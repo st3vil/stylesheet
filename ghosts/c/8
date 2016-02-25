@@ -675,7 +675,25 @@ Wob_up: |
         $c->render(text => 'Hello World!');
       };
 
+    get '/' => sub {
+        my $c = shift;
+        sayre "Fork";
+        $c->render_static("lowcal\.html");
+    };    
+
     Rw Tism;
+    
+    websocket '/s' => sub {
+        my $mojo = shift;
+        sayyl "Connect!";
+        my $s = $mojo;
+        my $tx = $s->tx;
+        my $addr = $tx->remote_address;
+        Mojo::IOLoop->stream($tx->connection)->timeout(300000);
+        $tx->max_websocket_size(512000);
+        $tx->send(' clon();keon();');
+    };
+    
     
     G.clockon = sub {
         saybl "Starting  G.t     listens: $s";
