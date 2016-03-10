@@ -20,16 +20,17 @@ my $th = "$mou$thl";
 # tape twist effect coming from somewhere
 if (!-f $th && 1){#J.fop->()) {
     sayyl " thumbnail++$u";
-    my $thd = $1 if $th =~ /^(.+)\/(.+)$/ || die $th;
-    if (!-d $thd) {
-        run 'mkdir', '-p', $thd;
-    }
-    if ($u =~ /(mov|avi|mp4)$/i) {
-        run 'ffmpegthumbnailer -s 420 -t 20% -i '.$u.' -o '.$th
-    }
-    else {
-        run 'convert', $u, '-thumbnail','500x500', $th
-    }
+   my $thd = $1 if $th =~ /^(.+)\/(.+?)$/ || die $th;
+   !-d $thd && `mkdir -p $thd`;
+   if ($s =~ /(mov|avi|mp4)$/i) {
+       `ffmpegthumbnailer -s 420 -t 20% -i $s -o $th`
+   }
+   else {
+       -s $s < 200_000 ?
+           `cp $s $th` # webserver likes no symlink
+           :
+           `convert $s -thumbnail 1200x1200 $th`
+   }
 }
 #sayyl "Pi thumbnAIL of J.most.J.name";
 #J.V = 1;
