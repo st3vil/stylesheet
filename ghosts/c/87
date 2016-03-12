@@ -117,6 +117,8 @@ Vind: | # View boat / live generator /
     G.c.i = 1;
     
     J.koe++;
+    my $d = Rw sleep_if_hot;
+    
     my $d = 5;
     # sleep if hot
     my $dont;
@@ -284,6 +286,7 @@ Tarp: |
     Rw Ti;
     J.donts++ && exit if $dont;
     
+    J.VV.N = 1;
     y.at.sq = 'wave';
     #y.at.dis = 0;
     #
@@ -292,27 +295,31 @@ Tarp: |
     y.in += 0.03 if J.od++ && do{J.od=0;1};
     y.out = y.in + 0.3;
     
-    # one more to clear
+    # one more to clear ##
     $dont && return # doesnt work? ack Yuni
         n nosc=>''=>{}=>"%nosc"
     
-    my @for = (1..3);
+    my $many = J.many ||= [shuffle grep {/^[\/\w\.]+jpg$/i} split "\n", ''.`find eye -type f`];
+    
+    my @for = (1..7);
     my $dea = 2;
     while (@for) {
+        J.ite++;
         my $n = shift @for;
         $i++;
         $dea += rand(2) - 1;
         $dea += 0.2 until $dea > 0.2;
         
         my $sc = {};
-        
+        ##
         #sc.tism = sprintf '%s%06d', slm(4,G.oin.id), J.oini++;
         
-        sc.deal = G&ron,0.4+$dea;
+        sc.deal = 0.1 * int $dea * 10;
         
-        sc.I = 'Viow';
+        #sc.I = 'Viow';
+        $n = J.many->[J.ite];
     
-        m $n=>''=>{pi=>'pape'},$sc;
+        m $n=>''=>{pi=>'pape'},$sc
     }
     #delete J.El.>$_ for Pre=>'Duv';
     
@@ -329,7 +336,7 @@ pi/pape: |
     my ($no,$i,$se) = ($1,$2,$3)
         if `uptime` =~ /([\d\.]+), ([\d\.]+), ([\d\.]+)/;
     my $fo = $no - $i;
-    
+    #
     #C.sc.src || sayre "no src..";
     delete C&src if 'th/'.C.t eq C&src;
     
@@ -346,15 +353,16 @@ pi/pape: |
     
     C&b = (shuffle 
     'negation',# 'source-over', 'source-in',
-    'normal', 'multiply','multiply',
+    #'normal', 'multiply','multiply',
+    #
     'difference',
     #'source-out',
     #'source-atop',
     'darken', 'lighten',
     #'color-dodge', 'color-burn',
-    'normal', 'normal',
+    #'normal', 'normal',
     #'exclusion',
-    'hue', 'saturation',# 'saturation',# 'saturation', 'saturation',# 'luminosity',
+    #'hue', 'saturation',# 'saturation',# 'saturation', 'saturation',# 'luminosity',
     # 'color', 'add', 'subtract',
     # 'color', 'add',# 'subtract','subtract','subtract',
     #'normal', 'normal', 'normal', 'normal', 'normal', 
@@ -362,6 +370,10 @@ pi/pape: |
     # 'multiply', 'screen', 'overlay', 'soft-light', 
     #'hard-light', # 'darken', 'lighten',
     # 'pin-light', 'pin-light', 'pin-light', #
+    'difference',
+    'difference',
+    'difference',
+    'difference',
     'difference',
     #'exclusion', 'hue', 'saturation', 'luminosity', 'color', 'add', 'subtract'
     #, 'average', 'pin-light', 'negation', 'source-over', 'source-in', 'source-out', 'source-atop', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'lighter', 'darker', 'copy', 
