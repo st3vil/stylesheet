@@ -111,13 +111,13 @@ Gohup: |
             insert into gho (file,t,s,dig,ts) values (?,?,?,?,?)
     }
     c.ts = $ts;
-    Rw Gonews $J $c;
     Rw w_way_file $k:c.t $v:c.s;
+    Rw Gonews $J $c;
     
 Gohdown: | # read pins from gho where t=$p, chucks in G.way
     my $J = G.GW || die "No GW";
     $A = J.lA || die "Need init GW A";
-    
+    snooze 2300;
     my @w = G&qh,<<'',$p;
         select file,t,s,dig from gho where t = ?
     @w > 1 && die "Many ways to $p: ".wdump 3, \@w;
