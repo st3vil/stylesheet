@@ -60,9 +60,8 @@ Dub: | #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     Rw Code;
     
     
-    $A=
-    m exit=>[-dot=>0.02],{},'%hs:594'
-    m $_=>[-doJ=>0.04],{},'%hs:896' for qw'JJ PSF';
+    m exit=>-dot=>{},'%hs:594'
+    m $_=>-doJ=>{},'%hs:896' for qw'JJ PSF Tarp';
     
     m Sources=>-bath
     
@@ -82,6 +81,9 @@ pi/bath: |
     y.clos = 1;
     y.at.mw = 25;
     y.at.mt = -3;
+    y.at.ml = 4;
+    y.at.bo = '4px solid black';
+    
     Rw Sources;
 Sources: |
     map{delete $J.>$_ }qw'olp ghut' if J.olp++ > 10;
@@ -647,18 +649,21 @@ Tinput: |
     saybl q{Yep: us&code  };
     J.vid = us&code;
     #T.oke = 1;
-PSF: |
+PS: |
     u urw
-    my $j;
-    for (`ps faux | grep perl`) {
-        next if /grep perl/;
-        my ($user,$pid,$cpu,$mem) = split /\s+/;
-        my $p = $1 if /\|(.+)$/;
-        $j .= "$pid \t $cpu  $mem \t !  $p\n";
-    }
-    $j =~ s/     !          //g;
+    n Dub
+    # everything is photo emulsion. various types of photoniches,
+    # things want to get taken care of by the left or right side
+    # # #
+    my $j = join "\n", map {
+        chomp;
+        my ($user,$pid,$cpu,$mem,@junk) = split /\s+/, $_, 10;
+        my $cmd = pop @junk;
+        $cmd =~ s/^\S+//;
+        "$pid \t $cpu  $mem \t $cmd"
+    } grep{!/grep perl/} `ps faux | grep perl\\\\\\\|xfce4-terminal`;
     n date=>0.032=>`date`,'%fs:66,blr:9,opa:7,hs:394'
-    n ps=>-pre=>$j
+    n ps=>[-pre=>4]=>$j=>'%hs:345,sha:2 2 5 544,fs:13'
 Rec: | # batchy you, web
     #u urw
     u Sugd
