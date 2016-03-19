@@ -21,21 +21,19 @@ Vind: | # View boat / live generator /
     G.c.i = 1;
     
     J.koe++;
-    #my $d = Rw sleep_if_hot;
     
-    my $d = 5;
     # sleep if hot
+    my $d = 5;
     my $dont;
     if (J.koe > 2) {
         my $h = {};
-        my @l;
-        for (@l=`ssh v sensors`) {
+        my @l = grep {
             my ($k,$v) = /^(Core 0|temp1):\s+\+(\d+)\./;
             $k || next;
             $k =~ s/\W//g;
             $k .= "2" while $h.>$k;
             $h.>$k = $v;
-        }
+        } `sensors`;
         saybl "SEnse: ".ki $h;
         if (!keys %$h) {
             sayre "nonsense ".wdump \@l;
@@ -52,6 +50,8 @@ Vind: | # View boat / live generator /
             J.koe = 0;
         }
     }
+    
+    # blank at start
     if (J.rem++ == 0) {
         n uncan
         saybl "wipe" for 1..9;
@@ -60,13 +60,13 @@ Vind: | # View boat / live generator /
     J.rem > 100 && Rw restar;
     
     saybl "---------" for 1..4;
+    # next timer
     Rw waito $J $d;
     
     return if $dont;
     
     # Tarps for us
     n Singe=>W=>{pin=>'Tarp',for=>142}
-
 Viow: |
     G.c.i = 1;
     J.rem++;
@@ -116,61 +116,28 @@ View: | # oncer, makes paddocks of images, as pin for some random W, looking in 
         $page++;
     }
     
-wave: |
-    my $try = sub {
-        my $s = shift;
-        return sjson($s) if grep{/\n|\t|,|:/}
-            keys(%$s), values(%$s);
-        join ',', map { join':', $_, $s.>$_ } sort keys %$s;
-    };
-    my $M = [map{
-        my $C = G&tC,$_;
-        $C = G&hup,$C;
-        my $z = delete C&z;
-        delete C&J;
-        delete C&geo;
-        delete C&z;
-        delete C.sc.pi;
-        
-        C.c = $try->(C.c);
-        C.sc = $try->(C.sc);
-        my $y = C.y.cv;
-        $y =~ s/^0\.//;
-        my @m = join("\t", '', C.t, $y, C.c, C.sc);
-        if ($z) {
-            my $n = Rw wave + $N:z $oo=1;
-            push @m, map {" $_"} @$n;
-        }
-        @m
-    }@$N];
-    if (ar.oo) {
-        return $M
-    }
-    else {
-        J.Wayout || die "Wayout wave J.name";
-        say "Wave tabulated: J.name ".@$M;
-        @$M = grep {!/nosc:1$/}@$M;
-        G&wraf,"life/W/J.Wayout",$M;
-    }
-    $N;
-Ti: |
+Ti: | # r %int/ini attach sense of time
     my $t = J.Ti ||= {};
     if (c&for) {
         my $now = hitime();
         t.last ||= $now;
         t.now = $now;
-
-        y.at.int = int((t.now - t.last)*10)*0.1;
-        y.at.int = 30 if y.at.int > 30;
-        y.at.ini = t.ini++;
+        
+        t.int = int((t.now - t.last)*10)*0.1;
+        t.int = 30 if y.at.int > 30;
+        
+        t.ini = t.ini++;
 
         t.last = t.now;
+        y.at.int = t.int;
+        y.at.ini = t.ini++;
     }
     say "Jidder: J.id";
     my $see = J.Wayout || "J.id\.c";
     !y.at.ini && J.Wayout && `cat /dev/null > life/W/J.Wayout`;
     c&atusc && !y.at.ini && G&wraf,"life/W/c&atusc\.sc",$see;
     # extents of time with a pour out at the end.
+    # but does it unW?
     !c&for || y.at.ini < c&for;
     
     
@@ -228,6 +195,7 @@ Tarp: |
     
     shift @$M while @$M > 8;
     J.AM = [@$M];
+    saybl "JAMIN J.at.ini";
 pi/pape: |
     C&pa = 'R';
     C&qz = 1;

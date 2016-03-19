@@ -2,21 +2,19 @@ G.oin.A.tid += 3;
 G.c.i = 1;
 
 J.koe++;
-#my $d = Rw sleep_if_hot;
 
-my $d = 5;
 # sleep if hot
+my $d = 5;
 my $dont;
 if (J.koe > 2) {
     my $h = {};
-    my @l;
-    for (@l=`ssh v sensors`) {
+    my @l = grep {
         my ($k,$v) = /^(Core 0|temp1):\s+\+(\d+)\./;
         $k || next;
         $k =~ s/\W//g;
         $k .= "2" while $h.>$k;
         $h.>$k = $v;
-    }
+    } `sensors`;
     saybl "SEnse: ".ki $h;
     if (!keys %$h) {
         sayre "nonsense ".wdump \@l;
@@ -33,6 +31,8 @@ if (J.koe > 2) {
         J.koe = 0;
     }
 }
+
+# blank at start
 if (J.rem++ == 0) {
     n uncan
     saybl "wipe" for 1..9;
@@ -41,6 +41,7 @@ if (J.rem++ == 0) {
 J.rem > 100 && Rw restar;
 
 saybl "---------" for 1..4;
+# next timer
 Rw waito $J $d;
 
 return if $dont;
