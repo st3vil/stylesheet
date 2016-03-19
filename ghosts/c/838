@@ -1,16 +1,44 @@
 MetaphysicsMetaphysics: |
+    the nest is pretty cold
     
     Ive got a bunch of parts, most go like ->
     
-
-
 YouToo: |
-    my $uyt = <<''
-        https://www.youtube.com/playlist?list=PLjMNWea6sX7L-qIbKVzgKmoYdWuqsh2yV
-    use WWW::Mechanize;
-    my $m = new WWW::Mechanize;
-    $m->get($url);
+    $s ||= 'PLjMNWea6sX7L-qIbKVzgKmoYdWuqsh2yV';
+    $s = <<''.$s unless $s =~ /^http/;
+        https://www.youtube.com/playlist?list=
+    #use WWW::Mechanize;
+    #my $m = new WWW::Mechanize;
+    #$m->get($url);
+    my @h = read_file("yout\.html");
+    my @l;
+    my $e = 0;
+    while (@h) {
+        my $v = $l[-1] if @l;
+        for (shift @h) {
+        if ($e == 0) {
+            /class=.pl-video-title-link/ || next;
+            my ($yt) = /href=..watch\?v=([-\w]+)/;
+            (my $t = shift @h) =~ s/^\s+|\s+$//sg;
+            push @l, {t=>$t,sc=>{yt=>$yt}};
+            $e = 1;
+        }
+        elsif ($e == 1) {
+            /div class="timestamp".+>(\d+:\d+)<\/span>/ || next;
+            v.sc.duration = $1;
+            my ($ms,$ss) = split ':', $1;
+            v.sc.secs = $ms * 60 + $ss;
+            $e = 0;
+        }
+        }
+    }
+    say "Done: ".wdump 4, \@l;
     
+    
+    
+    
+    
+    #
     
 Zo: | # tumblr suction
     use WWW::Mechanize;
@@ -100,7 +128,6 @@ Zwah: |
     }
         
     
-
 Zos: |
     my @in = `cat n/W/st33v\.ii\.41\.c`;
     my $i = 0;
