@@ -58,7 +58,7 @@ Sesifi: | # 64 includi, for when the repo lands at first, start projecting ghost
     unless (-d $W && -d "$W/way") {
     my $from = 'g/c/*';
     `mkdir -p $W` if !-d $W;
-    sayyl "Projecting $from to $W/(dig)way ...";
+    sayyl "Projecting $from to $W/{wf,{dig,}way} ...";
     
     my $glomet = sub {
         my $f = shift;
@@ -111,6 +111,12 @@ Sesifi: | # 64 includi, for when the repo lands at first, start projecting ghost
             -l $wig && `unlink $wig`;
             `ln -s $dig $wig`;
         }
+        
+        # mtimes in wf must be after any of the inner branches ^
+        (my $fi = $f) =~ s/\//-/g;
+        my $wf = "$W/wf/$fi";
+        `mkdir $W/wf` if !-d "$W/wf";
+        write_file($wf,'');
     };
     
     my @li = glob $from;
