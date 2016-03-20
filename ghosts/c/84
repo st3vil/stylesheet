@@ -25,7 +25,6 @@ Sefission: | # maintain g/c/* peelings to -> w/way/$K
     my $p = 'g/c/*';
     Mn(p=>''=>$p,'%decor,hs:388,fs:15');
     
-    sayyl "AKiur";
     # $f mtimes into w/wf/$fish (s/\//-/g), for its -glo:
     #  - way $k digs into w/digway/$kish
     #    - new file written & diffed and move in/over w/way/$kish
@@ -53,6 +52,75 @@ Sefission: | # maintain g/c/* peelings to -> w/way/$K
     Mn(found=>''=>"found ".@li);
     n o=>42=>"@",'%fs:40,blr:4';
     # and so
+    
+Sesifi: | # 64 includi, for when the repo lands at first, start projecting ghost chunks
+    my $W = 'woof'; # wormhole/
+    unless (-d $W && -d "$W/way") {
+    my $from = 'g/c/*';
+    `mkdir -p $W` if !-d $W;
+    
+    my $glomet = sub {
+        my $f = shift;
+        my $mt = (stat $f)[9];
+        my $fi = $f;
+        $fi =~ s/\//-/g;
+        
+        
+        my $wf = "$W/wf/$fi";
+        my $mft = (stat $wf)[9] if -f $wf;
+        $mt > $mft
+    };
+    
+    my $doway = sub {
+        my $f = shift;
+        my $d = LoadFile($f);
+        `mkdir $W/way` if !-d "$W/way";
+        `mkdir $W/digway` if !-d "$W/digway";
+        while(my($k,$v) = each %$d) {
+            {
+                my $k = $k;
+                $k =~ s/\//-/g;
+                my $waf = "$W/way/$k";
+                # bol
+                my $wig = "$W/digway/$k";
+                my $dig = slm(10, dig($v));
+                my $lin = readlink($wig) if -l $wig;
+                next if $lin eq $dig;
+            }
+            $k =~ s/\//-/g;
+            my $waf = "$W/way/$k";
+            # bol
+            my $wig = "$W/digway/$k";
+            my $dig = slm 10, dig($v);
+            my $lin = readlink($wig) if -l $wig;
+            if ($lin eq $dig) {
+                next
+            }
+            else {
+                sayyl "Lin: $k   $dig <--- $lin" if $lin;
+                delete G.way.>$k;
+                sayre "No lin $wig " if !$lin;
+            }
+            write_file($waf."nt",$v);
+            if (!-f $waf || `diff $waf ${waf}nt`) {
+                `mv ${waf}nt $waf`;
+            }
+            else {
+                `rm ${waf}nt`;
+            }
+            -l $wig && `unlink $wig`;
+            `ln -s $dig $wig`;
+        }
+    };
+    
+    my @li = glob $from;
+    for my $f (@li) {
+        $f =~ /(?!8)\d\d\d$/ && next;
+        $glomet->($f) || next;
+        # part of glo ^
+        $doway->($f);
+    }
+    }
     
 pi/glo: | # see file glowing, flood gates of
     y.at.hs = '638';
