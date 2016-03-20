@@ -18,6 +18,72 @@ our $A = {};
 $A->{I} = {};
 $A->{AAAA} = [
 $Bun::A,$Down::Goodat::A,$Down::Tides::A,$G::A,$GBabz::A,$Ise::KnowTime::A,$Ise::Rob::A,$Ise::Shelf::A,$Ngwe::A];
+my $W = 'wormhole'; # wormhole/
+unless (-d $W && -d "$W/way") {
+my $from = 'g/c/*';
+`mkdir -p $W` if !-d $W;
+
+my $glomet = sub {
+    my $f = shift;
+    my $mt = (stat $f)[9];
+    my $fi = $f;
+    $fi =~ s/\//-/g;
+
+
+    my $wf = "$W/wf/$fi";
+    my $mft = (stat $wf)[9] if -f $wf;
+    $mt > $mft
+};
+
+my $doway = sub {
+    my $f = shift;
+    my $d = LoadFile($f);
+    `mkdir $W/way` if !-d "$W/way";
+    `mkdir $W/digway` if !-d "$W/digway";
+    while(my($k,$v) = each %$d) {
+        {
+            my $k = $k;
+            $k =~ s/\//-/g;
+            my $waf = "$W/way/$k";
+            # bol
+            my $wig = "$W/digway/$k";
+            my $dig = slm(10, dig($v));
+            my $lin = readlink($wig) if -l $wig;
+            next if $lin eq $dig;
+        }
+        $k =~ s/\//-/g;
+        my $waf = "$W/way/$k";
+        # bol
+        my $wig = "$W/digway/$k";
+        my $dig = slm 10, dig($v);
+        my $lin = readlink($wig) if -l $wig;
+        if ($lin eq $dig) {
+            next
+        }
+        else {
+            sayyl "Lin: $k   $dig <--- $lin" if $lin;
+            #sayre "No lin $wig " if !$lin;
+        }
+        write_file($waf."nt",$v);
+        if (!-f $waf || `diff $waf ${waf}nt`) {
+            `mv ${waf}nt $waf`;
+        }
+        else {
+            `rm ${waf}nt`;
+        }
+        -l $wig && `unlink $wig`;
+        `ln -s $dig $wig`;
+    }
+};
+
+my @li = glob $from;
+for my $f (@li) {
+    $f =~ /(?!8)\d\d\d$/ && next;
+    $glomet->($f) || next;
+    # part of glo ^
+    $doway->($f);
+}
+}
 for my $AA (@{$A->{AAAA}}) {
     my @D = map{values%$_} map{values%$_} values %{$AA->{II}};
     my $ne = {map{$_=>1}keys%{$AA->{I}}};
@@ -40,6 +106,7 @@ $G->{I} = $A->{I};
 $G->{A} = $A;
 $A->{talk} = "G";
 $A->{mo} = $A;
+our $G = $G;
 our $KA = {};
 $G::KA->{"$A"} = $A;
 my $C = {};
@@ -49,7 +116,7 @@ for my $sn (qw'pwin tie h w airlock') {
 }
 $SIG{__DIE__} = $G->{I}->{sigstackend} || die "NO sigstackend";
 $SIG{__WARN__} = $G->{I}->{sigstackwarn} || die "NO sigstackwarn";
-$G->{IIII} = [map{'G/T/'.$_}qw'H/Boat H/Rest Chang K/eel'];
+$G->{IIII} = [map{'G/T/'.$_}qw'H/Boat H/Rest p/Ang K/Stable'];
 
 $G->{h}->($A,$C,$G,$T,"init");
 
