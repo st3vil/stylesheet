@@ -1,46 +1,23 @@
+# subvert the very simple J slower-downer
+# so per Vind, "time" advances enough to 
 G.oin.A.tid += 3;
 G.c.i = 1;
 
 J.koe++;
 
-# sleep if hot
-my $d = 5;
-my $dont;
-if (J.koe > 2) {
-    my $h = {};
-    my @l = grep {
-        my ($k,$v) = /^(Core 0|temp1):\s+\+(\d+)\./;
-        $k || next;
-        $k =~ s/\W//g;
-        $k .= "2" while $h.>$k;
-        $h.>$k = $v;
-    } `sensors`;
-    saybl "SEnse: ".ki $h;
-    if (!keys %$h) {
-        sayre "nonsense ".wdump \@l;
-        $dont = 1;
-        $d = 20;
-    }
-    if (grep{$h.>$_ > ('temp12'eq$_?88:84)}keys %$h) {
-        sayre "Hot: ".ki $h;
-        sleep 6;
-        $dont = 1;
-        $d = 35;
-    }
-    else {
-        J.koe = 0;
-    }
-}
+c&de = 5;
+c&dont = 0;
 
-# blank at start
+Rw sleep_if_hot;
+
 if (J.rem++ == 0) {
+    saybl "wipe";
     n uncan
-    saybl "wipe" for 1..9;
-    J.rem = 1;
 }
 J.rem > 100 && Rw restar;
 
 saybl "---------" for 1..4;
+
 # next timer
 Rw waito $J $d;
 

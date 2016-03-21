@@ -17,14 +17,35 @@ Zoy: |
     `cd w/jw; rm -f @hose` if @hose;
     #n Hit
 Vind: | # View boat / live generator / 
+    # subvert the very simple J slower-downer
+    # so per Vind, "time" advances enough to 
     G.oin.A.tid += 3;
     G.c.i = 1;
     
     J.koe++;
     
-    # sleep if hot
-    my $d = 5;
-    my $dont;
+    c&de = 5;
+    c&dont = 0;
+    
+    Rw sleep_if_hot;
+    
+    if (J.rem++ == 0) {
+        saybl "wipe";
+        n uncan
+    }
+    J.rem > 100 && Rw restar;
+    
+    saybl "---------" for 1..4;
+    
+    # next timer
+    Rw waito $J $d;
+    
+    return if $dont;
+    
+    # Tarps for us
+    n Singe=>W=>{pin=>'Tarp',for=>142}
+sleep_if_hot: |
+    J.koe || die "Must J_koe to use";
     if (J.koe > 2) {
         my $h = {};
         my @l = grep {
@@ -37,36 +58,20 @@ Vind: | # View boat / live generator /
         saybl "SEnse: ".ki $h;
         if (!keys %$h) {
             sayre "nonsense ".wdump \@l;
-            $dont = 1;
-            $d = 20;
+            c&dont = 1;
+            c&de = 20;
         }
         if (grep{$h.>$_ > ('temp12'eq$_?88:84)}keys %$h) {
             sayre "Hot: ".ki $h;
             sleep 6;
-            $dont = 1;
-            $d = 35;
+            c&dont = 1;
+            c&de = 35;
         }
         else {
             J.koe = 0;
         }
     }
     
-    # blank at start
-    if (J.rem++ == 0) {
-        n uncan
-        saybl "wipe" for 1..9;
-        J.rem = 1;
-    }
-    J.rem > 100 && Rw restar;
-    
-    saybl "---------" for 1..4;
-    # next timer
-    Rw waito $J $d;
-    
-    return if $dont;
-    
-    # Tarps for us
-    n Singe=>W=>{pin=>'Tarp',for=>142}
 Viow: |
     G.c.i = 1;
     J.rem++;
