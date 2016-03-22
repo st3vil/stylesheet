@@ -101,7 +101,8 @@ IO: |
     m 'io/W'=>-stre
     
 pi/stre: |
-    y.limn = 7
+    y.limn = 3;
+    y.at.zi = 30;
     n have=>1=>"s:$s",'%hs:334'
     n mtime=>''=>(stat $s)[9]
     
@@ -111,8 +112,8 @@ pi/stre: |
         for grep {s/^$s\///s}
         glob $s.'/*';
     
-    map { _.sc.ty = $1 if _.t =~ /.+\.(.+?)$/ } @$M;
-    map { _.t       = $1 if _.t =~ /^(.+?)\./ } @$M;
+    map { _.sc.ty   = $1 if _.c.s =~ s/^(.+)\.(.+?)$/$1/s; } @$M;
+    map { _.t       = $1 if _.c.s =~ s/^(.+?)\.(.+)$/$2/s; } @$M;
     
     
     my $z = {};
@@ -121,13 +122,17 @@ pi/stre: |
     
     my $l;
     @$M = map {
-        my $N = [$_];
+        my $M = [];
         my $new = _.t ne $l;
+        if ($new) {
+            $l &&
+            m The=>''=>"^"
+            m The=>''=>"_.t",'%fs:22,hs:397,mr:2'
+        }
         $l = _.t;
-        Nn(The=>''=>"^");
-        Nn(The=>''=>"_.t");
-        @$N
-    } @$M;
+        m $_
+        
+    @$M } @$M;
     
     
     m fas=>pi=>\$z
