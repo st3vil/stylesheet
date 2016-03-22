@@ -52,7 +52,7 @@ our $_ob = undef;
 # to dry up
 
 use Exporter 'import';
-our @EXPORT = qw(read_file write_file Dump DumpFile Load LoadFile dclone gettimeofday usleep first max maxstr min minstr reduce shuffle sum natatime uniq ceil floor pi2 encode_entities decode_entities charinfo encode_utf8 decode_utf8 is_utf8 enth snooze dig ind acum slm slim sjson ejson djson zjson mkuuid mkuid flatline hitime hexbe hexend unico k2 kk ki saybl saygr sayg sayre sayyl say saycol wdump ddump inter F_delta stack fwind);
+our @EXPORT = qw(read_file write_file Dump DumpFile Load LoadFile dclone gettimeofday usleep first max maxstr min minstr reduce shuffle sum natatime uniq ceil floor pi2 encode_entities decode_entities charinfo encode_utf8 decode_utf8 is_utf8 enth snooze dig ind acu acum slm slim sjson ejson djson zjson mkuuid mkuid flatline hitime hexbe hexend unico k2 kk ki saybl saygr sayg sayre sayyl say saycol wdump ddump inter F_delta stack fwind);
 
 
 sub enth {
@@ -69,6 +69,11 @@ Digest::SHA::sha1_hex(encode_utf8(shift))
 }
 sub ind {
 "$_[0]".join "\n$_[0]", split "\n", $_[1]
+
+}
+sub acu {
+my ($n, $y, $c) = @_;
+push @{$n->{$y}||=[]}, $c;
 
 }
 sub acum {
