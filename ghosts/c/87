@@ -38,9 +38,9 @@ Vind: | # View boat / live generator /
     saybl "---------" for 1..4;
     
     # next timer
-    Rw waito $J $d;
+    Rw waito $J $d:c&de;
     
-    return if $dont;
+    return if c&dont;
     
     # Tarps for us
     n Singe=>W=>{pin=>'Tarp',for=>142}
@@ -48,13 +48,14 @@ sleep_if_hot: |
     J.koe || die "Must J_koe to use";
     if (J.koe > 2) {
         my $h = {};
-        my @l = grep {
+        my @l = `sensors`;
+        for (@l) {
             my ($k,$v) = /^(Core 0|temp1):\s+\+(\d+)\./;
             $k || next;
             $k =~ s/\W//g;
             $k .= "2" while $h.>$k;
             $h.>$k = $v;
-        } `sensors`;
+        }
         saybl "SEnse: ".ki $h;
         if (!keys %$h) {
             sayre "nonsense ".wdump \@l;
@@ -176,7 +177,7 @@ Tarp: |
     
     my $many = J.many ||= [shuffle grep {/^[\/\w\.]+jpg$/i} split "\n", ''.`find eye -type f`];
     
-    my @for = (1..7);
+    my @for = (1..5);
     my $dea = 2;
     while (@for) {
         J.ite++;
