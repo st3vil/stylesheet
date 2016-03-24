@@ -58,6 +58,7 @@ MetaphysicsMetaphysics: |
     creates space to hold arguments properly, potentially.
     its the kind of technology that it is.
     dangled energy smashups. for something you have no idea of.
+    its always sealing into forms. seems to be some cleverness, but not really plugged in.
     
 Work: | # for Steve
      render Vind
@@ -78,48 +79,78 @@ laters: | # for YOU
     so its all clicking on stuff, letters just comp
 YouToo: |
     $s ||= 'PLjMNWea6sX7L-qIbKVzgKmoYdWuqsh2yV';
-    $s = "https://www\.youtube\.com/playlist?list=".$s unless $s =~ /^http/;
+    $s = "https://www\.youtube\.com/playlist?list=".$s
+        unless $s =~ /^http/;
         
     use WWW::Mechanize;
     my $m = new WWW::Mechanize;
+    say ": $s";
     $m->get($s);
-    say "  - $s";
     my @h = split "\n", $m->content;
     write_file("FOryou", encode_utf8 $m->content);
-    saybl "Y";
-    sleep 1;
     
     #my @h = read_file("w/yout\.html");
     my @l;
+    my $ti;
     my $e = 0;
     while (@h) {
         my $v = $l[-1] if @l;
         for (shift @h) {
         if ($e == 0) {
+            /class=.pl-header-title/ || next;
+            (my $t = shift @h) =~ s/^\s+|\s+$//sg;
+            $ti = $t;
+            $e = 1;
+        }
+        elsif ($e == 1) {
             /class=.pl-video-title-link/ || next;
             my ($yt) = /href=..watch\?v=([-\w]+)/;
             (my $t = shift @h) =~ s/^\s+|\s+$//sg;
             push @l, {t=>$t,sc=>{yt=>$yt}};
-            $e = 1;
+            $e = 2;
         }
-        elsif ($e == 1) {
+        elsif ($e == 2) {
             /div class="timestamp".+>(\d+:\d+)<\/span>/ || next;
             v.sc.duration = $1;
             my ($ms,$ss) = split ':', $1;
             v.sc.secs = $ms * 60 + $ss;
-            $e = 0;
+            $e = 1;
         }
         }
     }
-    say "Done: ".wdump 4, \@l;
     
+    say "Done: $ti";
+    return ($ti,\@l)
+YuT: |
+    for (`cat io/W/Movy\.sc`) {
+        chomp;
+        say "For $_";
+        my $f = "io/W/$_";
+        my @n;
+        my $e = {};
+        for (`cat $f`) {
+            chomp;
+            saybl " - $_";
+            my ($s) = /list=([\w-]+)/;
+            $e->{$s} && sayre("Skipping another") && next;
+            $e->{$s} = 1;
+            my ($t,$l) = Rw YouToo $s;
+            say "   $t  ".@$l;
+            my @l;
+            for (@$l) {
+                my $link = "https://www\.youtube\.com/embed/".(_.sc.yt||die"noyt")
+                    ."?list=".$s."&secs="._.sc.secs;
+                $link .= " # _.t";
+                push @l, $link;
+            }
+            push @n, @l;
+        }
+        write_file($f,encode_utf8 join"",map{"$_\n"}@n);
+        #return;
+    }
+    #return;
     
-    
-    
-    
-    #
-    
-io: |
+io: | 
     
 IO: |
     u urw
@@ -129,7 +160,7 @@ IO: |
     y.at.bg = 3335;
     y.at.ws = 1;
     y.at.qs = 1;
-    y.at.mean = 'YouToo';
+    y.at.mean = 'YouTg';
     
     y.at.hs = 4578;
     n noise=>1=>int rand 304
@@ -231,14 +262,24 @@ pi/bit: |
     Rw ay havebit;
     y.at.sha = '3 3 3 340'
 havebit: | # HAVE BITHOLD! ikntense connection to fire
-    my $J = e&hJ ->[-1];
+    my $eJ = e&hJ ->[-1];
     
-        Rw talkzyh;
-    saybl wdump 3, J.C.c.s;
+    my $mJ = J.mo.J;
+    my $mean = mJ.at.mean || die "J.name mean nothing";
+    my $m = mJ.C.c.s;
+    my $s = eJ.C.c.s;
+    
+    my $M = E.c.us.pick ||= [];
+    Mn(founde=>-edr=>s.t,{mean=>$mean,onto=>$m});
+    
+    n Dug =>$E
+    T.pos = 0;
+    
     # THE PULL OF THE LINE to reapply self
-    n Hold=>\ J.C.c.s
+    #n Hold=>\ J.C.c.s
     
-    
+YouTg: |
+    Rw talkzyh;
     
     
     
@@ -253,6 +294,10 @@ pi/in: | # o
 Hold: |
     u urw
     Rw ay see;
+    
+    my $Jn = e&hJ ->[-1];
+        #Rw talkzyh;
+    say "Holdened: ". wdump 3, Jn.C.c.s;
     
     push @{J.l||=[]}, flatline e&s;
     #m $_ for @{J.l||=[]};
