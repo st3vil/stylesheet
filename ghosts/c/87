@@ -17,7 +17,7 @@ Zoy: |
     `cd w/jw; rm -f @hose` if @hose;
     #n Hit
 Vind: | # View boat / live generator / 
-    #u urw
+    u urw
     #n WE=>-sliT=>3=>'%dos:adh'
     # subvert the very simple J slower-downer
     # so per Vind, "time" advances enough to 
@@ -50,12 +50,18 @@ Vind: | # View boat / live generator /
     my $d = c&de;
     Rw waito $J $d;
     
+    n thing=>''=>(J.yon?"O":"8")=>'%dos:vinyon'
+    c&dont = 1 if J.yon;
+    
     return if c&dont;
     
     # Tarps for us
-    n Singe=>W=>{pin=>'Tarp',for=>142,oat=>2}
+    #n Singe=>W=>{pin=>'Tarp',for=>142,oat=>2}
     
-    n Signe=>W=>{pin=>'Tarp',for=>142,oat=>2}
+    n Tarp=>W=>{pin=>'Tarp',for=>142,oat=>2}
+vinyon: |
+    J.yon = !J.yon;
+    
 adh: |
     sayre "Y";
     saybl wdump 3, e&us
@@ -180,39 +186,50 @@ Tarp: |
     J.VV.N = 1;
     y.at.sq = 'wave';
     #y.at.dis = 0;
-    #
-    my $i = 0;
+    
     y.in = 0.3;
-    y.in += 0.03 if J.od++ && do{J.od=0;1};
-    y.out = y.in + 0.3;
+    #y.in += 0.03 if J.od++ && do{J.od=0;1};
+    y.out = y.in;# + 0.3;
     
     # one more to clear ##
     $dont && return # doesnt work? ack Yuni
         n nosc=>''=>{}=>"%nosc"
     
     my $many = J.many ||= [shuffle grep {/^[\/\w\.]+jpg$/i} split "\n", ''.`find io/i -type f`];
-    my @for = (1..5);
     
-    @for = J.nu.8++ % C.c.oat ? '8' : '0' if c&oat;
+    my @for = (1..5);
+    J.indear = 2;
+    J.tr->{$_} eq '1' && delete J.tr->{$_} for @for;
+    if (J.at.ini > J.indea) {
+        J.indei ||= 0;
+        my $di = $for[J.indei];
+        J.tr->{$di} = '1';
+        J.indei++;
+        J.indei = 0 if J.indei > @for;
+        J.indea = J.at.ini + J.indear;
+    }
+    J.tr->{$_} ||= J.many->[J.ite++] for @for;
     
     my $dea = 2;
+    my $i = 0;
     while (@for) {
-        J.ite++;
-        my $n = shift @for;
-        $i++;
-        $dea += rand(2) - 1;
-        $dea += 0.2 until $dea > 0.2;
-        
         my $sc = {};
-        ##
-        sc.tism = sprintf '%s%06d', slm(4,G.oin.id), J.oini++;
-        
-        sc.deal = 0.1 * int $dea * 10 * 0.3;
+        my $n = shift @for;
+        my $src = J.tr->{$n};
+        $src eq '1' && next;
         
         #sc.I = 'Viow';
-        $n = J.many->[J.ite];
-    
+        sc.src = $src;
+        
+        $dea += rand(3) - 1;
+        $dea += 0.2 until $dea > 0.2;
+        sc.deal = 0.1 * int $dea * 10 * 0.3;
+        
+        sc.tism = join '_', J.name, slm(4,G.oin.id), J.at.ini;
+        sc.tism .= '_'.$i if $i;
+        
         m $n=>''=>{pi=>'pape'},$sc
+        $i++;
     }
     #d#elete J.El.>$_ for Pre=>'Duv';
     
@@ -227,6 +244,27 @@ pi/pape: |
     Rw pi/thumb + $s:c&thumb;
     delete C&I if C&I eq 'Viow';
     
+    if (J.ini++) {
+        my $otv = J.Jiter.El.Pre.tv;
+        my $be = $otv->{C.y.cv."\t".C.t};
+        my $ws = J.wasc ||={};
+        G&xot,$ws,be.sc;
+        saybl "THe J.name: ".ki J.wasc;
+        y.ope = 1;
+        
+        
+        C&sca = ws.sca + 0.1 if ws.sca;
+        
+        
+        3 > rand 5 &&
+            Rw pap_b;
+        
+        C&opa = 0.6 * (0.5 + rand 0.9)
+            if 3 > rand 5;
+        
+        3 > rand 5 ||
+        return;
+    }
     my ($no,$i,$se) = ($1,$2,$3)
         if `uptime` =~ /([\d\.]+), ([\d\.]+), ([\d\.]+)/;
     my $fo = $no - $i;
@@ -245,6 +283,16 @@ pi/pape: |
     
     C&opa = 0.6 * (0.5 + rand 0.9);
     
+    C&fi = 1;
+    
+    Rw pap_b;
+    
+    C&r = int(700 * $fo);
+    C&pxp = int C&pxp if C&pxp;
+    C&pyp = int C&pyp if C&pyp;
+    C.sc->{$_} = G&ron,C.sc->{$_}
+        for grep{C.sc->{$_}} qw'sca opa r';
+pap_b: |
     C&b = (shuffle 
     #'negation',# 'source-over', 'source-in',
     #'normal', 'multiply','multiply',
@@ -273,11 +321,6 @@ pi/pape: |
     #, 'average', 'pin-light', 'negation', 'source-over', 'source-in', 'source-out', 'source-atop', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'lighter', 'darker', 'copy', 
     'xor'
     )[0];
-    C&r = int(700 * $fo);
-    C&pxp = int C&pxp if C&pxp;
-    C&pyp = int C&pyp if C&pyp;
-    C.sc->{$_} = G&ron,C.sc->{$_}
-        for grep{C.sc->{$_}} qw'sca opa r';
 Sjum: | # make nice js line protocol
     u urw
     delete J.El.>$_ for qw'Duv Pre';
@@ -358,7 +401,7 @@ stylepap: |
     tism 36:
         var h = $('canvas#display').get()[0];
         var m = h.toDataURL('image/jpeg');
-        $.ajax({url: '/tism',type: 'PUT',data: m});
+        $.ajax({url: '/tism?g='+s,type: 'PUT',data: m});
     
     0&&
     notism:
@@ -408,6 +451,7 @@ stylepap: |
             C&src && C&src != r.image.src and r.image.src = C&src;
             C&an && a.uplg and n = r.animate(C&an, a.uplg);
             c&el <3 and r.position = view.center;
+            C&fit and r.fitBounds(view.bounds, true);
             C&pxp and r.position.x += C&pxp;
             C&pyp and r.position.y += C&pyp;
             C&sca and r.scale = C&sca;
