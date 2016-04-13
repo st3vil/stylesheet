@@ -181,10 +181,8 @@ Tarp: |
     J.VV.wave = 1;
     y.at.sq = 'wave';
     #y.at.dis = 0;
-    y.ope = !do {
-        J.oneto = 1 if J.oneto++ > 4;
-    };
-    y.in = '0.3'.J.oneto;
+    J.oneto = 1 if J.oneto++ > 4;
+    y.in = '0.3';
     #y.in += 0.03 if J.od++ && do{J.od=0;1};
     y.out = y.in;# + 0.3;
     
@@ -194,7 +192,7 @@ Tarp: |
     
     my $many = J.many ||= [shuffle grep {/^[\/\w\.]+jpg$/i} split "\n", ''.`find io/i -type f`];
     
-    my @for = (1..3);
+    my @for = (1..4);
     J.indear = 2;
     J.tr->{$_} eq '1' && delete J.tr->{$_} for @for;
     #y.ope = 1;
@@ -202,7 +200,7 @@ Tarp: |
         #delete y.ope;
         #n unify=>''=>{}=>'%rasu:4,pa:R,fit,opa:0.7,elie:4,sca:0.9'
         
-        for (@for) {# last;
+        for (1) {# last;
             J.indei ||= 0;
             my $di = $for[J.indei];
             acu $J=>indres=>J.tr->{$di};
@@ -227,8 +225,8 @@ Tarp: |
         #sc.I = 'Viow';
         sc.src = $src;
         
-        if (@for < 1) {
-            sc.deal = 0.5;
+        if (@for < 3) {
+            sc.deal = 0.3;
             sc.tism = join '_', J.name, slm(4,G.oin.id), J.at.ini;
             sc.tism .= '_'.$i if $i;
         }
@@ -319,8 +317,8 @@ pap_b: |
     # 'multiply', 'screen', 'overlay', 'soft-light', 
     #'hard-light', # 'darken', 'lighten',
     # 'pin-light', 'pin-light', 'pin-light', #
-    'difference',
-    'soft-light',
+    'add',
+    'add',
     'pin-light',
     'difference',
     'difference',
@@ -418,9 +416,11 @@ stylepap: |
         }
     # take some photo
     tism 36:
+        a.yl(4, &{
         var h = $('canvas#display').get()[0];
         var m = h.toDataURL('image/jpeg');
         $.ajax({url: '/tism?g='+s,type: 'PUT',data: m});
+        });
     
     0&&
     notism:
