@@ -2,19 +2,23 @@ return warn"nontypeimage: $s" unless $s =~ /(tga|png|gif|jpe?g)$/i;
 my $mou = "public/";
 my ($first) = split '/', $s;
 die "$first not $mou?" unless -e "$mou$first";
-my $thl = "th/$s";
+my $sized = c&size.'/' if c&size;
+my $thl = "th/$sized$s";
 my $th = "$mou$thl";
 if (!-f $th){
     my $thd = $1 if $th =~ /^(.+)\/(.+?)$/ || die $th;
     !-d $thd && `mkdir -p $thd`;
     if ($s =~ /(mov|avi|mp4)$/i) {
+        c&size ||= 420;
         `ffmpegthumbnailer -s 420 -t 20% -i $s -o $th`
     }
     else {
+        c&size ||= 1200;
+        my $size = c&size.'x'.c&size;
         -s $s < 200_000 ?
             `cp $s $th` # webserver likes no symlink
             :
-            `convert $s -thumbnail 1200x1200 $th`
+            `convert $s -thumbnail $size $th`
     }
 }
 C.sc.src = $thl;

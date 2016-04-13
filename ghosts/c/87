@@ -6,10 +6,6 @@ uncan: |
     y.at.jslines = 1;
     blag 4: %js
         paper.project.clear();
-
-
-
-
 Zoy: |
     #y.at.jsl = 1;
     Rw Sefara;
@@ -32,7 +28,7 @@ Vind: | # View boat / live generator /
     # inter sphere lowsis
     # hum
     my $i =
-    c&de = 1.2 + (J.elv || 3);
+    c&de = 6.2 + (J.elv || 3);
     c&dont = 0;
     
     #J.food ||= <>;
@@ -159,7 +155,6 @@ TimeTape: | # r %int/ini attach sense of time
         y.at.int = t.int;
         y.at.ini = t.ini++;
     }
-    say "Jidder: J.id";
     my $see = J.Wayout || "J.id\.c";
     !y.at.ini && J.Wayout && `cat /dev/null > life/W/J.Wayout`;
     c&atusc && !y.at.ini && G&wraf,"life/W/c&atusc\.sc",$see;
@@ -183,11 +178,11 @@ Tarp: |
     Rw TimeTape;
     J.donts++ && exit if $dont;
     
-    J.VV.N = 0;
+    J.VV.wave = 1;
     y.at.sq = 'wave';
     #y.at.dis = 0;
-    
-    y.in = 0.3;
+    J.oneto = 1 if J.oneto++ > 4;
+    y.in = '0.3'.J.oneto;
     #y.in += 0.03 if J.od++ && do{J.od=0;1};
     y.out = y.in;# + 0.3;
     
@@ -197,20 +192,29 @@ Tarp: |
     
     my $many = J.many ||= [shuffle grep {/^[\/\w\.]+jpg$/i} split "\n", ''.`find io/i -type f`];
     
-    my @for = (1..5);
-    J.indear = 2;
+    my @for = (1..4);
+    J.indear = 1;
     J.tr->{$_} eq '1' && delete J.tr->{$_} for @for;
+    #y.ope = 1;
     if (J.at.ini > J.indea) {
-        J.indei ||= 0;
-        my $di = $for[J.indei];
-        J.tr->{$di} = '1';
-        J.indei++;
-        J.indei = 0 if J.indei > @for;
+        #delete y.ope;
+        n unify=>''=>{}=>'%rasu:4,pa:R,fit,opa:0.7,elie:4,sca:0.9'
+        
+        for (1..@for-1) { last;
+            J.indei ||= 0;
+            my $di = $for[J.indei];
+            acu $J=>indres=>J.tr->{$di};
+            J.tr->{$di} = '1';
+            J.indei++;
+            J.indei = 0 if J.indei > @for;
+        }
+        
         J.indea = J.at.ini + J.indear;
+        return J.tr = {};
     }
-    J.tr->{$_} ||= J.many->[J.ite++] for @for;
+    J.tr->{$_} ||= shift(@{J.indres||[]}) || J.many->[J.ite++] for @for;
+    J.ite = 0 if J.ite > @{J.many};
     
-    my $dea = 2;
     my $i = 0;
     while (@for) {
         my $sc = {};
@@ -221,9 +225,7 @@ Tarp: |
         #sc.I = 'Viow';
         sc.src = $src;
         
-        $dea += rand(3) - 1;
-        $dea += 0.2 until $dea > 0.2;
-        sc.deal = 0.1 * int $dea * 10 * 0.3;
+        sc.deal = 0.23;
         
         sc.tism = join '_', J.name, slm(4,G.oin.id), J.at.ini;
         sc.tism .= '_'.$i if $i;
@@ -235,7 +237,6 @@ Tarp: |
     
     shift @$M while @$M > 8;
     J.AM = [@$M];
-    saybl "JAMIN J.at.ini";
 pi/pape: |
     C&pa = 'R';
     C&qz = 1;
@@ -249,20 +250,19 @@ pi/pape: |
         my $be = $otv->{C.y.cv."\t".C.t};
         my $ws = J.wasc ||={};
         G&xot,$ws,be.sc;
-        saybl "THe J.name: ".ki J.wasc;
         y.ope = 1;
         
+        return if 3 > rand 4;
         
         C&sca = ws.sca + 0.1 if ws.sca;
+        for (qw'sca fit opa pxp pyp r') {
+            C.sc.>$_ = $ws->{$_} * 1.02 if $ws->{$_};
+        }
         
-        
-        3 > rand 5 &&
+        #3 > rand 5 &&
             Rw pap_b;
         
-        C&opa = 0.6 * (0.5 + rand 0.9)
-            if 3 > rand 5;
-        
-        3 > rand 5 ||
+        #3 > rand 5 ||
         return;
     }
     my ($no,$i,$se) = ($1,$2,$3)
@@ -291,7 +291,7 @@ pi/pape: |
     C&pxp = int C&pxp if C&pxp;
     C&pyp = int C&pyp if C&pyp;
     C.sc->{$_} = G&ron,C.sc->{$_}
-        for grep{C.sc->{$_}} qw'sca opa r';
+        for grep{C.sc->{$_} =~ /^[\d\.]+$/} keys %{C.sc};
 pap_b: |
     C&b = (shuffle 
     #'negation',# 'source-over', 'source-in',
@@ -357,6 +357,7 @@ stylepap: |
     # rassimilato
     # needs to put in background and do before dealings
     # maybe the Cs become for compression somehow
+    
     rasunify:
         s and A.mo.rasgo = s;
         !G&Time,'rasunify',700 and return
@@ -397,6 +398,13 @@ stylepap: |
         }
     
     u alljse
+    # shorter rasunify ^
+    rasu 334:
+        with (paper) {
+            var h = $('canvas#display').get()[0];
+            C&src = h.toDataURL('image/jpeg');
+            s >= 2 and paper.project.clear();
+        }
     # take some photo
     tism 36:
         var h = $('canvas#display').get()[0];
@@ -458,6 +466,7 @@ stylepap: |
             C&b and r.blendMode = C&b;
             C&r and r.rotate(C&r);
             C&opa and r.opacity = C&opa;
+            C&elie and c&el = C&elie;
             !A.W and ~die~panoW: A
             A.W ||= {};
             if (c&el <3) {
