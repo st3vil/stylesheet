@@ -28,7 +28,7 @@ Vind: | # View boat / live generator /
     # inter sphere lowsis
     # hum
     my $i =
-    c&de = 6.2 + (J.elv || 3);
+    c&de = 2.2 + (J.elv || 3);
     c&dont = 0;
     
     #J.food ||= <>;
@@ -182,7 +182,7 @@ Tarp: |
     y.at.sq = 'wave';
     #y.at.dis = 0;
     J.oneto = 1 if J.oneto++ > 4;
-    y.in = '0.3'.J.oneto;
+    y.in = '0.3';#.J.oneto;
     #y.in += 0.03 if J.od++ && do{J.od=0;1};
     y.out = y.in;# + 0.3;
     
@@ -192,15 +192,15 @@ Tarp: |
     
     my $many = J.many ||= [shuffle grep {/^[\/\w\.]+jpg$/i} split "\n", ''.`find io/i -type f`];
     
-    my @for = (1..4);
-    J.indear = 1;
+    my @for = (1..3);
+    J.indear = 2;
     J.tr->{$_} eq '1' && delete J.tr->{$_} for @for;
     #y.ope = 1;
     if (J.at.ini > J.indea) {
         #delete y.ope;
-        n unify=>''=>{}=>'%rasu:4,pa:R,fit,opa:0.7,elie:4,sca:0.9'
+        #n unify=>''=>{}=>'%rasu:4,pa:R,fit,opa:0.7,elie:4,sca:0.9'
         
-        for (1..@for-1) { last;
+        for (1) {# last;
             J.indei ||= 0;
             my $di = $for[J.indei];
             acu $J=>indres=>J.tr->{$di};
@@ -225,11 +225,11 @@ Tarp: |
         #sc.I = 'Viow';
         sc.src = $src;
         
-        sc.deal = 0.23;
-        
-        sc.tism = join '_', J.name, slm(4,G.oin.id), J.at.ini;
-        sc.tism .= '_'.$i if $i;
-        
+        if (@for < 1) {
+            sc.deal = 0.5;
+            sc.tism = join '_', J.name, slm(4,G.oin.id), J.at.ini;
+            sc.tism .= '_'.$i if $i;
+        }
         m $n=>''=>{pi=>'pape'},$sc
         $i++;
     }
@@ -252,10 +252,10 @@ pi/pape: |
         G&xot,$ws,be.sc;
         y.ope = 1;
         
-        return if 3 > rand 4;
+        #return if 3 > rand 8;
         
-        C&sca = ws.sca + 0.1 if ws.sca;
-        for (qw'sca fit opa pxp pyp r') {
+        #C&sca = ws.sca + 0.1 if ws.sca;
+        for (qw'sca opa pxp pyp r') {
             C.sc.>$_ = $ws->{$_} * 1.02 if $ws->{$_};
         }
         
@@ -276,10 +276,10 @@ pi/pape: |
     C&pyp = 270 * (rand(2)-1);
     map { C.sc.>$_ * 0.3 if C.sc.>$_ > 100 } qw'pxp pyp';
     
-    C&sca = 3.421 * rand(3) ^ 2;
+    C&sca = 3.421 * rand(3);
     #C.sc.zm = int(rand 10);
     C.sc.sca += 2;
-    C&sca *= 0.3 until C&sca < 2.3;
+    C&sca *= 0.3 until C&sca < 4.3;
     
     C&opa = 0.6 * (0.5 + rand 0.9);
     
@@ -494,7 +494,7 @@ stylepap: |
                 r.omily and delete r.alive
                 else { r.remove() }
             }
-            ~pa: r.image.src
+            ~pa: C.t, C.y.cv, a.ks(C.sc)
             A.b.pa = r;
         }
 
