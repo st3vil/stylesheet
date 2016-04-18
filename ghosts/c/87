@@ -28,7 +28,7 @@ Vind: | # View boat / live generator /
     # inter sphere lowsis
     # hum
     my $i =
-    c&de = 2.2 + (J.elv || 3);
+    c&de = 6.2 + (J.elv || 3);
     c&dont = 0;
     
     #J.food ||= <>;
@@ -52,9 +52,9 @@ Vind: | # View boat / live generator /
     return if c&dont;
     
     # Tarps for us
-    #n Singe=>W=>{pin=>'Tarp',for=>142,oat=>2}
+    n Singe=>W=>{pin=>'Tarp',for=>142,oat=>2,fu=>'eye/p/Memso'}
     
-    n Tarp=>W=>{pin=>'Tarp',for=>142,oat=>2}
+    n Tarp=>W=>{pin=>'Tarp',for=>142,oat=>4}
 vinyon: |
     J.yon = !J.yon;
     
@@ -181,6 +181,7 @@ Tarp: |
     J.VV.wave = 1;
     y.at.sq = 'wave';
     #y.at.dis = 0;
+    J.iin++;
     J.oneto = 1 if J.oneto++ > 4;
     y.in = '0.3';
     #y.in += 0.03 if J.od++ && do{J.od=0;1};
@@ -189,9 +190,9 @@ Tarp: |
     # one more to clear ##
     $dont && return # doesnt work? ack Yuni
         n nosc=>''=>{}=>"%nosc"
-    
-    my $many = J.many ||= [shuffle grep {/^[\/\w\.]+jpg$/i} split "\n", ''.`find io/i -type f`];
-    
+    c&fu ||= 'io/i';
+    my $many = J.many ||= [shuffle grep {/^[\/\w\.]+jpg$/i} split "\n", ''.`find c&fu -type f`];
+    c&oat ||= 4;
     my @for = (1..4);
     J.indear = 2;
     J.tr->{$_} eq '1' && delete J.tr->{$_} for @for;
@@ -224,11 +225,10 @@ Tarp: |
         
         #sc.I = 'Viow';
         sc.src = $src;
-        
-        if (@for < 3) {
+        if (1) {
             sc.deal = 0.3;
-            sc.tism = join '_', J.name, slm(4,G.oin.id), J.at.ini;
-            sc.tism .= '_'.$i if $i;
+            sc.tism = sprintf '%s_%s_%06d', J.name, slm(4,G.oin.id), J.iini++;
+            #sc.tism .= '_'.$i if $i;
         }
         m $n=>''=>{pi=>'pape'},$sc
         $i++;
@@ -260,7 +260,7 @@ pi/pape: |
             C.sc.>$_ = $ws->{$_} * 1.02 if $ws->{$_};
         }
         for (qw'sca r') {
-        #    C.sc.>$_ = $ws->{$_} * 1.02 if $ws->{$_};
+            C.sc.>$_ = $ws->{$_} * 1.12 if $ws->{$_};
         }
         
         #3 > rand 5 &&
@@ -284,13 +284,13 @@ pi/pape: |
     #C.sc.zm = int(rand 10);
     C.sc.sca += 2;
     C&sca *= 0.3 until C&sca < 4.3;
-    
+    C&sca *= 1.4;
     C&opa = 0.6 * (0.5 + rand 0.9);
     
     C&fit = 1;
     
     Rw pap_b;
-    C&b = 'normal' if C.t =~ /^[12]/;
+    C&b = 'normal' if C.t =~ /^[1]/;
     
     C&r = int(700 * $fo);
     C&pxp = int C&pxp if C&pxp;
@@ -307,7 +307,7 @@ pap_b: |
     #'source-atop',
     #'darken', 'lighten',
     #'color-dodge', 'color-burn',
-    'normal', 'normal',
+    #'normal', 'normal',
     #'exclusion',
     #'hue', 'saturation',# 'saturation',# 'saturation', 'saturation',# 'luminosity',
     # 'color', 'add', 'subtract',
@@ -317,14 +317,15 @@ pap_b: |
     # 'multiply', 'screen', 'overlay', 'soft-light', 
     #'hard-light', # 'darken', 'lighten',
     # 'pin-light', 'pin-light', 'pin-light', #
-    'add',
-    'add',
-    'pin-light',
+    'difference',
+    #'add',
+    #'soft-light',
+    #'pin-light',
     'difference',
     'difference',
     #'exclusion', 'hue', 'saturation', 'luminosity', 'color', 'add', 'subtract'
     #, 'average', 'pin-light', 'negation', 'source-over', 'source-in', 'source-out', 'source-atop', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'lighter', 'darker', 'copy', 
-    'xor'
+    'darker'
     )[0];
 Sjum: | # make nice js line protocol
     u urw
@@ -416,7 +417,7 @@ stylepap: |
         }
     # take some photo
     tism 36:
-        a.yl(4, &{
+        a.yl(140, &{
         var h = $('canvas#display').get()[0];
         var m = h.toDataURL('image/jpeg');
         $.ajax({url: '/tism?g='+s,type: 'PUT',data: m});
