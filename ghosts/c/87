@@ -39,7 +39,7 @@ Vind: | # View boat / live generator /
         saybl "wipe";
         n uncan
     }
-    J.rem > 100 && Rw restar;
+    J.rem > 100000 && Rw restar;
     
     
     # next timer
@@ -51,10 +51,11 @@ Vind: | # View boat / live generator /
     
     return if c&dont;
     
+    #n Tarp=>W=>{pin=>'Tarp',for=>142,oat=>5,or=>'eye/p/screens'}
     # Tarps for us
-    n Singe=>W=>{pin=>'Tarp',for=>142,oat=>2,fu=>'eye/p/Memso'}
+    n Singe=>W=>{pin=>'Tarp',for=>14442,oat=>2,fu=>'eye/p/*'}
     
-    n Tarp=>W=>{pin=>'Tarp',for=>142,oat=>4}
+    #n Tarp=>W=>{pin=>'Tarp',for=>142,oat=>4}
 vinyon: |
     J.yon = !J.yon;
     
@@ -190,21 +191,28 @@ Tarp: |
     # one more to clear ##
     $dont && return # doesnt work? ack Yuni
         n nosc=>''=>{}=>"%nosc"
-    c&fu ||= 'io/i';
-    my $many = J.many ||= [shuffle grep {/^[\/\w\.]+jpg$/i} split "\n", ''.`find c&fu -type f`];
+    c&fu ||= c&or || 'io/i';
+    my $many = J.many ||= [do{
+        my @n = grep {/^[\/\w\.-]+jpg$/i} split "\n", ''.`find c&fu -type f`;
+        @n = shuffle @n if !c&or ;
+        @n
+    }];
     c&oat ||= 4;
-    my @for = (1..4);
+    my @for = (1..c&oat);
     J.indear = 2;
     J.tr->{$_} eq '1' && delete J.tr->{$_} for @for;
     #y.ope = 1;
-    if (J.at.ini > J.indea) {
+    if (0&& c&or) {
+        J.tr = {};
+    }
+    elsif (J.at.ini > J.indea) {
         #delete y.ope;
         #n unify=>''=>{}=>'%rasu:4,pa:R,fit,opa:0.7,elie:4,sca:0.9'
         
-        for (1) {# last;
+        for (1,2) {# last;
             J.indei ||= 0;
             my $di = $for[J.indei];
-            acu $J=>indres=>J.tr->{$di};
+            $_ eq '1' && acu $J=>indres=>J.tr->{$di};
             J.tr->{$di} = '1';
             J.indei++;
             J.indei = 0 if J.indei > @for;
@@ -225,8 +233,8 @@ Tarp: |
         
         #sc.I = 'Viow';
         sc.src = $src;
-        if (1) {
-            sc.deal = 0.3;
+        if (@for<3) {
+            sc.deal = 0.2;
             sc.tism = sprintf '%s_%s_%06d', J.name, slm(4,G.oin.id), J.iini++;
             #sc.tism .= '_'.$i if $i;
         }
@@ -259,7 +267,7 @@ pi/pape: |
             next;
             C.sc.>$_ = $ws->{$_} * 1.02 if $ws->{$_};
         }
-        for (qw'sca r') {
+        for (qw'sca r opa') {
             C.sc.>$_ = $ws->{$_} * 1.12 if $ws->{$_};
         }
         
@@ -276,6 +284,9 @@ pi/pape: |
     #C.sc.src || sayre "no src..";
     delete C&src if 'th/'.C.t eq C&src;
     
+    C&fit = 1;
+    
+    #return if J.mo.J.C.c.or;
     C&pxp = 270 * (rand(2)-1);
     C&pyp = 270 * (rand(2)-1);
     map { C.sc.>$_ * 0.3 if C.sc.>$_ > 100 } qw'pxp pyp';
@@ -287,7 +298,6 @@ pi/pape: |
     C&sca *= 1.4;
     C&opa = 0.6 * (0.5 + rand 0.9);
     
-    C&fit = 1;
     
     Rw pap_b;
     C&b = 'normal' if C.t =~ /^[1]/;
@@ -297,6 +307,7 @@ pi/pape: |
     C&pyp = int C&pyp if C&pyp;
     C.sc->{$_} = G&ron,C.sc->{$_}
         for grep{C.sc->{$_} =~ /^[\d\.]+$/} keys %{C.sc};
+    
 pap_b: |
     C&b = (shuffle 
     #'negation',# 'source-over', 'source-in',
@@ -342,9 +353,19 @@ Sjum: | # make nice js line protocol
         console.log($('ndkon'),  M);
 Alsi: | # surf the web
     u urw
+    J.VV.N=1;
     # http://st33v.tumblr.com/
-    n AnimLines=>''=>''=>"%ifr:paperjs/examples/Animated/Smoothing\.html"
-stylepap: |
+    my $r = 'paperjs/examples';
+    my @m = grep{s/^public\///;/html$/}
+        split "\n", ''.`find public/$r -type f`;
+    my ($in) = shuffle @m;
+    (my $o = $in) =~ s/^$r\/(.+)\/(.+)\.html$/$1 $2/;
+    n in=>1=>$o
+    n $o=>2=>{pi=>'ifor',s=>$in}
+    
+pi/ifor: |
+    n if=>2=>''=>"%ifr:$s" 
+stylepap: | 
     u alljs
     #
     # first is only resumed e

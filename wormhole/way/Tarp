@@ -17,21 +17,28 @@ y.out = y.in;# + 0.3;
 # one more to clear ##
 $dont && return # doesnt work? ack Yuni
     n nosc=>''=>{}=>"%nosc"
-c&fu ||= 'io/i';
-my $many = J.many ||= [shuffle grep {/^[\/\w\.]+jpg$/i} split "\n", ''.`find c&fu -type f`];
+c&fu ||= c&or || 'io/i';
+my $many = J.many ||= [do{
+    my @n = grep {/^[\/\w\.-]+jpg$/i} split "\n", ''.`find c&fu -type f`;
+    @n = shuffle @n if !c&or ;
+    @n
+}];
 c&oat ||= 4;
-my @for = (1..4);
+my @for = (1..c&oat);
 J.indear = 2;
 J.tr->{$_} eq '1' && delete J.tr->{$_} for @for;
 #y.ope = 1;
-if (J.at.ini > J.indea) {
+if (0&& c&or) {
+    J.tr = {};
+}
+elsif (J.at.ini > J.indea) {
     #delete y.ope;
     #n unify=>''=>{}=>'%rasu:4,pa:R,fit,opa:0.7,elie:4,sca:0.9'
 
-    for (1) {# last;
+    for (1,2) {# last;
         J.indei ||= 0;
         my $di = $for[J.indei];
-        acu $J=>indres=>J.tr->{$di};
+        $_ eq '1' && acu $J=>indres=>J.tr->{$di};
         J.tr->{$di} = '1';
         J.indei++;
         J.indei = 0 if J.indei > @for;
@@ -52,8 +59,8 @@ while (@for) {
 
     #sc.I = 'Viow';
     sc.src = $src;
-    if (1) {
-        sc.deal = 0.3;
+    if (@for<3) {
+        sc.deal = 0.2;
         sc.tism = sprintf '%s_%s_%06d', J.name, slm(4,G.oin.id), J.iini++;
         #sc.tism .= '_'.$i if $i;
     }
