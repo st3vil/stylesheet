@@ -75,7 +75,7 @@ StylePhone: | # must have net
     n stylehut
     n styclick
     #n stysocket # see lowcal websockety
-stylehut: |
+stylehut: | # TODO slim down lowcal.html
     u alljs
     y.at.jsl = 1;
     
@@ -156,13 +156,18 @@ stylehut: |
 styclick: |
     u alljs
     y.at.jsl = 1;
+    # A speak
+    E:
+        a.cl(s);
     
+    # no A, see lowcal.html keon() etc.
     cl: %args:ev ws
-          if (keyjam) {
+          if (keyjam && 0) {
               return;
           }
-          setTimeout(function () { keyjam = 0; }, keyjamfor);
           keyjam = 1;
+          keyjamfor ||= 10;
+          setTimeout(function () { keyjam = 0; }, keyjamfor);
 
           var d = {};
           a.dscam(d,ev);
@@ -173,9 +178,7 @@ styclick: |
           d.pagey = window.pageYOffset;
 
           var tag = $(ev.target);
-          if (tag.type == 'range') {
-              d.rval = tag.value
-          }
+          tag.val and d.s = tag.val();
 
           a.entag(d, tag);
           a.ethro(d, ws);
@@ -536,6 +539,12 @@ stylation: |
             else
             C.c[v] and fl(v, C.c[v])
         });
+Swemp: | # the Ang for js stylers
+    s:
+        Nothing
+    my ($X,$N) = Rw Xisle p Ang;
+    Rw Csse + $N;
+    
 Ocean: | # styles, thingies
     n stylers
     n Swemp
@@ -603,12 +612,6 @@ stylers: |
     
     anc 59:
         $(A.on).animate(C.sc.anc, (C.sc.ant||900));
-    
-Swemp: | # the Ang for js stylers
-    s:
-        Nothing
-    my ($X,$N) = Rw Xisle p Ang;
-    Rw Csse + $N;
     
 stylext: |
     u alljs
