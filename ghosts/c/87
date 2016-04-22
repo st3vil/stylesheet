@@ -51,9 +51,12 @@ Vind: | # View boat / live generator /
     
     return if c&dont;
     
+    my $ba = G&peel,'pin:Tarp,for:11,oat:2,dea:2';
+    n Zeng=>W=>{%$ba,ic=>'Seng'}
+    n Zong=>W=>{%$ba,ic=>'Song'}
     
-    n Singe=>W=>{pin=>'Tarp',for=>420,oat=>2,dea=>2,fu=>'eye/io/i'}
-    n Singo=>W=>{pin=>'Tarp',for=>420,oat=>2,dea=>2,fu=>'eye/io/th'}
+    #n Singe=>W=>{pin=>'Tarp',for=>420,oat=>2,dea=>2,fu=>'eye/io/i'}
+    #n Singo=>W=>{pin=>'Tarp',for=>420,oat=>2,dea=>2,fu=>'eye/io/th'}
     
 vinyon: |
     J.yon = !J.yon;
@@ -129,9 +132,20 @@ Tarp: |
     J.Wayout = "J.name\.c";
     my $dont = !
     Rw TimeTape;
-    J.donts++ && exit if $dont;
+    J.donts++ && return c&ic && do {
+        my $io = 'io';
+        my $in = "J.name\.sc";
+        my ($la) = `tail $io/W/$in` =~ /\.(\d+)\.c$/sm;
+        my $ne = defined $la ? $la + 1 : 0;
+        say "Done shift: $la, next $ne";
+        my $ol = "J.name\.$ne\.c";
+        `cp life/W/J.Wayout $io/W/$ol`;
+        G&wraf,"$io/W/$in",$ol;
+        say "Added $ol to $in in $io";
+    } if $dont;
     
     J.VV.wave = 1;
+    y.at.imgl = c&ic if c&ic;
     y.at.sq = 'wave';
     #y.at.dis = 0;
     J.iin++;
@@ -144,15 +158,17 @@ Tarp: |
     $dont && return # doesnt work? ack Yuni
         n nosc=>''=>{}=>"%nosc"
     c&fu ||= c&or || 'io/i';
-    my $many = J.many ||= [do{
-        my @n = grep {/^[\/\w\.-]+jpg$/i} split "\n", ''.`find c&fu -type f`;
-        @n = shuffle @n if !c&or ;
-        @n
-    }];
+    if (!c&ic) {
+        J.many ||= [do{
+            my @n = grep {/^[\/\w\.-]+jpg$/i} split "\n", ''.`find c&fu -type f`;
+            @n = shuffle @n if !c&or ;
+            @n
+        }];
+    }
     c&oat ||= 4;
     my @for = (1..c&oat);
     J.indear = c&dea || 2;
-    J.tr->{$_} eq '1' && delete J.tr->{$_} for @for;
+    J.tr->{$_} eq 'nothere' && delete J.tr->{$_} for @for;
     #y.ope = 1;
     if (0&& c&or) {
         J.tr = {};
@@ -165,7 +181,7 @@ Tarp: |
             J.indei ||= 0;
             my $di = $for[J.indei];
             $_ eq '1' && acu $J=>indres=>J.tr->{$di};
-            J.tr->{$di} = '1';
+            J.tr->{$di} = 'nothere';
             J.indei++;
             J.indei = 0 if J.indei > @for;
         }
@@ -173,18 +189,26 @@ Tarp: |
         J.indea = J.at.ini + J.indear;
         return J.tr = {};
     }
-    J.tr->{$_} ||= shift(@{J.indres||[]}) || J.many->[J.ite++] for @for;
-    J.ite = 0 if J.ite > @{J.many};
+    J.tr->{$_} ||= shift(@{J.indres||[]})
+        ||
+        c&ic ? J.ite++ : # stitches into image list
+        J.many->[J.ite++]
+         for @for;
+    J.ite = 0 if J.many && J.ite > @{J.many};
     
     my $i = 0;
     while (@for) {
         my $sc = {};
         my $n = shift @for;
         my $src = J.tr->{$n};
-        $src eq '1' && next;
+        $src eq 'nothere' && next;
         
-        #sc.I = 'Viow';
-        sc.src = $src;
+        if (c&ic) {
+            sc.I = c&ic;
+        }
+        else {
+            sc.src = $src;
+        }
         if (@for<3) {
             sc.deal = 0.6;
             sc.tism = sprintf '%s_%s_%06d', J.name, slm(4,G.oin.id), J.iini++;
@@ -203,7 +227,7 @@ pi/pape: |
     c&thumb ||= C.t unless C&src || C&I || length(C.t) < 4;
     c&thumb &&
     Rw pi/thumb + $s:c&thumb;
-    delete C&I if C&I eq 'Viow';
+    delete C&I if C&I;
     
     if (J.ini++) {
         my $otv = J.Jiter.El.Pre.tv;
@@ -320,6 +344,9 @@ pi/ifor: |
     n if=>2=>''=>"%ifr:$s,he:30em" 
 stylepap: | 
     u alljse
+    # set a W's image source
+    imgl 334:
+        A.W.imgl = s;
     # shorter rasunify
     rasu 334:
         with (paper) {
@@ -360,8 +387,12 @@ stylepap: |
             !(c&el <3) and r = A.b.pa; !r && a.c("no rasmeemmber "+C.t);
             else if (C&typ === 'R') {
                 C&src and src = C&src;
-                !src && C.t.length < 4 and src = G&pull,'Viow';
-                !src && C.t.length < 4 and src = G&pull,'Viow';
+                if (!src && C.t.length < 4) {
+                    $igl = A.W.imgl;
+                    igl ||= 'Song';
+                    src = G&pull,igl;
+                    !src and src = G&pull,'igl';
+                }
                 src ||= 'th/'+C.t;
                 if (!src) {
                     C&jfi ||= 'img';
