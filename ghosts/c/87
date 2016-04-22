@@ -39,7 +39,8 @@ Vind: | # View boat / live generator /
         saybl "wipe";
         n uncan
     }
-    J.rem > 520 && Rw restar;
+    
+    J.rem > 420 && Rw restar;
     
     
     # next timer
@@ -51,7 +52,7 @@ Vind: | # View boat / live generator /
     
     return if c&dont;
     
-    my $ba = G&peel,'pin:Tarp,for:11,oat:2,dea:2';
+    my $ba = G&peel,'pin:Tarp,for:411,oat:2,dea:2';
     n Zeng=>W=>{%$ba,ic=>'Seng'}
     n Zong=>W=>{%$ba,ic=>'Song'}
     
@@ -103,7 +104,7 @@ TimeTape: | # r %int/ini attach sense of time
         t.now = $now;
         
         t.int = int((t.now - t.last)*10)*0.1;
-        t.int = 30 if y.at.int > 30;
+        t.int = 12 if t.int > 12;
         
         t.ini = t.ini++;
 
@@ -132,7 +133,7 @@ Tarp: |
     J.Wayout = "J.name\.c";
     my $dont = !
     Rw TimeTape;
-    J.donts++ && return c&ic && do {
+    J.donts++ && return c&ic && !J.leaveonce++ && do {
         my $io = 'io';
         my $in = "J.name\.sc";
         my ($la) = `tail $io/W/$in` =~ /\.(\d+)\.c$/sm;
@@ -204,14 +205,14 @@ Tarp: |
         $src eq 'nothere' && next;
         
         if (c&ic) {
-            sc.I = c&ic;
+            sc.I = $src;
         }
         else {
             sc.src = $src;
         }
         if (@for<3) {
             sc.deal = 0.6;
-            sc.tism = sprintf '%s_%s_%06d', J.name, slm(4,G.oin.id), J.iini++;
+            #sc.tism = sprintf '%s_%s_%06d', J.name, slm(4,G.oin.id), J.iini++;
             #sc.tism .= '_'.$i if $i;
         }
         m $n=>''=>{pi=>'pape'},$sc
@@ -227,7 +228,7 @@ pi/pape: |
     c&thumb ||= C.t unless C&src || C&I || length(C.t) < 4;
     c&thumb &&
     Rw pi/thumb + $s:c&thumb;
-    delete C&I if C&I;
+    #delete C&I if C&I;
     
     if (J.ini++) {
         my $otv = J.Jiter.El.Pre.tv;
@@ -300,7 +301,7 @@ pap_b: |
     # 'color', 'add', 'subtract',
     # 'color', 'add',# 'subtract','subtract','subtract',
     #'normal', 'normal', 'normal', 'normal', 'normal', 
-    'multiply',#'multiply',, #'multiply',, 'multiply',, 'multiply',,
+    'color-dodge',#'multiply',, #'multiply',, 'multiply',, 'multiply',,
     # 'multiply', 'screen', 'overlay', 'soft-light', 
     #hard-light', # 'darken',
     'lighten',
@@ -390,8 +391,11 @@ stylepap: |
                 if (!src && C.t.length < 4) {
                     $igl = A.W.imgl;
                     igl ||= 'Song';
-                    src = G&pull,igl;
-                    !src and src = G&pull,'igl';
+                    A.W.iml ||= {};
+                    C&I and src = A.W.iml[C&I];
+                    src ||= G&pull,igl;
+                    src ||= G&pull,igl;
+                    C&I and A.W.iml[C&I] = src;
                 }
                 src ||= 'th/'+C.t;
                 if (!src) {
