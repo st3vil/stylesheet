@@ -195,18 +195,20 @@ Hoo: | # sliders and content actuator wormhole
     delete C.c.s;
     J.VV.N = 1;
     
-    n zoo=>1=>'h'=>{on=>'c:hid',perch=>'W',poi=>1}
+    n zoo=>1=>'h'=>{on=>'c:hid',perch=>'W',poi=>1,e=><<''}
+        paper.project.clear();
     
     m save=>''=>'s'=>{on=>'c:savas',hs=>'3945'}
     
     # use random <= 5 to start, make 3 in-sc-issions at a time
     # start off,  #
-    #m Movy=>-sliT=>{sc=>'%lows:9,vid,wi:22,rad:-0.2',s=>0}
     m Seng=>-sliT=>{sc=>'%lows:9,qfa:2,wi:18'}
-    m Zeng=>-sliT=>{sc=>'%lows:5,play,wi:18'}
+    m Zeng=>-sliT=>{sc=>'%lows:5,play,wi:18,imed:300'}
     m Song=>-sliT=>{sc=>'%lows:9,qfa:2,wi:18'}
-    m Zong=>-sliT=>{sc=>'%lows:5,play,wi:18'}
-    
+    m Zong=>-sliT=>{sc=>'%lows:5,play,wi:18,imed:200'}
+    m Movy=>-sliT=>{sc=>'%lows:3,vid,wi:22,rad:-0.2',s=>0}
+    m nnn=>''=>1
+    m nn2io=>''=>1
     #m Vind=>-sliT=>{sc=>'%play',dis=>'non'}
     
     #Mn(in=>''=>{},{src=>$_,qw'tag img wi 300px he 500px'})
@@ -267,7 +269,9 @@ And: | # andimation
         a.WW ||= {};
         a.WW.N ||= {};
         a.WW.sN ||= {};
-        a.yl(5, &{ a.huf(e) });
+        //a.yl(5, &{
+        a.huf(e);
+        //});
     
     rnd: %args:s
         return Math.round( s * 100) / 100
@@ -284,7 +288,7 @@ And: | # andimation
             $.each(a.WW.sN, &t,s{
                 if (nw < s.fut) {
                     $of = a.rnd(s.fut - nw);
-                    //~wai: t, of
+                    ~wai: t, of
                     return
                 }
                 e.now = nw;
@@ -310,14 +314,15 @@ Sand: | # kinds of dribbles
         i == undefined and i = 1.3;
         a.timesmoving ||= 1;
         i = i / a.timesmoving;
+        i = i / s.cur.s;
         s.fut = s.tlas + i * 1;
         $gap = a.rnd(s.fut - s.tlas);
         $til = a.rnd(s.fut - a.nw());
         $ii = '+'+n.sc.ini;
         ~gaptiltz: gap, til, n.t, ii
         
-        s.tild ||= 1; a.yl(til * 1000, &{ G&sand,s });
-        til > 0 and return
+        s.e && !s.tild and s.tild = 1; a.yl(til * 1050, s.e);
+        til > 0 and return;
         s.tild = 0;
         
         s.last = s.next;
@@ -346,7 +351,8 @@ Sand: | # kinds of dribbles
             }
             iz[d] = l;
         }
-        $l = s.last
+        $l = s.last;
+        a.yl(33, &{ G&sand,s });
         return s.last;
     
     land:
@@ -551,7 +557,7 @@ Tjs: | # webis cranking, Hut's content patchbay
             el.on(k, &e{
                 G&$v,e
             });
-            s&fsc and G&$v;
+            s&fsc && !s&imed and G&$v;
             s&imed and a.yl(s&imed, &{ G&$v } );
         });
     
@@ -596,7 +602,7 @@ Tjs: | # webis cranking, Hut's content patchbay
     
     #c hid,crn,savas,vid,play,qvea
     u alljs
-    
+    # event handlers:
     hid:
         $(s&hides || A.mo.on).toggle();
         !s&hides and $(A.om.on).find('[cv="0.4"]').toggle();
@@ -607,7 +613,9 @@ Tjs: | # webis cranking, Hut's content patchbay
         var fsc = C.t;
         s&fsc and t = C.t; fsc = s&fsc
         sc[fsc] = A.on.value;
-        a.om(A.mo,[t,'',{r:C},sc],a,{});
+        $c = {r:C};
+        s&nobo and c.nobody = s&nobo;
+        a.om(A.mo,[t,'',c,sc],a,{});
     
     savas:
         var h = $('canvas#display').get()[0];
@@ -656,7 +664,7 @@ Tjs: | # webis cranking, Hut's content patchbay
             }
         }
         $c = {el:2};
-        $sc = {geo:'a1 0.1361 0.3466 -0.3734'};
+        $sc = {geo:'a1 0.1361 0.55 -0.3734'};
         if (l.match('^\/')) {
             c.ht = 1;
             c.s = '<video width="600px" autoplay controls><source src="'+l+'"></video>';
@@ -674,6 +682,7 @@ Tjs: | # webis cranking, Hut's content patchbay
         $cur = a.zet('cur',s.t);
         !cur.s and return
         $tap = a.zet('tap',s.t);
+        tap.cur = cur;
         tap.e ||= &e{ G&play,s }; G&nim,tap;
         $n = G&sand,tap;
         !n and return
