@@ -195,20 +195,21 @@ Hoo: | # sliders and content actuator wormhole
     delete C.c.s;
     J.VV.N = 1;
     
-    n zoo=>1=>'h'=>{on=>'c:hid',perch=>'W',poi=>1,e=><<''}
-        paper.project.clear();
+    n zoo=>1=>'h'=>{on=>'c:hid',perch=>'W',poi=>1}
+    #e=><<''}
+    #    paper.project.clear();
     
     m save=>''=>'s'=>{on=>'c:savas',hs=>'3945'}
     
     # use random <= 5 to start, make 3 in-sc-issions at a time
     # start off,  #
     m Seng=>-sliT=>{sc=>'%lows:9,qfa:2,wi:18'}
-    m Zeng=>-sliT=>{sc=>'%lows:5,play,wi:18,imed:300'}
+    m Zeng=>-sliT=>{sc=>'%lows:3,play,wi:18,imed:300'}
     m Song=>-sliT=>{sc=>'%lows:9,qfa:2,wi:18'}
-    m Zong=>-sliT=>{sc=>'%lows:5,play,wi:18,imed:200'}
+    m Zong=>-sliT=>{sc=>'%lows:3,play,wi:18,imed:200'}
     m Movy=>-sliT=>{sc=>'%lows:3,vid,wi:22,rad:-0.2',s=>0}
-    m nnn=>''=>1
-    m nn2io=>''=>1
+    #Mn($_=>-sliT=>{sc=>'%fsc:0,wi:18,nobo:body'})
+    #for qw' blr bri hue sep inv sat con';
     #m Vind=>-sliT=>{sc=>'%play',dis=>'non'}
     
     #Mn(in=>''=>{},{src=>$_,qw'tag img wi 300px he 500px'})
@@ -228,7 +229,9 @@ pi/slid: |
     y.clos = 1;
     n t=>1=>substr(C.t,0,1),'%fs:11'
     $s = 1 if $s eq C.t;
-    m C.t=>22=>$s,{pc=>lid=>lid=>1,on=>'ch:crn',%{ar.sc||{}}};
+    my $sc = {pc=>lid=>lid=>1,on=>'ch:crn',%{ar.sc||{}}};
+    delete sc.fsc if !sc.fsc;
+    m C.t=>22=>$s,$sc;
     
 Hand: |
     n And
@@ -454,7 +457,13 @@ Sand: | # kinds of dribbles
         cur.i >= cur.ol.length and cur.i = 0
         
         ol.i ||= 0;
-        ol.i == 0 && (s.substr(0,1) == 'S') and ol.l = G&shuff,ol.l;
+        if (ol.i == 0) {
+            if (s.substr(0,1) == 'S' ||
+                s.substr(0,1) == 'M' && cur.s >= 4.5) {
+                ~shufflin: s.t, ol.l.length
+                ol.l = G&shuff,ol.l;
+            }
+        }
         $f = '';
         $uh = 0;
         while (!f.length && uh < 5) {    
@@ -468,7 +477,7 @@ Sand: | # kinds of dribbles
         ~many pul: cur.t, ol.t, C.t, ol.i, f
         sol.fs ||= [];
         sol.fs.push(f);
-        a.lim(sol.fs,49)
+        a.lim(sol.fs,49);
         return f
     
     shuff:
@@ -476,7 +485,6 @@ Sand: | # kinds of dribbles
           while (0 !== currentIndex) {
             randomIndex = Math.floor(Math.random() * currentIndex);
             currentIndex -= 1;
-
             temporaryValue = s[currentIndex];
             s[currentIndex] = s[randomIndex];
             s[randomIndex] = temporaryValue;
@@ -598,7 +606,6 @@ Tjs: | # webis cranking, Hut's content patchbay
         delete cur.ol;
         r.sc.play and G&play,r;
         r.sc.vid and G&vid,r;
-        ~way: C.t, cur.l.length
     
     #c hid,crn,savas,vid,play,qvea
     u alljs
@@ -627,7 +634,21 @@ Tjs: | # webis cranking, Hut's content patchbay
             });
         });
     
+    entro:
+        a.eltropy ||= [(elvis+'').match('\\.(\\d+)')[1].split('')];
+        $el = a.eltropy;
+        s ||= 1;
+        $e;
+        while(e.length < s) {
+            i--;
+            $bit = el.shift();
+            el.push(bit);
+            e = e+bit;
+        }
+        return e;
+    
     # per W player with hyperactivity (Movy)
+    #  <video> needs callback to on.currentTime = c.in
     vid:
         s&Tac == 0 and return
         ~gotviddy: s, C.t, C
@@ -644,25 +665,55 @@ Tjs: | # webis cranking, Hut's content patchbay
         $lt = l.split(' # ');
         l = lt[0];
         $t = lt[1];
+        ~vid: t
+        
+        $c = {};
+        $re = {
+            in:'[ti]',
+            out:'o',
+            len:'(len|secs)',
+            any:'io'
+        };
+        $.each(re, &k,v{
+            $se = l.match('&'+v+'=(\\d+)');
+            se and c[k] = 0+se.pop();
+        });
+        
+        if (c.any) {
+            $any = c.any.split(',');
+            any = G&shuff,any;
+            $one = any.shift();
+            $is = one.split('-');
+            c.in = is[0];
+            is[1] and c.out = is[1];
+        }
+        
         $hy = s&Tac - 4;
-        A.om.lastvid = l;
-        if (hy > 1) {
-            $se = l.match('&secs=(\\d+)');
-            if (se) {
-                $e = Math.round(se[1] * elvis);
-                $nd = se[1] - e;
-                l = l+'&start='+e;
-                while (nd > (137 / hy)) {
+        if (hy > 0 && c.len && (!c.in || !c.out)) {
+            $into = &nd{
+                while (nd > (89 / hy)) {
                     nd *= 0.3
                 }
-                ~soft: nd, t
-                nd *= 1000;
-                a.yl(nd, &{ 
-                    A.om.lastvid != l and return console.log("Not last vid: "+t);
-                    G&vid,s ;
-                });
-            }
+                return nd
+            };
+            c.out && !c.in and c.in = c.out - G&into,c.in;
+            c.in ||= Math.round(c.len * elvis);
+            c.in && !c.out and c.out = c.in + G&into,c.len-c.in;
         }
+        
+        if (c.in) {
+            l = l+'&start='+c.in;
+        }
+        if (c.out) {
+            $nd = c.in - c.out;
+            ~vidoutin: nd, t
+            nd *= 1000;
+            a.yl(nd, &{ 
+                A.om.lastvid != l and return console.log("Not last vid: "+t);
+                G&vid,s ;
+            });
+        }
+        
         $c = {el:2};
         $sc = {geo:'a1 0.1361 0.55 -0.3734'};
         if (l.match('^\/')) {
@@ -672,9 +723,9 @@ Tjs: | # webis cranking, Hut's content patchbay
         else {
             l = l + "&autoplay=1";
             sc.z = [['i',4,{el:2},{ifr:l}]];
-        
         }
-        c.slow = 4;
+        A.om.lastvid = l;
+        c.slow = 3;
         a.om(A.om,[C.t+'eo',4,c,sc],a,{});
     
     # s = TacC.c.r = lidC, have tuned, progress time # play W tapes
@@ -688,7 +739,8 @@ Tjs: | # webis cranking, Hut's content patchbay
         !n and return
         //~play: s.t, n.t, n.sc.int, A
         a.om(A.om,n,a,{});
-        
+    
+    # notch filter sc, many links to c
     qvea:
         $f = s&zoo;
         $p = s * 0.1 * f.length;
