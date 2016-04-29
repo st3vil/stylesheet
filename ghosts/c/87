@@ -28,7 +28,7 @@ Vind: | # View boat / live generator /
     # inter sphere lowsis
     # hum
     my $i =
-    c&de = 7.27;
+    c&de = 2.27;
     c&dont = 0;
     
     #J.food ||= <>;
@@ -40,7 +40,7 @@ Vind: | # View boat / live generator /
         n uncan
     }
     
-    J.rem > 522 && exit;#Rw restar;
+    J.rem > 562 && exit;#Rw restar;
     
     
     # next timer
@@ -52,9 +52,16 @@ Vind: | # View boat / live generator /
     
     return if c&dont;
     
-    my $ba = G&peel,'pin:Tarp,for:240,oat:2,dea:2';
-    n Zeng=>W=>{%$ba,ic=>'Seng'}
-    n Zong=>W=>{%$ba,ic=>'Song'}
+    my $ba = G&peel,'pin:Tarp,for:486,oat:4,dea:2';
+    my $f = "eye/thetalk/stop/sm";
+    #n Tarp=>W=>{%$ba,oat=>4,or=>$f,pc=>{fite=>1},pic=>1,dod=>1,skip=>400}
+    
+    #n SoiTo=>W=>{%$ba,fu=>'eye/p/lllfater',pc=>{opam=>0.3,lino=>1}}
+    n Syyy=>W=>{%$ba,fu=>'eye/Tarf',pic=>1,pc=>{fite=>1},dod=>1}
+    
+    #ba.hoW = 'io';
+    #n Zeng=>W=>{%$ba,ic=>'Seng'}
+    #n Zong=>W=>{%$ba,ic=>'Song'}
     
     #n Singe=>W=>{pin=>'Tarp',for=>420,oat=>2,dea=>2,fu=>'eye/io/i'}
     #n Singo=>W=>{pin=>'Tarp',for=>420,oat=>2,dea=>2,fu=>'eye/io/th'}
@@ -133,8 +140,8 @@ Tarp: |
     J.Wayout = "J.name\.c";
     my $dont = !
     Rw TimeTape;
-    J.donts++ && return c&ic && !J.leaveonce++ && do {
-        my $io = 'io';
+    J.donts++ && return c&hoW && !J.leaveonce++ && do {
+        my $io = c&hoW || 'io';
         my $in = "J.name\.sc";
         my ($la) = `tail -n 1 $io/W/$in` =~ /\.(\d+)\.c$/sm;
         my $ne = defined $la ? $la + 1 : 0;
@@ -152,6 +159,7 @@ Tarp: |
     J.iin++;
     J.oneto = 1 if J.oneto++ > 4;
     y.in = '0.3';
+    y.in .= J.ititini++ if c&dod;
     #y.in += 0.03 if J.od++ && do{J.od=0;1};
     y.out = y.in;# + 0.3;
     
@@ -163,6 +171,10 @@ Tarp: |
         J.many ||= [do{
             my @n = grep {/^[\/\w\.-]+jpg$/i} split "\n", ''.`find c&fu -type f`;
             @n = shuffle @n if !c&or ;
+            @n = sort @n if c&or ;
+            if (c&skip) {
+                shift @n for 1.. c&skip ;
+            }
             @n
         }];
     }
@@ -178,7 +190,7 @@ Tarp: |
         #delete y.ope;
         #n unify=>''=>{}=>'%rasu:4,pa:R,fit,opa:0.7,elie:4,sca:0.9'
         
-        for (1,2) {# last;
+        for (1 .. (c&den || 1)) {# last;
             J.indei ||= 0;
             my $di = $for[J.indei];
             $_ eq '1' && acu $J=>indres=>J.tr->{$di};
@@ -210,13 +222,19 @@ Tarp: |
         else {
             sc.src = $src;
         }
-        if (@for<3) {
+        next if sc.src =~ /^\d+$/;
+        if (!c&pc && @for<3) {
             sc.deal = 0.6;
             #sc.tism = sprintf '%s_%s_%06d', J.name, slm(4,G.oin.id), J.iini++;
             #sc.tism .= '_'.$i if $i;
         }
-        m $n=>''=>{pi=>'pape'},$sc
+        my $c = c&pc || {};
+        m $n=>''=>{pi=>'pape',%$c},$sc
         $i++;
+    }
+    if (c&pic) {
+        my $i = sprintf '%s_%s_%06d', J.name, slm(4,G.oin.id), J.iini++;
+        n phot=>'8'.int(rand 50)=>{}=>{tism=>$i,deal=>0.4}
     }
     #d#elete J.El.>$_ for Pre=>'Duv';
     
@@ -237,6 +255,7 @@ pi/pape: |
         G&xot,$ws,be.sc;
         y.ope = 1;
         
+        return if c&fite || c&noa;
         #return if 3 > rand 8;
         
         #C&sca = ws.sca + 0.1 if ws.sca;
@@ -263,6 +282,15 @@ pi/pape: |
     
     C&fit = 1;
     
+    return if c&fito;
+    Rw pap_b;
+    my $tdig = $1 if C.t =~ /^(\d+)$/;
+    C&b = 'normal' if $tdig eq '1';
+    if (c&fite) {
+        C&opa = 0.6 * (0.5 + rand 0.9) if $tdig > 1;
+        return;
+    }
+    
     #return if J.mo.J.C.c.or;
     C&pxp = 270 * (rand(2)-1);
     C&pyp = 270 * (rand(2)-1);
@@ -274,6 +302,7 @@ pi/pape: |
     C&sca *= 0.3 until C&sca < 4.3;
     C&sca *= 1.4;
     C&opa = 0.6 * (0.5 + rand 0.9);
+    C&opa *= c&opam if c&opam;
     
     
     Rw pap_b;
@@ -286,13 +315,9 @@ pi/pape: |
         for grep{C.sc->{$_} =~ /^[\d\.]+$/} keys %{C.sc};
     
 pap_b: |
-    C&b = (shuffle 
+    my @op = (
     #'negation',# 'source-over', 'source-in',
-    #'normal', 'multiply','multiply',
-    #
-    #'difference',
-    #'source-out',
-    #'source-atop',
+    #'source-out',    #'source-atop',
     #'darken', 'lighten',
     #'color-dodge', 'color-burn',
     #'normal', 'normal',
@@ -300,22 +325,26 @@ pap_b: |
     #'hue', 'saturation',# 'saturation',# 'saturation', 'saturation',# 'luminosity',
     # 'color', 'add', 'subtract',
     # 'color', 'add',# 'subtract','subtract','subtract',
-    #'normal', 'normal', 'normal', 'normal', 'normal', 
-    #'color-dodge',#'multiply',, #'multiply',, 'multiply',, 'multiply',,
+    ##'normal', 'normal', 'normal', 'normal', 'normal', 
+    #'color-dodge','multiply',, #'multiply',, 'multiply',, 'multiply',,
     # 'multiply', 'screen', 'overlay', 'soft-light', 
     #hard-light', # 'darken',
-    'lighten',
+    #'lighten',
     # 'pin-light', 'pin-light', 'pin-light', #
-    'difference',
-    #'add',
+    #'difference',
+    'add',
     #'soft-light',
     #'pin-light',
+    #'difference',
     'difference',
-    'difference',
-    #'exclusion', 'hue', 'saturation', 'luminosity', 'color', 'add', 'subtract'
-    #, 'average', 'pin-light', 'negation', 'source-over', 'source-in', 'source-out', 'source-atop', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'lighter', 'darker', 'copy', 
+    #'exclusion', #'hue', 'saturation', 'luminosity', 'color', 'add', 'subtract'
+    , 'average', 'pin-light', 'negation', 'source-over', 'source-in', 'source-out', 'source-atop', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'lighter', 'darker', 'copy', 
     #'darker'
-    )[0];
+    );
+    if (c&lino) {
+        @op = ('normal', 'normal','difference');
+    }
+    C&b = (shuffle @op)[0];
 Sjum: | # make nice js line protocol
     u urw
     delete J.El.>$_ for qw'Duv Pre';
