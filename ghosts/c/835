@@ -7,6 +7,15 @@ Gul: |
     #             90%             %10
     # composite IMG_2213.JPG IMG_3514.JPG -blend 90 out.jpg
     
+    # xwd -root | convert - oustp.jpg
     
     
+Phot: |
+    my $how = G.c.l ? 'ns' : 'seconds';
+    (my $t = `date --rfc-3339=$how`) =~ s/[^\d]+/_/sg;
+    $t .= '.jpg';
+    my $d = "sc/".(G.c.t || J.name);
+    `mkdir $d` unless -d $d;
+    my $f = "$d/$t";
+    `xwd -root | convert - $f`;
 
