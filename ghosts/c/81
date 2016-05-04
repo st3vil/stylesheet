@@ -155,12 +155,12 @@ Tr: |
     # # ##
     J.VV.N = 0;
     y.in = 3;
-    
-    n 'ඬ'=>''=>'!!! ඬ ؎ ‎ ﴿ጞ !!','%fs:40,hs:454'
-    n restar=>[-dot=>0.02]
-    n za=>-swim
-    n se=>[-slig=>0.06]=>0
-    n omi=>[-slig=>0.06]=>4
+    #
+    n 'ඬ'=>''=>'!!! ඬ ؎  ‎ ﴿ጞ !!','%fs:40,hs:454'
+    m restar=>[-dot=>0.02]
+    m za=>-swim
+    m se=>[-slig=>0.06]=>0=>{multoJ=>'sizeup'}
+    m omi=>[-slig=>0.06]=>4=>{multib=>4}
     
     Rw gUpDo;
     
@@ -170,20 +170,22 @@ Tr: |
     my $c;
     c.do = 'ls -1';
     c.only = 'image';
-    c.lim = J.g.omi || 16;
-    c.se = J.g.se || 0;
+    c.lim = int J.g.omi || 16;
+    c.se = int J.g.se || 0;
     # c.skov = 8;
+    y.out = 4;
     
+    say "See c: ".ki $c;
     Rw D_ceel + $c;
     
     my $sc = '%height:30,ab:100,fs:6,mr:3';
     my $v = 22;
     $v .= J.inii++ if 0;
-    n $f=>[-bzat=>$v]=>$c,$sc
+    m $f=>[-bzat=>$v]=>$c,$sc
 
-    my $v = '3'.J.cosnoela++; # el=3 no A.on, TODO
+    my $v = '5'.J.cosnoela++; # el=3 no A.on, TODO
     # move animation data thru sc, will json, careful now...
-    n dofisl=>$v=>{}=>{tag=>'img',aloop=>J.go,wi=>'50%'}
+    n dofisl=>$v=>{}=>{tag=>'img',aloop=>J.go,wi=>'50%',opa=>7,sat=>7,bri=>2,zig=>4,inv=>1}
     
 pi/swim: | # random onlooker
     C&dos = 'swimi';
@@ -266,13 +268,27 @@ Aloop: | # js for tripidation
 slies: | # slider selv
     $s = J.g->{C.t."_s"} ||= $s;
 pi/slig: |
+    m C.t=>1=>C.t
     m C.t=>22=>$s,{pc=>lid=>lid=>1,on=>'ch:E',dos=>'sliE',wi=>16,bo=>"3px solid white"};
 sliE: |
     my $o = e&hC ->[-1];
+    my $v = us&s;
+    
+    
+    my $to;
+    if (my $k = o.sc.multoJ) {
+        my $ma = $J->{$k};
+        $to = $v * $ma;
+    }
+    elsif (my $mu = o.sc.multib) {
+        $to = $v * $mu;
+    }
+    
     say "Is :".ki $o;
-    saygr "IOf ".wdump 2, us&C;
-    J.gomi = 10 + (6 * us&s); 
-    sayyl "Wattagoom: J.gomi";
+    saygr "IOf ".ki us&C;
+    my $vas = J.g.>o.t;
+    sayyl "Wattagoom: $vas != o.t = $v";
+    J.g.>o.t = $v;
     sleep 1;
     #T.oke = 1;
     
