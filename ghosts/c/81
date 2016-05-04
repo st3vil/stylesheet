@@ -154,9 +154,8 @@ Tr: |
     #n Wordin 
     # # ##
     J.VV.N = 0;
-    y.in = 3;
-    #
-    n 'ඬ'=>''=>'!!! ඬ ؎  ‎ ﴿ጞ !!','%fs:40,hs:454'
+    y.in = 1;
+    #    n 'ඬ'=>''=>'!!! ඬ ؎  ‎ ﴿ጞ !!','%fs:40,hs:454'
     m restar=>[-dot=>0.02]
     m za=>-swim
     m se=>[-slig=>0.06]=>0=>{multoJ=>'sizeup'}
@@ -170,10 +169,14 @@ Tr: |
     my $c;
     c.do = 'ls -1';
     c.only = 'image';
-    c.lim = int J.g.omi || 16;
-    c.se = int J.g.se || 0;
+    c.lim = int(J.g.omi || 16);
+    c.se = int(J.g.se || 0);
     # c.skov = 8;
+    c.sizeup = 1;
     y.out = 4;
+    
+    m seek=>''=>"c.se - ".(c.se+c.lim)." of J.sizeup"
+    
     
     say "See c: ".ki $c;
     Rw D_ceel + $c;
@@ -185,7 +188,9 @@ Tr: |
 
     my $v = '5'.J.cosnoela++; # el=3 no A.on, TODO
     # move animation data thru sc, will json, careful now...
-    n dofisl=>$v=>{}=>{tag=>'img',aloop=>J.go,wi=>'50%',opa=>7,sat=>7,bri=>2,zig=>4,inv=>1}
+    n dofisl=>$v=>{}=>{tag=>'img',aloop=>J.go,wi=>'50%',opa=>7,sat=>7,bri=>2,zig=>4,inv=>1,fps=>8}
+    
+    sayyl wdump 3, J.las;
     
 pi/swim: | # random onlooker
     C&dos = 'swimi';
@@ -200,7 +205,7 @@ D_ceel: | # form wiring diagram
     c.Mins = [''=>-thim=>{},'%he:25%,dos:D_click'];
     # after/with M form ^ but before its run
     c.Mod = "D_Mod";
-    c.Mats = [ni=>-ni=>{}];
+    c.Mats = [ni=>-null=>{}];
 D_Mod: | # pickup self by t (s)
     my $g = J.mo.J.g;
     my $l = J.mo.J.las;
@@ -265,30 +270,36 @@ Aloop: | # js for tripidation
 
         an.i++;
         
-slies: | # slider selv
-    $s = J.g->{C.t."_s"} ||= $s;
+
 pi/slig: |
     m C.t=>1=>C.t
-    m C.t=>22=>$s,{pc=>lid=>lid=>1,on=>'ch:E',dos=>'sliE',wi=>16,bo=>"3px solid white"};
+    m C.t=>22=>$s,{pc=>lid=>lid=>'0.05',on=>'ch:E',dos=>'sliE',wi=>16,bo=>"3px solid white"};
 sliE: |
     my $o = e&hC ->[-1];
+    my $j = e&hJ ->[-1];
+    my $sg = j.C.sc;
     my $v = us&s;
     
     
     my $to;
-    if (my $k = o.sc.multoJ) {
+    if (my $k = sg.multoJ) {
         my $ma = $J->{$k};
-        $to = $v * $ma;
+        $to = $v * 0.1 * $ma;
     }
-    elsif (my $mu = o.sc.multib) {
+    elsif (my $mu = sg.multib) {
         $to = $v * $mu;
+    }
+    else {
+        die "Interpret ".ki j.C;
     }
     
     say "Is :".ki $o;
-    saygr "IOf ".ki us&C;
+    saygr "IOf ".wdump 2, us&C;
+    sayyl "Of: ".ki j.C;
+    saybl "~" for 1..5;
     my $vas = J.g.>o.t;
-    sayyl "Wattagoom: $vas != o.t = $v";
-    J.g.>o.t = $v;
+    sayyl "J.name o.t: $vas -> $to   ($v)";
+    J.g.>o.t = $to;
     sleep 1;
     #T.oke = 1;
     
@@ -360,6 +371,8 @@ pi/ni: |
     #y.at.
     @$s &&
     m @$s
+pi/null: |
+    y.at.qs = 1;
 clat: |
     y.clat = ki $C;
     Atime(2);
