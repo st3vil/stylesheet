@@ -159,7 +159,8 @@ Tr: |
     n 'ඬ'=>''=>'!!! ඬ ؎ ‎ ﴿ጞ !!','%fs:40,hs:454'
     n restar=>[-dot=>0.02]
     n za=>-swim
-    n Jose=>[-sli=>0.06]
+    n se=>[-slig=>0.06]=>0
+    n omi=>[-slig=>0.06]=>4
     
     Rw gUpDo;
     
@@ -169,7 +170,8 @@ Tr: |
     my $c;
     c.do = 'ls -1';
     c.only = 'image';
-    c.lim = 11;
+    c.lim = J.g.omi || 16;
+    c.se = J.g.se || 0;
     # c.skov = 8;
     
     Rw D_ceel + $c;
@@ -178,9 +180,10 @@ Tr: |
     my $v = 22;
     $v .= J.inii++ if 0;
     n $f=>[-bzat=>$v]=>$c,$sc
-    
+
+    my $v = '3'.J.cosnoela++; # el=3 no A.on, TODO
     # move animation data thru sc, will json, careful now...
-    n dofisl=>6=>{}=>{tag=>'img',aloop=>J.go}
+    n dofisl=>$v=>{}=>{tag=>'img',aloop=>J.go,wi=>'50%'}
     
 pi/swim: | # random onlooker
     C&dos = 'swimi';
@@ -224,6 +227,7 @@ Aloop: | # js for tripidation
     aloop 6:
         A.W.aloop ||= {};
         $an = A.W.aloop;
+        an.on = A.on;
         an.s = s;
         G&door;
     
@@ -240,7 +244,7 @@ Aloop: | # js for tripidation
         an.i ||= 0;
         an.i >= an.s.length and an.i = 0;
         $r = G&inC,an.s[an.i];
-        $(A.on).attr('src',r.t);
+        $(an.on).attr('src',r.t);
 
         $dela = an.gap;
         $fps = s&fps || 25;
@@ -249,18 +253,29 @@ Aloop: | # js for tripidation
         r.sc.gap and dela = r.sc.gap;
         dela *= 1000;
         
+        $lo = a.nw() - a.drinks;
+        if (lo > 4) {
+            dela += 2000;
+            ~slowing: A.W.t, C.t
+        }
+        
         a.yl(dela, &{ G&door,s });
 
         an.i++;
         
-pi/sli: |
-    my ($am) = C.t =~ /^J(\w+)$/||die "Nopon";
-    $s = $J->{$am} ||= $s;
-    m C.t=>22=>$s,{pc=>lid=>lid=>1,on=>'ch:E',dos=>'sliE',wi=>6,bob=>"3px solid white"};
+slies: | # slider selv
+    $s = J.g->{C.t."_s"} ||= $s;
+pi/slig: |
+    m C.t=>22=>$s,{pc=>lid=>lid=>1,on=>'ch:E',dos=>'sliE',wi=>16,bo=>"3px solid white"};
 sliE: |
     my $o = e&hC ->[-1];
     say "Is :".ki $o;
     saygr "IOf ".wdump 2, us&C;
+    J.gomi = 10 + (6 * us&s); 
+    sayyl "Wattagoom: J.gomi";
+    sleep 1;
+    #T.oke = 1;
+    
     
 acTd: |
     saybl "Would asave: ".wdump 3, J.mo.J.las;
@@ -273,6 +288,7 @@ Exe: |
     c&lsins = 1 if c&do =~ /^ls -1/;
     c&cmd ||= "c&do".(defined c&s && ' '.c&s);
     c&cmd .= "| grep c&grep" if c&grep;
+    J.mo.J.sizeup = split"\n",''.`c&cmd` if c&sizeup;
     c&lim = 20 if !defined c&unl && !defined c&lim;
     c&cmd .= "| tail --lines=+".(c&se) if c&se ;
     c&cmd .= "| head -n ".(2*c&lim) if c&lim;
