@@ -162,9 +162,7 @@ styclick: |
     
     # no A, see lowcal.html keon() etc.
     cl: %args:ev ws
-          if (keyjam) {
-              return;
-          }
+          keyjam and return;
           keyjam = 1;
           keyjamfor ||= 10;
           setTimeout(function () { keyjam = 0; }, keyjamfor);
@@ -181,6 +179,8 @@ styclick: |
           tag.val and d.s = tag.val();
 
           a.entag(d, tag);
+          d.W and a.lastW = d.W;
+          d.p and a.lastp = d.p;
           a.ethro(d, ws);
     
     entag: %args:d tag
@@ -215,9 +215,7 @@ styclick: |
           ws.reply({event: d});
     
     ke: %args:ev ws
-          if (keyjam) {
-              return;
-          }
+          keyjam and return;
           setTimeout(function () { keyjam = 0; }, keyjamfor);
           keyjam = 1;
 
@@ -229,10 +227,15 @@ styclick: |
           }
 
           d.k = String.fromCharCode(ev.keyCode);
-
-          ws ||= w;
+          if (!d.W && a.lastW && ww[a.lastW]) {
+                $W = ww[a.lastW].W;
+              if (W.typeinto) {
+                d.W ||= a.lastW;
+                d.p ||= a.lastp;
+              }
+          }
           
-          ws.reply({event: d});
+          a.ethro(d, ws);
     
     dscam: %args:d ev
         d.type = ev.type;
