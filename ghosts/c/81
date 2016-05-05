@@ -191,9 +191,9 @@ Tr: |
     # move animation data thru sc, will json, careful now...
     my $sc = {
         tag=>'img', aloop=>J.go,
-           monte=>'loung', wi=>'50%',
+        monte=>'loung', wi=>'50%',
         opa=>7,sat=>7,bri=>1,
-        zig=>4,inv=>1,fps=>8,hue=>266
+        zig=>4,inv=>1,fps=>8#,hue=>266
     };
     n dofisl=>$v=>{}=>$sc 
     
@@ -214,7 +214,7 @@ D_ceel: | # form wiring diagram
     # after/with M form ^ but before its run
     c.Mod = "D_Mod";
     # pile of
-    c.Mats = [ni=>-nosl=>{mont=>'loung'}];
+    c.Mats = [ni=>-nosl=>{mont=>'loung'}=>{}];
 D_Mod: | # pickup self by t (s)
     my $g = J.mo.J.g;
     my $l = J.mo.J.las;
@@ -244,7 +244,7 @@ Aloop: | # js for tripidation
         A.W[s] ||= {};
         $se = A.W[s];
         se.t ||= {};
-        se.t[c&s] = A;
+        se.t[C.t] = A;
     
     aloop 6:
         A.W.aloop ||= {};
@@ -257,12 +257,15 @@ Aloop: | # js for tripidation
     # {s&gap,Sand sand's s&int} is time {to,til} live
     u alljs
     monte:
+        $t = s&amont || C.t;
+        s ||= s&monte;
         $se = A.W[s];
         !se and return a.c('ono ',A.W.t,s,C)
         $wa = se.was;
-        $(wa.on).css('color','initial');
-        $me = se.t[c&s]
-        $(.on).css('color','#fff');
+        wa and $(wa.on).css('color','initial');
+        $me = se.t[t];
+        $(me.on).css('color','#fff');
+        se.was = me;
     
     door:
         $an = A.W.aloop;
@@ -275,11 +278,8 @@ Aloop: | # js for tripidation
         an.i >= an.s.length and an.i = 0;
         $r = G&inC,an.s[an.i];
         $(an.on).attr('src',r.t);
-        if (s&monte) {
-            s&
-            s&amon = r.t;
-            G&monte
-        }
+        s&amont = r.t;
+        s&monte and G&monte;
 
         $dela = an.gap;
         $fps = s&fps || 25;
