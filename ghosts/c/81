@@ -153,7 +153,7 @@ Tr: |
     
     #n Wordin 
     # # ##
-    J.VV.N = 0;
+    J.VV.N = 1;
     y.in = 1;
     #    n 'ඬ'=>''=>'!!! ඬ ؎  ‎ ﴿ጞ !!','%fs:40,hs:454'
     m restar=>[-dot=>0.02]
@@ -190,16 +190,16 @@ Tr: |
     my $v = '4'.J.cosnoela++;
     # move animation data thru sc, will json, careful now...
     my $sc = {
-        tag=>'img', aloop=>J.go,
+        tag=>'img', aloop=>sjson(J.go),
         monte=>'loung', wi=>'50%',
-        opa=>7,sat=>7,bri=>1,
-        zig=>4,inv=>1,fps=>8#,hue=>266
+        sat=>3,bri=>1,
+        zig=>4,#inv=>1,
+        fps=>8#,hue=>266
     };
     n dofisl=>$v=>{}=>$sc 
     
     sayyl wdump 3, J.las;
     
-
 D_ceel: | # form wiring diagram
     # t ''= s (guesinto if blanc)
     # vacuuming of ideas into structural needs
@@ -237,7 +237,13 @@ pi/swim: | # random onlooker
     
     
 D_swim: | # key latcher/tweak router/bushbash
-    
+    my $k = lc us&k;
+    $k || return;
+    my $os = J.kms.>$k || die "NoK: ".ki us&C;
+    my $g = J.mo.J.g;
+    my $my = g.s.>$os;
+    my.tim ||= 1;
+    my.tim *= us&S ? 0.9 : 1.1;
     saybl wdump 3, us&C;
     my $o = e&hC ->[-1];
     say "More; ".ki $o;
@@ -257,6 +263,7 @@ Aloop: | # js for tripidation
         se.t[C.t] = A;
     
     aloop 6:
+        typeof s == 'string' and s = $.parseJSON(s);
         A.W.aloop ||= {};
         $an = A.W.aloop;
         an.on = A.on;
@@ -415,11 +422,14 @@ pi/nosl: |
     y.ert = 40;
     y.at.ws = 1;
     y.at.umont = 'loung';
-    
+    my $ke = J.mo.J.kms = {};
+    my @ks = 'a'..'z';
     my $g = J.mo.J.g;
     m $_ for [map{
         my $my = g.s.>_.t;
-        [_.t=>''=>sjson($my)."\n",
+        my $k = shift @ks;
+        $ke.>$k = _.t if $k;
+        [_.t=>''=>"$k ".sjson($my)."\n",
             '%fs:22,mont:loung']
     }@$s];
     map{_.sc.mont = c&mont}@$M if c&mont;
