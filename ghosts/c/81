@@ -1,6 +1,6 @@
 
 ItsAlw: |
-    
+    in the spine, trying to move things with as little effort as possible
     
     ays trying to get one pie enzemap
     display & application of enzymes
@@ -145,6 +145,9 @@ gUpDo: |
     c&ise ||= "g";
     c&gwo ||= 'w/'.c&ise.'/'.(c&t || J.name);
     J.g ||= -f c&gwo ? LoadFile(c&gwo) : {};
+    while (my ($k,$v) = each %{J.g.s}) {
+        delete J.g.s.>$k if !keys %$v;
+    }
     DumpFile(c&gwo, J.g);
     
 Tr: |
@@ -165,7 +168,7 @@ Tr: |
     
     #n znap=>-bza
     #my $f = J.zz.znap->[0];
-    my $f = "eye/thetalk/stop/sm";
+    my $f = J.g.f = "eye/thetalk/stop/sm";
     my $c;
     c.do = 'ls -1';
     c.only = 'image';
@@ -194,7 +197,8 @@ Tr: |
         monte=>'loung', wi=>'50%',
         sat=>3,bri=>1,
         zig=>4,#inv=>1,
-        fps=>8#,hue=>266
+        fps=>(J.g.fps ||= 8),#,hue=>266
+        opa=>5
     };
     n dofisl=>$v=>{}=>$sc 
     
@@ -229,10 +233,12 @@ D_click: |
     my $o = e&hC ->[-1];
     say "No more; ".ki $o;
 pi/swim: | # random onlooker
-    C&dos = 'D_swim';
-    my $g = J.mo.J.g;
-    my $op = ['more','less'];
-    n ha=>''=>"Havio"
+    #C&dos = 'D_swim';
+    y.at.ws = 1;
+    
+    n ha=>''=>"Havio",'%dos:D_swim'
+    n foa=>12=>'    ~ ~ ~ ~ ~'
+    n ha=>14=>"Doofi",'%dos:D_oof'
     
     
     
@@ -247,6 +253,11 @@ D_swim: | # key latcher/tweak router/bushbash
     saybl wdump 3, us&C;
     my $o = e&hC ->[-1];
     say "More; ".ki $o;
+D_oof: |
+    # te
+    my $e = G&tC,[Dilation=>''=>{gin=>J.mo.J.g}];
+    n Doofi=>$e
+    T.oke = 0;
 Aloop: | # js for tripidation
     # hold down pieces of reality to allow meditations/passover
     u alljse
@@ -380,6 +391,7 @@ pi/bza: |
     my @img = Rw Exe;
     J.mo.J.zz.>C.t = \@img;
 pi/bzat: |
+    c&notime ||
     Rw clat
     || return;
     my @img = Rw Exe;
@@ -395,9 +407,10 @@ pi/bzat: |
     };
     
     # impregnate C with .s
-    if (c&Mins) {map{
-        m $ins->(c&Mins,$_);
-    }@img}
+    for (@img) {
+        my $n = c&Mins ? $ins->(c&Mins,$_) : ['','',$_];
+        m $n
+    }
     
     map{ _.t = _.c.s if _.t eq '' } @$M;
     J.mo.J.las = [map{_.c.s}@$M];
@@ -408,9 +421,15 @@ pi/bzat: |
     # enclose in a .s=M
     if (!c&unl && c&Mats) {
         n $ins->(c&Mats,[@$M])
-        @$M=();
+        c&noM = 1;
     }
-    
+    @$M=() if c&noM;
+pi/biza: |
+    c&only ||= 'image';
+    c&do = 'ls -1';
+    c&unl = 1;
+    c&noM = 1;
+    Rw pi/bzat;
 pi/ni: |
     #y.at.
     @$s &&
