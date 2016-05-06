@@ -16,19 +16,57 @@ Dowf: |
     saybl wdump 3, $e;
     n Doofi=>W=>{e=>$e}
 Doofi: |
+    J.VV.N = 1;
     Atime(2) || return sayre "Doofskip";
     # ^ makes the elvis pop-inner arrive from c.elv slightation
     # was waiting for brain to arrive but time2 means the u-n drop
     my $g = e&gin || die "SEND STUFF ".e&gin .": ".wdump 3, $C;
     # requires the C.c.e presenting a .t & .c.gin
     my $tm = "/home/s/thetalk/mo/". e&t;
-    saybl wdump 3, $g;
-    J.VV.N = 1;
     n images=>-biza=>g.f
-    my $l = J.las;
+    my @l = @{J.las};
+    n imageo=>-biza=>'eye/thetalk/stop/extRA/sm'
+    push @l, @{J.las};
     
-    say "Got ".@$l." images, ".(keys %{g.s})." tweaks,"
+    n stat=>''=>$_ for
+    say "Got ".@l." images, ".(keys %{g.s})." tweaks,"
         ." g.fps fps to: $tm";
+    
+    n $tm=>-infrate=>{g=>$g,s=>\@l,fps=>25}
+    
+    n $tm.'.mp4'=>-vindeo
+    
+    system 'mplayer '.$tm.'.mp4'
+pi/infrate: | # fps merge etc into 25fps
+    my $g = c&g;
+    my $u = {};
+    u.fps = g.fps || die "GIve fps";
+    c&fps ||= 25;
+    u.gap = c&fps / u.fps;
+    `mkdir -p C.t`;
+    my $i = 0;
+    for my $t (@$s) {
+        my $n = g.s.>$t;
+        n.gap ||= u.gap * (n.tim || 1);
+        for (1..int(n.gap)) {
+            my $f = "C.t/".sprintf('%08d',$i++).".jpg";
+            `cp $t $f`;
+        }
+        sayre "$t: n.gap";#.wdump 3, $n;
+    }
+pi/vindeo: | # frames->video
+    # din
+    n many=>''=>"are: $s"
+    my ($d,$t) = C.t =~ /^(.+)\/(.+?\..+?)$/;
+    $d .= "/$1" if $t =~ /^(.+)\..+?$/;
+    my $cmd = "cd $d; ffmpeg"
+        #." -start_number 340"
+        ." -i %8d\.jpg"
+        ." -vcodec mpeg4 -b:v 8000k -s 1920x1080"
+        ." ../$t";
+    say "Coms: $cmd";
+    `$cmd`;
+    #
 Phot: |
     my $how = G.c.l ? 'ns' : 'seconds';
     (my $t = `date --rfc-3339=$how`) =~ s/[^\d]+/_/sg;
