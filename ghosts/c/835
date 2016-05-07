@@ -13,7 +13,10 @@ Gul: |
 Dowf: |
     my $g = LoadFile('w/g/Tr');
     my $e = G&tC,[Dilation=>''=>{gin=>$g}];
-    saybl wdump 3, $e;
+    n Doofi=>W=>{e=>$e}
+Zowf: |
+    my $g = {fps=>5,fade=>1,f=>'znap/2907'};
+    my $e = G&tC,[Purpelly=>''=>{gin=>$g}];
     n Doofi=>W=>{e=>$e}
 Doofi: |
     J.VV.N = 1;
@@ -25,8 +28,8 @@ Doofi: |
     my $tm = "/home/s/thetalk/mo/". e&t;
     n images=>-biza=>g.f
     my @l = @{J.las};
-    n imageo=>-biza=>'eye/thetalk/stop/extRA/sm'
-    push @l, @{J.las};
+    #n imageo=>-biza=>'eye/thetalk/stop/extRA/sm'
+    #push @l, @{J.las};
     
     n stat=>''=>$_ for
     say "Got ".@l." images, ".(keys %{g.s})." tweaks,"
@@ -34,7 +37,7 @@ Doofi: |
     
     n $tm=>-infrate=>{g=>$g,s=>\@l,fps=>25}
     
-    n $tm.'.mp4'=>-vindeo
+    n $tm=>-vindeo
     
     system 'mplayer '.$tm.'.mp4'
 pi/infrate: | # fps merge etc into 25fps
@@ -45,25 +48,37 @@ pi/infrate: | # fps merge etc into 25fps
     u.gap = c&fps / u.fps;
     `mkdir -p C.t`;
     my $i = 0;
+    my $bg;
     for my $t (@$s) {
         my $n = g.s.>$t;
         n.gap ||= u.gap * (n.tim || 1);
-        for (1..int(n.gap)) {
+        my $ma = int(n.gap);
+        for (1..$ma) {
             my $f = "C.t/".sprintf('%08d',$i++).".jpg";
-            `cp $t $f`;
+            if (g.fade && $bg) {
+                my $pc = $_ / $ma;
+                $pc = int(100 - $pc * 100);
+                sayyl "   $bg $t -blend $pc $f";
+                `composite $bg $t -blend $pc $f`;
+            }
+            else {
+                `cp $t $f`;
+            }
         }
+        $bg = $t;
         sayre "$t: n.gap";#.wdump 3, $n;
     }
 pi/vindeo: | # frames->video
     # din
     n many=>''=>"are: $s"
-    my ($d,$t) = C.t =~ /^(.+)\/(.+?\..+?)$/;
+    my ($t) = reverse split /\//, C.t;
+    my ($d,$t) = C.t =~ /^(.+)\/(.+?)$/;
     $d .= "/$1" if $t =~ /^(.+)\..+?$/;
-    my $cmd = "cd $d; ffmpeg"
+    my $cmd = "cd C.t; ffmpeg"
         #." -start_number 340"
         ." -i %8d\.jpg"
-        ." -vcodec mpeg4 -b:v 8000k -s 1920x1080"
-        ." ../$t";
+        ." -vcodec mpeg4 -b:v 12000k -s 1920x1080"
+        ." ../$t\.mp4";
     say "Coms: $cmd";
     `$cmd`;
     #
