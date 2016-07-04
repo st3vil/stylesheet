@@ -1,5 +1,5 @@
 Day: |
-    u s
+    u i
     # see 64 got
     G:
         {%{$G||{}}, i=>{%{A.i||{}}}, t=>G.t||'nobody'}
@@ -18,54 +18,36 @@ Day: |
         $C = G&s,$s;
         c&on ||= 'ii';
         c&max ||= 5;
-        my $wh;
         for (1..c&max) {
-            $C = $A->{$_}
-              && $A->{$_}->{c&on} 
-              && $A->{$_}->{c&on}->{c&s} || next;
-            $wh = $_;
-            last;
+            return $A->{$_}->{c&on}->{c&s}
+                if $A->{$_}
+                && $A->{$_}->{c&on} 
+                && $A->{$_}->{c&on}->{c&s}
         }
-        $wh || return;
-        c&wh ||= $wh;
-        $C
+    # make call
     h:
-        my $y = !ref $s && A.i && A.i.>$s || do {
-            $C = G&s,$s;
+        my $y;
+        my $D = T.D if T.D;
+        if (ref $s eq 'CODE') {
+            $y = $s;
+        }
+        elsif (!ref $s && A.i && A.i.>$s) {
+            $y = A.i.>$s;
+        }
+        else {
+            my $C = G&s,$s;
             c&on = 'i';
-            $C = G.i.t->($A,$C,$G,$T,$C);
-            c&s
+            $y = G.i.t->($A,$C,$G,$T,$C);
         };
         $y || die "no h: $s";
-        $y->($A,$C,$G,$T,@Me);
+        eval { my @r = $y->($A,$C,$G,$T,@Me) };
+        die "Throh D.y.cv D.t: ".ind('  ',$@)."\n" if $@;
+        @r
         # see 64 Ngwe
     
     
     Rw MoreHands;
     
-    # go A
-    throat:
-        my $of = G&s,$s;
-        of.c.of ||= of.c.s;
-        of.c.max = 2;
-        my $z = G&t,$of || return;
-        my $uov = A.c.ov;
-        while (1) {
-            if ($z wants $C) {
-                my $yt = z.sc.yt;
-                G&$yt,C.sc.interesting;
-            }
-            $z = z.y.next || last; # or timeout
-        }
-        # TODO cycle all A.N as C
-        # TODO line with Targety interrupt potential
-        # see 1 KnowTime/Cone
-    J:
-        my $J = G&A,J=>1;
-        J.t = $s;
-        J.sc.u = sub { G&u,@_ };
-        J.sc.n = sub { G&n,@_ };
-        
     A: %acgt:s ov
         if (ref $s) {
             $A = $s;
@@ -78,19 +60,130 @@ Day: |
             A.c = {};
             A.sc = {};
             A.up = $i;
+            A.1 = $A;
         }
         if ($ov) {
-            $ov = 0 + '0'.G&sca,$ov if $ov >= 1;
-            A.c.ov = 0 + $ov;
+            $ov /= 10 while $ov >= 1;
+            A.c.ov = $ov;
+            if (@Me) {
+                A.N = \@Me;
+            }
+            G&throat,A.t;
         }
+Tube: |
+    u i
+    # go A
+    throat:
+        my $of = G&s,$s;
+        of.c.of ||= of.c.s;
+        of.c.max = 2;
+        my $z = G&t,$of || return;
         
-    n:
-        my $n = G&A,n=>1;
-        my $u = A.sc.u; # pronounce ayousk, youok
-        if ($u && !u.c.o) {
-            G&A,osc=>9;
+        my $uov = A.c.ov;
+        $C = A.c.s ||= {};
+        $T = A.c.T ||= {};
+        
+        while (1) {
+            last if $uov && z.y.cv > $uov;
+            my @is = ($z); # shows s=Dome
+            
+            # z wants C
+            if (z.sc.nk) {
+                exists $C->{z.sc.nk} || next;
+                @is = $C->{z.sc.nk};
+                if (z.sc.gk) {
+                    exists $C->{z.sc.nk}->{z.sc.gk} || next;
+                    @is = $C->{z.sc.nk}->{z.sc.gk};
+                }
+            }
+            if (z.sc.sk) {
+                exists C.sc->{z.sc.sk} || next;
+                @is = C.sc->{z.sc.sk};
+            }
+            if (z.sc.t) {
+                my $sc = z.sc;
+                ref sc.ip eq 'HASH' || die "Dsct ip not: ".ki$z;
+                G&ip,\$sc,$C || next;
+            }
+            if (z.sc.Ifs) {
+                die "A impli";
+                @is = G&scIfs,z.sc.Ifs;
+            }
+            
+            # z readies
+            if (z.sc.acgt && !z.c.code) {
+                my $y = eval z.y.s;
+                die "Throcompile of.t z.y.cv: z.t: ".ind('  ',$@)."\n" if $@;
+                z.c.code = $y;
+            }
+            
+            # happens
+            for my $s (@is) {
+                z.sc.acgt eq 's' || die "nonacgts".wdump $z;
+                T.D = $z;
+                my $y = z.sc.code;
+                
+                G.i.h->($A,$C,$G,$T,$y,$s);
+                
+                if (T.ut) {
+                    G&Tut,$s;
+                }
+                if (T.Z) {
+                    die "A.t 's z.y.cv~z.t TZ moved C.y.cv~C.t ".wdump 3, T.Z;
+                }
+                last if T.not || T.whack;
+            }
+            # back
+            delete T.ut;
+            
+            A.cv = z.y.cv;
+            last if delete T.whack || T.not;
+            $z = z.y.next || last; # or timeout, mass comb via A.m
+            
         }
+        # TODO cycle all A.N as C
+        # TODO line with Targety interrupt potential
+        # see 1 KnowTime/Cone
+    
+    
+of: |
+    # indifferent index
+    # receivers always new C.c for compile ref
+Tunnel: |
+    u i
+    sJ: %acgt:J t f ov
+        ($ov,$f) = ($f,$t) if !$ov;
+        J.sc.>$t ||= G&A,$f,$ov;
+    u a
+    J 2:
+        my $J = G&A,J=>1;
+        J.t = $s;
+        J.u = sub { ($A,$C,$G,$T,@Me) = @_; G&A,u=>6=>$J,@Me };
+        J.n = sub { ($A,$C,$G,$T,@Me) = @_; G&A,n=>6=>$J,@Me };
+        $J
+    # dialect of ...
+    n 2:
+        my $J = A.2 = shift @{A.N};
+        G&A,A.2.sc.u
+        my $u = A.2.sc.u ||= G&A,u=>3;
+        my $n = A.2.sc.n ||= G&A,n=>3;
+        if (u.cv < 0.7) {
+            G&A,$u=>9;
+        }
+    
+    # explain self
+    u 2:
+        my $J = A.2 = shift @{A.N};
         
+        my $u = A.2.sc.u ||= G&A,u=>3;
+        my $n = A.2.sc.n ||= G&A,n=>3;
+        if (u.cv < 0.7) {
+            G&A,$u=>9;
+        }
+        u.cv = 0.4;
+    
+    markactive 13:
+        A.c.o = 1;
         # spawn A of In, enter C into the vector
         # see 1 Shelf/Cone
     u:
@@ -101,11 +194,62 @@ Day: |
         # see 2 uCon
     u O
     of:
+        n $s=>''=>{W=>'of'}
         # compile language, see 9 cono
         # container process is traveling bunches of code, see 99 Traweil
         # place toward A.ii.>$s, linked list of embryo
         
         
+Eyes: |
+    u i
+    ifthing
+                    my $D = $tD->{$t};
+                    # head match
+                    if (D.sc.nk && !D.sc.def) {
+                        !exists $C->{D.sc.nk} && next;
+                        D.sc.gk && !exists $C->{D.sc.nk}->{D.sc.gk} && next;
+                    }
+                    my @is = (ref D.y ? D.y.cv : D.y) < 0.2 ? s.s : s.C.c.s;
+                    if (D.sc.t) {
+                        my $sc = D.sc;
+                        ref sc.ip eq 'HASH' || die "Dsct ip not: ".ki$D;
+                        return unless G&ip,\$sc,$C
+                    }
+                    if (D.sc.Ifs) {
+                        die "A impli";
+                        @is = G&scIfs,D.sc.Ifs;
+                    }
+                    !@is && next;
+                    # artists get drunk with power and fall of piers
+                    # usu. one receiver (Ci) and the rest scheme
+                    # may up Iso personalities as sublingoes to decompress inpatterns.
+                    if (D.sc.acgt) {
+                        # acgt lump normal as microfilm .001
+                        # film replaces if you shave A.I
+                        # which should Rustle up/m local code
+                        # and float random code, manifolds of effects
+                        # able to present ends to each other
+                        # soft-here
+                        # could do lots of I swapping
+                        my $dont = 1 if exists s.I->{D.t};
+                        $dont = 0 if $dont && s.I->{D.t."_dige"} ne D.sc.dige;
+
+                        unless ($dont) {
+                            if (!ref D.y) {
+                                sayre "D.t is .y = D.y   at s.c.ov";
+                                D.y = {cv=>D.y};
+                            }
+                            s.I->{D.t} = Rw D.t $A $C $G $T $__D:D;
+                            s.I->{D.t.'_dige'} = D.sc.dige;
+                            #sayyl "Compile D.t   for C.t  D.y.cv ";# if D.y.cv != 0.1;
+                        }
+                    }
+                    s.I->{D.t."_D"} = $D;
+                    # this ind is all flywheel
+                    # it's a kind of unity that wants to be a block of code like this
+                    # most tiny ticks
+                    # and c
+                    s.c.x->{$k}->{$t} = \@is if D.sc.act;
 n: |
     u s
     n:
@@ -194,13 +338,9 @@ MoreHands: |
         @r
     bang:
         # zig zag report stitched onto happenings' branches
-s: | # ACGTs sub for h
+
+i: | # ACGTs sub for h/A.i
     n allacgts
-    u O
-    arounds 4:
-        # look for C.t in already entered stuff
-        
-i: | # 
 O: | # s&OSCillators
     n allsvse
 Doy: |
