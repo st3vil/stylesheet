@@ -54,10 +54,12 @@ Day: |
             $A = {%$A};
             A.t = $s;
             A.y = $A; # means is full of wires
+            A.y.cv = 0;
             A.c = {};
             A.sc = {};
             A.up = $i;
             A.c.ip = [@{A.up.c.ip||[]}, A.up.c.ipi++];
+            A.c.sip = join',',@{A.c.ip};
             A.1 = $A;
         }
         if ($ov) {
@@ -81,8 +83,9 @@ Tube: |
         my $uov = A.c.ov;
         $C = A.c.s ||= {};
         $T = A.c.T ||= {};
-        
+        my $ntug = 0.1;
         while (1) {
+            next if z.y.cv <= A.y.cv;
             last if $uov && z.y.cv > $uov;
             my @is = (A.c.N || $z);
             
@@ -124,22 +127,19 @@ Tube: |
                 
                 G.i.h->($A,$C,$G,$T,$y,$s);
                 
-                if (T.ut) {
-                    G&Tut,$s;
-                }
-                if (T.Z) {
-                    die "A.t 's z.y.cv~z.t TZ moved C.y.cv~C.t ".wdump 3, T.Z;
-                }
+                T.ut && G&Tut,$s;
+                T.Z && G&Tz,$s;
                 last if T.not || T.whack;
             }
             # back
             delete T.ut;
             
-            A.cv = z.y.cv;
+            A.y.cv = z.y.cv;
             last if delete T.whack || T.not;
             $z = z.y.next || last; # or timeout, mass comb via A.m
-            
         }
+        # leaving
+        delete A.c.ov;
         # TODO cycle all A.c.N as C
         # TODO line with Targety interrupt potential
         # see 1 KnowTime/Cone
@@ -150,17 +150,6 @@ of: |
     # receivers always new C.c for compile ref
 Tunnel: |
     # machine for finding pi
-    u i
-    sJ: %acgt:J t f
-        $f ||= $t;
-        J.sc.>$t ||= G&J,$f;
-    J:
-        my $J = G&A,'J';
-        J.t = $s;
-        # will be bab to G&
-        J.u = sub { ($A,$C,$G,$T,@Me) = @_; G&A,u=>6=>$J,\@Me };
-        J.n = sub { ($A,$C,$G,$T,@Me) = @_; G&A,n=>6=>$J,\@Me };
-        $J
     u a
     # dialect of ...
     n 1:
@@ -190,26 +179,108 @@ Tunnel: |
         }
     n 3:
         my $n = A.c.n;
-        n.sc.a->{A.2.c.ch}->{A.c.ip} = $A;
+        n.sc.a->{A.2.c.ch}->{A.c.sip} = $A;
         delete A.2.c.o;
     u 3:
-        A.c.n = G&A,n=>1=>A.2,@{A.c.N};
-        A.c.n.c.u.c.whole = 'theu';
-        
+        my $n = A.c.n = G&A,n=>1=>A.2,@$s;
+        n.c.u.c.whole = 'theu';
+        G&A,$n,3;
     n 4:
         # become aware of past, surface vibration
     n 5:
         # more thinks
     n 6:
-        G&A,'mo';
+        G&A,'mo'=>6;
     n 7:
         
     mo 1:
-        if (A.up.c.V) {
+        # sprung from n/author, separate put words...
+        if (my $V = A.up.c.V) {
+            A.c.V = $V;
             A.m = $A;
+            my $mo = G&A,mo=>1;
+            mo.mo = $mo;
+            A.c.tug->{mo.c.sip} = $mo;
+        }
+    u i
+    Tnot:
+        # kills a particle
+    Tz:
+        # moves/spawns in time
+        die "A.t 's z.y.cv~z.t TZ moved C.y.cv~C.t ".wdump 3, T.Z;
+    u O
+    of:
+        n $s=>''=>{W=>'of'}
+        # compile language, see 9 cono
+        # container process is traveling bunches of code, see 99 Traweil
+        # place toward A.ii.>$s, linked list of embryo
+        
+        # rennovating around town
+        # a geodesic self-mover
+        # keeps rebuilding in different locations
+        
+        
+Jelly: |
+    u i
+    sJ: %acgt:J t f
+        $f ||= $t;
+        J.sc.>$t ||= G&J,$f;
+    J:
+        my $J = G&A,'J';
+        J.t = $s;
+        # will be bab to G&
+        J.u = sub { ($A,$C,$G,$T,@Me) = @_; G&A,u=>6=>$J,\@Me };
+        J.n = sub { ($A,$C,$G,$T,@Me) = @_; G&A,n=>6=>$J,\@Me };
+        $J
+    sesh: %acgt:J
+        # partition guts
+        my $o = J.sc.S->{J.sc.ch} = G&sJ,$s,'s';
+        delete J.sc.s;
+        my $ch = ++J.sc.ch;
+        my $s = J.sc.s = J.sc.S->{$ch} ||= G&sJ,$J,'s';
+        s.sc.prev = $o;
+        o.sc.next = $s;
+        # makes osc thing.3 etc hang around
+        J.sc.s.sc.ch = $ch;
+    rea: %acgt:J
+        # reset the ground
+        my $zi = ++J.c.zi;
+        my $i = '';
+        while (J.sc.S->{$i}) {
             
         }
+    u c
+    n \'of:mo'
+    W 12:
+        ref $s && die;
+        c&J = $s;
+        # dhcp
+    J 2:
+        # see self already
+        s&J = A.2.sc.tv && A.2.sc.tv->{C.t} && A.2.sc.tv->{C.t}->{C.y.cv}
+    J 3:
+        s&J ||= G&J,C.t;
+    u s
+    n \'of:mo'
+    # to rm ^ make the of rememberer D not leave between the o switchup of u others
+    J 4:
+        # humming - superline timetug - osc exports that door us here
+        my $v = J.sc.Tv; # inner surf attracto
+        my $ha = J.sc.tv; # things
+        # T wants ha or v wants T (by now, etc)
+        # travel comes down e-switches even if pin skips
+    J 5:
+        A.c.pin = c&pin || c&J || sc&J ->{t};
+    J 6:    
+        G&rea,$J
+    J 7:
+        G&A,s=>8=>$J;
+    J 8:
+        # through J's microJ of personality
     
+
+            J.name = "J.A.d. C.c.pi*C.t";
+Triangle: |
     # sevenatim
     s 1:
         A.2 = shift @$s;
@@ -219,7 +290,7 @@ Tunnel: |
     s 2:
         if (my $W = s.c.whole) {
             my $s = G&t,$W || die "no $W";
-            
+            # o it to here, as wh spacing desires: i subs copy same G
         }
         my $n = A.c.n;
         c&a = n.sc.a;
@@ -242,70 +313,13 @@ Tunnel: |
     # listen, insward, moral law, has to give us power
     o 1:
         A.3 = shift @$s;
+        A.c.z = G&sJ,A.3,'s';
         A.2 = shift @$s; # from
         A.c.s = G&sJ,A.2,'s';
         A.c.V = [ map { _.t ||= _.c.s } map{ G&s,$_ } @{A.c.N} ];
     o 2:
         G&mo,$_=>
     
-    u i
-    sesh: %a:J
-        # partition guts
-        J.sc.S->{J.sc.ch} = G&sJ,$s,'s';
-        delete J.sc.s;
-        my $ch = ++J.sc.ch;
-        J.sc.s = J.sc.S->{$ch} ||= G&sJ,$J,'s';
-        J.sc.s.sc.ch = $ch;
-        # makes osc thing.3 etc hang around
-    rea:
-        s.sc.S
-    u c
-    # nk=c gk=C.t
-    n \'of:mo'
-    W 12:
-        ref $s && die;
-        c&J = $s;
-    J 2:
-        # see self already
-        s&J = A.2.sc.tv && A.2.sc.tv->{C.t} && A.2.sc.tv->{C.t}->{C.y.cv}
-    J 3:
-        s&J ||= G&J,C.t;
-    J 4:
-        # superline timetug
-        G&rea,$s;
-        
-        my $J = s&J;
-        my $v = s.sc.Tv; # inner surf attracto
-        my $ha = s.sc.tv;
-        # T wants ha or v wants T (by now, etc)
-        # travel comes down e-switches even if pin skips
-    J 5:
-        A.c.
-    J 6:    
-        G&rea
-    J 7:
-        
-    J 8:
-        
-        
-    markactive 13:
-        A.c.o = 1;
-        # spawn A of In, enter C into the vector
-        # see 1 Shelf/Cone
-    u:
-        # soft-figure mind
-    un:
-        # called when n after u
-        # collapse J's microJ of personality
-        # see 2 uCon
-    u O
-    of:
-        n $s=>''=>{W=>'of'}
-        # compile language, see 9 cono
-        # container process is traveling bunches of code, see 99 Traweil
-        # place toward A.ii.>$s, linked list of embryo
-        
-        
 Rise: |
     u i
     top:
