@@ -40,7 +40,7 @@ Day: |
             $y = G.i.t->($A,$C,$G,$T,$C);
         };
         $y || die "no h: $s";
-        eval { my @r = $y->($A,$C,$G,$T,@Me) };
+        my @r = eval { $y->($A,$C,$G,$T,@Me) };
         die "Throh D.y.cv D.t: ".ind('  ',$@)."\n" if $@;
         @r
         # see 64 Ngwe
@@ -85,11 +85,12 @@ Tube: |
         $T = A.c.T ||= {};
         my $ntug = 0.1;
         while (1) {
+            next if z.c.W;
             next if z.y.cv <= A.y.cv;
             last if $uov && z.y.cv > $uov;
             if (A.c.tug && $ntug <= z.y.cv) {
-                $ntug += 0.1;
-                G&tug;
+                $ntug += 0.1 until $ntug > z.y.cv;
+                G&tug ;
             }
             my @is = (A.c.N || $z);
             
@@ -118,7 +119,7 @@ Tube: |
             
             # z readies
             if (z.sc.acgt && !z.c.code) {
-                my $y = eval z.y.s;
+                my $y = eval z.c.s;
                 die "Throcompile of.t z.y.cv: z.t: ".ind('  ',$@)."\n" if $@;
                 z.c.code = $y;
             }
@@ -127,12 +128,12 @@ Tube: |
             for my $s (@is) {
                 z.sc.acgt eq 's' || die "nonacgts".wdump $z;
                 T.D = $z;
-                my $y = z.sc.code;
+                my $y = z.c.code;
                 
                 G.i.h->($A,$C,$G,$T,$y,$s);
                 
                 T.ut && G&Tut,$s;
-                T.Z && G&Tz,$s;
+                T.Z && G&Tz,$z;
                 last if T.not || T.whack;
             }
             # back
@@ -140,6 +141,8 @@ Tube: |
             
             A.y.cv = z.y.cv;
             last if delete T.whack || T.not;
+        }
+        continue {
             $z = z.y.next || last; # or timeout, mass comb via A.m
         }
         # leaving
@@ -157,25 +160,9 @@ Tunnel: |
     # machine for finding pi
     u a
     # dialect of ...
-    n 1:
-        A.2 = shift @$s;
-        A.c.u = G&sJ,A.2,'u';
-        A.c.n = G&sJ,A.2,'n';
     u 1:
         A.3 = shift @$s; # for
         A.2 = G&sJ,A.3,'u';
-    n 2:
-        my $u = A.c.u;
-        if (!u.c.o) {
-            u.c.base = 'theu';
-            # resolve our (A.2 J) mind (its u J)
-            G&A,s=>8=>$u;
-            # merge its i/ii thing ideas into our 2
-            G&A,o=>8,A.2,$u for 'i','ii';
-        }
-        A.i = A.2.i;
-        A.ii = A.2.ii;
-        A.c.V = [ map{ G&s,$_ } @$s ];
     u 2:
         my $u = A.c.u;
         if (u.c.o) {
@@ -184,22 +171,38 @@ Tunnel: |
             # also its current position relative to itself
             # make many pages of u per A.3
         }
-    n 3:
-        my $n = A.c.n;
-        n.sc.a->{A.2.c.ch}->{A.c.sip} = $A;
-        delete A.2.c.o;
     u 3:
         my $n = A.c.n = G&A,n=>1=>A.2,@$s;
         n.c.u.c.whole = 'theu';
         G&A,$n,3;
+    n 1:
+        A.2 = shift @$s;
+        A.c.u = G&sJ,A.2,'u';
+        A.c.n = G&sJ,A.2,'n';
+    n 2:
+        my $u = A.c.u;
+        if (!u.c.o) {
+            u.c.base = 'theu';
+            # resolve our (A.2 J) mind (its u J)
+            G&A,s=>8=>$u;
+            # merge its i/ii thing ideas into our 2
+            G&A,o=>8=>A.2,$u,$_ for 'i','ii';
+        }
+        A.i = A.2.i;
+        A.ii = A.2.ii;
+        A.c.V = [ map{ G&s,$_ } @$s ];
+    n 3:
+        my $n = A.c.n;
+        n.sc.a->{A.2.c.ch}->{A.c.sip} = $A;
+        delete A.2.c.o;
     n 4:
         # become aware of past, surface vibration
     n 5:
         # more thinks
     n 6:
-        G&A,'mo'=>6;
+        G&A,mo=>6;
     n 7:
-        
+        #
     mo 1:
         # sprung from n/author, separate put words...
         if (my $V = A.up.c.V) {
@@ -212,14 +215,15 @@ Tunnel: |
     u i
     Tnot:
         # kills a particle
-    Tz:
+    Tz: %acgt:D
         # moves/spawns in time
-        die "A.t 's z.y.cv~z.t TZ moved C.y.cv~C.t ".wdump 3, T.Z;
+        die "A.t 's D.y.cv~D.t TZ moved C.y.cv~C.t ".wdump 3, T.Z;
     tug:
         # just before m (over many) mo 4, do inner mo up to 4
         
+        
     u O
-    of:
+    of: %of:O
         n $s=>''=>{W=>'of'}
         # compile language, see 9 cono
         # container process is traveling bunches of code, see 99 Traweil
@@ -245,7 +249,7 @@ Jelly: |
     
     sesh: %acgt:J
         # partition guts
-        my $o = J.sc.S->{J.sc.ch} = G&sJ,$s,'s';
+        my $o = J.sc.S->{J.sc.ch} = G&sJ,$J,'s';
         delete J.sc.s;
         my $ch = ++J.sc.ch;
         my $s = J.sc.s = J.sc.S->{$ch} ||= G&sJ,$J,'s';
@@ -301,7 +305,7 @@ Jelly: |
     J 6:
         J.sc.n && G&rea,$J;
         J.sc.u && G&rea,J.sc.u;
-        G&A,n=>1=>[J.t=>0.9]
+        J.sc.root = G&A,n=>1=>[J.t=>0.9];
         Rw A.c.pin - $A $C $G $T $J $y;
         
     J 7:
@@ -310,17 +314,21 @@ Jelly: |
         # through J's microJ of personality
     
 Triangle: |
+    u a
     # sevenatim
     # time passes independently of your being in the room (once you know about the room)
     s 1:
         A.2 = shift @$s;
         A.c.n = G&sJ,A.2,'n';
-        # come into self again by A.2.sc.s
+        # C is self for s
+        # C is 's many for o
         A.c.s = G&sJ,A.2,'s';
     s 2:
         if (my $W = s.c.whole) {
             my $s = G&t,$W || die "no $W";
-            # o it to here, as wh spacing desires: i subs copy same G
+            # o it to here, as wh spacing desires
+            # i subs copy same 4
+            # ii linked D list per 2
             return T.Z.8 = $A;
         }
         if (my $W = s.c.base) {
@@ -330,7 +338,9 @@ Triangle: |
         }
         my $n = A.c.n;
         c&a = n.sc.a; # ch/sip = A (n/author)
-        c&ch = s&ch || A.2.sc.ch || 
+        my $ch = defined s&ch ? s&ch : A.2.sc.ch || '';
+        my $flux = c&a ->{$ch};
+        
         
         # names -> A fall replace to check inside
         # A -> J t/y images
@@ -349,13 +359,14 @@ Triangle: |
         # send out
     # listen, insward, moral law, has to give us power
     o 1:
-        A.3 = shift @$s;
+        A.3 = shift @$s; # us
         A.c.z = G&sJ,A.3,'s';
         A.2 = shift @$s; # from
         A.c.s = G&sJ,A.2,'s';
         A.c.V = [ map { _.t ||= _.c.s } map{ G&s,$_ } @{A.c.N} ];
     o 2:
-        G&mo,$_=>
+        #G&A,$_=>
+        say "Hi";
     
 Rise: |
     u i
@@ -408,15 +419,76 @@ Round: |
     Rw waito $J $d=3
     
     #
+PiMachine: |
+    n Day
+    n Tube
+    
+    n Tunnel
+    n Jelly
+    n Triangle
 Zupe: |
     u urw
-    n Bud
-    n Round
-    #!##
+    my $ii = {};
+    if (0) {
+    my $it = 'Day';
+    $it = 'PiMachine';
+    n $it
     my $jt = G.oin.inJ;
-    #my $Day = jt.Day;
-    m wk=>-pre=>wdump(3, [J.A.I, J.A.II]),'%hs:375'
+    my $Day = $jt->{$it};
+    my $su;$su = sub {
+        my $J = shift;
+        my $v = J.El.Pre.tv || die "J.name no tv";
+        map { _.sc.J ? ($_,$su->(_.sc.J)) : $_ }
+        grep { _.y.cv < 0.9 } values %$v;
+    };
+    my $N = [$su->($Day)];
+    my $v = {}; # of/cv/t acum
+    my $M = [map {
+        Rw ym/conoi $noAI=1 $C:_ $v;
+    } @$N];
+    DumpFile('w/glacval',$v);
+    }
+    if (1) {
+    my $v = LoadFile('w/glacval');
+    for my $of (keys %$v) {
+        my $o = $ii->{$of} = {t=>'of',y=>{cv=>0.1},c=>{W=>'of'}};
+        my $c = $v->{$of};
+        my $la = $o;
+        for my $cv (sort keys %$c) {
+            my $ts = $c->{$cv};
+            for my $t (sort keys %$ts) {
+                my $z = $ts->{$t};
+                sayre "Compile $of $cv $t !";
+                z.c.s = G&parse_babbl,z.c.s;
+                z.c.s =~ s/\bs\&(\w+)/C\&$1/g;
+                my $y = eval z.c.s;
+                die "Throcompile of.t z.y.cv: z.t: "
+                    .ind('  ',$@)."\n" if $@;
+                z.c.code = $y;
+                   la.y.next = $z;
+                z.y.prev = $la;
+                $la = $z;
+            }
+        }
+    }
+    DumpFile('w/glacial',$ii);
+    }
+    $ii = LoadFile('w/glacial');
+    my $i = {};
+    my $n = ii.i;
+    while ($n) {
+        if (n.c.code) {
+            $i->{n.t} = n.c.code;
+        }
+        $n = n.y.next;
+    }
+    #n Bud
+    #n Round
+    #!##
+    n wk=>-pre=>wdump(6, $i),'%hs:375'
     
+Zuup: |
+    n Zupe
 Zop: |
     J.VV.N = 1;
     u Traweil
@@ -425,10 +497,21 @@ Zop: |
     
 Zoop: |
     n Day
+a: | # act
+    u allact
+    n allact
+    n 'allareact=1'=>42,<<''
+        C.sc.act = 1 if !exists C.sc.act;
+        C.sc.code = C.t if !exists C.sc.code;
 i: | # ACGTs sub for h/A.i
     n allacgts
 O: | # s&OSCillators
     n allsvse
+c: | # of something c.? acts
+    n allc
+s: | # of something sc.? acts
+    n alls
+    
 Doy: |
     u urw
     u unicrow

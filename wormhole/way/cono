@@ -23,6 +23,11 @@ C.sc.got && die ":Slooping";
         C.y.cv = $cv;
     }
     C.sc.code = C.sc.of; # pickyness
+    if (ar.noAI) {
+        delete C.sc.code;
+        C.sc.of = 'i' if C.sc.of eq 'I';
+
+    }
 
         my $ara = []; # ar ups and demand argsed
 
@@ -102,10 +107,10 @@ C.sc.got && die ":Slooping";
             # here some want their own I space
             # if I resolv backward winding pro-be
             # G pulls in I
-            my $waytoset = "A\.I.".C.t." = " unless C.sc.noAI || C.sc.sub;
+            my $waytoset = "A\.I.".C.t." = " unless ar.noAI  || C.sc.noAI || C.sc.sub;
             my $sub = "sub".(C.sc.sub ? " C.t " : ' ')."{\n";
             unless ($args eq '1') {
-                unshift @$ara, "my \$I = A\.I;";
+                unshift @$ara, "my \$I = A\.I;" unless ar.noAI;
                 unshift @$ara, "my (".join(',',map{'$'.$_}
                     split',',$args).',@Me) = @'.$und.";";
             }
