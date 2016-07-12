@@ -2,10 +2,12 @@ Day: |
     u i
     # see 64 got
     G:
-        {%{$G||{}}, i=>{%{A.i||{}}}, t=>G.t||'nobody'}
+        $G = {%{$G||{}}, i=>{%{A.i||{}}}, t=>G.t||'nobody'};
+        G.h = G.i.h;
+        $G
     # start holding an instruction
     s:
-        if (ref $s eq 'HASH' && s.t && ref s.y && s.y ne $s) {
+        if (ref $s eq 'HASH' && ref s.y && s.y ne $s) {
             return $s
         }
         $C = {};
@@ -40,9 +42,16 @@ Day: |
             $y = G.i.t->($A,$C,$G,$T,$C);
         };
         $y || die "no h: $s";
+        saybl ($D && D.t || $s);
         my @r = eval { $y->($A,$C,$G,$T,@Me) };
-        die "Throh D.y.cv D.t: ".ind('  ',$@)."\n" if $@;
-        @r
+        if ($@) {
+            if ($@ !~ /Throh/) {
+                $D ||= A.i.ii.i.y.tw->{$s};
+                saybl D.c.s;
+            }
+            die "Throh D.y.cv D.t: ".ind('  ',$@)."\n";
+        }
+        wantarray ? @r : $r[0];
         # see 64 Ngwe
     
     A: %acgt:s ov
@@ -70,7 +79,7 @@ Day: |
             }
             G&throat,A.t;
         }
-        A.9 || $A
+        return $A
 Tube: |
     u i
     # go A
@@ -79,12 +88,13 @@ Tube: |
         of.c.of ||= of.c.s;
         of.c.max = 2;
         my $z = G&t,$of || return;
-        
+        snooze 1500;
         my $uov = A.c.ov;
         $C = A.c.s ||= {};
         $T = A.c.T ||= {};
         my $ntug = 0.1;
-        while (1) {
+        while ($z) {
+            say "Onto z.t z.y.cv";
             next if z.c.W;
             next if z.y.cv <= A.y.cv;
             last if $uov && z.y.cv > $uov;
@@ -143,7 +153,7 @@ Tube: |
             last if delete T.whack || T.not;
         }
         continue {
-            $z = z.y.next || last; # or timeout, mass comb via A.m
+            $z = z.y.next; # or timeout, mass comb via A.m
         }
         # leaving
         A.c.tug && G&tug;
@@ -182,8 +192,8 @@ Tunnel: |
     n 2:
         my $u = A.c.u;
         if (!u.c.o) {
-            u.c.base = 'theu';
-            # resolve our (A.2 J) mind (its u J)
+            u.c.base = 'theu'; # the PiMachine
+            # resolve our mind
             G&A,s=>8=>$u;
             # merge its i/ii thing ideas into our 2
             G&A,o=>8=>A.2,$u,$_ for 'i','ii';
@@ -201,13 +211,14 @@ Tunnel: |
         # more thinks
     n 6:
         G&A,mo=>6;
+        # etc
     n 7:
         #
     mo 1:
         # sprung from n/author, separate put words...
         if (my $V = A.up.c.V) {
-            A.c.V = $V;
             A.m = $A;
+            saybl "For ".wdump 8, $V;
             my $mo = G&A,mo=>1;
             mo.mo = $mo;
             A.c.tug->{mo.c.sip} = $mo;
@@ -224,7 +235,8 @@ Tunnel: |
         
     u O
     of: %of:O
-        n $s=>''=>{W=>'of'}
+        #n $s=>''=>{W=>'of'}
+        say "OFing ! C.t C.y.cv ".ki C.sc;
         # compile language, see 9 cono
         # container process is traveling bunches of code, see 99 Traweil
         # place toward A.ii.>$s, linked list of embryo
@@ -324,6 +336,7 @@ Triangle: |
         # C is 's many for o
         A.c.s = G&sJ,A.2,'s';
     s 2:
+        my $s = A.c.s;
         if (my $W = s.c.whole) {
             my $s = G&t,$W || die "no $W";
             # o it to here, as wh spacing desires
@@ -340,7 +353,7 @@ Triangle: |
         c&a = n.sc.a; # ch/sip = A (n/author)
         my $ch = defined s&ch ? s&ch : A.2.sc.ch || '';
         my $flux = c&a ->{$ch};
-        
+        saybl "Incoming flux: ".wdump 4, $flux;
         
         # names -> A fall replace to check inside
         # A -> J t/y images
@@ -429,26 +442,36 @@ PiMachine: |
 Zupe: |
     u urw
     my $ii = {};
-    if (0) {
+    my $dig = sub {
+        my $tW = shift;
+        $tW = {%{$tW}};
+        $tW->{$_} = readlink "w/digway/$_" for keys %$tW;
+        $tW;
+    };
+    my $ol = LoadFile('w/glacwal');
+    if (ki($ol) ne ki($dig->($ol))) {
+    sayre "Zupe unstuck: \n".ki($ol)."\n ne\n".ki($dig->($ol));
     my $it = 'Day';
     $it = 'PiMachine';
     n $it
     my $jt = G.oin.inJ;
     my $Day = $jt->{$it};
+    my $tW = {};
     my $su;$su = sub {
         my $J = shift;
         my $v = J.El.Pre.tv || die "J.name no tv";
         map { _.sc.J ? ($_,$su->(_.sc.J)) : $_ }
-        grep { _.y.cv < 0.9 } values %$v;
+        grep { _.y.cv < 0.9 || do{$tW->{_.t} = $_; 0} } values %$v;
     };
     my $N = [$su->($Day)];
     my $v = {}; # of/cv/t acum
     my $M = [map {
         Rw ym/conoi $noAI=1 $C:_ $v;
     } @$N];
+    DumpFile('w/glacwal',$dig->($tW));
     DumpFile('w/glacval',$v);
     }
-    if (1) {
+    
     my $v = LoadFile('w/glacval');
     for my $of (keys %$v) {
         my $o = $ii->{$of} = {t=>'of',y=>{cv=>0.1},c=>{W=>'of'}};
@@ -471,21 +494,63 @@ Zupe: |
             }
         }
     }
-    DumpFile('w/glacial',$ii);
-    }
-    $ii = LoadFile('w/glacial');
+    
     my $i = {};
     my $n = ii.i;
     while ($n) {
         if (n.c.code) {
             $i->{n.t} = n.c.code;
+            ii.i.y.tw->{n.t} = $n;
         }
         $n = n.y.next;
     }
+    
+    my $so = do {
+        my $A = {};
+        A.i = $i;
+        A.ii = $ii;
+        my $G = A.i.G->($A,$C,$G,$T);
+        sayre "Yep";
+        $A = G&A,'so';
+        my $J = G&J,'os';
+        A.4 = A.3 = A.2 = $A;
+        $DB::single = 1;
+        n ows
+    };
+    
     #n Bud
     #n Round
     #!##
-    n wk=>-pre=>wdump(6, $i),'%hs:375'
+    n wk=>-pre=>wdump(6, $so),'%hs:375'
+    #n wk=>-pud=>{s=>$so},'%hs:375,ws,wi:30%'
+    J.VV.N = 1;
+    
+    
+pi/pud: |
+    y.at.qs=1;
+    y.at.ws=1;
+    #y.at.ml=J.A.d;
+    y.in = 0.2;
+    my $ind = join'', ('  ') x (J.A.d - 1);
+    n la=>''=>"\n$ind< C.t";
+    if ($s eq J.Jiter.C.c.s) {
+        n same=>2=>'same','%hs:855'
+        return
+    }
+    if (ref $s ne 'HASH' || J.A.d > 5) {
+        my $z = wdump(2, $s);
+        $z = $s if C.t eq 't';
+        n no=>2=>$z,'%fs:5,hs:394,lh:0.8em,ab,mt:1'
+        return;
+    }
+    my @ks = sort keys %$s;
+    n siz=>12=>" x ".@ks,'%hs:283,fs:6';
+    if (J.mo.J.C.c.intl++ > 40) {
+        return
+        n 'more'=>''=>"more",'%hs:544';
+    }
+    return if C.t =~ /^(\d+|ii?)$/;
+    m $_=>-pud=>{s=>$s->{$_}}, for @ks;
     
 Zuup: |
     n Zupe
@@ -496,7 +561,7 @@ Zop: |
     n Zoop=>W=>'%isle:go'
     
 Zoop: |
-    n Day
+    n PiMachine
 a: | # act
     u allact
     n allact
