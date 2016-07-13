@@ -7,6 +7,8 @@ use G;
 our $A = {};
 
 sub sigstackend {
+return if $A->{sc}->{stacktime} >  hitime() - 1;
+$A->{sc}->{stacktime} =  hitime();
 my $s = $@;
 $s ||= do { saygr "\$@ was blank"; $_[0] };
 local $@;
@@ -157,7 +159,7 @@ I:
         args: 1
         bab: ~
         code: I
-        dige: e0788bbf0219
+        dige: 5345f71820a7
         eg: Bun
         of: I
       t: sigstackend

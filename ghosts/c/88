@@ -15,6 +15,43 @@ Day: |
         C.y = {};
         C.c.s = $s;
         $C;
+    Cs:
+        my ($t,@e) = @$s;
+        if (ref $t eq 'SCALAR') {
+            C.c = G&peel,$$t;
+        }
+        elsif (ref $t eq 'ARRAY') {
+            die "Aray: ".wdump 3, $s;
+        }
+        elsif (ref $t) {
+            die "reft: ".wdump 3, $s;
+        }
+        else {
+            C.t = $t;
+        }
+        if (!@e) {
+            C.c.W = C.t;
+        }
+        else {
+            my ($y,$c,$sc,@e) = @e;
+            C.c.s = $c if !ref $c;
+            C.c = $c if ref $c eq 'HASH';
+            C.c = G&peel,$$c if ref $c eq 'SCALAR';
+            $sc = G&peel,$$sc if $sc eq 'SCALAR';
+            C.sc = $sc if $sc;
+            if (ref $y eq 'HASH') {
+                if (y.y) {
+                    C.c.e = $y;
+                    C.c.W ||= C.t;
+                }
+                else {
+                    C.y = $y;
+                }
+            }
+            C.y.cv = $y if !ref $y;
+            C.y.cv /= 10 while C.y.cv > 1;
+            die "Extra: ".wdump 3,$s;
+        }
     # find local things, look up trail of con centers
     t:
         $C = G&s,$s;
@@ -42,7 +79,6 @@ Day: |
             $y = G.i.t->($A,$C,$G,$T,$C);
         };
         $y || die "no h: $s";
-        saybl ($D && D.t || $s);
         my @r = eval { $y->($A,$C,$G,$T,@Me) };
         if ($@) {
             if ($@ !~ /Throh/) {
@@ -68,7 +104,8 @@ Day: |
             A.sc = {};
             A.up = $i;
             A.c.ip = [@{A.up.c.ip||[]}, A.up.c.ipi++];
-            A.c.sip = join',',@{A.c.ip};
+            A.c.sip = join' ',@{A.c.ip};
+            saygr "A.c.sip A.t from i.t";
             A.1 = $A;
         }
         if ($ov) {
@@ -84,6 +121,7 @@ Tube: |
     u i
     # go A
     throat:
+        $s ||= A.t;
         my $of = G&s,$s;
         of.c.of ||= of.c.s;
         of.c.max = 2;
@@ -94,13 +132,12 @@ Tube: |
         $T = A.c.T ||= {};
         my $ntug = 0.1;
         while ($z) {
-            say "Onto z.t z.y.cv";
             next if z.c.W;
             next if z.y.cv <= A.y.cv;
             last if $uov && z.y.cv > $uov;
             if (A.c.tug && $ntug <= z.y.cv) {
+                G&tug,$ntug;
                 $ntug += 0.1 until $ntug > z.y.cv;
-                G&tug ;
             }
             my @is = (A.c.N || $z);
             
@@ -134,6 +171,7 @@ Tube: |
                 z.c.code = $y;
             }
             
+            say "Onto A.c.sip A.t ~ C.t ~ z.t z.y.cv";
             # happens
             for my $s (@is) {
                 z.sc.acgt eq 's' || die "nonacgts".wdump $z;
@@ -158,6 +196,7 @@ Tube: |
         # leaving
         A.c.tug && G&tug;
         delete A.c.ov;
+        sayre "Levang";
         # TODO cycle all A.c.N as C
         # TODO line with Targety interrupt potential
         # see 1 KnowTime/Cone
@@ -174,8 +213,7 @@ Tunnel: |
         A.3 = shift @$s; # for
         A.2 = G&sJ,A.3,'u';
     u 2:
-        my $u = A.c.u;
-        if (u.c.o) {
+        if (A.2.c.o) {
             G&sesh,A.2;
             # o is the J's orderliness mark
             # also its current position relative to itself
@@ -200,29 +238,46 @@ Tunnel: |
         }
         A.i = A.2.i;
         A.ii = A.2.ii;
-        A.c.V = [ map{ G&s,$_ } @$s ];
     n 3:
+        # foldout tape
         my $n = A.c.n;
-        n.sc.a->{A.2.c.ch}->{A.c.sip} = $A;
-        delete A.2.c.o;
+        @$s = ([@$s]) if ref $s->[0] ne 'ARRAY';
+        A.m = $A;
+        for my $l (@$s) {
+            my $mo = G&A,mo=>1,@$l;
+            n.sc.a->{A.2.c.ch||''}->{mo.c.sip} = $mo;
+            say "Donmo A.2.c.ch mo.c.sip: ".ki $l;
+            A.c.tug->{mo.c.sip} = $mo;
+        }
+        delete A.2.c.o; # orderliness
     n 4:
         # become aware of past, surface vibration
     n 5:
         # more thinks
     n 6:
-        G&A,mo=>6;
         # etc
     n 7:
         #
     mo 1:
         # sprung from n/author, separate put words...
-        if (my $V = A.up.c.V) {
-            A.m = $A;
-            saybl "For ".wdump 8, $V;
-            my $mo = G&A,mo=>1;
-            mo.mo = $mo;
-            A.c.tug->{mo.c.sip} = $mo;
-        }
+        G&Cs,$s;
+        say "Mo looking ". wdump 4, $s;
+    mo 2:
+        say 'motu'
+    mo 3:
+        say 'motu'
+    mo 4:
+        say 'mour'
+    mo 5:
+        say 'mive'
+    mo 6:
+        say 'mix'
+    mo 7:
+        say 'meven'
+    mo 8:
+        say 'meight'
+    mo 9:
+        say 'monine'
     u i
     Tnot:
         # kills a particle
@@ -231,8 +286,14 @@ Tunnel: |
         die "A.t 's D.y.cv~D.t TZ moved C.y.cv~C.t ".wdump 3, T.Z;
     tug:
         # just before m (over many) mo 4, do inner mo up to 4
-        
-        
+        A.c.tog ||= [sort keys %{A.c.tug}];
+        for (@{A.c.tog}) {
+            my $mo = A.c.tug->{$_};
+            next if mo.y.cv >= $s;
+            my $A = $mo;
+            A.c.ov = $s;
+            G&throat
+        }
     u O
     of: %of:O
         #n $s=>''=>{W=>'of'}
@@ -255,8 +316,8 @@ Jelly: |
         my $J = G&A,'J';
         J.t = $s;
         # will be bab to G&
-        J.u = sub { ($A,$C,$G,$T,@Me) = @_; G&A,u=>6=>$J,\@Me };
-        J.n = sub { ($A,$C,$G,$T,@Me) = @_; G&A,n=>6=>$J,\@Me };
+        J.u = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,u=>6=>$J,\@Me };
+        J.n = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,n=>6=>$J,\@Me };
         $J
     
     sesh: %acgt:J
@@ -336,15 +397,14 @@ Triangle: |
         # C is 's many for o
         A.c.s = G&sJ,A.2,'s';
     s 2:
-        my $s = A.c.s;
-        if (my $W = s.c.whole) {
+        if (my $W = c&whole) {
             my $s = G&t,$W || die "no $W";
             # o it to here, as wh spacing desires
             # i subs copy same 4
             # ii linked D list per 2
             return T.Z.8 = $A;
         }
-        if (my $W = s.c.base) {
+        if (my $W = c&base) {
             my $s = G&t,$W || die "no $W";
             # o it to here, with us overlaid
             # mix into indexes under anything from us
@@ -379,7 +439,6 @@ Triangle: |
         A.c.V = [ map { _.t ||= _.c.s } map{ G&s,$_ } @{A.c.N} ];
     o 2:
         #G&A,$_=>
-        say "Hi";
     
 Rise: |
     u i
@@ -482,8 +541,8 @@ Zupe: |
             for my $t (sort keys %$ts) {
                 my $z = $ts->{$t};
                 sayre "Compile $of $cv $t !";
+                z.c.s =~ s/\bs\&(\w+)/C\&$1/sgm;
                 z.c.s = G&parse_babbl,z.c.s;
-                z.c.s =~ s/\bs\&(\w+)/C\&$1/g;
                 my $y = eval z.c.s;
                 die "Throcompile of.t z.y.cv: z.t: "
                     .ind('  ',$@)."\n" if $@;
@@ -505,27 +564,25 @@ Zupe: |
         $n = n.y.next;
     }
     
-    my $so = do {
-        my $A = {};
-        A.i = $i;
-        A.ii = $ii;
-        my $G = A.i.G->($A,$C,$G,$T);
-        sayre "Yep";
-        $A = G&A,'so';
-        my $J = G&J,'os';
-        A.4 = A.3 = A.2 = $A;
-        $DB::single = 1;
-        n ows
-    };
+    my $so = Rw Zome $i $ii;
     
     #n Bud
     #n Round
     #!##
-    n wk=>-pre=>wdump(6, $so),'%hs:375'
-    #n wk=>-pud=>{s=>$so},'%hs:375,ws,wi:30%'
-    J.VV.N = 1;
+    #n wk=>-pre=>wdump(6, $so),'%hs:375'
+    n wk=>-pud=>{s=>$so},'%hs:375,ws,wi:30%'
     
     
+Zome: |
+    my $A = {};
+    A.i = $i;
+    A.ii = $ii;
+    my $G = A.i.G->($A,$C,$G,$T);
+    sayre "Yep";
+    $A = G&A,'so';
+    my $J = G&J,'os';
+    A.4 = A.3 = A.2 = $A;
+    n ows
 pi/pud: |
     y.at.qs=1;
     y.at.ws=1;
@@ -540,8 +597,12 @@ pi/pud: |
     if (ref $s ne 'HASH' || J.A.d > 5) {
         my $z = wdump(2, $s);
         $z = $s if C.t eq 't';
-        n no=>2=>$z,'%fs:5,hs:394,lh:0.8em,ab,mt:1'
+        n no=>2=>$z,'%fs:5,hs:394,lh:0.8,mt:1'
         return;
+    }
+    if (s.y eq $s && J.A.d > 3) {
+        return
+        n A=>2=>"A s.t s.y.cv; ".ki(s.c)."    ".ki(s.sc);
     }
     my @ks = sort keys %$s;
     n siz=>12=>" x ".@ks,'%hs:283,fs:6';
@@ -549,8 +610,8 @@ pi/pud: |
         return
         n 'more'=>''=>"more",'%hs:544';
     }
-    return if C.t =~ /^(\d+|ii?)$/;
-    m $_=>-pud=>{s=>$s->{$_}}, for @ks;
+    return if C.t =~ /^(\d+|ii?|up)$/ || J.A.d > 5;
+    m $_=>-pud=>{s=>$s->{$_}} for @ks;
     
 Zuup: |
     n Zupe
