@@ -8,6 +8,8 @@ sigstackwarn: %args
     warn "Warndg: $s";
 
 sigstackend: %args
+    return if A.sc.stacktime >  hitime() - 1;
+    A.sc.stacktime =  hitime();
     my $s = $@;
     $s ||= do { saygr "\$@ was blank"; $_[0] };
     local $@;

@@ -38,6 +38,8 @@ Day: |
             C.c = $c if ref $c eq 'HASH';
             C.c = G&peel,$$c if ref $c eq 'SCALAR';
             $sc = G&peel,$$sc if $sc eq 'SCALAR';
+            $sc = {} if $sc eq '';
+            $sc = G&peel,$sc if !ref $sc;
             C.sc = $sc if $sc;
             if (ref $y eq 'HASH') {
                 if (y.y) {
@@ -48,9 +50,13 @@ Day: |
                     C.y = $y;
                 }
             }
-            C.y.cv = $y if !ref $y;
+            if (!ref $y) {
+                C.c.pi = $1 if $y =~ s/^-(\w+)//;
+                $y = 1 if $y eq '';
+                C.y.cv = $y;
+            }
             C.y.cv /= 10 while C.y.cv > 1;
-            die "Extra: ".wdump 3,$s;
+            die "Extra: ".wdump 3,$s if @e;
         }
     # find local things, look up trail of con centers
     t:
@@ -89,6 +95,12 @@ Day: |
         }
         wantarray ? @r : $r[0];
         # see 64 Ngwe
+    
+    0&&
+    w:
+        # looks up meaning of word
+    
+    n won=>'',join("\n",map{G.way->{$_} || die "no $_"}qw'cono CoBabbler')
     
     A: %acgt:s ov
         if (ref $s) {
@@ -196,7 +208,7 @@ Tube: |
         # leaving
         A.c.tug && G&tug;
         delete A.c.ov;
-        sayre "Levang";
+        sayre "Levang A.c.sip   A.t A.cv";
         # TODO cycle all A.c.N as C
         # TODO line with Targety interrupt potential
         # see 1 KnowTime/Cone
@@ -240,14 +252,12 @@ Tunnel: |
         A.ii = A.2.ii;
     n 3:
         # foldout tape
-        my $n = A.c.n;
         @$s = ([@$s]) if ref $s->[0] ne 'ARRAY';
         A.m = $A;
         for my $l (@$s) {
             my $mo = G&A,mo=>1,@$l;
-            n.sc.a->{A.2.c.ch||''}->{mo.c.sip} = $mo;
-            say "Donmo A.2.c.ch mo.c.sip: ".ki $l;
             A.c.tug->{mo.c.sip} = $mo;
+            A.c.n.sc.a->{A.2.c.ch||''}->{mo.c.sip} = $mo;
         }
         delete A.2.c.o; # orderliness
     n 4:
@@ -256,12 +266,14 @@ Tunnel: |
         # more thinks
     n 6:
         # etc
+        G&tug,0.7;
     n 7:
-        #
+        # compress
+    n 8:
+        # intertime
     mo 1:
         # sprung from n/author, separate put words...
         G&Cs,$s;
-        say "Mo looking ". wdump 4, $s;
     mo 2:
         say 'motu'
     mo 3:
@@ -285,9 +297,10 @@ Tunnel: |
         # moves/spawns in time
         die "A.t 's D.y.cv~D.t TZ moved C.y.cv~C.t ".wdump 3, T.Z;
     tug:
-        # just before m (over many) mo 4, do inner mo up to 4
-        A.c.tog ||= [sort keys %{A.c.tug}];
-        for (@{A.c.tog}) {
+        # just before m (over many) mo 4, do inner mo including 4
+        my $og = A.c.tog ||= [sort keys %{A.c.tug}];
+        saybl "A.c.sip A.t tugs $s -> ".@$og;
+        for (@$og) {
             my $mo = A.c.tug->{$_};
             next if mo.y.cv >= $s;
             my $A = $mo;
@@ -376,10 +389,14 @@ Jelly: |
     J 5:
         A.c.pin = c&pin || c&J || sc&J ->{t};
     J 6:
+        sayre "Re J.t";
         J.sc.n && G&rea,$J;
         J.sc.u && G&rea,J.sc.u;
-        J.sc.root = G&A,n=>1=>[J.t=>0.9];
+        saybl "St J.t";
+        J.sc.root = G&A,n=>1=>$J=>[J.t=>0.9];
+        saybl "Ive J.t";
         Rw A.c.pin - $A $C $G $T $J $y;
+        
         
     J 7:
         G&A,s=>8=>$J;
@@ -413,8 +430,27 @@ Triangle: |
         c&a = n.sc.a; # ch/sip = A (n/author)
         my $ch = defined s&ch ? s&ch : A.2.sc.ch || '';
         my $flux = c&a ->{$ch};
-        saybl "Incoming flux: ".wdump 4, $flux;
-        
+        my $tv;
+        my $vt;
+        my $ov; # overwrites tv []
+        my $M = [];
+        for my $k (sort keys %$flux) {
+            my $Y = $flux->{$k};
+            Y.c || die "noY".ki$Y;
+            my $Z = Y.c.s;
+            defined Z.t && defined Z.y.cv || die "noZ(C): ".ki$Z;
+            if ($tv->{Z.t}->{Z.y.cv}) {
+                push @{$ov->{Z.t}->{Z.y.cv}||=[]}, delete $tv->{Z.t}->{Z.y.cv};
+            }
+            my $z = $tv->{Z.t}->{Z.y.cv} ||= {};
+            $vt->{Z.y.cv}->{Z.t} = $z;
+            push @$M, $z;
+            z.t = Z.t;
+            z.y.cv = Z.y.cv;
+            z.c.s = Z.c.s if exists Z.c.s;
+            z.sc = {%{Z.sc}};
+        }
+        saybl wdump 4, $tv;
         # names -> A fall replace to check inside
         # A -> J t/y images
     s 3:
@@ -541,8 +577,7 @@ Zupe: |
             for my $t (sort keys %$ts) {
                 my $z = $ts->{$t};
                 sayre "Compile $of $cv $t !";
-                z.c.s =~ s/\bs\&(\w+)/C\&$1/sgm;
-                z.c.s = G&parse_babbl,z.c.s;
+                Rw TheBabbler $C:z;
                 my $y = eval z.c.s;
                 die "Throcompile of.t z.y.cv: z.t: "
                     .ind('  ',$@)."\n" if $@;
@@ -564,6 +599,7 @@ Zupe: |
         $n = n.y.next;
     }
     
+    
     my $so = Rw Zome $i $ii;
     
     #n Bud
@@ -573,16 +609,25 @@ Zupe: |
     n wk=>-pud=>{s=>$so},'%hs:375,ws,wi:30%'
     
     
+CoBabbler: |
+    C.c.s =~ s/\bs\&(\w+)/C\&$1/sgm;
+    C.c.s = G&parse_babbl,C.c.s;
+Hows: |
+    take:
+        robino
+    leave:
+        traces
 Zome: |
+    my $B = $A;
     my $A = {};
     A.i = $i;
     A.ii = $ii;
     my $G = A.i.G->($A,$C,$G,$T);
-    sayre "Yep";
+    A.i.parse_babbl = B.I.parse_babbl;
     $A = G&A,'so';
     my $J = G&J,'os';
     A.4 = A.3 = A.2 = $A;
-    n ows
+    n Hows
 pi/pud: |
     y.at.qs=1;
     y.at.ws=1;
