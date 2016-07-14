@@ -55,7 +55,7 @@ Day: |
                 $y = 1 if $y eq '';
                 C.y.cv = $y;
             }
-            C.y.cv /= 10 while C.y.cv > 1;
+            C.y.cv /= 10 until C.y.cv < 1;
             die "Extra: ".wdump 3,$s if @e;
         }
     # find local things, look up trail of con centers
@@ -356,6 +356,7 @@ Jelly: |
             }
             $ch++;
         }
+        delete J.c.o;
     
     u c
     n \'of:mo'
@@ -393,6 +394,9 @@ Jelly: |
         J.sc.n && G&rea,$J;
         J.sc.u && G&rea,J.sc.u;
         saybl "St J.t";
+        my $y = {cv=>0.9};
+        my $M = [];
+        my $c = {};
         J.sc.root = G&A,n=>1=>$J=>[J.t=>0.9];
         saybl "Ive J.t";
         Rw A.c.pin - $A $C $G $T $J $y;
@@ -433,7 +437,6 @@ Triangle: |
         my $tv;
         my $vt;
         my $ov; # overwrites tv []
-        my $M = [];
         for my $k (sort keys %$flux) {
             my $Y = $flux->{$k};
             Y.c || die "noY".ki$Y;
@@ -441,16 +444,17 @@ Triangle: |
             defined Z.t && defined Z.y.cv || die "noZ(C): ".ki$Z;
             if ($tv->{Z.t}->{Z.y.cv}) {
                 push @{$ov->{Z.t}->{Z.y.cv}||=[]}, delete $tv->{Z.t}->{Z.y.cv};
+                delete $vt->{Z.y.cv}->{Z.t};
             }
             my $z = $tv->{Z.t}->{Z.y.cv} ||= {};
             $vt->{Z.y.cv}->{Z.t} = $z;
-            push @$M, $z;
             z.t = Z.t;
             z.y.cv = Z.y.cv;
+            z.y.A = $Y;
             z.c.s = Z.c.s if exists Z.c.s;
             z.sc = {%{Z.sc}};
         }
-        saybl wdump 4, $tv;
+        saybl "A.c.sip A.t s2: ".wdump 4, $tv;
         # names -> A fall replace to check inside
         # A -> J t/y images
     s 3:
