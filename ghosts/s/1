@@ -15,6 +15,10 @@ Day: |
         C.y = {};
         C.c.s = $s;
         $C;
+    Ct:
+        my $C = {};
+        G&Cs,$s;
+        $C;
     Cs:
         my ($t,@e) = @$s;
         if (ref $t eq 'SCALAR') {
@@ -126,17 +130,16 @@ Day: |
             if (@Me) {
                 A.c.N = \@Me;
             }
-            G&throat,A.t;
+            G&throat;
         }
         return $A
 Tube: |
     u i
     # go A
     throat:
-        $s ||= A.t;
+        $s ||= A.c.of || A.t;
         my $of = G&s,$s;
-        of.c.of ||= of.c.s;
-        of.c.max = 2;
+        of.c.max = 2; # distance from A to look
         my $z = G&t,$of || return;
         snooze 1500;
         my $uov = A.c.ov;
@@ -206,8 +209,9 @@ Tube: |
             $z = z.y.in || z.y.next; # or timeout, mass comb via A.m
         }
         # leaving
-        A.c.tug && G&tug;
+        A.c.tug && G&tug,A.y.cv;
         delete A.c.ov;
+        T.not && G&Tnot;
         sayre "Levang A.c.sip   A.t A.cv";
         # TODO cycle all A.c.N as C
         # TODO line with Targety interrupt potential
