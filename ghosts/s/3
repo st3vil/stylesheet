@@ -185,61 +185,44 @@ Circle: |
         # opens recursive shop
         my $j = G&offis,i=>j=>'t';
         my $jj = j.sc.oo;
-        for my $t (keys %{jj.C}) {
-            my $vs = oo.C.>$t;
-        my $hh = {C=>{map{ $_=>$jj->{$_} 
+        my $hh;
+        map{my$x=$_; map{my$t=$_; map{my$cv=$_;
+            $hh.>$x.>$t.>$cv = 1;
+        } keys %{$jj.>$x.>$t } } keys %{$jj.>$x } } keys %$jj;
         my $oo = A.c.oo;
+        my $cha = A.c.cha ||= {};
         # sort by zipped from A sips
-        for my $t (keys %{oo.C}) {
-            my $vs = oo.C.>$t;
-            for my $cv (keys %$vs) {
-                my $Cs = $vs->{$cv};
-                @$Cs = reverse G&sortysip,$Cs,'A','R' if @$Cs > 1;
-                my ($o,@out) = @$Cs;
-                sayre "Dupl ".ki $_ for @out;
-                oo.C->{o.t}->{o.y.cv} = $o;
-                my $e = o.c.s;
-                my $l = jj.C->{o.t}->{o.y.cv};
-                my $v = l.c.s if $l;
-                if (o.y.A ne $A) {
-                    sayyl "e.t e.y.cv is from A.t";
+        for my $x (keys %$oo) {
+            my $xo = $oo.>$x;
+            for my $t (keys %$xo) {
+                my $vs = $xo.>$t;
+                for my $cv (keys %$vs) {
+                    my $Cs = $vs->{$cv};
+                    @$Cs = reverse G&sortysip,$Cs,'A','R' if @$Cs > 1;
+                    my ($o,@out) = @$Cs;
+                    sayre "Dupl ".ki $_ for @out;
+                    $oo.>$x.>$t.>$cv = $o;
+                    # last this
+                    delete $hh.>$x.>$t.>$cv;
+                    my $l = $jj.>$x.>$t.>$cv;
+                    G&Chang,$l,$o;
+                    if (o.y.A ne $A) {
+                        sayyl "$t $cv is from o.y.A.t";
+                    }
+                    if (!$l) {
+                        $cha.>$x.>$_.>$t.>$cv = $o for 'new';
+                    }
+                    elsif (o.c.cha) {
+                        $cha.>$x.>$_.>$t.>$cv = $o for 'diff';
+                    }
                 }
-                G&Com,$
-                sayre "Compare:";
-                saybl ki $l;
-                saybl ki $v;
-                saygr ki $o;
-                saygr ki $e;
             }
         }
+        map{my$x=$_; map{my$t=$_; map{my$cv=$_;
+            $hh.>$x.>$t.>$cv || return;
+            $cha.>$x.>$_.>$t.>$cv = $o for 'gone';
+        } keys %{$jj->{$x}->{$t}} } keys %{$jj->{$x}} } keys %$jj;
         # names -> A fall replace to check inside
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        #
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         
         
@@ -254,10 +237,38 @@ Circle: |
         # A -> J t/y images
 Walks: | # othering
     u i
+    # history tables sold separately
+    Chang: %acgt:l o
+        my $E = l.c.s if $l;
+        my $e = o.c.s;
+        for my $p (['t'],[y=>'cv'],[c=>''],[sc=>'']) {
+            my ($nk,$gk) = @$p;
+            my $u = $E.>$nk; # Eustobe
+            my $v = $e.>$nk; # revelation
+            if (defined $gk) {
+                my (@v,@u);
+                push @v, $gk ? $gk : keys %$v if defined $gk;
+                push @u, $gk ? $gk : keys %$u if defined $gk;
+                for my $vk (@v) {
+                
+                }
+                for my $uk (@u) {
+                    exists $v.>$uk && next;
+                    o.c.gone->{$nk}->{$uk} = $u
+                }
+            }
+            else {
+                
+            for my $s (map{ @$p > 1 ? 
+            o.c.diff->{
+        }
+        saybl ki $l;
+        saybl ki $v;
+        saygr ki $o;
+        saygr ki $e;
     # osc blinds previous empirica
     Chade:
         my $C = {};
-        C.y.A = $A;
         C.t = s.t;
         C.y.cv = s.y.cv;
         C.c.s = s.c.s if exists s.c.s;
@@ -289,7 +300,7 @@ Walks: | # othering
             || $so->($i+1);
         };
         sort {$so->(0,@Me)} @$s;
-    # recur j index sc.jo... on above j or root i (thing)
+    # recur j index (above j || root i).sc.jo... = $j
     # out of throat order, first to 3 in tug scene coops others
     offis: %acgt:r j
         my $ik = $j.'C';
@@ -318,7 +329,7 @@ Walks: | # othering
         };
         $oi->($C);
         
-    # current & join expr
+    # hash then & now expr
     wtch: %acgt:c d
         my $wt = {};
         wt.same = 1;
