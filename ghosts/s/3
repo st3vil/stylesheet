@@ -26,11 +26,11 @@ Triangle: | # peel electrosn
         if (my $n = A.c.n) {
             s&ch = A.2.sc.ch if !defined s&ch;
             s&ch = '' if !defined s&ch;
-            G&tugA,o=>2,$C,n.sc.a->{$ch},'zip';
+            G&tugA,o=>2,$C,n.sc.a->{s&ch},'zip';
         }
         c&zip = G&tugA,o=>3,$C,A.c.tug,'zip';
     s 3:
-        say "S 3";
+        say "S  3";
         # J t/y awakens
         # W t/y awakens
     s 4:
@@ -62,7 +62,7 @@ Circle: |
     #  - knows i means pull o.i as t=>s
     #  - recur C shell of just t and c.s
     # so around t/cs/sc the other stff
-    
+    #
     # eats other, splats self 
     # the splat modes of ts, tv (shade c), 
     
@@ -103,11 +103,9 @@ Circle: |
             # may have lvism & more via h.sc.s.
         }
     o 2:
-        # per protocol/named holster
-        my $j = c&j = C.c.i.sc.oo->{C.t} ||= {};
-        my $r = c&r = {};
-        my $oo = r.sc.oo = {};
-        # per other itself, way in is noise-ish
+        my $oo = A.c.oo = {};
+        # < space-for (C) < t < y [many o with .c.s = $e, o.y.etc = etc]
+        # per other itself in 3, way in is noise-ish
         if (c&m eq 'zip') {
             for my $k (keys %{c&s}) {
                 my $v = c&s ->{$k};
@@ -116,23 +114,30 @@ Circle: |
                 my $D = v.c.s;
                 if (v.t eq 'o') {
                     # D is inner o's C - index windups
-                    if (v.cv >= 0.2) {
-                        die "too late to grab self D.t";
+                    D.c.i eq c&i || die "o oth i C.c.i.t <-> D.c.i.t";
+                    D.c.j && die "o D.c.t already got j";
+                    D.c.jC && die "o D.c.t already got jC";
+                    D.c.jC = $C;
+                    my $ii = v.c.oo || die "Too early to oo: D.t";
+                    my $i = 0;
+                    for my $t (keys %{ii.C}) {
+                        my $vs = ii.C->{$t};
+                        for my $cv (keys %$vs) {
+                            my $os = $vs->{$cv};
+                            push @{oo.C->{$t}->{$cv}||=[]}, @$os;
+                            $i++ for @$os;
+                        }
                     }
-                    else {
-                        say "A.t A.c.sip C.t claims: v.t v.c.sip D.t";
-                        D.c.i eq c&i || die "o oth i C.c.i.t <-> D.c.i.t";
-                        D.c.i = c&j;
-                        push @{oo.all->{D.t}||=[]}, $v;
-                    }
+                    say "A.t A.c.sip C.t claims $i from: v.t v.c.sip D.t";
                 }
                 else {
-                    # D is J moment material to shade
+                    # D is J moment C material to shade
                     my $e = G&Chade,$D;
-                    e.y.D = $D;
-                    e.y.R = $v;
-                    e.y.k = $k;
-                    push @{oo.C->{e.t}->{e.y.cv}||=[]}, $e;
+                    my $o = G&Chs,$e;
+                    o.y.D = $D;
+                    o.y.R = $v;
+                    o.y.k = $k;
+                    push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
                 }
             }
         }
@@ -143,9 +148,10 @@ Circle: |
                 my $e;
                 e.t = $k;
                 e.y.cv = 0.1;
-                e.y.k = $k;
                 e.c.s = $v;
-                push @{oo.C->{e.t}->{e.y.cv}||=[]}, $e;
+                my $o = G&Chs,$e;
+                o.y.k = $k;
+                push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
             }
         }
         elsif (c&m eq 'ii') {
@@ -153,50 +159,48 @@ Circle: |
                 my $v = c&s ->{$k};
                 # t -> C
                 my $e = G&xot,$v;
-                e.y.k = $k;
-                push @{oo.C->{e.t}->{e.y.cv}||=[]}, $e;
+                my $o = G&Chs,$e;
+                o.y.k = $k;
+                push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
             }
         }
         elsif (c&m eq 'C') {
             # C
             my $e = G&xot,c&s;
             e.y && e.y ne c&s || die "nonyiv";
+            my $o = G&Chs,$e;
             # if y.in or sc.z make oo.all.
-            push @{oo.C->{e.t}->{e.y.cv}||=[]}, $e;
+            push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
         }
         else {
             die "How to read ".ki $C;
         }
         
-    o 3: %johnny guitar:#c
-        my $j = c&j;
+    o 3: %johnny guitar:#c 
+        my $i = c&i;
+        my $jo = $i;
+        # opens recursive shop
+        G&offis,i=>j=>t;
+        my $j = c&j ||= i.sc.jo->{C.t} ||= {};
         my $jj = j.sc.oo;
         my $r = c&r;
-        my $oo = r.sc.oo;
-        # sort by sip if somehow
+        my $oo = A.c.oo;
+        say " O three";
+        # sort by zipped from A sips
         for my $t (keys %{oo.C}) {
             my $vs = oo.C.>$t;
             for my $cv (keys %$vs) {
-                my $Cs = $vc->{$cv};
+                my $Cs = $vs->{$cv};
                 if (@$Cs > 1) {
-                    my $so;$so = sub {
-                        my $i = shift;
-                        my ($c,$d) = (a.y.v,b.y.v);
-                        $c && $d || die "noabyv";
-                        ($c,$d) = (c.c.ip,d.c.ip);
-                        return die "ip sort ran out: a.t a.y.cv"
-                            unless exists $c->[$i]
-                                || exists $d->[$i];
-                        c.c.ip->[$i] <=> d.c.ip->[$i]
-                        || $so->($i+1);
-                    };
-                    @$Cs = reverse sort {$so->(0)} @$Cs;
+                    @$Cs = reverse G&sortysip,$Cs,'A','R';
                 }
-                my ($e,@out) = @$Cs;
-                oo.C->{e.t}->{e.y.cv} = $e;
-                my $l = jj.C->{e.t}->{e.y.cv};
-                
-            }
+                my ($o,@out) = @$Cs;
+                oo.C->{o.t}->{o.y.cv} = $o;
+                my $l = jj.C->{o.t}->{o.y.cv};
+                sayre "Compare: ";
+                saybl ki l.c.s;
+                saygr ki o.c.s;
+            }sc
         }
         # names -> A fall replace to check inside
         
@@ -209,7 +213,7 @@ Circle: |
         
         
         
-        
+        #
         
         
         
@@ -240,13 +244,63 @@ Circle: |
         # A -> J t/y images
 Walks: | # othering
     u i
+    # osc blinds previous empirica
     Chade:
         my $C = {};
         C.t = s.t;
         C.y.cv = s.y.cv;
-        C.c.s = s.c.s if exists Z.c.s;
-        C.sc = {%{Z.sc}};
-        $C
+        C.c.s = s.c.s if exists s.c.s;
+        C.sc = {%{s.sc}};
+        return $C;
+    # make an other holding it
+    Chs:
+        my $C = {};
+        C.t = s.t;
+        C.y.cv = s.y.cv;
+        C.c.s = $s;
+        C.y.A = $A;
+        return $C;
+    # sort by many y.As
+    sortysip:
+        my $so;$so = sub {
+            my ($i,@try) = @_;
+            my ($yk) = @try;
+            my ($c,$d) = (a.y->{$yk},b.y->{$yk});
+            $c && $d || die "sort no y$yk";
+            ($c,$d) = (c.c.ip,d.c.ip);
+            $c && $d || die "sort noy$yk ip";
+            unless (exists $c->[$i] || exists $d->[$i]) {
+                shift @try;
+                return $so->(0,@try) if @try;
+                die "ip sort ran out: a.t a.y.cv";
+            }
+            c.c.ip->[$i] <=> d.c.ip->[$i]
+            || $so->($i+1);
+        };
+        sort {$so->(0,@Me)} @$s;
+    # opens recursive shop, cooperate with A overs as to where
+    # r origin c.? to sc.
+    offis: %acgt:r j
+        my $ik = $j.'C';
+        my $ok = $j.'o';
+        my $tw;
+        my $jo;$jo = sub {
+            my ($C) = @_;
+            die "loop" if $tw->{$C}++;
+            my $jo;
+            if (my $D = C.c.>$ik) {
+                $jo = D.c.>$j ||= $jo->($D);
+            }
+            else {
+                $jo = C.c.>$r;
+            }
+            jo.sc.
+        if (my $sip = c&over) {
+            my ($v,@etc) = values %$sip;
+            @etc && die "Many overhead C.t";
+            
+        }
+        
     # current & join expr
     wtch: %acgt:c d
         my $wt = {};
