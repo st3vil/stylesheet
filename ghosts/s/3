@@ -28,9 +28,11 @@ Triangle: | # peel electrosn
             s&ch = '' if !defined s&ch;
             G&tugA,o=>2,$C,n.sc.a->{s&ch},'zip';
         }
-        c&zip = G&tugA,o=>3,$C,A.c.tug,'zip';
+        c&zip = G&tugA,o=>2,$C,A.c.tug,'zipover';
     s 3:
-        say "S  3";
+        say "S  3 A.2.t";
+        my $z = c&zip;
+        saybl wdump 3, z.c.cha;
         # J t/y awakens
         # W t/y awakens
     s 4:
@@ -38,6 +40,7 @@ Triangle: | # peel electrosn
         # brings up W inners <9 like t/y clang
     s 5:
         # goS made
+        sayyl "5  A.2.t";
     s 6:
         # going - figure difference
         c&el = '2' if 1 == 3;
@@ -77,6 +80,7 @@ Circle: |
         
         c&i = $i;
         c&m ||= C.t;
+        c&m = 'zip' if c&m =~ /^zip(.+)$/;
         if (f.y) {
             if (f.y eq $f) {
                 # A/J
@@ -177,30 +181,36 @@ Circle: |
         }
         
     o 3: %johnny guitar:#c 
-        my $i = c&i;
-        my $jo = $i;
-        # opens recursive shop
-        G&offis,i=>j=>t;
-        my $j = c&j ||= i.sc.jo->{C.t} ||= {};
-        my $jj = j.sc.oo;
-        my $r = c&r;
-        my $oo = A.c.oo;
         say " O three";
+        # opens recursive shop
+        my $j = G&offis,i=>j=>'t';
+        my $jj = j.sc.oo;
+        for my $t (keys %{jj.C}) {
+            my $vs = oo.C.>$t;
+        my $hh = {C=>{map{ $_=>$jj->{$_} 
+        my $oo = A.c.oo;
         # sort by zipped from A sips
         for my $t (keys %{oo.C}) {
             my $vs = oo.C.>$t;
             for my $cv (keys %$vs) {
                 my $Cs = $vs->{$cv};
-                if (@$Cs > 1) {
-                    @$Cs = reverse G&sortysip,$Cs,'A','R';
-                }
+                @$Cs = reverse G&sortysip,$Cs,'A','R' if @$Cs > 1;
                 my ($o,@out) = @$Cs;
+                sayre "Dupl ".ki $_ for @out;
                 oo.C->{o.t}->{o.y.cv} = $o;
+                my $e = o.c.s;
                 my $l = jj.C->{o.t}->{o.y.cv};
-                sayre "Compare: ";
-                saybl ki l.c.s;
-                saygr ki o.c.s;
-            }sc
+                my $v = l.c.s if $l;
+                if (o.y.A ne $A) {
+                    sayyl "e.t e.y.cv is from A.t";
+                }
+                G&Com,$
+                sayre "Compare:";
+                saybl ki $l;
+                saybl ki $v;
+                saygr ki $o;
+                saygr ki $e;
+            }
         }
         # names -> A fall replace to check inside
         
@@ -247,6 +257,7 @@ Walks: | # othering
     # osc blinds previous empirica
     Chade:
         my $C = {};
+        C.y.A = $A;
         C.t = s.t;
         C.y.cv = s.y.cv;
         C.c.s = s.c.s if exists s.c.s;
@@ -255,10 +266,10 @@ Walks: | # othering
     # make an other holding it
     Chs:
         my $C = {};
+        C.y.A = $A;
         C.t = s.t;
         C.y.cv = s.y.cv;
         C.c.s = $s;
-        C.y.A = $A;
         return $C;
     # sort by many y.As
     sortysip:
@@ -278,28 +289,34 @@ Walks: | # othering
             || $so->($i+1);
         };
         sort {$so->(0,@Me)} @$s;
-    # opens recursive shop, cooperate with A overs as to where
-    # r origin c.? to sc.
+    # recur j index sc.jo... on above j or root i (thing)
+    # out of throat order, first to 3 in tug scene coops others
     offis: %acgt:r j
         my $ik = $j.'C';
         my $ok = $j.'o';
         my $tw;
-        my $jo;$jo = sub {
+        my $oi;$oi = sub {
             my ($C) = @_;
-            die "loop" if $tw->{$C}++;
+            die "loop C.t" if $tw->{$C}++;
             my $jo;
             if (my $D = C.c.>$ik) {
-                $jo = D.c.>$j ||= $jo->($D);
+                # tune in parents first
+                $jo = D.c.>$j ||= $oi->($D);
             }
             else {
+                # origin
                 $jo = C.c.>$r;
             }
-            jo.sc.
-        if (my $sip = c&over) {
-            my ($v,@etc) = values %$sip;
-            @etc && die "Many overhead C.t";
-            
-        }
+            my $i = jo.sc.>$ok ||= {};
+            for my $nk (@Me) {
+                ($nk,my $gk) = ($1,$nk) if $nk =~ s/^(y|c|sc)//;
+                my $v = $C->{$nk};
+                $v = $v->{$gk} if $gk;
+                $i = $i->{$v} ||= {};
+            }
+            C.c.>$j = $i;
+        };
+        $oi->($C);
         
     # current & join expr
     wtch: %acgt:c d
