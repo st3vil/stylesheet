@@ -11,7 +11,9 @@ Triangle: | # peel electrosn
         A.c.s = G&sJ,A.2,'s';
     s 2:
         # number of things plugged in
-        # o uses recursio as passed in
+        for my $J (A.2) {
+            C.c.>$_ = J.c.>$_ for grep{ J.c.>$_ }qw'whole base';
+        }
         if (my $W = c&whole) {
             my $s = G&t,$W || die "no $W";
             say "Whole ! ".ki $s;
@@ -32,7 +34,7 @@ Triangle: | # peel electrosn
     s 3:
         say "S  3 A.2.t";
         my $z = c&zip;
-        saybl wdump 3, z.c.cha;
+        saybl "AN zip: z.t z.cv / z.c.sip ".wdump 3, z.c.cha;
         # J t/y awakens
         # W t/y awakens
     s 4:
@@ -224,14 +226,7 @@ Circle: |
         } keys %{$jj->{$x}->{$t}} } keys %{$jj->{$x}} } keys %$jj;
         # names -> A fall replace to check inside
         
-        
-        
-        
-        
-        
-        
-        
-        
+        j.sc.oo = $oo;
         
         
         # A -> J t/y images
@@ -241,31 +236,51 @@ Walks: | # othering
     Chang: %acgt:l o
         my $E = l.c.s if $l;
         my $e = o.c.s;
-        for my $p (['t'],[y=>'cv'],[c=>''],[sc=>'']) {
+        my @p = (['t'],[y=>'cv'],[c=>{}],[sc=>{}]);
+        while (@p) {
+            my $p = shift @p;
             my ($nk,$gk) = @$p;
             my $u = $E.>$nk; # Eustobe
             my $v = $e.>$nk; # revelation
-            if (defined $gk) {
-                my (@v,@u);
-                push @v, $gk ? $gk : keys %$v if defined $gk;
-                push @u, $gk ? $gk : keys %$u if defined $gk;
-                for my $vk (@v) {
+            if (ref $gk) {
+                keys %$gk == 0 || die "Given a ref: ".ki $gk;
+                $gk.>$_++ for keys(%$u), keys (%$v);
+                unshift @p, [$nk,$_] for keys %$gk;
+                next;
+            }
+            if ($gk) {
+                if (!exists $u.>$nk) {
+                    o.c.new.>$nk.>$gk = 1;
+                }
+                elsif (!exists $v.>$nk) {
+                    o.c.gone.>$nk.>$gk = 1;
+                }
+                elsif ($u.>$nk ne $v.>$nk) {
+                    o.c.diff.>$nk.>$gk = 1;
+                }
+                else {
+                    o.c.same.>$nk.>$gk = 1;
+                }
                 
-                }
-                for my $uk (@u) {
-                    exists $v.>$uk && next;
-                    o.c.gone->{$nk}->{$uk} = $u
-                }
             }
             else {
-                
-            for my $s (map{ @$p > 1 ? 
-            o.c.diff->{
+                if (!exists $E.>$nk) {
+                    o.c.new.>$nk = 1;
+                }
+                elsif (!exists $e.>$nk) {
+                    o.c.gone.>$nk = 1;
+                }
+                elsif ($u ne $v) {
+                    o.c.diff.>$nk = 1;
+                }
+                else {
+                    o.c.same.>$nk = 1;
+                }
+            }
         }
-        saybl ki $l;
-        saybl ki $v;
-        saygr ki $o;
-        saygr ki $e;
+        for (grep { o.c.>$_ } qw'new gone diff') {
+            o.c.cha->{$_} = o.c.>$_;
+        }
     # osc blinds previous empirica
     Chade:
         my $C = {};
