@@ -43,7 +43,7 @@ Zupe: |
     
     my $v = LoadFile('w/glacval');
     for my $of (keys %$v) {
-        my $o = $ii->{$of} = {t=>'of',y=>{cv=>0.1},c=>{W=>'of'}};
+        my $o = $ii->{$of} = {t=>$of,y=>{cv=>0.1},c=>{W=>'of'}};
         my $c = $v->{$of};
         my $la = $o;
         for my $cv (sort keys %$c) {
@@ -57,7 +57,12 @@ Zupe: |
                 die "Throcompile of.t z.y.cv: z.t:"
                     .ind('  ',$@)."\n" if $@;
                 z.c.code = $y;
-                   la.y.next = $z;
+                if ($la eq $o) {
+                    la.y.in = $z;
+                }
+                else {
+                    la.y.next = $z;
+                }
                 z.y.prev = $la;
                 $la = $z;
             }
@@ -94,6 +99,7 @@ Zome: |
     my $A = {};
     A.i = $i;
     A.ii = $ii;
+    die Dump($ii);
     my $G = A.i.G->($A,$C,$G,$T);
     A.i.parse_babbl = B.I.parse_babbl;
     $A = G&A,'so';
