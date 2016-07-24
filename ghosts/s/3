@@ -109,6 +109,8 @@ Circle: |
             c&s = h.sc->{c&kno};
             # may have lvism & more via h.sc.s.
         }
+    # intermediate whats-where
+    # has 
     o 2:
         my $oo = A.c.oo = {};
         # < space-for (C) < t < y [many o with .c.s = $e, o.y.etc = etc]
@@ -180,7 +182,7 @@ Circle: |
                 say "C.t C.y.cv Has some inward: ".wdump 3, $in;
             }
             if (my $z = e.sc.z) {
-                saybl "C.t C.y.cv has some z: ".wdump 4, $z;
+                saybl "C.t C.y.cv has some z: ".wdump 3, $z;
             }
             my $o = G&Chs,$e;
             # if y.in or sc.z make oo.all.
@@ -220,6 +222,7 @@ Circle: |
                     delete $hh.>$x.>$t.>$cv;
                     my $l = $jj.>$x.>$t.>$cv;
                     G&Chang,$l,$o;
+                    o.y.l = $l if $l;
                     my $fr = o.y.A;
                     if ($fr ne $A) {
                         sayyl "$t $cv is from fr.t ";
@@ -240,8 +243,9 @@ Circle: |
         # names -> A fall replace to check inside
         
         j.sc.oo = $oo;
-        
-        
+    
+    o 4:
+        #
         # A -> J t/y images
 Walks: | # othering
     u i
@@ -273,7 +277,27 @@ Walks: | # othering
             C.c.>$j = $i;
         };
         $oi->($C);
+    # index iterator
+    Chew:
+        @Me = split ',', @Me if @Me == 1 && $Me[0] =~ /,/;
+        my $in;$in = sub {
+            my ($p,$s,$i) = @_;
+            if (!@$i || @$i==1 &&
+                ref $s ne 'HASH' && $i->[0] =~ /\?$/) {
+                return [$s,@$p];
+            }
+            die "NO ".wdump 3,[$p,$s] if ref $s ne 'HASH';
+            shift @$i;
+            map {
+                my $v = $s.>$_;
+                $in->([@$p,$_],$v,[@$i]);
+            } keys %$s;
+            
+        };
+        my @are = $in->([],$s,[@Me]);
+        return sub { shift @are };
         
+    
     # history tables sold separately
     Chang: %acgt:l o
         my $E = l.c.s if $l;
@@ -291,13 +315,13 @@ Walks: | # othering
                 next;
             }
             if ($gk) {
-                if (!exists $u.>$nk) {
+                if (!exists $u.>$nk.>$gk) {
                     o.c.new.>$nk.>$gk = 1;
                 }
-                elsif (!exists $v.>$nk) {
+                elsif (!exists $v.>$nk.>$gk) {
                     o.c.gone.>$nk.>$gk = 1;
                 }
-                elsif ($u.>$nk ne $v.>$nk) {
+                elsif ($u.>$nk.>$gk ne $v.>$nk.>$gk) {
                     o.c.diff.>$nk.>$gk = 1;
                 }
                 else {
