@@ -84,7 +84,11 @@ Circle: |
         c&i = $i;
         c&m ||= C.t;
         c&m = 'zip' if c&m =~ /^zip(.+)$/;
-        if (f.y) {
+        if (ref $f eq 'ARRAY') {
+            c&m = 'z';
+            c&s = $f;
+        }
+        elsif (f.y) {
             if (f.y eq $f) {
                 # A/J
                 c&h = $f;
@@ -109,8 +113,7 @@ Circle: |
             c&s = h.sc->{c&kno};
             # may have lvism & more via h.sc.s.
         }
-    # intermediate whats-where
-    # has 
+    #c intermediate whats-where
     o 2:
         my $oo = A.c.oo = {};
         # < space-for (C) < t < y [many o with .c.s = $e, o.y.etc = etc]
@@ -175,18 +178,22 @@ Circle: |
         }
         elsif (c&m eq 'C') {
             # C
-            # know about z
-            my $e = G&hup,c&s;
-            e.y && e.y ne c&s || die "CynonC";
-            if (my $in = e.y.in) {
-                say "C.t C.y.cv Has some inward: ".wdump 3, $in;
+            my $S = c&s;
+            while ($S) {
+                my $e = G&hup,$S;
+                my $o = G&Chs,$e;
+                push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
+                $S = S.y.next;
             }
-            if (my $z = e.sc.z) {
-                saybl "C.t C.y.cv has some z: ".wdump 3, $z;
+        }
+        elsif (c&m eq 'z') {
+            # [ C... ]
+            say "       doing z C.t C.y.cv  x ".@{c&s};
+            for my $S (@{ c&s }) {
+                my $e = G&hup,$S;
+                my $o = G&Chs,$e;
+                push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
             }
-            my $o = G&Chs,$e;
-            # if y.in or sc.z make oo.all.
-            push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
         }
         else {
             die "How to read ".ki $C;
@@ -197,53 +204,58 @@ Circle: |
         # opens recursive shop
         my $j = G&offis,i=>j=>'t';
         my $jj = j.sc.oo;
-        my $hh;
-        map{my$x=$_; map{my$t=$_; map{my$cv=$_;
-            $hh.>$x.>$t.>$cv = 1;
-        } keys %{$jj.>$x.>$t } } keys %{$jj.>$x } } keys %$jj;
         my $oo = A.c.oo;
         my $cha = A.c.cha ||= {};
-        # sort by zipped from A sips
         # falls until array, oo.C.t.cv = [thamany]
-        # and the jj most watery collects oo.W.$of.oft.ofcv.tot.tocv = []
-        for my $x (keys %$oo) {
-            my $xo = $oo.>$x;
-            for my $t (keys %$xo) {
-                my $vs = $xo.>$t;
-                for my $cv (keys %$vs) {
-                    my $Cs = $vs->{$cv};
-                    if (@$Cs > 1) {
-                        @$Cs = reverse G&sortysip,$Cs,'A','R';
-                    }
-                    my ($o,@out) = @$Cs;
-                    sayre "Dupl ".ki $_ for @out;
-                    $oo.>$x.>$t.>$cv = $o;
-                    # last this
-                    delete $hh.>$x.>$t.>$cv;
-                    my $l = $jj.>$x.>$t.>$cv;
-                    G&Chang,$l,$o;
-                    o.y.l = $l if $l;
-                    my $fr = o.y.A;
-                    if ($fr ne $A) {
-                        sayyl "$t $cv is from fr.t ";
-                    }
-                    if (!$l) {
-                        $cha.>$x.>$_.>$t.>$cv = $o for 'new';
-                    }
-                    elsif (o.c.cha) {
-                        $cha.>$x.>$_.>$t.>$cv = $o for 'diff';
-                    }
+        G&Chew,$oo,'x,t,cv',$_ for sub {
+            my ($o,$x,$t,$cv) = @_;
+            if (@$o > 1) {
+                # sort by zipped from A sips
+                @$o = reverse G&sortysip,$o,'A','R';
+            }
+            ($o,my@out) = @$o;
+            sayre "Dupl ".ki $_ for @out;
+            $oo.>$x.>$t.>$cv = $o;
+            # last this
+            my $l = $jj.>$x.>$t.>$cv;
+            G&Chang,$l,$o;
+            o.y.l = $l if $l;
+            
+            my $e = o.c.s;
+            if (my $z = e.y.in || e.sc.z) {
+                my $t = "z $t $cv";
+                my $Y = G&tugA,o=>2,c&i,$z,$t;
+                Y.c.s.c.jC = $C;
+                G&A,$Y=>3;
+                if (my $ch = Y.c.cha) {
+                    saybl "Hava";
+                    Rw Duj $i:Y;
+                    say "Yav";
                 }
             }
-        }
-        map{my$x=$_; map{my$t=$_; map{my$cv=$_;
-            $hh.>$x.>$t.>$cv || return;
+            
+            my $fr = o.y.A;
+            if ($fr ne $A) {
+                sayyl "$t $cv is from fr.t ";
+            }
+            if (!$l) {
+                $cha.>$x.>$_.>$t.>$cv = $o for 'new';
+                o.c.el = 1;
+            }
+            elsif (o.c.cha) {
+                $cha.>$x.>$_.>$t.>$cv = $o for 'diff';
+            }
+        };
+        G&Chew,$jj,'x,t,cv',$_ for sub {
+            my ($o,$x,$t,$cv) = @_;
+            $oo.>$x.>$t.>$cv && return;
+            say "Goner C.t C.y.cv  --  $x $t $cv ----";
             $cha.>$x.>$_.>$t.>$cv = $o for 'gone';
-        } keys %{$jj->{$x}->{$t}} } keys %{$jj->{$x}} } keys %$jj;
+        };
         # names -> A fall replace to check inside
         
         j.sc.oo = $oo;
-    
+    0&&
     o 4:
         #
         # A -> J t/y images
@@ -258,16 +270,16 @@ Walks: | # othering
         my $oi;$oi = sub {
             my ($C) = @_;
             die "loop C.t" if $tw->{$C}++;
-            my $jo;
+            my $jon;
             if (my $D = C.c.>$ik) {
                 # tune in parents first
-                $jo = D.c.>$j ||= $oi->($D);
+                $jon = D.c.>$j ||= $oi->($D);
             }
             else {
                 # origin
-                $jo = C.c.>$r;
+                $jon = C.c.>$r;
             }
-            my $i = jo.sc.>$ok ||= {};
+            my $i = jon.sc.>$ok ||= {};
             for my $nk (@Me) {
                 ($nk,my $gk) = ($1,$nk) if $nk =~ s/^(y|c|sc)//;
                 my $v = $C->{$nk};
@@ -277,9 +289,10 @@ Walks: | # othering
             C.c.>$j = $i;
         };
         $oi->($C);
-    # index iterator
+    # iterator/map for index
     Chew:
-        @Me = split ',', @Me if @Me == 1 && $Me[0] =~ /,/;
+        my $it = pop @Me if ref $Me[-1] eq 'CODE';
+        @Me = split ',', shift @Me if @Me == 1 && $Me[0] =~ /,/;
         my $in;$in = sub {
             my ($p,$s,$i) = @_;
             if (!@$i || @$i==1 &&
@@ -291,11 +304,16 @@ Walks: | # othering
             map {
                 my $v = $s.>$_;
                 $in->([@$p,$_],$v,[@$i]);
-            } keys %$s;
+            } sort keys %$s;
             
         };
         my @are = $in->([],$s,[@Me]);
-        return sub { shift @are };
+        if ($it) {
+            $it->(@$_) for @are 
+        }
+        else {
+            sub { shift @are }
+        }
         
     
     # history tables sold separately
@@ -315,13 +333,13 @@ Walks: | # othering
                 next;
             }
             if ($gk) {
-                if (!exists $u.>$nk.>$gk) {
+                if (!exists $u.>$gk) {
                     o.c.new.>$nk.>$gk = 1;
                 }
-                elsif (!exists $v.>$nk.>$gk) {
+                elsif (!exists $v.>$gk) {
                     o.c.gone.>$nk.>$gk = 1;
                 }
-                elsif ($u.>$nk.>$gk ne $v.>$nk.>$gk) {
+                elsif ($u.>$gk ne $v.>$gk) {
                     o.c.diff.>$nk.>$gk = 1;
                 }
                 else {
