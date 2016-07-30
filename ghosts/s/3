@@ -228,22 +228,72 @@ Circle: |
             o.y.l = $l if $l;
             
             my $e = o.c.s;
+            # ty in above o
+            if (my $u = c&oup) {
+                if (my $al = u.sc.bz.>$t.>$cv) {
+                    die "ALREADY a C.t: ".ki $al;
+                }
+                u.sc.bz.>$t.>$cv = $o;
+            }
+            # throw inward (yin falls to z)
             if (my $z = e.y.in || e.sc.z) {
                 my $t = "z $t $cv";
                 $t = {t=>$t,c=>{jC=>$C,oup=>$o}};
-                my $Y = G&tugA,o=>2,c&i,$z,$t;
+                my $Y = G&tugA,o=>3,c&i,$z,$t;
                 if (my $ch = Y.c.cha) {
-                    saybl "Hava";
+                    sayyl "Hava";
                     #Rw Duj $i:Y;
-                    say "Yav";
                 }
             }
-            
+        };
+        G&Chew,$oo,'x,t,cv',$_ for sub {
+            my ($o,$x,$t,$cv) = @_;
+            my $l = o.y.l;
+            # ty inward check
+            my $sc = 'sc';
+            my $z = 'z';
+            if (my $bz = o.sc.bz) {
+                G&Chew,$bz,'t,cv',$_ for sub {
+                    my ($to,$dt,$dcv) = @_;
+                    my $m = !to.c.cha ? 'same' : to.y.l ? 'diff' : 'new';
+                    o.c.>$m.>$sc.>$z.>$dt.>$dcv = $to;
+                    to.c.cha || next;
+                    #sayyl " - $t $cv has: $dt $dcv ".ki to.c if to.c.cha;
+                    o.c.cha.>$m.>$sc.>$z.>$dt.>$dcv = $to;
+                }
+            }
+            if (my $dz = $l && l.sc.bz) {
+                my $bz = o.sc.bz;
+                G&Chew,$dz,'t,cv',$_ for sub {
+                    my ($to,$dt,$dcv) = @_;
+                    $bz.>$dt.>$dcv && next;
+                    my $m = 'gone';
+                    o.c.>$m.>$sc.>$z.>$dt.>$dcv = $to;
+                    o.c.cha.>$m.>$sc.>$z.>$dt.>$dcv = $to;
+                }
+            }
+            # 
+            if (my $oz = o.sc.oz) {
+                for my $on (keys %$oz) {
+                    my $to = $oz.>$on;
+                    if (to.y.A eq $A) {
+                        if (oo.C.>to.t.>to.y.cv eq $to) {
+                            #sayre "  -- have $on: to.t to.y.cv";
+                        }
+                        else {
+                            sayre "$t $cv Dont have $on: to.t to.y.cv ".wdump 2, oo.C;
+                        }
+                    }
+                    else {
+                        sayre "   ++ $on: to.t to.y.cv from other A";
+                    }
+                }
+            }
             my $fr = o.y.A;
             if ($fr ne $A) {
                 sayyl "$t $cv is from fr.t ";
             }
-            if (!$l) {
+            if (!o.y.l) {
                 $cha.>$x.>$_.>$t.>$cv = $o for 'new';
                 o.c.el = 1;
             }
@@ -257,7 +307,7 @@ Circle: |
             say "Goner C.t C.y.cv  --  $x $t $cv ----";
             $cha.>$x.>$_.>$t.>$cv = $o for 'gone';
         };
-        delete A.c.cha if !keys %$cha;
+        sayyl("Noch C.t C.y.cv") && delete A.c.cha if !keys %$cha;
         # names -> A fall replace to check inside
         j.sc.oo = $oo;
     0&&
@@ -296,8 +346,16 @@ Walks: | # othering
         $oi->($C);
     # iterator/map for index
     Chew:
+        my $sort;
         my $it = pop @Me if ref $Me[-1] eq 'CODE';
-        @Me = split ',', shift @Me if @Me == 1 && $Me[0] =~ /,/;
+        if (@Me == 1) {
+            my $i = shift @Me;
+            if (ref $i eq 'SCALAR') {
+                $sort = 1;
+                $i = $$i;
+            }
+            @Me = split ',', $i;
+        }
         my $in;$in = sub {
             my ($p,$s,$i) = @_;
             if (!@$i || @$i==1 &&
@@ -306,10 +364,12 @@ Walks: | # othering
             }
             die "NO ".wdump 3,[$p,$s] if ref $s ne 'HASH';
             shift @$i;
+            my @r = keys %$s;
+            @r = sort @r if $sort;
             map {
                 my $v = $s.>$_;
                 $in->([@$p,$_],$v,[@$i]);
-            } sort keys %$s;
+            } @r;
             
         };
         my @are = $in->([],$s,[@Me]);
@@ -322,6 +382,9 @@ Walks: | # othering
         
     
     # history tables sold separately
+    # prop up non val o.c.$cha.$nk.$gk = {}
+    # which unify cha ne same into o.c.cha.$cha.$nk.$gk 
+    # {} may extend meaning, eg z tys into
     Chang: %acgt:l o
         my $E = l.c.s if $l;
         my $e = o.c.s;
@@ -337,33 +400,34 @@ Walks: | # othering
                 unshift @p, [$nk,$_] for keys %$gk;
                 next;
             }
+            my $i = {};
             if ($gk) {
                 if (!exists $u.>$gk) {
-                    o.c.new.>$nk.>$gk = 1;
+                    o.c.new.>$nk.>$gk = $i;
                 }
                 elsif (!exists $v.>$gk) {
-                    o.c.gone.>$nk.>$gk = 1;
+                    o.c.gone.>$nk.>$gk = $i;
                 }
                 elsif ($u.>$gk ne $v.>$gk) {
-                    o.c.diff.>$nk.>$gk = 1;
+                    o.c.diff.>$nk.>$gk = $i;
                 }
                 else {
-                    o.c.same.>$nk.>$gk = 1;
+                    o.c.same.>$nk.>$gk = $i;
                 }
                 
             }
             else {
                 if (!exists $E.>$nk) {
-                    o.c.new.>$nk = 1;
+                    o.c.new.>$nk = $i;
                 }
                 elsif (!exists $e.>$nk) {
-                    o.c.gone.>$nk = 1;
+                    o.c.gone.>$nk = $i;
                 }
                 elsif ($u ne $v) {
-                    o.c.diff.>$nk = 1;
+                    o.c.diff.>$nk = $i;
                 }
                 else {
-                    o.c.same.>$nk = 1;
+                    o.c.same.>$nk = $i;
                 }
             }
         }
@@ -405,6 +469,7 @@ Walks: | # othering
         };
         sort {$so->(0,@Me)} @$s;
     # hash then & now expr
+    # goner, project everything onto C
     wtch: %acgt:c d
         my $wt = {};
         wt.same = 1;
