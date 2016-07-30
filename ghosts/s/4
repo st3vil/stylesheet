@@ -148,33 +148,42 @@ Zome: |
 Duj: |
     my $oo = i.c.oo;
     my $cha = i.c.cha;
+    my $ind = ar.ind = ar.ind.'  ';
     #my $ab = G&Chew,$cha,'x,di,t,cv';
     my $i;
-    G&Chew,$oo,'x,t,cv',$_ for sub {
+    G&Chew,$oo,\'x,t,cv',$_ for sub {
         $i++;
         my ($o,$x,$di,$t,$cv) = @_;
         my $l = o.y.l;
         my $E = l.c.s;
         my $e = o.c.s;
-        my $ch = o.c.cha;
-        if ($ch) {
+        my $cha = o.c.cha;
+        if ($cha) {
             if (o.c.el == 1) {
-                sayyl "New $x $di $t $cv";
+                sayyl "$ind $x $di $t $cv";
                 return;
             }
-            saygr "Has $x $di $t $cv:";
+            saygr "$ind != $x $di $t $cv:";
         }
         else {
-            saygr "Same $x $di $t $cv";
+            saygr "$ind = $x $di $t $cv";
             return
         };
-        G&Chew,o.c.cha,'m,nk,gk?',$_ for sub {
+        G&Chew,$cha,\'m,nk,gk?',$_ for sub {
             my ($wa,$m,$nk,$gk) = @_;
-            my $ol = $E.>$nk;
-            $ol = $ol.>$gk if @_ == 4;
+            my $xe = $cha.>$m.>$nk;
+            my $oe = $E.>$nk;
             my $ne = $e.>$nk;
+            $xe = $xe.>$gk if @_ == 4;
+            $oe = $oe.>$gk if @_ == 4;
             $ne = $ne.>$gk if @_ == 4;
-            say "   $m $nk $gk    ".slim($ne)."   <<-=    ".slim($ol);
+            say "$ind $m $nk $gk    ".slim($ne)."   <<-=    ".slim($oe);
+            if ($nk eq 'sc' && $gk eq 'z') {
+                my @Y = map { map { _.y.A } values %$_ } values %$xe;
+                uniq(@Y) == 1 || die "More than one A for scz o.t o.y.cv On i.t";
+                say "$ind Zeal x ".@Y;
+                Rw Duj + $i:_ for shift @Y;
+            }
         };
     };
     saybl "No changes" if !$i;
