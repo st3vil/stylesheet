@@ -117,10 +117,11 @@ Zome: |
     Y.sc.ii = Y.ii;
     Y.sc.i = Y.i;
     my $e = G&Ct,[zomb=>1=>'steve'=>'%hs:355,el:vs'];
-    #my $o = G&A,o=>4=>$J=>A.ii.theu,'zoyba';
     $e = A.ii.theu;
+    
     my $ot = 'zimb';
     my $beg = hitime();
+    
     my $o = G&A,o=>4=>$J=>$e,$ot;
     #Y.i.Chsgu = Y.i.Chs;
     Rw Duj $i:o;
@@ -129,6 +130,11 @@ Zome: |
     #e.y.cv = 0.2;
     my $m = e.sc.z->[4];
     m.sc.was = 'Here';
+    $m = e.sc.z->[3];
+    $m = m.y.in;
+    $m = m.y.next || $m for 1..3;
+    m.sc.epl = "Dop";
+    m.sc.s = "ACGT {} !";
     e.sc.eo = 'popup';
     my $i = G&A,o=>4=>$J=>$e,$ot;
     
@@ -149,28 +155,57 @@ Duj: |
     my $oo = i.c.oo;
     my $cha = i.c.cha;
     my $ind = ar.ind = ar.ind.'  ';
-    #my $ab = G&Chew,$cha,'x,di,t,cv';
+    die 'ooC: '.ki $oo if 1 != keys %$oo;
+    my $ty = oo.C;
+    my $oty = $cha && cha.C && cha.C.gone;
     my $i;
-    G&Chew,$oo,\'x,t,cv',$_ for sub {
-        my ($o,$x,$di,$t,$cv) = @_;
-        $i++;
+    my $yt = {};
+    for my $on ($ty, $oty) {
+        G&Chew,$on,'t,cv',$_ for sub {
+            my ($o,$t,$cv) = @_;
+            $yt->{$cv}->{$t} = $o;
+            $i++;
+        };
+    }
+    my $la;
+    my @z;
+    G&Chew,$yt,\'cv,t',$_ for sub {
+        my ($o,$cv,$t) = @_;
         my $l = o.y.l;
         my $E = l.c.s;
         my $e = o.c.s;
         my $cha = o.c.cha;
+        my $r;
+        r.t = $t;
+        r.y.cv = $cv;
+        r.c.o = $o;
         if ($cha) {
-            if (o.c.el == 1) {
-                sayyl "$ind    $x $di $t $cv";
-                return;
+            if (cha.new && cha.new.t) {
+                r.c.el = keys %{ $ty.>r.t } == 1 ? 2 : 1;
+                sayyl "$ind    $t $cv";
             }
-            saygr "$ind != $x $di $t $cv:";
+            elsif (cha.gone && cha.gone.t) {
+                r.c.el = 9;
+                sayre "$ind -- $t $cv";
+            }
+            else {
+                saygr "$ind != $t $cv:";
+                r.c.el = 3; # or 4 if only z more
+                # z holding notices things coming and going
+                # z ealand elabourates on past from here
+            }
         }
         else {
-            saygr "$ind == $x $di $t $cv";
+            saygr "$ind == $t $cv";
+            r.c.el = 8;
+            $la = $r;
             return
-        };
-        G&Chew,$cha,\'m,nk,gk?',$_ for sub {
+        }
+        my $chi;
+        my $co = r.sc.co ||= {};
+        G&Chew,$cha,'m,nk,gk?',$_ for sub {
             my ($wa,$m,$nk,$gk) = @_;
+            $chi++;
             my $xe = $cha.>$m.>$nk;
             my $oe = $E.>$nk;
             my $ne = $e.>$nk;
@@ -178,13 +213,61 @@ Duj: |
             $oe = $oe.>$gk if @_ == 4;
             $ne = $ne.>$gk if @_ == 4;
             say "$ind $m $nk $gk    ".slim($ne)."   <<-=    ".slim($oe);
+            my $co = co.co.>$nk ||= {};
+            $co = co.co.>$gk if @_ == 4;
+            co.o = $oe;
+            co.v = $ne;
+            co.p = [$nk];
+            push @{co.p}, $gk if @_ == 4;
             if ($nk eq 'sc' && $gk eq 'z') {
-                my @Y = map { map { _.y.A } values %$_ } values %$xe;
-                uniq(@Y) == 1 || die "More than one A for scz o.t o.y.cv On i.t";
-                say "$ind Zeal x ".@Y;
-                Rw Duj + $i:_ for shift @Y;
+                G&Chew,$xe,\'t,cv',$_ for sub {
+                    my ($zb,$t,$cv) = @_;
+                    co.ytm.>$cv.>$t.>$m = $zb;
+                    co.Ams.>_.c.sip = $_ for zb.y.A;
+                }
             }
         };
+        my $or;$or = sub {
+            my $co = shift; # outside/index
+            my ($he,$ta) = ([],[]);
+            my $tw;
+            # nk/gk ordering
+            for ([$he=>qw't y c sc'],
+                [$ta=>qw's z']) {
+                my ($l,$t) = @$_;
+                $co.>$t || next;
+                $tw.>$t++;
+                push @$l, $t;
+            }
+            my @mi = sort grep { !$tw.>$_ } keys %$co;
+            my $z = [];
+            for my $t (@$he,@mi,@$ta) {
+                my $co = $co->{$t}; # inside/state
+                my $j;
+                j.t = $t;
+                if (co.co) {
+                    die "More to co: ".wdump 3, $co if keys %$co > 1;
+                    j.z = $or->(co.co);
+                }
+                if (
+                j.s = co.v;
+                push @$z, $j;
+            }
+            $z;
+        };
+        co.co.t.v = r.t;
+        co.co.y.co.cv.v = r.y.cv;
+        my $ef = $or->(co.co);
+        say wdump 5, $ef;
+        
+        
+        push @z, $la if $la ne $z[-1];
+        push @z, $r;
+        
+        
+        
+        
+        # eo
     };
     saybl "No changes" if !$i;
     
