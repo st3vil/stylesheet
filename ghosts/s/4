@@ -140,7 +140,15 @@ Zome: |
     
     my $int = hitime() - $beg;
     say "Took $int";
-    Rw Duj $i;
+    
+    my $beg = hitime();
+    my $z = Rw Duj $i;
+    saygr " ++++++++++++++";
+    sayyl wdump 7,
+        Rw Dis $z;
+    my $int = hitime() - $beg;
+    say "Took $int";
+    
     my $so = $i;
     my $one = 0.1;
     #$so = so.c.oo.C.theu.>$one;
@@ -151,6 +159,46 @@ Zome: |
     $so = so.c.j.sc.oo.C.W;
     return $so;
     n Hows
+Dis: |
+    my $ind = ar.ind = ar.ind.'  ';
+    my $ja;$ja = sub {
+        my ($d,$e) = @_;
+        say "$ind d.t -> ".ki $d;
+        $e = $e.>d.t;
+        my @l = "d.t";
+        push @l, "= d.c.s" if exists d.c.s;
+        if (my $z = d.sc.z) {
+            push @l,'{';
+            #d.c.p || die "nop: ".ki$e;
+            #my @o = @{d.c.p};
+            #pop @o;
+            #my $io = $e;
+            #$io = $io.>$_ for @o;
+            #push @l, join',',$_ for sort keys %$io;
+            push @l, $ja->($_, $e) for @$z;
+            push @l, '}';
+        }
+        @l;
+    };
+    my @r;
+    for my $r (@$z) {
+        my @l;
+        push @l, r.t, r.y.cv;
+        my $ul = {map{!ref r.c.>$_ ? ($_ => r.c.>$_ ) : ()}keys %{r.c}};
+        push @l, ki $ul if keys %$ul;
+        
+        my $e = r.c.o.c.s || die "no cocs".ki$r;
+        for my $d (@{r.c.dis}) {
+            push @l, $ja->($d,$e);
+        }
+        if (my $z = r.c.z) {
+            push @l, 
+                Rw Dis + $z;
+        }
+        !@l && sayre "Havenodis: ".ki $r;
+        push @r, \@l;
+    }
+    \@r;
 Duj: |
     my $oo = i.c.oo;
     my $cha = i.c.cha;
@@ -160,7 +208,7 @@ Duj: |
     my $oty = $cha && cha.C && cha.C.gone;
     my $i;
     my $yt = {};
-    for my $on ($ty, $oty) {
+    for my $on (grep {defined} $ty, $oty) {
         G&Chew,$on,'t,cv',$_ for sub {
             my ($o,$t,$cv) = @_;
             $yt->{$cv}->{$t} = $o;
@@ -213,11 +261,12 @@ Duj: |
             $oe = $oe.>$gk if @_ == 4;
             $ne = $ne.>$gk if @_ == 4;
             say "$ind $m $nk $gk    ".slim($ne)."   <<-=    ".slim($oe);
-            my $co = co.co.>$nk ||= {};
-            $co = co.co.>$gk if @_ == 4;
+            my $co = r.sc.co.co.>$nk ||= {};
+            $co = co.co.>$gk ||= {} if @_ == 4;
             co.o = $oe;
             co.v = $ne;
             co.p = [$nk];
+            co.m = $m;
             push @{co.p}, $gk if @_ == 4;
             if ($nk eq 'sc' && $gk eq 'z') {
                 G&Chew,$xe,\'t,cv',$_ for sub {
@@ -234,10 +283,12 @@ Duj: |
             # nk/gk ordering
             for ([$he=>qw't y c sc'],
                 [$ta=>qw's z']) {
-                my ($l,$t) = @$_;
-                $co.>$t || next;
-                $tw.>$t++;
-                push @$l, $t;
+                my ($l,@l) = @$_;
+                for my $t (@l) {
+                    $co.>$t || next;
+                    $tw.>$t ++;
+                    push @$l, $t;
+                }
             }
             my @mi = sort grep { !$tw.>$_ } keys %$co;
             my $z = [];
@@ -245,33 +296,33 @@ Duj: |
                 my $co = $co->{$t}; # inside/state
                 my $j;
                 j.t = $t;
-                if (co.co) {
-                    die "More to co: ".wdump 3, $co if keys %$co > 1;
-                    j.z = $or->(co.co);
+                if (co.co && keys %{co.co}) {
+                    die "More to mid co: ".wdump 3, $co if keys %$co > 1;
+                    j.sc.z = $or->(co.co);
                 }
-                if (
-                j.s = co.v;
+                if (co.ytm) {
+                    my ($Y,@much) = values %{co.Ams};
+                    @much && die "Many A under: ".ki co.Ams;
+                    r.c.z = Rw Duj + $i:Y;
+                }
+                map { j.c.>$_ = $co.>$_ if exists $co.>$_ } qw'o m p';
+                j.c.s = co.v if exists co.v;
                 push @$z, $j;
             }
             $z;
         };
-        co.co.t.v = r.t;
-        co.co.y.co.cv.v = r.y.cv;
-        my $ef = $or->(co.co);
-        say wdump 5, $ef;
-        
+        # co.co.t.v = r.t;
+        # co.co.y.co.cv.v = r.y.cv;
+        r.c.dis = $or->(co.co);
         
         push @z, $la if $la ne $z[-1];
         push @z, $r;
-        
-        
-        
         
         # eo
     };
     saybl "No changes" if !$i;
     
-        
+    \@z
 pi/pud: |
     y.at.qs=1;
     y.at.ws=1;
