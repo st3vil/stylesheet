@@ -134,8 +134,23 @@ Zome: |
     $m = m.y.in;
     $m = m.y.next || $m for 1..3;
     m.sc.epl = "Dop";
-    m.sc.s = "ACGT {} !";
+    m.c.s = "ACGT {} !";
     e.sc.eo = 'popup';
+    
+    $m = e.sc.z->[5];
+    $m = m.y.in;
+    $m = m.y.next || $m for 1..2;
+    saybl ki $m;
+    my $pr = m.y.prev;
+    my $ne = m.y.next;
+    pr.y.next = $ne;
+    ne.y.prev = $pr;
+    #m.y.prev = m.y.prev.y.prev;
+    #m.y.prev.y.next = $m;
+    pr.sc.herre = 'OOOO';
+    
+    pop @{e.sc.z};
+    
     my $i = G&A,o=>4=>$J=>$e,$ot;
     
     my $int = hitime() - $beg;
@@ -144,8 +159,9 @@ Zome: |
     my $beg = hitime();
     my $z = Rw Duj $i;
     saygr " ++++++++++++++";
-    sayyl wdump 7,
+    my $x =
         Rw Dis $z;
+    Rw Disp $x;
     my $int = hitime() - $beg;
     say "Took $int";
     
@@ -159,23 +175,36 @@ Zome: |
     $so = so.c.j.sc.oo.C.W;
     return $so;
     n Hows
-Dis: |
+Disp: |
     my $ind = ar.ind = ar.ind.'  ';
+    for my $d (@$x) {
+        my $x = [];
+        #saybl wdump 3, $d;
+        sayyl $ind . join ' ', grep { !ref$_ || do{push@$x,$_;0} } @$d;
+        Rw Disp + $x:_ for @$x;
+    }
+Dis: |
     my $ja;$ja = sub {
         my ($d,$e) = @_;
-        say "$ind d.t -> ".ki $d;
         $e = $e.>d.t;
-        my @l = "d.t";
-        push @l, "= d.c.s" if exists d.c.s;
+        my $etc;
+        if (exists d.c.s) {
+            my $m = '=';
+            $m = "+" if d.c.m eq 'new';
+            $m = "-" if d.c.m eq 'gone';
+            (my $s = d.c.s) =~ s/\n/\\n/sg;
+            $etc = $m . slim(13,$s);
+        }
+        my @l = "d.t$etc";
         if (my $z = d.sc.z) {
             push @l,'{';
-            #d.c.p || die "nop: ".ki$e;
-            #my @o = @{d.c.p};
-            #pop @o;
-            #my $io = $e;
-            #$io = $io.>$_ for @o;
-            #push @l, join',',$_ for sort keys %$io;
-            push @l, $ja->($_, $e) for @$z;
+            #my $tw = {map{$_=>1}keys %$e};
+            my @lo = map {
+                #delete $tw.>_.t;
+                $ja->($_, $e)
+            } @$z;
+            #push @l, join',', sort keys %$tw;
+            push @l, @lo;
             push @l, '}';
         }
         @l;
@@ -187,13 +216,15 @@ Dis: |
         my $ul = {map{!ref r.c.>$_ ? ($_ => r.c.>$_ ) : ()}keys %{r.c}};
         push @l, ki $ul if keys %$ul;
         
-        my $e = r.c.o.c.s || die "no cocs".ki$r;
-        for my $d (@{r.c.dis}) {
-            push @l, $ja->($d,$e);
-        }
-        if (my $z = r.c.z) {
-            push @l, 
-                Rw Dis + $z;
+        if (my $o = r.c.o) {
+            my $e = o.c.s || die "no ocs".ki$r;
+            for my $d (@{r.c.dis}) {
+                push @l, $ja->($d,$e);
+            }
+            if (my $z = r.c.z) {
+                push @l, 
+                    Rw Dis $z;
+            }
         }
         !@l && sayre "Havenodis: ".ki $r;
         push @r, \@l;
@@ -227,13 +258,14 @@ Duj: |
         r.t = $t;
         r.y.cv = $cv;
         r.c.o = $o;
+        saybl wdump 3, $cha if r.t eq 'u';
         if ($cha) {
             if (cha.new && cha.new.t) {
                 r.c.el = keys %{ $ty.>r.t } == 1 ? 2 : 1;
                 sayyl "$ind    $t $cv";
             }
             elsif (cha.gone && cha.gone.t) {
-                r.c.el = 9;
+                r.c.el = 9; # not here
                 sayre "$ind -- $t $cv";
             }
             else {
@@ -271,8 +303,13 @@ Duj: |
             if ($nk eq 'sc' && $gk eq 'z') {
                 G&Chew,$xe,\'t,cv',$_ for sub {
                     my ($zb,$t,$cv) = @_;
-                    co.ytm.>$cv.>$t.>$m = $zb;
-                    co.Ams.>_.c.sip = $_ for zb.y.A;
+                    if ($m eq 'gone') {
+                        co.goneyt.>$cv.>$t = $zb;
+                    }
+                    else {
+                        co.ytm.>$cv.>$t.>$m = $zb;
+                        co.Ams.>_.c.sip = $_ for zb.y.A;
+                    }
                 }
             }
         };
@@ -301,10 +338,26 @@ Duj: |
                     j.sc.z = $or->(co.co);
                 }
                 if (co.ytm) {
-                    my ($Y,@much) = values %{co.Ams};
-                    @much && die "Many A under: ".ki co.Ams;
-                    r.c.z = Rw Duj + $i:Y;
+                    my @mu = values %{co.Ams};
+                    @mu > 1 && die "Many A below r.t r.y.cv: ".ki co.Ams;
+                    for my $i (@mu) {
+                        r.c.z = Rw Duj + $i;
+                    }
                 }
+                if (my $gt = co.goneyt) {
+                    my @rm;
+                    G&Chew,$gt,'cv,t',$_ for sub {
+                        my ($d,$cv,$t) = @_;
+                        my $r;
+                        r.t = $t;
+                        r.y.cv = $cv;
+                        r.c.el = 9;
+                        push @rm, $r
+                    };
+                    # breaks el=8/previous thing ness
+                    unshift @{r.c.z||=[]}, @rm;
+                }
+                saybl " LEEVLVLEI ".wdump 3, r.c.z if co.goneyt;
                 map { j.c.>$_ = $co.>$_ if exists $co.>$_ } qw'o m p';
                 j.c.s = co.v if exists co.v;
                 push @$z, $j;
@@ -317,6 +370,7 @@ Duj: |
         
         push @z, $la if $la ne $z[-1];
         push @z, $r;
+        $la = $r;
         
         # eo
     };
