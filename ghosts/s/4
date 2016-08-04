@@ -230,7 +230,7 @@ Dis: |
         push @r, \@l;
     }
     \@r;
-Duj: |
+Duj: | # eat o 3 for 
     my $oo = i.c.oo;
     my $cha = i.c.cha;
     my $ind = ar.ind = ar.ind.'  ';
@@ -258,41 +258,40 @@ Duj: |
         r.t = $t;
         r.y.cv = $cv;
         r.c.o = $o;
-        saybl wdump 3, $cha if r.t eq 'u';
         if ($cha) {
             if (cha.new && cha.new.t) {
                 r.c.el = keys %{ $ty.>r.t } == 1 ? 2 : 1;
-                sayyl "$ind    $t $cv";
+                #sayyl "$ind    $t $cv";
             }
             elsif (cha.gone && cha.gone.t) {
                 r.c.el = 9; # not here
-                sayre "$ind -- $t $cv";
+                #sayre "$ind -- $t $cv";
             }
             else {
-                saygr "$ind != $t $cv:";
+                #saygr "$ind != $t $cv:";
                 r.c.el = 3; # or 4 if only z more
                 # z holding notices things coming and going
                 # z ealand elabourates on past from here
             }
         }
         else {
-            saygr "$ind == $t $cv";
+            #saygr "$ind == $t $cv";
             r.c.el = 8;
             $la = $r;
             return
         }
-        my $chi;
+        #c make co.path -> {nodestuff,co} trees
         my $co = r.sc.co ||= {};
         G&Chew,$cha,'m,nk,gk?',$_ for sub {
             my ($wa,$m,$nk,$gk) = @_;
-            $chi++;
+            say "$nk $gk";
             my $xe = $cha.>$m.>$nk;
             my $oe = $E.>$nk;
             my $ne = $e.>$nk;
             $xe = $xe.>$gk if @_ == 4;
             $oe = $oe.>$gk if @_ == 4;
             $ne = $ne.>$gk if @_ == 4;
-            say "$ind $m $nk $gk    ".slim($ne)."   <<-=    ".slim($oe);
+            #say "$ind $m $nk $gk    ".slim($ne)."   <<-=    ".slim($oe);
             my $co = r.sc.co.co.>$nk ||= {};
             $co = co.co.>$gk ||= {} if @_ == 4;
             co.o = $oe;
@@ -313,12 +312,13 @@ Duj: |
                 }
             }
         };
-        my $or;$or = sub {
+        #c co.paths in order make j `
+        my $or;$or = sub { 
             my $co = shift; # outside/index
             my ($he,$ta) = ([],[]);
             my $tw;
             # nk/gk ordering
-            for ([$he=>qw't y c sc'],
+            for ([$he=>qw't cv y c sc'],
                 [$ta=>qw's z']) {
                 my ($l,@l) = @$_;
                 for my $t (@l) {
@@ -330,6 +330,7 @@ Duj: |
             my @mi = sort grep { !$tw.>$_ } keys %$co;
             my $z = [];
             for my $t (@$he,@mi,@$ta) {
+                saybl "$ind !$t";
                 my $co = $co->{$t}; # inside/state
                 my $j;
                 j.t = $t;
@@ -345,19 +346,30 @@ Duj: |
                     }
                 }
                 if (my $gt = co.goneyt) {
+                    r.c.z ||= [];
+                    # 
                     my @rm;
                     G&Chew,$gt,'cv,t',$_ for sub {
                         my ($d,$cv,$t) = @_;
-                        my $r;
-                        r.t = $t;
-                        r.y.cv = $cv;
-                        r.c.el = 9;
-                        push @rm, $r
+                        my $zr;
+                        zr.t = $t;
+                        zr.y.cv = $cv;
+                        zr.c.el = 9;
+                        push @rm, $zr;
                     };
-                    # breaks el=8/previous thing ness
-                    unshift @{r.c.z||=[]}, @rm;
+                    my @mr;
+                    for my $zr (@rm) {
+                        my $got;
+                        @{r.c.z} = map {
+                            _.t eq zr.t && _.y.cv eq zr.y.cv
+                                ? do { $got = 1; $zr }
+                                : $_
+                        } @{r.c.z};
+                        $got || push @mr, $zr;
+                    }
+                    # breaks el=8/previous thing ness?
+                    push @{r.c.z}, @mr;
                 }
-                saybl " LEEVLVLEI ".wdump 3, r.c.z if co.goneyt;
                 map { j.c.>$_ = $co.>$_ if exists $co.>$_ } qw'o m p';
                 j.c.s = co.v if exists co.v;
                 push @$z, $j;
@@ -368,7 +380,7 @@ Duj: |
         # co.co.y.co.cv.v = r.y.cv;
         r.c.dis = $or->(co.co);
         
-        push @z, $la if $la ne $z[-1];
+        push @z, $la if $la ne $z[-1] && r.c.el ne 3;
         push @z, $r;
         $la = $r;
         
