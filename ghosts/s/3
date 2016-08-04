@@ -76,7 +76,8 @@ Circle: | # copy things
     o 1:
         my ($i,$f,$t) = @$s;
         i.y eq $i || die "i must A";
-        die \$f;
+        
+        ($f,my $fis) = ($$f,1) if ref $f eq 'REF';
         $t = G&Ct,@$t if ref $t eq 'ARRAY';
         %$C = %$t if ref $t eq 'HASH';
         C.t = $t if $t && !ref $t;
@@ -89,8 +90,8 @@ Circle: | # copy things
             c&m = 'z';
             c&s = $f;
         }
-        elsif (c&linkt) {
-        
+        elsif ($fis) {
+            c&s = $f;
         }
         elsif (f.y) {
             if (f.y eq $f) {
@@ -114,7 +115,7 @@ Circle: | # copy things
         }
         if (c&kno) {
             my $h = c&h || die "unhoused kno C.t m:c&m";
-            c&s = h.sc->{c&kno};
+            c&s = h.sc->{c&kno} || $h->{c&kno};
             # may have lvism & more via h.sc.s.
         }
     #c o2 intermediate whats-where
@@ -228,8 +229,9 @@ Circle: | # copy things
             $oo.>$x.>$t.>$cv = $o;
             # last this
             my $l = $jj.>$x.>$t.>$cv;
-            G&Chang,$l,$o;
             o.y.l = $l if $l;
+            
+            G&Chang,$l,$o;
             
             my $e = o.c.s;
             # ty in above o
@@ -251,6 +253,7 @@ Circle: | # copy things
         G&Chew,$oo,'x,t,cv',$_ for sub {
             my ($o,$x,$t,$cv) = @_;
             my $l = o.y.l;
+            
             # ty inward check
             my $sc = 'sc';
             my $z = 'z';
@@ -275,6 +278,7 @@ Circle: | # copy things
                     o.c.cha.>$m.>$sc.>$z.>$dt.>$dcv = $to;
                 }
             }
+            
             # wires
             if (my $oz = o.sc.oz) {
                 for my $on (keys %$oz) {
@@ -293,10 +297,7 @@ Circle: | # copy things
                     }
                 }
             }
-            my $fr = o.y.A;
-            if ($fr ne $A) {
-                sayyl "$t $cv is from fr.t ";
-            }
+            sayyl "$t $cv is from o.y.A.t " if o.y.A ne $A;
             if (!o.y.l) {
                 $cha.>$x.>$_.>$t.>$cv = $o for 'new';
                 o.c.el = 1;
@@ -358,7 +359,6 @@ Compliers: | # othered
             }
         }
         
-
 Walks: | # othering
     u i
     # iterator/map for index
