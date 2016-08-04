@@ -318,10 +318,46 @@ Circle: |
     o 4:
         #
         # A -> J t/y images
-Compliers: |
-    
-Walks: | # othering
+Compliers: | # othered
     u i
+    # join/etc arrays
+    toget:
+        G&together,$s,@Me
+        
+    together: %acgt:k c d
+        my $o = c.y.>$k;
+        c.y.>$k = $d;
+        my $ok = {qw{next prev prev next}}->{$k};
+        if ($ok) {
+            d.y.>$ok = $c;
+            if ($o) {
+                d.y.>$k = $o;
+                o.y.>$ok = $d;
+            }
+        }
+    
+    apart: %acgt:k c d
+        $d ||= c.y.>$k;
+        my $o = d.y.>$k;
+        delete c.y.>$k;
+        if ($o) {
+            if ($c eq $o) { # mutual
+                delete d.y.>$k;
+            }
+            else {
+                c.y.>$k = $o;
+            }
+        }
+        my $ok = {qw{next prev prev next}}->{$k};
+        if ($ok) {
+            delete d.y.>$k;
+            if ($o) {
+                delete d.y.>$ok;
+                o.y.>$ok = $c;
+            }
+        }
+        
+Stashi: | # ways to track A
     # recur j index (above j || root i).sc.jo... = $j
     # out of throat order, first to 3 in tug scene coops others
     offis: %acgt:r j
@@ -350,6 +386,8 @@ Walks: | # othering
             C.c.>$j = $i;
         };
         $oi->($C);
+Walks: | # othering
+    u i
     # iterator/map for index
     Chew:
         my $sort;
