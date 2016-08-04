@@ -1,4 +1,4 @@
-Tunnel: |
+Tunnel: | # mind & world
     # machine for finding pi
     u a
     # dialect of ...
@@ -57,86 +57,7 @@ Tunnel: |
         G&Cs,$s;
     mo 5:
         say 'mive'
-    u i
-    Tnot:
-        # kills a particle
-        sayre "!\n! not A.t ".ki($C)."\n!";
-        A.cv = 0.9;
-    Tz: %acgt:D
-        # moves/spawns in time
-        die "A.t 's D.y.cv~D.t TZ moved C.y.cv~C.t ".wdump 3, T.Z;
-    
-    tugA:
-        $s = G&A,$s,@Me;
-        G&entug,$s;
-        $s
-    entug:
-        A.c.tug->{s.c.sip} = $s;
-        delete A.c.tog;
-        $s
-    tug:
-        # just before m (over many) mo 4, do inner mo including 4
-        my $og = A.c.tog ||= [sort keys %{A.c.tug}];
-        saybl "A.c.sip A.t tugs $s -> ".@$og;
-        for (@$og) {
-            my $mo = A.c.tug->{$_};
-            next if mo.y.cv >= $s;
-            my $A = $mo;
-            A.c.ov = $s;
-            G&throat
-        }
-    u O
-    of: %of:O
-        #n $s=>''=>{W=>'of'}
-        say "OFing ! C.t C.y.cv ".ki C.sc;
-        # compile language, see 9 cono
-        # container process is traveling bunches of code, see 99 Traweil
-        # place toward A.ii.>$s, linked list of embryo
-        
-        # rennovating around town
-        # a geodesic self-mover
-        # keeps rebuilding in different locations
-        
-        
-Jelly: | # making
-    u i
-    sJ: %acgt:J t f
-        $f ||= $t;
-        J.sc.>$t ||= G&J,$f;
-    J:
-        my $J = G&A,'J';
-        J.t = $s;
-        # will be bab to G&
-        J.u = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,u=>6=>$J,\@Me };
-        J.n = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,n=>6=>$J,\@Me };
-        $J
-    
-    sesh: %acgt:J
-        # partition guts
-        my $o = J.sc.S->{J.sc.ch} = G&sJ,$J,'s';
-        delete J.sc.s;
-        my $ch = ++J.sc.ch;
-        my $s = J.sc.s = J.sc.S->{$ch} ||= G&sJ,$J,'s';
-        o.sc.next = $s;
-        s.sc.prev = $o;
-        # makes osc thing.3 etc hang around
-        s.sc.ch = $ch;
-    
-    rea: %acgt:J
-        # reset the ground
-        my $n = J.sc.n || die 'no n';
-        my $zi = ++J.c.zi;
-        my $ch = '';
-        my $lim = 2;
-        while (n.sc.a->{$ch}) {
-            J.sc.Z->{$zi}->{$ch} = delete n.sc.a->{$ch};
-            if ($zi > $lim) {
-                delete J.sc.Z->{$zi-$lim}
-            }
-            $ch++;
-        }
-        delete J.c.o;
-    
+Jelly: | # Town making
     u c
     n \'of:mo'
     pi 12:
@@ -185,5 +106,78 @@ Jelly: | # making
         G&A,s=>8=>$J;
     J 8:
         # through J's microJ of personality
+    
+Stashi: | # recursors/ways to track A stuff
+    u i
+    # c&$j = above.sc.$jo.path
+    # above is our c&$jC or root c&$r
+    # @Me is C nkgks for path
+    #
+    # out of throat order, first/deepest coops others
+    # j is usually j
+    offis: %acgt:r j
+        my $ik = $j.'C';
+        my $ok = $j.'o';
+        my $tw;
+        my $oi;$oi = sub {
+            my ($C) = @_;
+            die "loop C.t" if $tw->{$C}++;
+            my $jon;
+            if (my $D = C.c.>$ik) {
+                # tune in parents first
+                $jon = D.c.>$j ||= $oi->($D);
+            }
+            else {
+                # origin
+                $jon = C.c.>$r;
+            }
+            my $i = jon.sc.>$ok ||= {};
+            for my $nk (@Me) {
+                ($nk,my $gk) = ($1,$nk) if $nk =~ s/^(y|c|sc)//;
+                my $v = $C->{$nk};
+                $v = $v->{$gk} if $gk;
+                $i = $i->{$v} ||= {};
+            }
+            C.c.>$j = $i;
+        };
+        $oi->($C);
+    
+    sJ: %acgt:J t f
+        $f ||= $t;
+        J.sc.>$t ||= G&J,$f;
+    J:
+        my $J = G&A,'J';
+        J.t = $s;
+        J.y.G = $G;
+        # will be bab to G&
+        J.u = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,u=>6=>$J,\@Me };
+        J.n = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,n=>6=>$J,\@Me };
+        $J
+    
+    # partition ground
+    sesh: %acgt:J
+        my $o = J.sc.S->{J.sc.ch} = G&sJ,$J,'s';
+        delete J.sc.s;
+        my $ch = ++J.sc.ch;
+        my $s = J.sc.s = J.sc.S->{$ch} ||= G&sJ,$J,'s';
+        o.sc.next = $s;
+        s.sc.prev = $o;
+        # makes osc thing.3 etc hang around
+        s.sc.ch = $ch;
+    
+    # reset ground
+    rea: %acgt:J
+        my $n = J.sc.n || die 'no n';
+        my $zi = ++J.c.zi;
+        my $ch = '';
+        my $lim = 2;
+        while (n.sc.a->{$ch}) {
+            J.sc.Z->{$zi}->{$ch} = delete n.sc.a->{$ch};
+            if ($zi > $lim) {
+                delete J.sc.Z->{$zi-$lim}
+            }
+            $ch++;
+        }
+        delete J.c.o;
     
 

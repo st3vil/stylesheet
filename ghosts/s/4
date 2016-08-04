@@ -1,5 +1,6 @@
 PiMachine: |
     n C
+    n To
     n Day
     n Tube
     #
@@ -7,10 +8,13 @@ PiMachine: |
     n Jelly
     
     n Triangle
-    n Circle
     n Walks
-Zupe: | # make code, run Zome, output pud
-    u urw
+    n Circle
+    n Stashi
+    n Compliers
+    
+    n Tan
+MakePi: | # make code, 
     my $ii = {};
     my $dig = sub {
         my $tW = shift;
@@ -81,14 +85,16 @@ Zupe: | # make code, run Zome, output pud
         $n = n.y.in || n.y.next;
     }
     
-    
+    ($i,$ii)
+Zupe: | # run Zome, output pud
+    u urw
     y.clos = 1;
-    my $so = Rw Zome $i $ii;
+    my $so = Rw Radio;
     #n wk=>-pre=>wdump(6, $so),'%hs:375'
     m wk=>-pud=>{s=>$so},'%hs:375,ws,wi:30%'
     
     
-CoBabbler: |
+CoBabbler: | # bake code
     C.c.s =~ s/\bs\&(\w+)/C\&$1/sgm;
     C.c.s = G&parse_babbl,C.c.s;
 Hows: |
@@ -96,33 +102,40 @@ Hows: |
         robino
     leave:
         traces
-Zome: |
+Zome: | # return a new J
+    my ($i,$ii) = Rw MakePi;
+    
     my $B = $A;
     my $A = {};
     A.sc.i = A.i = $i;
     A.sc.ii = A.ii = $ii;
     my $G = A.i.G->($A,$C,$G,$T);
-    A.i.parse_babbl = B.I.parse_babbl;
+    A.i.>$_ = B.I.>$_ for qw'parse_babbl';
+    
     $A = G&A,'so';
     my $J = G&J,'os';
-    A.4 = A.3 = A.2 = $A;
-    my $z = [sort {a.y.cv <=> b.y.cv || a.t cmp b.t}values%{A.ii}];
-    A.ii.>$_ = G&Ct,[$_,1,'steve',{z=>$z}] for 'theu';
+    $A.>$_ = $A for 2,3,4;
+    
     A.sc.ii = A.ii;
     A.sc.i = A.i;
-    my $Y = G&A,'Y';
-    Y.ii = {u=>A.ii.u};
-    Y.i = {};
-    Y.i.>$_ = A.i.>$_ for grep /^C/, keys %{A.i};
-    Y.sc.ii = Y.ii;
-    Y.sc.i = Y.i;
-    my $e = G&Ct,[zomb=>1=>'steve'=>'%hs:355,el:vs'];
-    $e = A.ii.theu;
+    my $z = [sort {a.y.cv <=> b.y.cv || a.t cmp b.t}values%{A.ii}];
+    A.ii.>$_ = G&Ct,[$_,1,'steve',{z=>$z}] for 'theu';
     
-    my $ot = 'zimb';
+    $J
+Radio: |
+    my $oJ = J.R ||= Rw Zome;
     my $beg = hitime();
     
+    Rw ElvisLeaves $J:oJ $A:oJ.1 $G:oJ.y.G;
+    
+    my $int = hitime() - $beg;
+    say "Took $int";
+ElvisLeaves: |
+    
+    
+    my $e = A.ii.theu;
     my $o = G&A,o=>4=>$J=>$e,$ot;
+    my $ot = 'zimb';
     #Y.i.Chsgu = Y.i.Chs;
     Rw Duj $i:o;
     #e.sc.el = 'vios';
@@ -153,8 +166,6 @@ Zome: |
     
     my $i = G&A,o=>4=>$J=>$e,$ot;
     
-    my $int = hitime() - $beg;
-    say "Took $int";
     
     my $beg = hitime();
     my $z = Rw Duj $i;
