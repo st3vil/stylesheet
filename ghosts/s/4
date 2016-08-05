@@ -14,6 +14,7 @@ PiMachine: |
     n Compliers
     
     n Tan
+    n Tal
 MakePi: | # make code, 
     my $ii = {};
     my $dig = sub {
@@ -56,7 +57,7 @@ MakePi: | # make code,
             for my $t (sort keys %$ts) {
                 my $z = $ts->{$t};
                 sayre "Compile $of $cv $t !";
-                Rw TheBabbler $C:z;
+                Rw CoBabbler $C:z;
                 saybl "zo: ". z.c.s if z.t eq 'Chew';
                 my $y = eval z.c.s;
                 die "Throcompile $of z.y.cv: z.t:"
@@ -86,16 +87,35 @@ MakePi: | # make code,
     }
     
     ($i,$ii)
+P: |
+    u urw
+    n Zupe=>-run
+pi/run: |
+    symb: %hs:394,fs:12
+        R
+    n jeio=>2=>C.t=>'%dos:runs'
+Com: |
+    
 Zupe: | # run Zome, output pud
     u urw
     y.clos = 1;
     my $so = Rw Radio;
     #n wk=>-pre=>wdump(6, $so),'%hs:375'
     m wk=>-pud=>{s=>$so},'%hs:375,ws,wi:30%'
-    
+    say "Yep";
     
 CoBabbler: | # bake code
+    my $sw = {};
+    $sw.>$_ = 'say' for qw'saygr saybl sayyl sayre say';
+    %$sw = () if C.sc.nobasay;
+    for (keys %$sw) {
+        my $if = $_ ne 'sayre' ? "A\.V && " : "";
+        C.c.s =~ s/^(\s*)$_ ([^\n]+?)((?: (?:for|if) .+)?;?)$/${1}${if}G\.h->(\$A,\$C,\$G,\$T,'$sw->{$_}','$_',$2)$3/sgm;
+        C.c.s =~ s/^((\s*)$_ .+?)$/ say "Foundo ".$1; $1 /esgm;
+    }
+    
     C.c.s =~ s/\bs\&(\w+)/C\&$1/sgm;
+    
     C.c.s = G&parse_babbl,C.c.s;
 Hows: |
     take:
@@ -122,7 +142,6 @@ Zome: | # return a new J
     A.ii.>$_ = G&Ct,[$_,1,'steve',{z=>$z}] for 'theu';
     
     $J
-
 Radio: |
     J.R ||= Rw Zome;
     my $beg = hitime();
@@ -138,81 +157,98 @@ Drive: |
     my $J = J.R;
     ($n,$J,J.1,J.y.G);
 ElvisLeaves: |
-    my ($n,$J,$A,$G) = Rw Drive 2;
+    my $tes = sub {
+        n @_
+    };
+    my ($n,$oJ,$A,$G) = Rw Drive 3;
     
-    my $e = A.ii.theu;
-    my $ot = 'zimb';
-    my $o = G&A,o=>4=>$J=>$e,$ot;
-    
-    #Y.i.Chsgu = Y.i.Chs;
-    Rw Duj $i:o;
-    #e.sc.el = 'vios';
-    #e.c.s = 'Steve';
-    #e.y.cv = 0.2;
-    my $m = e.sc.z->[4];
-    m.sc.was = 'Here';
-    $m = e.sc.z->[3];
-    $m = m.y.in;
-    $m = m.y.next || $m for 1..3;
-    m.sc.epl = "Dop";
-    m.c.s = "ACGT {} !";
-    e.sc.eo = 'popup';
-    
-    $m = e.sc.z->[5];
-    $m = m.y.in;
-    $m = m.y.next || $m for 1..2;
-    saybl ki $m;
-    my $pr = m.y.prev;
-    my $ne = m.y.next;
-    pr.y.next = $ne;
-    ne.y.prev = $pr;
-    #m.y.prev = m.y.prev.y.prev;
-    #m.y.prev.y.next = $m;
-    pr.sc.herre = 'OOOO';
-    
-    pop @{e.sc.z};
-    
-    my $i = G&A,o=>4=>$J=>$e,$ot;
-    
-    
-    my $beg = hitime();
-    my $z = Rw Duj $i;
     saygr " ++++++++++++++";
-    my $x =
-        Rw Dis $z;
-    Rw Disp $x;
-    my $int = hitime() - $beg;
-    say "Took $int";
+    my $e = A.ii.theu;
+    my $o;
+    my $ot = 'zimb';
     
-    my $so = $i;
+    c&mks = sub {
+        $o = G&A,o=>4=>$oJ=>$e,$ot;
+        my $l = Rw Dujis $o;
+    };
+    
+    if ($n==0) {
+        $tes->(Elvise=>'',{test=>'1 whole u'});
+    }
+    elsif ($n==1) {
+        my $m = e.sc.z->[4];
+        m.sc.was = 'Here';
+        $m = e.sc.z->[3];
+        $m = m.y.in;
+        $m = m.y.next || $m for 1..3;
+        m.sc.epl = "Dop";
+        m.c.s = "ACGT {} !";
+        e.sc.eo = 'popup';
+
+        $m = e.sc.z->[5];
+        $m = m.y.in;
+        $m = m.y.next || $m for 1..2;
+        
+        my $pr = m.y.prev;
+        G&apart,next=>$pr;
+        pr.sc.herre = 'OOOO';
+
+        pop @{e.sc.z};
+        
+        $tes->(Elvise=>'',{test=>'2 u messed with'});
+    }
+    elsif ($n==2) {
+        my $m = e.sc.z->[4];
+        m.sc.was = 'Hur';
+        $m = e.sc.z->[1];
+        $m = m.y.in;
+        G&apart,next=>$m for 1..3;
+        G&toget,next=>m.y.next.y.next,$_ for G&Ct,[available=>6=>'makeether','%eo:fil'];
+        
+        $tes->(Elvise=>'',{test=>'3 couple more'});
+    }
+    
+    my $so = $o;
     my $one = 0.1;
     #$so = so.c.oo.C.theu.>$one;
-    $so = J.sc.jo.zimb.sc.jo;
+    $so = oJ.sc.jo.zimb.sc.jo;
     ($so) = values %$so;
     $so = so.sc.jo->{"z mo $one"};
     $so = so.c.Co;
     $so = so.c.j.sc.oo.C.W;
+    $so = e.sc.z;
     return $so;
     n Hows
+Dujis: | # o3 changes as lines
+    my $z = Rw Duj $i:o;
+    my $x = Rw Dis $z;
+    my $l = Rw Disp $x;
 Disp: |
     my $ind = ar.ind = ar.ind.'  ';
+    my $l = [];
     for my $d (@$x) {
         my $x = [];
-        #saybl wdump 3, $d;
-        sayyl $ind . join ' ', grep { !ref$_ || do{push@$x,$_;0} } @$d;
+        my $s = $ind . join ' ', grep { !ref$_ || do{push@$x,$_;0} } @$d;
+        say " KW: $s";
+        push @$l, $s;
+        map { push @$l, @$_ }
         Rw Disp + $x:_ for @$x;
     }
+    $l
 Dis: |
     my $ja;$ja = sub {
         my ($d,$e) = @_;
         $e = $e.>d.t;
         my $etc;
-        if (exists d.c.s) {
+        if (exists d.c.sv) {
+            $etc = d.c.sv;
+        }
+        elsif (exists d.c.s) {
             my $m = '=';
             $m = "+" if d.c.m eq 'new';
             $m = "-" if d.c.m eq 'gone';
             (my $s = d.c.s) =~ s/\n/\\n/sg;
-            $etc = $m . slim(13,$s);
+            $etc = $m . slim(19,$s);
         }
         my @l = "d.t$etc";
         if (my $z = d.sc.z) {
@@ -245,11 +281,12 @@ Dis: |
                     Rw Dis $z;
             }
         }
-        !@l && sayre "Havenodis: ".ki $r;
+        sayre "Havenodis: ".ki $r if !@l;
         push @r, \@l;
     }
     \@r;
 Duj: | # eat o 3 for 
+    #snooze 9000;
     my $oo = i.c.oo;
     my $cha = i.c.cha;
     my $ind = ar.ind = ar.ind.'  ';
@@ -301,8 +338,9 @@ Duj: | # eat o 3 for
         }
         #c make co.path -> {nodestuff,co} trees
         my $co = r.sc.co ||= {};
-        G&Chew,$cha,'m,nk,gk?',$_ for sub {
+        G&Chew,$cha,\'m,nk,gk?',$_ for sub {
             my ($wa,$m,$nk,$gk) = @_;
+            return if $nk eq 'y' && $gk eq 'cv' && $m eq 'new';
             my $xe = $cha.>$m.>$nk;
             my $oe = $E.>$nk;
             my $ne = $e.>$nk;
@@ -318,8 +356,10 @@ Duj: | # eat o 3 for
             co.m = $m;
             push @{co.p}, $gk if @_ == 4;
             if ($nk eq 'sc' && $gk eq 'z') {
+                my $wi;
                 G&Chew,$xe,\'t,cv',$_ for sub {
                     my ($zb,$t,$cv) = @_;
+                    $wi++;
                     if ($m eq 'gone') {
                         co.goneyt.>$cv.>$t = $zb;
                     }
@@ -327,7 +367,13 @@ Duj: | # eat o 3 for
                         co.ytm.>$cv.>$t.>$m = $zb;
                         co.Ams.>_.c.sip = $_ for zb.y.A;
                     }
-                }
+                };
+                my $tot = @{$ne||e.sc.z||[]};
+                my $sm = '=';
+                $sm = "+" if $m eq 'new';
+                $sm = "-" if $m eq 'gone';
+                co.sv .= "$sm$wi";
+                #1 && saybl "r.t r.y.cv has scz x $wi $m  (/$tot)";
             }
         };
         #c co.paths in order make j `
@@ -385,9 +431,11 @@ Duj: | # eat o 3 for
                         $got || push @mr, $zr;
                     }
                     # breaks el=8/previous thing ness?
-                    push @{r.c.z}, @mr;
+                    if (@mr) {
+                        @{r.c.z} = sort {a.y.cv <=> b.y.cv || a.t cmp b.t} @{r.c.z}, @mr;
+                    }
                 }
-                map { j.c.>$_ = $co.>$_ if exists $co.>$_ } qw'o m p';
+                map { j.c.>$_ = $co.>$_ if exists $co.>$_ } qw'sv o m p';
                 j.c.s = co.v if exists co.v;
                 push @$z, $j;
             }

@@ -53,29 +53,33 @@ n testNews =>'',<<''
     $n = @{r.oldz}." more ^^^:\n$n" if r.oldz;
     .
     st.ts.rls->{$rlk} = $rv;
-    my $stuff = $n;
+    $n = G&muteNews,$n;
+    return [split "\n", encode_utf8 $n];
+
+muteNews:
     my $ids = {};
     my $here = 3;
     my $idi = 1;
     my $idstu = sub {
-        my $id = shift;
+        my ($id,$k) = @_;
+        $ids = $ids->{$k} ||= {} if $k;
         my $il = $ids->{$id} ||= $idi++;
         "il$here$il";
     };
-    for ($stuff) {
-    s/(id=)(\S+)/$1.$idstu->($2)/eg;
-    s/((?:HASH|ARRAY)\()(\w+)(\))/$1.$idstu->($2).$3/eg;
-    s/("(?:W|id)":")(\w+)(")/$1.$idstu->($2).$3/eg;
-    s/("ids":\[")((?:\w+|",")+)("\])/$1.join('","',map{$idstu->($_)}split'","', $2).$3/eg;
-    s/(\=\w+\/\w\/)(\w+)(\.\w)/$1.$idstu->($2).$3/eg;
-    s/(life\/W\/)(\w+)(\.\w)/$1.$idstu->($2).$3/eg;
-    while (1) {
-    s/(opel=.+?)(")(\w{6,})("])/$1.$2.$idstu->($3).$4/eg
-    && (s/($3)/$idstu->($1)/eg || 1) || last
-    };
-    s/(mtime=)(\d{2})(\d+)/$1.$2.join'', (('?') x length $3)/eg;
+    for (ref $s ? @$s : $s) {
+        s/(id=)(\S+)/$1.$idstu->($2)/eg;
+        s/((HASH|ARRAY|CODE)\()(\w+)(\))/$1.$idstu->($3,$2).$4/eg;
+        s/("(?:W|id)":")(\w+)(")/$1.$idstu->($2).$3/eg;
+        s/("ids":\[")((?:\w+|",")+)("\])/$1.join('","',map{$idstu->($_)}split'","', $2).$3/eg;
+        s/(\=\w+\/\w\/)(\w+)(\.\w)/$1.$idstu->($2).$3/eg;
+        s/(life\/W\/)(\w+)(\.\w)/$1.$idstu->($2).$3/eg;
+        while (1) {
+            s/(opel=.+?)(")(\w{6,})("])/$1.$2.$idstu->($3).$4/eg
+            && (s/($3)/$idstu->($1)/eg || 1) || last
+        };
+        s/(mtime=)(\d{2})(\d+)/$1.$2.join'', (('?') x length $3)/eg;
     }
-    return [split "\n", encode_utf8 $stuff];
+    $s
 
 n Wushredids =>'',<<''
     my $ids = {};

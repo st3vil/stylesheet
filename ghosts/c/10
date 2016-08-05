@@ -67,29 +67,33 @@ TestTool: |
         $n = @{r.oldz}." more ^^^:\n$n" if r.oldz;
         .
         st.ts.rls->{$rlk} = $rv;
-        my $stuff = $n;
+        $n = G&muteNews,$n;
+        return [split "\n", encode_utf8 $n];
+    
+    muteNews:
         my $ids = {};
         my $here = 3;
         my $idi = 1;
         my $idstu = sub {
-            my $id = shift;
+            my ($id,$k) = @_;
+            $ids = $ids->{$k} ||= {} if $k;
             my $il = $ids->{$id} ||= $idi++;
             "il$here$il";
         };
-        for ($stuff) {
-        s/(id=)(\S+)/$1.$idstu->($2)/eg;
-        s/((?:HASH|ARRAY)\()(\w+)(\))/$1.$idstu->($2).$3/eg;
-        s/("(?:W|id)":")(\w+)(")/$1.$idstu->($2).$3/eg;
-        s/("ids":\[")((?:\w+|",")+)("\])/$1.join('","',map{$idstu->($_)}split'","', $2).$3/eg;
-        s/(\=\w+\/\w\/)(\w+)(\.\w)/$1.$idstu->($2).$3/eg;
-        s/(life\/W\/)(\w+)(\.\w)/$1.$idstu->($2).$3/eg;
-        while (1) {
-        s/(opel=.+?)(")(\w{6,})("])/$1.$2.$idstu->($3).$4/eg
-        && (s/($3)/$idstu->($1)/eg || 1) || last
-        };
-        s/(mtime=)(\d{2})(\d+)/$1.$2.join'', (('?') x length $3)/eg;
+        for (ref $s ? @$s : $s) {
+            s/(id=)(\S+)/$1.$idstu->($2)/eg;
+            s/((HASH|ARRAY|CODE)\()(\w+)(\))/$1.$idstu->($3,$2).$4/eg;
+            s/("(?:W|id)":")(\w+)(")/$1.$idstu->($2).$3/eg;
+            s/("ids":\[")((?:\w+|",")+)("\])/$1.join('","',map{$idstu->($_)}split'","', $2).$3/eg;
+            s/(\=\w+\/\w\/)(\w+)(\.\w)/$1.$idstu->($2).$3/eg;
+            s/(life\/W\/)(\w+)(\.\w)/$1.$idstu->($2).$3/eg;
+            while (1) {
+                s/(opel=.+?)(")(\w{6,})("])/$1.$2.$idstu->($3).$4/eg
+                && (s/($3)/$idstu->($1)/eg || 1) || last
+            };
+            s/(mtime=)(\d{2})(\d+)/$1.$2.join'', (('?') x length $3)/eg;
         }
-        return [split "\n", encode_utf8 $stuff];
+        $s
         
     n Wushredids =>'',<<''
         my $ids = {};
@@ -115,6 +119,11 @@ TestRun: |
         ts.i++;
         ok(ts.i, "Running tests ts.i of J.name");
     
+    test 2:
+        $test =~ /^(\d+) (.+)$/ || return;
+        C.c.test = $1;
+        C.sc.l = $2;
+        
     # in J's C.t's $test 
     n test =>21,<<''
         my $J = A.J;
@@ -135,6 +144,11 @@ TestRun: |
         my $min = " (ts.i)" if ts.i > 1;
         ok(its.i, "$f begins its.i$min");
     
+    test 3:
+        my $J = A.J;
+        if (my $mks = J.C.c.mks) {
+            C.c.s = $mks->();
+        }
 AutoCzech: | # check re-working # conapi
     # wants to n Tests first
     # u uns when un repeats
@@ -156,7 +170,7 @@ AutoCzech: | # check re-working # conapi
             $s = I.d&testNews,'Duv';
         }
         else {
-            $s = c&s;
+            $s = G&muteNews,c&s;
         }
         my $l = C.sc.l || "Wheels of chaos";
         I.d&eeply,$s,$_
