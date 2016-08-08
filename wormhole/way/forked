@@ -17,7 +17,13 @@ if (J.me =~ /^(\w+);(.*)$/) {
     Rw $1 $J:G.oin $m;
     return;
 }
-if (J.me =~ /^(\w+):(\S+)(\s|$)/) {
+if (J.me =~ s/^(\w+):(.+)$// && G.way->{$1}) {
+    n $1=>W=>{s=>$2}
+}
+elsif (J.me =~ s/^ (\w+)(?: (.+))?// && G.way->{$1}) {
+    n $1=>W=>{t=>$2}
+}
+elsif (J.me =~ /^(\w+):(\S+)(\s|$)/) {
     my $o;
     my ($is,$ul) = ($1,$2);
     my $t = $1 if $ul =~ /^(\w+)/ || die "niul $ul";
@@ -29,9 +35,6 @@ if (J.me =~ /^(\w+):(\S+)(\s|$)/) {
     }
     sayyl "So: $is, $ul   fr  $o";
     J.me = " ALL $is:$ul";
-}
-if (J.me =~ s/^ (\w+)(?: (.+))?// && G.way->{$1}) {
-    n $1=>W=>{t=>$2}
 }
 
 J.fti -= 3 if J.me =~ s/o//g;

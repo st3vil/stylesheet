@@ -132,6 +132,7 @@ Circle: | # copy things
                 my $D = v.c.s;
                 if (v.t eq 'o') {
                     # D is inner o's C - index windups
+                    G&entug,$v;
                     D.c.i eq c&i || die "o oth i C.c.i.t <-> D.c.i.t";
                     D.c.j && die "o D.c.t already got j";
                     D.c.jC && die "o D.c.t already got jC";
@@ -189,6 +190,7 @@ Circle: | # copy things
             while ($S) {
                 my $e = G&hup,$S;
                 my $o = G&Chs,$e;
+                o.y.origin = $S;
                 push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
                 if ($pr) {
                     o.sc.oz.yprev = $pr;
@@ -212,7 +214,7 @@ Circle: | # copy things
         
     #c o3 make diff
     o 3:
-        # opens recursive shop
+        # opens recursive shop on i called j using C.t
         my $j = G&offis,i=>j=>'t';
         j.c.Co = $C;
         my $jj = j.sc.oo;
@@ -223,34 +225,53 @@ Circle: | # copy things
             my ($o,$x,$t,$cv) = @_;
             if (@$o > 1) {
                 # sort by zipped from A sips
-                @$o = reverse G&sortysip,$o,'A','R';
+                @$o = G&sortysip,$o,'A','R';
             }
-            ($o,my@out) = @$o;
-            sayre "Dupl ".ki $_ for @out;
+            my (@out) = @$o;
+            $o = pop @out;
+            
             $oo.>$x.>$t.>$cv = $o;
-            # last this
             my $l = $jj.>$x.>$t.>$cv;
             o.y.l = $l if $l;
+            # todo weaken l.y.l
             
             G&Chang,$l,$o;
             
-            my $e = o.c.s;
+            for my $d (@out,$o) {
+                my $e = d.c.s;
+                if ($d ne $o) {
+                    sayre "Dupl ".ki $d;
+                    next unless exists e.c.W;
+                    next if e.y.cv >= 0.9;
+                }
+                # throw inward (yin falls to z)
+                if (my $z = e.y.in || e.sc.z) {
+                    my $t = "z $t $cv";
+                    $t = {t=>$t,c=>{jC=>$C,oup=>$o}};
+
+                    my $Y = G&tugA,o=>3,c&i,$z,$t;
+                    # Y.c.cha etc
+                }
+            }
+            
             # ty in above o
             if (my $u = c&oup) {
                 if (my $al = u.sc.bz.>$t.>$cv) {
-                    die "ALREADY a C.t: ".ki $al;
+                    sayre "ALREADY a C.t: ".ki $al;
                 }
                 u.sc.bz.>$t.>$cv = $o;
             }
-            # throw inward (yin falls to z)
-            if (my $z = e.y.in || e.sc.z) {
-                my $t = "z $t $cv";
-                $t = {t=>$t,c=>{jC=>$C,oup=>$o}};
-                
-                my $Y = G&tugA,o=>3,c&i,$z,$t;
-                # Y.c.cha etc
-            }
         };
+        #c o4 A -> J t/y images
+        #
+        #o 4:
+        if (0) {
+        my $j = c&j;
+        my $jj = j.sc.oo;
+        my $oo = A.c.oo;
+        my $cha = A.c.cha ||= {};
+        saybl "EO ".wdump 4, $oo;
+        }
         G&Chew,$oo,'x,t,cv',$_ for sub {
             my ($o,$x,$t,$cv) = @_;
             my $l = o.y.l;
@@ -281,6 +302,7 @@ Circle: | # copy things
             }
             
             # wires
+            # notes from 2 - see upmost o's origin C ref index
             if (my $oz = o.sc.oz) {
                 for my $on (keys %$oz) {
                     my $to = $oz.>$on;
@@ -316,13 +338,9 @@ Circle: | # copy things
         !keys %$cha && delete A.c.cha;
         # names -> A fall replace to check inside
         j.sc.oo = $oo;
-    0&&
-    o 4:
-        #
-        # A -> J t/y images
 Compliers: | # othered
     u i
-    # join/etc arrays
+    # join/etc linked lists
     toget:
         G&together,$s,@Me
         
@@ -359,7 +377,7 @@ Compliers: | # othered
             }
         }
         
-Walks: | # othering
+Walks: | # othering, many C
     u i
     # iterator/map for index
     Chew:
@@ -479,10 +497,10 @@ Walks: | # othering
             unless (exists $c->[$i] || exists $d->[$i]) {
                 shift @try;
                 return $so->(0,@try) if @try;
-                die "ip sort ran out: a.t a.y.cv";
+                die "ip sort ran out:\n  ".ki($a)."\n  ".ki($b);
             }
-            c.c.ip->[$i] <=> d.c.ip->[$i]
-            || $so->($i+1);
+            $c->[$i] <=> $d->[$i]
+            || $so->($i+1,@try);
         };
         sort {$so->(0,@Me)} @$s;
     # hash then & now expr
