@@ -235,10 +235,10 @@ Circle: | # copy things
         G&Chew,$oo,'x,t,cv',$_ for sub {
             my ($o,$x,$t,$cv) = @_;
             my @o = @$o;
-            if (@o > 1) {
-                # sort by zipped from A sips
-                @o = G&sortysip,$o,'A','R';
-            }
+            
+            # sort by zipped from A sips
+            @o = G&sortysip,$o,'A','R' if @o > 1;
+            
             my @under;
             my $i; # number from last
             for my $d (reverse @o) {
@@ -262,25 +262,36 @@ Circle: | # copy things
             
                 # throw inward (yin falls to z)
                 if (my $z = e.y.in || e.sc.z) {
-                    my $t = {t=>"z $t $cv"};
+                    my $t = {t=>"z $t $cv".($i&&" $i")};
                     t.c.jC = $C;
                     t.c.oup = $o;
-                    if ($i) {
-                        t.t .= " $i";
-                        #t.c.oosh = $o;
-                    }
-                    unshift @under, [$z,$t];
+                    push @under, [$z,$t];
                 }
                 
                 $i++;
             }
+            
+            # spawn from first
+            my $fi;
+            map {
+                if ($_ ne $fi) {
+                    _.c.oosh = fi.c.oo ||= {}
+                }
+                else {
+                    $_
+                }
+            } map {
+                my $Y = G&A,o=>1,c&i,@$_;
+                $fi ||= $Y;
+                $Y
+            } reverse @under;
             
             G&tugA,o=>3,c&i,@$_ for @under;
             
             # ty in above o
             if (my $u = c&oup) {
                 if (my $al = u.sc.bz.>$t.>$cv) {
-                    sayre "ALREADY a C.t: ".ki $al;
+                    sayre "ALREADY a C.t: $t $cv: ".ki $al;
                 }
                 u.sc.bz.>$t.>$cv = $o;
             }
@@ -294,6 +305,7 @@ Circle: | # copy things
         my $cha = A.c.cha ||= {};
         G&Chew,$oo,'x,t,cv',$_ for sub {
             my ($o,$x,$t,$cv) = @_;
+            say "Hi from $t $cv";
             my $l = o.y.l;
             
             # o.sc.bz.$t.$cv inward check
