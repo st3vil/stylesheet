@@ -121,9 +121,14 @@ Circle: | # copy things
     #c o2 intermediate whats-where
     o 2:
         my $oo = A.c.oo = {};
+        if (my $o = c&oosh) {
+            $oo = o.y.A.c.oo || die "not yet oosh: ".ki $o;
+            sayyl "OO SHARED with o.t o.y.cv";
+        }
         # < space-for (C) < t < y [many o with .c.s = $e, o.y.etc = etc]
         # per other itself in 3, way in is noise-ish
         if (c&m eq 'zip') {
+            my $ads = [];
             for my $k (keys %{c&s}) {
                 my $v = c&s ->{$k};
                 v.y && v.y eq $v || die "zip yon not A";
@@ -132,7 +137,7 @@ Circle: | # copy things
                 my $D = v.c.s;
                 if (v.t eq 'o') {
                     # D is inner o's C - index windups
-                    G&entug,$v;
+                    push @$ads, $v;
                     D.c.i eq c&i || die "o oth i C.c.i.t <-> D.c.i.t";
                     D.c.j && die "o D.c.t already got j";
                     D.c.jC && die "o D.c.t already got jC";
@@ -159,6 +164,8 @@ Circle: | # copy things
                     push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
                 }
             }
+            @$ads = G&sortysip,$ads,'1' if @$ads > 1;
+            G&entug,$_ for @$ads;
         }
         elsif (c&m eq 'i') {
             for my $k (keys %{c&s}) {
@@ -211,6 +218,10 @@ Circle: | # copy things
         else {
             die "How to read ".ki $C;
         }
+        if (c&oosh) {
+            # oo shared with something that will 3... for us
+            T.not = 1;
+        }
         
     #c o3 make diff
     o 3:
@@ -223,36 +234,48 @@ Circle: | # copy things
         # falls until array, oo.C.t.cv = [thamany]
         G&Chew,$oo,'x,t,cv',$_ for sub {
             my ($o,$x,$t,$cv) = @_;
-            if (@$o > 1) {
+            my @o = @$o;
+            if (@o > 1) {
                 # sort by zipped from A sips
-                @$o = G&sortysip,$o,'A','R';
+                @o = G&sortysip,$o,'A','R';
             }
-            my (@out) = @$o;
-            $o = pop @out;
-            
-            $oo.>$x.>$t.>$cv = $o;
-            my $l = $jj.>$x.>$t.>$cv;
-            o.y.l = $l if $l;
-            # todo weaken l.y.l
-            
-            G&Chang,$l,$o;
-            
-            for my $d (@out,$o) {
+            my @under;
+            my $i; # number from last
+            for my $d (reverse @o) {
                 my $e = d.c.s;
-                if ($d ne $o) {
+                
+                if (!$i) {
+                    $o = $d;
+                    $oo.>$x.>$t.>$cv = $o;
+                    my $l = $jj.>$x.>$t.>$cv;
+                    o.y.l = $l if $l;
+                    # todo weaken l.y.l
+                    
+                    G&Chang,$l,$o;
+                }
+                else {
                     sayre "Dupl ".ki $d;
+                    # only mix W
                     next unless exists e.c.W;
                     next if e.y.cv >= 0.9;
                 }
+            
                 # throw inward (yin falls to z)
                 if (my $z = e.y.in || e.sc.z) {
-                    my $t = "z $t $cv";
-                    $t = {t=>$t,c=>{jC=>$C,oup=>$o}};
-
-                    my $Y = G&tugA,o=>3,c&i,$z,$t;
-                    # Y.c.cha etc
+                    my $t = {t=>"z $t $cv"};
+                    t.c.jC = $C;
+                    t.c.oup = $o;
+                    if ($i) {
+                        t.t .= " $i";
+                        #t.c.oosh = $o;
+                    }
+                    unshift @under, [$z,$t];
                 }
+                
+                $i++;
             }
+            
+            G&tugA,o=>3,c&i,@$_ for @under;
             
             # ty in above o
             if (my $u = c&oup) {
@@ -262,21 +285,18 @@ Circle: | # copy things
                 u.sc.bz.>$t.>$cv = $o;
             }
         };
-        #c o4 A -> J t/y images
-        #
-        #o 4:
-        if (0) {
+    #c o4 A -> J t/y images
+    #
+    o 4:
         my $j = c&j;
         my $jj = j.sc.oo;
         my $oo = A.c.oo;
         my $cha = A.c.cha ||= {};
-        saybl "EO ".wdump 4, $oo;
-        }
         G&Chew,$oo,'x,t,cv',$_ for sub {
             my ($o,$x,$t,$cv) = @_;
             my $l = o.y.l;
             
-            # ty inward check
+            # o.sc.bz.$t.$cv inward check
             my $sc = 'sc';
             my $z = 'z';
             if (my $bz = o.sc.bz) {
@@ -302,7 +322,8 @@ Circle: | # copy things
             }
             
             # wires
-            # notes from 2 - see upmost o's origin C ref index
+            # notes from 2 - see upmost o's origin C ref index,
+            # contributed to by all under
             if (my $oz = o.sc.oz) {
                 for my $on (keys %$oz) {
                     my $to = $oz.>$on;
@@ -397,6 +418,7 @@ Walks: | # othering, many C
                 ref $s ne 'HASH' && $i->[0] =~ /\?$/) {
                 return [$s,@$p];
             }
+            defined $s || return;
             die "NO ".wdump 3,[$p,$s] if ref $s ne 'HASH';
             shift @$i;
             my @r = keys %$s;
@@ -407,7 +429,7 @@ Walks: | # othering, many C
             } @r;
             
         };
-        my @are = $in->([],$s,[@Me]);
+        my @are = grep{defined} $in->([],$s,[@Me]);
         if ($it) {
             $it->(@$_) for @are 
         }

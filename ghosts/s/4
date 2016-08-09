@@ -57,6 +57,7 @@ MakePi: | # make code,
             my $ts = $c->{$cv};
             for my $t (sort keys %$ts) {
                 my $z = $ts->{$t};
+                sayre "As z.t z.y.cv ....";
                 Rw CoBabbler $C:z;
                 my $y = eval z.c.s;
                 die "Throcompile $of z.y.cv: z.t:"
@@ -170,23 +171,29 @@ Radio: |
     J.begins ||= hitime();
     my $beg = hitime();
     
-    Rw ElvisLeaves;
+    my $e = Rw ElvisLeaves;
     
     my $int = hitime() - $beg;
     say "Took $int";
     saybl "Total ".(hitime() - J.begins);
     # more attent if oJ.more
+    $e
 Drive: |
     my $n = Rw Dwive;
     my $J = J.R;
     ($n,$J,J.1,J.y.G);
 ElvisLeaves: |
     my $tes = sub {
-        n @_
+        my $C = G&tC,\@_;
+        # c&tac = 1;
+        n $C
     };
-    my ($n,$oJ,$A,$G) = Rw Drive 7;
-    
+    my ($n,$oJ,$A,$G) = 
+        #(5, J.R, J.R.1, J.R.y.G);
+        Rw Drive 7;
+    #A.V = 1;
     saygr " ++++++++++++++";
+    #exit if $n > 3;
     my $e = A.ii.theu;
     my $o;
     my $ot = 'zimb';
@@ -194,10 +201,14 @@ ElvisLeaves: |
     c&mks = sub {
         $o = G&A,o=>4=>$oJ=>$e,$ot;
         my $l = Rw Dujis $o;
+        (A.V || A.Ve) &&
+        saybl "the Dujis: ".$_ for @$l;
+        $l
     };
     
     if ($n==0) {
-        $tes->(Elvise=>'',{test=>'1 whole u'});
+        A.Ve=1;
+        $tes->(Elvise=>'',{test=>'1 whole u',tac=>1});
     }
     elsif ($n==1) {
         my $m = e.sc.z->[4];
@@ -250,33 +261,46 @@ ElvisLeaves: |
             $tes->(Elvise=>'',{test=>'5 mount'});
         }
     }
-    elsif ($n >= 5 && $n <= 5) {
+    elsif ($n >= 5 && $n <= 6) {
         my $mo = e.sc.z->[1];
-        my $om = G&Ct,[moving=>6=>'codedpassage'=>'%acgt:3'];
-        $om = G&Ct,[mo=>0.001=>{W=>'of'},{z=>[$om]}];
-        
+        my $om;
+        my $z = [
+            ($om = G&Ct,[J=>4=>'codedpassage'=>'%acgt:3'] ),
+            G&Ct,[moving=>6=>'codedpassage'=>'%acgt:3'] ,
+        ];
+        my $lom = G&Ct,[mo=>0.001=>{W=>'of'},{z=>$z}];
+        A.V = 1;
         my @io = (
             G&A,o=>2=>$oJ=>$mo,'Themo' ,
-            G&A,o=>2=>$oJ=>$om,'Extra'
+            G&A,o=>2=>$oJ=>$lom,'Extra'
         );
-        $e = {map{ _.c.sip => $_ }@io};
+        $e = {map{ _.V = 1; _.c.sip => $_ }@io};
         $ot = 'zip';
         A.V = 1;
-            $tes->(Elvise=>'',{test=>'6 mount'});
+        
+        if ($n == 5) {
+            c&mks ->();
+            #$tes->(Elvise=>'',{test=>'6 two W merges together'});
+        }
+        else {
+            om.sc.oh = 'yeah';
+            $tes->(Elvise=>'',{test=>'7 mount'});
+        }
             
         sayyl " Y P E P !";
         
     }
     my $so = $o;
-    my $one = 0.1;
+    my $one = 0.001;
     #$so = so.c.oo.C.theu.>$one;
-    $so = oJ.sc.jo.zimb.sc.jo;
+    $so = oJ.sc.jo.zip.sc.oo.C.mo.>$one;#.zimb.sc.jo;
+    
+    return $so;
     ($so) = values %$so;
     $so = so.sc.jo->{"z mo $one"};
     $so = so.c.Co;
     $so = so.c.j.sc.oo.C.W;
     $so = e.sc.z;
-    return $so;
     n Hows
 Dujis: | # o3 changes as lines
     my $z = Rw Duj $i:o;
@@ -288,7 +312,6 @@ Disp: |
     for my $d (@$x) {
         my $x = [];
         my $s = $ind . join ' ', grep { !ref$_ || do{push@$x,$_;0} } @$d;
-        say " KW: $s";
         push @$l, $s;
         map { push @$l, @$_ }
         Rw Disp + $x:_ for @$x;
@@ -365,6 +388,7 @@ Duj: | # eat o 3 for
     my @z;
     G&Chew,$yt,\'cv,t',$_ for sub {
         my ($o,$cv,$t) = @_;
+        sayyl "$ind o.t o.y.cv happens";
         my $l = o.y.l;
         my $E = l.c.s;
         my $e = o.c.s;
@@ -427,7 +451,6 @@ Duj: | # eat o 3 for
                         co.Ams.>_.c.sip = $_ for zb.y.A;
                     }
                 };
-                my $tot = @{$ne||e.sc.z||[]};
                 my $sm = '=';
                 $sm = "+" if $m eq 'new';
                 $sm = "-" if $m eq 'gone';
@@ -456,17 +479,28 @@ Duj: | # eat o 3 for
                 my $co = $co->{$t}; # inside/state
                 my $j;
                 j.t = $t;
+                my $zort;
                 if (co.co && keys %{co.co}) {
                     die "More to mid co: ".wdump 3, $co if keys %$co > 1;
                     j.sc.z = $or->(co.co);
                 }
+                
                 if (co.ytm) {
                     my @mu = values %{co.Ams};
-                    @mu > 1 && die "Many A below r.t r.y.cv: ".ki co.Ams;
-                    for my $i (@mu) {
-                        r.c.z = Rw Duj + $i;
+                    saybl "Upon: r.t r.y.cv .";
+                    @mu = G&sortysip,\@mu,'1' if @mu > 1;
+                    @mu = uniq @mu;
+                    for my $oi (@mu) {
+                        sayre "Sortout: oi.t oi.y.cv  - oi.c.s.t     oi.c.sip";
+                        my $z = Rw Duj + $i:oi;
+                        push @{r.c.z||=[]},  @$z;
+                    }
+                    if (@mu > 1) {
+                        sayre "Many A below r.t r.y.cv: ".ki co.Ams;
+                        $zort = 1;
                     }
                 }
+                
                 if (my $gt = co.goneyt) {
                     r.c.z ||= [];
                     # 
@@ -489,13 +523,20 @@ Duj: | # eat o 3 for
                         } @{r.c.z};
                         $got || push @mr, $zr;
                     }
-                    # breaks el=8/previous thing ness?`
+                    # breaks el=8/previous thing ness?
                     if (@mr) {
-                        @{r.c.z} = sort {a.y.cv <=> b.y.cv || a.t cmp b.t} @{r.c.z}, @mr;
+                        push @{r.c.z}, @mr;
+                        $zort = 1;
                     }
                 }
+                
+                if ($zort) {
+                    @{r.c.z} = sort {a.y.cv <=> b.y.cv || a.t cmp b.t} @{r.c.z};
+                }
+                
                 map { j.c.>$_ = $co.>$_ if exists $co.>$_ } qw'sv o m p';
                 j.c.s = co.v if exists co.v;
+                
                 push @$z, $j;
             }
             $z;
@@ -518,7 +559,7 @@ pi/pud: |
     y.at.ws=1;
     y.clos=1;
     #y.at.ml=J.A.d;
-    c&dl = J.Jiter.C.c.dl || 5;
+    c&dl = J.Jiter.C.c.dl || 3;
     c&dl += 9 if J.A.d < 20 && C.t eq 'sc';
     y.in = 0.2;
     my $ind = join'', ('  ') x (J.A.d - 1);
