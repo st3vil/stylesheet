@@ -121,10 +121,6 @@ Circle: | # copy things
     #c o2 intermediate whats-where
     o 2:
         my $oo = A.c.oo = {};
-        if (my $o = c&oosh) {
-            $oo = o.y.A.c.oo || die "not yet oosh: ".ki $o;
-            sayyl "OO SHARED with o.t o.y.cv";
-        }
         # < space-for (C) < t < y [many o with .c.s = $e, o.y.etc = etc]
         # per other itself in 3, way in is noise-ish
         if (c&m eq 'zip') {
@@ -148,7 +144,10 @@ Circle: | # copy things
                         my $vs = ii.C->{$t};
                         for my $cv (keys %$vs) {
                             my $os = $vs->{$cv};
-                            push @{oo.C->{$t}->{$cv}||=[]}, @$os;
+                            push @{oo.C->{$t}->{$cv}||=[]}, map {
+                                $_ = G&hup,$_;
+                                $_
+                            } @$os;
                             $i++ for @$os;
                         }
                     }
@@ -196,8 +195,7 @@ Circle: | # copy things
             my $pr;
             while ($S) {
                 my $e = G&hup,$S;
-                my $o = G&Chs,$e;
-                o.y.origin = $S;
+                my $o = G&Chs,$e,$S;
                 push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
                 if ($pr) {
                     o.sc.oz.yprev = $pr;
@@ -218,10 +216,6 @@ Circle: | # copy things
         else {
             die "How to read ".ki $C;
         }
-        if (c&oosh) {
-            # oo shared with something that will 3... for us
-            T.not = 1;
-        }
         
     #c o3 make diff
     o 3:
@@ -238,58 +232,39 @@ Circle: | # copy things
             
             # sort by zipped from A sips
             @o = G&sortysip,$o,'A','R' if @o > 1;
+            # later overwrite
+            @o = reverse @o;
             
-            my @under;
-            my $i; # number from last
-            for my $d (reverse @o) {
-                my $e = d.c.s;
-                
-                if (!$i) {
-                    $o = $d;
-                    $oo.>$x.>$t.>$cv = $o;
-                    my $l = $jj.>$x.>$t.>$cv;
-                    o.y.l = $l if $l;
-                    # todo weaken l.y.l
-                    
-                    G&Chang,$l,$o;
-                }
-                else {
-                    sayre "Dupl ".ki $d;
-                    # only mix W
-                    next unless exists e.c.W;
-                    next if e.y.cv >= 0.9;
-                }
+            sayre join"\n","Dupl: ",map{"  $t $cv from _.y.A.c.s.t"}@o if @o > 1;
             
-                # throw inward (yin falls to z)
-                if (my $z = e.y.in || e.sc.z) {
-                    my $t = {t=>"z $t $cv".($i&&" $i")};
-                    t.c.jC = $C;
-                    t.c.oup = $o;
-                    push @under, [$z,$t];
-                }
-                
-                $i++;
+            $o = $o[0];
+            my $e = o.c.s;
+            
+            $oo.>$x.>$t.>$cv = $o;
+            my $l = $jj.>$x.>$t.>$cv;
+            o.y.l = $l if $l;
+            # todo weaken l.y.l
+            
+            G&Chang,$l,$o;
+            
+            # throw inward (yin falls to z)
+            if (my $z = e.y.in || e.sc.z) {
+                my $t = {t=>"C.t/z $t $cv"};
+                t.c.jC = $C;
+                t.c.oup = $o;
+                G&tugA,o=>1,c&i,$z,$t;
             }
             
-            # spawn from first
-            my $fi;
-            map {
-                if ($_ ne $fi) {
-                    _.c.oosh = fi.c.oo ||= {}
-                }
-                G&entug,$_;
-            } map {
-                my $Y = G&A,o=>1,c&i,@$_;
-                $fi ||= $Y;
-                $Y
-            } reverse @under;
-            
             # ty in above o
+            sayyl "$t $cv is from o.y.A.c.s.t" if o.y.A ne $A;
+            
             if (my $u = c&oup) {
                 if (my $al = u.sc.bz.>$t.>$cv) {
-                    sayre "ALREADY a C.t: on u.t: $t $cv: ".ki $al;
+                    #sayre "ALREADY a C.t: on u.t: $t $cv from al.y.A.c.s.t: al.t al.y.cv";
+                    # zip hup'd acquired o but still..?
                 }
                 u.sc.bz.>$t.>$cv = $o;
+                #sayyl "Place u.t u.y.cv $u (u.y.A.c.s.t) from C.t: o.t o.y.cv $o";
             }
         };
     #c o4 A -> J t/y images
@@ -301,7 +276,6 @@ Circle: | # copy things
         my $cha = A.c.cha ||= {};
         G&Chew,$oo,'x,t,cv',$_ for sub {
             my ($o,$x,$t,$cv) = @_;
-            say "Hi from $t $cv";
             my $l = o.y.l;
             
             # o.sc.bz.$t.$cv inward check
@@ -349,7 +323,7 @@ Circle: | # copy things
                     }
                 }
             }
-            sayyl "$t $cv is from o.y.A.t " if o.y.A ne $A;
+            
             if (!o.y.l) {
                 $cha.>$x.>$_.>$t.>$cv = $o for 'new';
                 o.c.el = 1;
@@ -507,13 +481,15 @@ Walks: | # othering, many C
         C.c.s = s.c.s if exists s.c.s;
         C.sc = {%{s.sc}};
         return $C;
-    # make an other holding it
-    Chs:
+    # make an other holding it (s) at same ty
+    # s usu. copy already, hs is origin
+    Chs: %acgt:s hs
         my $C = {};
         C.y.A = $A;
         C.t = s.t;
         C.y.cv = s.y.cv;
         C.c.s = $s;
+        C.c.hs = $hs if $hs;
         return $C;
     # sort by many y.As
     sortysip:
@@ -521,7 +497,7 @@ Walks: | # othering, many C
             my ($i,@try) = @_;
             my ($yk) = @try;
             my ($c,$d) = (a.y->{$yk},b.y->{$yk});
-            $c && $d || die "sort no y$yk";
+            $c && $d || die "sort no y$yk".wdump 4,[$a,$b];
             ($c,$d) = (c.c.ip,d.c.ip);
             $c && $d || die "sort noy$yk ip";
             unless (exists $c->[$i] || exists $d->[$i]) {
