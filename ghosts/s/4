@@ -170,7 +170,7 @@ Radio: |
     J.begins ||= hitime();
     my $beg = hitime();
     
-    my $e = Rw ElvisLeaves;
+    my $e = Rw Tesh ElvisLeaves;
     
     my $int = hitime() - $beg;
     say "Took $int";
@@ -178,18 +178,34 @@ Radio: |
     # more attent if oJ.more
     $e
 Drive: |
-    my $n = Rw Dwive;
-    my $J = J.R;
     ($n,$J,J.1,J.y.G);
-ElvisLeaves: |
+Tesh: |
+    my ($t,$sel) = @$m;
     my $tes = sub {
         my $C = G&tC,\@_;
+        c&test ||= do {
+            c&l = C.t;
+            C.t = $t;
+            J.sc.testRun + 1;
+        };
         # c&tac = 1;
         n $C
     };
+    
+    if (!J.testsRun || J.testsRun < J.lasttestsrun) {
+        J.lasttestsrun = J.testsRun;
+        
+        my $n = Rw Dwive;
+        my $J = J.R;
+        Rw $t $n $J $A:J.1 $G:J
+    }
+Ily: |
+    
     my ($n,$oJ,$A,$G) = 
         #(5, J.R, J.R.1, J.R.y.G);
-        Rw Drive 7;
+        Rw Drive 9;
+    
+ElvisLeaves: |
     #A.V = 1;
     saygr " ++++++++++++++";
     #exit if $n > 3;
@@ -197,16 +213,23 @@ ElvisLeaves: |
     my $o;
     my $ot = 'zimb';
     
+    my $lshot = sub {
+        my $l = shift;
+        my $m = c&lshot;
+        return unless @$l > $m;
+        @$l = (@{$l}[0..$m], "... snip x".(@$l-$m));
+    };
     c&mks = sub {
         $o = G&A,o=>4=>$oJ=>$e,$ot;
         my $l = Rw Dujis $o;
+        c&lshot && $lshot ->($l);
         (A.V || A.Ve) &&
         saybl "the Dujis: ".$_ for @$l;
         $l
     };
     
     if ($n==0) {
-        $tes->(Elvise=>'',{test=>'1 whole u',tac=>1});
+        $tes->(Elvise=>'',{test=>'1 whole u',lshot=>32});
     }
     elsif ($n==1) {
         my $m = e.sc.z->[4];
@@ -259,7 +282,7 @@ ElvisLeaves: |
             $tes->(Elvise=>'',{test=>'5 mount'});
         }
     }
-    elsif ($n >= 5 && $n <= 6) {
+    elsif ($n >= 5 && $n <= 8) {
         my $mo = e.sc.z->[1];
         my $om = G&Ct,[J=>4=>'codedpassage'=>'%acgt:3'];
         my $z = [
@@ -270,18 +293,29 @@ ElvisLeaves: |
         my $lom = G&Ct,[mo=>0.001=>{W=>'of'},{z=>$z}];
         my @io = (
             G&A,o=>2=>$oJ=>$mo,'Themo' ,
-            G&A,o=>2=>$oJ=>$lom,'Extra'
+            $n < 7 && G&A,o=>2=>$oJ=>$lom,'Extra'
         );
-        $e = {map{_.c.sip => $_ }@io};
+        $e = {map{_.c.sip => $_ }grep{$_}@io};
         $ot = 'zip';
+        A.Ve = 1;
         
         if ($n == 5) {
-            c&mks ->();
-            #$tes->(Elvise=>'',{test=>'6 two W merges together'});
+            # c&mks ->();
+            $tes->('W over without innards','',{tac=>1});
         }
-        else {
-            om.sc.oh = 'yeah';
-            $tes->(Elvise=>'',{test=>'7 mount'});
+        elsif ($n == 6) {
+            om.sc.oh = "yeah $n";
+            mo.y.in.sc.no = "case $n";
+            $tes->('W over without innards','',{tac=>1});
+        }
+        elsif ($n == 7) {
+            mo.y.in.sc.casa = "case $n";
+            $tes->('W over without innards','',{tac=>1});
+        }
+        elsif ($n == 8) {
+            om.sc.oh = "yeah $n";
+            mo.y.in.sc.no = "case $n";
+            $tes->('W over without innards','',{tac=>1});
         }
             
         sayyl " Y P E P !";
