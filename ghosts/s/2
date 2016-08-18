@@ -107,40 +107,8 @@ Jelly: | # Town making
     J 8:
         # through J's microJ of personality
     
-Stashi: | # recursors/ways to track A stuff
+With: | # J's stuff, its Js, osc page, etc.
     u i
-    # c&$j = above.sc.$jo.path
-    # above is our c&$jC or root c&$r
-    # @Me is C nkgks for path
-    #
-    # out of throat order, first/deepest coops others
-    # j is usually j
-    offis: %acgt:r j
-        my $ik = $j.'C';
-        my $ok = $j.'o';
-        my $tw;
-        my $oi;$oi = sub {
-            my ($C) = @_;
-            die "loop C.t" if $tw->{$C}++;
-            my $jon;
-            if (my $D = C.c.>$ik) {
-                # tune in parents first
-                $jon = D.c.>$j ||= $oi->($D);
-            }
-            else {
-                # origin
-                $jon = C.c.>$r;
-            }
-            my $i = jon.sc.>$ok ||= {};
-            for my $nk (@Me) {
-                ($nk,my $gk) = ($1,$nk) if $nk =~ s/^(y|c|sc)//;
-                my $v = $C->{$nk};
-                $v = $v->{$gk} if $gk;
-                $i = $i->{$v} ||= {};
-            }
-            C.c.>$j = $i;
-        };
-        $oi->($C);
     
     sJ: %acgt:J t f
         $f ||= $t;
@@ -179,5 +147,208 @@ Stashi: | # recursors/ways to track A stuff
             $ch++;
         }
         delete J.c.o;
+    
+Compliers: | # othered
+    u i
+    # join/etc linked lists
+    toget:
+        G&together,$s,@Me
+        
+    together: %acgt:k c d
+        my $o = c.y.>$k;
+        c.y.>$k = $d;
+        my $ok = {qw{next prev prev next}}->{$k};
+        if ($ok) {
+            d.y.>$ok = $c;
+            if ($o) {
+                d.y.>$k = $o;
+                o.y.>$ok = $d;
+            }
+        }
+    
+    apart: %acgt:k c d
+        $d ||= c.y.>$k;
+        my $o = d.y.>$k;
+        delete c.y.>$k;
+        if ($o) {
+            if ($c eq $o) { # mutual
+                delete d.y.>$k;
+            }
+            else {
+                c.y.>$k = $o;
+            }
+        }
+        my $ok = {qw{next prev prev next}}->{$k};
+        if ($ok) {
+            delete d.y.>$k;
+            if ($o) {
+                delete d.y.>$ok;
+                o.y.>$ok = $c;
+            }
+        }
+    
+    # osc blinds previous empirica
+    Chade:
+        my $C = {};
+        C.t = s.t;
+        C.y.cv = s.y.cv;
+        C.c.s = s.c.s if exists s.c.s;
+        C.sc = {%{s.sc}};
+        return $C;
+    # make an other holding it (s) at same ty
+    # s usu. copy already, hs is origin
+    Chs: %acgt:s hs
+        my $C = {};
+        C.y.A = $A;
+        C.t = s.t;
+        C.y.cv = s.y.cv;
+        C.c.s = $s;
+        C.c.hs = $hs if $hs;
+        return $C;
+Walks: | # othering, many C
+    u i
+    # iterator/map for index
+    Chew:
+        my $sort;
+        my $it = pop @Me if ref $Me[-1] eq 'CODE';
+        if (@Me == 1) {
+            my $i = shift @Me;
+            if (ref $i eq 'SCALAR') {
+                $sort = 1;
+                $i = $$i;
+            }
+            @Me = split ',', $i;
+        }
+        my $in;$in = sub {
+            my ($p,$s,$i) = @_;
+            if (!@$i || @$i==1 &&
+                ref $s ne 'HASH' && $i->[0] =~ /\?$/) {
+                return [$s,@$p];
+            }
+            defined $s || return;
+            die "NO ".wdump 3,[$p,$s] if ref $s ne 'HASH';
+            shift @$i;
+            my @r = keys %$s;
+            @r = sort @r if $sort;
+            map {
+                my $v = $s.>$_;
+                $in->([@$p,$_],$v,[@$i]);
+            } @r;
+            
+        };
+        my @are = grep{defined} $in->([],$s,[@Me]);
+        if ($it) {
+            $it->(@$_) for @are 
+        }
+        else {
+            sub { shift @are }
+        }
+        
+    
+    # hash then & now, makes histories
+    # prop up non val o.c.$cha.$nk.$gk = {}
+    # which unify cha ne same into o.c.cha.$cha.$nk.$gk 
+    # {} may extend meaning, eg z tys into
+    Chang: %acgt:l o
+        my $E = l.c.s if $l;
+        my $e = o.c.s;
+        my @p = (['t'],[y=>'cv'],[c=>{}],[sc=>{}]);
+        while (@p) {
+            my $p = shift @p;
+            my ($nk,$gk) = @$p;
+            my $u = $E.>$nk; # Eustobe
+            my $v = $e.>$nk; # revelation
+            if (ref $gk) {
+                keys %$gk == 0 || die "Given a ref: ".ki $gk;
+                $gk.>$_++ for keys(%$u), keys (%$v);
+                unshift @p, [$nk,$_] for keys %$gk;
+                next;
+            }
+            my $i = {};
+            if ($gk) {
+                if (!exists $u.>$gk) {
+                    o.c.new.>$nk.>$gk = $i;
+                }
+                elsif (!exists $v.>$gk) {
+                    o.c.gone.>$nk.>$gk = $i;
+                }
+                elsif ($u.>$gk ne $v.>$gk) {
+                    o.c.diff.>$nk.>$gk = $i;
+                }
+                else {
+                    o.c.same.>$nk.>$gk = $i;
+                }
+                
+            }
+            else {
+                if (!exists $E.>$nk) {
+                    o.c.new.>$nk = $i;
+                }
+                elsif (!exists $e.>$nk) {
+                    o.c.gone.>$nk = $i;
+                }
+                elsif ($u ne $v) {
+                    o.c.diff.>$nk = $i;
+                }
+                else {
+                    o.c.same.>$nk = $i;
+                }
+            }
+        }
+        for (grep { o.c.>$_ } qw'new gone diff') {
+            o.c.cha->{$_} = o.c.>$_;
+        }
+    # sort by many y.As
+    sortysip:
+        my $so;$so = sub {
+            my ($i,@try) = @_;
+            my ($yk) = @try;
+            my ($c,$d) = (a.y->{$yk},b.y->{$yk});
+            $c && $d || die "sort no y$yk".wdump 4,[$a,$b];
+            ($c,$d) = (c.c.ip,d.c.ip);
+            $c && $d || die "sort noy$yk ip";
+            unless (exists $c->[$i] || exists $d->[$i]) {
+                shift @try;
+                return $so->(0,@try) if @try;
+                die "ip sort ran out:\n  ".ki($a)."\n  ".ki($b);
+            }
+            $c->[$i] <=> $d->[$i]
+            || $so->($i+1,@try);
+        };
+        sort {$so->(0,@Me)} @$s;
+Stashi: | # recursors/ways to track A stuff
+    u i
+    # c&$j = above.sc.$jo.path
+    # above is our c&$jC or root c&$r
+    # @Me is C nkgks for path
+    #
+    # out of throat order, first/deepest coops others
+    # j is usually j
+    offis: %acgt:r j
+        my $ik = $j.'C';
+        my $ok = $j.'o';
+        my $tw;
+        my $oi;$oi = sub {
+            my ($C) = @_;
+            die "loop C.t" if $tw->{$C}++;
+            my $jon;
+            if (my $D = C.c.>$ik) {
+                # tune in parents first
+                $jon = D.c.>$j ||= $oi->($D);
+            }
+            else {
+                # origin
+                $jon = C.c.>$r;
+            }
+            my $i = jon.sc.>$ok ||= {};
+            for my $nk (@Me) {
+                ($nk,my $gk) = ($1,$nk) if $nk =~ s/^(y|c|sc)//;
+                my $v = $C->{$nk};
+                $v = $v->{$gk} if $gk;
+                $i = $i->{$v} ||= {};
+            }
+            C.c.>$j = $i;
+        };
+        $oi->($C);
     
 
