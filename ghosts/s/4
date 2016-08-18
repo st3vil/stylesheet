@@ -123,7 +123,9 @@ comput: |
 Zupe: | # run Zome, output pud
     u urw
     y.clos = 1;
-    my $so = Rw Radio;
+    
+    my $so = Rw Tesh ElvisLeaves;
+    
     #n wk=>-pre=>wdump(6, $so),'%hs:375'
     m wk=>-pud=>{s=>$so},'%hs:375,ws,wi:30%'
     
@@ -164,20 +166,7 @@ Zome: | # return a new J
     A.ii.>$_ = G&Ct,[$_,1,'steve',{z=>$z}] for 'theu';
     
     $J
-Radio: |
-    J.R ||= Rw Zome;
-    J.begins ||= hitime();
-    my $beg = hitime();
-    
-    my $e = Rw Tesh ElvisLeaves;
-    
-    my $int = hitime() - $beg;
-    say "Took $int";
-    saybl "Total ".(hitime() - J.begins);
-    # more attent if oJ.more
-    $e
-Drive: |
-    ($n,$J,J.1,J.y.G);
+
 Tesh: | # wrap test way
     my ($t,$sel) = @$m;
     my $tes = sub {
@@ -189,18 +178,28 @@ Tesh: | # wrap test way
         };
         n $C
     };
+    
     die "Just $sel" if $sel;
+    
+    J.R ||= Rw Zome;
+    
+    J.begins ||= hitime();
+    my $beg = hitime();
+    
     if (!J.testsRun || J.testsRun > J.lasttestsrun) {
         J.lasttestsrun = J.testsRun;
         J.testUntil = J.testRun + 1;
         my $n = Rw Dwive;
         my $oJ = J.R;
         Rw $t + $tes $n $oJ $A:oJ.1 $G:oJ.y.G;
+        
+        ok(1, "Took J.testRun ".G&ron,hitime()-$beg );
     }
-
+    else {
+        ok(1, "Total ".G&ron,hitime()-J.begins );
+    }
 ElvisLeaves: |
     #A.V = 1;
-    saygr " ++++++++++++++";
     #exit if $n > 3;
     my $e = A.ii.theu;
     my $o;
