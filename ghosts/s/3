@@ -10,27 +10,29 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         # C is 's many for o
         A.c.s = G&sJ,A.2,'s';
     s 2:
-        # number of things plugged in
+        # number of things plugged in to s from J
         for my $J (A.2) {
-            C.c.>$_ = J.c.>$_ for grep{ J.c.>$_ }qw'whole base';
+            C.c.>$_ = J.c.>$_ for grep{ J.c.>$_ } qw'whole base';
         }
         if (my $W = c&whole) {
             my $s = G&t,$W || die "no $W";
-            say "Whole ! ".ki $s;
-            G&tugA,o=>8,$C,$s,'whole';
+            G&A,o=>8,$C,$s,'whole';
+            # place on us
             return T.Z.8 = $A;
         }
+        my $tug;
         if (my $W = c&base) {
             my $s = G&t,$W || die "no $W";
             say "Base ! ".ki $s;
-            G&tugA,o=>2,$C,$s,'base';
+            tug.base = G&A,o=>2,$C,$s,'base';
         }
         if (my $n = A.c.n) {
             s&ch = A.2.sc.ch if !defined s&ch;
             s&ch = '' if !defined s&ch;
-            G&tugA,o=>2,$C,n.sc.a->{s&ch},'zip';
+            tug.ground = G&A,o=>2,$C,n.sc.a->{s&ch},'zip';
         }
-        c&zip = G&tugA,o=>2,$C,A.c.tug,'zipover';
+        $tug || die "No ground to A.2.t";
+        c&zip = G&A,o=>4,$C,$tug,'zipover';
     s 3:
         say "S  3 A.2.t";
         my $z = c&zip;
