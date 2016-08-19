@@ -145,6 +145,7 @@ CoBabbler: | # bake code
     
     C.c.s = G&parse_babbl,C.c.s;
 Hows: |
+    J.sc.u.c.o = 'oscd';
     take:
         robino
     leave:
@@ -186,22 +187,25 @@ Tesh: | # wrap test way
     
     J.R ||= Rw Zome;
     
-    J.begins ||= hitime();
     my $beg = hitime();
-    
-    if (!J.testsRun || J.testsRun > J.lasttestsrun) {
+    my $e;
+    if (!J.begins || J.testsRun > J.lasttestsrun) {
+        J.begins ||= $beg;
         J.lasttestsrun = J.testsRun;
         J.testUntil = J.testRun + 1;
-        my $n = Rw Dwive;
+        my $n = 0;#Rw Dwive;
         my $oJ = J.R;
+        $e =
         Rw $t + $tes $n $J:oJ $A:oJ.1 $G:oJ.y.G;
+        sub ok {}
         
         ok(1, "Took J.testRun ".G&ron,hitime()-$beg );
     }
     else {
         ok(1, "Total ".G&ron,hitime()-J.begins );
     }
-ElvisWorld: |
+    $e
+ElvisWorld: | # J makes, puts W
     return if $n;
     A.V = 1;
     J.sc.u.c.o = 'oscd';
@@ -222,12 +226,18 @@ ElvisWorld: |
         $l
     };
     
-    
+    my $j =
     n Hows
-    
+    ($j) = values %{j.c.tug};
+    $j = j.c.s;
+    $j = j.sc.J;
+    $j = j.sc.s;
+    $j = j.sc.jo.zipover;
     sayyl "Done!";
-    $tes->("Selecto");
-    $e
+    #$tes->("Selecto");
+    sayyl wdump 2,$j;
+    return;
+    #J.sc.
     
 ElvisLeaves: |
     #A.V = 1;
@@ -652,10 +662,15 @@ pi/pud: |
     c&dl += 9 if J.A.d < 20 && C.t eq 'sc';
     y.in = 0.2;
     my $ind = join'', ('  ') x (J.A.d - 1);
+    sayyl "At $ind we have C.t";
     n la=>''=>"\n$ind< C.t";
     if ($s eq J.Jiter.C.c.s) {
         n same=>2=>'same','%hs:855'
         return
+    }
+    if (C.t eq 'G') {
+        return
+        n no=>2=>"!",'%fs:5,hs:595'
     }
     if (ref $s ne 'HASH' || J.A.d > c&dl) {
         my $z = ki $s;
@@ -669,7 +684,7 @@ pi/pud: |
     }
     my @ks = sort keys %$s;
     n siz=>12=>" x ".@ks,'%hs:283,fs:6';
-    if (J.mo.J.C.c.intl++ > 40) {
+    if (J.mo.J.C.c.intl++ > 10) {
         return
         n 'more'=>''=>"more",'%hs:544';
     }
