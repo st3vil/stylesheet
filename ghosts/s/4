@@ -1,56 +1,80 @@
 PiMachine: |
-    # sequencing
+    n Sequencing
+    n ForJ
+    n Jingle
+    n Stuff
+    n ThatWillBe
+Sequencing: |
     n C
     n To
     n Day
     n Tube
-    # for J
+ForJ: |
     n Tunnel
     n Jelly
     n With
+Jingle: |
     n Compliers
     n Walks
     n Stashi
-    # stuff
+Stuff: |
     n Triangle
     n Circle
-    # that will be
+ThatWillBe: |
     n Tan
     n Tal
-MakePi: | # make code, 
+MakePi: | # make code,
     my $ii = {};
+    
     my $dig = sub {
-        my $tW = shift;
+        my $tW = shift || return;
         $tW = {%{$tW}};
         $tW->{$_} = readlink "w/digway/$_" for keys %$tW;
         $tW;
     };
-    my $ol = LoadFile('w/glacwal');
     
-    if (ki($ol) ne ki($dig->($ol))) {
-    sayre "Zupe unstuck: \n".ki($ol)."\n ne\n".ki($dig->($ol));
-    my $it = 'Day';
-    $it = 'PiMachine';
-    n $it
-    my $jt = G.oin.inJ;
-    my $Day = $jt->{$it};
-    my $tW = {};
-    my $su;$su = sub {
-        my $J = shift;
-        my $v = J.El.Pre.tv || die "J.name no tv";
-        map { _.sc.J ? ($_,$su->(_.sc.J)) : $_ }
-        grep { _.y.cv < 0.9 || do{$tW->{_.t} = $_; 0} } values %$v;
-    };
-    my $N = [$su->($Day)];
-    my $v = {}; # of/cv/t acum
-    my $M = [map {
-        Rw ym/conoi $noAI=1 $C:_ $v;
-    } @$N];
-    DumpFile('w/glacwal',$dig->($tW));
-    DumpFile('w/glacval',$v);
+    my $main = 'PiMachine';
+    my $see = G.way.>$main;
+    my (@bit) = $see =~ /^n (\w+)$/sgm;
+    
+    my $s = {};
+    for my $bit (@bit) {
+         my $fd = "w/pimash/$main/$bit";
+        my $ol = LoadFile($fd.'.g') if -f $fd.'.g';
+        
+        my $v = {};
+        if (!$ol || ki($ol) ne ki($dig->($ol))) {
+            sayre "$main $bit unstuck: \n".ki($ol)."\n ne\n".ki($dig->($ol)) if !$ol;
+            n $bit
+            my $jt = G.oin.inJ;
+            my $Day = $jt->{$bit};
+            my $tW = {};
+            my $su;$su = sub {
+                my $J = shift;
+                my $v = J.El.Pre.tv || die "J.name no tv";
+                map { _.sc.J ? ($_,$su->(_.sc.J)) : $_ }
+                grep { _.y.cv < 0.9 || do{$tW->{_.t} = $_; 0} } values %$v;
+            };
+            my $N = [$su->($Day)];
+            for my $C (@$N) {
+                Rw ym/conoi $noAI=1 $C $v;
+            }
+            DumpFile($fd.'.g',$dig->($tW));
+            DumpFile($fd.'.v',$v);
+        }
+        else {
+            $v = LoadFile($fd.'.v');
+        }
+        while (my ($k,$tv) = each %$v) {
+            while (my ($t,$cvs) = each %$tv) {
+                while (my ($cv,$C) = each %$cvs) {
+                    $s.>$k.>$t.>$cv = $C;
+                }
+            }
+        }
     }
     
-    my $v = LoadFile('w/glacval');
+    my $v = $s;
     for my $of (keys %$v) {
         my $o = $ii->{$of} = {t=>$of,y=>{cv=>0.001},c=>{W=>'of'}};
         my $c = $v->{$of};
@@ -180,6 +204,7 @@ Tesh: | # wrap test way
             C.t = $t;
             J.testRun;
         };
+        c&tac = 1 if J.tacall;
         n $C
     };
     
@@ -193,11 +218,11 @@ Tesh: | # wrap test way
         J.begins ||= $beg;
         J.lasttestsrun = J.testsRun;
         J.testUntil = J.testRun + 1;
-        my $n = 0;#Rw Dwive;
+        my $n = Rw Dwive;
         my $oJ = J.R;
         $e =
-        Rw $t + $tes $n $J:oJ $A:oJ.1 $G:oJ.y.G;
-        sub ok {}
+        Rw $t + $tes $n $oJ:J $J:oJ $A:oJ.1 $G:oJ.y.G;
+        delete J.tacall;
         
         ok(1, "Took J.testRun ".G&ron,hitime()-$beg );
     }
@@ -231,9 +256,9 @@ ElvisWorld: | # J makes, puts W
     ($j) = values %{j.c.tug};
     $j = j.c.s;
     $j = j.sc.J;
-    $j = j.sc.s;
-    $j = j.sc.jo.zipover;
-    $j = j.sc.oo;
+    #$j = j.sc.s;
+    #$j = j.sc.jo.zipover;
+    #$j = j.sc.oo;
     sayyl "Done!";
     #$tes->("Selecto");
     sayyl wdump 2,$j;
@@ -345,16 +370,16 @@ ElvisLeaves: |
         elsif ($n == 6) {
             om.sc.oh = "yeah $n";
             mo.y.in.sc.no = "case $n";
-            $tes->('W over without innards');
+            $tes->('W over change some');
         }
         elsif ($n == 7) {
             mo.y.in.sc.casa = "case $n";
-            $tes->('W over without innards');
+            $tes->('W over, chang, Extra gone');
         }
         elsif ($n == 8) {
             om.sc.oh = "yeah $n";
             mo.y.in.sc.no = "case $n";
-            $tes->('W over without innards');
+            $tes->('W over, more change');
         }
     }
     elsif ($n == 9) { #c
@@ -391,7 +416,7 @@ ElvisLeaves: |
     my $so = $o;
     my $one = 0.001;
     #$so = so.c.oo.C.theu.>$one;
-    $so = oJ.sc.jo.zip.sc.oo.C.mo.>$one; # from oJ, the zip's mo 0.001
+    $so = J.sc.jo.zip.sc.oo.C.mo.>$one; # from oJ, the zip's mo 0.001
     return {p=>33};
     $so = so.sc.jo->{"z mo $one"};
     $so = so.c.Co; # the C currently othering under the recursionship of j
@@ -663,7 +688,7 @@ pi/pud: |
     c&dl += 9 if J.A.d < 20 && C.t eq 'sc';
     y.in = 0.2;
     my $ind = join'', ('  ') x (J.A.d - 1);
-    sayyl "At $ind we have C.t";
+    
     n la=>''=>"\n$ind< C.t";
     if ($s eq J.Jiter.C.c.s) {
         n same=>2=>'same','%hs:855'
