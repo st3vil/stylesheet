@@ -1,4 +1,4 @@
-PiMachine: |
+PiMachine: | # all that is
     n Sequencing
     n ForJ
     n Jingle
@@ -112,6 +112,39 @@ MakePi: | # make code,
     }
     
     ($i,$ii)
+CoBabbler: | # bake code
+    my $sw = {};
+    $sw.>$_ = 'say' for qw'saygr saybl sayyl sayre say';
+    %$sw = () if C.sc.nobasay;
+    for (keys %$sw) {
+        my $if = $_ ne 'sayre' ? "A\.V && " : "";
+        C.c.s =~ s/^(\s*)$_ ([^\n]+?)((?: (?:for|if) .+)?;?)$/${1}${if}G\.h->(\$A,\$C,\$G,\$T,'$sw->{$_}','$_',$2)$3/sgm;
+    }
+    
+    C.c.s =~ s/\bs\&(\w+)/C\&$1/sgm;
+    
+    C.c.s = G&parse_babbl,C.c.s;
+Zome: | # return a new J
+    my ($i,$ii) = Rw MakePi;
+    
+    my $B = $A;
+    my $A = {};
+    A.sc.i = A.i = $i;
+    A.sc.ii = A.ii = $ii;
+    my $G = A.i.G->($A,$C,$G,$T);
+    A.i.>$_ = B.I.>$_ for qw'parse_babbl';
+    
+    $A = G&A,'so';
+    my $J = G&J,$A,'os';
+    $A.>$_ = $A for 2,3,4;
+    
+    A.sc.ii = A.ii;
+    A.sc.i = A.i;
+    
+    my $z = [sort {a.y.cv <=> b.y.cv || a.t cmp b.t}values%{A.ii}];
+    A.ii.>$_ = G&Ct,[$_,1,'steve',{z=>$z}] for 'theu';
+    
+    $J
 P: |
     u urw
     u UpPg
@@ -150,51 +183,25 @@ Zupe: | # run Zome, output pud
     u urw
     y.clos = 1;
     
-    #my $so = Rw Tesh ElvisLeaves;
-    my $so = Rw Tesh ElvisWorld;
+    my $so = Rw Tesh ElvisLeaves;
     
-    #n wk=>-pre=>wdump(6, $so),'%hs:375'
     m wk=>-pud=>{s=>$so},'%hs:375,ws,wi:30%'
     
-CoBabbler: | # bake code
-    my $sw = {};
-    $sw.>$_ = 'say' for qw'saygr saybl sayyl sayre say';
-    %$sw = () if C.sc.nobasay;
-    for (keys %$sw) {
-        my $if = $_ ne 'sayre' ? "A\.V && " : "";
-        C.c.s =~ s/^(\s*)$_ ([^\n]+?)((?: (?:for|if) .+)?;?)$/${1}${if}G\.h->(\$A,\$C,\$G,\$T,'$sw->{$_}','$_',$2)$3/sgm;
-    }
+Zop: |
+    u urw
+    y.clos = 1;
     
-    C.c.s =~ s/\bs\&(\w+)/C\&$1/sgm;
+    my $so = Rw Tesh ElvisWorld ee;
     
-    C.c.s = G&parse_babbl,C.c.s;
+    m wk=>-pud=>{s=>$so},'%hs:375,ws,wi:30%'
+    
+    
 Hows: |
     J.sc.u.c.o = 'oscd';
     take:
         robino
     leave:
         traces
-Zome: | # return a new J
-    my ($i,$ii) = Rw MakePi;
-    
-    my $B = $A;
-    my $A = {};
-    A.sc.i = A.i = $i;
-    A.sc.ii = A.ii = $ii;
-    my $G = A.i.G->($A,$C,$G,$T);
-    A.i.>$_ = B.I.>$_ for qw'parse_babbl';
-    
-    $A = G&A,'so';
-    my $J = G&J,'os';
-    $A.>$_ = $A for 2,3,4;
-    
-    A.sc.ii = A.ii;
-    A.sc.i = A.i;
-    
-    my $z = [sort {a.y.cv <=> b.y.cv || a.t cmp b.t}values%{A.ii}];
-    A.ii.>$_ = G&Ct,[$_,1,'steve',{z=>$z}] for 'theu';
-    
-    $J
 Tesh: | # wrap test way
     my ($t,$sel) = @$m;
     my $tes = sub {
@@ -208,7 +215,7 @@ Tesh: | # wrap test way
         n $C
     };
     
-    die "Just $sel" if $sel;
+    #die "Just $sel" if $sel;
     
     J.R ||= Rw Zome;
     
@@ -218,12 +225,13 @@ Tesh: | # wrap test way
         J.begins ||= $beg;
         J.lasttestsrun = J.testsRun;
         J.testUntil = J.testRun + 1;
-        my $n = Rw Dwive;
+        my $n = $sel ? 0 :
+            Rw Dwive;
         my $oJ = J.R;
         $e =
         Rw $t + $tes $n $oJ:J $J:oJ $A:oJ.1 $G:oJ.y.G;
         delete J.tacall;
-        
+        $sel ||
         ok(1, "Took J.testRun ".G&ron,hitime()-$beg );
     }
     else {
@@ -261,13 +269,16 @@ ElvisWorld: | # J makes, puts W
     #$j = j.sc.oo;
     sayyl "Done!";
     #$tes->("Selecto");
-    sayyl wdump 2,$j;
-    return;
+    #sayyl wdump 2,$j;
+    return $j;
     #J.sc.
     
 ElvisLeaves: |
     #A.V = 1;
     #exit if $n > 3;
+    my $tf = 't/Zupe/ElvisLeaves/theu';
+    DumpFile($tf, A.ii.theu) unless -f $tf;
+    my $e = LoadFile($tf);
     my $e = A.ii.theu;
     my $o;
     my $ot = 'zimb';
@@ -285,6 +296,8 @@ ElvisLeaves: |
         #A.V = 1 if $n == 10;
         
         my $l = Rw Dujis $o;
+        
+        
         c&lshot && $lshot ->($C,$l);
         (A.V || A.Ve) &&
         saybl "the Dujis: ".$_ for @$l;
@@ -467,13 +480,9 @@ Duj: | # eat o 3 for
         elsif ($cha) {
             if (cha.new && cha.new.t) {
                 r.c.el = keys %{ $ty.>r.t } == 1 ? 2 : 1;
-                #sayyl "$ind    $t $cv";
-            }
-            elsif (cha.gone && cha.gone.t) {
             }
             else {
-                #saygr "$ind != $t $cv:";
-                r.c.el = 3; # or 4 if only z more
+                r.c.el = 3; # or 4 if only z more?
                 # z holding notices things coming and going
                 # z ealand elabourates on past from here
             }

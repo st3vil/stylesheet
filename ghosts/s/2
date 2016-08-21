@@ -66,13 +66,15 @@ Jelly: | # Town making
     W 12:
         ref $s && die;
         c&J = $s;
+        A.c.Jpool = A.4;
         # dhcp replanty A.c.ip
     J 2:
         # see self already
-        s&J ||= A.2.sc.tv && A.2.sc.tv->{C.t} && A.2.sc.tv->{C.t}->{C.y.cv};
+        s&J ||= G&pint,A.2.sc.tv=>C.t,C.y.cv;
         # or force a...
     J 3:
-        s&J ||= G&J,C.t;
+        my $from = A.c.Jpool || A.2;
+        s&J ||= G&J,$from,C.t;
     pi 3:
         my $J = s&J;
         J.c.d = A.2.c.d + 1;
@@ -115,11 +117,21 @@ Jelly: | # Town making
 With: | # J's stuff, its Js, osc page, etc.
     u i
     
-    sJ: %acgt:J t f
-        $f ||= $t;
-        J.sc.>$t ||= G&J,$f;
+    # make/return J as named universal
+    sJ: %acgt:J t
+        J.sc.>$t ||= G&J,$J,$t;
+    
+    # make J, they inherit non c/sc
     J:
-        my $J = G&A,'J';
+        my $from = A.2;
+        if (ref $s) {
+            $from = $s;
+            $s = shift @Me;
+        }
+        my $J = do {
+            my $A = $from;
+            G&A,'J';
+        };
         J.t = $s;
         J.y.G = $G;
         # will be bab to G&
@@ -212,6 +224,12 @@ Compliers: | # othered
         return $C;
 Walks: | # othering, many C
     u i
+    # step into hash path    also T/ip
+    pint:
+        for (@Me) {
+            return unless ref $s eq 'HASH' && exists $s.>$_;
+            $s = $s.>$_;
+        }
     # iterator/map for index
     Chew:
         my $sort;
