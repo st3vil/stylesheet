@@ -469,7 +469,7 @@ Circle: | # < copy things
                         my @mu = values %{co.Ams};
                         @mu = G&sortysip,\@mu,'1' if @mu > 1;
                         for my $oi (@mu) {
-                            my $z = oi.c.r || die "no r on ".ki $oi;
+                            my $z = oi.c.r || sayre("no r on A.t A.cv A.c.s.t   from oi.t oi.cv  oi.c.s.t") && next;
                             push @{r.c.z||=[]},  @$z;
                         }
                         if (@mu > 1) {
@@ -526,11 +526,16 @@ Circle: | # < copy things
         };
         A.c.r = \@z 
     
-    #c o6 pramoidy r becomes human or machine act lines
+    #c o6 growth (r) becomes readable growth strings (rs) or machine act lines
     o 6:
+        # r are ty and c.el=? of change
+        #  c.dis is from $or, j describing co paths of change into C, in order
+        #    j.sc.z is more j
+        #  c.z is r children
+        # (o should grow to know non-z things in things unis)
         my $z = A.c.r;
         
-        # recurse branches of the C
+        # recurse branches of the C for display
         my $ja;$ja = sub {
             my ($d,$e) = @_;
             $e = $e.>d.t;
@@ -548,36 +553,58 @@ Circle: | # < copy things
             my @l = "d.t$etc";
             if (my $z = d.sc.z) {
                 push @l,'{';
-                #my $tw = {map{$_=>1}keys %$e};
                 my @lo = map {
-                    #delete $tw.>_.t;
                     $ja->($_, $e)
                 } @$z;
-                #push @l, join',', sort keys %$tw;
                 push @l, @lo;
                 push @l, '}';
             }
             @l;
         };
-        my @r;
-        for my $r (@$z) {
-            my @l;
-            push @l, r.t, r.y.cv;
-            my $ul = {map{!ref r.c.>$_ ? ($_ => r.c.>$_ ) : ()}keys %{r.c}};
-            push @l, ki $ul if keys %$ul;
+        
+        # climb the r
+        # rs is array of arrays of display strings and more rs
+        my $rs;$rs = sub {
+            my ($z) = @_;
+            my @r;
+            for my $r (@$z) {
+                my @l;
+                push @l, r.t, r.y.cv;
+                my $ul = {map{!ref r.c.>$_ ? ($_ => r.c.>$_ ) : ()}keys %{r.c}};
+                push @l, ki $ul if keys %$ul;
 
-            if (my $o = r.c.o) {
-                my $e = o.c.s || die "no ocs".ki$r;
-                if (my $dis = r.c.dis) { # change display elements
-                    push @l, $ja->($_,$e) for @$dis
+                if (my $o = r.c.o) {
+                    my $e = o.c.s || die "no ocs".ki$r;
+                    if (my $dis = r.c.dis) { # change display elements
+                        push @l, $ja->($_,$e) for @$dis
+                    }
+                    if (my $z = r.c.z) { # inside lines
+                        push @l, $rs->($z);
+                    }
                 }
-                if (my $z = r.c.z) { # inside lines
-                    push @l, 
-                        Rw Dis $z;
-                }
+                sayre "Havenodis: ".ki $r if !@l;
+                push @r, \@l;
             }
-            sayre "Havenodis: ".ki $r if !@l;
-            push @r, \@l;
-        }
-        \@r;
+            \@r
+        };
+        
+        A.c.rs = $rs->($z);
+        
+        # collapse rs
+        # rsl is array of indented strings
+        my $rsl;$rsl = sub {
+            my ($x,$ind) = @_;
+            $ind .= '  ';
+            my $l = [];
+            for my $d (@$x) {
+                my $x = [];
+                my $s = $ind . join ' ', grep { !ref$_ || do{push@$x,$_;0} } @$d;
+                push @$l, $s;
+                map { push @$l, @$_ }
+                $rsl->($_,$ind) for @$x;
+            }
+            $l
+        };
+        
+        A.c.rsl = $rsl->(A.c.rs);
 
