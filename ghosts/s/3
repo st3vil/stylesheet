@@ -243,6 +243,7 @@ Circle: | # < copy things
             my $e = o.c.s;
             
             $oo.>$x.>$t.>$cv = $o;
+            
             my $l = $jj.>$x.>$t.>$cv;
             o.y.l = $l if $l;
             # todo weaken l.y.l
@@ -344,4 +345,239 @@ Circle: | # < copy things
         !keys %$cha && delete A.c.cha;
         # names -> A fall replace to check inside
         j.sc.oo = $oo;
+    
+    #c o5 join changed o as r by yt
+    #
+    o 5:
+        my $oo = A.c.oo;
+        my $cha = A.c.cha;
+        my $ind = ar.ind = ar.ind.'  ';
+        die 'more than ooC: '.ki $oo if 1 != keys %$oo;
+        # make ty -> yt
+        my $ty = oo.C;
+        my $oty = $cha && cha.C && cha.C.gone;
+        my $i;
+        my $yt = {};
+        for my $on (grep {defined} $ty, $oty) {
+            G&Chew,$on,'t,cv',$_ for sub {
+                my ($o,$t,$cv) = @_;
+                $yt->{$cv}->{$t} = $o;
+                $i++;
+            };
+        }
+        # iterate by yt
+        my $la;
+        my @z;
+        G&Chew,$yt,\'cv,t',$_ for sub {
+            my ($o,$cv,$t) = @_;
+            my $l = o.y.l;
+            my $E = l.c.s;
+            my $e = o.c.s;
+            my $cha = o.c.cha;
+            my $r;
+            r.t = $t;
+            r.y.A = $A;
+            r.y.cv = $cv;
+            r.c.o = $o;
+            if ($oty.>$t.>$cv) {
+                # $o is last there
+                # above knows on goneyt when there is no more z
+                r.c.el = 9; # not here
+                push @z, $r;
+                $la = $r;
+                return;
+            }
+            elsif ($cha) {
+                if (cha.new && cha.new.t) {
+                    r.c.el = keys %{ $ty.>r.t } == 1 ? 2 : 1;
+                }
+                else {
+                    r.c.el = 3; # or 4 if only z more?
+                }
+            }
+            else {
+                r.c.el = 8;
+                $la = $r;
+                return
+            }
+            
+            #c make co.path -> {nodestuff,co} trees
+            my $co = r.sc.co ||= {};
+            G&Chew,$cha,\'m,nk,gk?',$_ for sub {
+                my ($wa,$m,$nk,$gk) = @_;
+                return if $nk eq 'y' && $gk eq 'cv' && $m eq 'new';
+                my $xe = $cha.>$m.>$nk;
+                my $oe = $E.>$nk;
+                my $ne = $e.>$nk;
+                $xe = $xe.>$gk if @_ == 4;
+                $oe = $oe.>$gk if @_ == 4;
+                $ne = $ne.>$gk if @_ == 4;
+                my $co = r.sc.co.co.>$nk ||= {};
+                $co = co.co.>$gk ||= {} if @_ == 4;
+                co.o = $oe;
+                co.v = $ne;
+                co.p = [$nk];
+                co.m = $m;
+                push @{co.p}, $gk if @_ == 4;
+                if ($nk eq 'sc' && $gk eq 'z') {
+                    my $wi;
+                    G&Chew,$xe,\'t,cv',$_ for sub {
+                        my ($zb,$t,$cv) = @_;
+                        $wi++;
+                        if ($m eq 'gone') {
+                            co.goneyt.>$cv.>$t = $zb;
+                        }
+                        else {
+                            co.ytm.>$cv.>$t.>$m = $zb;
+                            co.Ams.>_.c.sip = $_ for zb.y.A;
+                        }
+                    };
+                    my $sm = '=';
+                    $sm = "+" if $m eq 'new';
+                    $sm = "-" if $m eq 'gone';
+                    co.sv .= "$sm$wi";
+                }
+            };
+            #c co.paths in order make j microCs
+            my $or;$or = sub { 
+                my $co = shift; # outside/index
+                my ($he,$ta) = ([],[]);
+                my $tw;
+                # nk/gk ordering
+                for ([$he=>qw't cv y c sc'],
+                    [$ta=>qw's z']) {
+                    my ($l,@l) = @$_;
+                    for my $t (@l) {
+                        $co.>$t || next;
+                        $tw.>$t ++;
+                        push @$l, $t;
+                    }
+                }
+                my @mi = sort grep { !$tw.>$_ } keys %$co;
+                my $z = [];
+                for my $t (@$he,@mi,@$ta) {
+                    my $co = $co->{$t}; # inside/state
+                    my $j;
+                    j.t = $t;
+                    my $zort;
+                    if (co.co && keys %{co.co}) {
+                        die "More to mid co: ".wdump 3, $co if keys %$co > 1;
+                        j.sc.z = $or->(co.co);
+                    }
+
+                    if (co.ytm) {
+                        my @mu = values %{co.Ams};
+                        @mu = G&sortysip,\@mu,'1' if @mu > 1;
+                        for my $oi (@mu) {
+                            my $z = oi.c.r || die "no r on ".ki $oi;
+                            push @{r.c.z||=[]},  @$z;
+                        }
+                        if (@mu > 1) {
+                            sayre "Many A below r.t r.y.cv: ".ki co.Ams;
+                            $zort = 1;
+                        }
+                    }
+
+                    if (my $gt = co.goneyt) {
+                        r.c.z ||= [];
+                        # yonder thing disappears (maybe no A)
+                        my @rm;
+                        G&Chew,$gt,'cv,t',$_ for sub {
+                            my ($d,$cv,$t) = @_;
+                            my $zr;
+                            zr.t = $t;
+                            zr.y.cv = $cv;
+                            zr.c.el = 9;
+                            push @rm, $zr;
+                        };
+                        my @mr;
+                        for my $zr (@rm) {
+                            my $got;
+                            @{r.c.z} = map {
+                                _.t eq zr.t && _.y.cv eq zr.y.cv
+                                    ? do { $got = 1; $zr }
+                                    : $_
+                            } @{r.c.z};
+                            $got || push @mr, $zr;
+                        }
+                        # breaks el=8/previous thing ness?
+                        if (@mr) {
+                            push @{r.c.z}, @mr;
+                            $zort = 1;
+                        }
+                    }
+
+                    if ($zort) {
+                        @{r.c.z} = sort {a.y.cv <=> b.y.cv || a.t cmp b.t} @{r.c.z};
+                    }
+
+                    map { j.c.>$_ = $co.>$_ if exists $co.>$_ } qw'sv o m p';
+                    j.c.s = co.v if exists co.v;
+
+                    push @$z, $j;
+                }
+                $z;
+            };
+            r.c.dis = $or->(co.co);
+
+            push @z, $la if $la ne $z[-1] && r.c.el ne 3;
+            push @z, $r;
+            $la = $r;
+        };
+        A.c.r = \@z 
+    
+    #c o6 pramoidy r becomes human or machine act lines
+    o 6:
+        my $z = A.c.r;
+        
+        # recurse branches of the C
+        my $ja;$ja = sub {
+            my ($d,$e) = @_;
+            $e = $e.>d.t;
+            my $etc;
+            if (exists d.c.sv) {
+                $etc = d.c.sv;
+            }
+            elsif (exists d.c.s) {
+                my $m = '=';
+                $m = "+" if d.c.m eq 'new';
+                $m = "-" if d.c.m eq 'gone';
+                (my $s = d.c.s) =~ s/\n/\\n/sg;
+                $etc = $m . slim(19,$s);
+            }
+            my @l = "d.t$etc";
+            if (my $z = d.sc.z) {
+                push @l,'{';
+                #my $tw = {map{$_=>1}keys %$e};
+                my @lo = map {
+                    #delete $tw.>_.t;
+                    $ja->($_, $e)
+                } @$z;
+                #push @l, join',', sort keys %$tw;
+                push @l, @lo;
+                push @l, '}';
+            }
+            @l;
+        };
+        my @r;
+        for my $r (@$z) {
+            my @l;
+            push @l, r.t, r.y.cv;
+            my $ul = {map{!ref r.c.>$_ ? ($_ => r.c.>$_ ) : ()}keys %{r.c}};
+            push @l, ki $ul if keys %$ul;
+
+            if (my $o = r.c.o) {
+                my $e = o.c.s || die "no ocs".ki$r;
+                if (my $dis = r.c.dis) { # change display elements
+                    push @l, $ja->($_,$e) for @$dis
+                }
+                if (my $z = r.c.z) { # inside lines
+                    push @l, 
+                        Rw Dis $z;
+                }
+            }
+            sayre "Havenodis: ".ki $r if !@l;
+            push @r, \@l;
+        }
+        \@r;
 
