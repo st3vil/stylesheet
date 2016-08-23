@@ -251,7 +251,7 @@ Tesh: | # wrap test way
     $e
 ElvisWorld: | # J makes, puts W
     return if $n;
-    A.V = 1;
+    #A.V = 1;
     J.sc.u.c.o = 'oscd';
     
     my $e = A.ii.theu;
@@ -277,6 +277,8 @@ ElvisWorld: | # J makes, puts W
     $j = j.c.s;
     $j = j.sc.J;
     $j = j.sc.s;
+    $j = j.c.zip;
+    $j = j.c.r;
     #$j = j.sc.jo.zipover;
     #$j = j.sc.oo;
     sayyl "Done!";
@@ -475,16 +477,26 @@ pi/pud: |
     n ind=>0.07=>"\n$ind"
     n sli=>0.08=>"<  ",'%hs:784'
     n title=>1=>"C.t"
-    if ($s eq A.2.C.c.s) {
-        n same=>2=>'same','%hs:855'
+    
+    c&block = 'same' if $s eq A.2.C.c.s;
+    c&block = 'G' if C.t eq 'G' && ref s.w;
+    if (ref $s eq 'HASH') {
+        if (s.y eq $s && A.2.C.t eq 'y') {
+            c&block= 'yA';
+            c&blos = "s.t @ s.cv";
+            c&blos .= "(s.c.s.t)" if ref s.c.s eq 'HASH';
+        }
+    }
+    
+    if (c&block) {
+        n block=>2=>c&block,'%hs:855'
+        c&blos &&
+        n blocked=>21=>c&blos,'%hs:827'
         return
     }
-    if (C.t eq 'G') {
-        return
-        n no=>2=>"!",'%fs:5,hs:595'
-    }
+    
     my ($ks,$vs);
-    if (ref $s eq 'ARRAY' && C.t eq 'z') {
+    if (ref $s eq 'ARRAY') {
         n is=>11=>'[','%hs:455'
         C.sc.type = 'array';
         $vs = [@$s];
@@ -495,12 +507,13 @@ pi/pud: |
             my $z = ki $s;
             
             $z = $s if C.t eq 't';
-            my $fs = 5;
+            my $fs = 6;
+            $fs = 8 if !ref $s;
             $fs = 13 if C.t eq 't';
+            my $bg = ',bg:653' if !ref $s;
             
-            
-            n no=>2=>$z,"%fs:$fs,hs:398,lh:0.5,mt:1,mh:5"
-            return;
+            n no=>2=>$z,"%fs:$fs,hs:398,lh:0.5,mt:1,mh:5$bg"
+            return
         }
         if (s.y eq $s && J.A.d > c&dl) {
             return
@@ -510,19 +523,28 @@ pi/pud: |
             C.sc.istycsc = 1;
         }
     }
+    # order children
     # use Walks/hord
     my ($he,$ta);
-    map { $he->{$_} = 1 } qw't y' if C.sc.istycsc;
-    map { $he->{$_} = 1 } qw't y' if C.sc.istycsc;
-    my @he;
-    my @ks = grep { !($he->{$_} && push(@he,$_)) } 
+    if (C.sc.istycsc) {
+        $he->{$_} = 1 for qw't y';
+        $ta->{$_} = 1 for qw'c sc';
+    }
+    my (@he,@ta);
+    my @ks = grep { !($he->{$_} && push(@he,$_) || $ta->{$_} && push(@ta,$_)) }
         $ks ? @$ks : sort keys %$s;
     @ks = (@he,@ks) if @he;
+    @ks = (@ks,@ta) if @ta;
     
     n siz=>12=>" x ".@ks,'%hs:283,fs:6';
     if (A.3.C.c.intl++ > A.3.C.c.intlim) {
+        if (ref $s eq 'HASH') {
+            if (defined s.t) {
+                n peak=>3=>"s.t",'%hs:398,fs:11'
+            }
+        }
         return
-        n 'more'=>4=>"more",'%hs:544';
+        n more=>4=>"more",'%hs:544'
     }
     return if C.t =~ /^(ii?|up|T)$/
         || ( A.2.C.sc.type ne 'array' && C.t =~ /^\d+$/)
