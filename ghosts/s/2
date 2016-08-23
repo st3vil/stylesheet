@@ -1,16 +1,77 @@
+With: | # J's stuff, its Js, osc page, etc.
+    u i
+    
+    # make/return J as named universal
+    sJ: %acgt:J t
+        J.sc.>$t ||= G&J,$J,$t;
+    
+    # make J, they inherit non c/sc
+    J: %acgt:from t
+        ($from,$t) = (A.2,$from) if !defined $t;
+        my $J = do {
+            my $A = $from;
+            G&A,'J';
+        };
+        J.t = $t;
+        J.y.G = $G;
+        # will be bab to G&
+        J.u = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,u=>8=>$J,\@Me };
+        J.n = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,n=>8=>$J,\@Me };
+        $J
+    
+    # partition ground
+    sesh: %acgt:J
+        my $o = J.sc.S->{J.sc.ch} = G&sJ,$J,'s';
+        delete J.sc.s;
+        my $ch = ++J.sc.ch;
+        my $s = J.sc.s = J.sc.S->{$ch} ||= G&sJ,$J,'s';
+        o.sc.next = $s;
+        s.sc.prev = $o;
+        # makes osc thing.3 etc hang around
+        s.sc.ch = $ch;
+    
+    # reset ground
+    rea: %acgt:J
+        my $n = J.sc.n || die 'no n';
+        my $zi = ++J.c.zi;
+        my $ch = '';
+        my $lim = 2;
+        while (n.sc.a->{$ch}) {
+            J.sc.Z->{$zi}->{$ch} = delete n.sc.a->{$ch};
+            if ($zi > $lim) {
+                delete J.sc.Z->{$zi-$lim}
+            }
+            $ch++;
+        }
+        delete J.c.o;
+    
 Tunnel: | # mind & world
     # machine for finding pi
+    # reality is a cave system
+    u i
+    # adapt to J interior as perhaps exterior
+    # used to be J.u sub created to know J
+    # use s&J or kaboom
+    # here A.2 is the doer
+    # see With/J
+    n: %acgt
+        sayre "In out ".wdump 3, \@Me;
+    u: %acgt
+        sayre "Mind out ".wdump 3, \@Me;
+    # many slide by slightly and then get nailed down
+    m: %acgt
+        sayre "In out ".wdump 3, \@Me;
+    
     u a
     # dialect of ...
     u 1:
         A.3 = shift @$s; # for
         A.2 = G&sJ,A.3,'u';
     u 2:
-        if (A.2.c.o) {
-            G&sesh,A.2;
-            # o is the J's orderliness mark
+        if (A.2.c.o) { # uJ's orderliness mark
             # also its current position relative to itself
             # make many pages of u per A.3
+            G&sesh,A.2;
         }
     u 3:
         my $n = A.c.n = G&A,n=>1=>A.2,@$s;
@@ -58,6 +119,7 @@ Tunnel: | # mind & world
         say 'mive';
         sayre "YEP ".ki$C;
 Jelly: | # Town making
+    # 
     u c
     n \'of:mo'
     # a wake of dynamics to the same particle
@@ -96,6 +158,7 @@ Jelly: | # Town making
         sayre "Re J.t";
         J.sc.n && G&rea,$J;
         J.sc.u && G&rea,J.sc.u;
+        #A.1 = $J;
         saybl "St J.t";
         my $y = {cv=>0.9};
         my $M = [];
@@ -113,57 +176,6 @@ Jelly: | # Town making
         sayyl "Oscillate J.t done!@!";
     J 8:
         # through J's microJ of personality
-    
-With: | # J's stuff, its Js, osc page, etc.
-    u i
-    
-    # make/return J as named universal
-    sJ: %acgt:J t
-        J.sc.>$t ||= G&J,$J,$t;
-    
-    # make J, they inherit non c/sc
-    J:
-        my $from = A.2;
-        if (ref $s) {
-            $from = $s;
-            $s = shift @Me;
-        }
-        my $J = do {
-            my $A = $from;
-            G&A,'J';
-        };
-        J.t = $s;
-        J.y.G = $G;
-        # will be bab to G&
-        J.u = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,u=>8=>$J,\@Me };
-        J.n = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,n=>8=>$J,\@Me };
-        $J
-    
-    # partition ground
-    sesh: %acgt:J
-        my $o = J.sc.S->{J.sc.ch} = G&sJ,$J,'s';
-        delete J.sc.s;
-        my $ch = ++J.sc.ch;
-        my $s = J.sc.s = J.sc.S->{$ch} ||= G&sJ,$J,'s';
-        o.sc.next = $s;
-        s.sc.prev = $o;
-        # makes osc thing.3 etc hang around
-        s.sc.ch = $ch;
-    
-    # reset ground
-    rea: %acgt:J
-        my $n = J.sc.n || die 'no n';
-        my $zi = ++J.c.zi;
-        my $ch = '';
-        my $lim = 2;
-        while (n.sc.a->{$ch}) {
-            J.sc.Z->{$zi}->{$ch} = delete n.sc.a->{$ch};
-            if ($zi > $lim) {
-                delete J.sc.Z->{$zi-$lim}
-            }
-            $ch++;
-        }
-        delete J.c.o;
     
 Compliers: | # othered
     u i
@@ -224,12 +236,28 @@ Compliers: | # othered
         return $C;
 Walks: | # othering, many C
     u i
-    # step into hash path    also T/ip
+    # k into hash path    also T/ip
     pint:
         for (@Me) {
             return unless ref $s eq 'HASH' && exists $s.>$_;
             $s = $s.>$_;
         }
+    # hash ordering
+    hord: %acgt:s head tail
+        my ($he,$ta) = ([],[]);
+        $head ||= [qw't cv y c sc'];
+        $tail ||= [qw's z'];
+        my $tw;
+        for ([$he=>$head],[$ta=>$tail]) {
+            my ($to,$k) = @$_;
+            for my $t (@$k) {
+                $s.>$t || next;
+                $tw.>$t ++;
+                push @$to, $t;
+            }
+        }
+        my @mi = sort grep { !$tw.>$_ } keys %$s;
+        [ map { [ $_ => $s.>$_ ] } @$he, @mi, @$ta ];
     # iterator/map for index
     Chew:
         my $sort;
