@@ -549,8 +549,12 @@ Circle: | # < copy things
                 my $m = '=';
                 $m = "+" if d.c.m eq 'new';
                 $m = "-" if d.c.m eq 'gone';
-                (my $s = d.c.s) =~ s/\n/\\n/sg;
-                $etc = $m . slim(19,$s);
+                my $s = d.c.s;
+                if (length $s > 24) {
+                    $s = slim(19,$s).'h'.slm(6,dig($s));
+                }
+                $s =~ s/\n/\\n/sg;
+                $etc = $m.$s;
             }
             my @l = "d.t$etc";
             if (my $z = d.sc.z) {

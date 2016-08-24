@@ -199,7 +199,7 @@ Zupe: | # run Zome, output pud
 Zop: |
     u urw
     y.clos = 1;
-    n sno=>1=>'snows'
+    n sno=>0.04=>'snows'
     my $so = J.output ||= Rw Tesh ElvisWorld ee;
     
     m wk=>-pud=>{s=>$so},'%hs:375,ws,wi:30%'
@@ -208,10 +208,11 @@ Zop: |
 Hows: |
     J.sc.u.c.o = 'oscd';
     # STEVEWAS
-    take:
+    take: %acgt:s o
         robino
-    leave:
+    leave: %some:other,ma:ni,fo:la,t:e
         traces
+    n skinny=>4=>{}
 Tesh: | # wrap test way
     my ($t,$sel) = @$m;
     my $tes = sub {
@@ -278,7 +279,10 @@ ElvisWorld: | # J makes, puts W
     $j = j.sc.J;
     $j = j.sc.s;
     $j = j.c.zip;
-    $j = j.c.r;
+    $j = j.c.rs;
+    #$j = $j->[1]; # leave
+    #$j = j.c.dis->[0];
+    #$j = j.sc.z->[0]; # of c
     #$j = j.sc.jo.zipover;
     #$j = j.sc.oo;
     sayyl "Done!";
@@ -466,11 +470,11 @@ pi/pud: |
     #y.at.ml=J.A.d;
     c&depth = J.A.d;
     # how many M inners before 'more' (depth first)
-    A.3.C.c.intlim ||= 9;
+    A.3.C.c.intlim ||= 19;
     # max depth before like nothash
-    c&dl = A.2.C.c.dl || 9;
+    c&dl = A.2.C.c.dl || 3;
     # travel boosts/cons depth
-    c&dl += 9 if c&depth < 20 && C.t eq 'sc';
+    c&dl += 3 if c&depth < 20 && C.t eq 'sc';
     y.in = 0.21;
     my $ind = join'', ('  ') x (J.A.d - 1);
     
@@ -484,7 +488,7 @@ pi/pud: |
         if (s.y eq $s && A.2.C.t eq 'y') {
             c&block= 'yA';
             c&blos = "s.t @ s.cv";
-            c&blos .= "(s.c.s.t)" if ref s.c.s eq 'HASH';
+            c&blos .= " (s.c.s.t)" if ref s.c.s eq 'HASH';
         }
     }
     
@@ -497,7 +501,7 @@ pi/pud: |
     
     my ($ks,$vs);
     if (ref $s eq 'ARRAY') {
-        n is=>11=>'[','%hs:455'
+        n is=>11=>'[','%hs:457'
         C.sc.type = 'array';
         $vs = [@$s];
         $ks = [0..(@$s-1)];
@@ -505,12 +509,21 @@ pi/pud: |
     else {
         if (ref $s ne 'HASH' || J.A.d > c&dl) {
             my $z = ki $s;
-            
+            my $bg;
+            if (!ref $s) {
+                $z =~ s/^!%://;
+                $bg = ',bg:653';
+                if (!defined $s) {
+                    n know=>18=>'undef','%hs:845,fs:6'
+                }
+                elsif (!length $s) {
+                    n know=>18=>"''",'%hs:845,fs:6'
+                }
+            }
             $z = $s if C.t eq 't';
             my $fs = 6;
             $fs = 8 if !ref $s;
             $fs = 13 if C.t eq 't';
-            my $bg = ',bg:653' if !ref $s;
             
             n no=>2=>$z,"%fs:$fs,hs:398,lh:0.5,mt:1,mh:5$bg"
             return
@@ -548,9 +561,10 @@ pi/pud: |
     }
     return if C.t =~ /^(ii?|up|T)$/
         || ( A.2.C.sc.type ne 'array' && C.t =~ /^\d+$/)
-        || J.A.d > 5;
+        #|| J.A.d > 5
+        ;
     C.sc.css = 'border-left:3px solid 473' if @ks > 3;
-    m $_=>-pud=>{s=>$vs ? shift @$vs : $s->{$_}} for @ks;
+    m $_=>-pud=>{s=>$vs ? shift @$vs : $s->{$_}},'%ma:1' for @ks;
     
 a: | # act
     u allact
