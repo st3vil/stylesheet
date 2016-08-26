@@ -70,36 +70,9 @@ Es3: | # J t/y awakens
         say "S  3 A.2.t";
         my $o = c&zip;
         my $z = o.c.r || die "No r from o: ".ki$o;
-        
+        # like receiving el etc
         my $la;
         for my $r (@$z) {
-            my $o = r.c.o || die "No o from r: ".ki$r;
-            my $e = o.c.s || die "No e from o: ".ki$o;
-            my $c = G&hup,$e;
-            sayyl "Have root: ".wdump 3, $c if c.c.root;
-            # shade
-            next;
-            c.y = {cv=>c.y.cv};
-            c.c = {};
-            c.c.s = e.c.s if exists e.c.s;
-            # join existence
-            my $E = c.y.E = s&Etv ->{c.t}->{c.y.cv} ||= {};
-            c.y.r = $r;
-            c.y.e = $e;
-            if (r.c.el eq '8') {
-                $la = E.c.s;
-                next;
-            }
-            elsif (r.c.el < 3) {
-                
-            }
-            E.c.s = $c;
-            my $O = G&A,O=>1,$c;
-            O.c.el = r.c.el;
-            O.c.osc = $C; # s
-            E.c.O = $O;
-            G&toget,'next',$la,$c if $la;
-            $la = $c;
         }
 Hoop: | # osc art, colour in
     u a
@@ -136,6 +109,8 @@ Circle: | # < copy things
     o 1:
         my ($i,$f,$t) = @$s;
         i.y eq $i || die "i must A";
+        
+        defined $f || die "from undef o $t";
         
         ($f,my $fis) = ($$f,1) if ref $f eq 'REF';
         $t = G&Ct,@$t if ref $t eq 'ARRAY';
@@ -178,7 +153,7 @@ Circle: | # < copy things
             c&s = h.sc->{c&kno} || $h->{c&kno};
             # may have lvism & more via h.sc.s.
         }
-    #c o2 intermediate whats-where
+    #c o2 intermediate whats-where, diff o/oo per zing
     o 2:
         my $oo = A.c.oo = {};
         # < space-for (C) < t < y [many o with .c.s = $e, o.y.etc = etc]
@@ -262,12 +237,18 @@ Circle: | # < copy things
             }
         }
         elsif (c&m eq 'z') {
-            # [ C... ]
+            # whole [ C... ], not rl
             for my $S (@{ c&s }) {
                 my $e = G&hup,$S;
                 my $o = G&Chs,$e;
                 push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
             }
+        }
+        elsif (c&m eq 'rl') {
+            # rl same array growing more el=3 updatey dives
+            # make A.c.r from el=3
+            die "code rl";
+            A.cv = 0.599;
         }
         else {
             die "How to read ".ki $C;
@@ -492,7 +473,9 @@ Circle: | # < copy things
                     co.sv .= "$sm$wi";
                 }
             };
-            #c co.paths in order make j microCs
+            #c co.paths in order make j microCs:
+            # r tcv, c&o, c&z inside r, c&dis z j:
+            # j t=nk/gk, s=value, sc.z=inside j (climbs paths)
             my $or;$or = sub { 
                 my $co = shift; # outside/index
                 my ($he,$ta) = ([],[]);
@@ -561,11 +544,13 @@ Circle: | # < copy things
                         }
                     }
 
-                    if ($zort) {
-                        @{r.c.z} = sort {a.y.cv <=> b.y.cv || a.t cmp b.t} @{r.c.z};
-                    }
+                    @{r.c.z} = sort {a.y.cv <=> b.y.cv || a.t cmp b.t} @{r.c.z}
+                        if $zort;
 
-                    map { j.c.>$_ = $co.>$_ if exists $co.>$_ } qw'sv o m p';
+                    for (qw'sv o m p') {
+                        exists $co.>$_ || next;
+                        j.c.>$_ = $co.>$_;
+                    }
                     j.c.s = co.v if exists co.v;
 
                     push @$z, $j;
@@ -578,16 +563,15 @@ Circle: | # < copy things
             push @z, $r;
             $la = $r;
         };
-        A.c.r = \@z 
-    
-    #c o6 growth (r) becomes readable growth strings (rs) or machine act lines
-    o 6:
+        A.c.r = \@z;
+        
+    #c o57 r -> rs, rsl readable/testable change text
+    o 57:
         # r are ty and c.el=? of change
         #  c.dis is from $or, j describing co paths of change into C, in order
         #    j.sc.z is more j
         #  c.z is r children
         # (o should grow to know non-z things in things unis)
-        my $z = A.c.r;
         
         # recurse branches of the C for display
         my $ja;$ja = sub {
@@ -646,7 +630,7 @@ Circle: | # < copy things
             \@r
         };
         
-        A.c.rs = $rs->($z);
+        A.c.rs = $rs->(A.c.r);
         
         # collapse rs
         # rsl is array of indented strings
@@ -665,4 +649,135 @@ Circle: | # < copy things
         };
         
         A.c.rsl = $rsl->(A.c.rs);
+    #c o6 r growth happens to our objects
+    # we can skip into here with another o's r or rl converted to r
+    # r tcv, el=3, o=$o?, dis=z j, z=inside r
+    o 6:
+        my $j = G&offis,i=>j=>'t';
+        j.c.Co = $C;
+        my @r = @{A&r};
+        
+        # we may have root elected by .c.root from the many
+        my @root = grep { _.c.o && _.c.o.c.s.c.root } @r;
+        @root > 1 && die "More than 1 root";
+        for (@root) {
+            if (my $root = js&root) {
+                _.t eq root.t && _.y.cv eq root.y.cv
+                    || die "Root wanders: ".ki({f=>$root,t=>$_});
+            }
+            js&root = $_;
+        }
+        # attach things in general to ...
+        if (my $root = js&root) {
+            if (!@root) {
+                # make up r of el=3 to z=etc, put things in
+                my $r = {};
+                r.t = root.t;
+                r.y.cv = root.y.cv;
+                r.c.el = '3';
+                r.c.z = [@r];
+                @r = $r;
+            }
+            else {
+                push @{root.c.z||=[]}, grep {$_ ne $root} @r;
+                @r = $root;
+            }
+        }
+        
+        my $tcvis = sub {
+            my ($x,$y) = @_;
+            x.t eq y.t && x.y.cv eq y.y.cv
+        };
+        
+        my $ro;$ro = sub {
+            my ($z,$up) = @_;
+            my $la;
+            for my $r (@$z) {
+                my $l = up.y.tv->{r.t}->{r.y.cv};
+                my $new;
+                if (!$l) {
+                    $new = 1;
+                    rc&el < 3 || die "Upel no hist ".ki$r;
+                    l.t = r.t;
+                    l.y.cv = r.y.cv;
+                }
+                
+                my $x = l.y.x || {};
+                
+                if (rc&el eq '8') {
+                    $la = $l;
+                    next;
+                }
+                elsif (rc&el < 3) {
+                    if (!$new) {
+                        # rl over/replace
+                        $l = {};
+                        l.t = r.t;
+                        l.y.cv = r.y.cv;
+                    }
+                    if (!$la) {
+                        if (my $in = up.y.in) {
+                            up.y.in = $l;
+                            l.y.out = $up;
+                            l.y.next = $in;
+                            in.y.prev = $l;
+                            delete in.y.out;
+                        }
+                        else {
+                            up.y.in = $l;
+                            l.y.out = $up;
+                        }
+                    }
+                    else {
+                        G&toget,next=>$la,$l;
+                    }
+                }
+                elsif (rc&el eq '9') {
+                    my $prev = l.y.prev;
+                    my $next = l.y.next;
+                    
+                }
+                E.c.s = $c;
+                my $O = G&A,O=>1,$c;
+                O.c.el = r.c.el;
+                O.c.osc = $C; # s
+                E.c.O = $O;
+                G&toget,'next',$la,$c if $la;
+                $la = $c;
+                
+                up.y.tv->{l.t}->{l.y.cv} = $l;
+                up.y.tw->{l.t} = $l; # unless already
+            }
+        };
+        $ro->(\@r,$j);
+        # 
+        sayyl "Machine acti ".wdump 5, A.c.r;
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        #
+        #
 

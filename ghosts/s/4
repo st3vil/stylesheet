@@ -125,6 +125,8 @@ CoBabbler: | # bake code
     C.c.s =~ s/\bs\&(\w+)/C\&$1/sgm;
     C.c.s =~ s/\bA\&(\w+)/A\.c\.$1/sgm;
     C.c.s =~ s/\ba\&(\w+)/A\.sc\.$1/sgm;
+    C.c.s =~ s/\b((?!u)\w)s\&(\w+)/$1\.sc\.$2/sgm;
+    C.c.s =~ s/\b(\w)c\&(\w+)/$1\.c\.$2/sgm;
     
     C.c.s = G&parse_babbl,C.c.s;
     
@@ -282,7 +284,7 @@ ElvisWorld: | # J makes, puts W
     $j = j.sc.s;
     $j = j.c.zip;
     $j = j.c.r;
-    $j = $j->[2]; # leave
+    $j = $j->[1];
     #$j = j.c.dis->[0];
     #$j = j.sc.z->[0]; # of c
     #$j = j.sc.jo.zipover;
@@ -473,7 +475,7 @@ pi/pud: |
     # how many M inners before 'more' (depth first)
     A.3.C.c.intlim ||= 19;
     # max depth before like nothash
-    c&dl = A.2.C.c.dl || 3;
+    c&dl = A.2.C.c.dl || 7;
     # travel boosts/cons depth
     c&dl += 3 if c&depth < 20 && C.t eq 'sc';
     y.in = 0.21;
