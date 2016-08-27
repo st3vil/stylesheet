@@ -693,6 +693,7 @@ Circle: | # < copy things
             my ($z,$up) = @_;
             my $la;
             for my $r (@$z) {
+                # the object for the other
                 my $l = up.y.tv->{r.t}->{r.y.cv};
                 my $new;
                 if (!$l) {
@@ -701,42 +702,89 @@ Circle: | # < copy things
                     l.t = r.t;
                     l.y.cv = r.y.cv;
                 }
+                # has this 
+                my $x = l.y.x ||= {t=>l.t,y=>{cv=>l.y.cv}};
                 
-                my $x = l.y.x || {};
-                
+                #c relink C
                 if (rc&el eq '8') {
                     $la = $l;
                     next;
                 }
                 elsif (rc&el < 3) {
+                    my $ol = $l;
                     if (!$new) {
                         # rl over/replace
                         $l = {};
                         l.t = r.t;
                         l.y.cv = r.y.cv;
+                        $la ||= ol.y.prev;
                     }
                     if (!$la) {
-                        if (my $in = up.y.in) {
-                            up.y.in = $l;
-                            l.y.out = $up;
-                            l.y.next = $in;
-                            in.y.prev = $l;
-                            delete in.y.out;
-                        }
-                        else {
-                            up.y.in = $l;
-                            l.y.out = $up;
+                        # becomes first
+                        my $in = up.y.in;
+                        up.y.in = $l;
+                        # TODO way out first + last?
+                        if ($in) {
+                            if ($tcvis->($l,$in)) {
+                                # replace self
+                                if (my $ne = in.y.next) {
+                                    l.y.next = $ne;
+                                    ne.y.prev = $l;
+                                }
+                            }
+                            else {
+                                # first becomes next
+                                l.y.next = $in;
+                                in.y.prev = $l;
+                            }
                         }
                     }
                     else {
-                        G&toget,next=>$la,$l;
+                        my $on = la.y.next;
+                        la.y.next = $l;
+                        l.y.prev = $la;
+                        if ($on) {
+                            if ($tcvis->($l,$on)) {
+                                # replace self
+                                if (my $ne = on.y.next) {
+                                    l.y.next = $ne;
+                                    ne.y.prev = $l;
+                                }
+                            }
+                            else {
+                                l.y.next = $on;
+                                on.y.prev = $l;
+                            }
+                        }
                     }
                 }
                 elsif (rc&el eq '9') {
                     my $prev = l.y.prev;
                     my $next = l.y.next;
-                    
+                    if (up.y.in eq $l) {
+                        $prev && die "First with prev: ".ki$l;
+                        if ($next) {
+                            up.y.in = $next;
+                        }
+                        else {
+                            # empties
+                            delete up.y.in;
+                        }
+                    }
+                    if ($prev && $next) {
+                        prev.y.next = $next;
+                        next.y.prev = $prev;
+                    }
+                    elsif ($prev) {
+                        delete prev.y.next;
+                    }
+                    elsif ($next) {
+                        delete next.y.prev;
+                    }
                 }
+                
+                #c throw data across
+                
                 E.c.s = $c;
                 my $O = G&A,O=>1,$c;
                 O.c.el = r.c.el;
