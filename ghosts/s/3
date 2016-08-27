@@ -40,7 +40,22 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
     # ordered diff, pieces sorted in
     # creates O's for awakened C
     s 3:
-        Rw Es3 $A $C $G $T;
+        say "S  3 A.2.t";
+        my $o = c&zip;
+        for (@{os&outz}) {
+            # retract indexen via .y.x
+            # & say the area changed, updates
+        }
+        # put through Hoop to make index & self
+        A&inz = [map {
+            my $O = G&A,O=>1,$_;
+            my $r = _.y.r || die "No r: ".ki$_;
+            Oc&el = rc&el if rc&el;
+            Oc&osc = $C;
+            $O;
+        } @{os&inz}];
+        A&top = os&top
+        G&A,$_,0.4 for A&inz;
         
     # W t/y awakens
     # elsward going index grabbed
@@ -66,14 +81,6 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         # send out
     
     
-Es3: | # J t/y awakens
-        say "S  3 A.2.t";
-        my $o = c&zip;
-        my $z = o.c.r || die "No r from o: ".ki$o;
-        # like receiving el etc
-        my $la;
-        for my $r (@$z) {
-        }
 Hoop: | # osc art, colour in
     u a
     O 1:
@@ -473,9 +480,9 @@ Circle: | # < copy things
                     co.sv .= "$sm$wi";
                 }
             };
-            #c co.paths in order make j microCs:
-            # r tcv, c&o, c&z inside r, c&dis z j:
-            # j t=nk/gk, s=value, sc.z=inside j (climbs paths)
+            #c co.paths in order make dis/z d microCs:
+            # r tcv, c&o, c.z inside r, c.dis z d:   (climbs Cs)
+            # d t=nk/gk, s=value, sc.z=inside d      (climbs paths)
             my $or;$or = sub { 
                 my $co = shift; # outside/index
                 my ($he,$ta) = ([],[]);
@@ -494,12 +501,12 @@ Circle: | # < copy things
                 my $z = [];
                 for my $t (@$he,@mi,@$ta) {
                     my $co = $co->{$t}; # inside/state
-                    my $j;
-                    j.t = $t;
+                    my $d;
+                    d.t = $t;
                     my $zort;
                     if (co.co && keys %{co.co}) {
                         die "More to mid co: ".wdump 3, $co if keys %$co > 1;
-                        j.sc.z = $or->(co.co);
+                        d.sc.z = $or->(co.co);
                     }
 
                     if (co.ytm) {
@@ -549,11 +556,11 @@ Circle: | # < copy things
 
                     for (qw'sv o m p') {
                         exists $co.>$_ || next;
-                        j.c.>$_ = $co.>$_;
+                        d.c.>$_ = $co.>$_;
                     }
-                    j.c.s = co.v if exists co.v;
+                    d.c.s = co.v if exists co.v;
 
-                    push @$z, $j;
+                    push @$z, $d;
                 }
                 $z;
             };
@@ -688,12 +695,43 @@ Circle: | # < copy things
             my ($x,$y) = @_;
             x.t eq y.t && x.y.cv eq y.y.cv
         };
-        
+                # part of relink, sweep into Compliers with in->next corner
+                my $unshiftover = sub {
+                    my ($l,$in) = @_;
+                            if ($tcvis->($l,$in)) {
+                                # replace self
+                                if (my $ne = in.y.next) {
+                                    l.y.next = $ne;
+                                    ne.y.prev = $l;
+                                }
+                            }
+                            else {
+                                # first becomes next
+                                l.y.next = $in;
+                                in.y.prev = $l;
+                            }
+        };
+                my $dis;$dis = sub {
+                    my ($c,$dis) = @_;
+                    for my $d (@$dis) {
+                        if (ds&z) {
+                            my $con = $c->{d.t} ||= {};
+                            $dis->($con,ds&z);
+                        }
+                        if (exists dc&s) {
+                            $c->{d.t} = dc&s;
+                        }
+                        if (dc&m eq 'gone') {
+                            delete $c->{d.t};
+                        }
+                    }
+                };
+        my (@in,@out);
         my $ro;$ro = sub {
             my ($z,$up) = @_;
             my $la;
             for my $r (@$z) {
-                # the object for the other
+                # our C - the object for the other
                 my $l = up.y.tv->{r.t}->{r.y.cv};
                 my $new;
                 if (!$l) {
@@ -705,7 +743,7 @@ Circle: | # < copy things
                 # has this 
                 my $x = l.y.x ||= {t=>l.t,y=>{cv=>l.y.cv}};
                 
-                #c relink C
+                #c relink our C
                 if (rc&el eq '8') {
                     $la = $l;
                     next;
@@ -724,38 +762,13 @@ Circle: | # < copy things
                         my $in = up.y.in;
                         up.y.in = $l;
                         # TODO way out first + last?
-                        if ($in) {
-                            if ($tcvis->($l,$in)) {
-                                # replace self
-                                if (my $ne = in.y.next) {
-                                    l.y.next = $ne;
-                                    ne.y.prev = $l;
-                                }
-                            }
-                            else {
-                                # first becomes next
-                                l.y.next = $in;
-                                in.y.prev = $l;
-                            }
-                        }
+                        $unshiftover->($l,$in) if $in;
                     }
                     else {
                         my $on = la.y.next;
                         la.y.next = $l;
                         l.y.prev = $la;
-                        if ($on) {
-                            if ($tcvis->($l,$on)) {
-                                # replace self
-                                if (my $ne = on.y.next) {
-                                    l.y.next = $ne;
-                                    ne.y.prev = $l;
-                                }
-                            }
-                            else {
-                                l.y.next = $on;
-                                on.y.prev = $l;
-                            }
-                        }
+                        $unshiftover->($l,$on) if $on;
                     }
                 }
                 elsif (rc&el eq '9') {
@@ -783,49 +796,33 @@ Circle: | # < copy things
                     }
                 }
                 
-                #c throw data across
+                #c throw dis across
+                $dis->(rc&dis) if rc&dis;
                 
-                E.c.s = $c;
-                my $O = G&A,O=>1,$c;
-                O.c.el = r.c.el;
-                O.c.osc = $C; # s
-                E.c.O = $O;
-                G&toget,'next',$la,$c if $la;
-                $la = $c;
+                l.y.r = $r;
                 
-                up.y.tv->{l.t}->{l.y.cv} = $l;
-                up.y.tw->{l.t} = $l; # unless already
+                # internal index building, really 7 cos
+                if (rc&el eq '9') {
+                    push @out, $l;
+                    delete up.y.tv->{l.t}->{l.y.cv};
+                    delete up.y.tw->{l.t} if up.y.tw->{l.t} eq $l;
+                }
+                else {
+                    push @in, $l;
+                    up.y.tv->{l.t}->{l.y.cv} = $l;
+                    up.y.tw->{l.t} = $l;
+                    # TODO ^ unless already by > other
+                    # and backwards if other leaves
+                }
+                
+                $ro->(rc&z) if rc&z;
             }
         };
         $ro->(\@r,$j);
         # 
         sayyl "Machine acti ".wdump 5, A.c.r;
+        a&outz = \@out;
+        a&inz = \@in;
+        a&top = j.y.in || die "No toplevel! ".wdump 4 $j;
         
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        #
-        #
 
