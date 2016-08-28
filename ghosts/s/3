@@ -139,20 +139,21 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         $t = G&hup,$t;
         delete t.y.in;
         t.sc.z = $z;
+        # feed in as C root, zop meaning return
         c&zop = G&A,o=>6,$C,$t,'zopul';
     #c s73 compress
     s 7:
         # pack down goods
-        # keep 8s
+        # zops are el and change Cs, 
         my $o = c&zop;
-        A&allz = [map {
+        A&zop = [map {
             my $O = G&A,K=>1,$_;
             my $r = _.y.r || die "No r: ".ki$_;
             Oc&el = rc&el if rc&el;
             Oc&osc = $C;
             _.y.x.y.O = $O;
             $O
-        } @{os&allz}];
+        } @{os&zop}];
         
         A&outz = [map {
             _.y.x.y.O || die "out not yxyO: ".ki $_;
@@ -180,7 +181,7 @@ Hoop: | # osc art, colour in
         # if 9 unposit T and disappear
     O 4:
         for my $W ('of') {
-            if (my $Wt = s&of) {
+            if (my $Wt = C.sc.>$W) {
                 my $Wcv = 0.001;
                 a&swim.>$W.>$Wt.>$Wcv.>C.t.>C.y.cv = $C;
             }
@@ -792,22 +793,31 @@ Circle: | # < copy things
                 in.y.prev = $l;
             }
         };
-        my $dis;$dis = sub {
-            my ($c,$dis) = @_;
+        # attribute hammer
+        my $atdis;$atdis = sub {
+            my ($c,$dis,$ch) = @_;
             for my $d (@$dis) {
                 if (ds&z) {
-                    my $con = $c->{d.t} ||= {};
-                    $dis->($con,ds&z);
+                    my $con = $c.>d.t ||= {};
+                    my $ch = ch.K.>d.t ||= {}; # like co
+                    $atdis->($con,ds&z,$ch);
                 }
                 if (exists dc&s) {
-                    $c->{d.t} = dc&s;
+                    ch.set.>d.t =
+                    $c.>d.t = dc&s;
                 }
                 if (dc&m eq 'gone') {
+                    ch.drop.>d.t = 1;
                     delete $c->{d.t};
                 }
             }
         };
-        my (@all,@in,@out);
+        # all as in changed or 3/8fected by change
+        my @all; # flat list of our changed or el=8ing C, ordered descent
+        my @zop; # all change minima with c.el=?
+        my @in; # all el < 8 (happenings)
+        my @out; # all el == 9 (goners)
+        # something just el3ing for z will be in
         my $ro;$ro = sub {
             my ($z,$up) = @_;
             my $la;
@@ -874,8 +884,29 @@ Circle: | # < copy things
                 }
                 
                 #c throw dis across
-                $dis->(rc&dis) if rc&dis;
-                
+                # zop is l changed only and el=?
+                my $ch = {};
+                $atdis->($l,rc&dis,$ch) if rc&dis;
+                my $zop;
+                zop.t = l.t;
+                zop.y.cv = l.y.cv;
+                zop.y.l = $l;
+                zop.y.r = $r;
+                die "zop change already contains el: ".ki$zop if zop.c.el;
+                zop.c.el = r.c.el;
+                for my $nk (sort keys %{ch.K}) {
+                    my $gh = ch.K.>$nk;
+                    if (gh.set) {
+                        $zop.>$nk = gh.set;
+                    }
+                    if (my $drop = gh.drop) {
+                        my @gks = sort keys %$drop;
+                        my $k = "drop$nk";
+                        exists zop.c.>$k && die "zop already c.$k: ".ki$zop;
+                        zop.c.>$k = join ',', @gks; # TODO texty line safety
+                    }
+                }
+                push @zop, $zop;
                 l.y.r = $r;
                 
                 # internal index building, really 7 cos
@@ -902,6 +933,7 @@ Circle: | # < copy things
         $ro->(\@r,$j);
         
         a&allz = \@all;
+        a&zop = \@zop;
         a&inz = \@in;
         a&outz = \@out;
         a&top = j.y.in || sayre "No toplevel! ".wdump 4, $j;
