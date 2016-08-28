@@ -37,9 +37,10 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         $tug || die "No ground to A.2.t";
         c&zip = G&A,o=>6,$C,$tug,'zipover';
     # J t/y
-    # ordered diff creates O's for awakened C
+    # ordered diff creates O's for awakened C 
+    # hold the top and all in or out
     s 3:
-        say "S  3 A.2.t";
+        say "s3   A.2.t";
         my $o = c&zip;
         # put through Hoop to make index & self
         A&inz = [map {
@@ -57,9 +58,9 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         
         A&top = os&top;
         
-        G&A,$_,0.4 for @{A&inz};
+        G&A,$_,0.5 for @{A&inz};
         
-    # + W t/y
+    #c s4 + W t/y
     # elsward going index posited awake
     s 4:
         s&swim ||= {};
@@ -88,18 +89,12 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
                 s&swam ->{$W}->{$Wt}->{$Wcv}++;
             };
         }
-    # elsward goings made
+    # elsward goS made
     s 5:
-        my @for;
-        my $WtvW = {};
+        A&ytWe = {};
         G&chew,s&swam,'W,Wt,Wcv',$_ for sub {
             my ($ctv,$W,$Wt,$Wcv) = @_;
-            
-            my $Wa = $WtvW ->{$Wt}->{$Wcv};
-            if ($Wa && $Wa ne $W) {
-                die "swim: $Wt $Wcv already W=$Wa wants W=$W:\n  ".ki$ctv;
-            }
-            $WtvW ->{$Wt}->{$Wcv} = $Wa;
+            $ctv = s&swim ->{$W}->{$Wt}->{$Wcv};
             
             my $yt = G&yttv,$ctv;
             my $z = [];
@@ -107,17 +102,66 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
                 my ($c,$cv,$t) = @_;
                 my $O = c.y.A;
                 my $etv = Os&swim ->{$W}->{$Wt}->{$Wcv};
-                #
+                # from this c's pushing to Wtcv
+                G&chew,$etv,'t,cv' for sub {
+                    my ($es,$t,$cv) = @_;
+                    # the pushed thing, probably c itself
+                    push @$z, $es;
+                };
+            };
+            if (my $al = A&ytWe ->{$Wcv}->{$Wt}) {
+                die "swim $W $Wt $Wcv already al.c.W";
             }
+            my $e = G&Ct,[Swim=>3,{z=>$z}];
+            A&ytWe ->{$Wcv}->{$Wt} = G&Ct,[$Wt=>$Wcv,{W=>$W,e=>$e}];
         };
-        # goS made
-        sayyl "5  A.2.t";
+        sayyl "s5   A.2.t";
     # J t/y
     s 6:
         # going - figure difference
-        c&el = '2' if 1 == 3;
+        my $t = A&top;
+        my $z = [grep { $_ ne $t } map { _.c.s } @{A&inz}];
+        # and W returns over the top
+        G&chew,A&ytWe,\'Wcv,Wt',$_ for sub {
+            my ($We,$Wcv,$Wt) = @_;
+            # Tunnel e wants to know in general:
+            #   We may provide forms of ground to return results
+            #   e z may o and send diffs depending on connection
+            # for now modemless e.c.z in, n.sc.z out
+            my $n = 
+            n $We
+            my $W = n.c.s;
+            say wdump 5, ["GOt n: ",$n];
+            my $D = G&Ct,[$Wt=>$Wcv,{W=>We.c.W}];
+            D.sc.z = W.sc.z || die "W no z ".ki$W;
+            push @$z, $D;
+        };
+        $t = G&hup,$t;
+        delete t.y.in;
+        t.sc.z = $z;
+        c&zop = G&A,o=>6,$C,$t,'zopul';
+    #c s73 compress
     s 7:
         # pack down goods
+        # keep 8s
+        my $o = c&zop;
+        A&inz = [map {
+            my $O = G&A,O=>1,$_;
+            my $r = _.y.r || die "No r: ".ki$_;
+            Oc&el = rc&el if rc&el;
+            Oc&osc = $C;
+            _.y.x.y.O = $O;
+            $O
+        } @{os&allz}];
+        
+        A&outz = [map {
+            _.y.x.y.O || die "out not yxyO: ".ki $_;
+        } @{os&outz}];
+        
+        A&top = os&top;
+        
+        G&A,$_,0.5 for @{A&inz};
+        
     s 8:
         # tie together
         A.c.expo.>$_ = 1 for qw'tv i ii';
@@ -152,7 +196,7 @@ Circle: | # < copy things
     #  - recur bit J..b.i.>$o <- last C we make 
     #  - may see lv/otherness settling clues on o
     #  - knows i means pull o.i as t=>s
-    #  - recur C shell of just t and c.s
+    #  - float C forms from k>v data, etc
     # so around t/cs/sc the other stff
     #
     # eats other, splats self 
@@ -763,7 +807,7 @@ Circle: | # < copy things
                 }
             }
         };
-        my (@in,@out);
+        my (@all,@in,@out);
         my $ro;$ro = sub {
             my ($z,$up) = @_;
             my $la;
@@ -781,11 +825,7 @@ Circle: | # < copy things
                 my $x = l.y.x ||= {t=>l.t,y=>{cv=>l.y.cv}};
                 
                 #c relink our C
-                if (rc&el eq '8') {
-                    $la = $l;
-                    next;
-                }
-                elsif (rc&el < 3) {
+                if (rc&el < 3) {
                     my $ol = $l;
                     if (!$new) {
                         # rl over/replace
@@ -844,22 +884,26 @@ Circle: | # < copy things
                     delete up.y.tv->{l.t}->{l.y.cv};
                     delete up.y.tw->{l.t} if up.y.tw->{l.t} eq $l;
                 }
-                else {
+                elsif (rc&el ne '8') {
                     push @in, $l;
                     up.y.tv->{l.t}->{l.y.cv} = $l;
                     up.y.tw->{l.t} = $l;
                     # TODO ^ unless already by > other
                     # and backwards if other leaves
                 }
+                push @all, $l;
                 
                 $ro->(rc&z,$l) if rc&z;
+                
+                $la = $l;
             }
         };
+        
         $ro->(\@r,$j);
-        # 
-        sayyl "Machine acti ".wdump 5, A.c.r;
-        a&outz = \@out;
+        
+        a&allz = \@all;
         a&inz = \@in;
+        a&outz = \@out;
         a&top = j.y.in || sayre "No toplevel! ".wdump 4, $j;
         
 
