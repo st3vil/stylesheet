@@ -36,38 +36,83 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         }
         $tug || die "No ground to A.2.t";
         c&zip = G&A,o=>6,$C,$tug,'zipover';
-    # J t/y awakens
-    # ordered diff, pieces sorted in
-    # creates O's for awakened C
+    # J t/y
+    # ordered diff creates O's for awakened C
     s 3:
         say "S  3 A.2.t";
         my $o = c&zip;
-        for (@{os&outz}) {
-            # retract indexen via .y.x
-            # & say the area changed, updates
-        }
         # put through Hoop to make index & self
         A&inz = [map {
             my $O = G&A,O=>1,$_;
             my $r = _.y.r || die "No r: ".ki$_;
             Oc&el = rc&el if rc&el;
             Oc&osc = $C;
-            $O;
+            _.y.x.y.O = $O;
+            $O
         } @{os&inz}];
-        A&top = os&top
-        G&A,$_,0.4 for A&inz;
         
-    # W t/y awakens
-    # elsward going index grabbed
+        A&outz = [map {
+            _.y.x.y.O || die "out not yxyO: ".ki $_;
+        } @{os&outz}];
+        
+        A&top = os&top;
+        
+        G&A,$_,0.4 for @{A&inz};
+        
+    # + W t/y
+    # elsward going index posited awake
     s 4:
-        # pieces sorted
-        # brings up W inners <9 like t/y clang
-        # from O's T.X.$W.$Wt.$Wcv.$t.$cv
-        #G&Chew
+        s&swim ||= {};
+        s&swam = {};
+        for my $O (@{A&inz}) {
+            my $c = O.c.s;
+            my $X = O.y.x.y.X;
+            G&chew,Os&swim,'W,Wt,Wcv',$_ for sub {
+                my ($etv,$W,$Wt,$Wcv) = @_;
+                s&swim ->{$W}->{$Wt}->{$Wcv}->{c.t}->{c.y.cv} = $c;
+                s&swam ->{$W}->{$Wt}->{$Wcv}++;
+            };
+            G&chew,Xs&swim,'W,Wt,Wcv',$_ for sub {
+                my ($etv,$W,$Wt,$Wcv) = @_;
+                Os&swim ->{$W}->{$Wt}->{$Wcv}->{c.t}->{c.y.cv} && return;
+                delete s&swim ->{$W}->{$Wt}->{$Wcv}->{c.t}->{c.y.cv};
+                s&swam ->{$W}->{$Wt}->{$Wcv}++;
+            };
+            O.y.x.y.X = $O;
+        }
+        for my $X (@{A&outz}) {
+            my $c = X.c.s;
+            G&chew,Xs&swim,'W,Wt,Wcv',$_ for sub {
+                my ($etv,$W,$Wt,$Wcv) = @_;
+                delete s&swim ->{$W}->{$Wt}->{$Wcv}->{c.t}->{c.y.cv};
+                s&swam ->{$W}->{$Wt}->{$Wcv}++;
+            };
+        }
     # elsward goings made
     s 5:
+        my @for;
+        my $WtvW = {};
+        G&chew,s&swam,'W,Wt,Wcv',$_ for sub {
+            my ($ctv,$W,$Wt,$Wcv) = @_;
+            
+            my $Wa = $WtvW ->{$Wt}->{$Wcv};
+            if ($Wa && $Wa ne $W) {
+                die "swim: $Wt $Wcv already W=$Wa wants W=$W:\n  ".ki$ctv;
+            }
+            $WtvW ->{$Wt}->{$Wcv} = $Wa;
+            
+            my $yt = G&yttv,$ctv;
+            my $z = [];
+            G&chew,$yt,\'cv,t' for sub {
+                my ($c,$cv,$t) = @_;
+                my $O = c.y.A;
+                my $etv = Os&swim ->{$W}->{$Wt}->{$Wcv};
+                #
+            }
+        };
         # goS made
         sayyl "5  A.2.t";
+    # J t/y
     s 6:
         # going - figure difference
         c&el = '2' if 1 == 3;
@@ -86,13 +131,14 @@ Hoop: | # osc art, colour in
     O 1:
         A.c.s = shift @$s; # us
     O 2:
+        C.y.A = $A;
         return T.not = 1 if A&el eq '9';
         # if 9 unposit T and disappear
     O 4:
         for my $W ('of') {
             if (my $Wt = s&of) {
                 my $Wcv = 0.001;
-                T.X.>$W.>$Wt.>$Wcv.>C.t.>C.y.cv = $C;
+                a&swim.>$W.>$Wt.>$Wcv.>C.t.>C.y.cv = $C;
             }
         }
     
@@ -388,25 +434,16 @@ Circle: | # < copy things
         # names -> A fall replace to check inside
         j.sc.oo = $oo;
     
-    #c o5 join changed o as r by yt
+    #c o5 join changed o as r (with el=3) by yt
     #
     o 5:
         my $oo = A.c.oo;
         my $cha = A.c.cha;
-        my $ind = ar.ind = ar.ind.'  ';
         die 'more than ooC: '.ki $oo if 1 != keys %$oo;
         # make ty -> yt
         my $ty = oo.C;
         my $oty = $cha && cha.C && cha.C.gone;
-        my $i;
-        my $yt = {};
-        for my $on (grep {defined} $ty, $oty) {
-            G&Chew,$on,'t,cv',$_ for sub {
-                my ($o,$t,$cv) = @_;
-                $yt->{$cv}->{$t} = $o;
-                $i++;
-            };
-        }
+        my $yt = G&yttv,grep{defined}$ty,$oty;
         # iterate by yt
         my $la;
         my @z;
@@ -736,7 +773,7 @@ Circle: | # < copy things
                 my $new;
                 if (!$l) {
                     $new = 1;
-                    rc&el < 3 || die "Upel no hist ".ki$r;
+                    rc&el < 3 || die "Upel no hist ".ki($r).wdump 3, $j;
                     l.t = r.t;
                     l.y.cv = r.y.cv;
                 }
@@ -815,7 +852,7 @@ Circle: | # < copy things
                     # and backwards if other leaves
                 }
                 
-                $ro->(rc&z) if rc&z;
+                $ro->(rc&z,$l) if rc&z;
             }
         };
         $ro->(\@r,$j);
@@ -823,6 +860,6 @@ Circle: | # < copy things
         sayyl "Machine acti ".wdump 5, A.c.r;
         a&outz = \@out;
         a&inz = \@in;
-        a&top = j.y.in || die "No toplevel! ".wdump 4 $j;
+        a&top = j.y.in || sayre "No toplevel! ".wdump 4, $j;
         
 
