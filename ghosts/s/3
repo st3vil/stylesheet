@@ -151,17 +151,12 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
             my $r = _.y.r || die "No r: ".ki$_;
             Oc&el = rc&el if rc&el;
             Oc&osc = $C;
-            _.y.x.y.O = $O;
             $O
         } @{os&zop}];
         
-        A&outz = [map {
-            _.y.x.y.O || die "out not yxyO: ".ki $_;
-        } @{os&outz}];
+        G&A,$_,0.8 for @{A&zop};
         
-        A&top = os&top;
-        
-        G&A,$_,0.8 for @{A&inz};
+        s&lastA = $A;
         
     s 8:
         # tie together
@@ -170,6 +165,17 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         A.2.c.o = "Steved ".++C.c.imp;
         # send out
     
+    
+Komp: | # K/D line protoClattice
+    u a
+    K 1:
+        A.c.s = shift @$s; # us
+    D 1:
+        A.c.s = shift @$s; # us
+    K 2:
+        saybl "To compress: ".wdump 3, $C;
+    D 2:
+        # reverse it
     
 Hoop: | # osc art, colour in
     u a
@@ -794,13 +800,13 @@ Circle: | # < copy things
             }
         };
         # attribute hammer
-        my $atdis;$atdis = sub {
-            my ($c,$dis,$ch) = @_;
-            for my $d (@$dis) {
+        my $dis;$dis = sub {
+            my ($c,$z,$ch) = @_;
+            for my $d (@$z) {
                 if (ds&z) {
                     my $con = $c.>d.t ||= {};
                     my $ch = ch.K.>d.t ||= {}; # like co
-                    $atdis->($con,ds&z,$ch);
+                    $dis->($con,ds&z,$ch);
                 }
                 if (exists dc&s) {
                     ch.set.>d.t =
@@ -886,7 +892,8 @@ Circle: | # < copy things
                 #c throw dis across
                 # zop is l changed only and el=?
                 my $ch = {};
-                $atdis->($l,rc&dis,$ch) if rc&dis;
+                $dis->($l,rc&dis,$ch) if rc&dis;
+                
                 my $zop;
                 zop.t = l.t;
                 zop.y.cv = l.y.cv;
@@ -894,7 +901,7 @@ Circle: | # < copy things
                 zop.y.r = $r;
                 die "zop change already contains el: ".ki$zop if zop.c.el;
                 zop.c.el = r.c.el;
-                for my $nk (sort keys %{ch.K}) {
+                for my $nk (sort keys %{ch.K||{}}) {
                     my $gh = ch.K.>$nk;
                     if (gh.set) {
                         $zop.>$nk = gh.set;
@@ -907,6 +914,7 @@ Circle: | # < copy things
                     }
                 }
                 push @zop, $zop;
+                #
                 l.y.r = $r;
                 
                 # internal index building, really 7 cos

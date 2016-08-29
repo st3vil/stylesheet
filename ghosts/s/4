@@ -24,6 +24,7 @@ Stuff: |
 ThatWillBe: |
     n Tan
     n Tal
+    n Komp
 MakePi: | # make code,
     my $ii = {};
     
@@ -133,6 +134,8 @@ CoBabbler: | # bake code
     # change J.n 
     C.c.s =~ s{\$J->\{([unm])\}->\((\$A,\$C,\$G,\$T?)(, ?\$M)?}
         {\$G->\{h\}->($2,"$1"$3}sgm;
+    
+    C.c.s
 Zome: | # return a new J
     my ($i,$ii) = Rw MakePi;
     
@@ -209,7 +212,6 @@ Zop: |
     
     
 Hows: |
-    die "STEVEWAS";
     J.sc.u.c.o = 'oscd';
     # STEVEWAS
     take: %acgt:s o
@@ -279,18 +281,24 @@ ElvisWorld: | # J makes, puts W
     
     my $j =
     n Hows
+    sayre "So!";
+    snooze 3000;
+    my $j =
+    n Hows
+    
     ($j) = values %{j.c.tug};
     $j = j.c.s;
     $j = j.sc.J;
     $j = j.sc.s;
-    $j = j.c.zip;
-    $j = j.c.r;
-    $j = $j->[1];
+    #$j = j.sc.lastA;
+    #$j = [ split "\n", wdump 2, $j ];
+    #pop @$j until @$j < 30;
+    #$j = j.sc.zop;
     #$j = j.c.dis->[0];
     #$j = j.sc.z->[0]; # of c
     #$j = j.sc.jo.zipover;
     #$j = j.sc.oo;
-    sayyl "Done!";
+    sayyl "Done! ";
     #say wdump 4, $oJ;
     #exit;
     #$tes->("Selecto");
@@ -474,9 +482,9 @@ pi/pud: |
     #y.at.ml=J.A.d;
     c&depth = J.A.d;
     # how many M inners before 'more' (depth first)
-    A.3.C.c.intlim ||= 19;
+    A.3.C.c.intlim ||= 13;
     # max depth before like nothash
-    c&dl = A.2.C.c.dl || 7;
+    c&dl = A.2.C.c.dl || 2;
     # travel boosts/cons depth
     c&dl += 3 if c&depth < 20 && C.t eq 'sc';
     y.in = 0.21;
@@ -487,12 +495,21 @@ pi/pud: |
     n title=>1=>"C.t"
     
     c&block = 'same' if $s eq A.2.C.c.s;
-    c&block = 'G' if C.t eq 'G' && ref s.w;
-    if (ref $s eq 'HASH') {
-        if (s.y eq $s && A.2.C.t eq 'y') {
-            c&block= 'yA';
-            c&blos = "s.t @ s.cv";
-            c&blos .= " (s.c.s.t)" if ref s.c.s eq 'HASH';
+    if (!c&block && ref $s eq 'HASH') {
+        if (C.t eq 'G') {
+            my $w = s.w;
+            if (ref $w eq 'CODE' || ref \$w eq 'GLOB') {
+                c&block = 'G';
+            }
+        }
+        if (s.y eq $s) {
+            C.sc.type = 'A';
+            c&block = 'yA' if A.2.C.t eq 'y';
+            c&block = 'AA' if A.2.C.sc.type eq 'A';
+            if (c&block) {
+                c&blos = "s.t @ s.cv";
+                c&blos .= " (s.c.s.t)" if ref s.c.s eq 'HASH';
+            }
         }
     }
     
