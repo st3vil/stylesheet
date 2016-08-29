@@ -162,7 +162,7 @@ wantarray ? @s : shift @s
 
 }
 sub k2 {
-ki(1, shift);
+ki(shift,1);
 
 }
 sub kk {
@@ -183,8 +183,11 @@ join ' ', map {
 
 }
 sub ki {
-my ($re,$ar,$d) = @_;
+my ($ar,$re,$d) = @_;
+# s, depth limit, depth
 $d++;
+($ar,$re) = ($re,$ar) if ref $re && $ar =~ /^\d+$/; # goner
+$re = 2 if !defined $re;
 if ($re !~ /^\d+$/ && !$ar) {
     $ar = $re;
     $re = 2;
@@ -215,7 +218,7 @@ join ' ', map {
             "$_={@".$v->{name}."&".slm(3,$v->{id})."@}"
           )
         : 
-              "$_=".($re?"{ ".slim($lim,ki($re-1,$v,$d))." }":"$v")
+              "$_=".($re?"{ ".slim($lim,ki($v,$re-1,$d))." }":"$v")
     }
     : ref $v eq 'ARRAY' ? do {
           my $x;$x = sub {

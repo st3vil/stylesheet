@@ -17,26 +17,27 @@ if (J.me =~ /^(\w+);(.*)$/) {
     Rw $1 $J:G.oin $m;
     return;
 }
-if (J.me =~ s/^(\w+):(.+)$// && G.way->{$1}) {
+if (J.me =~ s/^(\w+):(.+)$// && -f "w/way/$1") {
     n $1=>W=>{s=>$2}
 }
-elsif (J.me =~ s/^ (\w+)(?: (.+))?// && G.way->{$1}) {
-    n $1=>W=>{t=>$2}
-}
-elsif (J.me =~ /^(\w+):(\S+)(\s|$)/) {
-    my $o;
-    my ($is,$ul) = ($1,$2);
-    my $t = $1 if $ul =~ /^(\w+)/ || die "niul $ul";
-    if (0 && !-f "w/$is/$t") {
-        my @op = glob "w/$is/$t*";
-        sayre "Many options: ".ki @op if @op > 1;
-        my $o = shift @op;
-        $ul = $1 if $o =~ /^.+\/(.+?)$/;
+else {
+    if (J.me =~ /^(\w+):(\S+)(\s|$)/) {
+        my $o;
+        my ($is,$ul) = ($1,$2);
+        my $t = $1 if $ul =~ /^(\w+)/ || die "niul $ul";
+        if (0 && !-f "w/$is/$t") {
+            my @op = glob "w/$is/$t*";
+            sayre "Many options: ".ki @op if @op > 1;
+            my $o = shift @op;
+            $ul = $1 if $o =~ /^.+\/(.+?)$/;
+        }
+        sayyl "So: $is, $ul   fr  $o";
+        J.me = " ALL $is:$ul";
     }
-    sayyl "So: $is, $ul   fr  $o";
-    J.me = " ALL $is:$ul";
+    if (J.me =~ s/^ (\w+)(?: (.+))?// && -f "w/way/$1") {
+        n $1=>W=>{t=>$2}
+    }
 }
-
 J.fti -= 3 if J.me =~ s/o//g;
 J.fti -= 2 if J.me =~ s/i//g;
 
