@@ -1,3 +1,83 @@
+Sea: | # folds of the day
+    u i
+    # start holding an instruction
+    s:
+        if (ref $s eq 'HASH' && ref s.y && s.y ne $s) {
+            return $s
+        }
+        $C = {};
+        C.t = '';
+        C.y = {};
+        C.c.s = $s;
+        $C;
+    # give you your C, from This=>3=>{etc}
+    Ct:
+        my $C = {};
+        G&Cs,$s;
+        $C;
+    # parse $s into $C
+    Cs:
+        my ($t,@e) = @$s;
+        if (ref $t eq 'SCALAR') {
+            C.c = G&peel,$$t;
+        }
+        elsif (ref $t eq 'ARRAY') {
+            die "Aray: ".wdump 3, $s;
+        }
+        elsif (ref $t) {
+            die "reft: ".wdump 3, $s;
+        }
+        else {
+            C.t = $t;
+        }
+        if (!@e) {
+            C.c.W = C.t;
+        }
+        else {
+            my ($y,$c,$sc,@e) = @e;
+            C.c.s = $c if !ref $c;
+            C.c = $c if ref $c eq 'HASH';
+            C.c = G&peel,$$c if ref $c eq 'SCALAR';
+            $sc = G&peel,$$sc if $sc eq 'SCALAR';
+            $sc = {} if $sc eq '';
+            $sc = G&peel,$sc if !ref $sc;
+            C.sc = $sc if $sc;
+            if (ref $y eq 'HASH') {
+                if (y.y) {
+                    C.c.e = $y;
+                    C.c.W ||= C.t;
+                }
+                else {
+                    C.y = $y;
+                }
+            }
+            if (!ref $y) {
+                C.c.pi = $1 if $y =~ s/^-(\w+)//;
+                $y = 1 if $y eq '';
+                C.y.cv = $y;
+            }
+            C.y.cv /= 10 until C.y.cv < 1;
+            die "Extra: ".wdump 3,$s if @e;
+        }
+
+    # osc blinds previous empirica
+    Chade:
+        my $C = {};
+        C.t = s.t;
+        C.y.cv = s.y.cv;
+        C.c.s = s.c.s if exists s.c.s;
+        C.sc = {%{s.sc}};
+        return $C;
+    # make an other holding it (s) at same ty
+    # s usu. copy already, hs is origin
+    Chs: %acgt:s hs
+        my $C = {};
+        C.y.A = $A;
+        C.t = s.t;
+        C.y.cv = s.y.cv;
+        C.c.s = $s;
+        C.c.hs = $hs if $hs;
+        return $C;
 With: | # J's stuff, its Js, osc page, etc.
     u i
     # adapt to J interior as perhaps exterior
@@ -29,6 +109,8 @@ With: | # J's stuff, its Js, osc page, etc.
         };
         J.t = $t;
         J.y.G = $G;
+        J.u = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,u=>8=>$J,\@Me };
+        J.n = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,n=>8=>$J,\@Me };
         $J
     
     # partition ground
@@ -44,7 +126,7 @@ With: | # J's stuff, its Js, osc page, etc.
     
     # reset ground
     rea: %acgt:J
-        my $n = J.sc.n || die 'no n';
+        my $n = J.sc.n || return sayre "no n on J.t";
         my $zi = ++J.c.zi;
         my $ch = '';
         my $lim = 2;
@@ -113,6 +195,7 @@ Tunnel: | # mind & world
     mo 1:
         # sprung from n/author, separate put words...
         G&Cs,$s;
+        C.y.cv = 0.1 if C.y.cv eq '';
     mo 5:
         say 'mive';
         sayre "YEP ".ki$C;
@@ -129,16 +212,22 @@ Jelly: | # Town making happening
         # dhcp replanty A.c.ip
     J 2:
         # see self already
-        s&J ||= G&pint,A.2.sc.tv=>C.t,C.y.cv;
-        s&J && sayre "Have J.t !";
+        my $J = s&J ||= G&pint,A.2.sc.tv=>C.t,C.y.cv;
+        $J && sayre "Have J.t !";
         # or force a...
     J 3:
-        my $from = A.c.Jpool || A.2;
-        s&J ||= G&J,$from,C.t;
+        my $from = A&Jpool || A.2;
+        if (!s&J) {
+            s&J = G&J,$from,C.t;
+            1 && sayyl "J MAde! C.t,C.y.cv ".wdump 4, [G&pint,A.2.sc.tv=>C.t,C.y.cv , A.2.sc.tv];
+        }
+        else {
+            1 && saybl "Had C.t !";
+        }
+        # temp
+        A.2.sc.tv->{C.t}->{C.y.cv} = s&J;
         A.2 = s&J;
         A.3 = s&J if A.c.Jpool;
-        # temp
-        A.2.sc.tv->{C.t}->{C.y.cv};
     pi 3:
         my $J = s&J;
         J.c.d = A.2.c.d + 1;
@@ -218,24 +307,6 @@ Compliers: | # othered
             }
         }
     
-    # osc blinds previous empirica
-    Chade:
-        my $C = {};
-        C.t = s.t;
-        C.y.cv = s.y.cv;
-        C.c.s = s.c.s if exists s.c.s;
-        C.sc = {%{s.sc}};
-        return $C;
-    # make an other holding it (s) at same ty
-    # s usu. copy already, hs is origin
-    Chs: %acgt:s hs
-        my $C = {};
-        C.y.A = $A;
-        C.t = s.t;
-        C.y.cv = s.y.cv;
-        C.c.s = $s;
-        C.c.hs = $hs if $hs;
-        return $C;
 Walks: | # othering, many C
     u i
     # k into hash path    also T/ip
@@ -244,6 +315,7 @@ Walks: | # othering, many C
             return unless ref $s eq 'HASH' && exists $s.>$_;
             $s = $s.>$_;
         }
+        $s
     # hash ordering
     hord: %acgt:s head tail
         my ($he,$ta) = ([],[]);
