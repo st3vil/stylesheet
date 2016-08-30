@@ -206,11 +206,12 @@ Zupe: | # run Zome, output pud
 Zop: |
     u urw
     y.clos = 1;
-    my $j = Rw Tesh ElvisWorld;
+    my $j = J.thou ||= Rw Tesh ElvisWorld;
     
-    $j || return
+    $j || return 
         n progress=>1=>"run: J.testRun"
     
+    sayyl "Making pud...";
     m wk=>-pud=>{s=>$j},'%hs:375,ws,wi:30%'
     
     
@@ -234,9 +235,9 @@ Tesh: | # wrap test way
             J.testRun;
         };
         c&tac = 1 if J.tacall;
-        my ($aye) = 
+        my ($aye) = map {_.M->[0]}
         n $C
-        aye.return;
+        aye.c.return
     };
     
     #die "Just $sel" if $sel;
@@ -274,7 +275,14 @@ ElvisWorld: | # J makes, puts W
     my $ot = "this";
     my $o;
     
-    my $ntos = sub {
+    my $tos = sub {
+        my ($c,$t) = @_;
+        $c = {ntos=>$c} if $c && !ref $c;
+        $ot = $1 if c.ntos =~ s/^(\w+)\///;
+        map { G&xot,$c,$_ } G&peel,$1 if c.ntos =~ s/,(.+)$//;
+        $tes->($t,1,$c)
+    };
+    my $ntos = sub { # get the oscillator A (s) given e is n of J
         my $j = shift;
         ($j) = values %{j.c.tug};
         $j = j.c.s || die "No C on ".ki$j;
@@ -285,16 +293,28 @@ ElvisWorld: | # J makes, puts W
         $j
     };
     c&mks = sub {
-        my $C = shift;
+        my ($C,$T) = @_;
+        T.oke = 1;
         my $se = $e;
         if (my $p = c&ntos) {
-            $p = [split / |,/, $p];
-            $se = $ntos->($se,@$p);
+            my $sp = sub {[split / |,/, shift ]};
+            my $output = $sp->($1) if $p =~ s/^(.+)!( .+)?$/$1$2/;
+            
+            $p = $sp->($p);
+            $se = $ntos->($se);
+            
+            if ($output) {
+                oJ.output = G&pint,$se,@$output;
+                sayyl "Output ".ki oJ.output;
+            }
+            
+            C.c.return = $se;
+            $se = G&pint,$se,@$p
         }
         $o = G&A,o=>6=>$J=>$se,$ot;
-        A.return = $se;
         
         #A.V = 1 if $n == 10;
+        # c&tac=1;
         
         my $l = o.c.rsl || die "no rsl";
         
@@ -305,17 +325,18 @@ ElvisWorld: | # J makes, puts W
     if ($n == 0) {
         $e =
         n Hows
-        $tes->('Hows constructed on zip/top'=>''=>{ntos=>'c zip sc top'});
+        $tos->('zip/c zip sc top','Hows zip top');
+        #oJ.output =
+        $tos->('zop/c zop sc top','Hows zop top');
     }
     elsif ($n == 1) {
-        $e = $ntos->($_,qw'c zip sc top') for
+        $e =
         n Hows
         #$ot .= " $n";
-        $tes->('Hows again');
-        oJ.output = $e;
+        $tos->('zlp/c zip! sc top','Hows zip top again');
+        $tos->('zyp/c zop sc top','Hows zop top again');
+        #oJ.output = $e;
     }
-    
-    sayyl "Done! ";
     
 ElvisLeaves: |
     #A.V = 1;
@@ -490,7 +511,7 @@ pi/pud: |
     # max depth before like nothash
     c&dl = A.2.C.c.dl || 2;
     # travel boosts/cons depth
-    c&dl += 2 if c&depth < 6 && C.t eq 'sc';
+    c&dl += 1 if c&depth < 5 && C.t eq 'sc';
     y.in = 0.21;
     my $ind = join'', ('  ') x (J.A.d - 1);
     
@@ -520,7 +541,7 @@ pi/pud: |
     if (c&block) {
         n block=>2=>c&block,'%hs:855'
         c&blos &&
-        n blocked=>21=>c&blos,'%hs:827'
+        n blocked=>21=>' '.c&blos,'%hs:827'
         return
     }
     

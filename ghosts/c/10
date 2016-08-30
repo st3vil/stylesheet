@@ -18,12 +18,16 @@ TestTool: |
         my $f = C.c.tfile;
         (my $d = $f) =~ s/\/[^\/]+?$//;
         `mkdir -p $d` unless -d $d;
-        my $got = C.c.st.got;
-        say "Accepting for $f: ".wdump 2,$got;
         
-        return sayre("Ref leaky ".wdump 6, $got) && sleep 6 if
-            G&oleak,$got,4;
-        DumpFile($f, $got);
+        my $st = C.c.st;
+        my $got = st.got;
+        my $exp = {%{st.exp}};
+        $exp->{$_} = $got->{$_} for keys %$got;
+        say "Accepting for $f: ".wdump 2,$exp;
+        
+        return sayre("Ref leaky ".wdump 6, $exp) && sleep 6 if
+            G&oleak,$exp,4;
+        DumpFile($f, $exp);
 
     eeply: %acgt:s K
         C.c.st.got->{$K} = $s;
@@ -143,7 +147,7 @@ TestRun: |
     test 3:
         my $J = A.J;
         if (my $mks = J.C.c.mks) {
-            C.c.s = $mks->($C);
+            C.c.s = $mks->($C,$T);
         }
 
     n noJ =>222,<<''
@@ -229,19 +233,20 @@ MkSle: |
 Dwive: | # @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @ @
     J.A.IIII = [@{G.IIII}, 'G/T/TestI'];
     n \'runs'
-    G.asap = 1;
-    G.Jlone = 1;
     y.ope = 1;
     G.oin.A.tid += 4; # alwayser
     my $n = J.testRun++;
     my $d = ar.d || ar.m && ar.m->[0] || 3;
     $d--; # since now is a run and spec looks like yay many lumps
     $d = J.testUntil if J.testUntil;
-    if ($n < $d && !ar.notime) {
-        Rw waito + $d=0.000005;
+    if (!ar.notime) {
+        G.Jlone = 1; # disables speak
+        T.nose = 1; # dont thing the test vector
+        if ($n < $d) {
+            Rw waito + $d=0.000005;
+        }
     }
     $n || `rm life/W/{JStestlines,Sltest,Detailtest} &> /dev/null`;
-    T.nose = 1; # dont thing the test vector
     $n
     
 UnPreDuv: |

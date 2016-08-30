@@ -217,7 +217,8 @@ join ' ', map {
           :
             "$_={@".$v->{name}."&".slm(3,$v->{id})."@}"
           )
-        : 
+        :
+        $v eq $ar ? "$k:same" :
               "$_=".($re?"{ ".slim($lim,ki($v,$re-1,$d))." }":"$v")
     }
     : ref $v eq 'ARRAY' ? do {

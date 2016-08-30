@@ -46,12 +46,12 @@ I:
     taccept: 
       c: 
         el: 2
-        s: "A.I.taccept = sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $I = A.I;\nmy $f = C.c.tfile;\n(my $d = $f) =~ s/\\/[^\\/]+?$//;\n`mkdir -p $d` unless -d $d;\nmy $got = C.c.st.got;\nsay \"Accepting for $f: \".wdump 2,$got;\n\nreturn sayre(\"Ref leaky \".wdump 6, $got) && sleep 6 if\n    G&oleak,$got,4;\nDumpFile($f, $got);\n};"
+        s: "A.I.taccept = sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $I = A.I;\nmy $f = C.c.tfile;\n(my $d = $f) =~ s/\\/[^\\/]+?$//;\n`mkdir -p $d` unless -d $d;\n\nmy $st = C.c.st;\nmy $got = st.got;\nmy $exp = {%{st.exp}};\n$exp->{$_} = $got->{$_} for keys %$got;\nsay \"Accepting for $f: \".wdump 2,$exp;\n\nreturn sayre(\"Ref leaky \".wdump 6, $exp) && sleep 6 if\n    G&oleak,$exp,4;\nDumpFile($f, $exp);\n};"
       sc: 
         acgt: s
         args: A,C,G,T,s
         code: I
-        dige: f31ac2215482
+        dige: dd3e74ad0ba7
         gro: TestTool
         of: I
       t: taccept
@@ -151,13 +151,13 @@ Mo:
     test_3: 
       c: 
         el: 2
-        s: "A.I.test_3 = sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $I = A.I;\nmy $c = C.c;\nmy $test = C.c.test;\nmy $J = A.J;\nif (my $mks = J.C.c.mks) {\n    C.c.s = $mks->($C);\n}\n};"
+        s: "A.I.test_3 = sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $I = A.I;\nmy $c = C.c;\nmy $test = C.c.test;\nmy $J = A.J;\nif (my $mks = J.C.c.mks) {\n    C.c.s = $mks->($C,$T);\n}\n};"
       sc: 
         acgt: s
         act: 1
         args: A,C,G,T,s
         code: Mo
-        dige: d32976ea3c1b
+        dige: ae141eb8f533
         gk: test
         gro: TestRun
         nk: c
