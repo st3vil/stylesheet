@@ -234,6 +234,8 @@ Tesh: | # wrap test way
             C.t = $t;
             J.testRun;
         };
+        C.c.tac = 1 if C&l =~ s/\?!//;
+        C.c.question = 1 if C&l =~ s/\?$//;
         c&tac = 1 if J.tacall;
         my ($aye) = map {_.M->[0]}
         n $C
@@ -308,9 +310,9 @@ ElvisWorld: | # J makes, puts W
                 sayyl "Output ".ki oJ.output;
             }
             
-            C.c.return = $se;
             $se = G&pint,$se,@$p
         }
+        C.c.return = $se;
         $o = G&A,o=>6=>$J=>$se,$ot;
         
         #A.V = 1 if $n == 10;
@@ -318,23 +320,28 @@ ElvisWorld: | # J makes, puts W
         
         my $l = o.c.rsl || die "no rsl";
         
-        (A.V || A.Ve) &&
+        (A.V || A.Ve || C.c.question) &&
         1 && saybl "the Dujis: ".$_ for @$l;
         $l
     };
     if ($n == 0) {
         $e =
         n Hows
-        $tos->('zip/c zip sc top','Hows zip top');
+        $tos->('ziptop/c zip sc top','Hows zip top');
         #oJ.output =
-        $tos->('zop/c zop sc top','Hows zop top');
+        $tos->('zoptop/c zop sc top','Hows zop top');
+        my $u =
+        $tos->('zipp/c zip sc allz!','Hows zip allz');
+        
+        saybl "Gotu: ".wdump 2, $u;
     }
     elsif ($n == 1) {
         $e =
         n Hows
         #$ot .= " $n";
-        $tos->('zlp/c zip! sc top','Hows zip top again');
-        $tos->('zyp/c zop sc top','Hows zop top again');
+        $tos->('zlp/c zip sc top','Hows zip top again');
+        $tos->('zlpp/c zip sc zop','zip zop shows gone skinny');
+        #$tos->('zyp/c zop sc top','Hows zop top again');
         #oJ.output = $e;
     }
     
@@ -498,120 +505,7 @@ ElvisLeaves: |
     $so = so.sc.jo->{"z mo $one"};
     $so = so.c.Co; # the C currently othering under the recursionship of j
     $so = so.c.j.sc.oo.C.W; # through to the j again, all C it can see named W
-pi/pud: |
-    y.at.qs=1;
-    y.at.ws=1;
-    y.clos=1;
-    A.3 = J.mo.J; # the W planted in A.4
-    A.2 = J.Jiter; # the last J
-    #y.at.ml=J.A.d;
-    c&depth = J.A.d;
-    # how many M inners before 'more' (depth first)
-    A.3.C.c.intlim ||= 13;
-    # max depth before like nothash
-    c&dl = A.2.C.c.dl || 2;
-    # travel boosts/cons depth
-    c&dl += 1 if c&depth < 5 && C.t eq 'sc';
-    y.in = 0.21;
-    my $ind = join'', ('  ') x (J.A.d - 1);
-    
-    n ind=>0.07=>"\n$ind"
-    n sli=>0.08=>"<  ",'%hs:784'
-    n title=>1=>"C.t"
-    
-    c&block = 'same' if $s eq A.2.C.c.s;
-    if (!c&block && ref $s eq 'HASH') {
-        if (C.t eq 'G') {
-            my $w = s.w;
-            if (ref $w eq 'CODE' || ref \$w eq 'GLOB') {
-                c&block = 'G';
-            }
-        }
-        if (s.y eq $s) {
-            C.sc.type = 'A';
-            c&block = 'yA' if A.2.C.t eq 'y';
-            c&block = 'AA' if A.2.C.sc.type eq 'A';
-            if (c&block) {
-                c&blos = "s.t @ s.cv";
-                c&blos .= " (s.c.s.t)" if ref s.c.s eq 'HASH';
-            }
-        }
-    }
-    
-    if (c&block) {
-        n block=>2=>c&block,'%hs:855'
-        c&blos &&
-        n blocked=>21=>' '.c&blos,'%hs:827'
-        return
-    }
-    
-    my ($ks,$vs);
-    if (ref $s eq 'ARRAY') {
-        n is=>11=>'[','%hs:457'
-        C.sc.type = 'array';
-        $vs = [@$s];
-        $ks = [0..(@$s-1)];
-    }
-    else {
-        if (ref $s ne 'HASH' || J.A.d > c&dl) {
-            my $z = ki $s;
-            my $bg;
-            if (!ref $s) {
-                $z =~ s/^!%://;
-                $bg = ',bg:653';
-                if (!defined $s) {
-                    n know=>18=>'undef','%hs:845,fs:6'
-                }
-                elsif (!length $s) {
-                    n know=>18=>"''",'%hs:845,fs:6'
-                }
-            }
-            $z = $s if C.t eq 't';
-            my $fs = 6;
-            $fs = 8 if !ref $s;
-            $fs = 13 if C.t eq 't';
-            
-            n no=>2=>$z,"%fs:$fs,hs:398,lh:0.5,mt:1,mh:5$bg"
-            return
-        }
-        if (s.y eq $s && J.A.d > c&dl) {
-            return
-            n A=>2=>"A s.t s.y.cv; ".ki(s.c)."    ".ki(s.sc);
-        }
-        if (defined s.t && s.y && (s.c || s.sc)) {
-            C.sc.istycsc = 1;
-        }
-    }
-    # order children
-    # use Walks/hord
-    my ($he,$ta);
-    if (C.sc.istycsc) {
-        $he->{$_} = 1 for qw't y';
-        $ta->{$_} = 1 for qw'c sc';
-    }
-    my (@he,@ta);
-    my @ks = grep { !($he->{$_} && push(@he,$_) || $ta->{$_} && push(@ta,$_)) }
-        $ks ? @$ks : sort keys %$s;
-    @ks = (@he,@ks) if @he;
-    @ks = (@ks,@ta) if @ta;
-    
-    n siz=>12=>" x ".@ks,'%hs:283,fs:6';
-    if (A.3.C.c.intl++ > A.3.C.c.intlim) {
-        if (ref $s eq 'HASH') {
-            if (defined s.t) {
-                n peak=>3=>"s.t",'%hs:398,fs:11'
-            }
-        }
-        return
-        n more=>4=>"more",'%hs:544'
-    }
-    return if C.t =~ /^(ii?|up|T)$/
-        || ( A.2.C.sc.type ne 'array' && C.t =~ /^\d+$/)
-        #|| J.A.d > 5
-        ;
-    C.sc.css = 'border-left:3px solid 473' if @ks > 3;
-    m $_=>-pud=>{s=>$vs ? shift @$vs : $s->{$_}},'%ma:1' for @ks;
-    
+
 a: | # act
     u allact
     n allact
