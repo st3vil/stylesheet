@@ -234,7 +234,7 @@ Tesh: | # wrap test way
             C.t = $t;
             J.testRun;
         };
-        C.c.tac = 1 if C&l =~ s/\?!//;
+        C.c.tac = 1 if C&l =~ s/!$//;
         C.c.question = 1 if C&l =~ s/\?$//;
         c&tac = 1 if J.tacall;
         my ($aye) = map {_.M->[0]}
@@ -300,14 +300,15 @@ ElvisWorld: | # J makes, puts W
         my $se = $e;
         if (my $p = c&ntos) {
             my $sp = sub {[split / |,/, shift ]};
-            my $output = $sp->($1) if $p =~ s/^(.+)!( .+)?$/$1$2/;
-            
+            my $output = $sp->($1) if $p =~ s/^(.*)\?( .+)?$/$1$2/;
             $p = $sp->($p);
             $se = $ntos->($se);
             
-            if ($output) {
-                oJ.output = G&pint,$se,@$output;
+            if ($output || C.c.see) {
+                $output ||= $sp->(C.c.see) if C.c.see && C.c.see ne '1';
+                oJ.output = $output ? G&pint,$se,@$output : $se;
                 sayyl "Output ".ki oJ.output;
+                return [] if C.c.see;
             }
             
             $se = G&pint,$se,@$p
@@ -331,17 +332,16 @@ ElvisWorld: | # J makes, puts W
         #oJ.output =
         $tos->('zoptop/c zop sc top','Hows zop top');
         my $u =
-        $tos->('zipp/c zip sc allz!','Hows zip allz');
-        
-        saybl "Gotu: ".wdump 2, $u;
+        $tos->('zipp/c zip sc allz','Hows zip allz');
+        ok(@$u==4,"four things we o'd y\.in to seven");
     }
     elsif ($n == 1) {
         $e =
         n Hows
         #$ot .= " $n";
         $tos->('zlp/c zip sc top','Hows zip top again');
-        $tos->('zlpp/c zip sc zop','zip zop shows gone skinny');
-        #$tos->('zyp/c zop sc top','Hows zop top again');
+        $tos->('zlpp/c zip sc zop','zip zop shows gone skinny?');
+        $tos->('zyp/c zop,see:c zip','Hows zop top agaein');
         #oJ.output = $e;
     }
     
