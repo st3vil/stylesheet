@@ -207,8 +207,10 @@ Zop: |
     u urw
     y.clos = 1;
     my $j = Rw Tesh ElvisWorld;
-    return unless $j;
-    saybl wdump 3, $j;
+    
+    $j || return
+        n progress=>1=>"run: J.testRun"
+    
     m wk=>-pud=>{s=>$j},'%hs:375,ws,wi:30%'
     
     
@@ -232,35 +234,37 @@ Tesh: | # wrap test way
             J.testRun;
         };
         c&tac = 1 if J.tacall;
+        my ($aye) = 
         n $C
+        aye.return;
     };
     
     #die "Just $sel" if $sel;
     
     J.R ||= Rw Zome;
-    
     my $beg = hitime();
-    my $e;
-    if (!J.begins || J.testsRun > J.lasttestsrun) {
-        J.begins ||= $beg;
+    while (!J.begins || J.testsRun > J.lasttestsrun) {
         J.lasttestsrun = J.testsRun;
         J.testUntil = J.testRun + 1;
-        my $n = $sel ? 0 :
-            Rw Dwive;
-        my $oJ = J.R;
-        $e =
+        my $n = defined $sel ? $sel :
+            Rw Dwive + $notime=1;
+        J.begins ||= do {
+            ok(1, "J.name begins");
+            $beg;
+        };
+        
+        my $oJ = J.R; # v inside oJ is J
         Rw $t + $tes $n $oJ:J $J:oJ $A:oJ.1 $G:oJ.y.G;
+        
         delete J.tacall;
         $sel ||
-        ok(1, "Took J.testRun ".G&ron,hitime()-$beg );
+        ok(1, "Took ".G&ron,hitime()-$beg );
+        return J.output if J.output && defined $sel;
     }
-    else {
-        $sel ||
-        ok(1, "Total ".G&ron,hitime()-J.begins );
-        J.output && return J.output;
-        exit;
-    }
-    $e
+    $sel ||
+    ok(1, "Total ".G&ron,hitime()-J.begins );
+    
+    J.output || exit
 ElvisWorld: | # J makes, puts W
     #return if $n;
     #A.V = 1;
@@ -270,18 +274,6 @@ ElvisWorld: | # J makes, puts W
     my $ot = "this";
     my $o;
     
-    c&mks = sub {
-        my $C = shift;
-        $o = G&A,o=>6=>$J=>$e,$ot;
-        
-        #A.V = 1 if $n == 10;
-        
-        my $l = o.c.rsl || die "no rsl";
-        
-        (A.V || A.Ve) &&
-        1 && saybl "the Dujis: ".$_ for @$l;
-        $l
-    };
     my $ntos = sub {
         my $j = shift;
         ($j) = values %{j.c.tug};
@@ -292,22 +284,37 @@ ElvisWorld: | # J makes, puts W
         $j = G&pint,$j,@_ if @_;
         $j
     };
-    my $en = sub {
+    c&mks = sub {
+        my $C = shift;
+        my $se = $e;
+        if (my $p = c&ntos) {
+            $p = [split / |,/, $p];
+            $se = $ntos->($se,@$p);
+        }
+        $o = G&A,o=>6=>$J=>$se,$ot;
+        A.return = $se;
         
+        #A.V = 1 if $n == 10;
+        
+        my $l = o.c.rsl || die "no rsl";
+        
+        (A.V || A.Ve) &&
+        1 && saybl "the Dujis: ".$_ for @$l;
+        $l
     };
     if ($n == 0) {
-        $e = $ntos->($_,qw'c zip sc top') for
+        $e =
         n Hows
-        $tes->('Hows again');
+        $tes->('Hows constructed on zip/top'=>''=>{ntos=>'c zip sc top'});
     }
     elsif ($n == 1) {
         $e = $ntos->($_,qw'c zip sc top') for
         n Hows
-        $ot .= " $n";
+        #$ot .= " $n";
         $tes->('Hows again');
+        oJ.output = $e;
     }
     
-    oJ.output = $e;
     sayyl "Done! ";
     
 ElvisLeaves: |
@@ -481,7 +488,7 @@ pi/pud: |
     # how many M inners before 'more' (depth first)
     A.3.C.c.intlim ||= 13;
     # max depth before like nothash
-    c&dl = A.2.C.c.dl || 4;
+    c&dl = A.2.C.c.dl || 2;
     # travel boosts/cons depth
     c&dl += 2 if c&depth < 6 && C.t eq 'sc';
     y.in = 0.21;
