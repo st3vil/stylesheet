@@ -113,7 +113,16 @@ With: | # J's stuff, its Js, osc page, etc.
         J.n = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,n=>8=>$J,\@Me };
         $J
     
-    # partition ground
+    # give an A (with .c.s = C) to the J
+    ground:
+        my $sip = s.c.sip || die "no ip: ".ki$s;
+        my $ch = A.2.c.ch || '';
+        A.c.n.sc.a->{$ch}->{$sip} = $s;
+
+    # partition ground - increment ch and swap out the s
+    # all osc s live on Js&S by channel they're for
+    # channel is the time dive/page
+    # main street (Js&ch aimed) being '', 1, 2...
     sesh: %acgt:J
         my $o = J.sc.S->{J.sc.ch} = G&sJ,$J,'s';
         delete J.sc.s;
@@ -124,7 +133,7 @@ With: | # J's stuff, its Js, osc page, etc.
         # makes osc thing.3 etc hang around
         s.sc.ch = $ch;
     
-    # reset ground
+    # reset ground '', 1, 2...
     rea: %acgt:J
         my $n = J.sc.n || return sayre "no n on J.t";
         my $zi = ++J.c.zi;
@@ -153,6 +162,7 @@ Tunnel: | # mind & world
             # make many pages of u per A.3
             G&sesh,A.2;
         }
+    # hardwire u's u
     u 3:
         my $n = A.c.n = G&A,n=>1=>A.2,@$s;
         n.c.u.c.whole = 'theu';
@@ -161,6 +171,7 @@ Tunnel: | # mind & world
         A.2 = shift @$s;
         A.c.u = G&sJ,A.2,'u';
         A.c.n = G&sJ,A.2,'n';
+    # any ground needs a mind first
     n 2:
         my $u = A.c.u;
         if (!u.c.o) {
@@ -179,7 +190,7 @@ Tunnel: | # mind & world
         A.m = $A;
         for my $l (@$s) {
             my $mo = G&tugA,mo=>1,@$l;
-            A.c.n.sc.a->{A.2.c.ch||''}->{mo.c.sip} = $mo;
+            G&ground,$mo;
         }
         delete A.2.c.o; # orderliness
     n 4:
@@ -218,7 +229,7 @@ Jelly: | # Town making happening
         my $from = A&Jpool || A.2;
         if (!s&J) {
             s&J = G&J,$from,C.t;
-            1 && sayyl "J MAde! C.t,C.y.cv ".wdump 4, [G&pint,A.2.sc.tv=>C.t,C.y.cv , A.2.sc.tv];
+            1 && sayyl "J MAde! ".ki$C;
         }
         else {
             1 && saybl "Had C.t !";
