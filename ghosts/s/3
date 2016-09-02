@@ -37,18 +37,24 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         $tug || die "No ground to A.2.t";
         c&zip = G&A,o=>6,$C,$tug,'zipover';
     # J t/y
+    #c s3 J t/y
     # ordered diff creates O's for awakened C 
     # hold the top and all in or out
     s 3:
         say "s3   A.2.t";
         my $o = c&zip;
+        my $c = o.c.s;
+        my $j = cc&j || die "No o Acj! ".sayre(wdump 3,[ki($c),c.c]);
+        # needs a path system to find O aft C, not o aft C
+        #
         # put through Hoop to make index & self
         A&inz = [map {
             my $O = G&A,O=>1,$_;
-            my $r = _.y.r || die "No r: ".ki$_;
+            my $c = O.c.s;
+            c.y.x.y.O = $O;
+            my $r = c.y.r || die "No yr: ".ki$c;
             Oc&el = rc&el if rc&el;
             Oc&osc = $C;
-            _.y.x.y.O = $O;
             $O
         } @{os&inz}];
         
@@ -67,7 +73,8 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         s&swam = {};
         for my $O (@{A&inz}) {
             my $c = O.c.s;
-            my $X = O.y.x.y.X;
+            my $X = c.y.x.y.X;
+            Os&swim || Xs&swim || next;
             G&chew,Os&swim,'W,Wt,Wcv',$_ for sub {
                 my ($etv,$W,$Wt,$Wcv) = @_;
                 s&swim ->{$W}->{$Wt}->{$Wcv}->{c.t}->{c.y.cv} = $c;
@@ -79,7 +86,7 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
                 delete s&swim ->{$W}->{$Wt}->{$Wcv}->{c.t}->{c.y.cv};
                 s&swam ->{$W}->{$Wt}->{$Wcv}++;
             };
-            O.y.x.y.X = $O;
+            c.y.x.y.X = $O;
         }
         for my $X (@{A&outz}) {
             my $c = X.c.s;
@@ -116,7 +123,7 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
             A&ytWe ->{$Wcv}->{$Wt} = G&Ct,[$Wt=>$Wcv,{W=>$W,e=>$e}];
         };
         sayyl "s5   A.2.t";
-    # J t/y
+    #c s6 J t/y
     s 6:
         # going - figure difference
         my $t = A&top;
@@ -140,6 +147,9 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         delete t.y.in;
         t.sc.z = $z;
         # feed in as C root, zop meaning return
+        #
+        saybl wdump 2, $t;
+        saybl "SCZ: ".wdump 3, t.sc.z;
         c&zop = G&A,o=>6,$C,$t,'zopul';
     #c s73 compress
     s 7:
@@ -173,14 +183,17 @@ Komp: | # K/D line protoClattice
     D 1:
         A.c.s = shift @$s; # us
     K 2:
-        saybl "To compress: ".wdump 3, $C;
+        1 && sayyl "To compress: C.y.cv  C.t   ".ki(C.c)."      ".ki(C.sc||{});
     D 2:
         # reverse it
     
 Hoop: | # osc art, colour in
     u a
     O 1:
-        A.c.s = shift @$s; # us
+        # from = C out of o in osc, yryoyD is origin mo C
+        # themselves yin/ynext etc will point to from
+        A&from = shift @$s;
+        A&s = G&hup,A&from;
     O 2:
         C.y.A = $A;
         return T.not = 1 if A&el eq '9';
@@ -420,7 +433,7 @@ Circle: | # < copy things
         my $cha = A.c.cha ||= {};
         G&Chew,$oo,'x,t,cv',$_ for sub {
             my ($o,$x,$t,$cv) = @_;
-            my $l = o.y.l;
+            my $l = o.y.l; # last o
             
             # o.sc.bz.$t.$cv inward check
             my $sc = 'sc';
@@ -440,7 +453,7 @@ Circle: | # < copy things
                 my $bz = o.sc.bz;
                 G&Chew,$dz,'t,cv',$_ for sub {
                     my ($to,$dt,$dcv) = @_;
-                    $bz.>$dt.>$dcv && return;
+                    $bz.>$dt && $bz.>$dt.>$dcv && return;
                     my $m = 'gone';
                     o.c.>$m.>$sc.>$z.>$dt.>$dcv = $to;
                     o.c.cha.>$m.>$sc.>$z.>$dt.>$dcv = $to;
@@ -454,7 +467,7 @@ Circle: | # < copy things
                 for my $on (keys %$oz) {
                     my $to = $oz.>$on;
                     if (to.y.A eq $A) {
-                        if (oo.C.>to.t.>to.y.cv eq $to) {
+                        if (oo.C.>to.t && oo.C.>to.t.>to.y.cv eq $to) {
                             #sayre "  -- have $on: to.t to.y.cv";
                         }
                         else {
@@ -478,7 +491,7 @@ Circle: | # < copy things
         };
         G&Chew,$jj,'x,t,cv',$_ for sub {
             my ($o,$x,$t,$cv) = @_;
-            $oo.>$x.>$t.>$cv && return;
+            $oo.>$x && $oo.>$x.>$t && $oo.>$x.>$t.>$cv && return;
             say "Goner C.t C.y.cv  --  $x $t $cv ----";
             $cha.>$x.>$_.>$t.>$cv = $o for 'gone';
         };
@@ -496,6 +509,7 @@ Circle: | # < copy things
         my $ty = oo.C;
         my $oty = $cha && cha.C && cha.C.gone;
         my $yt = G&yttv,grep{defined}$ty,$oty;
+        
         # iterate by yt
         my $la;
         my @z;
