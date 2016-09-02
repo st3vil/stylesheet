@@ -192,8 +192,18 @@ if ($re !~ /^\d+$/ && !$ar) {
     $ar = $re;
     $re = 2;
 }
+my $array;$array = sub {
+    my $n = shift;
+    my $y = shift || 1;
+    if (ref $n ne 'ARRAY' || $y > 3) {
+        return ref($n)||$n if ref $n ne 'HASH' || !defined $n->{t};
+        return "$n->{t}";
+    }
+    '[ '.slim((160 / $y) + 10,join(',',map{$array->($_,$y+1)}@$n)).' ]'
+};
 if (!ref $ar || "$ar" !~ /(HASH)/) {
     my $s = "!%:$ar";
+    $s = $array->($ar) if ref $ar eq 'ARRAY';
     $s =~ s/\n/\\n/g;
     return slim(30,$s);
 }
@@ -201,7 +211,7 @@ return ref $ar if ref $ar =~ /^[A-Z][a-z]/;
 my $lim = 150 - (150 * ($d / 3));
 my @keys = sort keys %$ar;
 @keys = ('name') if $ar->{name} && $ar->{bb};
-@keys = ('t','y','c','sc') if $ar->{t} && $ar->{y} && $ar->{c} && $ar->{sc};
+@keys = ('t','y','c','sc') if $ar->{t} && $ar->{y} && ($ar->{c} || $ar->{sc});
 if ($ar->{cv} eq '0.3' && $ar->{aspace} eq '0.6') {
       my $t = {map{$_=>1}qw'aspace in out ov pcv space spc mu i u thi'};
     @keys = grep{!$t->{$_}}@keys;
@@ -221,19 +231,7 @@ join ' ', map {
         $v eq $ar ? "$k:same" :
               "$_=".($re?"{ ".slim($lim,ki($v,$re-1,$d))." }":"$v")
     }
-    : ref $v eq 'ARRAY' ? do {
-          my $x;$x = sub {
-              my $n = shift;
-              my $y = shift || 1;
-              if (ref $n ne 'ARRAY' || $y > 3) {
-                  return ref($n)||$n if ref $n ne 'HASH' || !defined $n->{t};
-                  return "$n->{t}";
-              }
-              '[ '.slim((160 / $y) + 10,join(',',map{$x->($_,$y+1)}@$n)).' ]'
-          };
-          my $p = $x->($v);
-          "$_=$p" #\@x".@$v.(@$v < 9 && slim(19, join", ",@$v))
-    }
+    : ref $v eq 'ARRAY' ? "$k=".$array->($v)
     : "$_=".slim(150,"$v")
 } @keys;
 
