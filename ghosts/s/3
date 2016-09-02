@@ -1,4 +1,4 @@
-Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
+Triangle: | # <>< swim, oscillator, s n, 7, 
     u a
     # sevenatim
     # time passes independently of your being in the room
@@ -9,6 +9,7 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         # C is self for s
         # C is 's many for o
         A.c.s = G&sJ,A.2,'s';
+    #c s2 peel ground moments
     s 2:
         # number of things plugged in to s from J
         for my $J (A.2) {
@@ -43,10 +44,8 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
     s 3:
         say "s3   A.2.t";
         my $o = c&zip;
-        my $c = o.c.s;
-        my $j = cc&j || die "No o Acj! ".sayre(wdump 3,[ki($c),c.c]);
-        # needs a path system to find O aft C, not o aft C
-        #
+        my $c = oc&s;
+        my $j = cc&j || die "No o Acj! ".ki$c;
         # put through Hoop to make index & self
         
         A&inz = [map {
@@ -66,7 +65,7 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         
         G&A,$_,0.5 for @{A&inz};
         
-    #c s4 + W t/y
+    #c s4 humming
     # elsward going index posited awake
     s 4:
         s&swim ||= {};
@@ -96,7 +95,8 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
                 s&swam ->{$W}->{$Wt}->{$Wcv}++;
             };
         }
-    # elsward goS made
+    #c s5 across the wormhole
+    # things have animal desires
     s 5:
         A&ytWe = {};
         G&chew,s&swam,'W,Wt,Wcv',$_ for sub {
@@ -123,14 +123,20 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
             A&ytWe ->{$Wcv}->{$Wt} = G&Ct,[$Wt=>$Wcv,{W=>$W,e=>$e}];
         };
         sayyl "s5   A.2.t";
-    #c s6 J t/y
+    #c s6 goes
     s 6:
-        # going - figure difference
+        # going - figure difference under top with osc'd
         my $t = a&topO;
         $t = t.c.s;
-        say "Top: $t ".ki$t;
-        my $z = [grep { $_ ne $t } map { _.c.s } @{A&inz}];
-        # and W returns over the top
+        my $tv = t.y.tv;
+        # all the O under top
+        my $z = [map{
+            my $x = _.y.x || die "no yx bridge: ".ki$_;
+            my $O = x.y.O || die "No yxyO on ".ki$_;
+            O.c.s
+        }map{values%$_}values%$tv];
+        
+        # and W returns
         G&chew,A&ytWe,\'Wcv,Wt',$_ for sub {
             my ($We,$Wcv,$Wt) = @_;
             # Tunnel e wants to know in general:
@@ -145,17 +151,17 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
             D.sc.z = W.sc.z || die "W no z ".ki$W;
             push @$z, $D;
         };
+        
         $t = G&hup,$t;
         delete t.y.in;
-        t.sc.z = $z;
-        # feed in as C root, zop meaning return
-        #
-        say "Top: $t ".(t.y.in && " yin   ").ki$t;
-        sayyl "mid: $_  _.t _.y.cv  from _.y.A.t  "
-            .join(',',sort keys %{_.y})."   ".ki _.c for @$z;
-        delete t.sc.z if !@$z;
+        t.sc.z = $z if @$z;
+        
+        1 && sayyl "Top: $t ".(t.y.in && " yin   ").ki$t;
+        1 && sayyl "mid: $_  _.t _.y.cv    y:"
+            .join(',',sort keys %{_.y})."   ".ki(_.c)."   ".ki _.sc for @$z;
+        
         c&zop = G&A,o=>6,$C,$t,'zopul';
-    #c s73 compress
+    #c s7 traction/compress
     s 7:
         # pack down goods
         # zops are el and change Cs, 
@@ -168,10 +174,11 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
             $O
         } @{os&zop}];
         
-        G&A,$_,0.8 for @{A&zop};
+        G&A,$_=>8 for @{A&zop};
         
         s&lastA = $A;
-        
+    
+    #c s8 transmission
     s 8:
         # tie together
         A.c.expo.>$_ = 1 for qw'tv i ii';
@@ -942,7 +949,9 @@ Circle: | # < copy things
                 # internal index building, really 7 cos
                 if (rc&el eq '9') {
                     push @out, $l;
-                    delete up.y.tv->{l.t}->{l.y.cv};
+                    my $tvt = up.y.tv.>l.t;
+                    delete $tvt.>l.y.cv;
+                    delete up.y.tv.>l.t if !keys %$tvt;
                     delete up.y.tw->{l.t} if up.y.tw->{l.t} eq $l;
                 }
                 elsif (rc&el ne '8') {
