@@ -35,10 +35,7 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
             tug.ground = G&A,o=>2,$C,$zip,'zip';
         }
         $tug || die "No ground to A.2.t";
-        c&zip = G&A,o=>5,$C,$tug,'zipover';
-        my $c = c&zip;
-        sayre "chaj: ".wdump 3, c.c.cha;
-        
+        c&zip = G&A,o=>6,$C,$tug,'zipover';
         G&A,c&zip=>6;
     #c s3 J t/y
     # ordered diff creates O's for awakened C 
@@ -51,8 +48,10 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         # needs a path system to find O aft C, not o aft C
         #
         # put through Hoop to make index & self
+        
         A&inz = [map {
             my $O = G&A,O=>1,$_;
+            a&topO = $O if os&top eq $_;
             my $c = O.c.s;
             c.y.x.y.O = $O;
             my $r = c.y.r || die "No yr: ".ki$c;
@@ -64,8 +63,6 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         A&outz = [map {
             _.y.x.y.O || die "out not yxyO: ".ki $_;
         } @{os&outz}];
-        
-        A&top = os&top;
         
         G&A,$_,0.5 for @{A&inz};
         
@@ -129,7 +126,9 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
     #c s6 J t/y
     s 6:
         # going - figure difference
-        my $t = A&top;
+        my $t = a&topO;
+        $t = t.c.s;
+        say "Top: $t ".ki$t;
         my $z = [grep { $_ ne $t } map { _.c.s } @{A&inz}];
         # and W returns over the top
         G&chew,A&ytWe,\'Wcv,Wt',$_ for sub {
@@ -151,8 +150,10 @@ Triangle: | # <>< sim, oscillator, s n, 7, peel electro ground moments
         t.sc.z = $z;
         # feed in as C root, zop meaning return
         #
-        saybl wdump 2, $t;
-        saybl "SCZ: ".wdump 3, t.sc.z;
+        say "Top: $t ".(t.y.in && " yin   ").ki$t;
+        sayyl "mid: $_  _.t _.y.cv  from _.y.A.t  "
+            .join(',',sort keys %{_.y})."   ".ki _.c for @$z;
+        delete t.sc.z if !@$z;
         c&zop = G&A,o=>6,$C,$t,'zopul';
     #c s73 compress
     s 7:
@@ -924,8 +925,8 @@ Circle: | # < copy things
                 zop.c.el = r.c.el;
                 for my $nk (sort keys %{ch.K||{}}) {
                     my $gh = ch.K.>$nk;
-                    if (gh.set) {
-                        $zop.>$nk = gh.set;
+                    if (my $s = gh.set) {
+                        $zop.>$nk.>$_ = $s.>$_ for keys %$s;
                     }
                     if (my $drop = gh.drop) {
                         my @gks = sort keys %$drop;
