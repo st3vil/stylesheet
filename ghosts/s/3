@@ -73,6 +73,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         for my $O (@{A&inz}) {
             my $c = O.c.s;
             my $X = c.y.x.y.X;
+            my $x = X.c.s;
             Os&swim || Xs&swim || next;
             G&chew,Os&swim,'W,Wt,Wcv',$_ for sub {
                 my ($etv,$W,$Wt,$Wcv) = @_;
@@ -85,6 +86,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
                 delete s&swim ->{$W}->{$Wt}->{$Wcv}->{c.t}->{c.y.cv};
                 s&swam ->{$W}->{$Wt}->{$Wcv}++;
             };
+            c.y.x || die "O C no yx joinery: ".ki $c;
             c.y.x.y.X = $O;
         }
         for my $X (@{A&outz}) {
@@ -105,14 +107,15 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             
             my $yt = G&yttv,$ctv;
             my $z = [];
-            G&chew,$yt,\'cv,t' for sub {
+            G&chew,$yt,\'cv,t',$_ for sub {
                 my ($c,$cv,$t) = @_;
                 my $O = c.y.A;
                 my $etv = Os&swim ->{$W}->{$Wt}->{$Wcv};
                 # from this c's pushing to Wtcv
-                G&chew,$etv,'t,cv' for sub {
-                    my ($es,$t,$cv) = @_;
+                G&chew,$etv,'t,cv',$_ for sub {
+                    my ($es,$et,$ecv) = @_;
                     # the pushed thing, probably c itself
+                    1 && sayyl "Pushed thing: $t $cv -> $et $ecv".ki $es;
                     push @$z, $es;
                 };
             };
@@ -145,11 +148,17 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             # for now modemless e.c.z in, n.sc.z out
             my $n = 
             n $We
+            !n.la && sayre "No la(st mo) on n: ".join" ",sort keys %$n;
+            ($n) = values %{n.c.tug};
             my $W = n.c.s;
-            say wdump 5, ["GOt n: ",$n];
+            #G.ouJ = $W;
             my $D = G&Ct,[$Wt=>$Wcv,{W=>We.c.W}];
-            D.sc.z = W.sc.z || die "W no z ".ki$W;
+            Ds&z = Ws&z;
+            Ws&z || sayre "W no z ".ki$W;
+            Ds&z ||= We.c.e.c.z;
+            1 && sayyl "Conceived Domeback We.t: ".wdump 5, $D;
             push @$z, $D;
+            #G.ouJ = We.c.e;
         };
         
         $t = G&hup,$t;
@@ -210,10 +219,11 @@ Hoop: | # osc art, colour in
         return T.not = 1 if A&el eq '9';
         # if 9 unposit T and disappear
     O 4:
-        for my $W ('of') {
+        for my $W ('oft','of') {
             if (my $Wt = C.sc.>$W) {
                 my $Wcv = 0.001;
                 a&swim.>$W.>$Wt.>$Wcv.>C.t.>C.y.cv = $C;
+                1 && saybl "A.2.t's C.t C.y.cv swims to $W-$Wt";
             }
         }
     
