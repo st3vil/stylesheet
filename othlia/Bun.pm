@@ -7,9 +7,12 @@ use G;
 our $A = {};
 
 sub sigstackend {
+my ($s,@Me) = @_;
+my $I = $A->{I};
 return if $A->{sc}->{stacktime} >  hitime() - 1;
 $A->{sc}->{stacktime} =  hitime();
-my $s = $@;
+$s && $@ && sayre "stackend with \$@ and arg0";
+$s ||= $@;
 $s ||= do { saygr "\$@ was blank"; $_[0] };
 local $@;
 eval { G::confess( '' ) };
@@ -94,7 +97,8 @@ for (@stack) {
     #
     $le = $_;
 }
-$A && $h || return;
+# TODO call/hook in to the A to land the message
+$A && $h || return sayre "Err: $s";
 my $l = $stack[-1];
 my $less = -@stack;
 $less = -10 if $less < -10;
@@ -115,7 +119,7 @@ my $D = $l->{c}->{w} ? $l : do {
     $D
 };
 $s =~ s/\n//;
-sayre slim(500,"Err: $s");
+sayre "Err: $s";
 if (!$D) {
     return sayre "NoD: $h    ".wdump 1, $A;
 }
@@ -156,10 +160,10 @@ I:
         from: Bun
       sc: 
         acgt: s
-        args: 1
+        args: s
         bab: ~
         code: I
-        dige: 5345f71820a7
+        dige: 0ea8a3d3e357
         eg: Bun
         of: I
       t: sigstackend

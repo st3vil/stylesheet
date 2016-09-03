@@ -32,7 +32,7 @@ Goth: | # agther limbs (Ear) ###################################################
     }
     Rw thilm + $E;
 opot: | # sneak library update
-    my @for = qw'G'; #    KnowTime    Shelf        
+    my @for = qw'Bun'; #    KnowTime    Shelf        
     `rm w/U/$_` for @for;
     my $com = 'othlia';
     my @fo = `find $com -type f`;
@@ -234,10 +234,11 @@ Bun: | # stack exits
         A.I.sigstackend->($s);
         warn "Warndg: $s";
         
-    sigstackend: %args
+    sigstackend: %args:s
         return if A.sc.stacktime >  hitime() - 1;
         A.sc.stacktime =  hitime();
-        my $s = $@;
+        $s && $@ && sayre "stackend with \$@ and arg0";
+        $s ||= $@;
         $s ||= do { saygr "\$@ was blank"; $_[0] };
         local $@;
         eval { G::confess( '' ) };
@@ -322,7 +323,8 @@ Bun: | # stack exits
             #
             $le = $_;
         }
-        $A && $h || return;
+        # TODO call/hook in to the A to land the message
+        $A && $h || return sayre "Err: $s";
         my $l = $stack[-1];
         my $less = -@stack;
         $less = -10 if $less < -10;
@@ -343,7 +345,7 @@ Bun: | # stack exits
             $D
         };
         $s =~ s/\n//;
-        sayre slim(500,"Err: $s");
+        sayre "Err: $s";
         if (!$D) {
             return sayre "NoD: $h    ".wdump 1, $A;
         }
