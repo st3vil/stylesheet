@@ -708,7 +708,7 @@ Circle: | # < copy things
             elsif (exists d.c.s) {
                 my $m = '=';
                 $m = "+" if d.c.m eq 'new';
-                $m = "-" if d.c.m eq 'gone';
+                die "gone had s: ".ki$d if d.c.m eq 'gone';
                 my $s = d.c.s;
                 if (length $s > 24) {
                     $s = slim(19,$s).'h'.slm(6,dig($s));
@@ -716,6 +716,7 @@ Circle: | # < copy things
                 $s =~ s/\n/\\n/sg;
                 $etc = $m.$s;
             }
+            $etc = "-$etc" if d.c.m eq 'gone';
             my @l = "d.t$etc";
             if (my $z = d.sc.z) {
                 push @l,'{';
