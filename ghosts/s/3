@@ -926,26 +926,28 @@ Circle: | # < copy things
                 my $ch = {};
                 $dis->($l,rc&dis,$ch) if rc&dis;
                 
-                my $zop;
-                zop.t = l.t;
-                zop.y.cv = l.y.cv;
-                zop.y.l = $l;
-                zop.y.r = $r;
-                die "zop change already contains el: ".ki$zop if zop.c.el;
-                zop.c.el = r.c.el;
-                for my $nk (sort keys %{ch.K||{}}) {
-                    my $gh = ch.K.>$nk;
-                    if (my $s = gh.set) {
-                        $zop.>$nk.>$_ = $s.>$_ for keys %$s;
+                if (rc&el ne '8') {
+                    my $zop;
+                    zop.t = l.t;
+                    zop.y.cv = l.y.cv;
+                    zop.y.l = $l;
+                    zop.y.r = $r;
+                    die "zop change already contains el: ".ki$zop if zop.c.el;
+                    zop.c.el = r.c.el;
+                    for my $nk (sort keys %{ch.K||{}}) {
+                        my $gh = ch.K.>$nk;
+                        if (my $s = gh.set) {
+                            $zop.>$nk.>$_ = $s.>$_ for keys %$s;
+                        }
+                        if (my $drop = gh.drop) {
+                            my @gks = sort keys %$drop;
+                            my $k = 'd'.substr($nk,0,1);
+                            exists zop.c.>$k && die "zop already c.$k: ".ki$zop;
+                            zop.c.>$k = join ',', @gks; # TODO texty line safety
+                        }
                     }
-                    if (my $drop = gh.drop) {
-                        my @gks = sort keys %$drop;
-                        my $k = "drop$nk";
-                        exists zop.c.>$k && die "zop already c.$k: ".ki$zop;
-                        zop.c.>$k = join ',', @gks; # TODO texty line safety
-                    }
+                    push @zop, $zop;
                 }
-                push @zop, $zop;
                 #
                 l.y.r = $r;
                 
