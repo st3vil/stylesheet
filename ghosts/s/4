@@ -195,27 +195,31 @@ comput: |
     die "BVack:";
     exit;
     
-Zupe: | # run Zome, output pud
-    u urw
-    y.clos = 1;
-    
-    my $so = Rw Tesh ElvisLeaves;
-    
-    m wk=>-pud=>{s=>$so},'%hs:375,ws,wi:30%'
-    
 Zop: |
     u urw
     y.clos = 1;
-    my $j = J.thou;
     
-    n ElvisWorld=>-test
-    n ElvisLeaves=>-test=>{man=>'Zupe'}
-    
+    J.thou++ || do {
+        n ElvisWorlds=>-test
+    };
     J.output || exit;
     
     sayyl "Making pud...";
     m wk=>-pud=>{s=>J.output},'%hs:375,ws,wi:30%'
     
+    
+Zupe: | # run Zome, output pud
+    u urw
+    y.clos = 1;
+    
+    J.thou++ || do {
+        n ElvisWorld=>-test
+        n ElvisLeaves=>-test
+    };
+    J.output || exit;
+    
+    sayyl "Making pud...";
+    m wk=>-pud=>{s=>J.output},'%hs:375,ws,wi:30%'
     
 pi/test: |
     my $c;
@@ -225,10 +229,9 @@ pi/test: |
     n C.t =>W=> $c
 ATest: |
     my $m = [ C.t ];
-    say "Up from J.t is ".ki C.c.tell;
     my $out = Rw Tesh + $m;
     if ($out) {
-        my $el = C.c.tell;
+        my $el = c&tell;
         el.output.>C.t = $out;
     }
     
