@@ -295,8 +295,9 @@ Komp: | # K/D line protoClattice
     D 1:
         A.c.s = shift @$s; # us
     K 2:
-        1 && sayyl "To compress: C.y.cv  C.t   "
-            .ki(C.c)."      ".ki(C.sc||{});
+        my $beam = "C.y.cv  C.t   ".ki(C.c)."      ".ki(C.sc||{});
+        $beam =~ s/\n/\\n/g;
+        1 && sayyl "K: $beam";
     D 2:
         # reverse it
     
@@ -315,9 +316,10 @@ Hoop: | # osc art, colour in
     O 4:
         for my $W ('oft','of') {
             if (my $Wt = C.sc.>$W) {
-                my $Wcv = 0.001;
+                my $Wcv = s&Wv || 0.001;
+                $Wcv /= 10 while $Wcv >= 1;
                 a&swim.>$W.>$Wt.>$Wcv.>C.t.>C.y.cv = $C;
-                1 && saybl "A.2.t's C.t C.y.cv swims to $W-$Wt";
+                1 && saybl "A.2.t's C.t C.y.cv swims to $Wt-$Wcv-$W";
             }
         }
         if (my $J = s&J) {
