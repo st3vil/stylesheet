@@ -131,7 +131,9 @@ TestRun: |
         my $J = A.J;
         J.testsRun++;
         my $ts = J.tests||die'suhpetsts';
-        my $f = C.c.tfile = join '/', 't', J.name, C.t, $test;
+        my $Jc = J.C.c;
+        my $man = Jc.man ? Jc.man : Jc.tell ? Jc.tell.name : J.name;
+        my $f = C.c.tfile = join '/', 't', $man, C.t, $test;
         my $its = $ts->{$f} ||= {};
         its.i++;
         
@@ -140,7 +142,7 @@ TestRun: |
         st.ts = $ts;
         
         my $is = -f C.c.tfile;
-        ok($is, "C.t $test");
+        ok($is, "C.t $test has C.c.tfile");
         st.exp = LoadFile(C.c.tfile) if $is;
         C.c.st = $st;
         
