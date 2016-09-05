@@ -125,8 +125,12 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             if (my $al = A&ytWe ->{$Wcv}->{$Wt}) {
                 die "swim $W $Wt $Wcv already al.c.W";
             }
+            if (!@$z) {
+                sayre "No z to $Wcv $Wt";
+                return;
+            }
             my $e = G&Ct,[Swim=>3,{z=>$z}];
-            A&ytWe ->{$Wcv}->{$Wt} = G&Ct,[$Wt=>$Wcv,{W=>$W,e=>$e}];
+            A&ytWe ->{$Wcv}->{$Wt} = G&Ct,[$Wt=>$Wcv,{W=>$W,e=>$e,nogro=>1}];
         };
         sayyl "s5   A.2.t";
     #c s6 goes
@@ -192,6 +196,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             }
             if (cc&el eq '9') {
                 for my $in (keys %{x.c.wasin||{}}) {
+                    sayre "Was in $in: ".ki $c;
                     if ($in eq 'iiyt') {
                         delete s&iiyt ->{c.y.cv}->{c.t};
                         keys %{s&iiyt ->{c.y.cv}} ||
@@ -454,6 +459,7 @@ Circle: | # < copy things
                 }
                 $pr = $o;
                 $S = S.y.next;
+                undef $S if c&nonext;
             }
         }
         elsif (c&m eq 'z') {
