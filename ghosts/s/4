@@ -344,9 +344,9 @@ Telvis: |
         # c&tac=1;
         
         my $l = o.c.rsl || die "no rsl";
-        
         (A.V || A.Ve || C.c.question) &&
         1 && saybl "the ".slim(10,$ot).": ".$_ for @$l;
+        
         $l
     };
     ($tos,$ntos)
@@ -411,6 +411,7 @@ ElWadill: |
 ElvisWorlds: | # J makes J, gather We in self
     my ($tos,$ntos) = Rw Telvis;
     J.sc.u.c.o = 'oscd';
+    my $use = 'next';
     my $lookii = sub {
         my $s = $ntos->(c&te);
         my $ii = s.sc.ii;
@@ -419,9 +420,19 @@ ElvisWorlds: | # J makes J, gather We in self
             my ($c) = @_; #
             my @m;
             push @m, "c.t c.y.cv has:";
-            for my $e (@{c.sc.z}) {
-                push @m, " - e.t e.y.cv    ".ki(e.c)."      ".ki(e.sc);
-                $m[-1] =~ s/\n/\\n/g;
+            if ($use eq 'z') {
+                for my $e (@{c.sc.z}) {
+                    push @m, " - e.t e.y.cv    ".ki(e.c)."      ".ki(e.sc);
+                    $m[-1] =~ s/\n/\\n/g;
+                }
+            }
+            elsif ($use eq 'next') {
+                my $e = c.y.in;
+                while ($e) {
+                    push @m, " - e.t e.y.cv    ".ki(e.c)."      ".ki(e.sc);
+                    $m[-1] =~ s/\n/\\n/g;
+                    $e = e.y.next;
+                }
             }
             if (my $ov = c.y.over) {
                 push @m, " y over:",
@@ -438,58 +449,79 @@ ElvisWorlds: | # J makes J, gather We in self
     
     if ($n == 0) {
         c&te =
-        n Whysl
-        $tos->('sc lastK c s','Whysl');
+        n Whys
+        $tos->('sc lastK c s','Whys');#
         $tos->({s=>C&ofts},"ofts made");
-        $tos->({s=>$lookii->()},"ii");
-        #$tos->('s1omp/sc lastK c s','two wormholes unite');
+        # TODO? zopul copies dupey z, relinked in/next is deduped
+        $tos->({s=>$lookii->()},"ii via next deduped");
+        $use = 'z';
+        $tos->({s=>$lookii->()},"ii via z contains dupes");
     }
     elsif ($n == 1) {
         c&te =
-        n Whysl
-        $tos->('sc lastK c s','Whysl changed?');
+        n Whys
+        $tos->('sc lastK c s','Whys without Whysl');
         $tos->({s=>C&ofts},"ofts made for changed We");
         $tos->({s=>$lookii->()},"ii changed");
     }
     elsif ($n == 2) {
         c&te =
         n Whys
-        $tos->('sc lastK c s','Whys + Whysl changed');
+        $tos->('sc lastK c s','Whys + Whysl again');
         $tos->({s=>C&ofts},"ofts made for changed We");
         $tos->({s=>$lookii->()},"ii changed");
     }
     elsif ($n == 3) {
         c&te =
         n Whys
-        $tos->('sc lastK c s','two wormholes unite');
+        $tos->('sc lastK c s','Whys not');
+        $tos->({s=>$lookii->()},"ii via next deduped");
+        $use = 'z';
+        $tos->({s=>$lookii->()},"ii via z contains dupes");
     }
     elsif ($n == 4) {
         c&te =
         n Whys
         $tos->('sc lastK c s','two wormholes unite');
+        $tos->({s=>$lookii->()},"ii");
+    }
+    elsif ($n == 5) {
+        c&te =
+        n Whys
+        $tos->('sc lastK c s','two wormholes unite');
+        $tos->({s=>$lookii->()},"ii");
+    }
+    elsif ($n == 6) {
+        c&te =
+        n Whys
+        $tos->('sc lastK c s','two wormholes unite');
+        $tos->({s=>$lookii->()},"ii");
     }
 Whys: |
     J.herefirst = "Was htis";
-    J.bowls++;# == 1 || 3;
+    J.bowls++ != 1 &&
     n Whysl
     
+    J.bowls > 3 &&
+    not: %velo:iffry,oft:i
+        negate
     mix: %acgt:s,v:chume,oft:i
         G&yellow,$C,'tool'
     elect: %acgt:s,v:chume,oft:i
         G&blues
         # e
-    music: %acgt:s,v:sJ,oft:dowse
-        # of sandy
+    my $ms = J.bowls > 2 ? '# the sandy' : '# sandy';
+    n music=>1=>{s=>$ms}=>'%acgt:s,v:sJ,oft:dowse'
     bull: %oft:tools
         motorise time machine
     trail 16: %acgt:s,v:cmoresel,oft:tools,Wv:2
         1c&dol++;
     
 Whysl: |
-    J.bowls++ ||
+    J.bowls++ < 2 ||
     n skinny=>4=>{}
     J.herefirst && die "Was not J.t";
-    my $hum = ',hum:4' if J.bowls == 2;
+    my $hum = ',hum:'.(J.bowls+2) if J.bowls == 2 || J.bowls == 3;
     
     trail: %acgt:s,v:ctar,oft:tools$hum
         G&yam,$A,'tool';
@@ -505,7 +537,7 @@ Whysl: |
         # or
         1c&dali++;
         
-        
+    
         
         
 ElvisWorld: | # J makes, puts elvised We in self
