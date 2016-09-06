@@ -174,7 +174,7 @@ Tunnel: | # mind & world
         G&A,$n,3; # pull on if not cached mindset (various W merged)
     n 1:
         A.2 = shift @$s;
-        A.4 || die "NO A4: A.t ".wdump 1, $A;
+        A.4 || sayre "NO A4: A.t";
         A.c.u = G&sJ,A.2,'u';
         A.c.n = G&sJ,A.2,'n';
     # any ground needs a mind first
@@ -227,24 +227,24 @@ Jelly: | # Town making happening
     W 12:
         ref $s && die;
         c&J = $s;
-        
-        A.c.Jpool = A.4;
+        A&Jup = A.4;
         # dhcp replanty A.c.ip
     J 2:
         # see self already
-        my $J = s&J ||= G&pint,A.2.sc.Jtv=>C.t,C.y.cv;
-        my $v = G&pint,A.2.sc.tv=>C.t,C.y.cv;
-        $v && saybl "J A.2.t -> v.t"; # C with sJ
+        my $J = s&J && return;
+        A&Jup ||= A.2;
+        $J = G&pint,A&Jup,sc=>Jtv=>C.t,C.y.cv;
         $J && sayre "L A.2.t -> J.t";
+        s&J = $J;
+        
+        my $v = G&pint,A&Jup,sc=>tv=>C.t,C.y.cv;
+        $v && saybl "J A.2.t -> v.t"; # C with sJ
         # or force a...
     J 3:
-        my $from = A&Jpool || A.2;
         if (!s&J) {
-            s&J = G&J,$from,C.t;
+            s&J = G&J,A&Jup,C.t;
             1 && sayyl "J ! C.t";
         }
-        # temp
-        A.2.sc.Jtv->{C.t}->{C.y.cv} = s&J;
         A.2 = s&J;
         A.3 = s&J if A.c.Jpool;
     pi 3:
@@ -280,6 +280,8 @@ Jelly: | # Town making happening
     J 7:
         T.nose && return
             sayyl "C.t knows";
+        # temp
+        A&Jup ->{sc}->{Jtv}->{C.t}->{C.y.cv} = s&J;
         sayyl "Oscillate J.t";
         G&A,s=>8=>$J;
         sayyl "Oscillate J.t done!@!";
