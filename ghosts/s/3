@@ -42,12 +42,19 @@ Triangle: | # <>< swim, oscillator, s n, 7,
     # ordered diff creates O's for awakened C 
     # hold the top and all in or out
     s 3:
-        say "s3   A.2.t";
         my $o = c&zip;
         my $c = oc&s;
         my $j = cc&j || die "No o Acj! ".ki$c;
         # put through Hoop to make index & self
         
+        if (!@{ os&zop }) {
+            A.cv = 0.799;
+            T.nocvz = 1;
+            return;
+        }
+        else {
+            say "s3   A.2.t";
+        }
         A&inz = [map {
             my $O = G&A,O=>1,$_;
             a&topO = $O if os&top eq $_;
@@ -234,6 +241,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         G&A,$_=>8 for @{A&zop};
         
         my $topK = A&zop ->[0];
+        $topK || die "No topK. no change?";
         my $c = topK.c.s;
         if (cc&el <= 2) {
             s&lv = [$c]
@@ -484,6 +492,7 @@ Circle: | # < copy things
             my $S = c&s;
             my $pr;
             while ($S) {
+                !defined S.t && die "Dodge o m=C: ".wdump 3, [$S,after=>$pr];
                 my $e = G&hup,$S;
                 my $o = G&Chs,$e,$S;
                 push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
@@ -499,6 +508,7 @@ Circle: | # < copy things
         elsif (c&m eq 'z') {
             # whole [ C... ], not rl
             for my $S (@{ c&s }) {
+                !defined S.t && die "Dodge o m=z: ".wdump 3, [$S];
                 my $e = G&hup,$S;
                 my $o = G&Chs,$e;
                 push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
@@ -508,7 +518,7 @@ Circle: | # < copy things
             # rl same array growing more el=3 updatey dives
             # make A.c.r from el=3
             die "code rl";
-            A.cv = 0.599;
+            T.Z.599 = 1;
         }
         else {
             die "How to read ".ki $C;
@@ -943,6 +953,9 @@ Circle: | # < copy things
             }
         }
         }
+        else {
+            # no changes
+        }
         
         my $tcvis = sub {
             my ($x,$y) = @_;
@@ -1115,6 +1128,9 @@ Circle: | # < copy things
         a&zop = \@zop;
         a&inz = \@in;
         a&outz = \@out;
-        a&top = j.y.in || sayre "No toplevel! ".wdump 4, $j;
+        a&top = j.y.in || do {
+            sayre "No toplevel! ".wdump 4, [j.sc.oo.C];
+            j.sc.root
+        };
         
 
