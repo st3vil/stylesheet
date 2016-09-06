@@ -102,13 +102,12 @@ Triangle: | # <>< swim, oscillator, s n, 7,
     s 5:
         A&ytWe = {};
         # Wtv swam awakes Wtv in swim to a tv of froms
-        # froms yAs swim is ^ and then tv of sent/elvising
+        # froms yA.sc.swim ^ and then tv of sent/elvising
         # so puts tv in Wtv
         G&chew,s&swam,'W,Wt,Wcv',$_ for sub {
             my ($ctv,$W,$Wt,$Wcv) = @_;
             $ctv = s&swim ->{$W}->{$Wt}->{$Wcv};
             # froms in order so it clobbers
-            # TODO o panics about clobbering
             my $yt = G&yttv,$ctv;
             my $z = [];
             G&chew,$yt,\'cv,t',$_ for sub {
@@ -126,11 +125,14 @@ Triangle: | # <>< swim, oscillator, s n, 7,
                 die "swim $W $Wt $Wcv already al.c.W";
             }
             if (!@$z) {
-                sayre "No z to $Wcv $Wt";
+                sayre "We thing $Wcv $Wt has no z";
+                delete s&ytWe ->{$Wcv}->{$Wt};
                 return;
             }
             my $e = G&Ct,[Swim=>3,{z=>$z}];
-            A&ytWe ->{$Wcv}->{$Wt} = G&Ct,[$Wt=>$Wcv,{W=>$W,e=>$e,nogro=>1}];
+            s&ytWe ->{$Wcv}->{$Wt} =
+            A&ytWe ->{$Wcv}->{$Wt} =
+                G&Ct,[$Wt=>$Wcv,{W=>$W,e=>$e,nogro=>1}];
         };
         sayyl "s5   A.2.t";
     #c s6 goes
@@ -151,20 +153,27 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         # make dupes here > through from Js (TODO) later yt of positor > earlier
         
         # and W returns
-        
-        G&chew,A&ytWe,\'Wcv,Wt',$_ for sub {
+        # mix in unswam ytWe without doing
+        G&chew,s&ytWe,\'Wcv,Wt',$_ for sub {
             my ($We,$Wcv,$Wt) = @_;
-            # Tunnel e wants to know in general:
-            #   We may provide forms of ground to return results
-            #   e z may o and send diffs depending on connection
-            # for now modemless e.c.z in, n.sc.z out
-            my ($mo) = values %{_.c.tug} for
-            n $We
-            my $W = mo.c.s;
-            my $D = G&Ct,[$Wt=>$Wcv,{W=>We.c.W}];
-            Ds&z = Ws&z;
-            Ws&z || sayre "W no z ".ki$W;
-            Ds&z ||= We.c.e.c.z;
+            my $D = We.c.D;
+            if ($D) {
+                # no swimming
+            }
+            else {
+                # Tunnel e wants to know in general:
+                #   We may provide forms of ground to return results
+                #   e z may o and send diffs depending on connection
+                # for now modemless e.c.z in, n.sc.z out
+                my ($mo) = values %{_.c.tug} for
+                n $We
+                my $W = mo.c.s;
+                $D = G&Ct,[$Wt=>$Wcv,{W=>We.c.W}];
+                Ds&z = Ws&z;
+                #Ws&z || sayre "W no z ".ki$W;
+                Ds&z ||= We.c.e.c.z;
+                We.c.D = $D;
+            }
             push @$z, $D;
         };
         
@@ -212,7 +221,8 @@ Triangle: | # <>< swim, oscillator, s n, 7,
                 my $ux = up.y.x || die "Up from c.t no x: ".ki$up;
                 my $uK = ux.c.K || die "upyx no K: ".ki$ux;
                 my $U = uK.c.s || die "No C in upyxcK: ".ki$uK;
-                ref U.sc.z eq 'ARRAY' || die "upKCsz not array: ".ki$U;
+                ref U.sc.z eq 'ARRAY' || die "upKCsz not array: ".ki($U)
+                    .wdump 2, l.y.o;
                 push @{U.sc.z}, $c;
             }
             $K
@@ -237,7 +247,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         # ii is tw of We things
         my $ii;
         if (keys %{ s&iiyt ||{} }) {
-            G&chew,s&iiyt,'\cv,t',$_ for sub {
+            G&chew,s&iiyt,\'cv,t',$_ for sub {
                 my ($c,$cv,$t) = @_;
                 if (my $o = $ii->{$t}) {
                     # join We things above next/prev
@@ -907,7 +917,7 @@ Circle: | # < copy things
         
         # we may have root elected by .c.root from the many
         my @root = grep { _.c.o && _.c.o.c.s.c.root } @r;
-        @root > 1 && die "More than 1 root";
+        @root > 1 && die "More than 1 root: ".wdump 3, \@root;
         for (@root) {
             if (my $root = js&root) {
                 _.t eq root.t && _.y.cv eq root.y.cv
