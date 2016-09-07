@@ -36,7 +36,8 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             tug.ground = G&A,o=>2,$C,$zip,'zip';
         }
         $tug || die "No ground to A.2.t";
-        c&zip = G&A,o=>6,$C,$tug,'zipover';
+        my $t = G&Ct,['zipover'=>''=>{shade=>1}];
+        c&zip = G&A,o=>6,$C,$tug,$t;
         G&A,c&zip=>6;
     #c s3 J t/y
     # ordered diff creates O's for awakened C 
@@ -369,14 +370,10 @@ Hoop: | # osc art, colour in
         
         # C.c should be shaded down to s, injext o
         # should wake up if they change tho, for hidden clocks
-        if (c&J) {
-            if (c&W) {
-                # W implies J in mo:W:12
-                delete c&J if c&W eq c&J;
-                # universal J means done deal
-                s&W = delete c&W if s&J;
-                # they can look it up
-                delete s&J;
+        if (s&J) {
+            if (s&W) {
+                # W implies J in mo:W:12, they can look it up
+                delete s&J if s&W eq s&J;
             }
         }
         
@@ -588,6 +585,9 @@ Circle: | # < copy things
             
             $o = $o[0];
             my $e = o.c.s;
+            
+            map { $_ eq 's' || delete e.c.>$_ } keys %{e.c}
+                if c&shade;
             
             $oo.>$x.>$t.>$cv = $o;
             
@@ -968,7 +968,7 @@ Circle: | # < copy things
         my @r = @{A&r};
         
         # we may have root elected by .c.root from the many
-        my @root = grep { _.c.o && _.c.o.c.s.c.root } @r;
+        my @root = grep { _.c.o && _.c.o.y.D && _.c.o.y.D.c.root } @r;
         @root > 1 && die "More than 1 root: ".wdump 3, \@root;
         for (@root) {
             if (my $root = js&root) {
@@ -979,21 +979,21 @@ Circle: | # < copy things
         }
         # attach things in general to ...
         if (@r) {
-        if (my $root = js&root) {
-            if (!@root) {
-                # make up r of el=3 to z=etc, put things in
-                my $r = {};
-                r.t = root.t;
-                r.y.cv = root.y.cv;
-                r.c.el = '3';
-                r.c.z = [@r];
-                @r = $r;
+            if (my $root = js&root) {
+                if (!@root) {
+                    # make up r of el=3 to z=etc, put things in
+                    my $r = {};
+                    r.t = root.t;
+                    r.y.cv = root.y.cv;
+                    r.c.el = '3';
+                    r.c.z = [@r];
+                    @r = $r;
+                }
+                else {
+                    push @{root.c.z||=[]}, grep {$_ ne $root} @r;
+                    @r = $root;
+                }
             }
-            else {
-                push @{root.c.z||=[]}, grep {$_ ne $root} @r;
-                @r = $root;
-            }
-        }
         }
         else {
             # no changes
