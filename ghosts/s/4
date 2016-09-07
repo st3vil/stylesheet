@@ -318,13 +318,16 @@ Telvis: |
         my $se = Q.c.te;
         if (my $p = c&ntos) {
             my $sp = sub {[split / |,/, shift ]};
-            my $output = $sp->($1) if $p =~ s/^(.*)\?( .+)?$/$1$2/;
+            my $output = $sp->($1) if $p =~ s/^(.*)\?(\S+)?( .+)?$/$1$3/;
+            my $nav = $2;
             $p = $sp->($p);
             $se = $ntos->($se);
             
             if ($output || C.c.see) {
                 $output ||= $sp->(C.c.see) if C.c.see && C.c.see ne '1';
-                oJ.output = $output ? G&pint,$se,@$output : $se;
+                $output = $output ? G&pint,$se,@$output : $se;
+                $output = G&pint,$output,split'-',$nav if $nav;
+                oJ.output = $output;
                 C.c.return ||= oJ.output;
                 return [] if C.c.see;
             }
@@ -358,6 +361,8 @@ EpiWaveletting: | # J makes J, gather We in self
         c&te =
         n Waveofit
         $tos->('sc lastK c s','Waveofit');
+        $tos->('c zip sc top?y-tw-dough','Waveofit zip top');
+        $tos->('c zop sc top','Waveofit zop top');
         # TODO? zopul copies dupey z, relinked in/next is deduped
     }
     elsif ($n == 2) {
@@ -372,12 +377,21 @@ EpiWaveletting: | # J makes J, gather We in self
     }
 Waveofit: |
     my $ou = [3,6,44,2,42,3,7,12];
-    n ylinogj=>-waveofits=>$ou
+    n ylinogj=>-waveofits=>{s=>$ou}
     
     
-    n dough=>3=>{pi=>-waveofit,s=>"Says so"}
+    n dough=>3=>{pi=>'waveofit',s=>"Says so"}
 pi/waveofits: |
-    ref $
+    pre 1: %hs:378,fs:19
+        ~@@@~
+    my $div = 6 / @$s;
+    my $i;
+    for (@$s) {
+        n doing=>(2+$div*$i++)=>{s=>$_},'%hs:394,bo:3px solid 4873'.($_ > 20 && ',fs:'.($_))
+    }
+    
+    pos 9: %hs:376,fs:17
+        ~@@@~
 pi/waveofit: |
     pre 1: %hs:878,fs:19
         ~~~~~~
