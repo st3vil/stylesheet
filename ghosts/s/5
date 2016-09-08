@@ -79,13 +79,14 @@ Komp: | # K/D line protoClattice
     K 2:
         my $beam = "C.y.cv  C.t   ".ki(C.c)."      ".ki(C.sc||{});
         $beam =~ s/\n/\\n/g;
-        1 && sayyl "K: $beam";
+        sayyl "K: $beam";
+        
         if (c&Jo) {
             s&z && die "Jo with z: ".ki$C;
             my $l = C.y.l || die "No KC yl: ".ki$C;
             my $J = ls&J || die "No sJ for Jo K: ".ki$l;
             if (!ref $J) {
-                # Hoop probably mutes sJ, go back before zip for it
+                # Hoop probably mutes sJ, go back before o zip for it
                 my $r = l.y.r || die "KCyl no yr: ".ki$l;
                 my $o = r.c.o || die "KCylyr no co: ".ki$r;
                 my $D = o.y.D || die "KCylyrco no yD: ".ki$o;
@@ -98,29 +99,23 @@ Komp: | # K/D line protoClattice
             my $x = l.y.x || die "KCyl no yx: ".ki$l;
             my $lo = xc&Jo;
             if ($lo ne c&Jo) {
-                my $s = Js&s;
-                my $lv = ss&lv;
+                my $s = Js&s || die "No s on J for K Jo lv: ".ki$J;
+                my $lv = ss&lv || die "No lv on J s for K Jo lv: ".ki$s;
                 # imp++ means lv restarts
                 # wil++ means lv grows
-                my $wil = sc&imp eq xc&Joimp && $lv eq xc&Jolv ? xc&Jowil : 1;
-                # version from 1 -> array slice from 0
-                $wil--;
-                my $begin = $wil;
-                my @new;
-                while (exists $lv->[$wil]) {
-                    push @new, $lv->[$wil];
-                    $wil++;
-                }
+                my $wil = xc&Jowil || 1;
+                my $conti = sc&imp eq xc&Joimp && $lv eq xc&Jolv;
+                $wil = 1 if !$conti;
+                
+                my $lets = !$conti || sc&wil > $wil;
+                $wil += 1 if $conti; # slice after already
+                my @new = @{$lv}[($wil-1) .. (sc&wil-1)] if $lets;
+                
+                xc&Jolv = $lv;
                 xc&Joimp = sc&imp;
-                xc&Jowil = $wil;
-                1 && saybl "News sc&imp / $begin -> $wil: ".wdump 4, \@new;
-                # lines
-                if (my $s = Js&s) {
-                    if (my $lv = ss&lv) {
-                        #s&z = $lv;
-                        s&zeal = "Would be ".@$lv;
-                    }
-                }
+                xc&Jowil = sc&wil;
+                s&z = \@new if @new;
+                delete c&Jo;
             }
             else {
                 1 && saygr "Same Jo: C.t C.y.cv @ $lo";
