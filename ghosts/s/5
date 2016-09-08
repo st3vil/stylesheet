@@ -34,12 +34,6 @@ Hoop: | # osc art, colour in
                     $D = D.y.over
                 }
             }
-            unless (s&W) {
-                # lines
-                if (my $s = Js&s) {
-                    s&z = ss&lv if ss&lv;
-                }
-            }
         }
     
     # shrinkwarp
@@ -85,10 +79,53 @@ Komp: | # K/D line protoClattice
     K 2:
         my $beam = "C.y.cv  C.t   ".ki(C.c)."      ".ki(C.sc||{});
         $beam =~ s/\n/\\n/g;
-        sayyl "K: $beam";
-        
-        # ^ some sc upgrade to c
-        
+        1 && sayyl "K: $beam";
+        if (c&Jo) {
+            s&z && die "Jo with z: ".ki$C;
+            my $l = C.y.l || die "No KC yl: ".ki$C;
+            my $J = ls&J || die "No sJ for Jo K: ".ki$l;
+            if (!ref $J) {
+                # Hoop probably mutes sJ, go back before zip for it
+                my $r = l.y.r || die "KCyl no yr: ".ki$l;
+                my $o = r.c.o || die "KCylyr no co: ".ki$r;
+                my $D = o.y.D || die "KCylyrco no yD: ".ki$o;
+                # ^ ours from zip, Hoop munted 
+                my $Dr = D.y.r || die "KCylyrcoyD no yr: ".ki$D;
+                my $Do = Dr.c.o || die "KCylyrcoyDyr no co: ".ki$Dr;
+                my $CJ = Do.c.s || die "KCylyrcoyDyrco no cs: ".ki$Do;
+                $J = CJ.sc.J || die "KCylyrcoyDyrco no sJ: ".ki$CJ;
+            }
+            my $x = l.y.x || die "KCyl no yx: ".ki$l;
+            my $lo = xc&Jo;
+            if ($lo ne c&Jo) {
+                my $s = Js&s;
+                my $lv = ss&lv;
+                # imp++ means lv restarts
+                # wil++ means lv grows
+                my $wil = sc&imp eq xc&Joimp && $lv eq xc&Jolv ? xc&Jowil : 1;
+                # version from 1 -> array slice from 0
+                $wil--;
+                my $begin = $wil;
+                my @new;
+                while (exists $lv->[$wil]) {
+                    push @new, $lv->[$wil];
+                    $wil++;
+                }
+                xc&Joimp = sc&imp;
+                xc&Jowil = $wil;
+                1 && saybl "News sc&imp / $begin -> $wil: ".wdump 4, \@new;
+                # lines
+                if (my $s = Js&s) {
+                    if (my $lv = ss&lv) {
+                        #s&z = $lv;
+                        s&zeal = "Would be ".@$lv;
+                    }
+                }
+            }
+            else {
+                1 && saygr "Same Jo: C.t C.y.cv @ $lo";
+            }
+        }
     D 2:
         # reverse it
     
@@ -99,6 +136,7 @@ WhereAmI: | #
 Tan: | # encodings
 
     u O
+    0 &&
     of: %of:O
         #n $s=>''=>{W=>'of'}
         say "OFing ! C.t C.y.cv ".ki C.sc;

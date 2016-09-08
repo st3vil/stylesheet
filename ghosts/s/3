@@ -243,12 +243,18 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         my $topK = A&zop ->[0];
         $topK || die "No topK. no change?";
         my $c = topK.c.s;
-        if (cc&el <= 2) {
-            s&lv = [$c]
+        
+        # lv is compression log
+        if (cc&el < 3) {
+            C.c.imp++;
+            C.c.wil = 1;
+            s&lv = [$c];
         }
         else {
-            push @{s&lv}, $c
+            C.c.wil++;
+            push @{s&lv}, $c;
         }
+        
         my $l = c.y.l || die "TopKC no yl: ".ki$c;
         s&tv = l.y.tv || die "TopKCyl no ytv: ".ki$l;
         
@@ -302,11 +308,14 @@ Triangle: | # <>< swim, oscillator, s n, 7,
                 next
             }
         }
-        J.c.o = "Steved ".++C.c.imp;
+        # + page of itself
+        # + layering of stable/sprawly lv
+        #     c/sc in a larger sense, dna/rna of this temple of truth
+        #   awaits o branching or so...
+        J.c.o = "Steved ".C.c.imp." ".C.c.wil;
         # send out
     
     
-
 Circle: | # < copy things
     u a
     # listen, insward, moral law, has to give us power
@@ -436,6 +445,7 @@ Circle: | # < copy things
                 my $e = G&hup,$v;
                 my $o = G&Chs,$e;
                 o.y.k = $k;
+                o.y.D = $v;
                 push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
             }
         }
@@ -447,6 +457,7 @@ Circle: | # < copy things
                 !defined S.t && die "Dodge o m=C: ".wdump 3, [$S,after=>$pr];
                 my $e = G&hup,$S;
                 my $o = G&Chs,$e,$S;
+                o.y.D = $S;
                 push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
                 if ($pr) {
                     o.sc.oz.yprev = $pr;
@@ -463,6 +474,7 @@ Circle: | # < copy things
                 !defined S.t && die "Dodge o m=z: ".wdump 3, [$S];
                 my $e = G&hup,$S;
                 my $o = G&Chs,$e;
+                o.y.D = $S;
                 push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
             }
         }
@@ -507,6 +519,18 @@ Circle: | # < copy things
             my $l = $jj.>$x.>$t.>$cv;
             o.y.l = $l if $l;
             # todo weaken l.y.l
+            
+            if (my $J = c&shade && ref es&J && !es&W && es&J) {
+                die "J also has z: ".ki$e if e.sc.z;
+                if (my $lv = J.sc.s && J.sc.s.sc.lv) {
+                    # TODO look at specific page of all the s,
+                    # quick check of lv layery linkage, a shallow z
+                    # ideally lv0 stable and lv1+ replaces often
+                    e.c.Jo = J.c.o;
+                    sayre "From C.t's e.t e.y.cv can see J.t J.c.o with lv: ".@$lv;
+                    
+                }
+            }
             
             G&Chang,$l,$o;
             
