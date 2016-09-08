@@ -125,10 +125,20 @@ With: | # J's stuff, its Js, osc page, etc.
     
     # give an A (with .c.s = C) to the J
     ground:
+        A.c.n ||= G&sJ,A.2,'n';
         my $sip = s.c.sip || die "no ip: ".ki$s;
         my $ch = A.2.c.ch || '';
         A.c.n.sc.a->{$ch}->{$sip} = $s;
 
+    # get ground zip, C is s with/receiving s&ch from the J
+    grinds:
+        my $n = A.c.n ||= G&sJ,A.2,'n';
+        $C = $s if $s; # pass 
+        s&ch = A.2.sc.ch if !defined s&ch;
+        s&ch = '' if !defined s&ch;
+        my $zip = n.sc.a->{s&ch};
+        defined $zip && keys %$zip && $zip
+    
     # partition ground - increment ch and swap out the s
     # all osc s live on Js&S by channel they're for
     # channel is the time dive/page
@@ -182,7 +192,6 @@ Tunnel: | # mind & world
         A.2 = shift @$s;
         A.4 || sayre "NO A4: A.t";
         A.c.u = G&sJ,A.2,'u';
-        A.c.n = G&sJ,A.2,'n';
     # any ground needs a mind first
     n 2:
         my $u = A.c.u;
@@ -193,9 +202,10 @@ Tunnel: | # mind & world
             saybl "resolves mind: A.2.t";
             G&A,s=>8=>$u;
             # merge its i/ii thing ideas into our 2
-            A.V = 1;
-            sayyl "Merge its ideas?";
-            G&A,o=>8=>A.2,$u,$_ for 'i','ii';
+            1 && sayyl "Merge its ideas?";
+            G.ouJ = ["u For A.2.t: ", u.sc.ii, A.2.ii];
+            #A.2.>$_ = u.sc.>$_ for 'i', 'ii';
+            #G&A,o=>8=>A.2,$u,$_ for 'i','ii';
         }
         #A.i = A.2.sc.i;
         #A.ii = A.2.sc.ii;
