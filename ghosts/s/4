@@ -86,12 +86,14 @@ MakePi: | # make code,
             my $ts = $c->{$cv};
             for my $t (sort keys %$ts) {
                 my $z = $ts->{$t};
+                
                 Rw CoBabbler $C:z;
                 my $y = eval z.c.s;
                 die "Throcompile $of z.y.cv: z.t:"
                     .ind('  ',$@)."\n\n z.c.s\n" if $@;
                 die "Not code: z.t z.y.cv: $@\n".ki $z if ref $y ne 'CODE' && !z.sc.subpeel;
                 z.c.code = $y;
+                
                 if ($la eq $o) {
                     la.y.in = $z;
                 }
@@ -137,6 +139,91 @@ CoBabbler: | # bake code
         {\$G->\{h\}->($2,"$1"$3}sgm;
     
     C.c.s
+of: |
+    # of
+    1 && sayyl "of C.t C.y.cv: _.t _.y.cv  _.c.code" for e&_z;
+    for my $z ( e&_z ) {
+        if (!z.c.code) {
+            # shade the edge, args etc.
+            Rw CoArgulate $C:z;
+            # translate into perl
+            Rw CoBabbler $C:z;
+            # track etc
+            s&dige = slm 12, dig zc&s;
+            
+            my $y = eval z.c.s;
+            die "Nocompile of=C.t z.y.cv: z.t:"
+                .ind('  ',$@)."\n\n z.c.s\n" if $@;
+            die "Not code: z.t z.y.cv: $@\n".wdump 2, $z if ref $y ne 'CODE' && !z.sc.subpeel;
+            z.c.code = $y;
+        }
+    }
+
+    C.sc.hi = 'lo';
+    T.nose = 1;
+    
+CoArgulate: |
+    s&of || die "No of on ".ki$C;
+    
+    s&args ||= join',','A,C,G,T',grep{$_ ne '1'}s&acgt if s&acgt;
+    s&args =~ s/[\+ ]/,/sgm;
+    
+    s&code && sayre "CoArgu C.t C.y.cv has scode: s&code:\n  ".ki$C;
+    
+    my $ara = [];
+            
+    exists s&t &&
+        Rw conot $C;
+    
+    # the nk/gk it wants to wake up
+    if (my $v = s&v) {
+        my ($nk,$gk,$more) = $v =~ /^([tycs])(\S*)(?: (.+))?$/;
+        $nk = 'sc' if $nk eq 's';
+        $nk || die"strv:$v";
+        s&nk = $nk;
+        s&gk = $gk;
+        die "More v: $more: ".ki$C if $more;
+    }
+    
+    if (my $nk = s&nk) {
+        push @$ara, "my \$".$nk." = C\.".$nk.";";
+        if (my $gk = s&gk) {
+            # dont remy v=cs in acgts
+            my $my = "my " unless s&args =~ /\b$gk\b/;
+            warn "Redefined the $gk ($nk\.$gk): ".ki$C if $gk =~ /^[ACGT]$/;
+            push @$ara, "$my\$".$gk." = C\.".$nk."\.".$gk.";";
+        }
+    }
+    
+    C.sc.>$_ && die "Given $_: ".ki $C for qw'rg cg';
+    
+    s&args ||= 1;
+    if (my $args = s&args) {
+        die "wonky C.t   of ".ki $C if C.t =~ /\W/;
+        my $gl = "";
+        my $und = "_";
+        # it becomes something
+        my ($sf,$sa) = ('(',')->($A,$C,$G,$T)') if s&subpeel;
+        my $sub = "sub {\n";
+        if ($args ne '1') {
+            my @args;
+            my $und = '_';
+            if ($args =~ s/^(A,C,G,T,)(?!s$)//) {
+                push @args, 'my ($A,$C,$G,$T,@M)=@_;';
+                $und = 'M';
+            }
+            push @args, "my (".join(',',map{'$'.$_}
+                split',',$args).',@Me) = @'.$und.";";
+            unshift @$ara, @args;
+        }
+        c&s = $sf
+            ."sub {\n"
+            .join("",map{"$_\n"} @$ara)
+            .c&s
+            ."}"
+            .$sa
+            .";";
+    }
 Zome: | # return a new J
     my ($i,$ii) = Rw MakePi;
     
@@ -348,6 +435,7 @@ Telvis: |
         $oc.>$_ = $toc.>$_ for keys %$toc;
         my $ot = c&ot || Q.c.ot || c&test.'-'.C&l;
         
+        
         my $AV = delete A.V;
         my $o = G&A,o=>6=>$J=>$se,[$ot,'',$oc];
         A.V = $AV if $AV;
@@ -355,6 +443,7 @@ Telvis: |
         # c&tac=1;
         
         my $l = o.c.rsl || die "no rsl";
+        $l = [grep { c&grepl ->($_) } @$l] if c&grepl;
         (A.V || A.Ve || C.c.question) &&
         1 && saybl "the ".slim(10,$ot).": ".$_ for @$l;
         
@@ -368,10 +457,14 @@ ElvisThinks: | # J makes up mind, does stuff with it
     if ($n == 0) {
         c&te =
         n ElvisThinker
-        #$tos->('sc lastK c s','Waveofit');
-        my $e = 
-        $tos->('sc lastA 2 sc u sc s c zip c rsl?!','Waveofit zip top');
-        1 && say wdump 2, $e;
+        $tos->('sc lastK c s','J itself');
+        $tos->('sc lastA 2 sc u sc s sc ii eloquence,nonext','J u s ii eloquence');
+        $tos->({ntos=>'sc lastA 2 sc u sc s sc ii mo',
+            nonext=>1,grepl=>sub{ $_[0] =~ /^\s+(fis|fscolour) / }
+        },'J u s ii mo seems to be');
+        
+        # new stuff mixed into top which turns out to be D
+        # u needs root... open J for it, split J6
         
         
         #$tos->('c zop sc top','Waveofit zop top');
@@ -411,17 +504,10 @@ ElvisThinking: |
 ElvisThought: |
     # for mo, or Hoop & bend towards some over time...
     dosoooooooooooooooooooo: %of:eloquence
-        I
+        3 + 4 / 33 + $s
     fis 16: %act,acgt:s,v:sfis,of:mo
         C.y.cv ||= 0.24 + 0.06 * 
             (length(c&s) / length(join'',split/\S+/,c&s));
-of: |
-    # of
-    1 && sayyl "of C.t C.y.cv: _.t _.y.cv" for e&_z;
-
-    C.sc.hi = 'lo';
-    T.nose = 1;
-    
 EpiWaveletting: | # J makes pi, join lv
     my ($tos,$ntos) = Rw Telvis;
     

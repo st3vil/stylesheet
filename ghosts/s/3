@@ -32,17 +32,14 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         if (my $W = c&base) {
             my $s = G&t,$W || die "no $W";
             sayyl "Base ! ".ki $s;
-            # should see settling clues on s
-            my $z = ss&z; # TODO not
+            my $z = ss&z; # TODO not and see settling clues
             tug.base = G&A,o=>2,$C,$z,'base';
-            say "Got base A.2.t: ".ki $tug;
-            # should do as whole if no ground
         }
         if ($zip) {
-            say "Got still A.2.t: ".ki $zip;
             tug.ground = G&A,o=>2,$C,$zip,'zip';
         }
         $tug || die "No ground to A.2.t";
+        # shade .c down to s (whole doesn't)
         my $t = G&Ct,['zipover'=>''=>{shade=>1}];
         c&zip = G&A,o=>6,$C,$tug,$t;
         G&A,c&zip=>6;
@@ -343,12 +340,12 @@ Circle: | # < copy things
         my ($i,$f,$t) = @$s;
         i.y eq $i || die "i must A";
         
-        defined $f || die "from undef o $t";
-        
         ($f,my $fis) = ($$f,1) if ref $f eq 'REF';
         $t = G&Ct,$t if ref $t eq 'ARRAY';
         %$C = %$t if ref $t eq 'HASH';
         C.t = $t if $t && !ref $t;
+        
+        defined $f || die "from undef o ".ki$C;
         
         
         c&i = $i;
