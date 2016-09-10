@@ -146,6 +146,9 @@ of: |
     # of
     #1 && sayyl "of C.t C.y.cv: _.t _.y.cv  _.c.code" for e&_z;
     for my $z ( e&_z ) {
+        if (!zc&s) {
+            sayre "z.t z.y.cv has no s: ".ki $z;
+        }
         if (!z.c.code) {
             # shade the edge, args etc.
             Rw CoArgulate $C:z;
@@ -226,6 +229,51 @@ CoArgulate: |
             ."}"
             .$sa
             .";";
+    }
+conot: | # expand sc.t->ip, arbitrary throat clause
+    my $ip = C.sc.ip = {};
+    for my $k (split ' ', C.sc.t) {
+        my $is;
+        $k =~ s/^(\w+):\^$/"$1:".C.sc.Ct/e;
+        $is = $2 if $k =~ s/^(\w+):(.+)$/$1/;
+        $is = C.sc.>C$k if exists C.sc.>C$k;
+        my $p;
+        my ($n,$g,$m) = $k =~ /^(t|y|c|sc)?(.+?)?(\d+)?$/;
+        $n ||= 'sc';
+        # C.$nk.$gk.$tk
+        p.nk = $n;
+        p.tk = $2 if $n eq 'y' && $g =~ s/^([A-Z])(\w+)$/$1/;
+        p.gk = $g if defined $g;
+        die "merge in? ".ki$is if ref $is;
+        # peels inside peels of sc.t
+        if ($is =~ /^(\w+):(.+)$/) {
+            $is =~ s/(?<!\\)\+/,/g;
+            my $i = G&peel,$is;
+            for (qw'in nin') {
+                my $s = $i.>$_ || next;
+                $s =~ s/\;/,/g;
+                $i.>$_ = G&peel,$s;
+            }
+            G&xo,$p,$i;
+        }
+        elsif (defined $is) {
+            my $i;
+            my $neg = $is =~ s/^\!//;
+            $i = 'gt' if $is =~ s/^>//;
+            $i = 'lt' if $is =~ s/^<//;
+            $i.= 'eq' if $is =~ s/^=//;
+            $i = 're' if $is =~ s/^~//;
+            $i ||= 'is';
+            if ($neg && $i eq 'is') {
+                undef $neg;
+                $i = 'not';
+            }
+            p.neg = 1 if $neg;
+            $p.>$i = $is;
+        }
+        delete p.gk if !p.gk;
+        delete p.tk if !p.tk;
+        $ip.>$k = $p;
     }
 Zome: | # return a new J
     my ($i,$ii) = Rw MakePi;
@@ -538,7 +586,7 @@ Telvis: |
 ElvisDialects: | # J u Dialect, deeply rooted
     my $t = Rw Telvis;
     A.uyes = 1;
-    A.V = 1;
+    #A.V = 1;
     if ($n == 0) {
         c&te =
         n ElvisDialecto
@@ -565,7 +613,7 @@ ElvisDialecto: |
     n \'of:not'
     1 && sayyl "fofo:";
     semio:
-        # tic tic
+        # tic tic;sdigjshgisdf
     sedio:
         # tic tic
     n alact
@@ -594,8 +642,12 @@ alof: | # auto of, i or whatever was .c.of'd
         $def = Y.sc.vse.of if Y.sc.vse && Y.sc.vse.of;
         s&of ||= $def;
 al4noJ: |
+    al4nonine 42: %acgt:s,act,t:ycv=0.9,of:mo
+        1 && sayyl "Skipping 9: ".ki$C;
+        T.Z.43 = $A;
+        
     al4noJ 42: %acgt:s,act,v:sJ,of:mo
-        1 && saybl "Sz 43: ".wdump$C;
+        1 && sayyl "Skipping J: ".ki$C;
         # skip over codings
         T.Z.43 = $A;
         # awkwardly switch to indifferent mind for J 5
