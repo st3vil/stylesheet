@@ -384,15 +384,16 @@ Telvis: |
     A.4.c.testC = $C;
     # same C each time as Tesh notime
     delete C&ofts;
+    my $t;
     
-    my $tos = sub {
+    t.cs = sub {
         my ($c,$t) = @_;
         $c = {ntos=>$c} if $c && !ref $c;
         C.c.ot = $1 if c.ntos =~ s/^(\w+)\///;
         map { G&xot,$c,$_ } G&peel,$1 if c.ntos =~ s/,(.+)$//;
         $tes->($t,1,$c)
     };
-    my $ntos = sub { # get the oscillator A (s) given e is n of J
+    t.ntos = sub { # get the oscillator A (s) given e is n of J
         my ($j,$want) = @_;
         ($j) = values %{j.c.tug};
         return $j if $want eq 'mo';
@@ -414,7 +415,7 @@ Telvis: |
             my $nav = $2;
             $bang = 1 if $3;
             $p = $sp->($p);
-            $se = $ntos->($se);
+            $se = t.ntos->($se);
             
             if ($output || C.c.see) {
                 $output ||= $sp->(C.c.see) if C.c.see && C.c.see ne '1';
@@ -452,48 +453,49 @@ Telvis: |
         
         $l
     };
-    ($tos,$ntos)
-ElvisThinks: | # J makes up mind, does stuff with it
-    my ($tos,$ntos) = Rw Telvis;
+    #c more stuff
+    t.siim = sub {
+	    my ($Y,$sc,$h) = @_;
+	    my $ii = Y.ii;
+	    $ii = Y.sc.ii if $sc;
+	    $h = sprintf"%-12s",$h if $h;
+	    $h .= " Y.c.sip Y.t 2=Y.2.t: ";
+	    $h .= 'sc' if $sc;
+	    return "$h undef" if !$ii;
+	    "$h   ii ".join" - ",
+	    map { 
+		my $de;
+		if ($_ eq 'mo') {
+		    my $mo = $ii.>$_ || die "No mo";
+		    my $tw = mo.y.tw || die "No tv: ".ki$mo;
+		    $de = "*" if tw.fis;
+		}
+		$_.$de
+	    } sort keys %$ii
+    };
+    t.gout = sub {
+        my ($Y,$p) = @_;
+        $p = [split '-', $p] if !ref $p;
+        my $h = join(' ',@$p);
+        my $sc = pop @$p if $p->[-1] eq 'sc';
+        $Y = G&pint,$Y,@$p if @$p;
+        t.siim->($Y,$sc,$h);
+    };
+    return $t
+ElvisThinks: | # J uses u (mind), does stuff with it
+    my $t = Rw Telvis;
     A.uyes = 1;
     if ($n == 0) {
         c&te =
         n ElvisThinker
-        $tos->('sc lastK c s','ElvisThinker made with mind');
-        $tos->('sc lastA 2 sc u sc s sc ii eloquence,nonext','J u s ii eloquence');
-        $tos->({ntos=>'sc lastA 2 sc u sc s sc ii mo',
+        t.cs->('sc lastK c s','ElvisThinker made with mind');
+        t.cs->('sc lastA 2 sc u sc s sc ii eloquence,nonext','J u s ii eloquence');
+        t.cs->({ntos=>'sc lastA 2 sc u sc s sc ii mo',
             nonext=>1,grepl=>sub{ $_[0] =~ /^\s+(fis|fscolour) / }
         },'J u s ii mo seems to be');
         
-        my $mo = $ntos->(c&te,'mo');
-        my $sim = sub {
-            my ($Y,$sc,$h) = @_;
-            my $ii = Y.ii;
-            $ii = Y.sc.ii if $sc;
-            $h = sprintf"%-12s",$h if $h;
-            $h .= " Y.c.sip Y.t 2=Y.2.t: ";
-            $h .= 'sc' if $sc;
-            return "$h undef" if !$ii;
-            "$h   ii ".join" - ",
-            map { 
-                my $de;
-                if ($_ eq 'mo') {
-                    my $mo = $ii.>$_ || die "No mo";
-                    my $tw = mo.y.tw || die "No tv: ".ki$mo;
-                    $de = "*" if tw.fis;
-                }
-                $_.$de
-            } sort keys %$ii
-        };
-        my $gout = sub {
-            my ($Y,$p) = @_;
-            $p = [split '-', $p] if !ref $p;
-            my $h = join(' ',@$p);
-            my $sc = pop @$p if $p->[-1] eq 'sc';
-            $Y = G&pint,$Y,@$p if @$p;
-            $sim->($Y,$sc,$h);
-            
-        };
+        my $mo = t.ntos->(c&te,'mo');
+        
         is mo.t, 'mo', 'mot is mo';
         is mo.2.t, 'ElvisThinker', 'mo2t is ElvisThinker';
         is mo.2.sc.u.t, 'u', 'ut is u';
@@ -506,7 +508,7 @@ ElvisThinks: | # J makes up mind, does stuff with it
                 is ref is.y.>$_, 'HASH', "usii $t has y$_";
             }
         }
-        my $minds = [map{$gout->($mo,$_)}qw'
+        my $minds = [map{t.gout->($mo,$_)}qw'
             up 1 1-sc
             2 2-sc
             2-sc-u
@@ -516,25 +518,17 @@ ElvisThinks: | # J makes up mind, does stuff with it
             2-sc-s
             2-sc-s-sc
         '];
-        $tos->({s=>$minds},"ii in/around mo ElvisThinker");
-        
-        #G.ouJ = $mo;
-        return;
-        # new stuff mixed into top which turns out to be D
-        # u needs root... open J for it, split J6
-        
-        
-        #$tos->('c zop sc top','Waveofit zop top');
+        t.cs->({s=>$minds},"ii in/around mo ElvisThinker?");
     }
     elsif ($n == 1) {
         c&te =
         n ElvisThinker
-        $tos->('sc lastK c s','ElvisThinker again uses mind');
+        t.cs->('sc lastK c s','ElvisThinker again uses mind');
     }
     elsif ($n == 2) {
         c&te =
         n ElvisThinker
-        $tos->('sc lastK c s','ElvisThinker changes mind');
+        t.cs->('sc lastK c s','ElvisThinker changes mind');
     }
 ElvisThinker: |
     u ElvisThinking
@@ -569,39 +563,39 @@ ElvisThought: |
         C.y.cv = 0.24 + 0.06 * 
             (length(c&s) / length(join'',split/\S+/,c&s));
 EpiWaveletting: | # J makes pi, join lv
-    my ($tos,$ntos) = Rw Telvis;
+    my $t = Rw Telvis;
     
     if ($n == 0) {
         c&te =
         n Waveofit
-        $tos->('sc lastK c s','Waveofit');
-        $tos->('c zip sc top','Waveofit zip top');
-        $tos->('c zop sc top','Waveofit zop top');
+        t.cs->('sc lastK c s','Waveofit');
+        t.cs->('c zip sc top','Waveofit zip top');
+        t.cs->('c zop sc top','Waveofit zop top');
     }
     elsif ($n == 1) {
         c&te =
         n Waveofit
-        $tos->('sc lastK c s','Waveofit pi change');
+        t.cs->('sc lastK c s','Waveofit pi change');
     }
     elsif ($n == 2) {
         c&te =
         n Waveofit
-        $tos->('sc lastK c s','Waveofit pi change/goner');
+        t.cs->('sc lastK c s','Waveofit pi change/goner');
     }
     elsif ($n == 3) {
         c&te =
         n Waveofit
-        $tos->('sc lastK c s','Waveofit pi change');
+        t.cs->('sc lastK c s','Waveofit pi change');
     }
     elsif ($n == 4) {
         c&te =
         n Waveofit
-        $tos->('sc lastK c s','Waveofit pi change');
+        t.cs->('sc lastK c s','Waveofit pi change');
     }
     elsif ($n == 5) {
         c&te =
         n Waveofit
-        $tos->('sc lastK c s','Waveofit pi change');
+        t.cs->('sc lastK c s','Waveofit pi change');
     }
 Waveofit: |
     my $ou = J.sc.ou ||= [3,6,44,2,42,3,7,12];
@@ -631,10 +625,10 @@ pi/waveofit: |
     pos 3: %hs:876,fs:17
         ~~~~~~
 ElvisWorlds: | # J makes J, gather We in self
-    my ($tos,$ntos) = Rw Telvis;
+    my $t = Rw Telvis;
     my $use = 'next';
     my $lookii = sub {
-        my $s = $ntos->(c&te);
+        my $s = t.ntos->(c&te);
         my $ii = s.sc.ii;
         my @m;
         my $anii;$anii = sub {
@@ -671,52 +665,52 @@ ElvisWorlds: | # J makes J, gather We in self
     if ($n == 0) {
         c&te =
         n Whys
-        $tos->('sc lastK c s','Whys');#
-        $tos->({s=>C&ofts},"ofts made");
+        t.cs->('sc lastK c s','Whys');#
+        t.cs->({s=>C&ofts},"ofts made");
         # TODO? zopul copies dupey z, relinked in/next is deduped
-        $tos->({s=>$lookii->()},"ii via next deduped");
+        t.cs->({s=>$lookii->()},"ii via next deduped");
         $use = 'z';
-        $tos->({s=>$lookii->()},"ii via z contains dupes");
+        t.cs->({s=>$lookii->()},"ii via z contains dupes");
     }
     elsif ($n == 1) {
         c&te =
         n Whys
-        $tos->('sc lastK c s','Whys without Whysl');
-        $tos->({s=>C&ofts},"ofts made for changed We");
-        $tos->({s=>$lookii->()},"ii changed");
+        t.cs->('sc lastK c s','Whys without Whysl');
+        t.cs->({s=>C&ofts},"ofts made for changed We");
+        t.cs->({s=>$lookii->()},"ii changed");
     }
     elsif ($n == 2) {
         c&te =
         n Whys
-        $tos->('sc lastK c s','Whys + Whysl again');
-        $tos->({s=>C&ofts},"ofts made for changed We");
-        $tos->({s=>$lookii->()},"ii changed");
+        t.cs->('sc lastK c s','Whys + Whysl again');
+        t.cs->({s=>C&ofts},"ofts made for changed We");
+        t.cs->({s=>$lookii->()},"ii changed");
     }
     elsif ($n == 3) {
         c&te =
         n Whys
-        $tos->('sc lastK c s','Whys not');
-        $tos->({s=>$lookii->()},"ii via next deduped");
+        t.cs->('sc lastK c s','Whys not');
+        t.cs->({s=>$lookii->()},"ii via next deduped");
         $use = 'z';
-        $tos->({s=>$lookii->()},"ii via z contains dupes");
+        t.cs->({s=>$lookii->()},"ii via z contains dupes");
     }
     elsif ($n == 4) {
         c&te =
         n Whys
-        $tos->('sc lastK c s','two wormholes unite');
-        $tos->({s=>$lookii->()},"ii");
+        t.cs->('sc lastK c s','two wormholes unite');
+        t.cs->({s=>$lookii->()},"ii");
     }
     elsif ($n == 5) {
         c&te =
         n Whys
-        $tos->('sc lastK c s','two wormholes unite');
-        $tos->({s=>$lookii->()},"ii");
+        t.cs->('sc lastK c s','two wormholes unite');
+        t.cs->({s=>$lookii->()},"ii");
     }
     elsif ($n == 6) {
         c&te =
         n Whys
-        $tos->('sc lastK c s','two wormholes unite');
-        $tos->({s=>$lookii->()},"ii");
+        t.cs->('sc lastK c s','two wormholes unite');
+        t.cs->({s=>$lookii->()},"ii");
     }
 Whys: |
     J.herefirst = "Was htis";
@@ -762,44 +756,44 @@ Whysl: |
         
         
 ElvisWads: | # J in J (both W) simplicity
-    my ($tos,$ntos) = Rw Telvis;
+    my $t = Rw Telvis;
     
     if ($n == 0) {
         c&te =
         n ElWad
-        $tos->('sc lastK c s','ElWad');
+        t.cs->('sc lastK c s','ElWad');
         ok !exists C&ofts, 'no ofts';
-        $tos->('c zop sc top','ElWad zop top');
+        t.cs->('c zop sc top','ElWad zop top');
         #$tos->('s1omp/sc lastK c s','two wormholes unite');
     }
     elsif ($n == 1) {
         c&te =
         n ElWad
-        $tos->('sc lastK c s','ElWad still');
-        $tos->('c zop sc top','ElWad zop top');
+        t.cs->('sc lastK c s','ElWad still');
+        t.cs->('c zop sc top','ElWad zop top');
     }
     elsif ($n == 2) {
         c&te =
         n ElWad
-        $tos->('sc lastK c s','ElWad changed');
+        t.cs->('sc lastK c s','ElWad changed');
     }
     elsif ($n == 3) {
         c&te =
         n ElWad
-        $tos->('sc lastK c s','ElWad changed back');
-        $tos->('c zop sc top','ElWad zop top');
+        t.cs->('sc lastK c s','ElWad changed back');
+        t.cs->('c zop sc top','ElWad zop top');
     }
     elsif ($n == 4) {
         c&te =
         n ElWad
-        $tos->('sc lastK c s','ElWad still changed back komp');
-        $tos->('c zop sc top','ElWad zop top');
+        t.cs->('sc lastK c s','ElWad still changed back komp');
+        t.cs->('c zop sc top','ElWad zop top');
     }
     elsif ($n == 5) {
         c&te =
         n ElWadill=>W=>{rando=>'M'}
-        $tos->('sc lastK c s','ElWadill randomly');
-        $tos->('c zop sc top','ElWadill zop top');
+        t.cs->('sc lastK c s','ElWadill randomly');
+        t.cs->('c zop sc top','ElWadill zop top');
     }
 ElWad: |
     n ElWadill
@@ -996,7 +990,7 @@ Hows: |
         
         # and
         1c&dali++;
-oft: | # perl modulator, stuff with you
+oft: | # test of
     1 && saybl "We things C.c.W named C.t C.y.cv:   ".ki C.c.e;
     # should hup & acum C.sc.z
     push @{ A.4.c.testC.sc.ofts ||= [] },
@@ -1011,7 +1005,7 @@ oft: | # perl modulator, stuff with you
     C.sc.hi = 'lo';
     T.nose = 1;
     
-ElvisLeaves: |
+ElvisLeaves: | # data vs o, watch change
     #A.V = 1;
     #exit if $n > 3;
     my $tf = 't/Zupe/ElvisLeaves/theu';
