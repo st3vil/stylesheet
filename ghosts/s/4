@@ -437,7 +437,7 @@ Telvis: |
         oc.noz = 1 if c&noz;
         oc.nonext = 1 if c&nonext;
         $oc.>$_ = $toc.>$_ for keys %$toc;
-        my $ot = c&ot || Q.c.ot || c&test.'-'.C&l;
+        my $ot = c&ot = c&ot || Q.c.ot || c&test.'-'.C&l;
         
         
         my $AV = delete A.V;
@@ -445,33 +445,34 @@ Telvis: |
         A.V = $AV if $AV;
         
         # c&tac=1;
-        
         my $l = o.c.rsl || die "no rsl";
         $l = [grep { c&grepl ->($_) } @$l] if c&grepl;
-        (A.V || A.Ve || C.c.question) &&
-        1 && saybl "the ".slim(10,$ot).": ".$_ for @$l;
-        
         $l
+    };
+    c&posts = sub {
+        my ($C,$T) = @_;
+        return unless A.V || A.Ve || C.c.question;
+        1 && saybl "the ".slim(10,c&ot).": ".$_ for @{c&s};
     };
     #c more stuff
     t.siim = sub {
-	    my ($Y,$sc,$h) = @_;
-	    my $ii = Y.ii;
-	    $ii = Y.sc.ii if $sc;
-	    $h = sprintf"%-12s",$h if $h;
-	    $h .= " Y.c.sip Y.t 2=Y.2.t: ";
-	    $h .= 'sc' if $sc;
-	    return "$h undef" if !$ii;
-	    "$h   ii ".join" - ",
-	    map { 
-		my $de;
-		if ($_ eq 'mo') {
-		    my $mo = $ii.>$_ || die "No mo";
-		    my $tw = mo.y.tw || die "No tv: ".ki$mo;
-		    $de = "*" if tw.fis;
-		}
-		$_.$de
-	    } sort keys %$ii
+        my ($Y,$sc,$h) = @_;
+        my $ii = Y.ii;
+        $ii = Y.sc.ii if $sc;
+        $h = sprintf"%-12s",$h if $h;
+        $h .= " Y.c.sip Y.t 2=Y.2.t: ";
+        $h .= 'sc' if $sc;
+        return "$h undef" if !$ii;
+        "$h   ii ".join" - ",
+        map { 
+        my $de;
+        if ($_ eq 'mo') {
+            my $mo = $ii.>$_ || die "No mo";
+            my $tw = mo.y.tw || die "No tv: ".ki$mo;
+            $de = "*" if tw.fis;
+        }
+        $_.$de
+        } sort keys %$ii
     };
     t.gout = sub {
         my ($Y,$p) = @_;
@@ -481,7 +482,43 @@ Telvis: |
         $Y = G&pint,$Y,@$p if @$p;
         t.siim->($Y,$sc,$h);
     };
+    c&iiuse = 'next';
+    t.lookii = sub {
+        my $s = t.ntos->(c&te);
+        my $ii = s.sc.ii;
+        my @m;
+        my $anii;$anii = sub {
+            my ($c) = @_; #
+            my @m;
+            push @m, "c.t c.y.cv has:";
+            if (c&iiuse eq 'z') {
+                for my $e (@{c.sc.z}) {
+                    push @m, " - e.t e.y.cv    ".ki(e.c)."      ".ki(e.sc);
+                    $m[-1] =~ s/\n/\\n/g;
+                }
+            }
+            else { # use next
+                my $e = c.y.in;
+                while ($e) {
+                    push @m, " - e.t e.y.cv    ".ki(e.c)."      ".ki(e.sc);
+                    $m[-1] =~ s/\n/\\n/g;
+                    $e = e.y.next;
+                }
+            }
+            if (my $ov = c.y.over) {
+                push @m, " y over:",
+                    map { "  $_" } $anii->($ov);
+            }
+            @m;
+        };
+        for my $t (sort keys %$ii) {
+            my $c = $ii.>$t;
+            push @m, $anii->($c);
+        }
+        \@m;
+    };
     return $t
+
 ElvisThinks: | # J uses u (mind), does stuff with it
     my $t = Rw Telvis;
     A.uyes = 1;
@@ -518,7 +555,8 @@ ElvisThinks: | # J uses u (mind), does stuff with it
             2-sc-s
             2-sc-s-sc
         '];
-        t.cs->({s=>$minds},"ii in/around mo ElvisThinker?");
+        t.cs->({s=>$minds},"ii in/around mo ElvisThinker");
+        
     }
     elsif ($n == 1) {
         c&te =
@@ -626,41 +664,6 @@ pi/waveofit: |
         ~~~~~~
 ElvisWorlds: | # J makes J, gather We in self
     my $t = Rw Telvis;
-    my $use = 'next';
-    my $lookii = sub {
-        my $s = t.ntos->(c&te);
-        my $ii = s.sc.ii;
-        my @m;
-        my $anii;$anii = sub {
-            my ($c) = @_; #
-            my @m;
-            push @m, "c.t c.y.cv has:";
-            if ($use eq 'z') {
-                for my $e (@{c.sc.z}) {
-                    push @m, " - e.t e.y.cv    ".ki(e.c)."      ".ki(e.sc);
-                    $m[-1] =~ s/\n/\\n/g;
-                }
-            }
-            elsif ($use eq 'next') {
-                my $e = c.y.in;
-                while ($e) {
-                    push @m, " - e.t e.y.cv    ".ki(e.c)."      ".ki(e.sc);
-                    $m[-1] =~ s/\n/\\n/g;
-                    $e = e.y.next;
-                }
-            }
-            if (my $ov = c.y.over) {
-                push @m, " y over:",
-                    map { "  $_" } $anii->($ov);
-            }
-            @m;
-        };
-        for my $t (sort keys %$ii) {
-            my $c = $ii.>$t;
-            push @m, $anii->($c);
-        }
-        \@m;
-    };
     
     if ($n == 0) {
         c&te =
@@ -668,49 +671,49 @@ ElvisWorlds: | # J makes J, gather We in self
         t.cs->('sc lastK c s','Whys');#
         t.cs->({s=>C&ofts},"ofts made");
         # TODO? zopul copies dupey z, relinked in/next is deduped
-        t.cs->({s=>$lookii->()},"ii via next deduped");
-        $use = 'z';
-        t.cs->({s=>$lookii->()},"ii via z contains dupes");
+        t.cs->({s=>t.lookii->()},"ii via next deduped");
+        c&iiuse = 'z';
+        t.cs->({s=>t.lookii->()},"ii via z contains dupes");
     }
     elsif ($n == 1) {
         c&te =
         n Whys
         t.cs->('sc lastK c s','Whys without Whysl');
         t.cs->({s=>C&ofts},"ofts made for changed We");
-        t.cs->({s=>$lookii->()},"ii changed");
+        t.cs->({s=>t.lookii->()},"ii changed");
     }
     elsif ($n == 2) {
         c&te =
         n Whys
         t.cs->('sc lastK c s','Whys + Whysl again');
         t.cs->({s=>C&ofts},"ofts made for changed We");
-        t.cs->({s=>$lookii->()},"ii changed");
+        t.cs->({s=>t.lookii->()},"ii changed");
     }
     elsif ($n == 3) {
         c&te =
         n Whys
         t.cs->('sc lastK c s','Whys not');
-        t.cs->({s=>$lookii->()},"ii via next deduped");
-        $use = 'z';
-        t.cs->({s=>$lookii->()},"ii via z contains dupes");
+        t.cs->({s=>t.lookii->()},"ii via next deduped");
+        c&iiuse = 'z';
+        t.cs->({s=>t.lookii->()},"ii via z contains dupes");
     }
     elsif ($n == 4) {
         c&te =
         n Whys
         t.cs->('sc lastK c s','two wormholes unite');
-        t.cs->({s=>$lookii->()},"ii");
+        t.cs->({s=>t.lookii->()},"ii");
     }
     elsif ($n == 5) {
         c&te =
         n Whys
         t.cs->('sc lastK c s','two wormholes unite');
-        t.cs->({s=>$lookii->()},"ii");
+        t.cs->({s=>t.lookii->()},"ii");
     }
     elsif ($n == 6) {
         c&te =
         n Whys
         t.cs->('sc lastK c s','two wormholes unite');
-        t.cs->({s=>$lookii->()},"ii");
+        t.cs->({s=>t.lookii->()},"ii");
     }
 Whys: |
     J.herefirst = "Was htis";
