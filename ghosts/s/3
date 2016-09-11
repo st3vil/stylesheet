@@ -499,6 +499,7 @@ Circle: | # < copy things
         my $oo = A.c.oo;
         my $cha = A.c.cha ||= {};
         # falls until array, oo.C.t.cv = [thamany]
+        my $dupytt;
         G&Chew,$oo,'x,t,cv',$_ for sub {
             my ($o,$x,$t,$cv) = @_;
             my @o = @$o;
@@ -508,7 +509,12 @@ Circle: | # < copy things
             # later overwrite
             @o = reverse @o;
             
-            sayre join"\n","Dupl: ",map{"  $t $cv from _.y.A.c.s.t"}@o if @o > 1;
+            if (@o > 1) {
+                for (@o) {
+                    my $At = _.y.A && _.y.A.c.s && _.y.A.c.s.t;
+                    push @{$dupytt.>$cv.>$t.>$At ||= []}, $_;
+                }
+            }
             
             $o = $o[0];
             my $e = o.c.s;
@@ -525,11 +531,12 @@ Circle: | # < copy things
             if (my $J = c&shade && ref es&J && !es&W && es&J) {
                 die "J also has z: ".ki$e if e.sc.z;
                 if (my $lv = J.sc.s && J.sc.s.sc.lv) {
+                    # see tips of other J
                     # TODO look at specific page of all the s,
                     # quick check of lv layery linkage, a shallow z
+                    # may just signal the version change to go and get (beyond o)
                     # ideally lv0 stable and lv1+ replaces often
                     e.c.Jo = J.c.o;
-                    
                 }
             }
             
@@ -551,13 +558,17 @@ Circle: | # < copy things
             
             if (my $u = c&oup) {
                 if (my $al = u.sc.bz.>$t.>$cv) {
-                    #sayre "ALREADY a C.t: on u.t: $t $cv from al.y.A.c.s.t: al.t al.y.cv";
-                    # zip hup'd acquired o but still..?
+                    # already
                 }
                 o.y.up = $u;
+                # place above
                 u.sc.bz.>$t.>$cv = $o;
-                #sayyl "Place u.t u.y.cv $u (u.y.A.c.s.t) from C.t: o.t o.y.cv $o";
             }
+        };
+        G&Chew,$dupytt,'cv,t,At',$_ for sub {
+            my ($o,$cv,$t,$At) = @_;
+            my $times = 'x'.@$o;
+            sayre "Dupe A.2.t o C.t $times: $cv $t: $At";
         };
     #c o4 A -> J t/y images
     #
