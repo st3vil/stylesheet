@@ -129,7 +129,7 @@ With: | # J's stuff, its Js, osc page, etc.
     ground:
         A.c.n ||= G&sJ,A.2,'n';
         my $sip = s.c.sip || die "no ip: ".ki$s;
-        my $ch = A.2.c.ch || '';
+        my $ch = A.2.sc.ch || '';
         A.c.n.sc.a->{$ch}->{$sip} = $s;
     
     # get ground zip off s, eg for u
@@ -160,6 +160,8 @@ With: | # J's stuff, its Js, osc page, etc.
         o.sc.next = $s;
         s.sc.prev = $o;
         # makes osc thing.3 etc hang around
+        # TODO s adds to .root? files under ch
+        # which could mean layer or page
         s.sc.ch = $ch;
     
     # reset ground '', 1, 2...
@@ -175,6 +177,7 @@ With: | # J's stuff, its Js, osc page, etc.
             }
             $ch++;
         }
+        J.sc.ch = '';
         delete J.c.o;
     
 Tunnel: | # mind & world
@@ -208,16 +211,18 @@ Tunnel: | # mind & world
         if (!u.c.o) {
             u.c.base = 'theu'; # the PiMachine
             # base if grind (ground, needs root), whole if just theu
-            1 && saybl "resolves mind: A.2.t";
-            G&grind,$u &&
-                G&A,n=>8=>$u=>[uuu=>9=>{root=>1}];
+            my $rev = ".u.sc.ch" if u.sc.ch;
+            1 && saybl "resolves mind$rev: A.2.t";
+            my $gr = G&grind,$u;
+            if ($gr) {
+                    G&A,n=>8=>$u=>[uuu=>9=>{root=>1}];
             
-            # slowly opening & closing a J of the u better than ^
-            # but also want to hold u n at 3 til cachable known
-            # the relevant page of s (man sesh) then ^ getting whole=?
-            # those u s pages get cached somewhere in 4stw.ucache
-            #   if simple enough
-            
+                # slowly opening & closing a J of the u better than ^
+                # but also want to hold u n at 3 til cachable known
+                # the relevant page of s (man sesh) then ^ getting whole=?
+                # those u s pages get cached somewhere in 4stw.ucache
+                #   if simple enough
+            }
             # resolve our mind
             G&A,s=>8=>$u;
             # merge its i/ii thing ideas into our 2
@@ -324,12 +329,13 @@ Jelly: | # Town making happening
         # T wants ha or v wants T (by now, etc)
         # travel comes down ch-switches even if pin skips
     J 5:
-        A&pin = c&pin || c&J || sc&J ->{t};
+        A&pin = c&pin || c&J || s&J ->{t};
     J 6:
         Js&n && G&rea,$J;
         Js&u && G&rea,Js&u;
         #A.1 = $J;
-        saybl "St J.t / A.2.t";
+        my $ise = c&e && " (e:".c&e ->{t}.")";
+        1 && saybl "St J.t / A.2.t  (A&pin)$ise";
         my $c = {root=>1};
         my $y = {cv=>0.9};
         my $r = J.sc.root = G&A,n=>1=>$J=>[J.t,$y,$c];
