@@ -5,13 +5,13 @@ pi/pud: |
     A.3.C.c.intlim ||= 15;
     # max depth before like nothash
     c&dl = A.2.C.c.dl;
-    c&dl = 4 if !defined c&dl;
+    c&dl = 3 if !defined c&dl;
     
     # travel boosts/cons depth
     # c&dl += 2 if c&depth < 5 && C.t eq 'sc';
     c&dl += 2 if c&depth < 6 && C.t eq 's' && A.2.2.C.sc.istycsc;
     c&dl -= 3 if C.t eq 'y' && A.2.C.sc.istycsc;
-    c&dl += 3 if C.t eq 'in' && A.2.C.t eq 'y' && A.2.2.C.sc.istycsc;
+    c&dl += 2 if C.t eq 'in' && A.2.C.t eq 'y' && A.2.2.C.sc.istycsc;
     
     y.in = 0.21;
     my $ind = join'', ('  ') x (J.A.d - 1);
@@ -23,6 +23,7 @@ pi/pud: |
     c&block = 'same' if $s eq A.2.C.c.s;
     c&block = 'b' if C.t eq 'ip' && A.2.C.t eq 'c';
     
+    # classify bits of the slide
     if (!c&block && ref $s eq 'HASH') {
         if (C.t eq 'G') {
             my $w = s.w;
@@ -35,7 +36,7 @@ pi/pud: |
             c&block = 'yA' if A.2.C.t eq 'y';
             c&block = 'AA' if A.2.C.sc.type eq 'A';
             if (c&block) {
-                c&blos = "s.t @ s.cv";
+                c&blos = "s.t s.cv";
                 c&blos .= " (s.c.s.t)" if ref s.c.s eq 'HASH';
             }
         }
@@ -46,6 +47,21 @@ pi/pud: |
         c&blos &&
         n blocked=>21=>' '.c&blos,'%hs:827'
         return
+    }
+    
+    if (C&type eq 'A') {
+        my ($sy,$si);
+        if (s.sc && s.sc.n) {
+            $sy = "J";
+            $si = 3;
+        }
+        # T # seen to/from ghost, they osc pool up to direct change in
+        # chasing up all the J that hit it
+        # osc pool meaning a vortex of self, changes moving upward, 
+        # just copying changed hashes - replace {} from changed up to root
+        # and copy it in at the other J
+        $sy &&
+        n sy=>11=>$sy=>"%hs:3574,ab:1,fs:".int(300 / c&depth)
     }
     
     my ($ks,$vs);
@@ -120,8 +136,16 @@ pi/pud: |
         #|| J.A.d > 5
         ;
     C.sc.css = 'border-left:3px solid 473' if @ks > 3;
+    
+    my $limit = 30;
+    my $lim = @ks > $limit;
+    my $was = @ks;
+    @ks = @ks[0..($limit-1)] if $lim;
+    
     m $_=>-pud=>{s=>$hash->{$_}},'%ma:1' for @ks;
     
+    $lim && 
+    m limited=>''=>{s=>"Limited from $was to $limit"},{hs=>"888",ws=>1}
 Typerack: | # makes a J for whitespaced typograph
     y.at.qs=1;
     y.at.ws=1;
@@ -151,7 +175,9 @@ HashKs: | # order children, returns $hash,@ks
                 push @$to, $t;
             }
         }
-        my @mi = sort grep { !$tw.>$_ } keys %$s;
+        my $num = qr/^\-\d+(\.\d+)?$/;
+        my @mi = sort { $a =~ $num && $b =~ $num ? $a <=> $b : $a cmp $b }
+            grep { !$tw.>$_ } keys %$s;
         [ map { [ $_ => $s.>$_ ] } @$he, @mi, @$ta ];
     };
     my (@he,@ta);
