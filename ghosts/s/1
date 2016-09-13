@@ -63,8 +63,8 @@ Day: | # world primitives
             $t || next;
             return $t;
         }
-    # make call, in i, within 5 (many rare/little subs)
-    # predefined args
+    # make call, in i, looks up to 5 many rare/little subs
+    # precompiled args
     h:
         my $y;
         my $D = T.D if T.D;
@@ -90,15 +90,102 @@ Day: | # world primitives
         }
         wantarray ? @r : $r[0];
     
-    # lookup word & call, in an ii called w, within 7
-    0&&
+    #c looks up meaning of word
+    # compiles for given args
     w:
-        # looks up meaning of word
+        my $ar = {};
+        # their $ar (+)
+        if (ref $Me[0]) {
+            my $ra = shift @Me;
+            %$ar = %$ra;
+        }
+        # use this w call's ACGT
+        (ar.A,ar.C,ar.G,ar.T) = ($A,$C,$G,$T);
+        # their args
+        my @o = @Me;
+        while (@Me) {
+            my $k = shift @Me;
+            @Me || die "w odd hash after $k: ".ki\@o;
+            my $v = shift @Me;
+            $ar.>$k = $v;
+        }
+        
+        ar.__D && die "w __D deprecated: ".ki$ar;
+        
+        my @args = sort keys %$ar;
+        my $args = join',','ar',@args;
+        
+        # look in of=w up the network to 5
+        my @lo;
+        my $want = sub {
+            my ($t,$f,$i) = @_;
+            push @lo, $f;
+            # if i > netmask
+            # if t mentions some other way to get it
+            my $tw = t.y.tw || die "w $s found no ytw on"
+                ." A.2.t s A.t @ $i (f.t): ".ki$t;
+            $tw.>$s
+        };
+        my $w = G&t,'w',$want;
+        # they are pins near network of knowledge of T
+        $w || die "No way to $s (on A.2.t's A.t)";
+        
+        # or the old way, 
+        if (!$w) {
+            # going, hash tied to a directory
+            # makes digest when way entered
+            (my $fi = $s) =~ s/\W/-/g;
+            $w = {t=>$fi};
+            wc&s = G.way->{$fi} || die "No way: $fi";
+            ws&dige = G.way.o.dige->{$fi}
+                || die "Not Gway not diges $fi: wayo: ".ki G.way.o;
+        }
+        
+        if (!$w) {
+            @lo = map{_.t} uniq @lo;
+            $w || die "No w: $s (looked in: @lo)";
+        }
+        ws&dige || die "w no dige: ".ki$w;
+        ws&of || die "w not of: ".ki$w;
+        
+        my $ark = G.sc.pinark ||= {};
+        my $v = $ark.>w.t.>ws&dige.>$args ||= do {
+            my $v = G&hup,$w;
+            v.y.argumented = $w;
+            vs&args = $args;
+            G&perlcode,$v;
+            v.c.code || die "no ccode back: ".ki$v;
+            $v;
+        };
+        v.sc.called++;
+        
+        vc&code ->($ar,map{ $ar.>$_ }@args);
+        
+    # make s.c.code, see of
+    perlcode:
+        my $C = $s;
+        # shade the edge, args etc.
+        G&CoArgulate;
+        # translate into perl
+        G&CoBabbler;
+        
+        my $y = eval c&s;
+        die "Nocompile C.t: ".ki($C)
+            .ind('  ',$@)."\n\n c&s \n"
+            if $@;
+        die "Not code C.t: ".ki($C)
+            if ref $y ne 'CODE' && !s&subpeel;
+        c&code = $y;
+    
+    n $_=>1=>G.way.>$_ for qw'CoArgulate CoBabbler';
+    
     # ^ compiler for old G.w
     n won=>'',join("\n",map{G.way->{$_} || die "no $_"}qw'cono CoBabbler')
     
     
     # be a A.y = A (means is full of wires)
+    # J are A that inherit from each other
+    # as A wave connection to them
     A: %acgt:s ov
         if (ref $s) {
             $A = $s;
