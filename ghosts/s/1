@@ -45,15 +45,22 @@ Day: | # world primitives
         G.h = G.i.h;
         $G
     # find local things, look up trail of con centers
+    # could also look down/allways for elvis proto
     t:
-        $C = G&s,$s;
+        my $wanted = pop @Me if @Me && ref $Me[-1] eq 'CODE';
+        $C = G&s,$s,@Me;
         c&on ||= 'ii';
         c&max ||= 5;
-        for (1..c&max) {
-            return $A->{$_}->{c&on}->{c&s}
-                if $A->{$_}
-                && $A->{$_}->{c&on} 
-                && $A->{$_}->{c&on}->{c&s}
+        c&min ||= 1;
+        for (c&min .. c&max) {
+            my $from = $A.>$_ || next;
+            my $on = $from.>c&on || next;
+            my $t = $on.>C.t || next;
+            if ($wanted) {
+                $t = $wanted->($t,$from,$_);
+            }
+            $t || next;
+            return $t;
         }
     # make call
     h:
@@ -204,8 +211,6 @@ Tube: |
         # see 1 KnowTime/Cone
     
     
-
-
 Ce: | # ways at C, see 2/Sea for C chewing/itself
     u allacgts
     n Te

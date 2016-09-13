@@ -155,8 +155,6 @@ of: |
             Rw CoArgulate $C:z;
             # translate into perl
             Rw CoBabbler $C:z;
-            # track etc
-            zs&dige = slm 12, dig zc&s;
             
             my $y = eval zc&s;
             die "Nocompile of=C.t z.y.cv: z.t:"
@@ -164,6 +162,8 @@ of: |
             die "Not code: z.t z.y.cv: $@\n".wdump 2, $z if ref $y ne 'CODE' && !z.sc.subpeel;
             z.c.code = $y;
         }
+        # track etc
+        zs&dige = slm 12, dig zc&s if exists zc&s && !ref zc&s;
     }
 
     C.sc.hi = 'lo';
@@ -575,10 +575,14 @@ ElvisWay: | # J new Rw pin getter,
     }
     if ($n == 1) {
         c&te = 
-        n ElvisWays
-        t.cs->('sc lastK c s y l y tw w,nonext','ways of=w');
-        t.cs->({s=>t.lookii->()},'have ii');
+        n ElvisWhay
+        t.cs->('sc lastK c s','way holder of=w');
+        #t.cs->({s=>t.lookii->()},'have ii');
         my $W = t.ntos->(c&te,'J');
+        return;
+        #W.ii = W.sc.ii;
+        # ^ doesn't break W, is J, bystander/particle to A
+        # those serving t must be holding it as .ii
         # T.o.J.t.ElvisWayer = G&Ct,'In5'=>3=>{inet=>5,s=>$J
         c&te = 
         n ElvisWaying=>W=>{house=>$W}
@@ -592,33 +596,28 @@ ElvisWaying: |
     my $Gw = G.w;
     G.w = A.i.w;
     A.5 = c&house || die "Give house";
+    A.5.ii && A.5.ii.w || die "House no w: ".wdump 1, A.5.ii;
     
-    Rw lingophase + $C $nos:A.2 $job=0 etc;
+    Rw shu + $C $nos:A.2 $job=0 etc;
     # ^ babs to:
     # $G->{w}->($A,$C,$G,$T,"lingophase",$ar,C=>$C,nos=>$A->{2},job=>"0",m=>["etc"]);
     # the + mixes in ar at the front, becomes m[] if elsewhere
     Rw lingophase $C $nos:A.2 $noj=C.y.cv;
     
     G.w = $Gw;
-    my $i = 1;
-    n looks=>$i++=>{s=>"FO: ".ki C.sc.>$_ } for sort keys %{C.sc};
+    my $i = 2;
+    n looks=>$i++=>{s=>ki C.sc.>$_ } for sort keys %{C.sc};
     
 ElvisWayer: |
     u alacgts
     w:
         local A.V = 1;
         # put ACGT of this call on top of that of ar
-        sayyl "A.2.t ways $s vis: ".ki \@Me;
-        saybl ki $_ for @Me;
         C.sc.kinda = 1;
         # t for of=w, having or not the pin in tw
         # ^ keeps looking upwards
         # they are pins near network of knowledge of T
-        
         # it is through of without args
-        return;
-    0 &&
-    not:
         # args get put on here inc. ar inc. ACGT, synom $m and @Me;
         my $ar = {};
         if (ref $Me[0]) {
@@ -632,63 +631,82 @@ ElvisWayer: |
         my @o = @Me;
         while (@Me) {
             my $k = shift @Me;
-            @Me || die "Rw odd hash after $k: ".ki\@o;
+            @Me || die "w odd hash after $k: ".ki\@o;
             my $v = shift @Me;
             $ar.>$k = $v;
         }
         
-        ar.__D && die "Rw Not taking D codes anymore: ".ki$ar;
+        ar.__D && die "w Not taking D codes anymore: ".ki$ar;
         
         my @args = sort keys %$ar;
-        (my $fi = $s) =~ s/\W/-/g;
+        my $args = join',','ar',@args;
         
-        $C = G&s,$s;
-        c&on ||= 'ii';
-        c&max ||= 5;
-        c&min ||= 1;
+        my @lo;
+        my $want = sub {
+            my ($t,$f,$i) = @_;
+            push @lo, $f;
+            # if i > netmask
+            # if t mentions some other way to get it
+            my $tw = t.y.tw || die "w found notw on A.2.t s A.t @ $i (f.t): ".ki$t;
+            $tw.>$s
+        };
+        my $w = G&t,'w',$want;
         
-        my ($way,$dige);
-        my $D;
-        if ($D = ) {
-            $dige = D.sc.dige || die "wayzipin wasnt scdige: ".ki$D;
-            $way = D.c.s;
-            $way =~ s/^A\.I\.(\w+) = //s;
-            $way =~ s/}A\.I\S+\n/\n/s if D.t eq 'An'; # redoes, too trouble
-        }
-        else {
-            
-            $way = G.way->{$fi} || die "No way: $fi";
-            $dige = G.way.o.dige->{$fi}
+        $w || return sayre "No way to $s (on A.2.t's A.t)";
+        
+        if (!$w) {
+            # going, hash tied to a directory
+            # makes digest when way entered
+            (my $fi = $s) =~ s/\W/-/g;
+            $w = {t=>$fi};
+            wc&s = G.way->{$fi} || die "No way: $fi";
+            ws&dige = G.way.o.dige->{$fi}
                 || die "Not Gway not diges $fi: wayo: ".ki G.way.o;
         }
-        my $ark = join',',@k;
-        my $code;
-        my $sub = G.dige_pin_ark->{$dige}->{$pin}->{$ark} ||= do {
-            my $C = {};
-            C.t = $pin;
-            C.c = {s=>$way,from=>"way"};
-            C.sc = {code=>1,noAI=>1,args=>"ar,$ark"};
-            if ($D) {
-                delete C.sc.args unless D.sc.subpeel;
-                C.c.from = "I D.c.from";
-            }
-            $code = G&won;
-            $@ && die ":BEFORE $pin www $@";
-            $SIG{__WARN__} = G.I.sigstackwarn || die "NO sigstackwarn";
-            my $sub = G.airlock->($code);
-            $@ && sayre "DED:\n".$code;
-            $@ && die "way nicht compile: $pin:\n$@";
-            !$sub && die "way nicht sub returned: $pin (no error tho)";
-            $sub;
-        };
-        if ($D && !D.sc.subpeel) {
-            return $sub;
+        if (!$w) {
+            @lo = map{_.t} uniq @lo;
+            $w || die "No w: $s (looked in: @lo)";
         }
-        $sub->($t,map{$t->{$_}}@k);
+        ws&dige || die "w no dige: ".ki$w;
+        ws&of || die "w not of: ".ki$w;
         
+        my $ark = G.sc.pinark ||= {};
+        my $v = $ark.>w.t.>ws&dige.>$args ||= do {
+            my $v = G&hup,$w;
+            v.y.argumented = $w;
+            vs&args = $args;
+            G&perlcode,$v;
+            v.c.code || die "no ccode back: ".ki$v;
+            $v;
+        };
+        v.sc.called++;
         
+        vc&code ->($ar,map{ $ar.>$_ }@args);
+        
+    # make s.c.code - what of does
+    perlcode:
+        my $C = $s;
+        # shade the edge, args etc.
+        G&CoArgulate;
+        # translate into perl
+        G&CoBabbler;
+        
+        my $y = eval c&s;
+        die "Nocompile C.t: ".ki($C)
+            .ind('  ',$@)."\n\n c&s \n"
+            if $@;
+        die "Not code C.t: ".ki($C)
+            if ref $y ne 'CODE' && !s&subpeel;
+        c&code = $y;
+    
+    n $_=>1=>G.way.>$_ for qw'CoArgulate CoBabbler';
+        
+ElvisWhay: |
+    u ElvisWays
+    n othing=>1
 ElvisWays: |
     #u alway
+    # passed through of uncoded
     shu: %of:w
         C.sc.op = 3;
         C.sc.mind = 'foep' if ar.m;
