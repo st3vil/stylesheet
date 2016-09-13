@@ -22,10 +22,12 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         if (my $W = c&whole) {
             my $s = G&t,$W || die "no $W";
             A&who = G&A,o=>8,$C,$s,'whole';
-            # replicate indexen (tv, i, ii) to s
-            # o changes all the links to this sided
-            # will need a real osc to begin
-            # resources hang around in process as J
+            # s C or J, s&top and/or y.in etc to copy
+            # if ii/i then copy too, repoint as tv to this side
+            # 
+            # gives us s&top, tv, i/ii like osc
+            #   can make our own lv for our slice of it
+            # letting us export it to the J in 8
             sayre "WHole! s: A.2.t: s.t";
             # place on us, eg u.sc.ii, you must 
             return T.Z.8 = $A;
@@ -34,7 +36,9 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         if (my $W = c&base) {
             my $s = G&t,$W || die "no $W";
             sayyl "Base ! ".ki $s;
-            my $z = ss&z; # TODO not and see settling clues
+            my $z = ss&z;
+            # TODO know top C with settling clues
+            # see s&top above
             tug.base = G&A,o=>2,$C,$z,'base';
         }
         if ($zip) {
@@ -45,14 +49,12 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         my $t = G&Ct,['zipover'=>''=>{shade=>1}];
         c&zip = G&A,o=>6,$C,$tug,$t;
         G&A,c&zip=>6;
-    #c s3 J t/y
-    # ordered diff creates O's for awakened C 
-    # hold the top and all in or out
+    #c s3 changes pop in
+    # ordered by o, creates O's to be awakened C 
     s 3:
         my $o = c&zip;
         my $c = oc&s;
         my $j = cc&j || die "No o Acj! ".ki$c;
-        # put through Hoop to make index & self
         
         if (!@{ os&zop }) {
             return T.Z.8 = $A;
@@ -64,7 +66,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             my $O = G&A,O=>1,$_;
             a&topO = $O if os&top eq $_;
             my $c = O.c.s;
-            c.y.x.y.O = $O;
+            c.y.x.y.O = $O; # follow to bring O up to date
             my $r = c.y.r || die "No yr: ".ki$c;
             Oc&el = rc&el if rc&el;
             Oc&osc = $C;
@@ -75,6 +77,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             _.y.x.y.O || die "out not yxyO: ".ki $_;
         } @{os&outz}];
         
+        # put through Hoop to make index & self
         G&A,$_,8 for @{A&inz};
         
     #c s4 humming
@@ -317,7 +320,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
     #c s8 transmission
     s 8:
         # tie together
-        A&expo.>$_ = 1 for qw'tv i ii';
+        A&expo.>$_ = 1 for qw'top tv i ii';
         my $J = A.2;
         for (keys %{A&expo}) {
             if (exists C.sc.>$_ ) {
@@ -356,53 +359,45 @@ Circle: | # < copy things
     o 1:
         my ($i,$f,$t) = @$s;
         i.y eq $i || die "i must A";
+        defined $f || die "from undef o ".ki$t;
         
-        ($f,my $fis) = ($$f,1) if ref $f eq 'REF';
         $t = G&Ct,$t if ref $t eq 'ARRAY';
         %$C = %$t if ref $t eq 'HASH';
         C.t = $t if $t && !ref $t;
-        
-        defined $f || die "from undef o ".ki$C;
-        
         
         c&i = $i;
         c&m ||= C.t;
         c&m = 'zip' if c&m =~ /^zip(.+)$/;
         if (ref $f eq 'ARRAY') {
+            # bunch of C
             c&m = 'z';
-            c&s = $f;
-        }
-        elsif ($fis) {
-            c&s = $f;
         }
         elsif (f.y) {
             if (f.y eq $f) {
                 # A/J
-                c&h = $f;
+                # try f.sc.top
+                c&m = 'A';
             }
             else {
                 # C mo 3 W:of ...
                 #  C mo 1 s:... of:mo,dig:...
                 # y.in or sc.z
-                c&s = $f;
                 c&m = 'C';
             }
         }
         else {
             # a zip
-            c&s = $f;
         }
-        if (c&m eq 'i' || c&m eq 'ii') {
-            c&kno = c&m;
-        }
-        if (c&kno) {
-            my $h = c&h || die "unhoused kno C.t m:c&m";
-            c&s = h.sc->{c&kno} || $h->{c&kno};
-            # may have lvism & more via h.sc.s.
-        }
+        c&s = $f;
     #c o2 intermediate whats-where, diff o/oo per zing
     o 2:
         my $oo = A.c.oo = {};
+        # resolving to stuff
+        if (c&m eq 'A') {
+            local A.V = 1;
+            Rw DodA;
+        }
+        # eating stuff
         # < space-for (C) < t < y [many o with .c.s = $e, o.y.etc = etc]
         # per other itself in 3, way in is noise-ish
         if (c&m eq 'zip') {
@@ -558,6 +553,7 @@ Circle: | # < copy things
                 }
             }
             
+            # top acum o.y.D for relinkage
             G&Chang,$l,$o;
             
             # throw inward (yin falls to z)
