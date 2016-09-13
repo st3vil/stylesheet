@@ -33,13 +33,13 @@ comput: |
     die "BVack:";
     exit;
 pi/pud: |
-    Rw Typerack;
+    $s = Rw Typerack;
     
     # how many M inners before 'more' (depth first)
     A.3.C.c.intlim ||= 15;
     # max depth before like nothash
     c&dl = A.2.C.c.dl;
-    c&dl = 3 if !defined c&dl;
+    c&dl = 2 if !defined c&dl;
     
     # travel boosts/cons depth
     # c&dl += 2 if c&depth < 5 && C.t eq 'sc';
@@ -83,6 +83,7 @@ pi/pud: |
         return
     }
     
+    #c classify
     if (C&type eq 'A') {
         my ($sy,$si);
         if (s.sc && s.sc.n) {
@@ -151,6 +152,7 @@ pi/pud: |
         }
     }
     
+    #c hash out
     my ($hash,@ks) = Rw HashKs $s $ks $vs;
     
     n ind=>0.07=>"\n$ind"
@@ -192,6 +194,25 @@ Typerack: | # makes a J for whitespaced typograph
     C.sc.istycsc = 1 if
         ref $s eq 'HASH' && defined s.t && s.y && (s.c || s.sc);
     
+    if (J.2.C.sc.pi ne J.C.sc.pi && ar.m) {
+        my @p;
+        for (@{ar.m}) {
+            sayyl "Skiping into $_ ion ".ki$s;
+            my $o = $s;
+            $s = ref $s eq 'HASH' ? $s->{$_} : 
+                ref $s eq 'ARRAY' ? $s->[$_] :
+                undef;
+            if (!$s) {
+                my @off = @{ar.m}[@p .. (@{ar.m}-1)];
+                n nopoint=>0.002=>"Broke: @p"
+                n nopoint=>0.003=>">@off<",'%hs:687'
+                $s = $o;
+                last;
+            }
+            push @p, $_;
+        }
+    }
+    c&s = $s;
 HashKs: | # order children, returns $hash,@ks
     # order children
     # use Walks/hord
