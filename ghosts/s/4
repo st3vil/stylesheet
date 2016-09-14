@@ -472,7 +472,7 @@ Telvis: |
         
         
         my $AV = delete A.V;
-        my $cv = c&ocv || 6;
+        my $cv = Q.c.ocv || 6;
         my $o = c&o = G&A,o=>$cv=>$J=>$se,[$ot,'',$oc];
         A.V = $AV if $AV;
         
@@ -579,23 +579,110 @@ ElvisWhole: | # o replicates C tv,i,ii
         #t.cs->('sc lastA 2 sc','have stuff');
         t.cs->({s=>t.lookii->()},'source ii');
         my $W = t.ntos->(c&te,'J');
-        sayyl wdump 2, W.sc.top.y.in;
+        my $ii = W.sc.ii;
+        ii.men.y.oun = ii.seg;
+        ii.men.y.tw.singing.y.monic = ii.seg.y.tw.eye;
         
         c&te = $W;
         c&ot = 'whole';
+        c&ocv = 7;
         
-        t.es->("See somewhat?");
+        t.es->("See somewhat");
+        
+       # sayyl wdump 2, J.sc.ii;
         # A&who = G&A,o=>8,$C,$s,'whole';
         
     }
 DodA: |
+    local A.V = 1;
     my $s = c&f = c&s;
     my $top = ss&top || die "o A from no sc top: ".ki$s;
     sayyl "Trying to copy: ".ki $top;
+    c&finds.i = 1 if ss&i;
+    c&finds.ii = 1 if ss&ii;
+    
     c&s = $top;
     c&m = 'C';
     # make an o.y.D ref index at the top
     # warn if same thing in many places, unless diff is same?
+    
+DodEven: |
+    local A.V = 1;
+    # 7 of C with 
+    #my $allD = 
+    my $l = c&j.y.in;
+    my $Dl = {};
+    my @Do;
+    my $el;$el = sub {
+        my ($l,$ind,$way) = @_;
+        my $r = l.y.r || die "l no yr: ".ki$l;
+        my $o = r.c.o || die "r no co: ".ki$r;
+        my $D = o.y.D || die "o no yD: ".ki$o;
+        my $j = o.y.j || die "o no yj: ".ki$o;
+        if (my $pre = $Dl.>$D) {
+            die "Has already a D.t D.y.cv: from ".ki$pre;
+        }
+        $Dl.>$D.>j.c.Co.t = $l;
+        push @Do, $o;
+        
+        #saybl "$ind $way l.t l.y.cv     ".ki o.y;
+        l.y.in && $el->(l.y.in, $ind."    ", "yin  ");
+        l.y.next && $el->(l.y.next, "$ind", "ynext");
+    };
+    $el->($l);
+    
+    
+    for my $fi (keys %{c&finds||{}}) {
+        my $fr = c&f.sc.>$fi || die "o cf no $fi; ".ki$C;
+        my $to = c&i.sc.>$fi ||= {};
+        for my $k (keys %$fr) {
+            my $v = $fr.>$k;
+            if (my $re = $Dl.>$v) {
+                if (1 < keys %$re) {
+                    die "Many same yonder:"
+                        ." y$k\t v.t v.y.cv: ".wdump 2, $re;
+                }
+                my $c = values %$re;
+                $to.>$k = $c;
+            }
+            else {
+                die "Not coming: ".ki $v;
+            }
+        }
+        for my $k (keys %$to) {
+            $fr.>$k || next;
+            delete $to.>$_;
+        }
+        saybl "Hasd $fi from c&f.t: ".ki $fr, 2, 2;
+        
+    }
+    
+    
+    
+    for my $o (@Do) {
+        my $D = o.y.D || die "o no yD: ".ki$o;
+        my $l = o.y.l || die "o no yl: ".ki$o;
+        for my $k (keys %{D.y}) {
+            my $v = D.y.>$k;
+            ref $v || next;
+            my $re = $Dl.>$v;
+            # only keeps links to things we were given
+            $re || next;
+            if (1 < keys %$re) {
+                # how? el + T like to lv for both places
+                #   el=6 when things it cares about happen in this wave?
+                die "Many same yonder:"
+                    ." y$k\t D.t D.y.cv: ".wdump 2, $re;
+            }
+            my ($c) = values %$re;
+            if (l.y.>$k eq $c) {
+                # already
+            }
+            else {
+                l.y.>$k = $c;
+            }
+        }
+    }
     
 ElvisWhob: |
     n do=>1
