@@ -12,10 +12,11 @@ Triangle: | # <>< swim, oscillator, s n, 7,
     s 2:
         # number of things plugged in to s from J
         for my $J (A.2) {
-            C.c.>$_ = J.c.>$_ for grep{ J.c.>$_ } qw'whole base';
+            C.c.>$_ = J.c.>$_ for grep{ defined J.c.>$_ } qw'whole base';
+            C.sc.>$_ = J.sc.>$_ for grep{ defined J.sc.>$_ } qw'ch';
         }
         
-        my $zip = G&grinds;
+        my $zip = G&grind,A.2,$C;
         # complexity hider, T may want to tho
         c&whole = delete c&base if !$zip && c&base;
         
@@ -23,7 +24,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             my $s = G&t,$W || die "no $W";
             sayre "WHole! s: A.2.t: s.t";
             return T.Z.8 = $A
-                 unless A.wholeyet;
+                 if A.nowholeyet;
             # m=A makes 
             A&who = G&A,o=>8,$C,$s,'whole',{m=>'A'};
             # s C or J, s&top and/or y.in etc to copy

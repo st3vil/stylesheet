@@ -125,29 +125,22 @@ With: | # J's stuff, its Js, osc page, etc.
         delete J.u, delete J.n if $t ne 'os';
         $J
     
-    # give an A (with .c.s = C) to the J
+    # join the A (with .c.s = C) to the J
     ground:
         A.c.n ||= G&sJ,A.2,'n';
-        my $sip = s.c.sip || die "no ip: ".ki$s;
         my $ch = A.2.sc.ch || '';
+        my $sip = s.c.sip || die "no ip: ".ki$s;
         A.c.n.sc.a->{$ch}->{$sip} = $s;
     
-    # get ground zip off s, eg for u
-    grind:
-        my $ch = ss&ch || '';
-        my $n = G&sJ,$s,'n';
+    # get ground zip off J, for osc/ch s
+    grind: %acgt:J s
+        my $n = G&sJ,$J,'n';
+        my $ch = ref $s ? s.sc.ch : $s if $s;
+        $ch = J.sc.ch if !defined $ch;
+        $ch = '' if !defined $ch;
         my $zip = n.sc.a->{$ch};
         defined $zip && keys %$zip && $zip
         
-    # get ground zip, C is s with/receiving s&ch from the J
-    grinds:
-        my $n = A.c.n ||= G&sJ,A.2,'n';
-        $C = $s if $s; # pass 
-        s&ch = A.2.sc.ch if !defined s&ch;
-        s&ch = '' if !defined s&ch;
-        my $zip = n.sc.a->{s&ch};
-        defined $zip && keys %$zip && $zip
-    
     # partition ground - increment ch and swap out the s
     # all osc s live on Js&S by channel they're for
     # channel is the time dive/page
@@ -215,6 +208,7 @@ Tunnel: | # mind & world
             1 && saybl "resolves mind$rev: A.2.t";
             my $gr = G&grind,$u;
             if ($gr) {
+                1 && saybl "u has";
                     G&A,n=>8=>$u=>[uuu=>9=>{root=>1}];
             
                 # slowly opening & closing a J of the u better than ^
@@ -572,7 +566,7 @@ Stashi: | # recursors/ways to track A stuff
                 # origin
                 $jon = C.c.>$r;
             }
-            my $i = jon.sc.>$ok.>C.t ||= {t=>C.t};
+            my $i = jon.sc.>$ok ||= {t=>C.t};
             for my $nk (@Me) {
                 ($nk,my $gk) = ($1,$nk) if $nk =~ s/^(y|c|sc)//;
                 my $v = $C->{$nk};
