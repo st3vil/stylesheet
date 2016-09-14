@@ -359,17 +359,17 @@ Circle: | # < copy things
     
     #c o1 all making a big rising of data, you could 
     o 1:
-        my ($i,$f,$t) = @$s;
-        i.y eq $i || die "i must A";
+        my ($i,$f,$t,$c) = @$s;
+        ref $i eq 'HASH' && i.y || die "i must A/C";
         defined $f || die "from undef o ".ki$t;
         
         $t = G&Ct,$t if ref $t eq 'ARRAY';
         %$C = %$t if ref $t eq 'HASH';
         C.t = $t if $t && !ref $t;
+        C.c = $c if $c;
         
         c&i = $i;
-        c&m ||= C.t;
-        c&m = 'zip' if c&m =~ /^zip(.+)$/;
+        c&m = 'zip' if C.t =~ /^zip\w+$/;
         if (ref $f eq 'ARRAY') {
             # bunch of C
             c&m = 'z';
@@ -384,12 +384,13 @@ Circle: | # < copy things
                 # C mo 3 W:of ...
                 #  C mo 1 s:... of:mo,dig:...
                 # y.in or sc.z
-                c&m = 'C';
+                c&m ||= 'C'; # may be treated as A if 9
             }
         }
         else {
             # a zip
         }
+        c&m ||= C.t;
         c&s = $f;
     #c o2 intermediate whats-where, diff o/oo per zing
     o 2:
