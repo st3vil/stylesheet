@@ -22,9 +22,10 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         if (my $W = c&whole) {
             my $s = G&t,$W || die "no $W";
             sayre "WHole! s: A.2.t: s.t";
-            return T.Z.8 = $A;
-            
-            A&who = G&A,o=>8,$C,$s,'whole';
+            return T.Z.8 = $A
+                 unless A.wholeyet;
+            # m=A makes 
+            A&who = G&A,o=>8,$C,$s,'whole',{m=>'A'};
             # s C or J, s&top and/or y.in etc to copy
             # if ii/i then copy too, repoint as tv to this side
             # 
@@ -319,7 +320,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         s&lastK = A&zop ->[0];
         s&lastA = $A;
     
-    #c s8 transmission
+    #c s8 transfer
     s 8:
         # tie together
         A&expo.>$_ = 1 for qw'top tv i ii';
@@ -397,7 +398,13 @@ Circle: | # < copy things
         my $oo = A.c.oo = {};
         # resolving to stuff
         if (c&m eq 'A') {
-            Rw DodA;
+            my $s = c&f = c&s;
+            my $top = ss&top || s.y.in
+                || die "o A from no sc top or yin: ".ki$s;
+            c&finds.i = 1 if ss&i;
+            c&finds.ii = 1 if ss&ii;
+            c&s = $top;
+            c&m = 'C';
         }
         # eating stuff
         # < space-for (C) < t < y [many o with .c.s = $e, o.y.etc = etc]
@@ -582,6 +589,7 @@ Circle: | # < copy things
                 u.sc.bz.>$t.>$cv = $o;
             }
         };
+        C.t =~ /^zopul/ ||
         G&Chew,$dupytt,'cv,t,At',$_ for sub {
             my ($o,$cv,$t,$At) = @_;
             my $times = 'x'.@$o;
@@ -1143,7 +1151,83 @@ Circle: | # < copy things
             j.sc.root
         };
         
-    #c o7 surroundings our...
+    #c o7 surroundings/y-repoint our...
+    # make an o.y.D -> o C.t -> $l ref index at the top
+    # TODO same thing in many places
     o 7:
-        Rw DodEven;
+        my $l = c&j.y.in;
+        my $Dl = {};
+        my @Do;
+        my $el;$el = sub {
+            my ($l,$ind,$way) = @_;
+            my $r = l.y.r || die "l no yr: ".ki$l;
+            my $o = r.c.o || die "r no co: ".ki$r;
+            my $D = o.y.D || die "o no yD: ".ki$o;
+            my $j = o.y.j || die "o no yj: ".ki$o;
+            if (my $pre = $Dl.>$D) {
+                die "Has already a D.t D.y.cv: from ".ki$pre;
+            }
+            $Dl.>$D.>j.c.Co.t = $l;
+            push @Do, $o;
+
+            l.y.in && $el->(l.y.in, $ind."    ", "yin  ");
+            l.y.next && $el->(l.y.next, "$ind", "ynext");
+        };
+        $el->($l);
+
+        # indexes
+        for my $fi (keys %{c&finds||{}}) {
+            my $fr = c&f.sc.>$fi || die "o cf no $fi; ".ki$C;
+            my $to = c&i.sc.>$fi ||= {};
+            for my $k (keys %$fr) {
+                my $v = $fr.>$k;
+                if (my $re = $Dl.>$v) {
+                    if (1 < keys %$re) {
+                        die "Many same yonder:"
+                            ." y$k\t v.t v.y.cv: ".wdump 2, $re;
+                    }
+                    my ($c) = values %$re;
+                    $to.>$k = $c;
+                }
+                elsif (ref $v ne 'HASH') {
+                    $to.>$k = $v;
+                }
+                else {
+                    die "Not coming: ".ref($v).'  '.ki($v)
+                        .wdump 2, A&rsl;
+                }
+            }
+            for my $k (keys %$to) {
+                $fr.>$k || next;
+                delete $to.>$_;
+            }
+        }
+
+        # our C's ys, in/up/next/prev already linked
+        # TODO grow to seeing same objects in many places
+        #   even inside a z? 
+        # how? el + T like to lv for both places
+        #   el=6 when things it cares about happen in this wave?
+        for my $o (@Do) {
+            my $D = o.y.D || die "o no yD: ".ki$o;
+            my $l = o.y.l || die "o no yl: ".ki$o;
+            for my $k (keys %{D.y}) {
+                my $v = D.y.>$k;
+                ref $v || next;
+                my $re = $Dl.>$v;
+                # only keeps links to things we were given
+                $re || next;
+                if (1 < keys %$re) {
+                    die "Many same yonder:"
+                        ." y$k\t D.t D.y.cv: ".wdump 2, $re;
+                }
+                my ($c) = values %$re;
+                if (l.y.>$k eq $c) {
+                    # already
+                }
+                else {
+                    l.y.>$k = $c;
+                }
+            }
+        }
 

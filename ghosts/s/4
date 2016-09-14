@@ -307,9 +307,9 @@ Zome: | # return a new J
     for my $o (@$z) {
         if ($ola) {
             ola.y.next = $o;
-            ola.y.over = $o;
+            #ola.y.over = $o;
             o.y.prev = $ola;
-            o.y.under = $ola;
+            #o.y.under = $ola;
         }
         $ola = $o;
     }
@@ -330,7 +330,7 @@ Zop: |
     
     J.thou++ || do {
         n ElvisWhole=>-test
-        #n ElvisThinks=>-test=>{man=>'Zupe'}
+        n ElvisDialects=>-test=>{man=>'Zupe'}
     };
     
     sayyl "Took ".G&ron,hitime()-$beg;
@@ -479,22 +479,24 @@ Telvis: |
         }
         C.c.return ||= $se;
         $bang && return ['Outputting something'];
-        
-        my $oc = {};
-        oc.noz = 1 if c&noz;
-        oc.nonext = 1 if c&nonext;
-        $oc.>$_ = $toc.>$_ for keys %$toc;
-        my $ot = c&ot = c&ot || Q.c.ot || c&test.'-'.C&l;
-        
-        
-        my $AV = delete A.V;
-        my $cv = Q.c.ocv || 6;
-        my $i = Q.c.oi || $J;
-        my $o = c&o = G&A,o=>$cv=>$i=>$se,$ot,$oc;
-        A.V = $AV if $AV;
+        my $o;
+        if (!c&rsl) {
+            my $oc = {};
+            oc.noz = 1 if c&noz;
+            oc.nonext = 1 if c&nonext;
+            $oc.>$_ = $toc.>$_ for keys %$toc;
+            my $ot = c&ot = c&ot || Q.c.ot || c&test.'-'.C&l;
+
+
+            my $AV = delete A.V;
+            my $cv = Q.c.ocv || 6;
+            my $i = Q.c.oi || $J;
+            $o = c&o = G&A,o=>$cv=>$i=>$se,$ot,$oc;
+            A.V = $AV if $AV;
+        }
         
         # c&tac=1;
-        my $l = o.c.rsl || die "no rsl";
+        my $l = c&rsl || oc&rsl || die "no rsl";
         $l = [grep { c&grepl ->($_) } @$l] if c&grepl;
         $l
     };
@@ -639,98 +641,47 @@ ElvisWhole: | # o replicates C tv,i,ii
         ok $ii, "i has ii";
         isnt ii.D, A.ii.D, "D not D";
         isnt ii.i.y.tw.xot, A.ii.i.y.tw.xot, "xot not xot";
+    }
+    elsif ($n == 2) {
+        A.wholeyet = 1;
+        c&te =
+        n ElvisNothing
         
-    }
-DodA: |
-    local A.V = 1;
-    my $s = c&f = c&s;
-    my $top = ss&top || s.y.in || die "o A from no sc top or yin: ".ki$s;
-    c&finds.i = 1 if ss&i;
-    c&finds.ii = 1 if ss&ii;
-    c&s = $top;
-    c&m = 'C';
-    
-DodEven: |
-    local A.V = 1;
-    # make an o.y.D ref index at the top
-    # warn if same thing in many places, unless diff is same?
-    my $l = c&j.y.in;
-    my $Dl = {};
-    my @Do;
-    my $el;$el = sub {
-        my ($l,$ind,$way) = @_;
-        my $r = l.y.r || die "l no yr: ".ki$l;
-        my $o = r.c.o || die "r no co: ".ki$r;
-        my $D = o.y.D || die "o no yD: ".ki$o;
-        my $j = o.y.j || die "o no yj: ".ki$o;
-        if (my $pre = $Dl.>$D) {
-            die "Has already a D.t D.y.cv: from ".ki$pre;
-        }
-        $Dl.>$D.>j.c.Co.t = $l;
-        push @Do, $o;
+        t.cs->('sc lastK c s','ElvisNothing with it');
+        my $mo = t.ntos->(c&te,'mo');
+        my $W = t.ntos->(c&te,'J');
+        is mo.ii, W.ii, "mo\.ii is J\.ii";
+        is mo.ii.mo, W.ii.mo, "mo\.ii\.mo is J\.ii\.mo";
+        isnt mo.ii, A.ii, "mo\.ii ! A\.ii";
+        isnt mo.ii.mo, A.ii.mo, "mo\.ii\.mo ! A\.ii\.mo";
+        isnt mo.ii.mo.y.in, A.ii.mo.y.in, "moiimoyin not Aiimoyin";
+        my $traces = qr/^\S.+has:| xot| FindMeWhenYoure/;
         
-        #saybl "$ind $way l.t l.y.cv     ".ki o.y;
-        l.y.in && $el->(l.y.in, $ind."    ", "yin  ");
-        l.y.next && $el->(l.y.next, "$ind", "ynext");
-    };
-    $el->($l);
-    
-    # indexes
-    for my $fi (keys %{c&finds||{}}) {
-        my $fr = c&f.sc.>$fi || die "o cf no $fi; ".ki$C;
-        my $to = c&i.sc.>$fi ||= {};
-        for my $k (keys %$fr) {
-            my $v = $fr.>$k;
-            if (my $re = $Dl.>$v) {
-                if (1 < keys %$re) {
-                    die "Many same yonder:"
-                        ." y$k\t v.t v.y.cv: ".wdump 2, $re;
-                }
-                my ($c) = values %$re;
-                $to.>$k = $c;
-            }
-            elsif (ref $v ne 'HASH') {
-                $to.>$k = $v;
-            }
-            else {
-                die "Not coming: ".ref($v).'  '.ki($v)
-                    .wdump 2, A&rsl;
-            }
-        }
-        for my $k (keys %$to) {
-            $fr.>$k || next;
-            delete $to.>$_;
-        }
+        my $lmo = t.anii->(mo.ii);
+        @$lmo = grep /$traces/, @$lmo;
+        t.cs->({s=>$lmo},'source ii');
     }
-    
-    # our C's ys, in/up/next/prev already linked
-    # TODO grow to seeing same objects in many places
-    #   even inside a z? 
-    # how? el + T like to lv for both places
-    #   el=6 when things it cares about happen in this wave?
-    for my $o (@Do) {
-        my $D = o.y.D || die "o no yD: ".ki$o;
-        my $l = o.y.l || die "o no yl: ".ki$o;
-        for my $k (keys %{D.y}) {
-            my $v = D.y.>$k;
-            ref $v || next;
-            my $re = $Dl.>$v;
-            # only keeps links to things we were given
-            $re || next;
-            if (1 < keys %$re) {
-                die "Many same yonder:"
-                    ." y$k\t D.t D.y.cv: ".wdump 2, $re;
-            }
-            my ($c) = values %$re;
-            if (l.y.>$k eq $c) {
-                # already
-            }
-            else {
-                l.y.>$k = $c;
-            }
-        }
+    elsif ($n == 3) {
+        A.wholeyet = 1;
+        c&te =
+        n ElvisThinker
+        
+        t.cs->('sc lastK c s','ElvisThinker with it');
+        my $mo = t.ntos->(c&te,'mo');
+        my $W = t.ntos->(c&te,'J');
+        is mo.ii, W.ii, "mo\.ii is J\.ii";
+        is mo.ii.mo, W.ii.mo, "mo\.ii\.mo is J\.ii\.mo";
+        isnt mo.ii, A.ii, "mo\.ii ! A\.ii";
+        isnt mo.ii.mo, A.ii.mo, "mo\.ii\.mo ! A\.ii\.mo";
+        isnt mo.ii.mo.y.in, A.ii.mo.y.in, "moiimoyin not Aiimoyin";
+        my $traces = qr/^\S.+has:| xot| FindMeWhenYoure/;
+        
+        my $lmo = t.anii->(mo.ii);
+        @$lmo = grep /$traces/, @$lmo;
+        t.cs->({s=>$lmo},'source ii');
     }
-    
+ElvisNothing: |
+    n nothi=>3=>'e'
 ElvisWhob: |
     n do=>1
     my $mod = sub {
@@ -750,6 +701,8 @@ ElvisWhob: |
 ElvisDialects: | # J u Dialect, deeply rooted # TODO TODO TODO
     my $t = Rw Telvis;
     #A.V = 1;
+    
+      #  A.wholeyet = 1;
     
     # localised implica expanded into universal (still localised)
     # eg make everything acgt:s
@@ -810,11 +763,26 @@ ElvisDialects: | # J u Dialect, deeply rooted # TODO TODO TODO
         n ElvisDialecto
         t.cs->('sc lastK c s','dialect decompressed');
         t.cs->({s=>t.lookii->()},'have ii');
+        my $W = t.ntos->(c&te,'J');
+        my $traces = qr/^\S.+has:| al\w+ 0/;
+        my $lmo = t.anii->(W.ii);
+        @$lmo = grep /$traces/, @$lmo;
+        t.cs->({s=>$lmo},'dialect source ii');
+        ok !W.ii.42, "Stuff in W not as W's mind";
+        
     }
     elsif ($n == 1) {
         c&te =
         n ElvisDialecto
         t.cs->('sc lastK c s','dialected change stuff');
+        t.cs->({s=>t.lookii->()},'have ii');
+        my $W = t.ntos->(c&te,'J');
+        my $traces = qr/^\S.+has:| al\w+ 0/;
+        my $lmo = t.anii->(W.ii);
+        @$lmo = grep /$traces/, @$lmo;
+        t.cs->({s=>$lmo},'dialect source ii');
+        ok !W.ii.42, "Stuff in W not as W's mind";
+        #exit;
     }
     elsif ($n == 2) {
         c&te =
@@ -843,7 +811,7 @@ ElvisDialecto: | # TODO n alact before u alact drops stuff
     else {
         u alacgts
     }
-    n alact
+    n alof
     my $hum = ',cr:ab' if J.bowls > 1;
     jasm: %fo:late$hum
         # rubbing
