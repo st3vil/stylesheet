@@ -582,6 +582,60 @@ Telvis: |
         }
         \@m;
     };
+    t.pinote = sub {
+        my ($s,$p,$do) = @_;
+        $p = [grep{$_}split/\W/,$p] if !ref $p;
+        my @ok;
+        my $l;
+        while (@$p) {
+            if (ref $s ne 'HASH') {
+                $l = ["Broken: @ok   (rest: @$p)"];
+                last;
+            }
+            my $k = shift @$p;
+            push @ok, $k;
+            $s = $s.>$k;
+            @$p || last;
+        }
+        $l ||= $do->($s) if $do;
+        $l;
+    };
+    t.grind = sub {
+        my $J = shift;
+        T.givech = '';
+        my $uz = G&grind,$J;
+        my $ch = delete T.givech;
+        $uz || return ["nothing for J.t . $ch"];
+        my $l = t.grimd->($uz);
+        push @$l, "For J.t . $ch";
+        $l
+    };
+    t.grimd = sub {
+        my $uz = shift;
+        [map{ "_.t _.cv: ".ki _.c.s } map {$uz.>$_ } sort keys %$uz];
+    };
+    t.popi = sub {
+        my ($J,$i,$C) = @_;
+        my $step = c&popl && c&popl.>$i || "something";
+        my $tac = '!' if $step =~ s/\!$//;
+        my $name = "C.t @ $i: $step";
+        my $gr = sub {
+            my $l = t.anii->(shift);
+            @$l = grep {/^\S.+has:| al\w+ 0/} @$l;
+            $l
+        };
+        t.cs->({s=>$gr->(J.ii)},"$name: .ii$tac");
+        t.cs->({s=>$gr->(J.sc.ii)},"$name: sc\.ii$tac");
+        
+        t.cs->({s=>t.grind->(J.sc.u)},"$name: u ground zipper$tac");
+        
+        t.cs->({s=>t.grind->($J)},"$name: ground zipper$tac");
+        
+        my $l = t.pinote->($J,<<'',t.grimd);
+            sc.u.sc.s.c.zip.c.s.c.s.ground.c.s.c.s
+        t.cs->({s=>$l},"$name: u osc'd ground zipper$tac");
+    };  
+    
     return $t
 ElvisElvises: | # J e J,
     my $t = Rw Telvis;
@@ -757,29 +811,66 @@ ElvisDialects: | # J u Dialect, deeply rooted # TODO TODO TODO
     #  until that J brings its own mind onto the A
     # simple stuff should work
     
+    my $Jay;
+    G.tuberay = sub {
+        my ($A,$C,$G,$T) = @_;
+        $Jay || return;
+        Jay.sc.ch ne '' && die "Jayscch changed: Jay.sc.ch";
+    } if 0;
+    
     if ($n == 0) {
+        my $ec;
+        ec.popi = t.popi;
+        ec.popl.0 = "before any";
+        # theu leaves ii, mo alof in ground, u s but not zip
+        ec.popl.1 = "first n, normal mind"; 
+        ec.popl.2 = "first u, mind still normal";
+        # al* appears in mind
+        ec.popl.3 = "n aft u";
+        # new bit of u ground + blank u s for next page
+        ec.popl.4 = "second u";
+        ec.popl.5 = "finality";
         c&te =
-        n ElvisDialecto
+        n ElvisDialecto=>W=>$ec
+        
         t.cs->('sc lastK c s','dialect decompressed');
         t.cs->({s=>t.lookii->()},'have ii');
+        
         my $W = t.ntos->(c&te,'J');
         my $traces = qr/^\S.+has:| al\w+ 0/;
         my $lmo = t.anii->(W.ii);
         @$lmo = grep /$traces/, @$lmo;
         t.cs->({s=>$lmo},'dialect source ii');
         ok !W.ii.42, "Stuff in W not as W's mind";
-        
     }
     elsif ($n == 1) {
+        my $ec;
+        ec.popi = t.popi;
+        # has J.ii with alacgts from last round
+        # we would be using A.ii from above
+        ec.popl.0 = "reset ground, last u osc";
+        ec.popl.1 = "first n, normal mind";
+        ec.popl.2 = "first u, mind still normal";
+        # al* appears in mind
+        ec.popl.3 = "n aft u";
+        # new bit of u ground + blank u s for next page
+        ec.popl.4 = "second u";
+        
+        ec.popl.5 = "finality";
         c&te =
-        n ElvisDialecto
+        n ElvisDialecto=>W=>$ec
         t.cs->('sc lastK c s','dialected change stuff');
+        # see the W.sc.ii produced by W
         t.cs->({s=>t.lookii->()},'have ii');
+        # see the W.ii used by W
+        
         my $W = t.ntos->(c&te,'J');
         my $lmo = t.anii->(W.ii);
         @$lmo = grep {/^\S.+has:| al\w+ 0/} @$lmo;
         t.cs->({s=>$lmo},'dialect source ii');
         ok !W.ii.42, "Stuff in W not as W's mind";
+        
+        saybl wdump 2, [W.ii, W.sc.u.sc.ii, W.sc.u.sc.s.sc.ii.mo.y.tw];
         #exit;
     }
     elsif ($n == 2) {
@@ -801,26 +892,37 @@ ElvisDialectos: |
     u Cee
     n $_=>2=>$_ for "Doowop";
     n $_ eq 4 && 3 || $_=>'3'.$_ => G&rand,7  for 1..7;
-ElvisDialecto: | # TODO n alact before u alact drops stuff
-    1&&sayyl "Actred";
+ElvisDialecto: | # TODO n alof before u alact drops stuff
+    my $for = sub {
+        my $i = shift;        
+        c&popi && c&popl.>$i && c&popi ->($J,$i,$C);
+    };
+    
+    $for->(0);
+    n alof
+    $for->(1);
     if (J.bowls++ < 2) {
         u alact
     }
     else {
         u alacgts
     }
-    n alof
+    $for->(2);
     my $hum = ',cr:ab' if J.bowls > 1;
     jasm: %fo:late$hum
         # rubbing
+    $for->(3);
     joints: %fo:river,of:42
         "southward $s"
     n \'of:not'
     semio:
         # tic tic;sdigjshgisdf
     u alacgts
+    $for->(4);
+    # no mind after first run...
     sedio:
         # tic tic
+    $for->(5);
     
 alact: | # aka a
     # make acts

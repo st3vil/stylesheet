@@ -126,18 +126,27 @@ With: | # J's stuff, its Js, osc page, etc.
         $J
     
     # join the A (with .c.s = C) to the J
+    # and gives A.c.n
     ground:
         A.c.n ||= G&sJ,A.2,'n';
         my $ch = A.2.sc.ch || '';
         my $sip = s.c.sip || die "no ip: ".ki$s;
         A.c.n.sc.a->{$ch}->{$sip} = $s;
     
-    # get ground zip off J, for osc/ch s
+    # get ground zip off J, or osc/ch s
     grind: %acgt:J s
-        my $n = G&sJ,$J,'n';
-        my $ch = ref $s ? s.sc.ch : $s if $s;
+        my $ch;
+        if (ref $s) {
+            $ch = s.sc.ch;
+        }
+        elsif ($s) {
+            sayre "Getting ground J.t/$s";
+            $ch = $s;
+        }
         $ch = J.sc.ch if !defined $ch;
         $ch = '' if !defined $ch;
+        T.givech = $ch if exists T.givech;
+        my $n = G&sJ,$J,'n';
         my $zip = n.sc.a->{$ch};
         defined $zip && keys %$zip && $zip
         
@@ -146,6 +155,8 @@ With: | # J's stuff, its Js, osc page, etc.
     # channel is the time dive/page
     # main street (Js&ch aimed) being '', 1, 2...
     sesh: %acgt:J
+        my $n = G&sJ,$J,'n';
+        n.sc.a->{J.sc.ch} ||= {}; # so rea goes through blank pages
         my $o = J.sc.S->{J.sc.ch} = G&sJ,$J,'s';
         delete J.sc.s;
         my $ch = ++J.sc.ch;
@@ -158,13 +169,14 @@ With: | # J's stuff, its Js, osc page, etc.
         s.sc.ch = $ch;
     
     # reset ground '', 1, 2...
-    rea: %acgt:J
-        my $n = J.sc.n || return;# sayre "no n on J.t";
+    rea: %acgt:J s
+        my $n = J.sc.n || return sayre "no n on J.t ".($s && s.t);
         my $zi = ++J.c.zi;
         my $ch = '';
         my $lim = 2;
+        my $rm = {};
         while (n.sc.a->{$ch}) {
-            J.sc.Z->{$zi}->{$ch} = delete n.sc.a->{$ch};
+            J.sc.Z->{$zi}->{$ch} = $rm->{$ch} = delete n.sc.a->{$ch};
             if ($zi > $lim) {
                 delete J.sc.Z->{$zi-$lim}
             }
@@ -331,7 +343,7 @@ Jelly: | # Town making happening
         A&pin = c&pin || c&J || s&J ->{t};
     J 6:
         Js&n && G&rea,$J;
-        Js&u && G&rea,Js&u;
+        Js&u && G&rea,Js&u,$J;
         #A.1 = $J;
         my $ise = c&e && " (e:".c&e ->{t}.")";
         saybl "St J.t / A.2.t  (A&pin)$ise";
