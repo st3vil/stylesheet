@@ -24,9 +24,9 @@ Stuff: |
     n Hoop
     n Circle
 ThatWillBe: |
-    n Tan
     n Tal
     n Komp
+    n ElVerse
 MakePi: | # make code,
     my $ii = {};
     
@@ -135,6 +135,15 @@ CoBabbler: | # bake code
     C.c.s =~ s/\ba\&(\w+)/A\.sc\.$1/sgm;
     C.c.s =~ s/\b((?!u)\w)s\&(\w+)/$1\.sc\.$2/sgm;
     C.c.s =~ s/\b(\w)c\&(\w+)/$1\.c\.$2/sgm;
+    # A22Cs&blue -> A.2.2.c.s.sc.blue
+    for my $l (qw'y c s') {
+        my $f = $l eq 's' ? 'sc' : $l;
+        C.c.s =~ s/\b(\d+)(C)?$l\&(\w+)/
+            my $net = join'.','A',split'',$1;
+            my $see = ".c\.s" if $2;
+            "$net$see\.$f\.$3"
+        /smeg;
+    }
     
     C.c.s = G&parse_babbl,C.c.s;
     
@@ -143,9 +152,15 @@ CoBabbler: | # bake code
         {\$G->\{h\}->($2,"$1"$3}sgm;
     
     C.c.s
-of: |
-    # of
-    #1 && sayyl "of C.t C.y.cv: _.t _.y.cv  _.c.code" for e&_z;
+of: | # compile/collect
+    # container process is traveling bunches of code, see 99 Traweil
+    # place toward A.ii.>$s, linked list of embryo
+
+    # rennovating around town
+    # a geodesic self-mover
+    # keeps rebuilding in different locations
+    
+    # this way should export osc hooks and another way...
     for my $z ( e&_z ) {
         if (!zc&s) {
             sayre "z.t z.y.cv has no s: ".ki $z;
