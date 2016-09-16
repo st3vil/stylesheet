@@ -69,8 +69,14 @@ Hoop: | # osc art, colour in
             # unless C.sc.qz (quiet z)
             # unless s&W (they can look it up)
             
-            # describe it, versions at head/remote
-            s&J = Js&name || J.t;
+            # scJ could describe it, versions at head/remote
+            # place it, in a net, can talk to with the address
+            if (s&pi) {
+                # implies s&J, which remains in osc C but not Komp
+            }
+            else {
+                s&J = Js&name || J.t;
+            }
             1 && saybl "J.t was J.sc.name";
         }
         
@@ -131,6 +137,25 @@ Komp: | # K/D line protoClattice
             }
             else {
                 1 && saygr "Same Jo: C.t C.y.cv @ $lo";
+            }
+            # Hoisting,
+        }
+        # mute refs
+        # tells you things that are not there, see o 7 apply
+        for my $nk ('c','sc') {
+            my $gh = $C.>$nk;
+            my $mute;
+            for my $gk (keys %$gh) {
+                ref $gh.>$gk || next;
+                next if $nk eq 'sc' && $gk eq 'z';
+                delete $gh.>$gk;
+                $mute.>$gk ++;
+            }
+            if ($mute) {
+                my @gks = sort keys %$mute;
+                my $k = 'm'.substr($nk,0,1);
+                exists C.c.>$k && die "Komp already c $k: ".ki$C;
+                C.c.>$k = "@gks";
             }
         }
     D 2:
