@@ -91,17 +91,19 @@ Sea: | # folds of the day
     
 With: | # J's stuff, its Js, osc page, etc.
     u i
+    sn:
+        join ' - ',map{ $A.>$_ ->{t} } y=>1..5;
     # adapt to J interior as perhaps exterior
     # used to be J.u sub created to know J
     # use s&J or kaboom
-    # here A.2 is the doer
+    # here A.1 is the doer
     # see With/J
     n: %acgt
         pop @Me;
-        G&A,n=>8=>A.2,\@Me;
+        G&A,n=>8=>A.1,\@Me;
     u: %acgt
         pop @Me;
-        G&A,u=>8=>A.2,\@Me;
+        G&A,u=>8=>A.1,\@Me;
     # many slide by slightly and then get nailed down
     m: %acgt
         pop @Me;
@@ -113,7 +115,7 @@ With: | # J's stuff, its Js, osc page, etc.
     
     # make J, they inherit non c/sc
     J: %acgt:from t
-        ($from,$t) = (A.2,$from) if !defined $t;
+        ($from,$t) = (A.1,$from) if !defined $t;
         my $J = do {
             my $A = $from;
             G&A,'J';
@@ -122,14 +124,14 @@ With: | # J's stuff, its Js, osc page, etc.
         J.y.G = $G;
         J.u = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,u=>8=>$J,\@Me };
         J.n = sub { ($A,$C,$G,$T,@Me) = @_; pop @Me; G&A,n=>8=>$J,\@Me };
-        delete J.u, delete J.n if $t ne 'os';
+        delete(J.u), delete J.n if $t ne 'os';
         $J
     
     # join the A (with .c.s = C) to the J
     # and gives A.c.n
     ground:
-        A.c.n ||= G&sJ,A.2,'n';
-        my $ch = A.2.sc.ch || '';
+        A.c.n ||= G&sJ,A.1,'n';
+        my $ch = A.1.sc.ch || '';
         my $sip = s.c.sip || die "no ip: ".ki$s;
         A.c.n.sc.a->{$ch}->{$sip} = $s;
     
@@ -172,7 +174,7 @@ With: | # J's stuff, its Js, osc page, etc.
     # reset ground '', 1, 2...
     rea: %acgt:J s
         my $n = J.sc.n || return sayre "no n on J.t ".($s && s.t);
-        J.sc.S.>J.sc.ch = G&sJ,$J,'s';
+        Js&S.>Js&ch = G&sJ,$J,'s';
         my $zi = ++J.c.zi;
         my $ch = '';
         my $lim = 2;
@@ -195,38 +197,39 @@ Tunnel: | # mind & world
     u a
     # dialect of ...
     u 1:
-        A.3 = shift @$s; # for
-        A.2 = G&sJ,A.3,'u';
+        A.2 = shift @$s; # for
+        A.1 = G&sJ,A.3,'u';
     u 2:
-        if (A.2.c.o) { # uJ's orderliness mark
+        if (A.1.c.o) { # uJ's orderliness mark
             # also its current position relative to itself
-            # make many pages of u per A.3
-            G&sesh,A.2;
+            # make many pages of u per A.2 (A.1 doing u)
+            G&sesh,A.1;
         }
     # hardwire u's u
     u 3:
-        my $n = A.c.n = G&A,n=>1=>A.2,@$s;
+        my $n = A.c.n = G&A,n=>1=>A.1,@$s;
         n.c.u.c.whole = 'theu';
         G&A,$n,8;
         # pull on if not cached mindset (various W merged)
     n 1:
-        A.2 = shift @$s;
+        A.1 = shift @$s;
         A.4 || sayre "NO A4: A.t";
-        A.c.u = G&sJ,A.2,'u';
+        A.c.u = G&sJ,A.1,'u';
     # ground assembles mind
     n 2:
         my $u = A.c.u;
-        return if A.2.t eq 'os';#|| !A.uyes;
+        return if A.1.t eq 'os';#|| !A.uyes;
         if (!u.c.o) {
             u.c.base = 'theu'; # the PiMachine
             # base if grind (ground, needs root), whole if just theu
             my $rev = ".u.sc.ch" if u.sc.ch;
-            1 && saybl "resolves mind$rev: A.2.t";
+            my $V = A.1.t =~ /^[A-Z]/;
+            $V && saybl "resolves mind$rev: A.1.t";
             my $gr = G&grind,$u;
             if ($gr) {
-                1 && saybl "u has";
-                    G&A,n=>8=>$u=>[uuu=>9=>{root=>1}];
-            
+                $V && saybl "u has";
+                
+                G&A,n=>8=>$u=>[uuu=>9=>{root=>1}];
                 # slowly opening & closing a J of the u better than ^
                 # but also want to hold u n at 3 til cachable known
                 # the relevant page of s (man sesh) then ^ getting whole=?
@@ -235,25 +238,25 @@ Tunnel: | # mind & world
             }
             # resolve our mind
             my $so = G&A,s=>8=>$u;
-            # merge its i/ii thing ideas into our 2
+            # merge its i/ii thing ideas into our 1
             if (u.sc.ii) {
-                1 && sayyl "Merge its ideas? A.2.t";
+                $V && sayyl "Merge its ideas? A.1.t";
                 # A.mo = the 6er this n is mindupping
                 # A = this A, already fell off A.mo
-                # A.2 = an fyi for the J
-                for (A.mo, $A, A.2) {
+                # A.1 = an fyi for the J, may want only the most something mind
+                for (A.mo, $A, A.1) {
                     _.ii = u.sc.ii;
-                    _.i = u.sc.i || die "No i on A.2.t u";
+                    _.i = u.sc.i || die "No i on A.1.t u";
                 }
                 # the mo of A.2 minds from above til here
                 # a J's mind has how to get into a J and do its mind
                 # see Elvising for inside-outside cooperation
             }
             else {
-                sayre "No ii on A.2.t u (o Whole TODO?)";
-                for (A.mo, $A, A.2) {
+                sayre "No ii on A.1.t u (o Whole TODO?)";
+                for (A.mo, $A, A.1) {
                     _.ii = A.4.ii;
-                    _.i = A.4.i || die "No i on A.2.t u ish A.4.t not-whole";
+                    _.i = A.4.i || die "No i on A.1.t u ish A.4.t not-whole";
                 }
             }
         }
@@ -265,7 +268,7 @@ Tunnel: | # mind & world
             my $mo = G&tugA,mo=>1,@$l;
             G&ground,$mo unless mo.c.s.c.nogro;
         }
-        delete A.2.c.o; # orderliness
+        delete A.1.c.o; # orderliness
     n 4:
         # become aware of past, surface vibration
     n 5:
@@ -285,8 +288,7 @@ Tunnel: | # mind & world
     mo 5:
         # 
     mo 8:
-        A.up.la = $A;
-
+        A.up.la = $A; # never happens?
 Jelly: | # Town making happening
     u c
     n \'of:mo'
@@ -303,26 +305,27 @@ Jelly: | # Town making happening
     J 2:
         # see self already
         my $J = s&J && return;
-        A&Jup ||= A.2;
+        A&Jup ||= A.1;
         $J = G&pint,A&Jup,sc=>Jtv=>C.t,C.y.cv;
         s&J = $J;
         
         my $v = G&pint,A&Jup,sc=>tv=>C.t,C.y.cv;
-        #$v && saybl "J A.2.t -> v.t"; # C with sJ
-        # or force a...
+        #$v && saybl "J A.1.t -> v.t"; # C with sJ
     J 3:
         if (!s&J) {
             s&J = G&J,A&Jup,C.t;
             length(C.t) > 2 && sayyl "J ! C.t";
         }
-        A.2 = s&J;
-        A.3 = s&J if A.c.Jpool;
+        A.3 = s&J if c&W;
+        A.2 = A.1;
+        A.1 = s&J;
     pi 3:
         my $J = s&J;
         J.c.d = A.2.c.d + 1;
         J.sc.name = "J.c.d $pi*C.t";
         s&pi = $pi;
         # distance from A.3 as ip
+    # J.C/T wants to be? drop in A spawn?
     u s
     n \'of:mo'
     # to rm ^ make the of rememberer D not leave between the o switchup of u others
@@ -340,7 +343,7 @@ Jelly: | # Town making happening
         Js&u && G&rea,Js&u,$J;
         #A.1 = $J;
         my $ise = c&e && " (e:".c&e ->{t}.")";
-        saybl "St J.t / A.2.t  (A&pin)$ise";
+        saybl "St J.t / A.1.t  (A&pin)$ise";
         my $c = {root=>1};
         my $y = {cv=>0.9};
         my $r = J.sc.root = G&A,n=>1=>$J=>[J.t,$y,$c];

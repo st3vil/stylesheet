@@ -52,9 +52,10 @@ Day: | # world primitives
         $C = G&s,$s,@Me;
         c&on ||= 'ii';
         c&max ||= 5;
-        c&min ||= 1;
-        for (c&min .. c&max) {
-            my $from = $A.>$_ || next;
+        c&min ||= 0;
+        for my $i (c&min .. c&max) {
+            my $from = $i == 0 ? $A : $A.>$i;
+            $from || next;
             my $on = $from.>c&on || next;
             my $t = $on.>C.t || next;
             if ($wanted) {
@@ -80,7 +81,7 @@ Day: | # world primitives
             $y = G.i.t->($A,$C,$G,$T,$C);
         };
         $y || die "no h: $s";
-        my @r = eval { $y->($A,$C,$G,$T,@Me) };
+        my @r = eval { $DB::single = G.ydrop; $y->($A,$C,$G,$T,@Me) };
         if ($@) {
             if ($@ !~ /Throh/) {
                 $D ||= A.i.ii.i.y.tw->{$s};
@@ -123,7 +124,7 @@ Day: | # world primitives
             # if i > netmask
             # if t mentions some other way to get it
             my $tw = t.y.tw || die "w $s found no ytw on"
-                ." A.2.t s A.t @ $i (f.t): ".ki$t;
+                ." A.1.t s A.t @ $i (f.t): ".ki$t;
             $tw.>$s
         };
         # they are pins near network of knowledge of T
@@ -140,7 +141,7 @@ Day: | # world primitives
                 || die "Not Gway not diges $fi: wayo: ".ki G.way.o;
             ws&of = 'w';
         }
-        $w || die "No way to $s (on A.2.t's A.t)";
+        $w || die "No way to $s (on A.1.t's A.t)";
         
         if (!$w) {
             @lo = map{_.t} uniq @lo;
@@ -204,7 +205,6 @@ Tube: |
             A.c.ip = [@{A.up.c.ip||[]}, A.up.c.ipi++];
             A.c.sip = join' ',@{A.c.ip};
             saygr "A.c.sip A.t from i.t";
-            A.1 = $A;
         }
         if ($ov) {
             $ov /= 10 while $ov >= 1;
