@@ -130,6 +130,7 @@ CoBabbler: | # bake code
         C.c.s =~ s/^(\s*)$_ ([^\n]+?)((?: (?:for|if) .+)?;?)$/${1}${if}G\.h->(\$A,\$C,\$G,\$T,'$sw->{$_}','$_',$2)$3/sgm;
     }
     
+    
     C.c.s =~ s/\bs\&(\w+)/C\&$1/sgm;
     C.c.s =~ s/\bA\&(\w+)/A\.c\.$1/sgm;
     C.c.s =~ s/\ba\&(\w+)/A\.sc\.$1/sgm;
@@ -137,6 +138,7 @@ CoBabbler: | # bake code
     C.c.s =~ s/\b(\w)c\&(\w+)/$1\.c\.$2/sgm;
     # A22Cs&blue -> A.2.2.c.s.sc.blue
     for my $l (qw'y c s') {
+    next;
         my $f = $l eq 's' ? 'sc' : $l;
         C.c.s =~ s/\b(\d+)(C)?$l\&(\w+)/
             my $net = join'.','A',split'',$1;
