@@ -371,6 +371,9 @@ Zupe: | # run Zome, output pud
     sayyl "Making pud...";
     m _.t=>-pud=>{s=>_.c.s},'%hs:675,ws,wi:30%'    for @{J.output||[]};
     
+Zuup: | # Zupe slowly
+    G.slowly++;
+    n Zupe
 pi/test: |
     my $c;
     c.pin = 'ATest';
@@ -384,10 +387,14 @@ ATest: |
         my $el = c&tell;
         push @{el.output ||= []}, {t=>C.t,c=>{s=>$out}};
     }
+    snooze 9000 if G.slowly;
     
 Tesh: | # wrap test way
     # give prototype J/A to the t, the test J as oJ
     my ($t,$sel) = @$m;
+     #J.tacall = 1;
+    
+    # twist towards n
     my $tes = sub {
         my $C = G&tC,\@_;
         c&test ||= do {
@@ -397,7 +404,7 @@ Tesh: | # wrap test way
         };
         C.c.tac = 1 if C&l =~ s/!$//;
         C.c.question = 1 if C&l =~ s/\?$//;
-        c&tac = 1 if J.tacall;
+        #c&tac = 1;# if J.tacall;
         my ($aye) = map {_.M->[0]}
         n $C
         aye.c.return
@@ -444,6 +451,7 @@ Telvis: |
     my $t;
     
     t.es = $tes;
+    # twist towards n
     t.cs = sub {
         my ($c,$t) = @_;
         $c = {ntos=>$c} if $c && !ref $c;
@@ -655,8 +663,6 @@ ElvisTimely: | # J know whatnot, pins (see Jam 82)
     # see pud re T
     # such massive hoisting wants 
     
-
-
 aly: | # something wiry
     # make acts
     n alvy
