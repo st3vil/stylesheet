@@ -4,16 +4,17 @@ PiMachine: | # all that is
     n Jingle
     n Stuff
     n ThatWillBe
+    n Elvising
 Sequencing: |
     n To
     n Day
+    J.gloway.>$_ = 1 for qw'CoBabbler CoArgulate';
     n Tube
     n Ce
 ForJ: |
     n Sea
     n With
     n Tunnel
-    n Elvising
     n Jelly
 Jingle: |
     n Compliers
@@ -53,6 +54,7 @@ MakePi: | # make code,
             my $jt = G.oin.inJ;
             my $Day = $jt->{$bit};
             my $tW = {};
+            G&xot,$tW,Day.gloway if Day.gloway;
             my $su;$su = sub {
                 my $J = shift;
                 my $v = J.El.Pre.tv || die "J.name no tv";
@@ -131,14 +133,8 @@ CoBabbler: | # bake code
     }
     
     
-    C.c.s =~ s/\bs\&(\w+)/C\&$1/sgm;
-    C.c.s =~ s/\bA\&(\w+)/A\.c\.$1/sgm;
-    C.c.s =~ s/\ba\&(\w+)/A\.sc\.$1/sgm;
-    C.c.s =~ s/\b((?!u)\w)s\&(\w+)/$1\.sc\.$2/sgm;
-    C.c.s =~ s/\b(\w)c\&(\w+)/$1\.c\.$2/sgm;
     # A22Cs&blue -> A.2.2.c.s.sc.blue
     for my $l (qw'y c s') {
-    next;
         my $f = $l eq 's' ? 'sc' : $l;
         C.c.s =~ s/\b(\d+)(C)?$l\&(\w+)/
             my $net = join'.','A',split'',$1;
@@ -146,6 +142,16 @@ CoBabbler: | # bake code
             "$net$see\.$f\.$3"
         /smeg;
     }
+    
+    
+    C.c.s =~ s/\bs\&(\w+)/C\&$1/sgm;
+    C.c.s =~ s/\bA\&(\w+)/A\.c\.$1/sgm;
+    C.c.s =~ s/\ba\&(\w+)/A\.sc\.$1/sgm;
+    C.c.s =~ s/\b((?!u)\w)s\&(\w+)/$1\.sc\.$2/sgm;
+    C.c.s =~ s/\b(\w)c\&(\w+)/$1\.c\.$2/sgm;
+    C.c.s =~ s/\b(\w)y\&(\w+)/$1\.y\.$2/sgm;
+    c&s =~ s/^\s*S(?: (\S+.*))?\s*$/G\&S,"$2";/sgm;
+    c&s =~ s/^\s*T(?: (\S+.*))?\s*$/G\&T,"$2";/sgm;
     
     C.c.s = G&parse_babbl,C.c.s;
     
@@ -200,14 +206,15 @@ CoArgulate: |
         Rw conot $C;
     
     # the nk/gk it wants to wake up
-    if (my $v = s&v) {
+    my $pasn = sub {
+        my $v = shift;
         my ($nk,$gk,$more) = $v =~ /^([tycs])(\S*)(?: (.+))?$/;
         $nk = 'sc' if $nk eq 's';
-        $nk || die"strv:$v";
-        s&nk = $nk;
-        s&gk = $gk;
-        die "More v: $more: ".ki$C if $more;
-    }
+        $nk && $gk || die"strv:$v";
+        ($nk,$gk);
+    };
+    (s&nk,s&gk) = $pasn->(s&v) if s&v;
+    (s&nnk,s&ngk) = $pasn->(s&v) if s&Nv;
     
     if (my $nk = s&nk) {
         push @$ara, "my \$".$nk." = C\.".$nk.";";
@@ -286,9 +293,14 @@ conot: | # expand sc.t->ip, compiled throat clause
             $i.= 'eq' if $is =~ s/^=//;
             $i = 're' if $is =~ s/^~//;
             $i ||= 'is';
-            if ($neg && $i eq 'is') {
-                undef $neg;
-                $i = 'not';
+            if ($i eq 'is') {
+                if ($is eq "''") {
+                    $is = '';
+                }
+                elsif (!length($is)) {
+                    $i = 'exi';
+                    $is = 1;
+                }
             }
             p.neg = 1 if $neg;
             $p.>$i = $is;
@@ -347,6 +359,7 @@ Zop: |
     
     J.thou++ || do {
         
+        n ElvisElvises=>-test,{man=>'Zupe'}
         n ElvisElvises=>-test
     };
     
