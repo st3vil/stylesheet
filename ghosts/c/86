@@ -48,6 +48,32 @@ mass: | # seconds -> h:m:s
         }
     }
     ($neg?"-":"").$rv;
+
+sciun: |
+    my $pref = {18=>"E",15=>"P",12=>"T",9=>"G",6=>"M",3=>"k",0=>"",
+              -3=>"m",-6=>"u",-9=>"n",-12=>"p",-15=>"f",-18=>"a"};
+    
+    my $neg = $s < 0 ? "-" : "";
+    if ($neg) {
+        $s = -$s;
+    }
+    my $unit = '';#(shift) || "";
+    my $d = 4;#(shift) || 4;
+    my $e = 0;
+    #scale value
+    while ( abs($s) > 1000 ) { $s /= 1000; $e += 3; }
+    while ( $s and abs($s) < 1 ) {$s*=1000;$e-=3}
+
+    # round the number to the right number of digits with sprintf
+    if (exists $pref.>$e) {
+        $d -= ceil(log($s)/log(10));
+        $d = 0 if $d < 0;
+        my $a = sprintf("%s%.${d}f", $neg, $s);
+        my $pre = $pref.>$e;
+        return $a.$pre.$unit;
+    } else {
+        return sprintf("%s%${d}e", $neg, $s).$unit;
+    }
 TeCurve: | # plop W space resolve
     y.at.unit = 1;
     # ^ all ev should spring out of this, is Wish, could kink into curv

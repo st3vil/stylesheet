@@ -362,6 +362,7 @@ Zop: |
     };
     
     sayyl "Took ".G&ron,hitime()-$beg;
+    Rw MemCpu;
     J.output || exit;
     
     sayyl "Making pud...";
@@ -373,7 +374,6 @@ Zupe: | # run Zome, output pud
     y.clos = 1;
     my $beg = hitime();
     
-    G.Ce = {};
     J.thou++ || do {
         # o
         n ElvisLeaves=>-test
@@ -393,14 +393,29 @@ Zupe: | # run Zome, output pud
         # A.1..5
         n ElvisFalls=>-test
     };
-    sayyl map{ "$_: ".ki G.Ce.>$_ } keys %{G.Ce};
+    
     sayyl "Total ".G&ron,hitime()-$beg;
+    Rw MemCpu;
     
     J.output || exit;
     
     sayyl "Making pud...";
     m _.t=>-pud=>{s=>_.c.s},'%hs:675,ws,wi:30%'    for @{J.output||[]};
     
+MemCpu: | # print memory and cpu time (non-waiting)
+    my @r = split /\s+/, (`top -bn1 -p $$ -c`)[-1],13;
+    shift @r for 1..5;
+    my $v = shift @r;
+    my $r = shift @r;
+    shift @r;
+    my $state = shift @r;
+    my $pc_cpu = shift @r;
+    my $pc_mem = shift @r;
+    my $cpu_time = shift @r;
+    my $mem = Rw sciun $s:v;
+    my $memr = Rw sciun $s:r;
+    $mem .= " virt, $memr res/$memr  (RES $memr)" if $r < $v * 0.7 || $r > $v * 1.3;
+    saygr "Proc $$ size: $mem time: $cpu_time";
 Zuup: | # Zupe slowly
     G.slowly = 4;
     n Zupe

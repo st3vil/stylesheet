@@ -34,11 +34,12 @@ waytyd: |
 waito: | # refresh vector in a post e swarm catchup way, without e, departs call stack 
     my $d = ar.d || 0.03;
     my $p = ar.p || 'waited';
-    my $K = ar.K || "ar.p ar.d J.name";
-    my $queued = J.waito->{$K};
+    my $K = ar.K || ar.J && "ar.p ar.d ar.J.name";
+    ar.K && !ar.J && die "Give J to queue K with: ar.K";
+    my $queued = ar.J.waito->{$K} if ar.K;
     saygr " waito $K     the C.t  ".($queued ? "again":"") if $queued;
     return if $queued;
-    J.waito->{$K} = 1;
+    ar.J.waito->{$K} = 1 if ar.K;
     ar.dd = $d if $p eq 'waited';
     Rw wayt + $K $d $p;
     
