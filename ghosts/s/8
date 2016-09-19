@@ -12,24 +12,31 @@ ElvisElvises: | # J e J,
         #t.cs->('sc lastA c s c zop c rsl?!','sourceee');
         c&te =
         n Elvisrec
-        t.cs->('sc lastK c s','source');
+        t.cs->('sc lastK c s','zource');
     }
 Elviseso: |
     #n ElBridge
     #return;
-    my $e = G&s,tool=>{s=>"Sandpaper"};
+    my $e = G&s,recee=>{s=>"Sandpaper"};
+    n Elvisrec=>W=>{e=>$e}
+    $e = G&s,receltool=>{s=>"Drier",us=>{p=>[['ElvisRec']]}};
     n Elvisrec=>W=>{e=>$e}
     n Elvisrec=>3=>{W=>''}
 Elvisrec: |
-    #u Applophy
     S
-    1 && saybl "To C.t: ". wdump 3, e&C;
+    if (my $e = e&C) {
+        if (e.t eq 'recee') {
+            1 && saybl "To C.t: ". wdump 3, e&C;
+            Js&theword = e.c.s
+        }
+    }
     n oa=>1=>33
-    
+    n ha =>2=> Js&theword||"unknown"
+    n have =>3=>join", ", @{Js&bunch||[]}
     #Js&ein.t.tools = 'fixolid';
-Applophy: |
-    u e
-    
+receltool: |
+    my $bu = J.sc.bunch ||= [];
+    push @$bu, e.c.s;
 Elvising: | # new way
     n ElVerse
     n ElBridge
@@ -49,7 +56,12 @@ ElVerse: | # hyperactive With
     # or headers from bodies of work, making sleep if same
     # want to substrata bits of the ground,
     # make pages of osc for groups of time
-    
+    vent:
+        my $E = A.mo.c.E;
+        $s = "Elvis lost: $s at E=E.cv\n at ".G&es;
+        push @{G.ohno||=[]},$s;
+        sayre $s;
+        T.Z.8 = $A;
     S:
         1&&saygr "Hyper C.t".G&sn;
         G&A,n=>2,A.1,[];
@@ -102,7 +114,7 @@ ElChorus: | # E joins your language
             push @hz, $e;
             $e = e.c.e || last;
         }
-        e.c.hz = \@hz;
+        e.c.hz = \@hz if @hz > 1;
         if (!@hz) {
             if (!e.c.us && e.c.s =~ /^\{/) {
                 # network line comes in on e as listen event
@@ -133,7 +145,7 @@ ElChorus: | # E joins your language
         my $us = E.c.us;
         my $in = 1s&ein;
         
-        if (!$in) {
+        if (!$in) { # ein & seemstoe may be, pins if 
             if (1s&seemstoe || A&pines) {
                 T.oke = 1;
                 return T.Z.7 = $A;
@@ -167,84 +179,179 @@ ElChorus: | # E joins your language
         }
     #c e3 enter linguistically
     e 3:
-        my $E = A&e;
-        my $us = E.c.us;
+        my $e = A&e; # endmost e, we got A&oure on C
+        my $us = e.c.us;
         my $in = 1s&ein;
         my $ar;
         ar.J = A.1;
-        ar.e = $E;
-        
-        Ec&trJ eq A.1 && return G&vent,'Doublysendo';
-        Ec&trJ = A.1;
-        
-        # make e& and us& pick into A&e if A&e && A.t eq 'E'
-        in.o && A.1 ne A.2 && return # from others only?
-            Rw in.o;
-            
-        in.li && 
-            Rw in.li;
+        ar.e = $e;
+        ec&trJ eq A.1 && return G&vent,'Doublysendo';
+        ec&trJ = A.1;
         
         my @being = $e;
-        being: while (@being) {
-            my $e = shift @being;
-            if (my $pin = in.f && in.f.>E.sc.pi ) {
+        # can multiplex lines, must handle simply here or be lost
+        while (@being) {
+            $e = shift @being;
+            # pass to E 7 if match not saying resolve E 4 (tree from A.3)
+            T.com = 1;
+            # make e& and us& pick into A&e if A&e && A.t eq 'E'
+            if (in.o && A.1 ne A.2) { # from other? may talk to self
+                Rw in.o;
+            }
+            elsif (in.li) {
+                Rw in.li;
+            }
+            # avoid trying to hard for us.p
+            
+            # handle e that is pi, kind of a grammar/form it wants
+            elsif (my $pin = in.f && in.f.>e.sc.pi ) {
                 ref $pin && die "More pinfotic";
                 Rw $pin;
-                next being
             }
-            if (my $pin = in.t && in.t.>E.t ) {
+            # and other c/sc grabbing interest where e.t = its identity
+            # before e.t is a thing we want:
+            elsif (my $pin = in.t && in.t.>e.t ) {
                 if (!ref $pin) {
                     Rw $pin;
                 }
                 else {
-                    die "e t complexi ".ki $pin if !pin.s || pin.s ne 'M' || keys %$pin !== 1;
+                    die "e t complexi ".ki $pin if !pin.s || pin.s ne 'M' || keys %$pin != 1;
                     # s=M used to open envelopes of e etc without leaving here
-                    my $M = djson E.c.s;
-                    push @be, @$M;
+                    my $M = djson e.c.s;
+                    push @being, @$M;
                     sayre "Multied ".@$M." For ".G&es;
                 }
-                next being
             }
-            
-        
-        
-        
-        
-        
-        
-    e 4:
-        # detect way
-    e 55:
-        # tug indy uov
+            else {
+                T.com = '';
+            }
+            # and then
+            if (T.com eq '4') {
+                # handler says keep going into E 4
+            }
+            elsif (T.com eq '6') {
+                # handler says route
+                T.Z.6 = $A;
+            }
+            elsif (T.com) {
+                # handled
+                T.Z.7 = $A;
+            }
+            else {
+                # unhandled
+                if (in.tractor) {
+                    if (in.demand) {
+                        G&vent,'Tractiondemand';
+                    }
+                    else {
+                        # can try E4/5, probably route for 6
+                    }
+                }
+            }
+        }
+        sayre "Done";
     
-    #c c6 route beyond here - could have done stuff too
+    #c e4 treeify hJ/hC
+    # bo or handler will use the remotest does
+    e 4:
+        my $e = A&e;
+        my $us = e.c.us;
+        my $in = 1s&ein;
+        # detect way in after this route from the tree of J we have
+        my $J = A.1;
+        my $c = Js&top || die "e4No top J.t";
+        my $p = us.p || return G&vent,"NoE4point";
+        my @p = @$p[ us.p_i .. (@$p-1) ];
+        my $i = 0;
+        my @hC;
+        for (@p) {
+            my ($t,$cv) = @$_;
+            if ($i == 0 && $t eq C.t) {
+                1&&saygr "hop 1 is C.t";
+            }
+            else {
+                $t || die "No way in";
+                my $tv = c.y.tv || die "No tv on ".ki$c;
+                my $vs = $tv.>$t;
+                if (!defined $cv) {
+                    ($cv,my@mi) = keys %$vs;
+                    @mi && die "Ambiguous way in"; # could keep going
+                }
+                $c = $vs.>$cv;
+            }
+            if (!$c) {
+                my $rea = "E4pointlost: at $i ($t $cv): ".wdump 3,\@p;
+                return G&vent,$rea;
+            }
+            push @hC, $c;
+        }
+        e.c.hJ = [grep{defined}map{_.sc.J}@hC];
+        e.c.hC = \@hC;
+        
+    #c e5 could route into pi?
+    e 55:
+        my $e = A&e; # endmost e, we got A&oure on C
+        my $us = e.c.us;
+        my $in = 1s&ein;
+        # tug indy uov
+        T.com = 1;
+        if (in.bo) {
+            Rw in.bo;
+        }
+        else {
+            T.com = '';
+        }
+        if (T.com eq '6') {
+            # handler says do route
+            # e is on a many pointed mission
+            # us.p changes/grows around corners
+        }
+        elsif (T.com eq '1') {
+            # handled
+            T.Z.7 = $A;
+        }
+        else {
+            # unhandled
+            G&vent,"E55nosolution";
+        }
+        
+        
+        #
+    
+    #c e6 route W, beyond here - could have done stuff too
     # may like to build onward meaing if so
     e 6:
         my $E = A&e;
         my $us = E.c.us;
         my $in = 1s&ein;
-        return unless ref us.p eq 'ARRAY';
+        
+        return G&vent,'NoE6point' unless ref us.p eq 'ARRAY';
         
         my $point = us.p->[us.p_i||=0];
+        $point || return G&vent,'Nomorepoint';
         my ($t,$cv) = @$point;
         
-        if (my $oJ = G.M.>$t) {
+        my $vs = 4s&Jtv.>$t;
+        $cv ||= 0.1;
+        my $oJ = $vs.>$cv;
+        
+        if ($oJ) {
+            us.p_i++;
             # readers move in in front of the meaning
             n oJ.t=>W=>{e=>$C}
             T.pos = 0;
         }
         else {
             die "space going: $t ".G&es;
-            # could also make it up for it wants the name
+            # could make it up for it wants the name
             # makes networked light injector
         }
     
-    # completion desires to J now or in a second
+    #c e7 completion desires to J now or in a second
     e 7:
         my $mo = A.mo || die "Nomo"; # mo
-        T.pos = 1 if !defined T.pos;
-        if (T.oke) { # do pin now
-            # meaning head in to pin
+        if (T.oke) {
+            # do pin now
             sayre "e Wants in to mo.t mo.cv: ".G&es;
             if (mo.cv < 5) {
                 # mo for it is still early
@@ -261,8 +368,10 @@ ElChorus: | # E joins your language
                 Rw waited $J;
             }
             sayre "Toking mo.cv into ".G&es;
+            return;
         }
-        elsif (T.pos || !defined T.pos) {
+        T.pos = 1 if !defined T.pos;
+        if (T.pos || !defined T.pos) {
             # do J in a second
             Rw waito $J $C;
         }
@@ -274,8 +383,20 @@ e: | # for elvis handlers
         # and various expand to shape pieces of server/etc protocols
         s&of ||= 'E';
     
-Routable: | # looks for routes in the current J for e
+Routable: | # look for routes in J (vie li, tractor?)
     # using pi to track remote pi
+    # tables of stuff to match, could double the cv for the solution
+    # route C could have sc.opel, a new path
+    # have to T.com = 6 to skip 4/5ing the p here, which wont work
+    # 
+Doable: | # look for dos in hC (vie bo)
+    my @doers = grep {_.sc.dos} @{e.c.hC};
+    @doers || return G&vent,"Nodoing";
+    @doers == 1 || G&vent,"Manydoing";
+    my ($c) = @doers;
+    1&&sayyl "dos e.t for c.sc.dos: ".ki$c;
+    Rw c.sc.dos;
+    
 ElvisHoists: | # J uphoist any {{{
     my $t = Rw Telvis;
     # J.sc.X fishtail connection, index clues needed, or eg co

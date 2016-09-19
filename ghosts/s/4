@@ -403,11 +403,19 @@ Zupe: | # run Zome, output pud
     m _.t=>-pud=>{s=>_.c.s},'%hs:675,ws,wi:30%'    for @{J.output||[]};
     
 MemCpu: | # print memory and cpu time (non-waiting)
-    my @r = split /\s+/, (`top -bn1 -p $$ -c`)[-1],13;
+    my @top = `top -bn1 -p $$ -c`;
+    my $line = pop @top;
+    my $headers = pop @top;
+    chomp $headers;
+    chomp $line;
+    $headers =~ s/\s+/ /sg;
+    $headers eq ' PID USER PR NI VIRT RES SHR S %CPU %MEM TIME+ COMMAND'
+        || die "top headers off:\n$headers";
+        
+    my @r = split /\s+/, $line,12;
     shift @r for 1..5;
     my $v = shift @r;
     my $r = shift @r;
-    shift @r;
     my $state = shift @r;
     my $pc_cpu = shift @r;
     my $pc_mem = shift @r;
