@@ -76,14 +76,21 @@ ElvisElvises: | # J e J,
         t.cs->({rsl=>G.ohno},'nonfirst lost');
     }
     if ($n == 2) {
+        my $el =
+        n ElvisBystand
         c&te =
         n Walley=>W=>\'pin:Elviseso,reeltool'
         t.cs->('sc lastK c s','source');
         c&te =
-        n Elvisrec
+        n ElvisBystand
+        t.cs->('sc lastK c s','routed to');
         t.cs->('sc lv,olv','lvour');
         
-        t.cs->({rsl=>G.ohno},'all lost');
+        c&te =
+        n Elvisrec
+        #t.cs->('sc lv,olv','lvour');
+        
+        t.cs->({rsl=>G.ohno},'outerspacer');
     }
     
 Elviseso: |
@@ -98,7 +105,7 @@ Elviseso: |
     $e = G&s,twice=>"Sandpaper";
     n Elvisrec=>W=>{e=>$e}
     
-    $e = G&s,reeltool=>{s=>"Drier",us=>{p=>[['Elvisrec']]}};
+    $e = G&s,reeltool=>{s=>"Drier",us=>{p=>[['ElvisBystand']]}};
     n Elvisrec=>W=>{e=>$e}
     
     $e = G&s,twice=>"Dwivel";
@@ -109,11 +116,12 @@ Elviseso: |
     
     n Elvisrec=>3=>{W=>''}
 Elvisrec: |
+    1 && saygr "~~~~~~~~";
     if (2c&reeltool) {
         Js&ein.t.reeltool = 'reeltooled';
     }
     S
-    if (my $e = (!2c&droppy || !J.bowls++) && e&C) {
+    if (my $e = (!2c&droppy || !(J.bowls++> 1) ) && e&C) {
         if (e.t eq 'twice') {
             Js&theword = e.c.s;
             J.seawire += 2;
@@ -126,14 +134,19 @@ Elvisrec: |
     
     n oa=>1=>33
     n ha =>2=> Js&theword||"unknown"
-    n have =>3=>join", ", @{Js&bunch||[]}
+    Js&bunch && 
+    n have =>3=>join(", ", @{Js&bunch||[]})
     #Js&ein.t.tools = 'fixolid';
 ElvisBystand: |
     1s&ein.t.reeltool = 'reeltooled';
+    S
+    n maunk=>3=>3
+    Js&bunch && 
+    n have =>3=>(join", ", @{Js&bunch||[]})
 reeltooled: |
     my $bu = Js&bunch ||= [];
     push @$bu, e.c.s;
-    sayyl "Handled ".ki $e;
+    sayyl "J.t $J Handled e.c.s: ".ki $e;
     T.pos = 1;
 pi/seawire: |
     n snuff=>3=>"Wuff";
@@ -214,7 +227,7 @@ ElVerse: | # hyperactive With
         my $cv = A.mo.cv;
         $cv =~ s/^0\.//;
         my $e = G&e,\'C';
-        G&sn .": ".ki $e;
+        G&sn .": ".ki($e);
     
     # means vector is about to do new ground
     # solves mind - which should row the of=S somewhere
@@ -230,9 +243,12 @@ ElVerse: | # hyperactive With
         push @{G.ohno||=[]},$s;
         sayre $s;
         T.Z.8 = $A;
+    # engage mind
+    # $s && mark pages of osc for groups of time
     S:
-        1&&saygr "Hyper C.t ".G&sn;
         G&A,n=>2,A.1,[];
+        G&tug
+        
     # marks a point for ghost chopchoping
     T:
         1&&saygr "T C.t".G&sn;
@@ -265,14 +281,34 @@ ElBridge: | # mo joins E
     
     
 ElChorus: | # E joins your language
-    u a
-    n \'of:E'
     # tries to route to handlers/pin
     # changing e lingo will disturb ElvisWorlds 1: ofts made
     
     # sympathetic postbotany
     # do the pin/vent unknownness lest J.sc.ein handlers
+    # elvectricity flowing through the space
+    u c
+    n \'of:mo'
+    e 36:
+        A.1 eq A.2 && sayre "Elvising same: ".G&es;
+        A&E && die "Elvising already: A&E.c.s.c.e.t vs e.t";
+        A&E = G&tugA,E=>1,$C;
     
+    # elvis should have resolved
+    # or been accessed e&la in pin (see Ce e)
+    e 72:
+        my $E = A&E;
+        1 && saygr "--- E.cv ".(1s&ein&&"ein")." Ec&wantpine && Ec&pines" if Ec&wantpine || Ec&pines;
+        return if E.cv >= 0.6 && !Ec&wantpine && !Ec&pines;
+        if (Ec&pines) {
+            1s&seemstoe = 1;
+        }
+        else {
+            G&vent,"Notcompleted";
+        }
+    
+    u a
+    n \'of:E'
     # mo tugs, wait for mind
     e 1:
         local A.V = 2;
@@ -310,7 +346,7 @@ ElChorus: | # E joins your language
         G&block,$_ && return for sub {
             !(1s&ein || 1s&seemstoe || A&pines)
         };
-    
+    #c e2
     e 2:
         local A.V = 2;
         my $E = A&e;
@@ -332,17 +368,18 @@ ElChorus: | # E joins your language
                 sayyl "Must pine";
                 A&wantpine = 1;
                 A.mo.c.want.elvis = 6;
-                return T.Z.8 = $A;
+                return T.Z.6 = $A;
             }
             else {
                 die "Got in to E unknown quick: ".G&es if A.mo.cv < 0.5;
                 # doesn't need to know anything,
                 # gets route, vent if lost
-                sayyl "Gets lost?";
+                G&vent,"Getslost?";
             }
         }
         
         # tractorbeam makes deeper look even if routable
+        # so we can log e
         unless (in.tractor && Ec&trJ ne A.1
             # or not routable
             || !$us
@@ -356,7 +393,7 @@ ElChorus: | # E joins your language
             || us.p && do {
                 # for now the chain must be fully linked also
                 my $tcv = us.p->[Ec&us.p_i - 1];
-                $tcv && $tcv->[0] eq J.t
+                $tcv && $tcv->[0] eq A.1.t
             }) {
             return T.Z.6 = $A;
         }
@@ -365,7 +402,7 @@ ElChorus: | # E joins your language
         local A.V = 2;
         my $e = A&e; # endmost e, we got A&oure on C
         my $us = e.c.us;
-        my $in = 1s&ein;
+        my $in = 1s&ein || return saybl "No Ein for e.t";
         my $ar;
         ar.J = A.1;
         ar.e = $e;
@@ -378,24 +415,19 @@ ElChorus: | # E joins your language
         # can multiplex lines, must handle simply here or be lost
         while (@being) {
             $e = shift @being;
-            # pass to E 7 if match not saying resolve E 4 (tree from A.3)
             T.com = 1;
-            # make e& and us& pick into A&e if A&e && A.t eq 'E'
             if (in.o && A.1 ne A.2) { # from other? may talk to self
                 Rw in.o;
             }
             elsif (in.li) {
                 Rw in.li;
             }
-            # avoid trying to hard for us.p
-            
-            # handle e that is pi, kind of a grammar/form it wants
+            #  pi
             elsif (my $pin = in.f && in.f.>e.sc.pi ) {
                 ref $pin && die "More pinfotic";
                 Rw $pin;
             }
-            # and other c/sc grabbing interest where e.t = its identity
-            # before e.t is a thing we want:
+            # c spaced things
             elsif (my $pin = in.t && in.t.>e.t ) {
                 if (!ref $pin) {
                     Rw $pin;
@@ -408,31 +440,35 @@ ElChorus: | # E joins your language
                     sayre "Multied ".@$M." For ".G&es;
                 }
             }
+            # 
             else {
                 T.com = '';
             }
             # and then
-            if (T.com eq '4') {
-                # handler says keep going into E 4
+            if (T.com eq '4') { # handler says keep going into E 4
             }
-            elsif (T.com eq '6') {
-                # handler says route
+            elsif (T.com eq '6') { # handler says route
                 T.Z.6 = $A;
             }
-            elsif (T.com) {
-                # handled
+            elsif (T.com) { # handled
                 T.Z.7 = $A;
             }
             else {
                 # unhandled
-                if (in.tractor) {
-                    if (in.demand) {
-                        G&vent,'Tractiondemand';
-                    }
-                    else {
-                        # can try E4/5, probably route for 6
-                    }
+                in.tractor && in.demand && return G&vent,'Tractiondemand';
+                # can try E4/5, probably route for 6
+                if (A&pines) {
+                    T.pos = 0; # doneA
+                    return T.Z.7 = $A;
                 }
+                elsif (1s&seemstoe) {
+                    A&wantpine = 1;
+                    A.mo.c.want.elvis = 6;
+                    return T.Z.7 = $A;
+                }
+                
+                sayre "UNhandled by 3, pin?  1s&seemstoe <> A&pines";
+                # Toke if seemstoe
             }
         }
         sayre "Done";
@@ -446,11 +482,9 @@ ElChorus: | # E joins your language
         my $in = 1s&ein;
         # detect way in after this route from the tree of J we have
         my $J = A.1;
-        return G&vent,'NoE6point' unless $us && us.p && ref us.p eq 'ARRAY';
-        
         my $c = Js&top || # needs to reblock until after osc
             return G&vent,"e4Notop:J.t";
-        my $p = us.p || return G&vent,"NoE4point";
+        my $p = $us && us.p || return G&vent,"NoE4point";
         my @p = @$p[ us.p_i .. (@$p-1) ];
         my $i = 0;
         my @hC;
@@ -511,13 +545,16 @@ ElChorus: | # E joins your language
     
     #c e6 route W, beyond here - could have done stuff too
     # may like to build onward meaing if so
-    e 6:
+    e 63:
         local A.V = 2;
         my $E = A&e;
         my $us = E.c.us;
         my $in = 1s&ein;
         
-        return G&vent,'NoE6point' unless $us && us.p && ref us.p eq 'ARRAY';
+        unless ($us && us.p && ref us.p eq 'ARRAY') {
+            #G&vent,'NoE6point' unless A&pines;
+               return;
+        }
         
         my $point = us.p->[us.p_i||=0];
         $point || return G&vent,'Nomorepoint';
@@ -531,6 +568,7 @@ ElChorus: | # E joins your language
             us.p_i++;
             # readers move in in front of the meaning
             sayyl "Routing: oJ.t <-- C.t";
+            _.c.mo.c.T.not = 1 for
             n oJ.t=>W=>{e=>$C}
             T.pos = 0;
         }
@@ -566,8 +604,9 @@ ElChorus: | # E joins your language
             sayre "Toking mo.cv into ".G&es;
             return;
         }
+        T.pos = 0 if !defined T.pos && A&wantpine;
         T.pos = 1 if !defined T.pos;
-        if (T.pos || !defined T.pos) {
+        if (T.pos) {
             # do J in a second
             sayyl "Do A.1.t in a second";
             #Rw waito $J $C;
