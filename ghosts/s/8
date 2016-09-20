@@ -49,21 +49,48 @@ ElvisElvises: | # J e J,
     # calls handlers or the pin to find handlers or handle as pin
     # handlers register into E (may want to J.ii only u wave '' or so)
     # handling e vars (via e&st -> G&e,'st', etc) tickles clues to pin
+    G.ohno = [];
+    delete A.4.sc.Jtv.Elvisrec->{0.1};
+    
     if ($n == 0) {
         c&te =
         n Elviseso
         t.cs->('sc lastK c s','source');
         is 0+uniq(map{_.sc.J}values %{c&so.sc.tv.Elvisrec}), 1,
             "Same Elvisrec positioned twice";
-        
-        #t.cs->('sc lastA c s c zop c rsl?!','sourceee');
         c&te =
         n Elvisrec
-        t.cs->('sc lv,olv','lvour?');
+        t.cs->('sc lv,olv','lvour');
+        
+        t.cs->({rsl=>G.ohno},'none lost');
+        
     }
+    if ($n == 1) {
+        c&te =
+        n Walless=>W=>\'pin:Elviseso,droppy'
+        t.cs->('sc lastK c s','source');
+        c&te =
+        n Elvisrec
+        t.cs->('sc lv,olv','lvour');
+        
+        t.cs->({rsl=>G.ohno},'nonfirst lost');
+    }
+    if ($n == 2) {
+        c&te =
+        n Walley=>W=>\'pin:Elviseso,reeltool'
+        t.cs->('sc lastK c s','source');
+        c&te =
+        n Elvisrec
+        t.cs->('sc lv,olv','lvour');
+        
+        t.cs->({rsl=>G.ohno},'all lost');
+    }
+    
 Elviseso: |
     #n ElBridge
     #return;
+    1c&droppy = 1 if c&droppy;
+    1c&reeltool = 1 if c&reeltool;
     my $e;
     $e = G&s,once=>"Dwiver";
     n Elvisrec=>W=>{e=>$e}
@@ -71,19 +98,22 @@ Elviseso: |
     $e = G&s,twice=>"Sandpaper";
     n Elvisrec=>W=>{e=>$e}
     
-    $e = G&s,receltool=>{s=>"Drier",us=>{p=>[['Elvisrec']]}};
+    $e = G&s,reeltool=>{s=>"Drier",us=>{p=>[['Elvisrec']]}};
     n Elvisrec=>W=>{e=>$e}
     
     $e = G&s,twice=>"Dwivel";
     n Elvisrec=>W=>{e=>$e}
     
-    $e = G&s,receltool=>{s=>"Digly",us=>{p=>[['OthierElves']]}};
+    $e = G&s,reeltool=>{s=>"Digly",us=>{p=>[['OthierElves']]}};
     n Elvisrec=>W=>{e=>$e}
     
     n Elvisrec=>3=>{W=>''}
 Elvisrec: |
+    if (2c&reeltool) {
+        Js&ein.t.reeltool = 'reeltooled';
+    }
     S
-    if (my $e = (!c&droppy || !J.bowls++) && e&C) {
+    if (my $e = (!2c&droppy || !J.bowls++) && e&C) {
         if (e.t eq 'twice') {
             Js&theword = e.c.s;
             J.seawire += 2;
@@ -92,19 +122,22 @@ Elvisrec: |
     }
     
     J.seawire && J.seawire-- &&
-        n seewooooorld=>-seawire=>'seeethe';
+        n seewooooorld=>-seawire=>
     
     n oa=>1=>33
     n ha =>2=> Js&theword||"unknown"
     n have =>3=>join", ", @{Js&bunch||[]}
     #Js&ein.t.tools = 'fixolid';
-receltool: |
+ElvisBystand: |
+    1s&ein.t.reeltool = 'reeltooled';
+reeltooled: |
     my $bu = Js&bunch ||= [];
     push @$bu, e.c.s;
+    sayyl "Handled ".ki $e;
+    T.pos = 1;
 pi/seawire: |
     n snuff=>3=>"Wuff";
     my $i = ++J.bowls;
-    sayre "Bowls seawire: $i";
     for (split '', $s||C.t) {
         n $_=>'0.'.sprintf('%04d',$i++)=>$_
     }
@@ -115,11 +148,74 @@ Elvising: | # new way
     
 ElVerse: | # hyperactive With
     u i
+    
+    # looking for C.c.e.?.? in a pin
+    # could see/ip what they are looking for too
+    # and give A&E clues for what the thing can do
+    # to take back to the client
+    e:
+        my $e = c&e || sayre("Noce: ".ki$C) && return ();
+        (my$q,$s) = (1,$$s) if ref $s eq 'SCALAR';
+        $e = A&E.c.e if A&E; # endmost
+        A&E && !$q && A&E.c.pines++;
+        return $e if $s eq 'C';
+        my $list = $s =~ s/^_//;
+        my ($nk,$gk) = G&pang,$s;
+        exists $e.>$nk || return ();
+        my $n = $e.>$nk;
+        exists $n.>$gk || return ();
+        my $g = $n.>$gk;
+        $list ? @$g : $g
+    
+    # looking for C.c.e.c.us.?_? in a pin
+    # explicit nk/gk sep with _
+    # clot of universalish nonhouse
+    # for our trusted their message
+    # an e&us at E 1 is a security bang
+    # us should float across as e sces
+    us:
+        my $e = c&e || return ();
+        (my$q,$s) = (1,$$s) if ref $s eq 'SCALAR';
+        $e = A&E.c.e if A&E; # endmost
+        $e = e.c.us || return ();
+        A&E && !$q && A&E.c.pines++;
+        return $e if $s eq 'C';
+        my $list = $s =~ s/^_//;
+        my ($nk,$gk) = split'_',$s;
+        exists $e.>$nk || return ();
+        $e = $e.>$nk;
+        if (defined $gk) {
+            exists $e.>$gk || return ();
+            $e = $e.>$gk;
+        }
+        $list ? @$e : $e
+    
+    # describe A net
+    sn:
+        my $la;
+        my $s;
+        for (map { $A.>$_ } y=>1..5) {
+            my ($cvb) = _.cv =~ /^0\.(\d+)$/ if $_ eq $A;
+            my $sep = '.' unless !$s;
+            $sep = '@' if $la eq $A;
+            if ($la eq A.2) {
+                # can go funny directions
+                if (la.3 ne A.3) {
+                    # J inherit 12345 before its set right
+                    $sep = "(".($la eq la.3 ? "" : "la.3.t)");
+                }
+            }
+            $s .= $sep."_.t$cvb";
+            $la = $_;
+        }
+        $s
     # describe A net and e
     es:
         my $cv = A.mo.cv;
         $cv =~ s/^0\.//;
-        "elm$cv ".G&sn .": ".ki c&e;
+        my $e = G&e,\'C';
+        G&sn .": ".ki $e;
+    
     # means vector is about to do new ground
     # solves mind - which should row the of=S somewhere
     # also tugA,mo so E can resolve and tell S/mo to sleep pin if T.pos=0;
@@ -129,7 +225,8 @@ ElVerse: | # hyperactive With
     # make pages of osc for groups of time
     vent:
         my $E = A.mo.c.E;
-        $s = "Elvis lost: $s at E=E.cv\n at ".G&es;
+        my ($cvb) = E.cv =~ /^0\.(\d+)$/;
+        $s = "Elos $cvb $s\n  at ".G&es;
         push @{G.ohno||=[]},$s;
         sayre $s;
         T.Z.8 = $A;
@@ -223,6 +320,7 @@ ElChorus: | # E joins your language
         if (!$in) { # ein & seemstoe may be, pins if 
             if (A&pines) {
                 # just did pin that e& - finished
+                sayyl "Pines";
                 return T.Z.8 = $A
             }
             elsif (1s&seemstoe) {
@@ -231,6 +329,7 @@ ElChorus: | # E joins your language
                 # so e is self in the equation that uses it
                 # and handles it, since it hands it...
                 die "Got toking E unknown too late: ".G&es if A.mo.cv > 0.5;
+                sayyl "Must pine";
                 A&wantpine = 1;
                 A.mo.c.want.elvis = 6;
                 return T.Z.8 = $A;
@@ -270,8 +369,10 @@ ElChorus: | # E joins your language
         my $ar;
         ar.J = A.1;
         ar.e = $e;
-        ec&trJ eq A.1 && return G&vent,'Doublysendo';
-        ec&trJ = A.1;
+        if (in.tractor) {
+            ec&trJ eq A.1 && return G&vent,'Doublysendo';
+            ec&trJ = A.1;
+        }
         
         my @being = $e;
         # can multiplex lines, must handle simply here or be lost
@@ -345,7 +446,10 @@ ElChorus: | # E joins your language
         my $in = 1s&ein;
         # detect way in after this route from the tree of J we have
         my $J = A.1;
-        my $c = Js&top || die "e4No top J.t";
+        return G&vent,'NoE6point' unless $us && us.p && ref us.p eq 'ARRAY';
+        
+        my $c = Js&top || # needs to reblock until after osc
+            return G&vent,"e4Notop:J.t";
         my $p = us.p || return G&vent,"NoE4point";
         my @p = @$p[ us.p_i .. (@$p-1) ];
         my $i = 0;
@@ -413,7 +517,7 @@ ElChorus: | # E joins your language
         my $us = E.c.us;
         my $in = 1s&ein;
         
-        return G&vent,'NoE6point' unless ref us.p eq 'ARRAY';
+        return G&vent,'NoE6point' unless $us && us.p && ref us.p eq 'ARRAY';
         
         my $point = us.p->[us.p_i||=0];
         $point || return G&vent,'Nomorepoint';
@@ -426,11 +530,12 @@ ElChorus: | # E joins your language
         if ($oJ) {
             us.p_i++;
             # readers move in in front of the meaning
+            sayyl "Routing: oJ.t <-- C.t";
             n oJ.t=>W=>{e=>$C}
             T.pos = 0;
         }
         else {
-            die "space going: $t ".G&es;
+            G&vent,"SpaceGoing:$t";
             # could make it up for it wants the name
             # makes networked light injector
         }
