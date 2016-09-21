@@ -366,8 +366,10 @@ adTd: |
     my $o = e&hC ->[-1];
     say "No more; ".ki $o;
     J.g.dont.>o.c.s = 1;
-Exe: |
-    c&do ||= 'find';
+Exe: | # find bits for the show
+    c&s =~ s/\/$//;
+    c&do ||= 'l'; # or find
+    c&do = 'ls -1' if c&do eq 'l';
     c&lsins = 1 if c&do =~ /^ls -1/;
     c&cmd ||= "c&do".(defined c&s && ' '.c&s);
     c&cmd .= "| grep c&grep" if c&grep;
@@ -376,7 +378,7 @@ Exe: |
     c&cmd .= "| tail --lines=+".(c&se) if c&se ;
     c&cmd .= "| head -n ".(2*c&lim) if c&lim;
     my @img = split"\n",''.`c&cmd`;
-    say "EXE: c&cmd: ".@img;
+    1 && say "EXE: c&cmd: ".@img;
     @img = grep {/^[\/\w-]+\.jpg$/i} @img if c&only eq 'image';
     # reunlimit until lim is full of satis ^
     @img = @img[0..c&lim] if c&lim && c&lim < @img;
