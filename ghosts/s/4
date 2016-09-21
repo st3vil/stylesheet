@@ -517,12 +517,14 @@ Telvis: |
     };
     t.ntos = sub { # get the oscillator A (s) given e is n of J
         my ($j,$want) = @_;
-        ($j) = values %{j.c.tug};
-        return $j if $want eq 'mo';
-        $j = j.c.s || die "No C on ".ki$j;
-        # the last Hows mo C
-        $j = j.sc.J || die "No J on ".ki$j;
-        return $j if $want eq 'J';
+        if (j.t eq 'n') {
+            ($j) = values %{j.c.tug};
+            return $j if $want eq 'mo';
+            $j = j.c.s || die "No C on ".ki$j;
+            # the last Hows mo C
+            $j = j.sc.J || die "No J on ".ki$j;
+            return $j if $want eq 'J';
+        }
         $j = j.sc.s || die "No s on ".ki$j;
         $j
     };
@@ -530,7 +532,7 @@ Telvis: |
     c&mks = sub {
         my ($C,$T) = @_;
         T.oke = 1;
-        my $se = Q.c.te;
+        my $se = c&te || Q.c.te;
         my $bang = 0; # path?! means avoid o
         if (my $p = c&ntos) {
             my $sp = sub {[split / |,/, shift ]};
@@ -560,6 +562,7 @@ Telvis: |
             oc.noz = 1 if c&noz;
             oc.nonext = 1 if c&nonext;
             $oc.>$_ = $toc.>$_ for keys %$toc;
+            $oc.>$_ = c&toc.>$_ for keys %{c&toc||{}};
             my $ot = c&ot = c&ot || Q.c.ot || c&test.'-'.C&l;
 
 

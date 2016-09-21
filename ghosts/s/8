@@ -94,25 +94,106 @@ ElvisElvises: | # J e J,
     }
 ElvisHandles: | # J e J
     my $t = Rw Telvis;
+    t.toc.slim = 44;
+    my $scene = sub {
+        my $l = pop;
+        my $p = shift;
+        $p ||= 'sc lastK c s';
+        $l ||= 'lastK';
+        my $o = t.ntos->(c&te);
+        my @W = o.sc.lastA.1;
+        $o = o.sc.top;
+        while ($o) {
+            $o = o.y.in || o.y.next || last;
+            push @W, o.sc.J if o.sc.W;
+        }
+        for my $j (@W) {
+            t.cs->({te=>$j,ntos=>$p},"j.t: ".$l);
+        }
+    };
     if ($n == 0) {
         c&te =
         n ElvisFivery
-        t.cs->('sc lastK c s','source');
+        $scene->('Tarfindsimagi, give one to vist');
+        c&te =
+        n Elvista
+        $scene->('vist 2');
+        c&te =
+        n Elvista
+        $scene->('vist 3');
+        
+        c&te =
+        n ElvisFivery
+        $scene->('Give another to vist');
+        
+        for (4..12) {
+            c&te =
+            n Elvista
+            $scene->('vist '.$_);
+        }
+        c&te =
+        n ElvisFivery
+        $scene->('Give third to vist');
+        
+        for (13..16) {
+            c&te =
+            n Elvista
+            $scene->('vist '.$_);
+        }
     }
+    if ($n == 1) {
+        my $p = [qw'ElvisViarator ElvisFivery Elvista img'];
+        my $e = G&Ct,[implant=>2=>{p=>$p}];
+        c&te =
+        n ElvisEmpty=>W=>{e=>$e}
+        $scene->('message sent');
+    }
+    
+        
+ElvisEmpty: |
+    # nothi
+ElvisViarator: |
+    1s&ein.tractor = 1;
+    1s&ein.li = 'writedown';
+writedown: |
+    1 && saybl "WRiteing on C.t: ".ki$e;
 ElvisFivery: |
+    T.ishere = C.t;
     n ElTarfigure
-    n Elvista
+    
+    my $i = J.bowls++;
+    my $t = T.op.y.in;
+    while ($i) {
+        if (!t.y.next) {
+            J.bowls--;
+            last;
+        }
+        $i--;
+        $t = t.y.next;
+    }
+    n Elvista=>W=>{e=>$t}
+Point: |
+    # etc
 ElTarfigure: |
     c&only = 'images';
     c&grep = 't';
     c&s = '../Tarf/Photo_serieses/';
     my @imgs = Rw Exe;
     1 && saybl "C.t: ".wdump 3, \@imgs;
-    n empt=>1=>5
+    my $i = 3;
+    n (/.+\/(.+?)$/)[0]=>'3'.$i++=>$_=>{pi=>'relim'} for @imgs;
 Elvista: |
+    1s&ein.pi.relim = 'reeltooled';
+    Js&bunch ||= [];
     S
     
-    n img => 6 => 3
+    
+    my $l = Js&bunch ->[ J.bowls ] || return;
+    J.bowls = 0 if !exists Js&bunch ->[++J.bowls];
+    
+    n img => 6 => $l=>{dos=>'visache'}
+visache: |
+    1 && saybl "Jere at ".wdump 3, $e;
 Elviseso: |
     #n ElBridge
     #return;
@@ -343,8 +424,10 @@ ElChorus: | # E joins your language
             push @hz, $e;
             $e = e.c.e || last;
         }
-        e.c.hz = \@hz if @hz > 1;
-        if (!@hz) {
+        if (@hz > 1) {
+            e.c.hz = \@hz;
+        }
+        else {
             if (!e.c.us && e.c.s =~ /^\{/) {
                 # network line comes in on e as listen event
                 # should onward aft hz an e as meaning/request
@@ -361,7 +444,13 @@ ElChorus: | # E joins your language
                 }
                 
             }
+            if (e.c.p) {
+                e.c.us.p = [map{[$_]}@{delete e.c.p}];
+            }
         }
+        
+        # opens
+        
         A&e = $e;
         
         G&block,$_ && return for sub {
@@ -441,8 +530,8 @@ ElChorus: | # E joins your language
             elsif (in.li) {
                 Rw in.li;
             }
-            #  pi
-            elsif (my $pin = in.f && in.f.>e.sc.pi ) {
+            #  pi (or can translate object through)
+            elsif (my $pin = in.pi && in.pi.>e.sc.pi ) {
                 ref $pin && die "More pinfotic";
                 Rw $pin;
             }

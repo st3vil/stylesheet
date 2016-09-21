@@ -295,7 +295,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         s&top = $l;
         # also s&lastA.sc.topO = zip out top as O A
         # and s&lastK is zop out top as K A, incremental changes
-        s&tv = l.y.tv || die "TopKCyl no ytv: ".ki$l;
+        s&tv = l.y.tv || {}; # die "TopKCyl no ytv: ".ki$l;
         
         # ii is tw of We things
         my $ii;
@@ -880,8 +880,9 @@ Circle: | # < copy things
                 $m = "+" if d.c.m eq 'new';
                 die "gone had s: ".ki$d if d.c.m eq 'gone';
                 my $s = d.c.s;
-                if (length $s > 24) {
-                    $s = slim(19,$s).'h'.slm(6,dig($s));
+                my $slim = c&slim || 24;
+                if (length $s > $slim) {
+                    $s = slim($slim-5,$s).'h'.slm(6,dig($s));
                 }
                 $s =~ s/\n/\\n/sg;
                 $etc = $m.$s;
