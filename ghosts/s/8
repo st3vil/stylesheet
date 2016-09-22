@@ -476,23 +476,102 @@ ElvisHoists: | # J uphoist any {{{
     # see pud re T
     #sleep 3;
     
-    G.hasway = sub {
-        my ($A,$C,$G,$T,$v) = @_;
-        sayre "Using v.t: ".G&sn;
-        my $te = A.mo && A.mo.c.T || return saybl "Nowhere to mo T has";
-        # should multi the name from the first one
-        te.has.way.>v.t = $v;
-    } if 0;
+    my $xo = sub {
+        my $s = t.ntos->(c&te);
+        my $xo = s.sc.xo;
+        my $l = shift;
+        t.cs->({rsl=>s.sc.infxo},$l);
+        t.cs->({rsl=>[ki$xo]},"xo: ".$l);
+        $xo
+    };
     
     if ($n == 0) {
         c&te =
-        n Elvarfigure
-        t.en->('sc top', 'they have stuff');
+        n Elvarfigure=>W=>{lim=>4}
+        t.en->('sc lastK c s', 'they have stuff');
+        J.xo1 = $xo->("Has 14 total");
+    }
+    if ($n == 1) {
+        c&te =
+        n Elvarfigure=>W=>{lim=>4}
+        t.en->('sc lastK c s', 'same stuff');
+        J.xo2 = $xo->("no infxo flow status");
+        is J.xo1, J.xo2, "xo same";
+    }
+    if ($n == 2) {
+        c&te =
+        n Elvarfigure=>W=>{lim=>7}
+        t.en->('sc lastK c s', 'more stuff');
+        J.xo3 = $xo->("now 17 images");
+        is J.xo2, J.xo3, "xo diff";
+    }
+ElvisRopeWay: | # J uphoisted xo way, causes activity
+    my $t = Rw Telvis;
+
+    my $xo = sub {
+        my $s = t.ntos->(c&te);
+        my $xo = s.sc.xo;
+        my $l = shift;
+        t.cs->({rsl=>s.sc.infxo},$l);
+        t.cs->({rsl=>[split"\n",ddump $xo]},"xo: ".$l);
+        $xo
+    };
+    G.hasway = sub {
+        my ($A,$C,$G,$T,$v) = @_;
+        my $te = A.mo && A.mo.c.T || return saybl "Nowhere to mo T has";
+        # should multi the name from the first one
+        te.has.way.>v.t.>v.sc.dige ++;
+    };
+
+    if ($n == 0) {
+        c&te =
+        n ElvisWithGhosts
+        my $W = t.ntos->(c&te,'J');
+        A.5 = $W;
+        sayre "A.5.t is W.t ".ki W.ii.w;
+        t.cs->('sc lastA 1 ii w y in', 'has ghost w');
+        my $pi = G&pint,$W,split'-',"ii-w-y-tw-pi/somiplace";
+        sayre "Japool pi.c.s";
+        
+        c&te =
+        n Elvariurgre=>W=>{lim=>4}
+        t.en->('sc lastK c s', 'they have stuff');
+        J.xo1 = $xo->("Has 14 total?");
+        
+        c&te =
+        n ElvisWithGhosts
+        t.cs->('sc lastA 1 ii w y in', 'has ghost w differently');
+        my $W = t.ntos->(c&te,'J');
+        my $pi = G&pint,$W,split'-',"ii-w-y-tw-pi/somiplace";
+        sayre "Japool pi.c.s";
+        
+        c&te =
+        n Elvariurgre=>W=>{lim=>5}
+        t.en->('sc lastK c s', 'they have stuff');
+        J.xo2 = $xo->("Has 14 total?");
+        
         
     }
-Elvarfigure: |
-    n Tarryn =>-somiplace=>'../Tarf/Photo_serieses'
-    n Fergus =>-somiplace=>'w/fug'
+ElvisWithGhosts: |
+    sayre "Withghosts";
+    if (J.bowls++) {
+        1 && sayyl "Extra Freaky";
+        u ElvisesGhosts=>W=>{moreso=>1}
+    }
+    else {
+        u ElvisesGhosts
+    }
+ElvisesGhosts: |
+    my $z = LoadFile('g/s/8');
+    my $t = 'pi/somiplace';
+    my $s = $z.>$t;
+    $s .= "# Difference\n";
+    $s .= "\n   n moreso=>7=>3333333\n" if c&moreso;
+    1 && sayyl "Yi: c&moreso ".ki C.c;
+    n $t=>1=>$s=>'%of:w'
+    findableormo: %of:w
+        1 && saygr "RJIFE";
+    A.V = 1;
 pi/somiplace: |
     c&only = 'images';
     my @imgs = Rw Exe;
@@ -500,6 +579,15 @@ pi/somiplace: |
     n (/.+\/(.+?)$/)[0]=>'3'.$i++=>$_=>{pi=>'relim'} for @imgs;
     
     G&has,image=>0+@imgs;
+Elvariurgre: |
+    Rw findableormo;
+    Rw Elvarfigure;
+Elvarfigure: |
+    my $c;
+    c.s = '../Tarf/Photo_serieses';
+    c.lim = c&lim if c&lim;
+    n Tarryn =>-somiplace=>$c
+    n Fergus =>-somiplace=>'w/fug'
 ElBridge: | # mo joins E
     u i
     
@@ -525,6 +613,30 @@ ElBridge: | # mo joins E
             $xo.>$k = undef;
         }
         xs&xo = $xo;
+    
+    multiv:
+        my $inf = s&infxo;
+        my $sa = sub {
+            push @$inf, shift;
+            sayyl "Inf: ".$inf->[-1];
+        };
+        if ($s eq 'way') {
+            my $td = {};
+            map {
+                while (my ($t,$ds) = each %$_) {
+                    while (my ($d,$q) = each %$ds) {
+                        $td.>$t.>$d += $q
+                    }
+                }
+            } map{_.c.s}@Me;
+            $td
+        }
+        else {
+            my $total = sum map {_.c.s} @Me;
+            $sa->(" $s totals $total from: ".ki \@Me);
+            $total;
+        }
+    
     u a
     # 
     # their xo
@@ -537,15 +649,14 @@ ElBridge: | # mo joins E
         
         my $xo = A.up.sc.ox.>C.y.cv.>C.t = G&newxo,ss&xo,$x;
         
-        1 && saygr "A.1.t Hoist J.t's ". ki $xo;
-        
         
     # unify harvested xo and hoisted ox (y t xo) as xo
-    s 799:
+    s 7999: %v:sctop
         local A.V = 2;
+        my $top = s&top || return;
         my $te = A.mo.c.T;
         my $xo = te.has; # our xo
-        my $x = s&top.y.x || die "No x on ".ki s&top;
+        my $x = top.y.x || die "No x on A.1.t: ".ki s&top;
         my $oxo = xs&xo; # our past xo
         
         my $we = G&newxo,$xo,$x if $xo || $oxo;
@@ -585,24 +696,21 @@ ElBridge: | # mo joins E
         };
         
         # xo is our k v
+        s&infxo = [];
         $xo = s&xo;
         for my $k (keys %$kyt) {
-            my $yt = $xox.>$k || next;
+            my $yt = $xox.>$k || {};
             my @M;
             G&chew,$yt,\'cv,t',$_ for sub {
                 my ($v,$cv,$t) = @_;
                 push @M, {t=>$t,y=>{cv=>$cv},c=>{s=>$v}};
             };
+            sayyl "Wakes up: $k";
             if (!@M) {
                 delete $xo.>$k;
             }
-            elsif ($k eq 'way') {
-                sayre "Join way: ".wdump 4, \@M;
-            }
             else {
-                my $total = sum map {_.c.s} @M;
-                sayyl " $k totals $total from: ".ki \@M;
-                $xo.>$k = $total;
+                $xo.>$k = G&multiv,$k,@M;
             }
         }
         s&xox = $xox;
