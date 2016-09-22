@@ -71,7 +71,13 @@ Komp: | # K/D line protoClattice
     u a
     K 1:
         A&from = shift @$s; # us
-        A&s = G&hup,A&from;
+        A&s = $C = G&hup,A&from;
+        my $l = a&l = C.y.l || die "No KC yl: ".ki$C;
+        my $x = a&x = l.y.x || die "KCyl no yx: ".ki$l;
+        if (my $J = ls&J) {
+            a&J = $J;
+            a&ys = Js&s || die "No s on J for K Jo lv: ".ki$J;
+        }
     D 1:
         A.c.s = shift @$s; # us
     K 2:
@@ -81,8 +87,8 @@ Komp: | # K/D line protoClattice
         
         if (c&Jo) {
             s&z && die "Jo with z: ".ki$C;
-            my $l = C.y.l || die "No KC yl: ".ki$C;
-            my $J = ls&J || die "No sJ for Jo K: ".ki$l;
+            my $l = a&l;
+            my $J = a&J || die "No sJ for Jo K: ".ki$l;
             if (!ref $J) {
                 # Hoop probably mutes sJ, go back before o zip for it
                 my $r = l.y.r || die "KCyl no yr: ".ki$l;
@@ -94,10 +100,10 @@ Komp: | # K/D line protoClattice
                 my $CJ = Do.c.s || die "KCylyrcoyDyrco no cs: ".ki$Do;
                 $J = CJ.sc.J || die "KCylyrcoyDyrco no sJ: ".ki$CJ;
             }
-            my $x = l.y.x || die "KCyl no yx: ".ki$l;
+            my $x = a&x;
             my $lo = xc&Jo;
             if ($lo ne c&Jo) {
-                my $s = Js&s || die "No s on J for K Jo lv: ".ki$J;
+                my $s = a&ys;
                 my $lv = ss&lv || die "No lv on J s for K Jo lv: ".ki$s;
                 # imp++ means lv restarts
                 # wil++ means lv grows
@@ -118,6 +124,7 @@ Komp: | # K/D line protoClattice
             else {
                 1 && saygr "Same Jo: C.t C.y.cv @ $lo";
             }
+            
             # Hoisting,
         }
         if (my $J = s&J) {
@@ -129,10 +136,8 @@ Komp: | # K/D line protoClattice
             else {
                 s&J = Js&name || J.t;
             }
-            if (s&W) {
-                # W implies J in mo:W:12, they can look it up
-                delete s&J if s&W eq s&J;
-            }
+            # W implies J in mo:W:12, they can look it up
+            delete s&J if s&W eq s&J;
         }
         # mute refs
         # tells you things that are not there, see o 7 apply
