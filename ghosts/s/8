@@ -475,12 +475,14 @@ ElvisHoists: | # J uphoist any {{{
     # J.sc.X fishtail connection, index clues needed, or eg co
     # see pud re T
     #sleep 3;
+    
     G.hasway = sub {
         my ($A,$C,$G,$T,$v) = @_;
         sayre "Using v.t: ".G&sn;
         my $te = A.mo && A.mo.c.T || return saybl "Nowhere to mo T has";
+        # should multi the name from the first one
         te.has.way.>v.t = $v;
-    };
+    } if 0;
     
     if ($n == 0) {
         c&te =
@@ -508,24 +510,104 @@ ElBridge: | # mo joins E
     has: %acgt:k v
         $v = 1 if !defined $v;
         T.has.>$k = $v
+    
+    newxo: %acgt:xo x
+        my $so = $xo;
+        $xo = {};
+        my $oxo = xs&xo;
+        for my $k (keys %$so) {
+            my $v = $so.>$k;
+            my $ov = $oxo.>$k;
+            $xo.>$k = $v eq $ov ? $ov : $v;
+        }
+        for my $k (keys %$oxo) {
+            exists $xo.>$k && next;
+            $xo.>$k = undef;
+        }
+        xs&xo = $xo;
     u a
+    # 
     # their xo
     K 18:
         c&Jo || return;
+        my $x = a&x;
+        my $J = a&J;
+        my $s = Js&s;
+        ss&xo || xs&xo || return;
         
-        if (c&Jo) {
-            my $J = s&J;
-            my $s = Js&s;
-            
-            1 && sayyl "A.1.t Hoist J.t's ". ki ss&xo;
-        }
-    # under our ox
+        my $xo = A.up.sc.ox.>C.y.cv.>C.t = G&newxo,ss&xo,$x;
+        
+        1 && saygr "A.1.t Hoist J.t's ". ki $xo;
+        
+        
+    # unify harvested xo and hoisted ox (y t xo) as xo
     s 799:
+        local A.V = 2;
         my $te = A.mo.c.T;
-        $te = te.has || return;
-        1 && sayyl "On A.1.t we are: ".ki $te;
-        s&ox = $te; # + yonders
-        s&xo = s&ox;
+        my $xo = te.has; # our xo
+        my $x = s&top.y.x || die "No x on ".ki s&top;
+        my $oxo = xs&xo; # our past xo
+        
+        my $we = G&newxo,$xo,$x if $xo || $oxo;
+        
+        my $ox = a&ox; # many y t xo (inc undef goners)
+        my $xox = s&xox; # many k y t v past
+        
+        $xo || $ox || $oxo || $xox || return delete s&xo;
+        
+        if (!$ox && !$xox) {
+            # harvested one
+            s&xo = $xo;
+            return;
+        }
+        
+        if ($we) {
+            my $cv = 0.9;
+            $ox.>$cv.>A.1.t = $xo;
+        }
+        # ox is y t to xo
+        # unified back to single xo with others
+        my $kyt = {};
+        G&chew,$ox,\'cv,t,k',$_ for sub {
+            my ($v,$cv,$t,$k) = @_;
+            my $ov = G&pint,$xox,[$k,$cv,$t];
+            if ($v ne $ov) {
+                $kyt.>$k++;
+            }
+            if (!defined $v) {
+                delete $xox.>$k.>$cv.>$t;
+                delete $xox.>$k.>$cv if !keys%{$xox.>$k.>$cv };
+                delete $xox.>$k if !keys%{$xox.>$k };
+            }
+            else {
+                $xox.>$k.>$cv.>$t = $v;
+            }
+        };
+        
+        # xo is our k v
+        $xo = s&xo;
+        for my $k (keys %$kyt) {
+            my $yt = $xox.>$k || next;
+            my @M;
+            G&chew,$yt,\'cv,t',$_ for sub {
+                my ($v,$cv,$t) = @_;
+                push @M, {t=>$t,y=>{cv=>$cv},c=>{s=>$v}};
+            };
+            if (!@M) {
+                delete $xo.>$k;
+            }
+            elsif ($k eq 'way') {
+                sayre "Join way: ".wdump 4, \@M;
+            }
+            else {
+                my $total = sum map {_.c.s} @M;
+                sayyl " $k totals $total from: ".ki \@M;
+                $xo.>$k = $total;
+            }
+        }
+        s&xox = $xox;
+        s&xo = $xo;
+        delete s&xo if !keys %$xo;
     
     # becomes our xo
     
