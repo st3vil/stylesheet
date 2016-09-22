@@ -106,12 +106,19 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             Os&swim || Xs&swim || next;
             G&chew,Os&swim,'W,Wt,Wcv',$_ for sub {
                 my ($etv,$W,$Wt,$Wcv) = @_;
+                # to order the C swimming bunches by origin yt
                 s&swim ->{$W}->{$Wt}->{$Wcv}->{c.t}->{c.y.cv} = $c;
                 s&swam ->{$W}->{$Wt}->{$Wcv}++;
             };
             G&chew,Xs&swim,'W,Wt,Wcv',$_ for sub {
                 my ($etv,$W,$Wt,$Wcv) = @_;
-                Os&swim ->{$W}->{$Wt}->{$Wcv}->{c.t}->{c.y.cv} && return;
+                # keep swim from the C unless all etv gone
+                my $sb = Os&swim ->{$W}->{$Wt}->{$Wcv};
+                for my $et (keys %$etv) {
+                    for my $ecv (keys %{ $etv.>$et }) {
+                        $sb.>$et && $sb.>$et.>$ecv && return;
+                    }
+                }
                 delete s&swim ->{$W}->{$Wt}->{$Wcv}->{c.t}->{c.y.cv};
                 s&swam ->{$W}->{$Wt}->{$Wcv}++;
             };
@@ -156,7 +163,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
                 die "swim $W $Wt $Wcv already al.c.W";
             }
             if (!@$z) {
-                sayre "We thing $Wcv $Wt has no z";
+                sayre "We thing $Wcv $Wt has no z yt:".wdump 4,s&swim ->{$W}->{$Wt}->{$Wcv};
                 delete s&ytWe ->{$Wcv}->{$Wt};
                 return;
             }
@@ -564,7 +571,7 @@ Circle: | # < copy things
             o.y.j = $j;
             # todo weaken l.y.l
             
-            if (my $J = c&shade && ref es&J && !es&W && es&J) {
+            if (my $J = c&shade && ref es&J eq 'HASH' && es&J) {
                 die "J also has z: ".ki$e if e.sc.z;
                 if (my $lv = J.sc.s && J.sc.s.sc.lv) {
                     # see tips of other J
@@ -572,7 +579,7 @@ Circle: | # < copy things
                     # quick check of lv layery linkage, a shallow z
                     # may just signal the version change to go and get (beyond o)
                     # ideally lv0 stable and lv1+ replaces often
-                    e.c.Jo = J.c.o;
+                    e.c.Jo = J.c.o || die "Jo not ready e.t e.y.cv: ".G&sn;
                 }
             }
             
