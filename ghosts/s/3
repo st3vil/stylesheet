@@ -220,8 +220,11 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         $t = G&hup,$t;
         delete t.y.in;
         t.sc.z = $z if @$z;
+        delete t.sc.z if !@$z;
         
-        c&zop = G&A,o=>6,$C,$t,'zopul';
+        my $o = c&zop = G&A,o=>6,$C,$t,'zopul';
+        t.t eq 'ElvisFivery' && sayyl wdump 6, o.c.cha.C.diff.ElvisFivery
+        #C.sc.jo.zopul
     #c s7 traction/compress
     s 7:
         # pack down goods
@@ -277,7 +280,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         # each index geo/type knows spherical sanity (re largeness)
         # so osc tracks objects piping whatever
         # with the {} replace/whatever trick on of=T
-        $topK || die "No topK. no change?";
+        $topK || return sayre "No topK. no change? ".G&sn;
         my $c = topK.c.s;
         
         # lv is compression log
@@ -571,7 +574,7 @@ Circle: | # < copy things
             o.y.j = $j;
             # todo weaken l.y.l
             
-            if (my $J = c&shade && ref es&J eq 'HASH' && es&J) {
+            if (my $J = c&shade && ref es&J && es&J) {
                 die "J also has z: ".ki$e if e.sc.z;
                 if (my $lv = J.sc.s && J.sc.s.sc.lv) {
                     # see tips of other J
@@ -583,9 +586,6 @@ Circle: | # < copy things
                 }
             }
             
-            # top acum o.y.D for relinkage
-            G&Chang,$l,$o;
-            
             # throw inward (yin falls to z)
             # we 6 yin/ynext meshi
             if (my $z = e.y.in || e.sc.z) {
@@ -596,6 +596,11 @@ Circle: | # < copy things
                 G&tugA,o=>1,c&i,$z,$t
                     unless c&noz;
             }
+            delete e.sc.z;
+            
+            # top acum o.y.D for relinkage
+            G&Chang,$l,$o;
+            
             
             # ty in above o
             sayyl "$t $cv is from o.y.A.c.s.t" if o.y.A ne $A;
@@ -695,7 +700,7 @@ Circle: | # < copy things
     o 5:
         my $oo = A.c.oo;
         my $cha = A.c.cha;
-        die "more than ooC: in C.t"
+        warn "more than ooC: in C.t"
             .(c&jC && " on C.c.jC.t").": ".ki $oo
                 if 1 != keys %$oo;
         # make ty -> yt

@@ -470,42 +470,58 @@ Doable: | # look for dos in hC (vie bo)
     
     Rw c.sc.dos + $c;
     
-ElvisHoists: | # J uphoist any {{{
+
+ElvisTower: | # J pool net namer: puts on the screen
     my $t = Rw Telvis;
-    # J.sc.X fishtail connection, index clues needed, or eg co
-    # see pud re T
-    #sleep 3;
-    
+
+    my $dd = sub {
+        t.cs->({rsl=>[split"\n",ddump shift]},shift);
+    };
     my $xo = sub {
         my $s = t.ntos->(c&te);
         my $xo = s.sc.xo;
         my $l = shift;
         t.cs->({rsl=>s.sc.infxo},$l);
-        t.cs->({rsl=>[ki$xo]},"xo: ".$l);
+        $dd->($xo,"xo: ".$l);
         $xo
     };
-    
+
     if ($n == 0) {
         c&te =
-        n Elvarfigure=>W=>{lim=>4}
+        n ElvisWithGhosts
+        my $W = t.ntos->(c&te,'J');
+        A.5 = $W;
+        
+        t.cs->('sc lastA 1 ii w y in', 'has ghost w');
+        my $pi = G&pint,$W,split'-',"ii-w-y-tw-pi/somiplace";
+        ok pi.c.s =~ /# Difference/, "pi/somiplace with a little difference";
+        ok pi.c.s !~ /n moreso=>/, "pi/somiplace non-moreso";
+        
+        c&te =
+        n Elvariurgre=>W=>{lim=>4}
         t.en->('sc lastK c s', 'they have stuff');
         J.xo1 = $xo->("Has 14 total");
-    }
-    if ($n == 1) {
+        my $mo = t.ntos->(c&te,'mo');
+        $dd->(mo.c.want, "Elvari no wanted");
+        
         c&te =
-        n Elvarfigure=>W=>{lim=>4}
-        t.en->('sc lastK c s', 'same stuff');
-        J.xo2 = $xo->("no infxo flow status");
-        is J.xo1, J.xo2, "xo same";
-    }
-    if ($n == 2) {
+        n ElvisWithGhosts
+        t.cs->('sc lastA 1 ii w y in', 'has ghost w differently');
+        t.cs->('sc lastA 1 sc u sc s sc lastK c s', 'has ghost w differently u K');
+        
+        my $W = t.ntos->(c&te,'J');
+        my $pi = G&pint,$W,split'-',"sc-u-sc-ii-w-y-tw-pi/somiplace";
+        ok pi.c.s =~ /# Difference/, "pi/somiplace with a little difference";
+        ok pi.c.s =~ /n moreso=>/, "pi/somiplace is moreso";
+        
         c&te =
-        n Elvarfigure=>W=>{lim=>7}
-        t.en->('sc lastK c s', 'more stuff');
-        J.xo3 = $xo->("now 17 images");
-        is J.xo2, J.xo3, "xo diff";
+        n Elvariurgre=>W=>{lim=>5,vangoats=>3}
+        t.en->('sc lastK c s', 'they have stuff moreso');
+        J.xo2 = $xo->("Has 15 moreso + vang");
+        my $mo = t.ntos->(c&te,'mo');
+        $dd->(mo.c.want, "Elvari notices pin change");
     }
-ElvisRopeWay: | # J uphoisted xo way, causes activity
+ElvisRopeWay: | # J uphoisted xo way, causes activity, G.hasway
     my $t = Rw Telvis;
 
     my $dd = sub {
@@ -561,6 +577,44 @@ ElvisRopeWay: | # J uphoisted xo way, causes activity
         J.xo2 = $xo->("Has 15 moreso + vang");
         my $mo = t.ntos->(c&te,'mo');
         $dd->(mo.c.want, "Elvari notices pin change");
+    }
+ElvisHoists: | # J uphoists xo
+    my $t = Rw Telvis;
+    # unifying J metadata
+    # mixing together as it goes
+    # simpler/faster/out-of-band We things
+    # should co any structure with index clues
+    # see pud re T
+    #sleep 3;
+    
+    my $xo = sub {
+        my $s = t.ntos->(c&te);
+        my $xo = s.sc.xo;
+        my $l = shift;
+        t.cs->({rsl=>s.sc.infxo},$l);
+        t.cs->({rsl=>[ki$xo]},"xo: ".$l);
+        $xo
+    };
+    
+    if ($n == 0) {
+        c&te =
+        n Elvarfigure=>W=>{lim=>4}
+        t.en->('sc lastK c s', 'they have stuff');
+        J.xo1 = $xo->("Has 14 total");
+    }
+    if ($n == 1) {
+        c&te =
+        n Elvarfigure=>W=>{lim=>4}
+        t.en->('sc lastK c s', 'same stuff');
+        J.xo2 = $xo->("no infxo flow status");
+        is J.xo1, J.xo2, "xo same";
+    }
+    if ($n == 2) {
+        c&te =
+        n Elvarfigure=>W=>{lim=>7}
+        t.en->('sc lastK c s', 'more stuff');
+        J.xo3 = $xo->("now 17 images");
+        is J.xo2, J.xo3, "xo diff";
     }
 ElvisSimpleGhost: |
     my $t = Rw Telvis;
@@ -786,7 +840,7 @@ ElBridge: | # mo joins E
         s&xo = $xo;
         delete s&xo if !keys %$xo;
     
-    #c J44 how the web works
+    #c J44 how the web works, including ape
     u s
     n \'of:mo'
     # how the web works
