@@ -508,19 +508,23 @@ ElvisHoists: | # J uphoist any {{{
 ElvisRopeWay: | # J uphoisted xo way, causes activity
     my $t = Rw Telvis;
 
+    my $dd = sub {
+        t.cs->({rsl=>[split"\n",ddump shift]},shift);
+    };
     my $xo = sub {
         my $s = t.ntos->(c&te);
         my $xo = s.sc.xo;
         my $l = shift;
         t.cs->({rsl=>s.sc.infxo},$l);
-        t.cs->({rsl=>[split"\n",ddump $xo]},"xo: ".$l);
+        $dd->($xo,"xo: ".$l);
         $xo
     };
     G.hasway = sub {
         my ($A,$C,$G,$T,$v) = @_;
         my $te = A.mo && A.mo.c.T || return saybl "Nowhere to mo T has";
         # should multi the name from the first one
-        te.has.way.>v.t.>v.sc.dige ++;
+        my $w = v.y.argumented || die "Not argumented? ".ki$v;
+        te.has.way.>w.t.>w.sc.dige ++;
     };
 
     if ($n == 0) {
@@ -528,35 +532,35 @@ ElvisRopeWay: | # J uphoisted xo way, causes activity
         n ElvisWithGhosts
         my $W = t.ntos->(c&te,'J');
         A.5 = $W;
-        sayre "A.5.t is W.t ".ki W.ii.w;
+        
         t.cs->('sc lastA 1 ii w y in', 'has ghost w');
         my $pi = G&pint,$W,split'-',"ii-w-y-tw-pi/somiplace";
-        sayre "Japool pi.c.s";
+        ok pi.c.s =~ /# Difference/, "pi/somiplace with a little difference";
+        ok pi.c.s !~ /n moreso=>/, "pi/somiplace non-moreso";
         
         c&te =
         n Elvariurgre=>W=>{lim=>4}
         t.en->('sc lastK c s', 'they have stuff');
-        J.xo1 = $xo->("Has 14 total?");
+        J.xo1 = $xo->("Has 14 total");
+        my $mo = t.ntos->(c&te,'mo');
+        $dd->(mo.c.want, "Elvari no wanted");
         
         c&te =
         n ElvisWithGhosts
         t.cs->('sc lastA 1 ii w y in', 'has ghost w differently');
-        t.cs->('sc lastA 1 sc u sc s sc lastK c s', 'has ghost w differently itself');
-        
-        c&te =
-        n ElvisesGhosts=>W=>{moreso=>1}
-        t.cs->('sc top', 'has ghost w differently itself');
+        t.cs->('sc lastA 1 sc u sc s sc lastK c s', 'has ghost w differently u K');
         
         my $W = t.ntos->(c&te,'J');
         my $pi = G&pint,$W,split'-',"sc-u-sc-ii-w-y-tw-pi/somiplace";
-        sayre "Japool pi.c.s";
+        ok pi.c.s =~ /# Difference/, "pi/somiplace with a little difference";
+        ok pi.c.s =~ /n moreso=>/, "pi/somiplace is moreso";
         
         c&te =
-        n Elvariurgre=>W=>{lim=>5}
-        t.en->('sc lastK c s', 'they have stuff');
-        J.xo2 = $xo->("Has 14 total");
-        
-        
+        n Elvariurgre=>W=>{lim=>5,vangoats=>3}
+        t.en->('sc lastK c s', 'they have stuff moreso');
+        J.xo2 = $xo->("Has 15 moreso + vang");
+        my $mo = t.ntos->(c&te,'mo');
+        $dd->(mo.c.want, "Elvari notices pin change");
     }
 ElvisSimpleGhost: |
     my $t = Rw Telvis;
@@ -608,6 +612,7 @@ ElvisWithNewGhosts: |
     my $o = Rw weeks;
     n weeks=>4=>$o;
 ElviseyGhost: |
+    c&moreso = 1 if J.bowls++;
     Rw ElvisesGhosts
 ElvisesGhosts: |
     my $z = LoadFile('g/s/8');
@@ -649,6 +654,10 @@ Elvarfigure: |
     c.lim = c&lim if c&lim;
     n Tarryn =>-somiplace=>$c
     n Fergus =>-somiplace=>'w/fug'
+    c&vangoats &&
+        Rw vang Flang
+         &&
+        Rw vang $e=4 $sempolate:c etc;
 ElBridge: | # mo joins E
     u i
     
@@ -766,7 +775,6 @@ ElBridge: | # mo joins E
                 my ($v,$cv,$t) = @_;
                 push @M, {t=>$t,y=>{cv=>$cv},c=>{s=>$v}};
             };
-            sayyl "Wakes up: $k";
             if (!@M) {
                 delete $xo.>$k;
             }
@@ -778,12 +786,29 @@ ElBridge: | # mo joins E
         s&xo = $xo;
         delete s&xo if !keys %$xo;
     
-    # becomes our xo
-    
-    u c
+    #c J44 how the web works
+    u s
     n \'of:mo'
     # how the web works
     # event finds a way into remote's mind
+    
+    J 44:
+        my $xo = Js&s && Js&s.sc.xo || return;
+        my $ow = xo.way || return;
+        T.pass = 1;
+        local A.V = 2;
+        for my $way (keys %$ow) {
+            my $w = G&wup,$way || next;
+            my $od = {%{ $ow.>$way }};
+            delete $od.>w.sc.dige;
+            if (keys %$od) {
+                A&want.pin = 6;
+                A&want.pins.>$way = 6;
+            }
+            else {
+                # stays
+            }
+        }
     
     # heaven's above me on a street called love
     # J must make known elvising to use .e hooks to answer calls

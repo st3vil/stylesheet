@@ -125,18 +125,8 @@ Day: | # world primitives
         my $args = join',','ar',@args;
         
         # look in of=w up the network to 5
-        my @lo;
-        my $want = sub {
-            my ($t,$f,$i) = @_;
-            push @lo, $f;
-            # if i > netmask
-            # if t mentions some other way to get it
-            my $tw = t.y.tw || die "w $s found no ytw on"
-                ." A.1.t s A.t @ $i (f.t): ".ki$t;
-            $tw.>$s
-        };
-        # they are pins near network of knowledge of T
-        my $w = G&t,'w',$want;
+        # they are pins near network of knowledge via T
+        my $w = G&wup,$s;
         
         # or the old way,
         if (!$w) {
@@ -151,14 +141,11 @@ Day: | # world primitives
         }
         $w || die "No way to $s (on A.1.t's A.t)";
         
-        if (!$w) {
-            @lo = map{_.t} uniq @lo;
-            $w || die "No w: $s (looked in: @lo)";
-        }
         ws&dige || die "w no dige: ".ki$w;
         ws&of || die "w not of: ".ki$w;
         
         my $ark = G.sc.pinark ||= {};
+        # dige same across all arg variations
         my $v = $ark.>w.t.>ws&dige.>$args ||= do {
             my $v = G&hup,$w;
             v.y.argumented = $w;
@@ -171,11 +158,24 @@ Day: | # world primitives
         G.hasway && G.hasway->($A,$C,$G,$T,$v);
         
         vc&code ->($ar,map{ $ar.>$_ }@args);
+    
+    # look for thing named $s in We thing named $of, on A net
+    wup: %acgt:s of
+        $of ||= 'w';
+        my $want = sub {
+            my ($t,$f,$i) = @_;
+            # if i > netmask
+            # if t mentions some other way to get it
+            my $tw = t.y.tw || die "w $s found no ytw on"
+                ." A.1.t s A.t @ $i (f.t): ".ki$t;
+            $tw.>$s
+        };
+        G&t,$of,$want;
         
-    # make s.c.code, see of
+    # make s.c.code, see of (which sets dige)
     perlcode:
-        my $C = $s;
-        # shade the edge, args etc.
+        $C = $s;
+        # encapsulate sub with args
         G&CoArgulate;
         # translate into perl
         G&CoBabbler;
