@@ -51,9 +51,9 @@ Day: | # world primitives
         $G
     # find local things, look up trail of con centers
     # could also look down/allways for elvis proto
-    t:
-        my $wanted = pop @Me if @Me && ref $Me[-1] eq 'CODE';
-        $C = G&s,$s,@Me;
+    t: %acgt:s c y
+        ($y,$c) = ($c,$y) if ref $c eq 'CODE';
+        $C = G&s,$s,$c;
         c&on ||= 'ii';
         c&max ||= 5;
         c&min ||= 0;
@@ -61,14 +61,36 @@ Day: | # world primitives
             my $from = $i == 0 ? $A : $A.>$i;
             $from || next;
             my $on = $from.>c&on || next;
+            
             my $t = $on.>C.t || next;
-            if ($wanted) {
-                $t = $wanted->($t,$from,$_);
-            }
+            $t = $y->($t,$from,$_) if $y;
             $t || next;
             return $t;
         }
-    # make call, in i, looks up to 5 many rare/little subs
+        return
+    
+    # look for thing named $s in We thing named $of, on A net
+    wup: %acgt:s of
+        $of ||= 'w';
+        my $want = sub {
+            my ($t,$f,$i) = @_;
+            # if i > netmask
+            # if t mentions some other way to get it
+            my $tw = t.y.tw || die "w $s found no ytw on"
+                ." A.1.t s A.t @ $i (f.t): ".ki$t;
+            $tw.>$s
+        };
+        G&t,$of,$want;
+    
+    Wup: %acgt:s of
+        $of ||= 'W';
+        my $W = G&wup,$s,$of || return;
+        my $s = W.c.s;
+        ref $s eq 'HASH' || die "No Wup $of: $s: ".ki $W;
+        $s;
+    
+    # make call, in i
+    # looks up to 5 many rare/little subs
     # precompiled args
     h:
         my $y;
@@ -159,19 +181,6 @@ Day: | # world primitives
         
         vc&code ->($ar,map{ $ar.>$_ }@args);
     
-    # look for thing named $s in We thing named $of, on A net
-    wup: %acgt:s of
-        $of ||= 'w';
-        my $want = sub {
-            my ($t,$f,$i) = @_;
-            # if i > netmask
-            # if t mentions some other way to get it
-            my $tw = t.y.tw || die "w $s found no ytw on"
-                ." A.1.t s A.t @ $i (f.t): ".ki$t;
-            $tw.>$s
-        };
-        G&t,$of,$want;
-        
     # make s.c.code, see of (which sets dige)
     perlcode:
         $C = $s;
