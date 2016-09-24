@@ -63,12 +63,10 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         my $j = cc&j || die "No o Acj! ".ki$c;
         
         if (!@{ os&zop }) {
-            1 && saybl "No changes: C.t ".G&sn if A&V;
+            A&V && saybl "No changes: C.t ".G&sn;
             return T.Z.8 = $A;
         }
-        else {
-            say "s3   A.1.t";
-        }
+        
         A&inz = [map {
             my $O = G&A,O=>1,$_;
             a&topO = $O if os&top eq $_;
@@ -176,6 +174,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         my $t = a&topO;
         $t = t.c.s;
         my $tv = t.y.tv;
+        
         # all the O under top
         my $z = [map{
             my $x = _.y.x || die "no yx bridge: ".ki$_;
@@ -189,6 +188,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         
         # and W returns
         # mix in unswam ytWe without doing
+        my $Wez = [];
         G&chew,s&ytWe,\'Wcv,Wt',$_ for sub {
             my ($We,$Wcv,$Wt) = @_;
             my $D = We.c.D;
@@ -212,7 +212,21 @@ Triangle: | # <>< swim, oscillator, s n, 7,
                 We.c.D = $D;
             }
             push @$z, $D;
+            push @$Wez, $D;
         };
+        
+        # feeds unification causes all We things
+        if (my $o = delete ts&coil) { # root.sc/y.at
+            my $N = [map {@{_.sc.z}} @$Wez];
+            for my $o (split ' ',$o) {
+                my $s = $1 if $o =~ s/:(.+)//;
+                for my $C (grep { _.sc.>$o }@$N) {
+                    my $way = C.sc.>$o;
+                    Rw $way $C $N $s
+                }
+            }
+        }
+        
         
         $t = G&hup,$t;
         delete t.y.in;

@@ -58,7 +58,7 @@ ElVerse: | # hyperactive With
             $sep = '@' if $la eq $A;
             if ($la eq A.2) {
                 # can go funny directions
-                if (la.3 ne A.3) {
+                if ($la ne A.5 && $la ne A.4 && la.3 ne A.3) {
                     # J inherit 12345 before its set right
                     $sep = "(".($la eq la.3 ? "" : "la.3.t)");
                 }
@@ -101,7 +101,6 @@ ElVerse: | # hyperactive With
     T:
         1&&saygr "T C.t".G&sn;
     # etc
-
 ElChorus: | # E joins your language
     # tries to route to handlers instead of pin
     # vents unknowns
@@ -418,6 +417,9 @@ ElChorus: | # E joins your language
     e 7:
         local A.V = 2;
         my $mo = A.mo || die "Nomo"; # mo
+        my $te = mo.c.T;
+        # inherit from mo positivity
+        $T.>$_ = $te.>$_ for grep{ defined $te.>$_ } qw'oke pos';
         if (T.oke) {
             # do pin now
             if (mo.cv < 0.5) {
@@ -444,7 +446,7 @@ ElChorus: | # E joins your language
         T.pos = 1 if !defined T.pos;
         if (T.pos) {
             # do J in a second
-            sayyl "Do A.1.t in a second";
+            sayyl "Do A.1.t in a second: ".G&es
             #Rw waito $J $C;
         }
     
@@ -531,13 +533,6 @@ ElvisRopeWay: | # J uphoisted xo way, causes activity, G.hasway
 ElvisTower: | # J pool net namer: puts on the screen
     my $t = Rw Telvis;
 
-    my $dd = sub {
-        t.cs->({rsl=>[split"\n",ddump shift]},shift);
-    };
-    my $xo = sub {
-        my $s = t.ntos->(c&te);
-        $dd->(s.sc.xo,shift);
-    };
     G.hasway = sub {
         my ($A,$C,$G,$T,$v) = @_;
         my $te = A.mo && A.mo.c.T || return saybl "Nowhere to mo T has";
@@ -549,59 +544,136 @@ ElvisTower: | # J pool net namer: puts on the screen
     if ($n == 0) {
         my $ma =
         n ElMatron
-        my $W = t.ntos->($ma,'J');
-        J.5 = A.5 = $W;
+        J.5 = A.5 = t.ntos->($ma,'J');
         
         c&te = 
-        n Os
+        n Os=>W=>{t=>$t,est=>'ElvisLower'}
         t.en->('sc top', 'A Os');
-        J.4 = A.4 = t.ntos->($ma,'J');
         
-        c&te = 
-        n Tube
-        t.en->('sc lastK c s', 'A throat');
-        $xo->("Tube way");
-        
-        c&te = 
-        n Sequencing
-        t.en->('sc lastK c s', 'A Sequencing');
-        $xo->("Sequencing way");
-        
-        return;
-        # c&te = 
-        # n PiMachine
-        # t.en->('sc lastK c s', 'A PiMachine');
-        
-    
-        c&te =
-        n ElvisMatters
-        my $W = t.ntos->(c&te,'J');
-        
-        t.mkoJ->(Junup=>{eat=>W.sc.s.sc.lastK.c.s});
-        exit;
+        #exit;
     }
-ElMatron: | # our 5
-    # make our w able to compile PiMachine
+ElvisLower: | # os->Os hopped main # newish in-Os test nodules
+    sayyl "forez room: ".G&sn;
+    
+    
+    Rw ElvisPaintedStripes;
+    
+    #
+    #return;
+    # c&te = 
+    # n PiMachine
+    # t.en->('sc lastK c s', 'A PiMachine');
+    exit;
+
+    t.e =
+    n ElvisMatu
+    my $W = t.ntos->(t.e,'J');
+
+    t.mkoJ->(Junup=>{eat=>W.sc.s.sc.lastK.c.s});
+ElvisPaintedStripes: | # copy O valve to Styles, which should be on 5
+    my $head = sub {
+        my $i;
+        (grepl=>sub{ $i++ < 10 });
+    };
+    t.e = 
+    n Ang
+    t.cs->({$head->(),ntos=>'sc lastK c s'}, "Ang/Stripes");
+    t.cs->({$head->(),rsl=>t.lookii->()}, "has ii");
+    my $s = t.ntos->(t.e);
+    my $mu = s.sc.ii.O.y.tw.muchofany;
+    ok $mu, "got muchofany coded";
+    $mu = G&hup,$mu;
+    mu.y = {cv=>mu.y.cv};
+    delete mu.c.code;
+    mu.c.mc = 'code';
+    G&oleak,$mu,5 && die "mu leaks: ".wdump 4, $mu;
+    DumpFile('w/StyleValve',$mu);
+    
+    
+    t.e = 
+    n PaintedStripes
+    t.cs->({$head->(),ntos=>'sc lastK c s'}, "PaintedStripes valve");
+    t.cs->({$head->(),rsl=>t.lookii->()}, "PaintedStripes has ii");
+    
+    
+    
+PaintedStripes: | # valve between O (distributed) and Styles (bulkily on 5)
+    u a
+    my $mu = LoadFile('w/StyleValve');
+    n $mu
+Zroom: |
+    sayyl "IN z room: ".G&sn;
+    n 3,3,3
+ElMatron: | # our 5, has normal + net decising
+    # make c/s/a/i in 5.ii.w for for compiling PiMachine on PiMachine
     u ElvisWayliases
+    # see theu in 5.ii.W...
     u ReU
+    u Ang
     n some=>2=>3
-    1 && sayyl "Our c: ".ki G&wup,'c';
-ReU: | # our A.ii.theu 
+ReU: | # our 4, is normal (theu), share as W
     # host
     my $u = A.4.ii.theu;
     n theu=>1=>{s=>$u},'%of:W'
 Os: | # our 4
+    G&mk4,$A;
+    A.5.4 = $A;
     # travellers
-    Rw Beer;
+    ar.t = c&t if c&t;
+    c&est ||= "Beer";
+    Rw c&est;
 Beer: | # our 3
     n Tube
+    #T.not = 1;
+    saygr "Upon: ".G&sn;
+ElvisMatu: | # T room on 
+    saygr "Upon: ".G&sn;
+    # puddle display
+    my $fo = A.4;
+    my $ts;
+    my $tt;
+    # for all that is
+    my $Jtv = fo.sc.Jtv;
+    my $nine = 0.9;
+    $Jtv.>fo.t.>$nine = $fo;
+    
+    G&chew,fo.sc.Jtv,'t,cv',$_ for sub {
+        my ($J,$t,$cv) = @_;
+        $tt.>$t && die "Already had $t: ".ki($J)."\nunt: ".ki($tt.>$t);
+        $ts.>$J = $tt.>$t = G&Ct,[$t,$cv,{},{J=>$J}];
+    };
+    # make A.2 or T hier
+    for my $C (values %$tt) {
+        my $upJ = s&J.2;
+        C.c.>$_ = s&J.>$_ ->{t} for 1..5;
+        if (my $upC = $ts.>$upJ ) {
+            next if $upC eq $C;
+            delete $tt.>C.t;
+            push @{upC.sc.z||=[]}, $C;
+        }
+    }
+    
+    my @t = values %$tt;
+    @t > 1 && sayre "Many tops: ".ki \@t;
+    
+    # that makes T into tests with extremities
+    my $s = join "\n\n", map {
+        my $ub = sub {
+            my $C = shift;
+            my $J = s&J;
+            "C.t".($J&&"   (J.c.o)")
+        };
+        G&ind,$_,$ub;
+    } @t;
+    n so=>1=>G&sn
+    n woov=>2=>"\nZouper: fo.t\n$s";
 ElvisMatters: |
     map {
         n fivi=>$_=>"fi"
     } map { $_ / 7 * $_ / 3 } 33..54;
     n hoov=>-tinput
     
-Junup: |
+Junup: | # display z of c&eat
     u urw
     y.at.tag = 'pre';
     J.ev.li = 'Juned';
@@ -626,9 +698,21 @@ Junup: |
     n itc=>2=>{}=>{z=>[$l]}
     #n reo=>-pre=>wdump 5, $l
 Juned: | # handle input
-    sayyl ki us&C;
+    sayyl "J.t: ".ki us&C;
+    Rw talkzyh;
 ElBridge: | # mo joins E
     u i
+    ind: %acgt:s y
+        join "\n", grep{defined}
+            $y->($s),
+            (s.sc.z && ind("  ",join"\n",map{ G&ind,$_,$y }@{s.sc.z}));
+        
+    # make A that is 4
+    mk4:
+        my $J = A.1;
+        $A.>$_ = $J for 1..4;
+        $J.>$_ = $J for 1..4;
+        saygr "A.t gets 4 J.t";
     # connect a resource to the vortexey hoist
     # for credits that pool up to the top level
     # want to be strung into roots, vaguing out
@@ -653,11 +737,12 @@ ElBridge: | # mo joins E
         }
         xs&xo = $xo;
     # join many xo
+    # may want to know top/our xo
     multiv:
         my $inf = s&infxo;
         my $sa = sub {
             push @$inf, shift;
-            sayyl "Inf: ".$inf->[-1]
+            sayyl "Inf A.1.t: ".$inf->[-1]
         };
         if ($s eq 'way') {
             my $td = {};
@@ -680,7 +765,7 @@ ElBridge: | # mo joins E
     u a
     # 
     # their xo
-    K 18:
+    O 6:
         c&Jo || return;
         my $x = a&x;
         my $J = a&J;
@@ -692,7 +777,6 @@ ElBridge: | # mo joins E
         
     # unify harvested xo and hoisted ox (y t xo) as xo
     s 7999: %v:sctop
-        local A.V = 2;
         my $top = s&top || return;
         my $te = A.mo.c.T;
         my $xo = te.has; # our xo
@@ -760,13 +844,11 @@ ElBridge: | # mo joins E
     u s
     n \'of:mo'
     # how the web works
-    # event finds a way into remote's mind
-    
+        
     # 
     J 44:
         my $xo = Js&s && Js&s.sc.xo || return;
         my $ow = xo.way || return;
-        T.pass = 1;
         local A.V = 2;
         for my $way (keys %$ow) {
             my $w = G&wup,$way || next;
@@ -780,7 +862,7 @@ ElBridge: | # mo joins E
                 # stays
             }
         }
-    
+        
     # heaven's above me on a street called love
     # J must make known elvising to use .e hooks to answer calls
     
