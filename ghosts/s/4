@@ -5,7 +5,6 @@ PiMachine: | # all that is
     n Stuff
     n ThatWillBe
     n Elvising
-    n PaintedStripes
 Sequencing: |
     n To
     n Day
@@ -63,6 +62,7 @@ MakePi: | # make code,
             };
             my $N = [$su->($Day)];
             for my $C (@$N) {
+                next if C.sc.coded;
                 Rw ym/conoi $noAI=1 $C $v;
             }
             DumpFile($fd.'.g',$dig->($tW));
@@ -90,11 +90,15 @@ MakePi: | # make code,
             for my $t (sort keys %$ts) {
                 my $z = $ts->{$t};
                 
+                z.sc.coded ||
                 Rw CoBabbler $C:z;
+                
                 my $y = eval z.c.s;
+                
                 die "Throcompile $of z.y.cv: z.t:"
                     .ind('  ',$@)."\n\n z.c.s\n" if $@;
                 die "Not code: z.t z.y.cv: $@\n".ki $z if ref $y ne 'CODE' && !z.sc.subpeel;
+                
                 z.c.code = $y;
                 
                 if ($la eq $o) {
@@ -177,11 +181,8 @@ of: | # compile/collect
             # may already be compiled
             # shades code through the wall
             # the W listened to needs one osc in G, then all can whole it
-            my $coded;
-            if (my $o = z.y.r && z.y.r.c.o) {
-                my $D = o.y.D;
-                $coded = D.c.mc && D.c.mc =~ /\bcode\b/;
-            }
+            # coded while the W goes through the wall
+            my $coded = delete(zs&coded) || zs&args && zs&acgt;
             unless ($coded) {
                 # shade the edge, args etc.
                 Rw CoArgulate $C:z;
@@ -371,7 +372,7 @@ Zop: |
     J.thou++ || do {
         #n ElvisRopeWay =>-test=>{man=>'Zupe'}
         n $_=>-test for @{c&also||[]};
-        n ElvisTower =>-test
+        n ElvisPaintedStripes =>-test
     };
     
     sayyl "Took ".G&ron,hitime()-$beg;
@@ -513,6 +514,7 @@ Tesh: | # wrap test way
         
         my $oJ = J.R || die "NoZome"; # v inside oJ is J
         my $oG = oJ.y.G || die "nozome y G";
+        delete ar.m;
         Rw $test + $t $tes $n $oJ:J $J:oJ $A:oJ.1 $G:oG;
         
         J.output = oG.ouJ if oG.ouJ;
@@ -794,11 +796,7 @@ ElvisTimely: | # J know whatnot, pins (see Jam 82)
     # such massive hoisting wants 
     
 
-ElvisWayliases: |
-    n c=>''=>G.way.alc,'%of:w';
-    n s=>''=>G.way.als,'%of:w';
-    n a=>''=>G.way.alact,'%of:w';
-    n i=>''=>G.way.alacgts,'%of:w';
+
 aly: | # something wiry
     # make acts
     n alvy

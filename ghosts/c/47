@@ -2,7 +2,7 @@
 
 
 scgkindex: | # make scindex
-    C.sc.scindex = {map{_.sc.gk=>1}grep{_.sc.nk eq 'sc' && _.sc.gk}@$N};
+    C.sc.scgkindex = {map{_.sc.gk=>1}grep{_.sc.nk eq 'sc' && _.sc.gk}@$N};
 jshang: |
     y.at.isle = 'jes';
     y.at.jsl = 1; # send js
@@ -59,44 +59,42 @@ Stripes: | # css
     y.at.coil = 'tldo'; # does indeax
     u alact
     # values from O to Styles, up on 5
-    muchofany 3: %tldo:scgkindex,of:O
-        for my $k (keys %{T.D.sc.scindex||{}}) {
-            exists C.sc->{$k} || next;
-            1 && saygr "Going into Styles: C.t C.y.cv: ".G&sn;
-            my $s = G&A,'Style';
-            s.c.tmax = 5;
-            G&A,$s=>7;
-            return;
-        }
+    muchofany 56: %tldo:scgkindex,of:O
+        my $D = T.D;
+        
+        for (keys %{Ds&scgkindex}) {
+               exists C.sc.>$_ || next;
+            return G&A,Style=>7,$C
+        }   
     
     Style 1: %of:Style
-        A&s = $C = shift @$s;
+        A&s = shift @$s;
         a&O = A.up;
         a&osc = A.up.c.osc;
-        #
 
     u alacgts
-    # uses an I cap, the sc satays with any filing
+    # Style D wants 
     stri: %acgt:D s
-        my $v = C.sc->{D.sc.gk};
-        if (D.sc.flex) {
-            for my $st (@{D.sc.flex}) {
+        my $v = C.sc->{Ds&gk};
+        if (Ds&flex) {
+            for my $st (@{Ds&flex}) {
                 for my $k (sort keys %$st) {
                     my $vv = $st->{$k};
                     my $e;
                     e.v = $v;
                     e.et = $vv;
-                    $v = I.d&$k,$e;
+                    $v = G&$k,$e;
                     !length $v && sayre "$k dfrom D.t didn't... $v from e.v";
                 }
             }
         }
         else {
-            my $k = D.sc.filt;
+            my $k = Ds&filt;
             return unless $k;
-            $v = I.d&$k,$v;
+            $v = G&$k,$v;
         }
-        C.sc->{D.sc.gk} = $v;
+        
+        C.sc->{Ds&gk} = $v;
     
     u als
     n \'%of:Style'
