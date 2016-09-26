@@ -13,8 +13,17 @@ Triangle: | # <>< swim, oscillator, s n, 7,
     s 2:
         # number of things plugged in to s from J
         for my $J (A.1) {
-            C.c.>$_ = J.c.>$_ for grep{ defined J.c.>$_ } qw'whole base';
-            C.sc.>$_ = J.sc.>$_ for grep{ defined J.sc.>$_ } qw'ch';
+            for my $g ([qw'c whole base parts'],[qw'c ch']) {
+                my ($gk,@nk) = @$g;
+                for (@nk) {
+                    if (defined $J.>$gk.>$_ ) {
+                        $C.>$gk.>$_ = $J.>$gk.>$_;
+                    }
+                    else {
+                        delete $C.>$gk.>$_;
+                    }
+                }
+            }
         }
         my $whole = c&whole;
         
@@ -25,7 +34,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         A&V = A.1.t =~ /^[A-Z]/;
         
         if (my $W = $whole) {
-            my $s = G&Wup,$W || G&t,$W ||  die "no $W on ".G&sn;
+            my $s = G&Wup,$W || G&t,$W || die "no $W on ".G&sn;
             sayre "WHole! s: A.1.t: s.t" if A&V;
             # m=A makes 
             A&who = G&A,o=>8,$C,$s,'whole',{m=>'A'};
@@ -38,7 +47,13 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             # place on us, eg u.sc.ii, you must 
             return T.Z.8 = $A;
         }
+        
         my $tug;
+        if (my $d = c&parts) {
+            $d = G&hup,$d;
+            A&xo = delete ds&xo if ds&xo;
+            tug.parts = G&A,o=>2,$C,$d,'parts';
+        }
         if (my $W = c&base) {
             my $s = G&Wup,$W || G&t,$W || die "no $W on ".G&sn;
             sayyl "Base ! ".ki $s;
@@ -357,7 +372,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
     #c s8 transfer
     s 8:
         # tie together
-        A&expo.>$_ = 1 for qw'top tv i ii';
+        A&expo.>$_ = 1 for qw'top tv i ii xo';
         my $J = A.1;
         for (keys %{A&expo}) {
             if (exists C.sc.>$_ ) {

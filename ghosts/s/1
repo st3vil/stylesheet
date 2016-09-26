@@ -247,9 +247,10 @@ Tube: |
         $T = A.c.T ||= {};
         return if T.not;
         $s ||= A.c.of || A.t;
-        my $of = G&s,$s;
-        of.c.max = A&tmax || 5; # distance from A to look
-        my $z = G&t,$of || return sayre "Not found: of.t: ".G&sn;
+        my $f = G&s,$s;
+        fc&max = A&tmax || 5; # distance from A to look
+        my $z = G&t,$f
+            || return sayre "Not found: f.t: ".G&sn;
         #snooze 500;
         my $uov = A.c.ov;
         my $ntug = 0.1;
@@ -267,27 +268,21 @@ Tube: |
             $C = A.c.s ||= {y=>{A=>$A}};
             my @is = (A.c.N || $z);
             
-            # z wants C
-            if (z.sc.nk) {
-                exists $C.>z.sc.nk || next;
-                @is = $C.>z.sc.nk;
-                if (z.sc.gk) {
-                    exists $C.>z.sc.nk.>z.sc.gk || next;
-                    @is = $C.>z.sc.nk.>z.sc.gk;
+            # z wants C.?.?
+            if (zs&nk) {
+                exists $C.>zs&nk || next;
+                @is = $C.>zs&nk;
+                if (zs&gk) {
+                    exists $C.>zs&nk.>zs&gk || next;
+                    @is = $C.>zs&nk.>zs&gk;
                 }
             }
-            if (z.sc.sk) {
-                exists C.sc.>z.sc.sk || next;
-                @is = C.sc.>z.sc.sk;
-            }
-            if (z.sc.t) {
+            # z wants anything more from C, compiles to ip
+            if (zs&t) {
+                ref zs&ip eq 'HASH' || die "Dsct ip not: ".ki$z;
+                # whole z.sc can arg/solute things
                 my $sc = z.sc;
-                ref sc.ip eq 'HASH' || die "Dsct ip not: ".ki$z;
                 G&ip,\$sc,$C || next;
-            }
-            if (z.sc.Ifs) {
-                die "A impli";
-                @is = G&scIfs,z.sc.Ifs;
             }
             
             # z readies
@@ -317,10 +312,13 @@ Tube: |
             delete T.ut;
             
             A.y.cv = z.y.cv unless delete T.nocvz;
-            last if delete T.whack || T.not;
+            last if delete T.whack || T.not || T.seek;
         }
         continue {
             $z = z.y.in || z.y.next; # or timeout, mass comb via A.m
+        }
+        if (delete T.seek) {
+            return G&throat;
         }
         # leaving
         A.c.tug && G&tug,A.y.cv;

@@ -54,6 +54,7 @@ ElVerse: | # hyperactive With
         $e = A&E.c.e if A&E; # endmost
         A&E && !$q && A&E.c.pines++;
         return $e if $s eq 'C';
+        return e.t if $s eq 't';
         my $list = $s =~ s/^_//;
         my ($nk,$gk) = G&pang,$s,'c';
         exists $e.>$nk || return ();
@@ -524,13 +525,7 @@ ElvisRopeWay: | # J uphoisted xo way, causes activity, G.hasway
         $dd->($xo,"xo: ".$l);
         $xo
     };
-    G.hasway = sub {
-        my ($A,$C,$G,$T,$v) = @_;
-        my $te = A.mo && A.mo.c.T || return saybl "Nowhere to mo T has";
-        # should multi the name from the first one
-        my $w = v.y.argumented || die "Not argumented? ".ki$v;
-        te.has.way.>w.t.>w.sc.dige ++;
-    };
+    Rw HasWay;
 
     if ($n == 0) {
         c&te =
@@ -567,25 +562,122 @@ ElvisRopeWay: | # J uphoisted xo way, causes activity, G.hasway
         my $mo = t.ntos->(c&te,'mo');
         $dd->(mo.c.want, "Elvari notices pin change");
     }
+HasWay: |
+    G.hasway = sub {
+        my ($A,$C,$G,$T,$v) = @_;
+        my $te = A.mo && A.mo.c.T || return saybl "Nowhere to mo T has";
+        # should multi the name from the first one
+        my $w = v.y.argumented || die "Not argumented? ".ki$v;
+        te.has.way.>w.t.>w.sc.dige ++;
+    };
 ElvisHosting: |
     my $t = Rw Telvis;
+    Rw HasWay;
 
     if ($n == 0) {
-        c&te =
+        t.e =
         n ElvisHostedThing
-        t.en->('sc lastK c s', 'they have stuff?');
+        t.en->('sc lastK c s', 'they have stuff');
+        my $W = t.ntos->(t.e,'J');
+        t.e = W.thePan;
+        t.en->('sc top', 'Pan have stuff');
+        
+        my $mo = t.ntos->(t.e,'J');
+        ok !mo.c.pin, 'no mo pin';
+        my $W = t.ntos->(t.e,'J');
+        t.dd->(W.sc.xo,'hands xo!');
+        
+        my $ii = {n=>W.ii.n};
+        #t.cs->('sc lastA 1 thePan?!', 'thepan...');
+        #t.cs->({rsl=>t.anii->($ii)},"Look at mo");
     }
     
 ElvisHostedThing: | # J stores, alives W
     u Hosting
-    n Stripes
+    J.thePan = 
+    n Panos
     # should see W in G.t, osc whole from top, unstores J.sc.>ein|xo 
     # no Jtv/scJ, says scW
+    
 Hosting: |
+    u alacgts
+    stores:
+        my $t = s.sc.top || die "Store no top: ".ki $s;
+        my @all = G&ind,$t;
+        my ($u) = @all;
+        for (@all) {
+            delete _c&ind;
+            _s&coded = 1 if delete _c&code;
+            _.y = {cv=>_.y.cv};
+            my $in = delete(_c&inside) || [];
+            my $z = delete _s&z;
+            G&oleak,$_,5 && die "Leaks: @$in: ".ki $_;
+            _s&z = $z;
+        }
+        u.sc.xo = s.sc.xo if s.sc.xo;
+        n Stro=>[put=>$u]
+    
+    thaws:
+        n Stro=>[get=>$C]
+        delete s&top
+        
+    
+        #
     u alact
-    mo 34:
-        C.t eq 'Stripes' || return;
-        sayre ki $C;
+    n \'of:mo'
+    
+    thawJ 34:
+        local A.V = 2;
+        c&e && return;
+        C.t eq 'Panos' || return;
+        A&storable = keys %{C.c} == 2 && c&W eq c&J && c&W eq C.t || return;
+        my $d = G&thaws || return
+            A.up.c.store++;
+        1c&parts = $d;
+        T.Z.7 = $A;
+        
+        
+    
+    thawJ 78: %of:n
+        A&store || return;
+        for my $mo (@{A&mos||[]}) {
+            mo.c.storable || next;
+            my $c = mo.c.s;
+            my $J = c.sc.J;
+            my $s = J.sc.s;
+            G&stores,$s;
+            #G.ouJ = $s;
+        }
+        
+Stro: |
+    my $f = 'w/StyleStro';
+    my $c = e&s; # sets C.c.e.c.s.sc.top = got
+    my @p = map { s/\W//g;$_ } A.4.t, c.t;
+    my $p = join '/', $f, @p;
+    my $f = "$p/head";
+    if (e&t eq 'put') {
+        `mkdir -p $p`;
+        DumpFile($f,$c);
+        sayyl "Store $f";
+    }
+    elsif (e&t eq 'get') {
+        -f $f || return;
+        my $u = LoadFile($f);
+        $u || return;
+        cs&top = $u;
+        sayyl "Get $f";
+    }
+    else { G&vent,"NHogo" }
+    T.nose = 1;
+    T.not = 1;
+Panos: |
+    u alact
+    G.panosted++;
+    blav:
+        G&Val + s&wi * s&he
+    Herz:
+        3 + C.y.cv
+    
 ElvisPaintedStripes: | # copy O valve to Styles, which should be on 5
     my $t = Rw Towering Ang
         || return;
@@ -771,10 +863,45 @@ Juned: | # handle input
     Rw talkzyh;
 ElBridge: | # hoisting, desire
     u i
-    ind: %acgt:s y
-        join "\n", grep{defined}
-            $y->($s),
-            (s.sc.z && ind("  ",join"\n",map{ G&ind,$_,$y }@{s.sc.z}));
+    ind: %acgt:s y d
+        $s = G&hup,$s;
+        $y ||= sub { shift };
+        my $d = {%{$d||{}}};
+        d.d++;
+        my @out;
+        if (my $z = s.sc.z) {
+            push @out, map{ G&ind,$_,$y,$d } grep{defined} @$z;
+        }
+        if (my $in = s.y.in) {
+            push @out, G&ind,$in,$y,$d;
+        }
+        my $my = [];
+        @out = map {
+            ! ref$_ ? "  ".$_ :
+            ref $_ eq 'HASH' ? do{
+                if (!_.c.ind) {
+                    _.c.ind = d.d;
+                    push @$my, $_;
+                };
+                unshift @{_.c.inside||=[]},s.t;
+                $_
+            } :
+            $_
+        } grep {defined} @out;
+        
+        if (my $next = s.y.next) {
+            push @out, G&ind,$next,$y,{%$d,d=>d.d-1};
+        }
+        
+        unshift @out, $s = $y->($s);
+        
+        if (d.d == 1 && !grep{ref}@out) {
+            join "\n", grep{defined} @out;
+        }
+        else { # an $N?
+            s.sc.z = $my if @$my;
+            return @out;
+        }
         
     # make A that is 4
     mk4:
@@ -833,7 +960,7 @@ ElBridge: | # hoisting, desire
     
     u a
     # 
-    # their xo
+    #c their xo
     O 6:
         c&Jo || return;
         my $x = a&x;
@@ -852,6 +979,7 @@ ElBridge: | # hoisting, desire
         my $x = top.y.x || die "No x on A.1.t: ".ki s&top;
         my $oxo = xs&xo; # our past xo
         
+        $xo = A&xo if A&xo; # W incoming
         my $we = G&newxo,$xo,$x if $xo || $oxo;
         
         my $ox = a&ox; # many y t xo (inc undef goners)
@@ -916,7 +1044,7 @@ ElBridge: | # hoisting, desire
         
     # 
     J 44:
-        my $xo = Js&s && Js&s.sc.xo || return;
+        my $xo = Js&xo || return;
         my $ow = xo.way || return;
         local A.V = 2;
         for my $way (keys %$ow) {

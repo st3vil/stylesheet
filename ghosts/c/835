@@ -82,14 +82,20 @@ pi/vindeo: | # frames->video
     say "Coms: $cmd";
     `$cmd`;
     #
+DevelTunnel: |
+    c&day = 1;
+    c&im = ' -resize 50% ';
+    Rw Phot;
+    Rw waito $J $d=10;
 Phot: | # SCREENSHOOT, store photo of now
     my $how = G.c.l ? 'ns' : 'seconds';
     (my $t = `date --rfc-3339=$how`) =~ s/[^\d]+/_/sg;
     $t .= '.jpg';
-    my $d = "sc/".(G.c.t || J.name);
-    `mkdir $d` unless -d $d;
+    my $d = "sc/".(c&scdir || G.c.t || J.name);
+    $d .= '/'.$1 if c&day && $t =~ /^(\d+_\d+_\d+)/;
+    `mkdir -p $d` unless -d $d;
     my $f = "$d/$t";
-    `xwd -root | convert - $f`;
+    `xwd -root | convert - c&im $f`;
 Vido: |
     `sudo mount /dev/mmcblk0p1 ~/mmc`;
     say "Name of thetalk/* <";
