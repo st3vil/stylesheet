@@ -277,9 +277,13 @@ Tube: |
             # z wants anything more from C, compiles to ip
             if (zs&t) {
                 ref zs&ip eq 'HASH' || die "Dsct ip not: ".ki$z;
-                # whole z.sc can arg/solute things
+                # whole z.sc could arg/solute things
                 my $sc = z.sc;
-                G&ip,\$sc,$C || next;
+                my $u = {};
+                G&ip,\$sc,$C,$u || next;
+                my @u = grep{defined} map{_.s} values %$u;
+                @u > 1 && die "Many picked via ".ki(sc.ip).":\n".ki $u;
+                @is = @u if @u;
             }
             
             # z readies
