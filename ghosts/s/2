@@ -231,7 +231,7 @@ Sea: | # folds of the day
                     if y.neg;
         }
         $pass == 1
-    
+    #c data
     xoy: %acgt:s c
         $c = G&xot,{},$c;
         G&xot,$c,$s;
@@ -355,9 +355,10 @@ With: | # J's stuff, its Js, osc page, etc.
         pop @Me;
         G&A,u=>8=>A.1,\@Me;
     # many slide by slightly and then get nailed down
-    m: %acgt
+    m:
         pop @Me;
-        sayre "In out ".wdump 3, \@Me;
+        G&A,n=>2=>A.1,[];
+        push @$s, G&Ct,\@Me;
     
 Tunnel: | # mind & world
     # machine for finding pi
@@ -377,6 +378,7 @@ Tunnel: | # mind & world
     u 3:
         my $n = A.c.n = G&A,n=>1=>A.1,@$s;
         n.c.u.c.whole = 'theu';
+        n.c.T.ATR.H = 8;
         G&A,$n,8;
         # pull on if not cached mindset (various W merged)
     n 1:
@@ -434,6 +436,9 @@ Tunnel: | # mind & world
         for my $l (@$s) {
             my $mo = G&tugA,mo=>1,@$l;
             G&ground,$mo unless mo.c.s.c.nogro;
+            if (my $r = delete T.ATR) { # T
+                G&xot,mo.c.T,$r;
+            }
             A&mo = $mo;
             push @{A&mos||=[]}, $mo;
         }
@@ -448,11 +453,13 @@ Tunnel: | # mind & world
         # compress
     n 8:
         # inter
+    
+    # mo-ment fills out the content
+    # sprung from n-author, separate put words...
     mo 1:
         A.mo = $A;
-        # sprung from n/author, separate put words...
         G&Cs,$s;
-    # join L if luminance
+    # join L if lumy
     mo 17:
         C.y.cv = 0.1 if C.y.cv eq '';
     # A.ii gets inner's mind, should T.seek
@@ -542,14 +549,16 @@ Jelly: | # mo Town making
         my $c = {root=>1};
         my $y = {cv=>0.9};
         my $sc = y.at = {};
-        my $r = J.sc.root = G&A,n=>1=>$J=>[J.t,$y,$c,$sc];
         my $M = [];
         my $ar = c&ar || {};
         my $s = c&s;
         local A.V = 2;
         Rw A.c.pin + $J $y $M $s;
         T.nose && return;
-        c.M = $M if @$M;
+        my $r = J.sc.root = G&A,n=>1=>$J=>[J.t,$y,$c,$sc];
+        if (@$M) {
+            c.M = $M;
+        }
         G&A,$r,8;
     
     # join moment to moment
