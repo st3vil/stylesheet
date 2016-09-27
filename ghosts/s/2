@@ -115,6 +115,26 @@ Sea: | # folds of the day
         }
         $c
     
+    # k into hash path    also T/ip
+    pint:
+        my $o = ref $Me[-1] eq 'HASH' ? pop @Me : {};
+        my @p;
+        for (@Me) {
+            if ($_ eq '*' && ref $s eq 'HASH' && 1 == keys %$s) {
+                ($_) = keys %$s;
+            }
+            unless (ref $s eq 'HASH' && exists $s.>$_) {
+                o.fail = $_;
+                o.mong = [sort keys %$s];
+                o.have = \@p;
+                return
+            }
+            push @p, $_;
+            $s = $s.>$_;
+        }
+        $s
+    
+    # sJ = sc J
     pang: %acgt:s def
         my ($nk,$gk) = $s =~ /^([tycs])?(.+)$/;
         $nk = 'sc' if $nk eq 's';
@@ -122,9 +142,26 @@ Sea: | # folds of the day
         $nk && $gk || die"strv:$s";
         ($nk,$gk);
     
+    # hash ordering
+    hord: %acgt:s head tail
+        my ($he,$ta) = ([],[]);
+        $head ||= [qw't cv y c sc'];
+        $tail ||= [qw's z'];
+        my $tw;
+        for ([$he=>$head],[$ta=>$tail]) {
+            my ($to,$k) = @$_;
+            for my $t (@$k) {
+                $s.>$t || next;
+                $tw.>$t ++;
+                push @$to, $t;
+            }
+        }
+        my @mi = sort grep { !$tw.>$_ } keys %$s;
+        [ map { [ $_ => $s.>$_ ] } @$he, @mi, @$ta ];
+    
     # determine/intel s, c properties
     # \$whereclause
-    ip: %acgt:s c
+    ip: %acgt:s c u
         my $z;
         $s = G&peel,$$s if ref $s eq 'SCALAR';
         my $n;
@@ -137,10 +174,13 @@ Sea: | # folds of the day
         }
         # n.all keeps going after a pass--
         my $pass = 1;
+        # the many named checks must pass
+        # their name is probably the k in $c.>$k
         EE: for my $k (keys %$s) {
             $pass == 1 || n.all || return 0;
-            my $y = $s.>$k;
-            my $x = $c.>$k;
+            my $y = $s.>$k; # intel
+            my $x = $c.>$k; # carb
+            my $u = $u.>$k ||= {};
             if (ref $y eq 'REF') {
                 $y = $$y;
                 my $exi;
@@ -154,11 +194,19 @@ Sea: | # folds of the day
                     }
                 }
                 my $wa = $pass;
+                if (y.pint) {
+                    my $o = {};
+                    $x = G&pint,$c,@{y.pint},$o;
+                    $exi = !o.fail;
+                    u.pint = $o;
+                    u.s = $x;
+                }
                 !defined $x || $pass-- if y.ndef;
                 defined $x || $pass-- if y.def;
                 !$exi || $pass-- if y.nexi;
                 $exi || $pass-- if y.exi;
                 y.is eq $x || $pass-- if exists y.is;
+                y.eq eq $x || $pass-- if exists y.eq;
                 y.not ne $x || $pass-- if exists y.not;
                 y.in->{$x} || $pass-- if y.in;
                 !y.nin->{$x} || $pass-- if y.nin;
@@ -553,29 +601,6 @@ Compliers: | # othered
     
 Walks: | # othering, many C
     u i
-    # k into hash path    also T/ip
-    pint:
-        for (@Me) {
-            return unless ref $s eq 'HASH' && exists $s.>$_;
-            $s = $s.>$_;
-        }
-        $s
-    # hash ordering
-    hord: %acgt:s head tail
-        my ($he,$ta) = ([],[]);
-        $head ||= [qw't cv y c sc'];
-        $tail ||= [qw's z'];
-        my $tw;
-        for ([$he=>$head],[$ta=>$tail]) {
-            my ($to,$k) = @$_;
-            for my $t (@$k) {
-                $s.>$t || next;
-                $tw.>$t ++;
-                push @$to, $t;
-            }
-        }
-        my @mi = sort grep { !$tw.>$_ } keys %$s;
-        [ map { [ $_ => $s.>$_ ] } @$he, @mi, @$ta ];
     # make yt (cv/t) from tv (t/cv)
     yttv: %acgt
         my $yt = {};

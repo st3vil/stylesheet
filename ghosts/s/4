@@ -270,34 +270,33 @@ CoArgulate: |
 conot: | # expand sc.t->ip, compiled throat clause
     my $ip = C.sc.ip = {};
     for my $k (split ' ', C.sc.t) {
+        my $ok = $k;
         my $is;
-        # $is is our C.t
+        # ^ our C.t
         $k =~ s/^(\w+):\^$/"$1:".C.t/e;
-        # $is is $op?.$v
-        $is = $2 if $k =~ s/^(\w+):(.+)$/$1/;
         # complication
         $is = C.sc.>C$k if exists C.sc.>C$k;
+        
         my $p;
-        my ($n,$g,$m) = $k =~ /^(t|y|c|sc?)?(.+?)?(\d+)?$/;
-        $n ||= 'sc';
-        $n = 'sc' if $n eq 's';
-        # C.$nk.$gk.$tk
-        p.nk = $n;
-        p.tk = $2 if $n eq 'y' && $g =~ s/^([A-Z])(\w+)$/$1/;
-        p.gk = $g if defined $g;
-        die "merge in? ".ki$is if ref $is;
-        # peels inside peels of sc.t
-        if ($is =~ /^(\w+):(.+)$/) {
-            $is =~ s/(?<!\\)\+/,/g;
-            my $i = G&peel,$is;
-            for (qw'in nin') {
-                my $s = $i.>$_ || next;
-                $s =~ s/\;/,/g;
-                $i.>$_ = G&peel,$s;
-            }
-            G&xo,$p,$i;
+        # simple key:val ing
+        if ($k =~ s/^(\w+):([^:]+)$/$1/) {
+            $is = $2;
+            (p.nk,p.gk) = G&pang,$k;
         }
-        elsif (defined $is) {
+        # pint further
+        elsif ($k =~ /\w+:\w+/) {
+            my @p = split ':', $k;
+            $k = $p[0];
+            $is = ''; # exists
+            $is = $1 if $p[-1] =~ s/([^\w\.-]+.+$)//;
+            p.pint = \@p;
+        }
+        else {
+            die "Unknown sc t bit: $k";
+        }
+        die "merge in? ".ki$is if ref $is;
+        
+        if (defined $is) {
             my $i;
             my $neg = $is =~ s/^\!//;
             $i = 'gt' if $is =~ s/^>//;
@@ -317,8 +316,6 @@ conot: | # expand sc.t->ip, compiled throat clause
             p.neg = 1 if $neg;
             $p.>$i = $is;
         }
-        delete p.gk if !p.gk;
-        delete p.tk if !p.tk;
         $ip.>$k = $p;
     }
 Zome: | # return a new J
@@ -374,9 +371,10 @@ Zop: | # a G
         
         n $_=>-test for @{c&also||[]};
         
-        n ElvisHosting=>-test
+        n ElvisHostingAndNot=>-test
+        #n ElvisHosting=>-test
         #n ElvisPaintedStripes =>-test
-        n ElvisDiMachine=>-test
+        #n ElvisDiMachine=>-test
     };
     
     sayyl "Took ".G&ron,hitime()-$beg;
@@ -585,13 +583,22 @@ Telvis: |
                 C.c.return ||= oJ.output;
                 return [] if C.c.see;
             }
-            
-            $se = G&pint,$se,@$p
+            my $o = {};
+            $se = G&pint,$se,@$p,$o;
+            if (exists o.fail) {
+                sayre "Path @{o.have}   !o.fail    (@{o.mong})";
+            }
         }
         C.c.return ||= $se;
         $bang && return ['Outputting something'];
         my $o;
-        c&rsl = $se if c&isl;
+        if (c&isl) {
+            c&rsl = $se;
+        }
+        if (c&dd eq '1') {
+            G&oleak,$se,10 && return ["Leaky massive: ".ki$se];
+            c&rsl = [split"\n",ddump $se];
+        }
         if (!c&rsl) {
             my $oc = {};
             oc.noz = 1 if c&noz;
