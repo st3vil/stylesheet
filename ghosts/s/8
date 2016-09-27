@@ -598,7 +598,11 @@ HasWay: |
 Hosthing: | # <-- Hosting
     u a
     # try wormhole/avoidance, wants Tractor to override regularly
-    # force T.H 1 nothing, 2 stores, 3 everything
+    # force T.H
+    #    1 nothing
+    #    2 stores only
+    #    3 everything
+    #   8+ thaws only
     thawJ 34: %of:mo,t:y:A:mo:up:mo:c:T:H || y:A:mo:c:T:H
         c&e && return;
         
@@ -607,13 +611,14 @@ Hosthing: | # <-- Hosting
         1 && saygr "@ C.t  : $s ".G&sn;
         # 
         a&thawable = 1 unless $s < 3;
-        a&storable = 1 unless $s < 2;
+        a&storable = 1 unless $s < 2 || $s > 7;
         a&storable && A.up.c.store++;
         a&thawable || return;
         my $d = G&thaws || return;
         
         c&parts = $d;
         T.Z.7 = $A;
+        delete a&storable;
         
     stawJ 78: %of:n,t:y:A:c:store
         for my $m (@{A&mos||[]}) {
@@ -753,11 +758,12 @@ ElvisLower: | # Os's main as tests like to dispatch
 
     t.mkoJ->(Junup=>{eat=>W.sc.s.sc.lastK.c.s});
 ElMatron: | # our 5, has normal + net decising
-    # make c/s/a/i in 5.ii.w for for compiling PiMachine on PiMachine
-    T.H = 0;
-    u ElvisWayliases
+    T.H = 8;
     # see theu in 5.ii.W...
     u ReU
+    # make c/s/a/i in 5.ii.w for for compiling PiMachine on PiMachine
+    T.H = 3;
+    u ElvisWayliases
     u $_ for @{c&inc||[]};
     #u Ang
     
