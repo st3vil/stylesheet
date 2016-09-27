@@ -170,19 +170,30 @@ Sea: | # folds of the day
             $s = $$s;
             $n = $s;
             s.ip || die "sip no ref";
-            $s = {map{$_=> \s.ip.>$_ }keys %{s.ip}};
+            $s = {%{s.ip}};
+            my $ord = delete s.order;
+            $s = {map{$_=> \$s.>$_ }keys %$s};
+            s.order = $ord if $ord;
         }
         # n.all keeps going after a pass--
         my $pass = 1;
         # the many named checks must pass
         # their name is probably the k in $c.>$k
-        EE: for my $k (keys %$s) {
-            $pass == 1 || n.all || return 0;
+        my $o = ref s.order eq 'ARRAY' && s.order || [keys %$s];
+        EE: for my $k (@$o) {
             my $y = $s.>$k; # intel
             my $x = $c.>$k; # carb
-            my $u = $u.>$k ||= {};
-            if (ref $y eq 'REF') {
-                $y = $$y;
+            my $u = $u.>$k ||= {}; # return
+            my $simple = !ref $y eq 'REF';
+            $y = $$y if !$simple;
+            $pass == 1 || n.all || !$simple && y.or || return 0;
+            if ($simple) {
+                $y eq $x || $pass--;
+                next
+            }
+            return 1 if y.or && $pass == 1;
+            $pass = 1 if y.or;
+            
                 my $exi;
                 if (exists y.nk) {
                     $x = $c;
@@ -205,6 +216,7 @@ Sea: | # folds of the day
                 defined $x || $pass-- if y.def;
                 !$exi || $pass-- if y.nexi;
                 $exi || $pass-- if y.exi;
+                $x || $pass-- if exists y.true;
                 y.is eq $x || $pass-- if exists y.is;
                 y.eq eq $x || $pass-- if exists y.eq;
                 y.not ne $x || $pass-- if exists y.not;
@@ -217,10 +229,6 @@ Sea: | # folds of the day
                 $x =~ y.re || $pass-- if exists y.re;
                 $pass = $pass < $wa ? $wa : $pass-1
                     if y.neg;
-            }
-            elsif ($y ne $c.>$k) {
-                $pass--;
-            }
         }
         $pass == 1
     

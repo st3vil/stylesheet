@@ -269,7 +269,10 @@ CoArgulate: |
     }
 conot: | # expand sc.t->ip, compiled throat clause
     my $ip = C.sc.ip = {};
+    my $or;
+    my @o;
     for my $k (split ' ', C.sc.t) {
+        $or++, next if $k eq '||';
         my $ok = $k;
         my $is;
         # ^ our C.t
@@ -295,6 +298,7 @@ conot: | # expand sc.t->ip, compiled throat clause
             die "Unknown sc t bit: $k";
         }
         die "merge in? ".ki$is if ref $is;
+        (p.or,$or) = (1,0) if $or;
         
         if (defined $is) {
             my $i;
@@ -309,15 +313,18 @@ conot: | # expand sc.t->ip, compiled throat clause
                     $is = '';
                 }
                 elsif (!length($is)) {
-                    $i = 'exi';
+                    $i = 'true';
                     $is = 1;
                 }
             }
             p.neg = 1 if $neg;
             $p.>$i = $is;
         }
+        $k =~ s/(\d+)?$/$1+1/e while exists $ip.>$k;
+        push @o, $k;
         $ip.>$k = $p;
     }
+    ip.order = \@o if @o > 1;
 Zome: | # return a new J
     my $iii = [];
     n MakePi=>W=>{iii=>$iii},'%qz'
