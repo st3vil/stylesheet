@@ -57,8 +57,16 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         my $tug;
         if (my $d = c&parts) {
             $d = G&hup,$d;
+            # could freeze ii etc (yaml does refs) as whole ^
             A&xo = delete ds&xo if ds&xo;
-            tug.parts = G&A,o=>2,$C,$d,'parts';
+            # have frozen stuff's top
+            # make flat z that c&root elects top
+            # so o histories (j) work for full J/zip
+            my $z = [$d, @{ delete ds&z }];
+            d.c.root = 1;
+            # also, had ground before, now just parts
+            undef $zip;
+            tug.parts = G&A,o=>2,$C,$z,'parts';
         }
         if (my $W = c&base) {
             my $s = G&Wup,$W || G&t,$W || die "no $W on ".G&sn;
@@ -173,6 +181,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
                 G&chew,$eyt,\'cv,t',$_ for sub {
                     my ($es,$et,$ecv) = @_;
                     # the pushed thing, probably c itself
+                    $es = G&hup,$es if G.eschup && $es eq $c;
                     push @$z, $es;
                 };
             };

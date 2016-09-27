@@ -374,8 +374,8 @@ Zop: |
         
         n $_=>-test for @{c&also||[]};
         
-        #n ElvisPaintedStripes =>-test
         n ElvisHosting=>-test
+        n ElvisPaintedStripes =>-test
         n ElvisDiMachine=>-test
     };
     
@@ -591,6 +591,7 @@ Telvis: |
         C.c.return ||= $se;
         $bang && return ['Outputting something'];
         my $o;
+        c&rsl = $se if c&isl;
         if (!c&rsl) {
             my $oc = {};
             oc.noz = 1 if c&noz;
@@ -785,7 +786,10 @@ Telvis: |
             n $W=>W=>{e=>$e}
     };
     t.dd = sub {
-        t.cs->({rsl=>[split"\n",ddump shift]},shift);
+        my ($s,$l,$grepl) = @_;
+        my $c = {rsl=>[split"\n",ddump $s]};
+        c.grepl = $grepl if $grepl;
+        t.cs->($c,$l);
     };
     t.xo = sub {
         my $s = t.ntos->(t.se->());

@@ -580,7 +580,7 @@ ElvisDiMachine: |
         t.en->('sc lastK c s', 'they have stuff');
         my $Jt = A.4.sc.Jtv;
         ok !Jt.Stripes, 'No stripes';
-        sayyl sort keys %$Jt;
+        ok Jt.Ang, 'Yes ang';
     }
 ElvisDi: |
     u Hosting
@@ -588,7 +588,9 @@ ElvisDi: |
     # now using Hosting
     u Ang
     n not=>2=>1
-    # now using Ang, which Hosting may have found
+    # now using Ang, which Hosting may have cached
+    
+    
     
     # note the trailing spaces or the trailing =>'' will be for G&sayurl
     # then n pops Fe... out thinking its =>'', required after bare word in perl
@@ -597,13 +599,15 @@ ElvisDi: |
 ElvisHosting: |
     my $t = Rw Telvis;
     Rw HasWay;
-
+    G.eschup = 1; # hups swimming c
+    
     if ($n == 0) {
         t.e =
         n ElvisHostedThing
         t.en->('sc lastK c s', 'they have stuff');
         my $W = t.ntos->(t.e,'J');
         t.e = W.thePan;
+        J.panOne = t.ntos->(t.e,'J');
         t.en->('sc top', 'Pan have stuff');
         
         my $mo = t.ntos->(t.e,'mo');
@@ -619,10 +623,20 @@ ElvisHosting: |
         ok !-f $f, "Deleted";
         t.e =
         n ElvisHostedThing
-        t.en->('sc lv,olv', 'they have stuff');
+        t.cs->('sc lv,olv', 'they have same');
+        t.cs->('sc top', 'they have top');
+        
         my $W = t.ntos->(t.e,'J');
         t.e = W.thePan;
+        J.panTwo = t.ntos->(t.e,'J');
         t.en->('sc lv,olv', 'Pan have stuff');
+        t.en->('sc top', 'Pan have top');
+        # thinks i 0.001 is gone since we fed it swam C
+        t.cs->('c zip c rsl,isl', 'Pan zip rsl');
+        t.cs->('c zop c rsl,isl', 'Pan zop rsl');
+        is J.panOne, J.panTwo, "same Pan J";
+        t.dd->(t.anii->(J.panTwo.ii),'Pan u inc alacgts',
+            sub{ $_[0] =~ /alacgts/ });
         
         my $mo = t.ntos->(t.e,'mo');
         is mo.c.pin, 'Panos', 'mo did pin';
@@ -632,7 +646,7 @@ ElvisHosting: |
     if ($n == 2) {
         t.e =
         n ElvisHostedThing
-        t.en->('sc lv,olv', 'they have stuff');
+        t.en->('sc lv,olv', 'they have same stuff');
         my $W = t.ntos->(t.e,'J');
         t.e = W.thePan;
         t.en->('sc lv,olv', 'Pan have stuff');
@@ -673,22 +687,21 @@ Hosting: | # & ElvisHosting
         n Stro=>[get=>$C]
         delete s&top
         
-    
-        #
     u alact
     n \'of:mo'
-    
+    # try wormhole/avoidance, wants Tractor to override regularly
+    # make extra xo about W
     thawJ 34:
-        local A.V = 2;
         c&e && return;
-        A&storable = keys %{C.c} == 2 && c&W eq c&J && c&W eq C.t || return;
-        my $d = G&thaws || return
-            A.up.c.store++;
+        keys %{C.c} == 2 && c&W eq c&J && c&W eq C.t
+            || return;
+        
+        A&storable = 1;
+        my $d = G&thaws || return A.up.c.store++;
+        
         c&parts = $d;
         T.Z.7 = $A;
         
-        
-    
     thawJ 78: %of:n
         A&store || return;
         for my $mo (@{A&mos||[]}) {
@@ -700,7 +713,7 @@ Hosting: | # & ElvisHosting
             #G.ouJ = $s;
         }
         
-Stro: |
+Stro: | # storage aJent
     my $f = 'w/StyleStro';
     my $c = e&s; # sets C.c.e.c.s.sc.top = got
     my @p = map { s/\W//g;$_ } A.4.t, c.t;
@@ -712,7 +725,7 @@ Stro: |
         sayyl "Store $f";
     }
     elsif (e&t eq 'get') {
-        -f $f || return;
+        -f $f && -s $f || return;
         my $u = LoadFile($f);
         $u || return;
         cs&top = $u;
@@ -721,7 +734,7 @@ Stro: |
     else { G&vent,"NHogo" }
     T.nose = 1;
     T.not = 1;
-Panos: |
+Panos: | # tested stored stuff
     u alact
     G.panosted++;
     blav:
@@ -729,7 +742,7 @@ Panos: |
     Herz:
         3 + C.y.cv
     
-ElvisPaintedStripes: | # copy O valve to Styles, which should be on 5
+ElvisPaintedStripes: | # T O->Style valve copy, Style separately on 5
     my $t = Rw Towering Ang
         || return;
     c&Se == 1 || return;
@@ -779,7 +792,7 @@ PaintedStripes: | # O -> Style bridge (ElvisPaintedStripes to cross)
     #####
     # # ##
     n $mu
-Towering: |
+Towering: | # makes sure you're in 4 Os
     return ar.t || die "Os no art" if A.4.t eq 'Os';
     my $t = Rw Telvis;
     A.c.fivey ||= do {
