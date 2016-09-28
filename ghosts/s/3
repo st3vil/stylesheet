@@ -12,24 +12,14 @@ Triangle: | # <>< swim, oscillator, s n, 7,
     #c s2 peel ground moments
     s 2:
         # number of things plugged in to s from J
-        if (my $p = A.up.c.s.c.parts) {
-            c&parts = $p;
-        }
-        else {
-            delete c&parts;
-        }
-        for my $J (A.1) {
-            for my $g ([qw'c whole base'],[qw'sc ch']) {
-                my ($gk,@nk) = @$g;
-                for (@nk) {
-                    if (defined $J.>$gk.>$_ ) {
-                        $C.>$gk.>$_ = $J.>$gk.>$_;
-                    }
-                    else {
-                        delete $C.>$gk.>$_;
-                    }
-                }
-            }
+        my $pl;
+        pl.parts = delete upCc&parts;
+        pl.whole = 1c&whole;
+        pl.base = 1c&base;
+        pl.ch = 1s&ch; # grind knows
+        while (my ($k,$v) = each %$pl) {
+            delete(C.c.>$k), next if !defined $v;
+            C.c.>$k = $v;
         }
         my $whole = c&whole;
         
