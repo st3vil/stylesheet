@@ -62,10 +62,19 @@ Sea: | # folds of the day
             if (!ref $y) {
                 C.c.pi = $1 if $y =~ s/^-(\w+)//;
                 C.c.W = C.t if $y =~ s/^W$//;
-                $y = 1 if $y eq '';
-                C.y.cv = $y;
+                if ($y =~ /^\d+(\.\d+)?$/ || !length $y) {
+                    C.y.cv = $y
+                }
+                elsif ($y =~ /^(\d+)?(?:\.\.(\d+))?(?:x(\d+))$/) {
+                    C.y.in = $1;
+                    C.y.out = $2 if defined $2;
+                    C.y.thi = $3 if defined $3;
+                }
+                else {
+                    die "Cs y not: '$y'\n".ki $C
+                }
             }
-            C.y.cv /= 10 until C.y.cv < 1;
+            C.y.cv /= 10 until !C.y.cv || C.y.cv < 1;
             die "Extra: ".wdump 3,$s if @ex;
         }
 
@@ -161,7 +170,7 @@ Sea: | # folds of the day
         my @mi = sort grep { !$tw.>$_ } keys %$s;
         [ map { [ $_ => $s.>$_ ] } @$he, @mi, @$ta ];
     
-    # determine/intel s, c properties
+    #c ip determine/intel s, c properties
     # \$whereclause
     ip: %acgt:s c u
         my $z;
@@ -229,6 +238,17 @@ Sea: | # folds of the day
                 $x >= y.gteq || $pass-- if exists y.gteq;
                 $x <= y.lteq || $pass-- if exists y.lteq;
                 $x =~ y.re || $pass-- if exists y.re;
+                if (my $h = y.hasany) {
+                    my $is = grep {
+                        my $s = $x.>$_;
+                        my $u = $h.>$_;
+                        $s && (!$u || do {
+                            $u eq '!ref' ? !ref $s
+                            : 1
+                        });
+                    } keys %$h;
+                    $pass-- unless $is;
+                }
                 $pass = $pass < $wa ? $wa : $pass-1
                     if y.neg;
         }
@@ -432,10 +452,15 @@ Tunnel: | # mind & world
             T.seek = 1;
         }
     # foldout tape - ground creates moment
+    # can be [ [t,y,c], [t,y,c,sc] ]
+    # or [ t,y,c ]
+    # or [ C, C, C, C ]
+    # mo receives A Me (A&N/$s) of [ C ] or [ t,y,c ]
     n 3:
-        @$s = ([@$s]) if ref $s->[0] ne 'ARRAY';
+        @$s = ([@$s]) unless ref $s->[0] eq 'ARRAY' || ref $s->[0] eq 'HASH';
         A.m = $A;
         for my $l (@$s) {
+            $l = [$l] if ref $l eq 'HASH';
             my $mo = G&tugA,mo=>1,@$l;
             G&ground,$mo unless mo.c.s.c.nogro;
             if (my $r = delete T.ATR) { # T
