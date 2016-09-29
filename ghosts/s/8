@@ -113,14 +113,21 @@ ElVerse: | # hyperactive With
     
     # describe A net
     sn:
-        my @set = (y=>1..5);
-        shift @set if $s eq '5';
-        my $la;
-        my $s;
-        for (map { $A.>$_ } @set) {
-            my ($cvb) = _.cv =~ /^0\.(\d+)$/ if $_ eq $A;
-            my $sep = '.' unless !$s;
+        my @net = ('y',1,2,3,4,5);
+        shift @net if $s eq '5';
+        my ($s,$h,$la);
+        for my $i (@net) {
+            my $Y = $A->{$i} || die "Npo $i on ".ki $A;
+            ref $Y eq 'HASH' || die "Got $i from A.t: ".ki $Y;
+            my ($cvb) = Y.cv =~ /^0\.(\d+)$/ if $Y eq $A;
+            my $sep = '.' if $s;
             $sep = '@' if $la eq $A;
+            my $th = Y.t;
+            if (my $ii = $h.>$Y ) {
+                $th = ','.$ii;
+                $sep = '';
+            }
+            $h.>$Y ||= $i;
             if ($la eq A.2) {
                 # can go funny directions
                 if ($la ne A.5 && $la ne A.4 && la.3 ne A.3) {
@@ -128,8 +135,8 @@ ElVerse: | # hyperactive With
                     $sep = "(".($la eq la.3 ? "" : "la.3.t)");
                 }
             }
-            $s .= $sep."_.t$cvb";
-            $la = $_;
+            $s .= "$sep$th$cvb";
+            $la = $Y;
         }
         $s
     # describe A net and e
