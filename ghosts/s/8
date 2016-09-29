@@ -113,9 +113,11 @@ ElVerse: | # hyperactive With
     
     # describe A net
     sn:
+        my @set = (y=>1..5);
+        shift @set if $s eq '5';
         my $la;
         my $s;
-        for (map { $A.>$_ } y=>1..5) {
+        for (map { $A.>$_ } @set) {
             my ($cvb) = _.cv =~ /^0\.(\d+)$/ if $_ eq $A;
             my $sep = '.' unless !$s;
             $sep = '@' if $la eq $A;
@@ -613,9 +615,10 @@ Hosthing: | # <-- Hosting
         a&storable = 1 unless $s < 2 || $s > 7;
         a&storable && A.up.c.store++;
         a&thawable || return;
-        my $d = G&thaws || return;
+        my $V = A.1.t =~ /^[A-Z]/ && A.2.t ne 'u';
+        my $d = G&thaws,$V || return;
         
-        1 && saygr " for ".G&sn;
+        $V && saygr " for ".G&sn;
         
         c&parts = $d;
         T.Z.7 = $A;
@@ -633,6 +636,7 @@ Hosthing: | # <-- Hosting
         
     u i
     thaws:
+        local C.c.V = 1;
         n Stro=>[get=>$C]
         delete s&top
     
@@ -665,14 +669,14 @@ Stro: | # storage aJent
     if (e&t eq 'put') {
         `mkdir -p $p`;
         DumpFile($f,$c);
-        sayyl "Store $f";
+        C.c.V && sayyl "Store $f";
     }
     elsif (e&t eq 'get') {
         -f $f && -s $f || return;
         my $u = LoadFile($f);
         $u || return;
         cs&top = $u;
-        sayyl "Get $f";
+        C.c.V && sayyl "Get $f";
     }
     else { G&vent,"NHogo" }
 ElvisPaintedStripes: | # T O->Style valve copy, Style separately on 5
