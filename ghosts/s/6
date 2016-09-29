@@ -8,9 +8,9 @@ ElvisMany: | # J m C # candidate for moving C جستجو
         t.e =
         n Softu
         t.en->('sc lastK c s', 'caches u');
+        exit;
     }
-    if (c&Se == 5) {
-        
+    if (c&Se == 1 && 0) {
         t.e =
         n Zpace
         t.en->('sc lastK c s', 'has Zpace');
@@ -37,11 +37,19 @@ ElvisMany: | # J m C # candidate for moving C جستجو
         
         t.e =
         n HasMany
-        t.en->('sc top', 'same thing multi Joy!');
+        t.en->('sc top', 'same thing multi Joy');
         
         t.e =
         n HasMany
-        t.en->('sc top', 'same thing multi!');
+        t.en->('sc top', 'same interleaving');
+        
+        t.e =
+        n HasMany
+        t.en->('sc top', 'many Joy and threes');
+        
+        t.e =
+        n HasMany
+        t.en->('sc top', 'm limiting');
     }
         
     # yeah
@@ -68,8 +76,20 @@ HasMany: |
     if ($n == 3) {
         n joy=>'1..3x7'=>'Joy'
     }
-    if ($n == 3) {
+    if ($n == 4) { # interleaving
         n joy=>'1..3x7'=>'Joy'
+        my $thy = 1;
+        m threes=>{thy=>($thy += $thy / 3)}=>3=>"%fs:$_" for 14..20;
+    }
+    if ($n == 5) { # many Joy and threes
+        n joy=>'..7x37'=>'Joy'
+        my $thy = 1;
+        m threes=>{thy=>($thy += $thy / 3)}=>3=>"%fs:$_" for 3..20;
+    }
+    if ($n == 6) { # limiting
+        y.thi = 6;
+        my $thy = 1;
+        m threes=>{thy=>($thy += $thy / 3)}=>3=>"%fs:$_" for 3..20;
     }
 nogindex: |
     my ($nk,$of) = split ':', $s;
@@ -174,9 +194,11 @@ Zpace: | # hang La space charts off mo
     L 2:
         A&y && die "You Ay L 2, should TZ3";
         A.1.C || die "J has no mo C: ".G&sn;
+        #local A.V = 1;
         my $Jy = A.1.C.y;
         my $y = C.y;
         my $M = c&M;
+        
         # some L uC spawns the A nC lattice
         # what to do with the L uC?
         if ($M) {
@@ -189,11 +211,39 @@ Zpace: | # hang La space charts off mo
             # to make holes in space other M must flow around
             A&M = $M = [$C];
             y.thi > 1 &&
-                   push @$M, map { G&hup,$C } 1..y.thi;
+                   push @$M, map { G&hup,$C } 1 .. y.thi - 1;
         }
+        
+        # limits apply, thi being for iterator and limit of output
+        my $lims = {};
+        lims.thi = y.thi if defined y.thi;
+        lims.limn = int(9 * y.limn * Jy.spc)
+            if y.limn && (Jy.spc || die "No space! J.t");
+        my $lim;
+        while (my ($k,$v) = each %$lims) {
+            @$M > $v || next;
+            sayre "Limof: $k $v to C.t";
+            $lim = $k if !$lim || $lims.>$lim > $lims.>$k;
+        }
+        if ($lim) {
+            my $it = $lims.>$lim;
+            my $from = 0;
+            if (y.tail) {
+                $from = -1;
+                $it *= -1;
+            }
+            else {
+                $it -= 1;
+            }
+            $lims = $lim; # name
+            $lim = @$M; # limited from
+            @$M = @{$M}[$from .. $it];
+        }
+        
+        A.V = 0;
         y.thi = @$M;
         y.thi || die "No M: ".ki $C;
-        # & point/seek to things coming in
+        #c & point/seek to things coming in with our surrounds
         
         # if we were placed with enough room
         # let atoms slide up to the top J
@@ -221,6 +271,15 @@ Zpace: | # hang La space charts off mo
         y.u = y.n + y.space if defined y.space;
         y.u /= 10 until y.u < 1;
         y.n /= 10 until y.n < 1;
+        # corner noted
+        if ($lim) {
+            my $s = "$lim>".@$M;
+            my $cv = y.tail ? y.n : y.u;
+            # TODO += here blows up zopul:
+            $cv -= 0.002;
+            my $M = A&XM = [];
+            m lim=>$cv,$s,'%fs:7,hs:7487,limit:'.$lims;
+        }
         # fit in multiple of
         if (my $ert = y.ert) {
             $ert += y.ert while y.thi > $ert;
@@ -311,6 +370,7 @@ Zpace: | # hang La space charts off mo
         my $y = C.y;
         shift @$M if $M->[0] eq $C;
         my $J = y.J || A.1;
+        A&XM && push @$M, @{A&XM};
         if (A.V) {
             1 && sayyl "For J.t: ";
             1 && saygr "_.t: ".ki _.y for @$M;
