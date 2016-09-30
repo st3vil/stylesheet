@@ -5,6 +5,8 @@ Elvising: | # new way
     n ElChorus
     n PaintedStripes
     n Hosthing
+    # not very stuck in alacgt etc u, only compilable on Os
+    #n Zpace
     
     # heaven's above me on a street called love
     # J must make known elvising to use .e hooks to answer calls
@@ -83,10 +85,12 @@ ElVerse: | # hyperactive With
         my $list = $s =~ s/^_//;
         my ($nk,$gk) = G&pang,$s,'c';
         exists $e.>$nk || return ();
-        my $n = $e.>$nk;
-        exists $n.>$gk || return ();
-        my $g = $n.>$gk;
-        $list ? @$g : $g
+        $e = $e.>$nk;
+        if (defined $gk) {
+            exists $e.>$gk || return ();
+            $e = $e.>$gk;
+        }
+        $list ? @$e : $e
     
     # looking for C.c.e.c.us.?_? in a pin
     # explicit nk/gk sep with _
@@ -611,6 +615,9 @@ Hosthing: | # <-- Hosting
     #    1 nothing
     #    2 stores only
     #    3 everything
+    #    4 
+    #    5 ^ + ii, s7ing slightly more whole, know how to eval code
+    # fork to commit the change
     #   8+ thaws only
     thawJ 34: %of:mo,t:y:A:mo:up:mo:c:T:H || y:A:mo:c:T:H
         c&e && return;
@@ -626,10 +633,22 @@ Hosthing: | # <-- Hosting
         my $d = G&thaws,$V || return;
         
         $V && saygr " for ".G&sn;
-        
-        c&parts = $d;
-        T.Z.7 = $A;
-        delete a&storable;
+        if ($s == 4) {
+            # thaws tv etc too, puts on Js&tv before doing pin as usu.
+            a&stowexp = 1; # anything exported from s sc > J sc
+        }
+        elsif ($s == 5) {
+            # as above but sets up the osc to continue the W lv
+            # B imp/wil/mat resume
+            # B means being of a W, branch name
+            # the lv writer needs to understand [,,,,[newlv]]
+        }
+        else { # 3-7
+            # skips it all
+            c&parts = $d;
+            T.Z.7 = $A;
+            delete a&storable;
+        }
         
     stawJ 78: %of:n,t:y:A:c:store
         for my $m (@{A&mos||[]}) {
@@ -650,6 +669,11 @@ Hosthing: | # <-- Hosting
     # make extra xo about W
     stores:
         my $t = s.sc.top || die "Store no top: ".ki $s;
+        if (a&stowexp) {
+            # expensiver keeping ii/tv/etc in a bundle
+            # could fork, ind without hup to shave y
+            # yaml it all
+        }
         my @all = G&ind,$t;
         my ($u) = @all;
         for (@all) {
@@ -888,8 +912,25 @@ Juned: | # handle input
     Rw talkzyh;
 ElBridge: | # hoisting, desire
     u i
+    # search last mo things top
+    op:
+        my $Wr = T.op || die "No Top to op";
+        my $C;
+        C.t = 'oping';
+        s&t = $s || die "No t to op";
+        Rw conot $C;
+        my $ub = sub {
+            my $D = shift;
+            my $p = G&ip,s&ip,$D;
+            return $D if $p;
+        };
+        my @ma = G&ind,$Wr,$ub;
+        @ma
+    # climb in/next/z with a sub giving returns in list
     ind: %acgt:s y d
+        my $D = $s;
         $s = G&hup,$s;
+        s.y.D = $D;
         $y ||= sub { shift };
         my $d = {%{$d||{}}};
         d.d++;
@@ -920,12 +961,15 @@ ElBridge: | # hoisting, desire
         
         unshift @out, $s = $y->($s);
         
+        @out = grep{$_} @out;
+        return () if !@out;
+        
         if (d.d == 1 && !grep{ref}@out) {
             join "\n", grep{defined} @out;
         }
         else { # an $N?
-            s.sc.z = $my if @$my;
-            return @out;
+            s.sc.z = $my if @$my && ref $s eq 'HASH';
+            return grep{$_} @out;
         }
         
     # make A that is 4

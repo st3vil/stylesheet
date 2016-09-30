@@ -148,6 +148,7 @@ Sea: | # folds of the day
     # sJ = sc J
     pang: %acgt:s def
         my ($nk,$gk) = $s =~ /^([tycs])?(.+)$/;
+        $nk || $gk eq 't' && return $gk;
         $nk = 'sc' if $nk eq 's';
         $nk = $def || 'sc' if !$nk;
         $nk && $gk || die"strv:$s";
@@ -195,13 +196,8 @@ Sea: | # folds of the day
             my $y = $s.>$k; # intel
             my $x = $c.>$k; # carb
             my $u = $u.>$k ||= {}; # return
-            my $simple = !ref $y eq 'REF';
-            $y = $$y if !$simple;
-            $pass == 1 || n.all || !$simple && y.or || return 0;
-            if ($simple) {
-                $y eq $x || $pass--;
-                next
-            }
+            $pass == 1 || n.all || y.or || return 0;
+            
             return 1 if y.or && $pass == 1;
             $pass = 1 if y.or;
             
@@ -238,6 +234,7 @@ Sea: | # folds of the day
                 $x >= y.gteq || $pass-- if exists y.gteq;
                 $x <= y.lteq || $pass-- if exists y.lteq;
                 $x =~ y.re || $pass-- if exists y.re;
+                $x =~ /y.re/i || $pass-- if exists y.rei;
                 if (my $h = y.hasany) {
                     my $is = grep {
                         my $s = $x.>$_;
