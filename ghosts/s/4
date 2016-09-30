@@ -136,7 +136,7 @@ CoBabbler: | # bake code
         C.c.s =~ s/^(\s*)$_ ([^\n]+?)((?: (?:for|if) .+)?;?)$/${1}${if}G\.h->(\$A,\$C,\$G,\$T,'$sw->{$_}','$_',$2)$3/sgm;
     }
     
-    
+    #
     # A22Cs&blue -> A.2.2.c.s.sc.blue
     for my $l (qw'y c s') {
         my $nk = $l eq 's' ? 'sc' : $l;
@@ -148,7 +148,7 @@ CoBabbler: | # bake code
         /smeg;
     }
     
-    
+    # s&eo -> C.sc.eo etc
     C.c.s =~ s/\bs\&(\w+)/C\&$1/sgm;
     C.c.s =~ s/\bA\&(\w+)/A\.c\.$1/sgm;
     C.c.s =~ s/\ba\&(\w+)/A\.sc\.$1/sgm;
@@ -474,6 +474,7 @@ Zuup: | # Zupe slowly
     G.slowly = 4;
     n Zupe
 pi/test: |
+    G.wakey.>C.t = 'restar';
     my $c;
     c.pin = 'ATest';
     c.tell = J.mo.J;
@@ -487,6 +488,7 @@ ATest: |
         my $el = c&tell;
         push @{el.output ||= []}, {t=>C.t,c=>{s=>$out}};
     }
+    
     map { say(''), snooze 9000 * G.slowly } 1..5 if G.slowly;
     
 Tesh: | # wrap test way
@@ -554,7 +556,6 @@ Telvis: |
     c&ot = "";
     my $Q = $C;
     A.4.c.testC = $C;
-    
     # same C each time as Tesh notime
     delete C&ofts;
     

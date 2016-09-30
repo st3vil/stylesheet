@@ -742,16 +742,25 @@ PaintedStripes: | # O -> Style bridge (ElvisPaintedStripes to cross)
 Towering: | # makes sure you're in 4 Os
     return ar.t || die "Os no art" if A.4.t eq 'Os';
     my $t = Rw Telvis;
+    my $incs = {};
+    my $inct = 'five'; # u things into the 5 on $m first
+    if (ar.m && !(ar.ar && ar.ar.m eq ar.m)) {
+        # u things mixing into theu (normal) TODO
+        /^_$/ ? $inct = 'normal'
+            : push @{ $incs.>$inct ||=[] }, $_
+        for @{ar.m}
+    }
     A.c.fivey ||= do {
         my $c = {};
-        c.inc = ar.m if ar.m && !(ar.ar && ar.ar.m eq ar.m);
+        c.inc = $incs if keys %$incs;
         my $ma =
         n ElMatron=>W=>$c
         J.5 = A.5 = t.ntos->($ma,'J');
     };
     defined ar.n || die "Os making no arn";
-    
-    n Os=>W=>{t=>$t, main=>'ElvisLower', estC=>c&estC, est=>C.t, estn=>1+ar.n}
+    my $c = {t=>$t, main=>'ElvisLower', estC=>c&estC, est=>C.t, estn=>1+ar.n};
+    c.inc = incs.fo if incs.fo;
+    n Os=>W=>$c
     return
 ElvisLower: | # Os's main as tests like to dispatch
     sayyl "forez room: ".G&sn;
@@ -773,12 +782,13 @@ ElvisLower: | # Os's main as tests like to dispatch
     t.mkoJ->(Junup=>{eat=>W.sc.s.sc.lastK.c.s});
 ElMatron: | # our 5, has normal + net decising
     T.H = 8;
-    # see theu in 5.ii.W...
+    # ^ always see theu, in 5.ii.W...
+    sayre "Wants normal += $_" for @{c&inc.normal||[]};
     u ReU
     # make c/s/a/i in 5.ii.w for for compiling PiMachine on PiMachine
     T.H = 3;
     u ElvisWayliases
-    u $_ for @{c&inc||[]};
+    u $_ for @{c&inc.five||[]};
     #u Ang
     
     n some=>2=>3
