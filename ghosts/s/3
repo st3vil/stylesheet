@@ -930,7 +930,16 @@ Circle: | # < copy things
                 my $s = d.c.s;
                 my $slim = c&slim || 24;
                 if (length $s > $slim) {
-                    $s = slim($slim-5,$s).'h'.slm(6,dig($s));
+                    my $va = c&slimvague;
+                    $va = 100 if $va eq '1';
+                    c&slimnodig ||= 1 if $va;
+                    
+                    my $dig = 'h'.dig($s) unless c&slimnodig;
+                    $s = slim($slim-5,$s).$dig;
+                    
+                    $va && $s =~ 
+                        s{\.\.(\d+)(h\S+)?$}
+                        {'..<'.(int($1/$va) * $va)}e;
                 }
                 $s =~ s/\n/\\n/sg;
                 $etc = $m.$s;
