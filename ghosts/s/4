@@ -139,11 +139,12 @@ CoBabbler: | # bake code
     
     # A22Cs&blue -> A.2.2.c.s.sc.blue
     for my $l (qw'y c s') {
-        my $f = $l eq 's' ? 'sc' : $l;
+        my $nk = $l eq 's' ? 'sc' : $l;
         C.c.s =~ s/\b(up|\d+)(C)?$l\&(\w+)/
             my $net = join'.','A',$1 eq 'up' ? $1 : split'',$1;
             my $see = ".c\.s" if $2;
-            "$net$see\.$f\.$3"
+            my $gks = "\.$3" if $3 ne 'C';
+            "$net$see\.$nk$gks"
         /smeg;
     }
     
@@ -378,13 +379,12 @@ Zop: | # a G
         #n ElvisSoftu=>-test
         #n ElvisPaintedStripes=>-test=>{man=>'Zupe',ray=>1}
         
-        #n ElvisEltus =>-test=>{man=>'Zupe'}
+        #n ElvisRopeWay =>-test=>{man=>'Zupe'}
         
         n $_=>-test for @{c&also||[]};
         
-        n ElvisMany=>-test
+        n ElPictMany=>-test
         
-        n ElvisResMany=>-test
     };
     
     sayyl "Took ".G&ron,hitime()-$beg;
@@ -404,6 +404,7 @@ Zupe: | # run Zome, output pud
     J.thou++ || do {
         if (G.justthat) { # enter 'q' at waitme
             n ElvisMany=>-test=>{man=>'Zop'}
+            n ElvisResMany=>-test=>{man=>'Zop'}
             exit;
         }
         # o
@@ -783,9 +784,12 @@ Telvis: |
             sc.u.sc.s.c.zip.c.s.c.s.ground.c.s.c.s
         t.cs->({s=>$l},"$name: u osc'd ground zipper$tac");
     };
-    t.se = sub { #c return the item from test stick/tested C n, or test C
+    t.se = sub { #c return the item
         my $C = shift;
-        t.e || c&te || Q.c.te
+        # v per test n, which are behind t.cs etc
+        #       v assigned mo in test pins
+        #               v per test enclosure (c&te in test pins)
+        c&te || t.e || Q.c.te
     };
     t.en = sub { # see J and W within separately
         my $l = pop;
@@ -802,6 +806,7 @@ Telvis: |
         for my $j (@W) {
             t.cs->({te=>$j,ntos=>$p},"j.t: ".$l);
         }
+        wantarray ? @W : pop @W;
     };
     t.el = sub { # send W e{t,c,p}
             my ($W,$t,$c,$p) = @_;
