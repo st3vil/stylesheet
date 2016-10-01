@@ -1,3 +1,407 @@
+Triangle: | # <>< swim, oscillator, s n, 7, 
+    u a
+    # sevenatim
+    # time passes independently of your being in the room
+    #c s1 once you know about the room
+    # C is the page of s currently in J.sc.s
+    s 1:
+        A.1 = shift @$s;
+        # C is self for s
+        # C is 's many for o
+        A.c.s = G&sJ,A.1,'s';
+    #c s2 peel ground moments
+    s 2:
+        # number of things plugged in to s from J
+        my $pl;
+        pl.parts = delete upCc&parts;
+        pl.whole = 1c&whole;
+        pl.base = 1c&base;
+        pl.ch = 1s&ch; # grind knows
+        while (my ($k,$v) = each %$pl) {
+            delete(C.c.>$k), next if !defined $v;
+            C.c.>$k = $v;
+        }
+        my $whole = c&whole;
+        
+        # also make C.t for the page of ground this s (C) is for
+        my $zip = G&grind,A.1;
+        # complexity hider, T may want to tho
+        $whole = delete c&base if c&base && !$zip;
+        A&V = A.1.t =~ /^[A-Z]/ && A.2.t ne 'u';
+        
+        if (my $W = $whole) {
+            my $s = G&Wup,$W || G&t,$W || die "no $W on ".G&sn;
+            sayre "WHole! s: A.1.t: s.t" if A&V;
+            # m=A makes 
+            A&who = G&A,o=>8,$C,$s,'whole',{m=>'A'};
+            # s C or J, s&top and/or y.in etc to copy
+            # if ii/i then copy too, repoint as tv to this side
+            # 
+            # gives us s&top, tv, i/ii like osc
+            #   can make our own lv for our slice of it
+            # letting us export it to the J in 8
+            # place on us, eg u.sc.ii, you must 
+            return T.Z.8 = $A;
+        }
+        
+        my $tug;
+        if (my $d = c&parts) {
+            $d = G&hup,$d;
+            # could freeze ii etc (yaml does refs) as whole ^
+            A&xo = delete ds&xo if ds&xo;
+            # have frozen stuff's top
+            # make flat z that c&root elects top
+            # so o histories (j) work for full J/zip
+            my $z = [$d, @{ delete ds&z }];
+            d.c.root = 1;
+            # also, had ground before, now just parts
+            undef $zip;
+            tug.parts = G&A,o=>2,$C,$z,'parts';
+        }
+        if (my $W = c&base) {
+            my $s = G&Wup,$W || G&t,$W || die "no $W on ".G&sn;
+            sayyl "Base ! ".ki $s;
+            my $z = ss&z;
+            # TODO know top C with settling clues
+            # see s&top above
+            tug.base = G&A,o=>2,$C,$z,'base';
+        }
+        if ($zip) {
+            tug.ground = G&A,o=>2,$C,$zip,'zip';
+        }
+        $tug || die "No ground to A.1.t";
+        # shade .c down to s (whole doesn't)
+        delete s&jo if delete 1c&imping; # zipover/zopul reoccur through
+        my $t = G&Ct,['zipover'=>''=>{shade=>1}];
+        c&zip = G&A,o=>6,$C,$tug,$t;
+        G&A,c&zip=>6;
+    #c s3 changes pop in
+    # ordered by o, creates O's to be awakened C 
+    s 3:
+        my $o = c&zip;
+        my $c = oc&s;
+        my $j = cc&j || die "No o Acj! ".ki$c;
+        
+        if (!@{ os&zop }) {
+            A&V && saybl "No changes: C.t ".G&sn,5;
+            return T.Z.8 = $A;
+        }
+        
+        A&inz = [map {
+            my $O = G&A,O=>1,$_;
+            a&topO = $O if os&top eq $_;
+            my $c = O.c.s;
+            c.y.x.y.O = $O; # follow to bring O up to date
+            my $r = c.y.r || die "No yr: ".ki$c;
+            Oc&el = rc&el if rc&el;
+            Oc&osc = $C;
+            $O
+        } @{os&inz}];
+        
+        A&outz = [map {
+            if (_.sc.J && !_.sc.W) {
+                if (1s&Jtv && 1s&Jtv.>_.t && 1s&Jtv.>_.t.>_.y.cv) {
+                    delete 1s&Jtv.>_.t.>_.y.cv;
+                }
+            }
+            _.y.x.y.O || die "out not yxyO: ".ki $_;
+        } @{os&outz}];
+        
+        # put through Hoop to make index & self
+        G&A,$_,8 for @{A&inz};
+        
+    #c s4 humming
+    # elsward going index posited awake
+    # see ElBridge/their
+    #   for more of the semi-sleeping grouper
+    s 4:
+        s&swim ||= {};
+        s&swam = {};
+        for my $O (@{A&inz}) {
+            my $c = O.c.s;
+            my $X = c.y.x.y.X;
+            my $x = X.c.s;
+            Os&swim || Xs&swim || next;
+            G&chew,Os&swim,'W,Wt,Wcv',$_ for sub {
+                my ($etv,$W,$Wt,$Wcv) = @_;
+                # to order the C swimming bunches by origin yt
+                s&swim ->{$W}->{$Wt}->{$Wcv}->{c.t}->{c.y.cv} = $c;
+                s&swam ->{$W}->{$Wt}->{$Wcv}++;
+            };
+            G&chew,Xs&swim,'W,Wt,Wcv',$_ for sub {
+                my ($etv,$W,$Wt,$Wcv) = @_;
+                # keep swim from the C unless all etv gone
+                my $sb = Os&swim ->{$W}->{$Wt}->{$Wcv};
+                for my $et (keys %$etv) {
+                    for my $ecv (keys %{ $etv.>$et }) {
+                        $sb.>$et && $sb.>$et.>$ecv && return;
+                    }
+                }
+                delete s&swim ->{$W}->{$Wt}->{$Wcv}->{c.t}->{c.y.cv};
+                s&swam ->{$W}->{$Wt}->{$Wcv}++;
+            };
+            c.y.x || die "O C no yx joinery: ".ki $c;
+            c.y.x.y.X = $O;
+        }
+        for my $X (@{A&outz}) {
+            my $c = X.c.s;
+            G&chew,Xs&swim,'W,Wt,Wcv',$_ for sub {
+                my ($etv,$W,$Wt,$Wcv) = @_;
+                delete s&swim ->{$W}->{$Wt}->{$Wcv}->{c.t}->{c.y.cv};
+                s&swam ->{$W}->{$Wt}->{$Wcv}++;
+            };
+        }
+    #c s5 across the wormhole
+    # things have animal desires
+    s 5:
+        A&ytWe = {};
+        # Wtv swam awakes Wtv in swim to a tv of froms
+        # froms yA.sc.swim ^ and then tv of sent/elvising
+        # so puts tv in Wtv
+        G&chew,s&swam,'W,Wt,Wcv',$_ for sub {
+            my ($ctv,$W,$Wt,$Wcv) = @_;
+            $ctv = s&swim ->{$W}->{$Wt}->{$Wcv};
+            # froms in order so it clobbers
+            my $yt = G&yttv,$ctv;
+            my $z = [];
+            G&chew,$yt,\'cv,t',$_ for sub {
+                my ($c,$cv,$t) = @_;
+                my $O = c.y.A;
+                my $etv = Os&swim ->{$W}->{$Wt}->{$Wcv};
+                # this c is pushing tv to Wtv
+                my $eyt = G&yttv,$etv;
+                # ordered ^ for the occasional test looking at details
+                G&chew,$eyt,\'cv,t',$_ for sub {
+                    my ($es,$et,$ecv) = @_;
+                    # the pushed thing, probably c itself - separates
+                    $es = G&hup,$es if $es eq $c;
+                    push @$z, $es;
+                };
+            };
+            if (my $al = A&ytWe ->{$Wcv}->{$Wt}) {
+                die "swim $W $Wt $Wcv already al.c.W";
+            }
+            if (!@$z) {
+                delete s&ytWe ->{$Wcv}->{$Wt};
+                return;
+            }
+            my $e = G&Ct,[Swim=>3,{z=>$z}];
+            s&ytWe ->{$Wcv}->{$Wt} =
+            A&ytWe ->{$Wcv}->{$Wt} =
+                G&Ct,[$Wt=>$Wcv,{W=>$W,e=>$e,nogro=>1}];
+        };
+        sayyl "s5   A.1.t";
+    #c s6 goes
+    s 6:
+        # going - figure difference under top with osc'd
+        my $t = a&topO;
+        $t = t.c.s;
+        my $tv = t.y.tv;
+        
+        # all the O under top
+        my $z = [map{
+            my $x = _.y.x || die "no yx bridge: ".ki$_;
+            my $O = x.y.O || die "No yxyO on ".ki$_;
+            O.c.s
+        }map{values%$_}values%$tv];
+        
+        # mix in anything z Js want to export to here (ii)
+        # look for their yl in previous ylytvs to give hierarchy
+        # make dupes here > through from Js (TODO) later yt of positor > earlier
+        
+        # and W returns
+        # mix in unswam ytWe without doing
+        my $Wez = [];
+        G&chew,s&ytWe,\'Wcv,Wt',$_ for sub {
+            my ($We,$Wcv,$Wt) = @_;
+            my $D = We.c.D;
+            if ($D) {
+                # no swimming
+            }
+            else {
+                # Tunnel e wants to know in general:
+                #   We may provide forms of ground to return results
+                #   e z may o and send diffs depending on connection
+                # for now modemless e.c.z in, n.sc.z out
+                my ($mo) = values %{_.c.tug} for
+                
+                n $We
+                
+                my $W = mo.c.s;
+                $D = G&Ct,[$Wt=>$Wcv,{W=>We.c.W}];
+                Ds&z = Ws&z;
+                #Ws&z || sayre "W no z ".ki$W;
+                Ds&z ||= We.c.e.c.z;
+                We.c.D = $D;
+            }
+            push @$z, $D;
+            push @$Wez, $D;
+        };
+        
+        #c coil feeds unification causes all We things
+        if (my $o = delete ts&coil) { # root.sc/y.at
+            my $N = [map {@{_.sc.z}} @$Wez];
+            for my $o (split ' ',$o) {
+                my $s = $1 if $o =~ s/:(.+)//;
+                # ^ guidance more likely from the C using this point to unify:
+                for my $C (grep { _.sc.>$o }@$N) {
+                    my $way = C.sc.>$o;
+                    my $s = $way =~ s/:(.+)// ? $1 : $s;
+                    Rw $way $C $N $s
+                }
+            }
+        }
+        
+        
+        $t = G&hup,$t;
+        delete t.y.in;
+        t.sc.z = $z if @$z;
+        delete t.sc.z if !@$z;
+        
+        my $o = c&zop = G&A,o=>6,$C,$t,'zopul';
+    #c s7 traction/compress
+    s 7:
+        # pack down goods
+        # zops are el and change Cs, have y l (
+        my $o = c&zop;
+        A&zop = [map {
+            my $K = G&A,K=>1,$_;
+            Kc&osc = $C;
+            my $c = Kc&s;
+            # l is indexed whole
+            my $l = c.y.l || die "No yl (in O, hupd): ".ki$c;
+            # x tracks falling wavelets
+            my $x = l.y.x || die "No ylyx: ".wdump 2,$l;
+            x.c.K = $K;
+            if (A&ytWe && A&ytWe ->{c.y.cv} && A&ytWe ->{c.y.cv}->{c.t}) {
+                # put in s&iiyt to squish into s&ii
+                # store in x for when 9 because no ytWe
+                die "ytWe el 9: ".ki $c if cc&el eq '9';
+                s&iiyt ->{c.y.cv}->{c.t} = $l;
+                x.c.wasin.iiyt = 1;
+            }
+            if (cc&el eq '9') {
+                for my $in (keys %{x.c.wasin||{}}) {
+                    if ($in eq 'iiyt') {
+                        delete s&iiyt ->{c.y.cv}->{c.t};
+                        keys %{s&iiyt ->{c.y.cv}} ||
+                        delete s&iiyt ->{c.y.cv}->{c.t};
+                    }
+                }
+            }
+            elsif (l.y.tv) {
+                c.sc.z = [];
+            }
+            
+            if (my $up = l.y.up) {
+                my $ux = up.y.x || die "Up from c.t no x: ".ki$up;
+                my $uK = ux.c.K || die "upyx no K: ".ki$ux;
+                my $U = uK.c.s || die "No C in upyxcK: ".ki$uK;
+                ref U.sc.z eq 'ARRAY' || die "upKCsz not array: ".ki($U)
+                    .wdump 2, l.y.o;
+                # an lv/ely plant between K C
+                push @{U.sc.z}, $c;
+            }
+            $K
+        } @{os&zop}];
+        
+        G&A,$_=>8 for @{A&zop}; # K
+        
+        my $topK = A&zop ->[0];
+        # no K/zop may mean something subtle .c.Jo like for
+        # the index we pool up using of knowledge for geo
+        # makes stats bubbling to the top
+        # each index geo/type knows spherical sanity (re largeness)
+        # so osc tracksobjects piping whatever
+        # with the {} replace/whatever trick on of=T
+        $topK || return;# sayre "No topK. no change? ".G&sn;
+        my $c = topK.c.s;
+        
+        # lv is compression log
+        if (cc&el < 3) {
+            c&imp++;
+            c&wil = 1;
+            c&mat = 1 if c&mat;
+            s&lv = [$c];
+        }
+        else {
+            c&wil++;
+            c&mat = 1 if c&mat;
+            if (my $la = @{s&lv} && s&lv ->[-1]) {
+                # TODO could wire forward/back
+                # check back is our last eg blogs
+            }
+            # TODO there's wire/sJ/sA free lv maker
+            # yA K has clues for writing liney/etc text
+            push @{s&lv}, $c;
+        }
+        
+        my $l = c.y.l || die "TopKC no yl: ".ki$c;
+        # top is this side of zop
+        s&top = $l;
+        l.y.s && l.y.s ne $C && die "top l ys points somewhere else: ".wdump 3,[$l,l.y.s,G&sn ];
+        l.y.s = $C;
+        # also s&lastA.sc.topO = zip out top as O A
+        # and s&lastK is zop out top as K A, incremental changes
+        s&tv = l.y.tv || {}; # die "TopKCyl no ytv: ".ki$l;
+        
+        # ii is tw of We things
+        my $ii;
+        if (keys %{ s&iiyt ||{} }) {
+            G&chew,s&iiyt,\'cv,t',$_ for sub {
+                my ($l,$cv,$t) = @_;
+                if (my $o = $ii->{$t}) {
+                    # join We things above next/prev
+                    o.y.over = $l;
+                    l.y.under = $o;
+                }
+                else {
+                    $ii->{$t} = $l;
+                }
+            };
+        }
+        # i is t = code, from We thing i tw
+        my $i;
+        if ($ii && ii.i) {
+            my $itw = ii.i.y.tw || die "No ytw on ii_i: ".ki ii.i;
+            while (my ($t,$c) = each %$itw) {
+                my $code = c.c.code;
+                $code || sayre("No code on itw: ".ki$c);
+                $code || next;
+                $i->{$t} = $code;
+            }
+            s&ii = $ii
+        }
+        s&ii = $ii if $ii;
+        $ii || delete s&ii;
+        $i || delete s&i;
+        s&i = $i if $i;
+        
+        # root of this cone branch
+        s&lastK = A&zop ->[0];
+        s&lastA = $A;
+    
+    #c s8 transfer
+    s 8:
+        # tie together
+        A&expo.>$_ = 1 for qw'top tv i ii xo';
+        my $J = A.1;
+        for (keys %{A&expo}) {
+            if (exists C.sc.>$_ ) {
+                J.sc.>$_ = C.sc.>$_
+            }
+            else {
+                delete J.sc.>$_;
+            }
+        }
+        # + page of itself
+        # + layering of stable/sprawly lv
+        #     c/sc in a larger sense, dna/rna of this temple of truth
+        #   awaits o branching or so...
+        J.c.o = "Steved ".c&imp." ".c&wil.(c&mat && " ".c&mat);
+        saygr ".";
+        # send out
+
 Hoop: | # osc art, colour in
     u a
     O 1:
