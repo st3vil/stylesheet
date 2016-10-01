@@ -77,22 +77,26 @@ ElPictMany: | # T sequence
             for (G&op,'t:~^[tT]' ) {
                 m _.t=>G&ye,$_ =>_c&s=>''
             }
-            shift @$M for 1..J.bowls;
+            J.bowls < 5 && shift @$M for 1..J.bowls;
             for (@$M) {
                 (_s&tag,_s&src) = ('img',delete(_c&s));
-                _c&helum = 1.7;
-            }
-            y.lum = 8 * J.bowls++ || return;
-            n do=>1=>"Fosci J.bowls",'%hs:345,fs:'.(30 * J.bowls)
+                _c&helum = 1.1;
+            }            
+            y.lum = 2 + 3 * J.bowls++ || return;
+            J.bowls < 3 &&
+            n do=>1=>"Fosci J.bowls\n",'%hs:345,fs:'.(30 * J.bowls)
             y.at.lumwas = y.lum;
-            y.in = 3;
-            y.out = 7;
-            y.thi = 44;
+            my $b = J.bowls;
+            y.thi = 44 - $b * 7;
+            y.thi *= -1 if y.thi < 1;
+            y.thi = 2 if y.thi < 1;
+            y.in = 3 - $b * 0.4;
+            y.out = 6 + $b * 0.445;
+            J.bowls = J.bowls - 10 if J.bowls > 12;
             y.at.ws = 3;
-            #y.at.mw = '40%';
-            #y.at.mh = '40%';
             y.at.ov = 1;
-            y.imp++;# if J.bowls == 2; # reset lv
+            y.imp++ ;#if J.bowls == 2; # reset lv
+            y.mod = 'JugleHue';
         
         t.toc.slim = 220;
         t.e =
@@ -100,14 +104,22 @@ ElPictMany: | # T sequence
         t.en->('sc lastK c s', "See tarps");
         my $s = T.op.y.s;
         n Chunkfalls
+        for (1..22) {
+            n Chunkfalls
+            $seeit->();
+        }
+        return;
+        t.cs = sub {};
         t.cs->('sc lastK c s', "See tarps lum 1, fresh lv");
         $seeit->();
         n Chunkfalls
         t.cs->('sc lastK c s', "See tarps lum 2");
         $seeit->(); # doesn't find elements to change?
-        return;
         n Chunkfalls
         t.cs->('sc lastK c s', "See tarps lum 3");
+        $seeit->();
+        n Chunkfalls
+        t.cs->('sc lastK c s', "See tarps lum 4");
         $seeit->();
         # feed onto screen as img tags
         # c.R callup W Top
@@ -116,6 +128,13 @@ ElPictMany: | # T sequence
         t.e =
         n ElvisMatu
         $seeit->();
+    }
+JugleHue: |
+    my $h = 0;
+    my $d = 15;
+    for (@$M) {
+        _s&hue = $h += $d;
+        _s&deal = 0.014;
     }
 ElPassTape: |
     my $t = Rw Towering Ang
@@ -417,7 +436,6 @@ Zpace: | # hang La space charts off mo
             # L uC can be forgotten, probably mo'd with root in J6
             # it could be placement metadata/unity
             my @M;
-            sayre "Your y.thi -> C.t ".@$M;
             while (y.thi && @$M < y.thi) { # copies out to there
                 @M = @$M if !@M;
                 last if !@M;
@@ -535,23 +553,23 @@ Zpace: | # hang La space charts off mo
     lum 23: %v:ylum
         my $M = c&M || die "lum no M";
         my $y = C.y;
-        my $um;
-        (um.l,um.r) = split ',', $lum;
-        for (grep{defined $um->{$_}} keys %$um) {
-            $um->{$_} =~ /^(?:(\d+)-)??(?:(\d)+)(?:-(\d)+)?$/
-                || die "notunder: ".wdump 2, $um;
-            $um->{$_} = {i=>$1,um=>$2,o=>$3};
-        }
-        
-        um.l.um ||= 3;
-        my $lumhalvesby = (um.l.um / 2) / (um.r.um || 3);
+        my $u;
+        (u.l,u.r) = split ',', $lum;
+        $u.>$_ = do {
+            $u.>$_ =~ m/^(?:(\d+)-)??(?:(\d+))(?:-(\d)+)?$/
+                || die "notunder: $_ ".wdump 2, $u;
+            {i=>$1,u=>$2,o=>$3}
+        } for grep {$u.>$_ } keys %$u;
+        u.l.u ||= 3;
+        u.r.u ||= u.l.u / 4;
+        u.l.o ||= u.r.u / 3;
         my $i = 0;
         for (@$M) {
             _.y.thy = 1 if !defined y.thy;
-            _.y.thy+=um.l.um;
+            _.y.thy += u.l.u;
             $i++;
-            if ($i > um.l.o) {
-                um.l.um -= $lumhalvesby if um.l.um > 0.1;
+            if ($i > u.l.o) {
+                u.l.u -= 2 if u.l.u > 0.1;
             }
         }
     
@@ -660,13 +678,14 @@ Zpace: | # hang La space charts off mo
         for my $C (@$M) {
             my $y = C.y;
             my $upt = 0;
-            y.spc = 0.1 if y.spc < 0.1;
+            y.spc = 0.01 if y.spc < 0.01;
             my $fs = y.spc * 20 * 4;
             if (c&helum) {
-                s&he = $fs / c&helum;
+                s&he = G&rou,$fs/c&helum;
             }
             else {
-                s&fs = $fs;
+                $fs = 3 if $fs < 3;
+                s&fs = G&rou,$fs;
             }
         }
     
@@ -689,6 +708,7 @@ Zpace: | # hang La space charts off mo
             1 && sayyl "For J.t: ";
             1 && saygr "_.t: ".ki _.y for @$M;
         }
+        Rw y.mod $M if y.mod;
         G&A,n=>8=>$J,@$M;
     
 
