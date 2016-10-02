@@ -6,9 +6,8 @@ Triangle: | # <>< swim, oscillator, s n, 7,
     # C is the page of s currently in J.sc.s
     s 1:
         A.1 = shift @$s;
-        # C is self for s
-        # C is 's many for o
-        A.c.s = G&sJ,A.1,'s';
+        A.s = A&s = G&sJ,A.1,'s';
+        A.sA = $A;
     #c s2 peel ground moments
     s 2:
         # number of things plugged in to s from J
@@ -16,7 +15,6 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         pl.parts = delete upCc&parts;
         pl.whole = 1c&whole;
         pl.base = 1c&base;
-        pl.ch = 1s&ch; # grind knows
         while (my ($k,$v) = each %$pl) {
             delete(C.c.>$k), next if !defined $v;
             C.c.>$k = $v;
@@ -24,7 +22,12 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         my $whole = c&whole;
         
         # also make C.t for the page of ground this s (C) is for
+        T.givech = 1;
         my $zip = G&grind,A.1;
+        G&always,C.sc,ch=>$_ || die "Chinout: s&ch $_" for T.givech;
+        delete T.givech;
+        #
+        
         # complexity hider, T may want to tho
         $whole = delete c&base if c&base && !$zip;
         A&V = A.1.t =~ /^[A-Z]/ && A.2.t ne 'u';
@@ -70,8 +73,10 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             tug.ground = G&A,o=>2,$C,$zip,'zip';
         }
         $tug || die "No ground to A.1.t";
-        # shade .c down to s (whole doesn't)
+        
         delete s&jo if delete 1c&imping; # zipover/zopul reoccur through
+        
+        # shade .c down to s (whole doesn't)
         my $t = G&Ct,['zipover'=>''=>{shade=>1}];
         c&zip = G&A,o=>6,$C,$tug,$t;
         G&A,c&zip=>6;
@@ -94,7 +99,9 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             c.y.x.y.O = $O; # follow to bring O up to date
             my $r = c.y.r || die "No yr: ".ki$c;
             Oc&el = rc&el if rc&el;
-            Oc&osc = $C;
+            # can see our s/A on A.s/sA
+            # might like to be handed changes from r
+            # and origin, somewhere like 
             $O
         } @{os&inz}];
         
@@ -259,9 +266,9 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         delete t.sc.z if !@$z;
         
         my $o = c&zop = G&A,o=>6,$C,$t,'zopul';
-    #c s7 traction/compress
+    #c s7 traction/compress - dig out root
     s 7:
-        # pack down goods
+        # K packs down goods
         # zops are el and change Cs, have y l (
         my $o = c&zop;
         A&zop = [map {
@@ -307,17 +314,21 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         
         G&A,$_=>8 for @{A&zop}; # K
         
-        my $topK = A&zop ->[0];
-        # no K/zop may mean something subtle .c.Jo like for
+        # no K/zop may mean a sublte c.Jo/something awoke it
+        # but the change fell through/is handled otherwise
+        # eg xo, 
         # the index we pool up using of knowledge for geo
         # makes stats bubbling to the top
         # each index geo/type knows spherical sanity (re largeness)
         # so osc tracksobjects piping whatever
         # with the {} replace/whatever trick on of=T
-        $topK || return;# sayre "No topK. no change? ".G&sn;
+        return T.Z.8 = $A if !@{A&zop};
+    #c log log
+    s 73:
+        my $topK = A&zop ->[0] || die "no change by 73? ".G&sn;
         my $c = topK.c.s;
         
-        # lv is compression log
+        # lv is K log, have y.everything
         if (cc&el < 3) {
             c&imp++;
             c&wil = 1;
@@ -336,14 +347,22 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             push @{s&lv}, $c;
         }
         
-        my $l = c.y.l || die "TopKC no yl: ".ki$c;
-        # top is this side of zop
-        s&top = $l;
-        l.y.s && l.y.s ne $C && die "top l ys points somewhere else: ".wdump 3,[$l,l.y.s,G&sn ];
-        l.y.s = $C;
+        # top is our C this side of zop
+        s&top = my $l = c.y.l;
+        
+        G&always,l.y,s=>$C || die "s top ys elswhere: "
+                            .wdump 3,[$l,l.y.s,G&sn ];
+    
+        
+    #c index index
+    # may be flung thawing top and iiyt to rebuild
+    s 76:
+        my $l = s&top;
+        # top is this side of zop or thawed stuff
         # also s&lastA.sc.topO = zip out top as O A
         # and s&lastK is zop out top as K A, incremental changes
-        s&tv = l.y.tv || {}; # die "TopKCyl no ytv: ".ki$l;
+        # maintained by ...
+        s&tv = l.y.tv || {};
         
         # ii is tw of We things
         my $ii;
@@ -380,6 +399,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         # root of this cone branch
         s&lastK = A&zop ->[0];
         s&lastA = $A;
+        A&waschange = 1;
     
     #c s8 transfer
     s 8:
@@ -398,19 +418,25 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         # + layering of stable/sprawly lv
         #     c/sc in a larger sense, dna/rna of this temple of truth
         #   awaits o branching or so...
-        J.c.o = "Steved ".c&imp." ".c&wil.(c&mat && " ".c&mat);
-        saygr ".";
-        # send out
-
+        # also G branching, where to put this...
+        
+        Jc&o = c&o = "Steved ".c&imp." ".c&wil.(c&mat && " ".c&mat);
+        
+        # beyond nothing/mat changing, pump news, send out
+        if (A&waschange) {
+            if (my $t = Jc&elvis) {
+                G&elph,$t=>[s=>$C];
+            }
+        }
 Hoop: | # osc art, colour in
     u a
+    # live any C that wakes up
     O 1:
         # from = C out of o in osc, yryoyD is origin mo C
         # themselves yin/ynext etc will point to from
         A&from = shift @$s;
         A&s = $C = G&hup,A&from;
-        a&osc = A.up.c.s;
-        # C is (was) the l 
+        # C is (was) the l from zip
         my $x = a&x = C.y.x || die "OC no yx: ".ki$C;
         if (my $J = s&J) {
             a&J = $J;
@@ -465,7 +491,7 @@ Hoop: | # osc art, colour in
     O 7:
         delete c&Jo if s&W;
         
-        # is wrong on js, pump update to fix
+        # is wrong in js, update to fix
         s&height = delete s&he if s&he;
         
         if (ref c&s) {
@@ -476,7 +502,6 @@ Hoop: | # osc art, colour in
         
         # C.c should be shaded down to s, injext o
         # should wake up if they change tho, for hidden clocks
-        
         
         # sc vanishing
         delete C.sc.>$_ for qw'ux oWl qs qz sq idly nspc path yspc';
@@ -491,7 +516,6 @@ Komp: | # K/D line protoClattice
     K 1:
         A&from = shift @$s; # us
         A&s = $C = G&hup,A&from;
-        a&osc = A.up.c.s;
         my $l = a&l = C.y.l || die "No KC yl: ".ki$C;
         my $x = a&x = l.y.x || die "KCyl no yx: ".ki$l;
         if (my $J = ls&J) {
@@ -501,32 +525,20 @@ Komp: | # K/D line protoClattice
     D 1:
         A.c.s = shift @$s; # us
     K 2:
-        my $beam = "C.y.cv  C.t   ".ki(C.c)."      ".ki(C.sc||{});
-        $beam =~ s/\n/\\n/g;
-        sayyl "K: $beam";
         my $l = a&l;
         delete c&Jo if ls&W;
         if (c&Jo) {
             s&z && die "Jo with z: ".ki$C;
             my $J = a&J || die "No sJ for Jo K: ".ki$l;
-            if (!ref $J) {
-                # Hoop probably mutes sJ, go back before o zip for it
-                my $r = l.y.r || die "KCyl no yr: ".ki$l;
-                my $o = r.c.o || die "KCylyr no co: ".ki$r;
-                my $D = o.y.D || die "KCylyrco no yD: ".ki$o;
-                # ^ ours from zip, Hoop munted 
-                my $Dr = D.y.r || die "KCylyrcoyD no yr: ".ki$D;
-                my $Do = Dr.c.o || die "KCylyrcoyDyr no co: ".ki$Dr;
-                my $CJ = Do.c.s || die "KCylyrcoyDyrco no cs: ".ki$Do;
-                $J = CJ.sc.J || die "KCylyrcoyDyrco no sJ: ".ki$CJ;
-            }
             my $x = a&x;
             my $lo = xc&Jo;
             if ($lo ne c&Jo) {
                 my $s = a&ys;
                 my $lv = ss&lv || die "No lv on J s for K Jo lv: ".ki$s;
+                # J are names on a branch, their content evolves
                 # imp++ means lv restarts
                 # wil++ means lv grows
+                # mat++ means out of band stuff changes, xo
                 my $wil = xc&Jowil || 1;
                 my $conti = sc&imp eq xc&Joimp && $lv eq xc&Jolv;
                 $wil = 1 if !$conti;
@@ -567,6 +579,7 @@ Komp: | # K/D line protoClattice
             my $mute;
             for my $gk (keys %$gh) {
                 my $ref = ref $gh.>$gk || next;
+                # eg nogindex 
                 next if $nk eq 'sc' && ($oksc.>$gk || $gk =~ /ex$/);
                 next if $ref eq 'CODE';
                 # and if in some known universal
@@ -589,7 +602,6 @@ WaysAcro: | # osc thing through cached pi into meta/waytogetat
     # install libaudio-scan-perl
 WhereAmI: | # 
     # install lshw
-
 Tal: | # displayings
     u i
     say: %nobasay
