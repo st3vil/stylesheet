@@ -332,53 +332,65 @@ With: | # J's stuff, its Js, osc page, etc.
     # main street (Js&ch aimed) being '', 1, 2...
     sesh: %acgt:J
         my $n = G&sJ,$J,'n';
-        J.sc.ch = '' if !defined J.sc.ch;
-        n.sc.a->{J.sc.ch} ||= {}; # so rea goes through blank pages
-        my $o = J.sc.S->{J.sc.ch} = G&sJ,$J,'s';
-        delete J.sc.s;
-        my $ch = ++J.sc.ch;
-        my $s = J.sc.s = J.sc.S->{$ch} ||= G&sJ,$J,'s';
-        o.sc.next = $s;
-        s.sc.prev = $o;
+        Js&ch = '' if !defined Js&ch;
+        ns&a->{Js&ch} ||= {}; # so rea goes through blank pages
+        my $o = Js&S.>Js&ch = G&sJ,$J,'s';
+        delete Js&s;
+        my $ch = ++Js&ch;
+        my $s = Js&s = Js&S->{$ch} ||= G&sJ,$J,'s';
+        os&next = $s;
+        ss&prev = $o;
+        ss&ch = $ch;
         # makes osc thing.3 etc hang around
         # TODO s adds to .root? files under ch
+        # make files out of pi folded
         # which could mean layer or page
-        s.sc.ch = $ch;
     
     # reset ground '', 1, 2...
     rea: %acgt:J s
         my $n = J.sc.n || return;
         Js&S.>Js&ch = G&sJ,$J,'s';
-        my $zi = ++J.c.zi;
+        my $zi = ++Jc&zi; # page of history
+        my $lim = 2; # kept
         my $ch = '';
-        my $lim = 2;
         my $rm = {};
-        while (n.sc.a->{$ch}) {
-            J.sc.Z->{$zi}->{$ch} = $rm->{$ch} = delete n.sc.a->{$ch};
+        while (ns&a.>$ch) {
+            Js&Z.>$zi.>$ch = $rm.>$ch = delete ns&a.>$ch;
             if ($zi > $lim) {
-                delete J.sc.Z->{$zi-$lim}
+                delete Js&Z->{$zi-$lim}
             }
             $ch++;
         }
-        J.sc.ch = '';
-        delete J.c.o;
-        delete J.sc.s;
+        Js&ch = '';
+        delete Jc&o;
+        delete Js&s;
         J.sc.s = Js&S.>Js&ch ||= G&sJ,$J,'s';
     
     # adapt to J interior as perhaps exterior
     # here A.1 is the doer
     n: %acgt
-        pop @Me;
+        pop @Me if $Me[-1] eq '';
         G&A,n=>8=>A.1,\@Me;
     u: %acgt
-        pop @Me;
+        pop @Me if $Me[-1] eq '';
         G&A,u=>8=>A.1,\@Me;
-    # many slide by slightly and then get nailed down
+    # many slide bywards on $M and then get nailed down
     m:
-        pop @Me;
+        pop @Me if $Me[-1] eq '';
         G&A,n=>2=>A.1,[];
         push @$s, G&Ct,\@Me;
     
+    # electric line phantom
+    # makes n without touching this ground (usu for c.e)
+    #   e could be reliabilitied by grounding and osc work
+    elph: %acgt
+        pop @Me if $Me[-1] eq '';
+        my $n = G&A,n=>1=>A.1,\@Me;
+        nc&nomind =
+            nc&nogro = 1;
+        G&A,$n,8;
+    
+
 Tunnel: | # mind & world
     # machine for finding pi
     # reality is a cave system
@@ -407,9 +419,9 @@ Tunnel: | # mind & world
         A.c.u = G&sJ,A.1,'u';
     # ground assembles mind
     n 2:
-        my $u = A.c.u;
-        return if A.1.t eq 'os';#|| !A.uyes;
-        if (!u.c.o) {
+        my $u = A&u;
+        return if A.1.t eq 'os' || A&nomind;
+        if (!uc&o) {
             u.c.base = 'theu'; # the PiMachine
             # base if grind (ground, needs root), whole if just theu
             my $rev = ".u.sc.ch" if u.sc.ch;
@@ -456,17 +468,21 @@ Tunnel: | # mind & world
     n 3:
         @$s = ([@$s]) unless ref $s->[0] eq 'ARRAY' || ref $s->[0] eq 'HASH';
         A.m = $A;
+        my $grounded;
         for my $l (@$s) {
             $l = [$l] if ref $l eq 'HASH';
             my $mo = G&tugA,mo=>1,@$l;
-            G&ground,$mo unless mo.c.s.c.nogro;
+            unless (mo.c.s.c.nogro || mo.c.nogro || A&nogro) {
+                G&ground,$mo;
+                $grounded++;
+            }
             if (my $r = delete T.ATR) { # T
                 G&xot,mo.c.T,$r;
             }
             A&mo = $mo;
             push @{A&mos||=[]}, $mo;
         }
-        delete 1c&o; # orderliness
+        $grounded && delete 1c&o; # orderliness
     n 4:
         # become aware of past, surface vibration
     n 5:
@@ -584,18 +600,17 @@ Jelly: | # mo Town making
         my $y = {cv=>0.9};
         my $sc = y.at = {};
         my $M = [];
+        my $r = J.sc.root = G&A,n=>1=>$J=>[J.t,$y,$c,$sc];
         my $ar = c&ar || {};
         my $s = c&s;
         local A.V = 2;
-        my $r = J.sc.root = G&A,n=>1=>$J=>[J.t,$y,$c,$sc];
+        
         Rw A.c.pin + $J $y $M $s;
+        
         T.nose && return;
-        if (@$M) {
-            c.M = $M;
-        }
-        sayyl "Amping J.t" if y.imp;
+        c.M = $M if @$M;
         Jc&imping = 1 if delete y.imp; # reset lv
-        r.ii = J.ii;
+        (r.i,r.ii) = (J.i,J.ii);
         G&A,$r,8;
     
     # join moment to moment
@@ -605,7 +620,6 @@ Jelly: | # mo Town making
         T.nose && return
             sayyl "C.t knows";
         # temp - of wants to load elvis understanding like route handlers
-        
         
         sayyl "Oscillate J.t";
         G&A,s=>8=>$J;

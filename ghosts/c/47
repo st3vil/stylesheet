@@ -118,6 +118,7 @@ Stripes: | # css
         [empc => [qw'left^ right^ top^ bottom^']],
         [empc => [qw'width^ height^']],
         [empc => [qw'wi^dth he^ght']],
+        [pcem => [qw'border radius']],
         
         ['' => 'over^flow'],
         ['' => 'float^'],
@@ -293,6 +294,10 @@ Oscgrin: |
         $s .= 'em' if $s !~ /(%|em|px)/;
         $s =~ s/^-?0em$/0%/;
         $s
+    pcem:
+        $s .= 'em' if $s !~ /(%|em|px)/;
+        $s =~ s/^-?0em$/0%/;
+        $s
     
     plus:
         s.v + s.et
@@ -305,18 +310,18 @@ Oscgrin: |
         my ($t,$f) = @{s.et};
         return s.v =~ /[1ay]/ ? $t : $f
     
-    n whipre =>''=><<''
+    whipre:
         return $s =~ /[1p]/ ? 'pre' : 
         $s =~ /[2n]/ ? 'nowrap' : 
         $s =~ /[3l]/ ? 'pre-line' : 
         die "Canot $s whipre?";
     
-    n shadole =>''=><<''
+    shadole:
         my @m = split m/\s/, $s;
         $m[-1] = I.d&cole,$m[-1];
         return sprintf '%dpx %dpx %dpx %s', @m;
     
-    n radun =>''=><<''
+    radun:
         my $o = $G::RADIAN*4;
         my $swish = $o;
         $swish *= -1 if $s < 0;
@@ -328,26 +333,26 @@ Oscgrin: |
             $o*-1 < $s && $s < $o;
         return $s
     
-    n saypx=>''=><<''
+    saypx:
         return $s if $s =~ /px$/;
         $s.'px';
     
-    n hundr=>''=><<''
+    hundr:
         int($s*100).'%';
     
-    n hunine=>''=><<''
+    hunine:
         int($s*9).'%';
         
-    n numb=>''=><<''
+    numb:
         int($s);
     
-    n saydeg=>''=><<''
+    saydeg:
         int($s).'deg';
     
-    n sayurl=>''=><<''
+    sayurl:
         "url('$s')"
     
-    n wordbreakwords=>''=><<''
+    wordbreakwords:
         die "Wordbreaku: $s" if $s ne '1';
         'break-word';
     
@@ -357,7 +362,7 @@ Oscapps: | # osc thinking, forming
     # all but intercepted sc is sc
     # a basket of potentials collapses into time extendobeam
     
-    n sz =>2=><<''
+    sz 2:
         my $si = length(C.c.s);
         ($s, my $lim) = split '/',$s;
         my $di = $s/$si;
@@ -366,27 +371,17 @@ Oscapps: | # osc thinking, forming
         I.d&meat,fsi=>1 if $di > 2;
         return;
     
-    n is =>2=><<''
+    is:
         my ($t,$z) = split ':', $s;
         $z ||= C.c.s;
         my $i = sum map { ord $_ } split '', $z;
         $i -= 9 until $i < 10;
         C.sc.hs = "${i}75";
     
-    n mu =>2=><<''
-        if ($s eq 'g') {
-            C.c.s || die "nos : ".wdump 2, $C;
-            C.c.s = Rw mugwu $d:C.c.s;
-            C.sc.hs ||= "576";
-        }
-        else {
-            die "how mu $s? C.c.s";
-        }
-
-    n nspc =>2=><<''
+    nspc 2:
         my $J = C.sc.J;
         my $squ = C.sc.yspc || J.C.y.spc;
-        my $ratio = $squ / $s;
+        my $ratio = $squ / $nspc;
         my $sl = sprintf '%.2f', $ratio;
         my $cl = 0.02;
         my $max = C.sc.nspc_max || 1;
@@ -396,32 +391,11 @@ Oscapps: | # osc thinking, forming
             C.sc.scale = $sl;
         }
     
-    n enid =>59=><<''
-        at.id = $s;
-        at.c.nobody = 1; 
-        at.t = j.l;
-        #say "enid j.l ::::  C.sc.at.sc.ab   ".k2 $at;
-        at.sc.ab = '100';
-        .
-        if (my $J = C.sc.J) {
-            die "DIffnoiw";
-            my $aj = C.sc.J.oJ.A.W->[-1];
-            my $l = aj.c->[0];
-            if (!aj.sent && ref $l) {
-                my ($t,$y,$c,$sc) = @$l;
-                if ($t eq j.l) {
-                    die if c.id ne at.id;
-                    %$sc = (%$sc,%{at.sc});
-                    at._aux = 1;
-                }
-            }
-        }
-    
-    n css =>555=><<''
+    css 555:
         $s = join ';', map{"$_:$s->{$_}"} sort keys %$s if ref $s eq 'HASH';
         for my $set (split ';', $s) {
             my ($k,$s) = split ':', $set;
-            at.sc.css->{$k} = $s;
+            s&css.>$k = $s;
         }
     
     n src =>556=><<''
