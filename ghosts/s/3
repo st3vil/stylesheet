@@ -521,7 +521,7 @@ Circle: | # < copy things
         
         # recurse branches of the C for display
         my $ja;$ja = sub {
-            my ($d,$e) = @_;
+            my ($d,$e,$r,$ud) = @_;
             $e = $e.>d.t;
             my $etc;
             if (exists d.c.sv) {
@@ -533,7 +533,16 @@ Circle: | # < copy things
                 die "gone had s: ".ki$d if d.c.m eq 'gone';
                 my $s = d.c.s;
                 my $slim = c&slim || 24;
-                if (length $s > $slim) {
+                # where s is cloud of text to be ind 4 vs 2 of z
+                if (c&unslim && ud.t eq 'c' && d.t eq 's') {
+                    $r || die "Norja";
+                    rc&motd && die "Already trying to put motd ud.t\.d.t: "
+                        .ki(rc&motd)."vs:\n".ki($s);
+                    rc&motd = [map{[$_]}split"\n",$s];
+                    $m = "<"."<''";
+                    $s = "";
+                }
+                elsif (length $s > $slim) {
                     my $va = c&slimvague;
                     $va = 100 if $va eq '1';
                     c&slimnodig ||= 1 if $va;
@@ -550,10 +559,10 @@ Circle: | # < copy things
             }
             $etc = "-$etc" if d.c.m eq 'gone';
             my @l = "d.t$etc";
-            if (my $z = d.sc.z) {
+            if (my $z = d.sc.z) { # gk
                 push @l,'{';
                 my @lo = map {
-                    $ja->($_, $e)
+                    $ja->($_,$e,$r,$d)
                 } @$z;
                 push @l, @lo;
                 push @l, '}';
@@ -573,10 +582,12 @@ Circle: | # < copy things
                 push @l, ki $ul if keys %$ul;
 
                 if (my $o = r.c.o) {
+                    # triangle
                     my $e = o.c.s || die "no ocs".ki$r;
                     if (my $dis = r.c.dis) { # change display elements
-                        push @l, $ja->($_,$e) for @$dis
+                        push @l, $ja->($_,$e,$r) for @$dis
                     }
+                    rc&motd && push @l, rc&motd;
                     if (my $z = r.c.z) { # inside lines
                         push @l, $rs->($z);
                     }
@@ -595,8 +606,10 @@ Circle: | # < copy things
             my ($x,$ind) = @_;
             $ind .= '  ';
             my $l = [];
+            sayre "Wasx " if ref $x ne 'ARRAY';
             for my $d (@$x) {
                 my $x = [];
+                sayre "Wasdin ".wdump 3, $x if ref $d ne 'ARRAY';
                 my $s = $ind . join ' ', grep { !ref$_ || do{push@$x,$_;0} } @$d;
                 push @$l, $s;
                 map { push @$l, @$_ }
