@@ -356,15 +356,16 @@ With: | # J's stuff, its Js, osc page, etc.
         # which could mean layer or page
     
     # reset ground '', 1, 2...
+    # more a given to the A.mo
+    # which can switch itself up before s
     rea: %acgt:J s
-        my $n = J.sc.n || return;
+        my $n = Js&n || return;
         Js&S.>Js&ch = G&sJ,$J,'s';
         my $zi = ++Jc&zi; # page of history
         my $lim = 2; # kept
         my $ch = '';
-        my $rm = {};
         while (ns&a.>$ch) {
-            Js&Z.>$zi.>$ch = $rm.>$ch = delete ns&a.>$ch;
+            Js&Z.>$zi.>$ch = delete ns&a.>$ch;
             if ($zi > $lim) {
                 delete Js&Z->{$zi-$lim}
             }
@@ -374,6 +375,17 @@ With: | # J's stuff, its Js, osc page, etc.
         delete Jc&o;
         delete Js&s;
         J.sc.s = Js&S.>Js&ch ||= G&sJ,$J,'s';
+    
+    # see S no, still osc will always mark Jc&o
+    unrea: %acgt:J
+        my $n = Js&n || die "Non J.t";
+        my $zi = Jc&zi--;
+        my $ch = '';
+        while (Js&Z.>$zi.>$ch) {
+            ns&a.>$ch = Js&Z.>$zi.>$ch;
+            $ch++;
+        }
+        delete Js&Z.>$zi;
     
     # adapt to J interior as perhaps exterior
     # here A.1 is the doer
@@ -560,7 +572,9 @@ Jelly: | # mo Town making
     J 3:
         if (!s&J) {
             s&J = G&J,A&Jup,C.t;
-            length(C.t) > 2 && sayyl "J ! C.t";
+            my $bla = " C.y.cv -".c&pi if c&pi ;
+                   # encodes entity π without ^
+            length(C.t) > 2 && sayyl "J ! C.t$bla";
         }
         A.3 = s&J if c&W;
         A.2 = A.1;
@@ -621,10 +635,10 @@ Jelly: | # mo Town making
         my $r = J.sc.root = G&A,n=>1=>$J=>[J.t,$y,$c,$sc];
         my $ar = c&ar || {};
         my $s = c&s;
-        local A.V = 2;
-        
-        Rw A.c.pin + $J $y $M $s;
-        
+        {
+          local A.V = 2;
+          Rw A.c.pin + $J $y $M $s;
+        }
         T.nose && return;
         c.M = $M if @$M;
         Jc&imping = 1 if delete y.imp; # reset lv
@@ -634,7 +648,10 @@ Jelly: | # mo Town making
     # join moment to moment
     J 7:
         A&Jup.sc.Jtv.>C.t.>A&Jcv = s&J unless T.nose eq '1';
-        T.not = 1 if T.nose eq '2'; # not grounded (e?)
+        # no osc us/ground you but keep J ^ (e to)
+        T.not = 1 if T.nose eq '2';
+        # was skipping out of 6
+        delete T.nose if T.nose eq '7'; # 
         T.nose && return
             sayyl "C.t knows";
         # temp - of wants to load elvis understanding like route handlers
@@ -648,6 +665,60 @@ Jelly: | # mo Town making
         my $oT = A.mo.up.mo.c.T;
         oT.op = 1s&s.sc.top;
     
+Sleep: | # desire and not
+    u i
+    
+    # sleep/engage mind
+    # $s && mark pages of osc for groups of time
+    S:
+        if ($s eq 'no') { # backwards for once
+            # where 
+            if (1c&want.once) { # got in somehow
+                G&unrea,A.1;
+                T.nose = 7; # still, osc
+                return 0 # || returns from pin
+            }
+            else {
+                1c&want.once = -7;
+            }
+        }
+        G&A,n=>2,A.1,[];
+        $A = A.mo;
+        local A.V = 0;
+        G&tug,0.6; # eg E can pos=1 awake
+         
+        1 unless "can" eq "sleep";
+        
+    # marks a point for ghost chopchoping, see pud
+    T:
+        1&&saygr "T C.t ".G&sn;
+        1;
+    
+    u c
+    n \'of:mo'
+    # are we in or out
+    J 45:
+        my $de;
+        de.mo = A&want if A&want;
+        de.J = 1c&want if 1c&want;
+        $de || return;
+        local A.V = 2;
+        my $des = "C.y.cv ".G&sn,5 ." -> ".ki $de;
+        
+        my $eq = sum map{ values %$_ } values %$de;
+        # want to add counterpoints
+        # everything eventually sleeps way/u/W stuff
+        
+        if ($eq < 0) {
+            saybl "Sleep $eq   $des";
+            my $to = $eq < -6 ? '8' : '7';
+            T.Z.>$to = $A;
+        }
+        else {
+            saygr "Waker $eq   $des";
+        }
+        
+        
 Compliers: | # othered
     u i
     # join/etc linked lists

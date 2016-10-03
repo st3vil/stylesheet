@@ -15,6 +15,7 @@ ForJ: |
     n With
     n Tunnel
     n Jelly
+    n Sleep
 Jingle: |
     n Compliers
     n Walks
@@ -27,7 +28,7 @@ ThatWillBe: |
     n Komp
     n Tal
     n ElVerse
-MakePi: | # make code,
+MakePi: | # make ii of PiMachine
     my $ii = {};
     
     my $dig = sub {
@@ -127,6 +128,49 @@ MakePi: | # make code,
     
     c&iii && push @{c&iii}, $i,$ii;
     ($i,$ii)
+Zome: | # compile PiMachine, return a new J
+    my $iii = [];
+    n MakePi=>W=>{iii=>$iii},'%qz'
+    my ($i,$ii) = @$iii;#Rw MakePi;
+    
+    my $B = $A;
+    my $A = {};
+    A.sc.i = A.i = $i;
+    A.sc.ii = A.ii = $ii;
+    my $G = A.i.G->($A,$C,$G,$T);
+    A.i.>$_ = B.I.>$_ for qw'parse_babbl';
+    G.w = A.i.w || die "No w way";
+    
+    $A = G&A,'so';
+    my $J = G&J,$A,'os';
+    $J.>$_ = $A.>$_ = $J for 1,2,3,4,5;
+    
+    
+    # A.* will inherit, A.sc.* is ours (usually)
+    A.sc.ii = A.ii;
+    A.sc.i = A.i;
+    
+    my $z = [sort {a.y.cv <=> b.y.cv || a.t cmp b.t}values%{A.ii}];
+    my $ola;
+    for my $o (@$z) {
+        if ($ola) {
+            ola.y.next = $o;
+            #ola.y.over = $o;
+            o.y.prev = $ola;
+            #o.y.under = $ola;
+        }
+        $ola = $o;
+    }
+    my $u = G&Ct,[theu=>1=>'steve',{z=>$z}];
+    A.ii.>u.t = $u;
+    u.y.tw->{_.t} = $_ for @$z;
+    u.y.in = $z->[0];
+    u.sc.i = A.i;
+    u.sc.ii = {%{A.ii}};
+    delete u.sc.ii.theu;
+    # ^ so no not found in self
+    
+    $J
 CoBabbler: | # bake code
     my $sw = {};
     $sw.>$_ = 'say' for qw'saygr saybl sayyl sayre say';
@@ -155,8 +199,9 @@ CoBabbler: | # bake code
     C.c.s =~ s/\b((?!u)\w)s\&(\w+)/$1\.sc\.$2/sgm;
     C.c.s =~ s/\b(\w)c\&(\w+)/$1\.c\.$2/sgm;
     C.c.s =~ s/\b(\w)y\&(\w+)/$1\.y\.$2/sgm;
-    c&s =~ s/^\s*S(?: (\S+.*))?\s*$/G\&S,"$2" || return sayre "GONG J\.t";/sgm;
-    c&s =~ s/^\s*T(?: (\S+.*))?\s*$/G\&T,"$2" || return sayre "TO J\.t";/sgm;
+    # sleepomatics
+    c&s =~ s/^\s*S(?: (\S+.*?))?\s*$/G\&S,"$1" || return sayre "GONG J\.t";/sgm;
+    c&s =~ s/^\s*T(?: (\S+.*?))?\s*$/G\&T,"$1" || return sayre "TO J\.t";/sgm;
     
     C.c.s = G&parse_babbl,C.c.s;
     
@@ -328,49 +373,6 @@ conot: | # expand sc.t->ip, compiled throat clause
         $ip.>$k = $p;
     }
     ip.order = \@o if @o > 1;
-Zome: | # return a new J
-    my $iii = [];
-    n MakePi=>W=>{iii=>$iii},'%qz'
-    my ($i,$ii) = @$iii;#Rw MakePi;
-    
-    my $B = $A;
-    my $A = {};
-    A.sc.i = A.i = $i;
-    A.sc.ii = A.ii = $ii;
-    my $G = A.i.G->($A,$C,$G,$T);
-    A.i.>$_ = B.I.>$_ for qw'parse_babbl';
-    G.w = A.i.w || die "No w way";
-    
-    $A = G&A,'so';
-    my $J = G&J,$A,'os';
-    $J.>$_ = $A.>$_ = $J for 1,2,3,4,5;
-    
-    
-    # A.* will inherit, A.sc.* is ours (usually)
-    A.sc.ii = A.ii;
-    A.sc.i = A.i;
-    
-    my $z = [sort {a.y.cv <=> b.y.cv || a.t cmp b.t}values%{A.ii}];
-    my $ola;
-    for my $o (@$z) {
-        if ($ola) {
-            ola.y.next = $o;
-            #ola.y.over = $o;
-            o.y.prev = $ola;
-            #o.y.under = $ola;
-        }
-        $ola = $o;
-    }
-    my $u = G&Ct,[theu=>1=>'steve',{z=>$z}];
-    A.ii.>u.t = $u;
-    u.y.tw->{_.t} = $_ for @$z;
-    u.y.in = $z->[0];
-    u.sc.i = A.i;
-    u.sc.ii = {%{A.ii}};
-    delete u.sc.ii.theu;
-    # ^ so no not found in self
-    
-    $J
 Zop: | # a G
     u urw
     y.clos = 1;
