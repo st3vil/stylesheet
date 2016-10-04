@@ -405,7 +405,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
     0 &&
     s 78:
         # other
-    #c s8 transfer
+    #c s8 transfer, send
     s 8:
         # root of this cone branch
         s&lastA = $A;
@@ -431,9 +431,14 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         # beyond nothing/mat changing, pump news, send out
         if (A&waschange) {
             if (my $t = Jc&elvis) {
-                G&elph,$t=>[s=>$C];
+                for my $t (split ' ', $t) {
+                    my $s = $1 if $t =~ s/:(.+)//;
+                    my $sc = G&peel,$s if $s;
+                    G&elph,$t=>[s=>8=>{s=>$C},$sc];
+                }
             }
         }
+        
 Hoop: | # live the C, colour art in
     u a
     # for any zip change (and its parents)
@@ -492,6 +497,8 @@ Hoop: | # live the C, colour art in
                 $S = S.y.next;
             }
         }
+    
+    # O 6 - hoisting, ElBridge/xo
     
     # shrinkwarp for our tv, 
     O 7:
@@ -562,8 +569,7 @@ Komp: | # K/D line protoClattice
             else {
                 1 && saygr "Same Jo: C.t C.y.cv @ $lo";
             }
-            
-            # Hoisting,
+            # other hoistings in O 6/s -8, eg xo
         }
         if (my $J = s&J) {
             # scJ could describe it, versions at head/remote

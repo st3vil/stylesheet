@@ -254,11 +254,12 @@ Sea: | # folds of the day
         }
         $pass == 1
     #c data
+    # hoh - hangup c and copy s over it 2 deep
     xoy: %acgt:s c
         $c = G&xot,{},$c;
         G&xot,$c,$s;
         return $s;
-    
+    # oh -  copy c over s, 2 hashes deep
     xot: %acgt:s c
         ref $c eq 'HASH' && ref $s eq 'HASH'
             || die "Hash up".wdump 3, [$s,$c];
@@ -269,6 +270,7 @@ Sea: | # folds of the day
         }
         return $s
     
+    # hoh - copy c over s (half oh)
     xo: %acgt:s c
         ref $c eq 'HASH' && ref $s eq 'HASH'
             || die "Hash up".wdump 3, [$s,$c];
@@ -277,12 +279,14 @@ Sea: | # folds of the day
         }
         return $s
     
+    # hup - clone s, 2 hashes deep
     hup:
         my $CC = {%$s};
         $CC->{$_} = {%{$CC->{$_}}} for
             grep {ref $CC->{$_} eq 'HASH'} keys %$CC;
         return $CC;
     
+    # assign to a hash, pass unless it was already something else
     always: %acgt:s k v
         my $pass = !exists $s.>$k || $s.>$k eq $v;
         $s.>$k = $v;
@@ -593,7 +597,7 @@ Jelly: | # mo Town making
         s&pi = $pi;
         # distance from A.3 as ip
     
-    # J.C/T wants to be? drop in A spawn?
+    #c J.C/T wants to be? drop in A spawn?
     # the 1Cs&la babs to A.1.c.s.sc.la
     
     u s
@@ -664,6 +668,7 @@ Jelly: | # mo Town making
     J 8:
         my $oT = A.mo.up.mo.c.T;
         oT.op = 1s&s.sc.top;
+    # TODO do n till 9
     
 Sleep: | # desire and not
     u i
@@ -700,6 +705,7 @@ Sleep: | # desire and not
     J 45:
         my $de;
         de.mo = A&want if A&want;
+        de.C = c&want if c&want;
         de.J = 1c&want if 1c&want;
         $de || return;
         local A.V = 2;
