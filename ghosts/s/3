@@ -533,26 +533,28 @@ Circle: | # < copy things
                 die "gone had s: ".ki$d if d.c.m eq 'gone';
                 my $s = d.c.s;
                 my $slim = c&slim || 24;
-                # where s is cloud of text to be ind 4 vs 2 of z
-                if (c&unslim && ud.t eq 'c' && d.t eq 's') {
-                    $r || die "Norja";
-                    rc&motd && die "Already trying to put motd ud.t\.d.t: "
-                        .ki(rc&motd)."vs:\n".ki($s);
-                    rc&motd = [map{[$_]}split"\n",$s];
-                    $m = "<"."<''";
-                    $s = "";
-                }
-                elsif (length $s > $slim) {
-                    my $va = c&slimvague;
-                    $va = 100 if $va eq '1';
-                    c&slimnodig ||= 1 if $va;
-                    
-                    my $dig = 'h'.slm(6,dig($s)) unless c&slimnodig;
-                    $s = slim($slim-5,$s).$dig;
-                    
-                    $va && $s =~ 
-                        s{\.\.(\d+)(h\S+)?$}
-                        {'..<'.(int($1/$va) * $va)}e;
+                if (length $s > $slim) {
+                    # where s is cloud of text to be ind 4 vs 2 of z
+                    if (c&largesse && ud.t eq 'c' && d.t eq 's') {
+                        $r || die "Norja";
+                        rc&motd && die "Already trying to put motd ud.t\.d.t: "
+                            .ki(rc&motd)."vs:\n".ki($s);
+                        rc&motd = [map{[$_]}split"\n",$s];
+                        $m = "<"."<''";
+                        $s = "";
+                    }
+                    else {
+                        my $va = c&slimvague;
+                        $va = 100 if $va eq '1';
+                        c&slimnodig ||= 1 if $va;
+
+                        my $dig = 'h'.slm(6,dig($s)) unless c&slimnodig;
+                        $s = slim($slim-5,$s).$dig;
+
+                        $va && $s =~ 
+                            s{\.\.(\d+)(h\S+)?$}
+                            {'..<'.(int($1/$va) * $va)}e;
+                    }
                 }
                 $s =~ s/\n/\\n/sg;
                 $etc = $m.$s;
