@@ -199,9 +199,20 @@ CoBabbler: | # bake code
     C.c.s =~ s/\b(\w)c\&(\w+)/$1\.c\.$2/sgm;
     C.c.s =~ s/\b(\w)y\&(\w+)/$1\.y\.$2/sgm;
     # sleepomatics
-    c&s =~ s/^\s*S(?: (\S+.*?))?\s*$/G\&S,"$1" || return sayre "GONG J\.t";/sgm;
-    c&s =~ s/^\s*T(?: (\S+.*?))?\s*$/G\&T,"$1" || return sayre "TO J\.t";/sgm;
+    my $orr = qq{ || return sayre };
+    c&s =~ s/^\s*S(?: (\S+.*?))?\s*$/G\&S,"$1"$orr "GONG J\.t";/sgm;
+    c&s =~ s/^\s*T(?: (\S+.*?))?\s*$/G\&T,"$1"$orr ("TO   J\.t") x 5;/sgm;
     
+    # little sub maker
+    # G may like to track lamda meta in a coderef => $D like way
+    # one word args assumed to be many single letter args
+    c&s =~ s[\W\&(\w+(?:,\w+)*)\{]
+        [my @r = split',',$1;
+        shift(@r), unshift @r, qw'A C G T' if $r[0] eq 'acgt';
+        @r = split '', $r[0] if @r == 1;
+        "sub { my (".join(',',map{'$'.$_}@r).") = \@_;"]smeg;
+    
+    # all without the not-in-blockquote intelising of:
     C.c.s = G&parse_babbl,C.c.s;
     
     # change J.n 
