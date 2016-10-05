@@ -862,6 +862,13 @@ ElPassTape: | # Jc&elvis sends e=s oscillations
             t.mkoJ->(Junup=>{eat=>W.sc.s.sc.lastK.c.s,time=>6,nopre=>1});
             sleep 1;
         };
+        G.Wouter = sub { # send stuff from 4=Os (g/s)
+            # to 4=Oth (g/c) which can web it out
+            my ($te,$c) = @_;
+            c.time = 6;
+            sayyl "Wouter $te: ".ki $c;
+            t.mkoJ->($te=>$c);
+        };
         #$seeit->();
         t.e =
         n FeelTapey
@@ -898,10 +905,6 @@ ElvisTape: | # to receive W production for run compara
     Js&ein.t.s = 'EatsTriangle';
     y.rev = 1000;
     S v
-    saygr <<'' .'     '.J.t;
-        |\
-        | \  *
-        ---
     
     push @$M, @{Js&M||=[]};
     # have have the tw in another unity that can be included to W search
@@ -909,13 +912,11 @@ ElvisTape: | # to receive W production for run compara
     # Tendon room, scuttle
 EatsTriangle: |
     my $s = e&s;
-    sayyl "Given: s.c.o";
     my $M = Js&M ||= [];
     my $j = ss&J || do{sayre"APROB";0} ||  ss&lastA.1 || die "no es J";
     
-    my $sc = e.sc;
-    sayre "Got sc: ".ki $sc if %$sc;
-    m j.t=>-TapeRack=>{s=>$s,%$sc}
+    # e.sc escalluctiates
+    m j.t=>-TapeRack=>{s=>$s,%{e.sc||{}}}
     # add to hoisting of moment of lv
     # wants to compress or not unique G-s
     T.oke = 1;
@@ -988,8 +989,8 @@ Dejo: | # cyclical spreebuilding
     Js&ein.t.s = 'MakesTriangle';
     y.rev = 8;
     Js&zeat = 'Junup';
+    Js&ze = 'Monitor';
     S v
-    saygr '    ---',' *  | /','    |/','     '.J.t;
     
     push @$M, @{Js&M||=[]};
     _s&o = _s&s && _s&s.c.o
@@ -1019,9 +1020,14 @@ TapePlay: | # whose connection is J.t and ch
         
         C.t = "Our C.t";
         delete s&o;
-        G&elph,Monitor=>[z=>$z]
+        if (my $t = 1s&ze) {
+            G&elph,$t=>[z=>$z];
+        }
+        if (my $t = 1s&zeat) {
+            G.Wouter->($t,{eat=>$z});
+        }
         #delete s&z;
-Monitor: | # batches for ocea, Gout easily
+Monitor: | # batches for ocea
     u Zpace
     y.rev = 100;
     Js&wls++;
@@ -1035,37 +1041,41 @@ Monitor: | # batches for ocea, Gout easily
     }
     push @$M, @{Js&M||=[]};
     
+Wout: | # sends up
+    
 Junup: | # display z of c&eat (K)
     u urw
-    #y.at.tag = 'pre' unless c&nopre;
-    y.at.ws = 'pre';
-    y.at.wb = 1;
-    y.at.mw = '60%';
-    y.at.mh = '60%';
-    #y.at.ab = 1;
-    J.ev.li = 'Juned';
-    return unless C.c.eat;
-    my $z = [];
+    G&xo,y.at||={},$_ for G&peel,'ws:pre,wb,mw:60%,mh:60%';
+    
+    J.ev.li = 'Juned'; # way back in
+    
+    return T.nose = 1 unless C.c.eat;
+    
+    # z must leak no refs, except .y.* which will be ycv only
+    my $z = [ref $eat eq 'ARRAY' ? @$eat : $eat];
+    # dripfeed time
+    my $deal = 0.3 if @$z > 1;
+    
     my $elv;$elv = sub {
         my ($C,$d,$la) = @_;
-        my $l = {};
-        l.t = C.t;
-        l.y = C.y.cv;
-        l.c = C.c;
-        l.sc = C.sc;
-        $C = $l;
+        
+        $C = G&hup,$C;
+        C.y = C.y.cv;
+        
         if ($la) {
-            c&s = "\n".c&s if $la && (C.y =~ /0\.(\d)/)[0] ne ($la->[1] =~ /0\.(\d)/)[0]
+            c&s = "\n".c&s if $la && (C.y =~ /0\.(\d)/)[0]
+                             ne ($la->[1] =~ /0\.(\d)/)[0]
         }
         my $la;
         C.sc.z = [map{my$l=$elv->($_,$d+1,$la);$la=$l;}@{C.sc.z}] if C.sc.z;
+        C.sc.deal ||= $deal if $deal;
         [C.t,C.y,C.c,C.sc]
-        #$l;
     };
-    my $l = $elv->(C.c.eat);
-    n itc=>0.0001=>{}=>{z=>[$l],mw=>'80%',mh=>'80%'}
-    #n reo=>-pre=>wdump 5, $l
-    #J.VV.N = 1;
+    my $eat = C.c.eat;
+    my @z = map { $elv->($_) } ref $eat eq 'ARRAY' ? @$eat : $eat;
+    
+    n itc=>0.0001=>{}=>{z=>\@z,mw=>'80%',mh=>'80%'}
+    
 Juned: | # handle input
     sayyl "J.t: ".ki us&C;
     Rw talkzyh;
