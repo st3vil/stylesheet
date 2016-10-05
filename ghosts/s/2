@@ -137,14 +137,16 @@ Sea: | # folds of the day
             if ($_ eq '*' && ref $s eq 'HASH' && 1 == keys %$s) {
                 ($_) = keys %$s;
             }
-            unless (ref $s eq 'HASH' && exists $s.>$_) {
+            unless (ref $s eq 'HASH' && exists $s.>$_
+                || ref $s eq 'ARRAY' && exists $s->[$_]) {
                 o.fail = $_;
-                o.mong = [sort keys %$s];
+                o.mong = [ref $s eq 'HASH' ? sort keys %$s
+                    : ref $s eq 'ARRAY' ? "0..".(@$s-1) : slim("?was: $s") ];
                 o.have = \@p;
                 return
             }
             push @p, $_;
-            $s = $s.>$_;
+            $s = ref $s eq 'HASH' ? $s.>$_ : $s->[$_];
         }
         $s
     
@@ -495,6 +497,7 @@ Tunnel: | # mind & world
         my $grounded;
         for my $l (@$s) {
             $l = [$l] if ref $l eq 'HASH';
+            sayre "None in ".ki($l)."   ".G&sn if !@$l;
             my $mo = G&tugA,mo=>1,@$l;
             unless (mo.c.s.c.nogro || mo.c.nogro || A&nogro) {
                 G&ground,$mo;
@@ -522,6 +525,7 @@ Tunnel: | # mind & world
     # sprung from n-author, separate put words...
     mo 1:
         A.mo = $A;
+        ref $s eq 'ARRAY' || saybl "Was: ".ki($s)."   ".ki(A.c.N);
         G&Cs,$s;
     # join L if lumy
     mo 17:
@@ -784,7 +788,7 @@ Walks: | # othering, many C
     # climb in/next/z with a sub giving returns in list
     ind: %acgt:s y d
         my $D = $s;
-        $s = G&hup,$s;
+        $s = G&hup,$s unless d.nohup;
         s.y.D = $D;
         $y ||= sub { shift };
         my $d = {%{$d||{}}};
@@ -858,7 +862,7 @@ Walks: | # othering, many C
                 return [$s,@$p];
             }
             defined $s || return;
-            die "NO ".wdump 3,[$p,$s] if ref $s ne 'HASH';
+            ref $s eq 'HASH' || return;
             shift @$i;
             my @r = keys %$s;
             @r = sort @r if $sort;

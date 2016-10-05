@@ -761,11 +761,11 @@ Hosthing: | # <-- Hosting
         keys %{C.c} == 2 && c&W eq c&J && c&W eq C.t || return;
         
         # 
-        a&thawable = 1 unless $s < 3;
+        a&thawable = 1 unless $s < 3 || $s == 5;
         a&storable = 1 unless $s < 2 || $s > 7;
         a&storable && A.up.c.store++;
         a&stowexp = 1 if $s >= 4 && $s < 6;
-        
+        1 && saybl "Thawable ($s) C.t: a&thawable";
         a&thawable || return;
         my $V = A.1.t =~ /^[A-Z]/ && A.2.t ne 'u';
         my $d = G&thaws,$V || return;
@@ -785,7 +785,11 @@ Hosthing: | # <-- Hosting
             # the lv writer needs to understand [,,,,[newlv]]
         }
         else { # 3-7
-            # skips it all
+            # skips pin but does osc, reof the things
+            # our C reof, over We things already
+            # and since we dont know pin we may drop coil
+            # use 4 if so
+            my $meta = delete ds&meta;
             c&parts = $d;
             T.Z.7 = $A;
             delete a&storable;
@@ -797,6 +801,9 @@ Hosthing: | # <-- Hosting
             my $c = mc&s;
             my $J = cs&J;
             my $s = Js&s;
+            $A = $m;
+            $C = m.c.s;
+            # hmm ^
             G&stores,$s;
             #G.ouJ = $s;
         }
@@ -810,10 +817,14 @@ Hosthing: | # <-- Hosting
     # make extra xo about W
     stores:
         my $t = s.sc.top || die "Store no top: ".ki $s;
+        my $m; # for ns&meta - indexes to take
+        my $n; # the first - top
+        1 && saybl "Your make C.t";
         if (a&stowexp) {
             # expensiver keeping ii/tv/etc in a bundle
             # could fork, ind without hup to shave y
             # yaml it all
+            return Rw StowExp $C:s;
         }
         my @all = G&ind,$t;
         my ($u) = @all;
@@ -829,6 +840,88 @@ Hosthing: | # <-- Hosting
         }
         u.sc.xo = s.sc.xo if s.sc.xo;
         n Stro=>[put=>$u]
+    
+ThawFour: | # s steals awake
+    # eset
+StowExp: | # as C = s
+    local A.V = 2;
+    
+    my ($ok,$dr);
+    ok.y.>$_ = 1 for qw'up in prev next';
+    ok.y.>$_ = 2 for qw'tv tw';
+    dr.y.>$_ = 1 for qw'D x r s';
+    dr.c.code = 3;
+    ok.sc.ip = 2;
+    
+    my $ha; # have seen
+    my $se; # see from
+    my $ub = &C{
+        $ha.>$C = $C;
+        G&chew,$C,'nk,gk',$_ for &v,nk,gk{
+            ref $v || return;
+            $se.>$nk.>$gk.>$v.>$C = $C;
+        }
+    };
+    my @all = G&ind,s&top,$ub,{nohup=>1};
+    
+    my $pass = 1;
+    G&chew,$se,'nk,gk,v',$_ for &vv,nk,gk,v{
+        return if $nk eq 'sc' && $gk =~ /ex$/;
+        my $M = [values %$vv];
+        if (my $k = $ok.>$nk.>$gk ) {
+            my $c = $ha.>$v;
+            $v = "C c.t c.y.cv" if $c;
+            unless ($c || $k == 2) {
+                sayre "Unhad $nk $gk $v from ".ki $M;
+                $pass--;
+            }
+        }
+        elsif (my $k = $dr.>$nk.>$gk ) {
+            #saybl "Droppy $nk $gk $v from ".ki $M;
+            delete $_.>$nk.>$gk for @$M;
+            if ($k == 3) {
+                my $gkd = $gk.'d';
+                $_.>$nk.>$gkd = 1 for @$M;
+            }
+        }
+        else {
+            sayre "Unknown $nk $gk $v from ".ki $M;
+            delete $_.>$nk.>$gk for @$M;
+            $pass--;
+        }
+    };
+    
+    G&chew,s&iiyt,'cv,t',$_ for &l,cv,t{
+        $ha.>$l || $pass--, sayre "Missing iiyt $cv $t: ".ki$l;
+    };
+    die "Shave missed spots" if $pass != 1;
+    my $t = s&top;
+    ts&meta = {}; # takes over as impart, sets tv,top,etc in self
+    # delete 
+    
+    saybl "Worked";
+    #1 && saybl wdump 3, se.y.up;
+    exit;
+    
+        my ($u) = @all;
+        for (@all) {
+            delete _c&ind;
+            _s&coded = 1 if delete _c&code;
+            _.y = {cv=>_.y.cv};
+            my $in = delete(_c&inside) || [];
+            my $z = delete _s&z;
+            delete _s&J;
+            G&oleak,$_,5 && die "Leaks: @$in: ".ki $_;
+            _s&z = $z;
+        }
+        u.sc.xo = s.sc.xo if s.sc.xo;
+        n Stro=>[put=>$u]
+    
+ThawFour: |
+    # 
+    my $s = 1s&s || die "nos";
+    sayyl "Thawing ".ki $d;
+    sc&impart = $d;
     
 Stro: | # storage aJent for Hosthing, just needs A.G
     T.nose = 2; # no osc but keep J (4s&Jtv)
@@ -1017,7 +1110,7 @@ Dejo: | # cyclical spreebuilding, bunch of oscillators to keep draining
     Js&ze = 'Monitor';
     Js&ein.t.s.sMJ = &sMJj{
         Js&tri.>$s ++ && return;
-        m j.t=>''=>{}=>{tJ=>$j,s=>$s}
+        m j.t=>''=>{}=>{oJ=>$j,s=>$s}
     };
     S
     
@@ -1031,9 +1124,9 @@ TapePlay: | # osc follow s&jJ's s&s, using K 2 Jo
     o 18: %of:K
         c&Jo = s&o || die "Give opy";
         my $l = a&l || die "No l";
-        a&J = ls&tJ || die "NotJ";
+        a&J = ls&oJ || die "NotJ";
         a&ys = ls&s || die "No o";
-        delete s&tJ;
+        delete s&oJ;
         
     o 3: %of:K
         my $z = s&z || return;

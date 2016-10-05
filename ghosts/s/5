@@ -13,9 +13,10 @@ Triangle: | # <>< swim, oscillator, s n, 7,
     s 2:
         # number of things plugged in to s from J
         my $pl;
-        pl.parts = delete upCc&parts;
-        pl.whole = 1c&whole;
         pl.base = 1c&base;
+        pl.impart = delete 1c&impart;
+        pl.whole = 1c&whole;
+        pl.parts = delete upCc&parts;
         while (my ($k,$v) = each %$pl) {
             delete(C.c.>$k), next if !defined $v;
             C.c.>$k = $v;
@@ -32,6 +33,11 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         # complexity hider, T may want to tho
         $whole = delete c&base if c&base && !$zip;
         A&V = A.1.t =~ /^[A-Z]/ && A.2.t ne 'u';
+        
+        if (my $im = c&impart) {
+            G&xot,$C,$im; # s top and tangled
+            return T.Z.76 = $A;
+        }
         
         if (my $W = $whole) {
             my $s = G&Wup,$W || G&t,$W || die "no $W on ".G&sn;
@@ -353,14 +359,13 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         # top is our C this side of zop
         s&top = my $l = c.y.l;
         
-        G&always,l.y,s=>$C || die "s top ys elswhere: "
-                            .wdump 3,[$l,l.y.s,G&sn ];
-    
         
     #c index index
     # may be flung thawing top and iiyt to rebuild
     s 76:
         my $l = s&top;
+        G&always,l.y,s=>$C || die "s top ys elswhere: "
+                            .wdump 3,[$l,l.y.s,G&sn ];
         # top is this side of zop or thawed stuff
         # also s&lastA.sc.topO = zip out top as O A
         # and s&lastK is zop out top as K A, incremental changes

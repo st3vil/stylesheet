@@ -207,11 +207,11 @@ CoBabbler: | # bake code
     # G may like to track lamda meta in a coderef => $D like way
     #    wants to be a function the sub passes through
     # one word args assumed to be many single letter args
-    c&s =~ s[\W\&(\w+(?:,\w+)*)\{]
-        [my @r = split',',$1;
+    c&s =~ s[(\W)\&(\w+(?:,\w+)*)\{]
+        [my @r = split',',$2;
         shift(@r), unshift @r, qw'A C G T' if $r[0] eq 'acgt';
         @r = split '', $r[0] if @r == 1;
-        "sub { my (".join(',',map{'$'.$_}@r).") = \@_;"]smeg;
+        $1."sub { my (".join(',',map{'$'.$_}@r).") = \@_;"]smeg;
     
     # all without the not-in-blockquote intelising of:
     C.c.s = G&parse_babbl,C.c.s;
@@ -396,11 +396,12 @@ Zop: | # a G
         #n ElPictMany=>-test=>{ray=>1}
         
         #n ElvisRopeWay =>-test=>{man=>'Zupe'}
-        n ElvisHandles=>-test=>{man=>'Zupe'}
-        
+        n ElvisZpace=>-test
+        #n ElvuseZpace=>-test
+        #exit;
         n $_=>-test for @{c&also||[]};
         
-        n ElPassTape=>-test
+        #n ElPassTape=>-test
         
         #n ElvisHoists =>-test=>{man=>'Zupe'}
         #n ElvisRopeWay =>-test=>{man=>'Zupe'}
