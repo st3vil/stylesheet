@@ -488,11 +488,18 @@ ElChorus: | # mo->E joins your request to a J
                     Rw $pin;
                 }
                 else {
-                    die "e t complexi ".ki $pin if !pin.s || pin.s ne 'M' || keys %$pin != 1;
-                    # s=M used to open envelopes of e etc without leaving here
-                    my $M = djson e.c.s;
-                    push @being, @$M;
-                    sayre "Multied ".@$M." For ".G&es;
+                    for my $k (sort keys %$pin) {
+                        my $v = $pin.>$k;
+                        if ($k eq 's' && $v eq 'M') {
+                            # s=M used to open envelopes of e etc without leaving here
+                            my $M = djson e.c.s;
+                            push @being, @$M;
+                            sayre "Multied ".@$M." For ".G&es;
+                        }
+                        else {
+                            Rw $k + $v $us;
+                        }
+                    }
                 }
             }
             # 
@@ -988,18 +995,23 @@ Dejo: | # cyclical spreebuilding, bunch of oscillators to keep draining
     y.rev = 8;
     Js&zeat = 'Junup';
     Js&ze = 'Monitor';
-    if (e&t eq 's') {
-        my $M = Js&M ||= [];
-        my $s = e&s;
-        my $j = ss&J || die "snoJ";
-        unless (Js&tri.>$s ++) {
-            m j.t=>''=>{}=>{tJ=>$j,s=>$s}
-        }
-    }
+    Js&ein.t.s.sMJ = sub {
+        my ($s,$M,$J,$j) = @_;
+        1 && sayyl "In J.t for j.t ... s.c.o, ".@$M;
+        Js&tri.>$s ++ && return;
+        m j.t=>''=>{}=>{tJ=>$j,s=>$s}
+    };
+    S
     
     push @$M, @{Js&M||=[]};
     _s&o = _s&s && _s&s.c.o
         || die "nots: ".ki$_ for @$M;
+sMJ: | # for Js&M map in
+    my $M = Js&M ||= [];
+    my $s = e&s;
+    my $j = ss&J || die "snoJ";
+    $v->($s,$M,$J,$j);
+    
 TapePlay: | # osc follow s&jJ's s&s, using K 2 Jo
     u als
     o 18: %of:K
