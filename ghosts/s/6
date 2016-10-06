@@ -28,13 +28,16 @@ ModNs: | # modulate M/N/etc with way, s=$way(:$s_arg)?
 nogindex: |
     my ($nk,$of) = split ':', $s;
     $nk && $of || die "not nk:of: $s";
-    my $i = s&nogindex = {};
+    # reuses refs if they look the same:
+    my ($tr,$i,$p) = G&superindex,'nogindex','ip';
+    
     for (@$N) {
         _s&nk eq $nk && _s&of eq $of && _s&gk || next;
         $i.>_s&gk = _s&vatis || 1;
     }
+    
     s&t = 1; # throat connected, if
-    my $p = s&ip = {};
+    
     p.y.hasany = $i;
     if (s&vor) {
         my $r = $p.>s&vor = {};
@@ -43,6 +46,8 @@ nogindex: |
         p.y.or = 1;
         p.order = [s&vor,'y'];
     }
+    
+    $tr->();
 ElvisZpace: | # T u Zpace fast, caching its s 76-
     my $t = Rw Towering Ang
         || return;

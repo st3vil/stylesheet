@@ -885,6 +885,57 @@ Walks: | # othering, many C
         }
         
     
+Stashi: | # recursors/ways to track A stuff
+    u i
+    # tiny little git, hash stabiliser
+    # reuses refs if they look the same
+    superindex: %acgt
+        my $had = {map { $_=>C.sc.>$_ } @Me};
+        (sub {
+            my $pass = 1;
+            my $now = {map { $_=>C.sc.>$_ } @Me};
+            
+            ddump($had) eq ddump($now) || return;
+            return unless $pass;
+            
+            C.sc.>$_ = $had.>$_ for @Me;
+            
+        }, map { C.sc.>$_ = {} } @Me);
+    
+    # c&$j = above.sc.$jo.path
+    # above is our c&$jC or root c&$r
+    # @Me is C nkgks for path
+    #
+    # out of throat order, first/deepest coops others
+    # j is usually j
+    offis: %acgt:r j
+        my $ik = $j.'C';
+        my $ok = $j.'o';
+        my $tw;
+        my $oi;$oi = sub {
+            my ($C) = @_;
+            die "loop C.t" if $tw->{$C}++;
+            my $jon;
+            if (my $D = C.c.>$ik) {
+                # tune in parents first
+                $jon = D.c.>$j ||= $oi->($D);
+            }
+            else {
+                # origin
+                $jon = C.c.>$r;
+            }
+            my $i = jon.sc.>$ok ||= {t=>C.t};
+            for my $nk (@Me) {
+                ($nk,my $gk) = ($1,$nk) if $nk =~ s/^(y|c|sc)//;
+                my $v = $C->{$nk};
+                $v = $v->{$gk} if $gk;
+                $i = $i->{$v} ||= {};
+            }
+            C.c.>$j = $i;
+        };
+        $oi->($C);
+    
+
     # hash then & now, makes histories
     # prop up non val o.c.$cha.$nk.$gk = {}
     # which unify cha ne same into o.c.cha.$cha.$nk.$gk 
@@ -956,39 +1007,4 @@ Walks: | # othering, many C
             || $so->($i+1,@try);
         };
         sort {$so->(0,@Me)} @$s;
-Stashi: | # recursors/ways to track A stuff
-    u i
-    # c&$j = above.sc.$jo.path
-    # above is our c&$jC or root c&$r
-    # @Me is C nkgks for path
-    #
-    # out of throat order, first/deepest coops others
-    # j is usually j
-    offis: %acgt:r j
-        my $ik = $j.'C';
-        my $ok = $j.'o';
-        my $tw;
-        my $oi;$oi = sub {
-            my ($C) = @_;
-            die "loop C.t" if $tw->{$C}++;
-            my $jon;
-            if (my $D = C.c.>$ik) {
-                # tune in parents first
-                $jon = D.c.>$j ||= $oi->($D);
-            }
-            else {
-                # origin
-                $jon = C.c.>$r;
-            }
-            my $i = jon.sc.>$ok ||= {t=>C.t};
-            for my $nk (@Me) {
-                ($nk,my $gk) = ($1,$nk) if $nk =~ s/^(y|c|sc)//;
-                my $v = $C->{$nk};
-                $v = $v->{$gk} if $gk;
-                $i = $i->{$v} ||= {};
-            }
-            C.c.>$j = $i;
-        };
-        $oi->($C);
-    
 
