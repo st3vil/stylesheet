@@ -41,9 +41,11 @@ Hosthing: | # <-- Hosting
             my $J = cs&J;
             my $s = Js&s;
             $A = $m;
-            $C = m.c.s;
+            $C = $s;
             # hmm ^
-            G&stores,$s;
+            a&stowexp ? G&stowexp
+            :
+            G&stores;
             #G.ouJ = $s;
         }
         
@@ -55,15 +57,7 @@ Hosthing: | # <-- Hosting
     
     # make flat list of C that should reosc to what it was
     stores:
-        my $t = s.sc.top || die "Store no top: ".ki $s;
-        my $m; # for ns&meta - indexes to take
-        my $n; # the first - top
-        if (a&stowexp) {
-            # expensiver keeping ii/tv/etc in a bundle
-            # could fork, ind without hup to shave y
-            # yaml it all
-            return Rw StowExp $C:s;
-        }
+        my $t = s&top || die "Store no top: ".ki $s;
         my @all = G&ind,$t;
         my ($u) = @all;
         for (@all) {
@@ -77,12 +71,169 @@ Hosthing: | # <-- Hosting
             _s&z = $z;
         }
         # put in meta, know not imparted unless m.unreal
-        u.sc.xo = s.sc.xo if s.sc.xo;
+        u.sc.xo = s.sc.xo if s&xo;
         n Stro=>[put=>$u]
+Impart: | # gittty Hosting/not interchange
+    u i
     
+    #c as C = s, store itself, see Parts/unreal
+    stowexp:
+        local A.V = 2;
+
+        if (my $pid = fork()) {
+            waitpid($pid,0);
+            die "child failed with $?" if $?;
+            return;
+        }
+        my ($ok,$dr);
+        ok.y.>$_ = 1 for qw'up in prev next';
+        ok.y.>$_ = 2 for qw'tv tw';
+        dr.y.>$_ = 1 for qw'D x r s';
+        dr.c.code = 3;
+        ok.sc.ip = 2;
+
+        my $ha; # have seen
+        my $pa; # paths to seen
+        my $se; # see from
+        my @or;
+        my $ub = &Cd{
+            $ha.>$C = $C;
+            my $p = join "/", @{d.path};
+            $pa.>$p = $C;
+            push @or, 
+            G&chew,$C,'nk,gk',$_ for &v,nk,gk{
+                ref $v || return;
+                $se.>$nk.>$gk.>$v.>$C = $C;
+            };
+            return; # means no c.ind/inside labegy
+        };
+        my @all = G&ind,s&top,$ub,{nohup=>1};
+
+        my $pass = 1;
+        G&chew,$se,'nk,gk,v',$_ for &vv,nk,gk,v{
+            return if $nk eq 'sc' && $gk =~ /ex$/;
+            my $M = [values %$vv];
+            if (my $k = $ok.>$nk.>$gk ) {
+                my $c = $ha.>$v;
+                $v = "C c.t c.y.cv" if $c;
+                unless ($c || $k == 2) {
+                    sayre "Unhad $nk $gk $v from ".ki $M;
+                    $pass--;
+                }
+            }
+            elsif (my $k = $dr.>$nk.>$gk ) {
+                #saybl "Droppy $nk $gk $v from ".ki $M;
+                delete $_.>$nk.>$gk for @$M;
+                if ($k == 3) {
+                    my $gkd = $gk.'d';
+                    _.sc.>$gkd = 1 for @$M;
+                }
+            }
+            else {
+                my $c = $ha.>$v;
+                my $had = " (had: c.t c.y.cv)" if $c;
+                sayre "Unknown $nk $gk $v$had from ".ki $M;
+                delete $_.>$nk.>$gk for @$M;
+                $pass--;
+            }
+        };
+
+        G&chew,s&iiyt,'cv,t',$_ for &l,cv,t{
+            $ha.>$l && return;
+            $pass--;
+            sayre "Missing iiyt $cv $t: ".ki$l;
+            saygr "Was it ".ki $_ for 
+                grep { _.t eq l.t && _.y.cv eq _.y.cv } values %$ha;
+        };
+        die "Shave missed spots" if $pass != 1;
+
+        my $t = s&top;
+        ts&meta && die "Already had topscmeta: ".ki($t)."\n  ".ki(ts&meta);
+        my $m = ts&meta = {}; # takes over as impart, sets tv,top,etc in self
+        m.sc.iiyt = s&iiyt;
+        m.unreal.sc.iiyt++; # iiyt maintained xarefully, drop before J for real
+        m.sc.top = $t;
+        m.c.>$_ = C.c.>$_ for qw'imp wil mat';
+        m.sc.xo = s&xo if s&xo;
+        m.paths = $pa;
+
+        # do in parallel, child kills parent
+        my $dl = 99;
+        if (G&oleak,$t,$dl ) {
+            write_file('eak', wdump $dl, $t);
+            die "t.t t.y.cv still leaks at depth=$dl, wrote file 'eak'";
+        }
+
+        $YAML::Syck::Headless = 1;
+        G&elph,Stro=>[put=>$t];
+        exit;
+    
+    #c osc eats self
+    imparts:
+        my $d = $s;
+        local A.V = 2;
+        my $m = delete ds&meta;
+
+        m.sc.xo = delete ds&xo if ds&xo;
+        for ('c','sc') {
+            my ($s,$c) = ($C.>$_ , $m.>$_ );
+            $c || next;
+            G&hoh,$s,$c;
+        }
+
+        return# saygr "Parts lightly A.1.t"
+        unless m.unreal;
+
+
+        my $ub = &Cd{
+            return unless delete s&coded;
+            G&Code,"Parts";
+            return; # means no c.ind/inside labegy
+        };
+        my @all = G&ind,$d,$ub,{nohup=>1};
+
+        # make a parts top that o2parts can make look like a ground
+        my $z = [];
+        my $S = d.y.in;
+        while ($S) {
+            push @$z, $S;
+            $S = S.y.next;
+        }
+        ds&z = $z;
+
+        # makes s Z to 76- un
+        c&imparted = $m unless c&imparting;
+    #c osc continues after eating self
+    imparted:
+        my $m = $s;
+        # involves intermediate partsing to make lv etc state
+        # so the next lv applies on the remote
+        local A.V = 2;
+        my $J = A.1;
+        sayre "Enhere A.1.t";
+
+        my $t = m.sc.top || die "No metatop";
+        ts&meta = $m;
+        # our c&imparted already deleted
+        c&parts = $t;
+
+        Jc&gripo = 1;
+        # ^ wants to be a T thing wired into v instead of bounced off the J
+        local c&imparting = 1;
+        G&A,s=>8=>$J;
+
+        while (my ($nk,$v) = each %{m.unreal||die"m not unreal"}) {
+            delete $C.>$nk.>$_ for keys %$v
+        }
+
+        sayyl "Was parted: ", @{C.c.rsl};
+        sayre "Now has lv: ".ki s&lv;
+
+        delete c&parts;
+        # and now returns into o2 with the ground
 StowExp: | # as C = s, store itself, see Parts/unreal
     local A.V = 2;
-    
+    die "Not here";
     if (my $pid = fork()) {
         waitpid($pid,0);
         die "child failed with $?" if $?;
