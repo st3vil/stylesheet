@@ -256,12 +256,9 @@ Sea: | # folds of the day
         }
         $pass == 1
     #c data
-    # hoh - hangup c and copy s over it 2 deep
-    xoy: %acgt:s c
-        $c = G&xot,{},$c;
-        G&xot,$c,$s;
-        return $s;
-    # oh -  copy c over s, 2 hashes deep
+    # oh -  copy c over s, 2 hashes deep, like C
+    oh:
+        G&xot,$s,@Me;
     xot: %acgt:s c
         ref $c eq 'HASH' && ref $s eq 'HASH'
             || die "Hash up".wdump 3, [$s,$c];
@@ -273,6 +270,8 @@ Sea: | # folds of the day
         return $s
     
     # hoh - copy c over s (half oh)
+    hoh:
+        G&xo,$s,@Me;
     xo: %acgt:s c
         ref $c eq 'HASH' && ref $s eq 'HASH'
             || die "Hash up".wdump 3, [$s,$c];
@@ -792,6 +791,7 @@ Walks: | # othering, many C
         s.y.D = $D;
         $y ||= sub { shift };
         my $d = {%{$d||{}}};
+        d.path = [@{d.path||[]}, "s.t s.y.cv"];
         d.d++;
         my @out;
         if (my $z = s.sc.z) {
@@ -815,10 +815,13 @@ Walks: | # othering, many C
         } grep {defined} @out;
         
         if (my $next = s.y.next) {
+            my $d = {%$d};
+            d.path = [@{d.path||[]}];
+            pop @{d.path};
             push @out, G&ind,$next,$y,{%$d,d=>d.d-1};
         }
         
-        unshift @out, $s = $y->($s);
+        unshift @out, $s = $y->($s,$d);
         
         @out = grep{$_} @out;
         return () if !@out;

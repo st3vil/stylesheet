@@ -251,7 +251,8 @@ ElBridge: | # hoisting, desire
         my $top = s&top || return;
         my $te = A.mo.c.T;
         my $xo = te.has; # our xo
-        my $x = top.y.x || die "No x on A.1.t: ".ki s&top;
+        my $x = top.y.x || c&imparted && return
+            || die "No x on A.1.t: ".ki s&top;
         my $oxo = xs&xo; # our past xo
         
         $xo = A&xo if A&xo; # thawing
@@ -750,10 +751,9 @@ Hosthing: | # <-- Hosting
     # force T.H
     #    1 nothing
     #    2 stores only
-    #    3 everything
-    #    4 everything with wires (tw)
-    #    5 ^ + ii, s7ing slightly more whole, know how to eval code
-    # fork to commit the change
+    #    3 everything (ofs of, of evals code(d))
+    #    4 with wires (tw, iiyt) to resume osc from 76- (evals coded)
+    #    5 ^ stores only
     #    8+ thaws only
     thawJ 34: %of:mo,t:y:A:mo:up:mo:c:T:H || y:A:mo:c:T:H
         c&e && return;
@@ -771,29 +771,23 @@ Hosthing: | # <-- Hosting
         my $d = G&thaws,$V || return;
         
         $V && saygr " for ".G&sn;
-        if ($s == 4) {
-            # top/all has y.tv/next/etc
-            Rw ThawFour $d;
-        }
-        elsif ($s == 5) {
-            Rw ThawFive $d;
-            # 4 + when it 
-            # as above but sets up the osc to continue the W lv
-            # B ch/imp/wil/mat resume
-            # wants to be at 5 due to elective from W change
-            # B means being of a W, on a branch
-            # the lv writer needs to understand [,,,,[newlv]]
+        if (0) {
+            sayyl "Thawing ".ki $d;
+            sc&impart = $d;
+            # ^ s copies itself d c/sc
+            # to resume on our end:
+            #    drops sc.$_ for unreal.*
+            #    osc parts=top holding version
+            # then lv grows like a patch on that
         }
         else { # 3-7
             # skips pin but does osc, reof the things
             # our C reof, over We things already
-            # and since we dont know pin we may drop coil
             # use 4 if so
-            my $meta = delete ds&meta;
             c&parts = $d;
-            T.Z.7 = $A;
-            delete a&storable;
         }
+        T.Z.7 = $A;
+        delete a&storable;
         
     stawJ 78: %of:n,t:y:A:c:store
         for my $m (@{A&mos||[]}) {
@@ -814,7 +808,7 @@ Hosthing: | # <-- Hosting
         n Stro=>[get=>$C]
         delete s&top
     
-    # make extra xo about W
+    # make flat list of C that should reosc to what it was
     stores:
         my $t = s.sc.top || die "Store no top: ".ki $s;
         my $m; # for ns&meta - indexes to take
@@ -838,13 +832,18 @@ Hosthing: | # <-- Hosting
             G&oleak,$_,5 && die "Leaks: @$in: ".ki $_;
             _s&z = $z;
         }
+        # put in meta, know not imparted unless m.unreal
         u.sc.xo = s.sc.xo if s.sc.xo;
         n Stro=>[put=>$u]
     
-ThawFour: | # s steals awake
-    # eset
-StowExp: | # as C = s
+StowExp: | # as C = s, store itself, see Parts/unreal
     local A.V = 2;
+    
+    if (my $pid = fork()) {
+        waitpid($pid,0);
+        die "child failed with $?" if $?;
+        return;
+    }
     
     my ($ok,$dr);
     ok.y.>$_ = 1 for qw'up in prev next';
@@ -854,13 +853,19 @@ StowExp: | # as C = s
     ok.sc.ip = 2;
     
     my $ha; # have seen
+    my $pa; # paths to seen
     my $se; # see from
-    my $ub = &C{
+    my @or;
+    my $ub = &Cd{
         $ha.>$C = $C;
+        my $p = join "/", @{d.path};
+        $pa.>$p = $C;
+        push @or, 
         G&chew,$C,'nk,gk',$_ for &v,nk,gk{
             ref $v || return;
             $se.>$nk.>$gk.>$v.>$C = $C;
-        }
+        };
+        return; # means no c.ind/inside labegy
     };
     my @all = G&ind,s&top,$ub,{nohup=>1};
     
@@ -881,48 +886,104 @@ StowExp: | # as C = s
             delete $_.>$nk.>$gk for @$M;
             if ($k == 3) {
                 my $gkd = $gk.'d';
-                $_.>$nk.>$gkd = 1 for @$M;
+                _.sc.>$gkd = 1 for @$M;
             }
         }
         else {
-            sayre "Unknown $nk $gk $v from ".ki $M;
+            my $c = $ha.>$v;
+            my $had = " (had: c.t c.y.cv)" if $c;
+            sayre "Unknown $nk $gk $v$had from ".ki $M;
             delete $_.>$nk.>$gk for @$M;
             $pass--;
         }
     };
     
     G&chew,s&iiyt,'cv,t',$_ for &l,cv,t{
-        $ha.>$l || $pass--, sayre "Missing iiyt $cv $t: ".ki$l;
+        $ha.>$l && return;
+        $pass--;
+        sayre "Missing iiyt $cv $t: ".ki$l;
+        saygr "Was it ".ki $_ for 
+            grep { _.t eq l.t && _.y.cv eq _.y.cv } values %$ha;
     };
     die "Shave missed spots" if $pass != 1;
-    my $t = s&top;
-    ts&meta = {}; # takes over as impart, sets tv,top,etc in self
-    # delete 
     
+    my $t = s&top;
+    ts&meta && die "Already had topscmeta: ".ki($t)."\n  ".ki(ts&meta);
+    my $m = ts&meta = {}; # takes over as impart, sets tv,top,etc in self
+    m.sc.iiyt = s&iiyt;
+    m.unreal.sc.iiyt++; # iiyt maintained xarefully, drop before J for real
+    m.sc.top = $t;
+    m.c.>$_ = C.c.>$_ for qw'imp wil mat';
+    m.sc.xo = s&xo if s&xo;
+    m.paths = $pa;
+    
+    my $dl = 77;
+    if (G&oleak,$t,$dl ) {
+        write_file('eak', wdump $dl, $t);
+        die "t.t t.y.cv still leaks at depth=$dl, wrote file 'eak'";
+    }
+    
+    G&elph,Stro=>[put=>$t];
     saybl "Worked";
-    #1 && saybl wdump 3, se.y.up;
     exit;
     
-        my ($u) = @all;
-        for (@all) {
-            delete _c&ind;
-            _s&coded = 1 if delete _c&code;
-            _.y = {cv=>_.y.cv};
-            my $in = delete(_c&inside) || [];
-            my $z = delete _s&z;
-            delete _s&J;
-            G&oleak,$_,5 && die "Leaks: @$in: ".ki $_;
-            _s&z = $z;
-        }
-        u.sc.xo = s.sc.xo if s.sc.xo;
-        n Stro=>[put=>$u]
+Parts: | # osc eats self
+    local A.V = 2;
+    my $m = delete ds&meta;
+    m.sc.xo = delete ds&xo if ds&xo;
+    sayyl "Partsing";
+    for ('c','sc') {
+        my ($s,$c) = ($C.>$_ , $m.>$_ );
+        $c || next;
+        G&hoh,$s,$c;
+    }
+    return saygr "Parts lightly A.1.t" unless m.unreal;
     
-ThawFour: |
-    # 
-    my $s = 1s&s || die "nos";
-    sayyl "Thawing ".ki $d;
-    sc&impart = $d;
+        my $Y = $Bun::A;
+    delete Ys&stacktime;
     
+    my $ub = &Cd{
+        return unless delete s&coded;
+        
+        my $y = eval c&s;
+        die "Parts coded Nocompile s&of C.y.cv: C.t:"
+            .ind('  ',$@)."\n\n C.c.s\n" if $@;
+        die "Parts coded Not code: C.t C.y.cv: $@\n"
+            .wdump 2, $C if ref $y ne 'CODE' && !s&subpeel;
+        
+        my $i = 1;
+        sayre join"\n", "Was: C.t C.y.cv: ", grep {$i++ == 57} split "\n", c&s
+            if delete Ys&stacktime;
+        c&code = $y;
+        
+        return; # means no c.ind/inside labegy
+    };
+    my @all = G&ind,$d,$ub,{nohup=>1};
+    
+    saybl "Parts 76 A.1.t";
+    c&imparted = $m; # makes s Z to 76-
+Imparted: | # osc continues after eating self
+    local A.V = 2;
+    my $J = A.1;
+    sayre "Render last lv of A.1.t: c&o";
+
+    # make a parts top that o2parts can make look like a ground
+    my $t = m.sc.top || die "No metatop";
+    
+    while (my ($nk,$v) = each %{m.unreal||die"m not unreal"}) {
+        delete $C.>$nk.>$_ for keys %$v
+    }
+    
+    # our c&imparted already deleted
+    c&parts = $t;
+    sayyl "reOscillate J.t   ".c&o ." But jo ".ki s&jo;
+    # so the next lv action applies on top of the one frozen
+    Jc&gripo = 1;
+    # ^ wants to be a T thing wired into v instead of bounced off the J
+    G&A,s=>8=>$J;
+    
+    sayyl "Done: ".wdump 4, [c&o];
+    # and now returns into o2
 Stro: | # storage aJent for Hosthing, just needs A.G
     T.nose = 2; # no osc but keep J (4s&Jtv)
     T.pos = 0; # always thinks its right

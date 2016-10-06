@@ -13,6 +13,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
     s 2:
         # number of things plugged in to s from J
         my $pl;
+        pl.gripo = delete 1c&gripo;
         pl.base = 1c&base;
         pl.impart = delete 1c&impart;
         pl.whole = 1c&whole;
@@ -22,6 +23,12 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             C.c.>$k = $v;
         }
         my $whole = c&whole;
+        
+        if (my $m = !c&parts && delete c&imparted) {
+            # osc fully to resume branch
+            Rw Imparted $m;
+        }
+        
         
         # also make C.t for the page of ground this s (C) is for
         T.givech = 1;
@@ -33,11 +40,6 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         # complexity hider, T may want to tho
         $whole = delete c&base if c&base && !$zip;
         A&V = A.1.t =~ /^[A-Z]/ && A.2.t ne 'u';
-        
-        if (my $im = c&impart) {
-            G&xot,$C,$im; # s top and tangled
-            return T.Z.76 = $A;
-        }
         
         if (my $W = $whole) {
             my $s = G&Wup,$W || G&t,$W || die "no $W on ".G&sn;
@@ -56,13 +58,13 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         
         my $tug;
         if (my $d = c&parts) {
+            Rw Parts $d;
+            return T.Z.76 = $A if c&imparted;
             $d = G&hup,$d;
-            # could freeze ii etc (yaml does refs) as whole ^
-            A&xo = delete ds&xo if ds&xo;
             # have frozen stuff's top
             # make flat z that c&root elects top
             # so o histories (j) work for full J/zip
-            my $z = [$d, @{ delete ds&z }];
+            my $z = [$d, @{ delete ds&z || []}];
             d.c.root = 1;
             # also, had ground before, now just parts
             undef $zip;
@@ -253,7 +255,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         };
         
         #c coil feeds unification causes all We things
-        if (my $o = delete ts&coil) { # root.sc/y.at
+        if (my $o = ts&coil) { # root.sc/y.at
             my $N = [map {@{_.sc.z}} @$Wez];
             for my $o (split ' ',$o) {
                 my $s = $1 if $o =~ s/:(.+)//;
@@ -336,6 +338,8 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         my $c = s&lastK.c.s || die "noshc";
         
         A&waschange = 1;
+        
+        local c&imp, local c&wil, local c&mat if delete c&gripo;
         
         # lv is K log, have y.everything
         if (cc&el < 3) {
