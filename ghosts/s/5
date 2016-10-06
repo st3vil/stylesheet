@@ -60,6 +60,8 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             return T.Z.8 = $A;
         }
         
+        # shade .c down to s (whole/imparted doesn't)
+        my $oc = {shade=>1};
         my $tug;
         if (my $d = c&parts) {
             Rw Parts $d;
@@ -72,7 +74,10 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             d.c.root = 1;
             # also, had ground before, now just parts
             undef $zip;
-            tug.parts = G&A,o=>2,$C,$z,'parts',{nonext=>1,noyin=>1};
+            # parts o are hoisted to zip o
+            # things
+            oc.nonext = oc.noyin = 1;
+            tug.parts = G&A,o=>2,$C,$z,'parts';
         }
         if (my $W = c&base) {
             my $s = G&Wup,$W || G&t,$W || die "no $W on ".G&sn;
@@ -88,9 +93,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         $tug || die "No ground to A.1.t";
         
         
-        # shade .c down to s (whole doesn't)
-        my $t = G&Ct,['zipover'=>''=>{shade=>1}];
-        c&zip = G&A,o=>6,$C,$tug,$t;
+        c&zip = G&A,o=>6,$C,$tug,'zipover',$oc;
         G&A,c&zip=>6;
     #c s3 changes pop in
     # ordered by o, creates O's to be awakened C 
