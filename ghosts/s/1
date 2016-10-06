@@ -114,7 +114,13 @@ Day: | # world primitives
             $y = G.i.t->($A,$C,$G,$T,$C);
         };
         $y || die "no h: $s";
-        my @r = eval { $DB::single = G.ydrop; $y->($A,$C,$G,$T,@Me) };
+        my @r;
+        if (wantarray || !Ds&raysens) {
+            @r = eval { $DB::single = G.ydrop; $y->($A,$C,$G,$T,@Me) };
+        }
+        else {
+            $r[0] = eval { $DB::single = G.ydrop; $y->($A,$C,$G,$T,@Me) };
+        }
         if ($@) {
             if ($@ !~ /Throh/) {
                 $D ||= A.i.ii.i.y.tw->{$s};

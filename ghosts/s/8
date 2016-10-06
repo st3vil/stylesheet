@@ -929,10 +929,16 @@ Parts: | # osc eats self
         G&hoh,$s,$c;
     }
     
-    if (A.1.t eq 'Zpace' && !m.unreal) {
-        sayyl "Space light: ".wdump 3, $m;
-    }
-    return saygr "Parts lightly A.1.t" unless m.unreal;
+    return# saygr "Parts lightly A.1.t"
+    unless m.unreal;
+    
+    
+    my $ub = &Cd{
+        return unless delete s&coded;
+        G&Code,"Parts";
+        return; # means no c.ind/inside labegy
+    };
+    my @all = G&ind,$d,$ub,{nohup=>1};
     
     # make a parts top that o2parts can make look like a ground
     my $z = [];
@@ -943,41 +949,31 @@ Parts: | # osc eats self
     }
     ds&z = $z;
     
-    my $ub = &Cd{
-        return unless delete s&coded;
-        G&Code,"Parts";
-        return; # means no c.ind/inside labegy
-    };
-    my @all = G&ind,$d,$ub,{nohup=>1};
-    
-    saybl "Parts 76 A.1.t  ". (1c&semiport && "SEMI PORT");
-     # makes s Z to 76- un
+    # makes s Z to 76- un
     c&imparted = $m;
 Imparted: | # osc continues after eating self
+    # involves intermediate partsing to make lv etc state
+    # so the next lv applies on the remote
     local A.V = 2;
     my $J = A.1;
-    sayre "Render last lv of A.1.t: c&o";
+    sayre "Enhere A.1.t";
 
     my $t = m.sc.top || die "No metatop";
     ts&meta = $m;
     # our c&imparted already deleted
     c&parts = $t;
-    delete s&top.y.tv;
-    sayyl "reOscillate J.t   ".c&o ." But jo ".ki s&jo;
-    # so the next lv action applies on top of the one frozen
+    #delete s&top.y.tv;
+    
     Jc&gripo = 1;
     # ^ wants to be a T thing wired into v instead of bounced off the J
-    Jc&semiport = 1;
     G&A,s=>8=>$J;
     
     while (my ($nk,$v) = each %{m.unreal||die"m not unreal"}) {
-        sayyl "Deleting C.t's $nk's: ".ki [sort keys %$v];
         delete $C.>$nk.>$_ for keys %$v
     }
     
-    sayyl "Done: ".wdump 4, [c&o];
     delete c&parts;
-    # and now returns into o2
+    # and now returns into o2 with the ground
 Stro: | # storage aJent for Hosthing, just needs A.G
     T.nose = 2; # no osc but keep J (4s&Jtv)
     T.pos = 0; # always thinks its right
