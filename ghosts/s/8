@@ -763,29 +763,21 @@ Hosthing: | # <-- Hosting
         # 
         a&thawable = 1 unless $s < 3 || $s == 5;
         a&storable = 1 unless $s < 2 || $s > 7;
+        
         a&storable && A.up.c.store++;
         a&stowexp = 1 if $s >= 4 && $s < 6;
-        1 && saybl "Thawable ($s) C.t: a&thawable";
+        saybl "Thawable ($s) C.t: a&thawable    a&stowexp";
+         
         a&thawable || return;
         my $V = A.1.t =~ /^[A-Z]/ && A.2.t ne 'u';
         my $d = G&thaws,$V || return;
         
         $V && saygr " for ".G&sn;
-        if (0) {
-            sayyl "Thawing ".ki $d;
-            sc&impart = $d;
-            # ^ s copies itself d c/sc
-            # to resume on our end:
-            #    drops sc.$_ for unreal.*
-            #    osc parts=top holding version
-            # then lv grows like a patch on that
-        }
-        else { # 3-7
-            # skips pin but does osc, reof the things
-            # our C reof, over We things already
-            # use 4 if so
-            c&parts = $d;
-        }
+        
+        # is upCc&parts from s
+        # which may skip s to 76-
+        # or at least not do the pin
+        c&parts = $d;
         T.Z.7 = $A;
         delete a&storable;
         
@@ -813,7 +805,6 @@ Hosthing: | # <-- Hosting
         my $t = s.sc.top || die "Store no top: ".ki $s;
         my $m; # for ns&meta - indexes to take
         my $n; # the first - top
-        1 && saybl "Your make C.t";
         if (a&stowexp) {
             # expensiver keeping ii/tv/etc in a bundle
             # could fork, ind without hup to shave y
@@ -917,72 +908,75 @@ StowExp: | # as C = s, store itself, see Parts/unreal
     m.sc.xo = s&xo if s&xo;
     m.paths = $pa;
     
-    my $dl = 77;
+    # do in parallel, child kills parent
+    my $dl = 99;
     if (G&oleak,$t,$dl ) {
         write_file('eak', wdump $dl, $t);
         die "t.t t.y.cv still leaks at depth=$dl, wrote file 'eak'";
     }
     
     G&elph,Stro=>[put=>$t];
-    saybl "Worked";
     exit;
     
 Parts: | # osc eats self
     local A.V = 2;
     my $m = delete ds&meta;
+    
     m.sc.xo = delete ds&xo if ds&xo;
-    sayyl "Partsing";
     for ('c','sc') {
         my ($s,$c) = ($C.>$_ , $m.>$_ );
         $c || next;
         G&hoh,$s,$c;
     }
+    
+    if (A.1.t eq 'Zpace' && !m.unreal) {
+        sayyl "Space light: ".wdump 3, $m;
+    }
     return saygr "Parts lightly A.1.t" unless m.unreal;
     
-        my $Y = $Bun::A;
-    delete Ys&stacktime;
+    # make a parts top that o2parts can make look like a ground
+    my $z = [];
+    my $S = d.y.in;
+    while ($S) {
+        push @$z, $S;
+        $S = S.y.next;
+    }
+    ds&z = $z;
     
     my $ub = &Cd{
         return unless delete s&coded;
-        
-        my $y = eval c&s;
-        die "Parts coded Nocompile s&of C.y.cv: C.t:"
-            .ind('  ',$@)."\n\n C.c.s\n" if $@;
-        die "Parts coded Not code: C.t C.y.cv: $@\n"
-            .wdump 2, $C if ref $y ne 'CODE' && !s&subpeel;
-        
-        my $i = 1;
-        sayre join"\n", "Was: C.t C.y.cv: ", grep {$i++ == 57} split "\n", c&s
-            if delete Ys&stacktime;
-        c&code = $y;
-        
+        G&Code,"Parts";
         return; # means no c.ind/inside labegy
     };
     my @all = G&ind,$d,$ub,{nohup=>1};
     
-    saybl "Parts 76 A.1.t";
-    c&imparted = $m; # makes s Z to 76-
+    saybl "Parts 76 A.1.t  ". (1c&semiport && "SEMI PORT");
+     # makes s Z to 76- un
+    c&imparted = $m;
 Imparted: | # osc continues after eating self
     local A.V = 2;
     my $J = A.1;
     sayre "Render last lv of A.1.t: c&o";
 
-    # make a parts top that o2parts can make look like a ground
     my $t = m.sc.top || die "No metatop";
-    
-    while (my ($nk,$v) = each %{m.unreal||die"m not unreal"}) {
-        delete $C.>$nk.>$_ for keys %$v
-    }
-    
+    ts&meta = $m;
     # our c&imparted already deleted
     c&parts = $t;
+    delete s&top.y.tv;
     sayyl "reOscillate J.t   ".c&o ." But jo ".ki s&jo;
     # so the next lv action applies on top of the one frozen
     Jc&gripo = 1;
     # ^ wants to be a T thing wired into v instead of bounced off the J
+    Jc&semiport = 1;
     G&A,s=>8=>$J;
     
+    while (my ($nk,$v) = each %{m.unreal||die"m not unreal"}) {
+        sayyl "Deleting C.t's $nk's: ".ki [sort keys %$v];
+        delete $C.>$nk.>$_ for keys %$v
+    }
+    
     sayyl "Done: ".wdump 4, [c&o];
+    delete c&parts;
     # and now returns into o2
 Stro: | # storage aJent for Hosthing, just needs A.G
     T.nose = 2; # no osc but keep J (4s&Jtv)

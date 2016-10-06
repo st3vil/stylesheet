@@ -1,4 +1,4 @@
---- &3 
+--- &17 
 sc: 
   coil: tldo
   meta: 
@@ -7,8 +7,8 @@ sc:
       mat: ~
       wil: 1
     paths: 
-      Zpace 0.9: *3
-      Zpace 0.9/L 0.001: &10 
+      Zpace 0.9: *17
+      Zpace 0.9/L 0.001: &1 
         c: 
           W: of
         sc: 
@@ -16,7 +16,7 @@ sc:
         t: L
         "y": 
           cv: '0.001'
-          in: &25 
+          in: &16 
             c: 
               s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\n($A->{c}->{s}) = @$s;\n};"
             sc: 
@@ -29,7 +29,7 @@ sc:
             t: L
             "y": 
               cv: '0.1'
-              next: &11 
+              next: &15 
                 c: 
                   s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $c = $C->{c};\nmy $M = $C->{c}->{M};\n# etc\n};"
                 sc: 
@@ -45,7 +45,7 @@ sc:
                 t: M
                 "y": 
                   cv: '0.1'
-                  next: &24 
+                  next: &2 
                     c: 
                       s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $n = $C->{y}->{n};\n# to almost fill space\n};"
                     sc: 
@@ -61,7 +61,7 @@ sc:
                     t: 'n'
                     "y": 
                       cv: '0.1'
-                      next: &12 
+                      next: &14 
                         c: 
                           s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $spc = $C->{y}->{spc};\n# composite including:\n#   erse - n,u = u,n # stack on floor vs ceiling\n#   1000 - or so thi & overflow replaces cyclicly\n};"
                         sc: 
@@ -93,7 +93,7 @@ sc:
                             t: spc
                             "y": 
                               cv: '0.1'
-                              next: &14 
+                              next: &12 
                                 c: 
                                   s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $u = $C->{y}->{u};\n# to take space up til\n};"
                                 sc: 
@@ -109,7 +109,7 @@ sc:
                                 t: u
                                 "y": 
                                   cv: '0.1'
-                                  next: &23 
+                                  next: &11 
                                     c: 
                                       s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $in = $C->{y}->{in};\n$C->{y}->{n} = delete $C->{y}->{in} if !ref $C->{y}->{in};\n};"
                                     sc: 
@@ -126,7 +126,7 @@ sc:
                                     t: in
                                     "y": 
                                       cv: '0.12'
-                                      next: &22 
+                                      next: &3 
                                         c: 
                                           s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $out = $C->{y}->{out};\n$C->{y}->{u} = delete $C->{y}->{out} if !ref $C->{y}->{out}\n};"
                                         sc: 
@@ -143,7 +143,7 @@ sc:
                                         t: out
                                         "y": 
                                           cv: '0.12'
-                                          next: &15 
+                                          next: &4 
                                             c: 
                                               s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\n$A->{c}->{y} && die \"You Ay L 2\";\nmy $J = $A->{1};\n$J->{c}->{s} || die \"Jcs not holding mo C: \".$G->{h}->($A,$C,$G,$T,\"sn\");\n#local $A->{V} = 1;\n# mo C that began the J we are now inside is the trick\n# we are probably at 17 of their root mo, which has $C->{c}->{M}\nmy $Jy = $A->{1}->{c}->{s}->{y};\nmy $y = $C->{y};\nmy $M = $C->{c}->{M};\n\nif (my $r = $y->{rev}) {\n    for my $r (split ' ', $r) {\n        if ($r =~ /^\\d+$/) {\n            $y->{cyc} = $r;\n        }\n        else {\n            $G->{h}->($A,$C,$G,$T,\"xot\",$y,$_) for $G->{h}->($A,$C,$G,$T,\"peel\",$r);\n        }\n    }\n}\n\n# some L uC spawns the A nC lattice\n# what to do with the L uC?\nif ($M) {\n    # has M\n    # L uC can be forgotten, probably mo'd with root in J6\n    # it could be placement metadata/unity\n    my @M;\n    while ($y->{thi} && @$M < $y->{thi}) { # copies out to there\n        @M = @$M if !@M;\n        last if !@M;\n        push @$M, $G->{h}->($A,$C,$G,$T,\"hup\",shift@M);\n    }\n    if ($y->{cyc} && @$M > $y->{cyc}) { # sweeping over itself\n        my @M = splice @$M, 0, $y->{cyc} while @$M > $y->{cyc};\n        splice @M, 0, 0+@$M;\n        push @$M, @M;\n        # decommissions them?\n    }\n}\nelse {\n    # is first in its own M\n    # to make holes in space other M must flow around\n    $C->{c}->{M} = $M = [$C];\n    $y->{thi} > 1 &&\n           push @$M, map { $G->{h}->($A,$C,$G,$T,\"hup\",$C) } 1 .. $y->{thi} - 1;\n}\n\n# limits apply, thi being for ^ iterator length \n#                          and v limit of output\nmy $lims = {};\nfor (qw'thi') {\n    $lims->{\"$_\"} = $y->{\"$_\"} if defined $y->{\"$_\"};\n}\n$lims->{limn} = int(9 * $y->{limn} * $Jy->{spc})\n    if $y->{limn} && ($Jy->{spc} || die \"No space! $J->{t}\");\nmy $lim;\nwhile (my ($k,$v) = each %$lims) {\n    @$M > $v || next;\n    $A->{V} && $G->{h}->($A,$C,$G,$T,'say','say',\"Limof: $k $v to $C->{t}\");\n    $lim = $k if !$lim || $lims->{\"$lim\"} > $lims->{\"$k\"};\n}\nif ($lim) {\n    my $it = $lims->{\"$lim\"};\n    my $from = 0;\n    if ($y->{tail}) {\n        $from = -1;\n        $it *= -1;\n    }\n    else {\n        $it -= 1;\n    }\n    $lims = $lim; # name\n    $lim = @$M; # limited from\n    @$M = @{$M}[$from .. $it];\n}\n\n$A->{V} = 0;\n$y->{thi} = @$M;\n$y->{thi} || die \"No M: \".ki $C;\n$y->{thi} = $y->{cyc} if $y->{cyc};\n#c & point/seek to things coming in with our surrounds\n\n# if we were placed with enough room\n# let atoms slide up to the top J\n# things saying they're in both places\n#   leads to nice grouping, ref integrity\n$y->{J} = $A->{3} if $Jy->{spc} > 0.1;\ndelete $y->{J} if $y->{clos};\nmy $clos = $Jy->{spc} && !$y->{J};\n#  they can want to be inside too\n#  geo to chain together floating/not atoms\n#  so its like wires over machines\n\n# ml (margin-left)\n# high lum makes tree bends up towards margin\n# like it is open inside, like bet. rummager.\n$y->{inde} = $Jy->{inde} + 0.06 if $y->{J};\n\n# sliver of attention\nmy $sl = $Jy->{spc} * 0.01;\n$sl = 0.02 if $sl < 0.02;\n# carpenting\n$y->{n} ||= $clos ? 0.3 : $Jy->{J} ? $Jy->{cv} + $sl : 0.1;\n$y->{u} ||= $clos ? 0.4 : $Jy->{J} ? $Jy->{ov} - $sl : 0.9;\n\n# set width\n$y->{u} = $y->{n} + $y->{space} if defined $y->{space};\nif ($y->{erse}) {\n    ($y->{u},$y->{n}) = ($y->{n},$y->{u});\n    $y->{tail} = $y->{thi}; # lightly\n}\n\n# may be way less than 0...\n# a cv scaled back, will have defiantly huge spc\n$y->{u} /= 10 until $y->{u} < 1;\n$y->{n} /= 10 until $y->{n} < 1;\n# corner noted\nif ($lim) {\n    my $s = \"$lim>\".@$M;\n    my $cv = $y->{tail} ? $y->{n} : $y->{u};\n    # TODO += here blows up zopul:\n    $cv -= 0.002;\n    my $M = $A->{c}->{XM} ||= []; # labely meta\n    $G->{h}->($A,$C,$G,$T,\"m\",$M,lim=>$cv,$s,'%fs:7,hs:7487,limit:'.$lims=>'');\n}\n# fit in multiple of\nif (my $ert = $y->{ert}) {\n    $ert += $y->{ert} while $y->{thi} > $ert;\n    $y->{thi} = $ert;\n}\n$y->{space} = $y->{u} - $y->{n};\nmy $outer;\nif ($y->{res}) {\n    $outer = $y->{space} / $y->{thi};\n    $y->{space} -= $outer;\n}\n$y->{space} *= -1 if $y->{space} < 0;\n$y->{v}->{v} = $y->{n}; # rolls\n$y->{v}->{v} += $outer / 2 if $outer; #\n# average size\n$y->{v}->{aspace} = $G->{h}->($A,$C,$G,$T,\"roun\",$y->{space}/$y->{thi});\n# thy -> mu bends out\n$y->{v}->{Ly} = $y; # u is shared placevolve meta\nmy $i;\nfor (@$M) {\n    $_->{y}->{v} = $y->{v};\n    $_->{y}->{i} = $i++;\n    $_->{y}->{a} = $G->{h}->($A,$C,$G,$T,\"tugA\",a=>2=>$_);\n    $_->{y}->{a}->{L} = $A;\n}\n# L can M the C also in a\n\n #c lum uC shapes curve, wants to be with limn\n # might mean a few lum qualities, make them switchupable\n # supposedly osc can measure itself, hoist geometry\n #    descriptions for ascii art buildings\n};"
                                             sc: 
@@ -156,7 +156,7 @@ sc:
                                             t: L
                                             "y": 
                                               cv: '0.2'
-                                              next: &21 
+                                              next: &5 
                                                 c: 
                                                   s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $lum = $C->{y}->{lum};\nmy $M = $C->{c}->{M} || die \"lum no M\";\nmy $y = $C->{y};\nmy $u;\n($u->{l},$u->{r}) = split ',', $lum;\n$u->{\"$_\"} = do {\n    $u->{\"$_\"} =~ m/^(?:(\\d+)-)??(?:(\\d+))(?:-(\\d)+)?$/\n        || die \"notunder: $_ \".wdump 2, $u;\n    {i=>$1,u=>$2,o=>$3}\n} for grep {$u->{\"$_\"} } keys %$u;\n$u->{l}->{u} ||= 3;\n$u->{r}->{u} ||= $u->{l}->{u} / 4;\n$u->{l}->{o} ||= $u->{r}->{u} / 3;\nmy $i = 0;\nfor (@$M) {\n    $_->{y}->{thy} = 1 if !defined $y->{thy};\n    $_->{y}->{thy} += $u->{l}->{u};\n    $i++;\n    if ($i > $u->{l}->{o}) {\n        $u->{l}->{u} -= 2 if $u->{l}->{u} > 0.1;\n    }\n}\n};"
                                                 sc: 
@@ -172,7 +172,7 @@ sc:
                                                 t: lum
                                                 "y": 
                                                   cv: '0.23'
-                                                  next: &16 
+                                                  next: &10 
                                                     c: 
                                                       s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $bal = $C->{y}->{bal};\nmy $M = $C->{c}->{M};\n$G->{w}->($A,$C,$G,$T,\"ModNs\",M=>$M,s=>$bal);\n};"
                                                     sc: 
@@ -188,7 +188,7 @@ sc:
                                                     t: bal
                                                     "y": 
                                                       cv: '0.3'
-                                                      next: &20 
+                                                      next: &6 
                                                         c: 
                                                           s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $res = $C->{y}->{res};\n#local $A->{V} = 2;\nmy $y = $C->{y};\nmy $M = $C->{c}->{M} || die \"refit no M\";\n$y->{res} == 2 && return\n    $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr',\"$A->{1}->{t} fits \".@$M.\" into $C->{t}\");\nmy $res = $y->{res} = $A->{1}->{sc}->{res}->{\"$C->{t}\"} ||= {res=>$res};\nmy $ctv = $res->{ctv} ||= {};\nmy $la; # known from\nmy @news;\nmy $bend = sub {\n    my ($from,$to,@M) = @_;\n    @M = map {\n        $_->{y}->{a} || die \"has no ya: \".ki$_;\n        $_->{y}->{a}->{c}->{s} eq $_ || die \"ya cs not _: \".ki[$_->{y}->{a}->{c}->{s},$_];\n        # their a C becomes for cv/spc for real heighting etc\n        $_->{y}->{realy} = $_->{y}->{a}->{c}->{s} = $G->{h}->($A,$C,$G,$T,\"hup\",$_->{y}->{a}->{c}->{s});\n        # takeover original ref:\n        $_\n    } @M;\n    my $nu = $G->{h}->($A,$C,$G,$T,\"Ct\",[\"Bend$from->$to\",{}]);\n    $nu->{y}->{n} = $from;\n    $nu->{y}->{u} = $to;\n    $nu->{y}->{res} = 2; # makes spc/2 away from edges but not M<>ctv\n    $nu->{c}->{M} = \\@M;\n    $nu->{c}->{oM} = [];\n    # ^ our ground splices this L's stuff into $M\n    # as it is $A->{y}=A in an M of C\n    $G->{h}->($A,$C,$G,$T,\"tugA\",L=>4,$nu);\n};\nreturn keys %$ctv &&\n    $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr',\"All new refit $C->{t} $C->{y}->{res} -- \".$G->{h}->($A,$C,$G,$T,\"sn\"))\n    unless grep{ $ctv->{\"$_->{t}\"} } @$M;\nmy @M;\nfor (@$M) {\n    my $at = $ctv->{\"$_->{t}\"};\n    if ($at && !$_->{c}->{refit}) {\n        $A->{V} && $G->{h}->($A,$C,$G,$T,'say','sayyl',\"Have $_->{t}  -> $at\");\n        if ($la && $at < $la) {\n            # has to opt out for M order via $C->{c}->{refit}\n            # la cause may have moved out already\n            $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saybl',\" is from earlier\");\n        }\n        $_->{y}->{cv} = $at;\n        push @M, $_;\n        if (@news) {\n            # bend @news between $la and $_\n            $la ||= $y->{n};\n            $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr',\"Bend from $la to $at:\\n\".ki \\@news);\n            push @M,\n                $bend->($la,$at,@news);\n            @news = ();\n        }\n        $la = $at;\n    }\n    else {\n        $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saybl',\"New $_->{t}\".($_->{c}->{refit} && \" (repo)\"));\n        push @news, $_;\n    }\n}\n$bend->($la,$y->{u},@news) if @news;\n};"
                                                         sc: 
@@ -204,7 +204,7 @@ sc:
                                                         t: refit
                                                         "y": 
                                                           cv: '0.4'
-                                                          next: &17 
+                                                          next: &9 
                                                             c: 
                                                               s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $c = $C->{c};\nmy $M = $C->{c}->{M};\nmy $y = $C->{y};\nmy $total = sum(map{ $_->{y}->{thy} || 1 } @$M) || 1;\n$y->{v}->{muav} = @$M / $total;\n};"
                                                             sc: 
@@ -220,7 +220,7 @@ sc:
                                                             t: barel
                                                             "y": 
                                                               cv: '0.5'
-                                                              next: &18 
+                                                              next: &8 
                                                                 c: 
                                                                   s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $lum = $C->{y}->{lum};\nmy $M = $C->{c}->{M} || die \"lum no M\";\nfor my $C (@$M) {\n    my $y = $C->{y};\n    my $upt = 0;\n    $y->{spc} = 0.01 if $y->{spc} < 0.01;\n    my $fs = $y->{spc} * 20 * 4;\n    if ($C->{c}->{helum}) {\n        $C->{sc}->{he} = $G->{h}->($A,$C,$G,$T,\"rou\",$fs/$C->{c}->{helum});\n    }\n    else {\n        $fs = 3 if $fs < 3;\n        $C->{sc}->{fs} = $G->{h}->($A,$C,$G,$T,\"rou\",$fs);\n    }\n}\n};"
                                                                 sc: 
@@ -236,7 +236,7 @@ sc:
                                                                 t: lum
                                                                 "y": 
                                                                   cv: '0.7'
-                                                                  next: &19 
+                                                                  next: &7 
                                                                     c: 
                                                                       s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $res = $C->{y}->{res};\nref $res || return;\nmy $y = $C->{y};\nmy $M = $C->{c}->{M};\nmy $ctv = $res->{ctv};\nfor (@$M) {\n    $ctv->{\"$_->{t}\"} && delete $ctv->{\"$_->{t}\"};\n    $ctv->{\"$_->{t}\"} = $_->{y}->{cv} || die \"No cv res yet: \".ki$_;\n}\n};"
                                                                     sc: 
@@ -252,7 +252,7 @@ sc:
                                                                     t: res
                                                                     "y": 
                                                                       cv: '0.7'
-                                                                      next: &26 
+                                                                      next: &18 
                                                                         c: 
                                                                           s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $M = $C->{c}->{M} || die \"L 8 with no M: \".ki$C;\nmy $y = $C->{y};\n# first was ourself that is already in mo\nshift @$M if $M->[0] eq $C;\nmy $J = $y->{J} || $A->{1};\n$A->{c}->{XM} && push @$M, @{$A->{c}->{XM}}; # labely meta\n# resolve any L in M to its many\n@$M = map {\n    my $oM = $_->{y} eq $_ && ($_->{c}->{s}->{c}->{oM} || die\n        \"NoM on inner $_->{t} from $C->{t}: \".ki $_->{c}->{s} );\n    $oM ? @$oM : $_\n} @$M;\n# stash out many for the above\n$C->{c}->{oM} && return push @{$C->{c}->{oM}}, @$M;\nif ($A->{V}) {\n    1 && sayyl \"For $J->{t}: \";\n    1 && saygr \"$_->{t}: \".ki $_->{y} for @$M;\n}\n\n$G->{w}->($A,$C,$G,$T,\"ModNs\",M=>$M,s=>$y->{mod}) if $y->{mod};\n$G->{h}->($A,$C,$G,$T,'say','sayre',\"NOthing!?\") if !@$M;\n$G->{h}->($A,$C,$G,$T,\"A\",n=>8=>$J,@$M);\n};"
                                                                         sc: 
@@ -265,38 +265,38 @@ sc:
                                                                         t: ground
                                                                         "y": 
                                                                           cv: '0.8'
-                                                                          prev: *19
-                                                                          up: *10
-                                                                      prev: *18
-                                                                      up: *10
-                                                                  prev: *17
-                                                                  up: *10
-                                                              prev: *20
-                                                              up: *10
-                                                          prev: *16
-                                                          up: *10
-                                                      prev: *21
-                                                      up: *10
-                                                  prev: *15
-                                                  up: *10
-                                              prev: *22
-                                              up: *10
-                                          prev: *23
-                                          up: *10
-                                      prev: *14
-                                      up: *10
+                                                                          prev: *7
+                                                                          up: *1
+                                                                      prev: *8
+                                                                      up: *1
+                                                                  prev: *9
+                                                                  up: *1
+                                                              prev: *6
+                                                              up: *1
+                                                          prev: *10
+                                                          up: *1
+                                                      prev: *5
+                                                      up: *1
+                                                  prev: *4
+                                                  up: *1
+                                              prev: *3
+                                              up: *1
+                                          prev: *11
+                                          up: *1
+                                      prev: *12
+                                      up: *1
                                   prev: *13
-                                  up: *10
-                              prev: *12
-                              up: *10
-                          prev: *24
-                          up: *10
-                      prev: *11
-                      up: *10
-                  prev: *25
-                  up: *10
-              up: *10
-          next: &7 
+                                  up: *1
+                              prev: *14
+                              up: *1
+                          prev: *2
+                          up: *1
+                      prev: *15
+                      up: *1
+                  prev: *16
+                  up: *1
+              up: *1
+          next: &19 
             c: 
               W: of
             sc: 
@@ -304,7 +304,7 @@ sc:
             t: a
             "y": 
               cv: '0.001'
-              in: &9 
+              in: &20 
                 c: 
                   s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\n($A->{c}->{s}) = @$s;\n};"
                 sc: 
@@ -317,7 +317,7 @@ sc:
                 t: a
                 "y": 
                   cv: '0.1'
-                  next: &8 
+                  next: &42 
                     c: 
                       s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\n$y->{mu} = defined $y->{thy} ? $y->{thy} : 1;\n$y->{mu} = $y->{mu} * $y->{v}->{muav} if $y->{v}->{muav};\nmy $was = $y->{v}->{v};\n$y->{cv} = $G->{h}->($A,$C,$G,$T,\"roun\",$y->{v}->{v}) if !$y->{cv};\n$y->{pcv} = $G->{h}->($A,$C,$G,$T,\"roun\",$y->{i}/$y->{v}->{Ly}->{thi});\nmy $in = $y->{v}->{aspace} * $y->{mu};\n$y->{v}->{v} += $in;\n$y->{ov} = $G->{h}->($A,$C,$G,$T,\"roun\",$y->{v}->{v});\n$y->{spc} = $y->{ov} - $y->{cv};\n\n$C->{sc}->{yspc} = $y->{spc} if $C->{sc}->{nspc};\n$C->{sc}->{ml} = ($y->{v}->{Ly}->{inde} * 40).\"%\" if $y->{v}->{Ly}->{inde};\n};"
                     sc: 
@@ -330,10 +330,10 @@ sc:
                     t: many
                     "y": 
                       cv: '0.6'
-                      prev: *9
-                      up: *7
-                  up: *7
-              next: &6 
+                      prev: *20
+                      up: *19
+                  up: *19
+              next: &21 
                 c: 
                   W: of
                 sc: 
@@ -341,7 +341,7 @@ sc:
                 t: mo
                 "y": 
                   cv: '0.001'
-                  in: &27 
+                  in: &41 
                     c: 
                       s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nreturn if $C->{y}->{a}; # already placed\nreturn if $C->{y}->{L}; # already placing\nmy $D = $T->{D};\nmy $ybrow = $D->{sc}->{nogindex};\n\nmy $M = $C->{c}->{M};\nif ($A->{V}) {\n    $G->{h}->($A,$C,$G,$T,'say','sayre',\"$C->{t} manies!: \".(exists $C->{c}->{M}).\"  \".ki $M);\n    my $D = $T->{D};\n    my $ybrow = $D->{sc}->{nogindex};\n    my @ym = grep{$C->{y}->{\"$_\"} } keys %$ybrow;\n    1 && sayyl \"Neg: $C->{t} y: \".join',',@ym;\n    1 && saybl \"noym: \".wdump 2, [$C->{c},$C->{y}] if !@ym;\n}\n$C->{y}->{L} = $G->{h}->($A,$C,$G,$T,\"A\",L=>8,$C)\n};"
                     sc: 
@@ -359,7 +359,7 @@ sc:
                           - cM
                           - 'y'
                         "y": 
-                          hasany: &5 
+                          hasany: &22 
                             bal: 1
                             in: "!ref"
                             lum: 1
@@ -369,7 +369,7 @@ sc:
                             spc: 1
                             u: 1
                           or: 1
-                      nogindex: *5
+                      nogindex: *22
                       of: mo
                       t: 1
                       tldo: nogindex:y:L
@@ -377,8 +377,8 @@ sc:
                     t: M
                     "y": 
                       cv: '0.16'
-                      up: *6
-                  next: &28 
+                      up: *21
+                  next: &40 
                     c: 
                       s: "(A.c.s) = @$s;\n"
                     sc: 
@@ -388,7 +388,7 @@ sc:
                     t: L
                     "y": 
                       cv: '0.1'
-                      next: &29 
+                      next: &39 
                         c: 
                           s: "# etc\n"
                         sc: 
@@ -399,7 +399,7 @@ sc:
                         t: M
                         "y": 
                           cv: '0.1'
-                          next: &4 
+                          next: &38 
                             c: 
                               s: "(A.c.s) = @$s;\n"
                             sc: 
@@ -409,7 +409,7 @@ sc:
                             t: a
                             "y": 
                               cv: '0.1'
-                              next: &30 
+                              next: &37 
                                 c: 
                                   s: "# to almost fill space\n"
                                 sc: 
@@ -420,7 +420,7 @@ sc:
                                 t: 'n'
                                 "y": 
                                   cv: '0.1'
-                                  next: &31 
+                                  next: &36 
                                     c: 
                                       s: "# composite including:\n#   erse - n,u = u,n # stack on floor vs ceiling\n#   1000 - or so thi & overflow replaces cyclicly\n"
                                     sc: 
@@ -431,7 +431,7 @@ sc:
                                     t: rev
                                     "y": 
                                       cv: '0.1'
-                                      next: &32 
+                                      next: &35 
                                         c: 
                                           s: "# to take up space\n"
                                         sc: 
@@ -442,7 +442,7 @@ sc:
                                         t: spc
                                         "y": 
                                           cv: '0.1'
-                                          next: &33 
+                                          next: &34 
                                             c: 
                                               s: "# to take space up til\n"
                                             sc: 
@@ -453,7 +453,7 @@ sc:
                                             t: u
                                             "y": 
                                               cv: '0.1'
-                                              next: &2 
+                                              next: &23 
                                                 c: 
                                                   s: "C.y.n = delete C.y.in if !ref C.y.in;\n"
                                                 sc: 
@@ -465,7 +465,7 @@ sc:
                                                 t: in
                                                 "y": 
                                                   cv: '0.12'
-                                                  next: &1 
+                                                  next: &33 
                                                     c: 
                                                       s: "C.y.u = delete C.y.out if !ref C.y.out\n"
                                                     sc: 
@@ -477,7 +477,7 @@ sc:
                                                     t: out
                                                     "y": 
                                                       cv: '0.12'
-                                                      next: &34 
+                                                      next: &24 
                                                         c: 
                                                           s: "return if C.y.a; # already placed\nreturn if C.y.L; # already placing\nmy $D = T.D;\nmy $ybrow = D.sc.nogindex;\n\nmy $M = c&M;\nif (A.V) {\n    G.h->($A,$C,$G,$T,'say','sayre',\"C.t manies!: \".(exists c&M).\"  \".ki $M);\n    my $D = T.D;\n    my $ybrow = D.sc.nogindex;\n    my @ym = grep{C.y.>$_ } keys %$ybrow;\n    1 && sayyl \"Neg: C.t y: \".join',',@ym;\n    1 && saybl \"noym: \".wdump 2, [C.c,C.y] if !@ym;\n}\nC.y.L = G&A,L=>8,$C\n"
                                                         sc: 
@@ -489,7 +489,7 @@ sc:
                                                         t: M
                                                         "y": 
                                                           cv: '0.16'
-                                                          next: &42 
+                                                          next: &25 
                                                             c: 
                                                               s: "A.c.y && die \"You Ay L 2\";\nmy $J = A.1;\nJ.c.s || die \"Jcs not holding mo C: \".G&sn;\n#local A.V = 1;\n# mo C that began the J we are now inside is the trick\n# we are probably at 17 of their root mo, which has c&M\nmy $Jy = A.1.c.s.y;\nmy $y = C.y;\nmy $M = c&M;\n\nif (my $r = y.rev) {\n    for my $r (split ' ', $r) {\n        if ($r =~ /^\\d+$/) {\n            y.cyc = $r;\n        }\n        else {\n            G&xot,$y,$_ for G&peel,$r;\n        }\n    }\n}\n\n# some L uC spawns the A nC lattice\n# what to do with the L uC?\nif ($M) {\n    # has M\n    # L uC can be forgotten, probably mo'd with root in J6\n    # it could be placement metadata/unity\n    my @M;\n    while (y.thi && @$M < y.thi) { # copies out to there\n        @M = @$M if !@M;\n        last if !@M;\n        push @$M, G&hup,shift@M;\n    }\n    if (y.cyc && @$M > y.cyc) { # sweeping over itself\n        my @M = splice @$M, 0, y.cyc while @$M > y.cyc;\n        splice @M, 0, 0+@$M;\n        push @$M, @M;\n        # decommissions them?\n    }\n}\nelse {\n    # is first in its own M\n    # to make holes in space other M must flow around\n    c&M = $M = [$C];\n    y.thi > 1 &&\n           push @$M, map { G&hup,$C } 1 .. y.thi - 1;\n}\n\n# limits apply, thi being for ^ iterator length \n#                          and v limit of output\nmy $lims = {};\nfor (qw'thi') {\n    $lims.>$_ = $y.>$_ if defined $y.>$_;\n}\nlims.limn = int(9 * y.limn * Jy.spc)\n    if y.limn && (Jy.spc || die \"No space! J.t\");\nmy $lim;\nwhile (my ($k,$v) = each %$lims) {\n    @$M > $v || next;\n    A.V && G.h->($A,$C,$G,$T,'say','say',\"Limof: $k $v to C.t\");\n    $lim = $k if !$lim || $lims.>$lim > $lims.>$k;\n}\nif ($lim) {\n    my $it = $lims.>$lim;\n    my $from = 0;\n    if (y.tail) {\n        $from = -1;\n        $it *= -1;\n    }\n    else {\n        $it -= 1;\n    }\n    $lims = $lim; # name\n    $lim = @$M; # limited from\n    @$M = @{$M}[$from .. $it];\n}\n\nA.V = 0;\ny.thi = @$M;\ny.thi || die \"No M: \".ki $C;\ny.thi = y.cyc if y.cyc;\n#c & point/seek to things coming in with our surrounds\n\n# if we were placed with enough room\n# let atoms slide up to the top J\n# things saying they're in both places\n#   leads to nice grouping, ref integrity\ny.J = A.3 if Jy.spc > 0.1;\ndelete y.J if y.clos;\nmy $clos = Jy.spc && !y.J;\n#  they can want to be inside too\n#  geo to chain together floating/not atoms\n#  so its like wires over machines\n\n# ml (margin-left)\n# high lum makes tree bends up towards margin\n# like it is open inside, like bet. rummager.\ny.inde = Jy.inde + 0.06 if y.J;\n\n# sliver of attention\nmy $sl = Jy.spc * 0.01;\n$sl = 0.02 if $sl < 0.02;\n# carpenting\ny.n ||= $clos ? 0.3 : Jy.J ? Jy.cv + $sl : 0.1;\ny.u ||= $clos ? 0.4 : Jy.J ? Jy.ov - $sl : 0.9;\n\n# set width\ny.u = y.n + y.space if defined y.space;\nif (y.erse) {\n    (y.u,y.n) = (y.n,y.u);\n    y.tail = y.thi; # lightly\n}\n\n# may be way less than 0...\n# a cv scaled back, will have defiantly huge spc\ny.u /= 10 until y.u < 1;\ny.n /= 10 until y.n < 1;\n# corner noted\nif ($lim) {\n    my $s = \"$lim>\".@$M;\n    my $cv = y.tail ? y.n : y.u;\n    # TODO += here blows up zopul:\n    $cv -= 0.002;\n    my $M = A.c.XM ||= []; # labely meta\n    m lim=>$cv,$s,'%fs:7,hs:7487,limit:'.$lims;\n}\n# fit in multiple of\nif (my $ert = y.ert) {\n    $ert += y.ert while y.thi > $ert;\n    y.thi = $ert;\n}\ny.space = y.u - y.n;\nmy $outer;\nif (y.res) {\n    $outer = y.space / y.thi;\n    y.space -= $outer;\n}\ny.space *= -1 if y.space < 0;\ny.v.v = y.n; # rolls\ny.v.v += $outer / 2 if $outer; #\n# average size\ny.v.aspace = G&roun,y.space/y.thi;\n# thy -> mu bends out\ny.v.Ly = $y; # u is shared placevolve meta\nmy $i;\nfor (@$M) {\n    _.y.v = y.v;\n    _.y.i = $i++;\n    _.y.a = G&tugA,a=>2=>$_;\n    _.y.a.L = $A;\n}\n# L can M the C also in a\n\n #c lum uC shapes curve, wants to be with limn\n # might mean a few lum qualities, make them switchupable\n # supposedly osc can measure itself, hoist geometry\n #    descriptions for ascii art buildings\n"
                                                             sc: 
@@ -499,7 +499,7 @@ sc:
                                                             t: L
                                                             "y": 
                                                               cv: '0.2'
-                                                              next: &41 
+                                                              next: &32 
                                                                 c: 
                                                                   s: "my $M = c&M || die \"lum no M\";\nmy $y = C.y;\nmy $u;\n(u.l,u.r) = split ',', $lum;\n$u.>$_ = do {\n    $u.>$_ =~ m/^(?:(\\d+)-)??(?:(\\d+))(?:-(\\d)+)?$/\n        || die \"notunder: $_ \".wdump 2, $u;\n    {i=>$1,u=>$2,o=>$3}\n} for grep {$u.>$_ } keys %$u;\nu.l.u ||= 3;\nu.r.u ||= u.l.u / 4;\nu.l.o ||= u.r.u / 3;\nmy $i = 0;\nfor (@$M) {\n    _.y.thy = 1 if !defined y.thy;\n    _.y.thy += u.l.u;\n    $i++;\n    if ($i > u.l.o) {\n        u.l.u -= 2 if u.l.u > 0.1;\n    }\n}\n"
                                                                 sc: 
@@ -510,7 +510,7 @@ sc:
                                                                 t: lum
                                                                 "y": 
                                                                   cv: '0.23'
-                                                                  next: &40 
+                                                                  next: &26 
                                                                     c: 
                                                                       s: "my $M = c&M;\nRw ModNs $M $s:bal;\n"
                                                                     sc: 
@@ -521,7 +521,7 @@ sc:
                                                                     t: bal
                                                                     "y": 
                                                                       cv: '0.3'
-                                                                      next: &39 
+                                                                      next: &31 
                                                                         c: 
                                                                           s: "#local A.V = 2;\nmy $y = C.y;\nmy $M = c&M || die \"refit no M\";\ny.res == 2 && return\n    A.V && G.h->($A,$C,$G,$T,'say','saygr',\"A.1.t fits \".@$M.\" into C.t\");\nmy $res = y.res = A.1.sc.res.>C.t ||= {res=>$res};\nmy $ctv = res.ctv ||= {};\nmy $la; # known from\nmy @news;\nmy $bend = sub {\n    my ($from,$to,@M) = @_;\n    @M = map {\n        _.y.a || die \"has no ya: \".ki$_;\n        _.y.a.c.s eq $_ || die \"ya cs not _: \".ki[_.y.a.c.s,$_];\n        # their a C becomes for cv/spc for real heighting etc\n        _.y.realy = _.y.a.c.s = G&hup,_.y.a.c.s;\n        # takeover original ref:\n        $_\n    } @M;\n    my $nu = G&Ct,[\"Bend$from->$to\",{}];\n    nu.y.n = $from;\n    nu.y.u = $to;\n    nu.y.res = 2; # makes spc/2 away from edges but not M<>ctv\n    nu.c.M = \\@M;\n    nu.c.oM = [];\n    # ^ our ground splices this L's stuff into $M\n    # as it is A.y=A in an M of C\n    G&tugA,L=>4,$nu;\n};\nreturn keys %$ctv &&\n    A.V && G.h->($A,$C,$G,$T,'say','saygr',\"All new refit C.t C.y.res -- \".G&sn)\n    unless grep{ $ctv.>_.t } @$M;\nmy @M;\nfor (@$M) {\n    my $at = $ctv.>_.t;\n    if ($at && !_.c.refit) {\n        A.V && G.h->($A,$C,$G,$T,'say','sayyl',\"Have _.t  -> $at\");\n        if ($la && $at < $la) {\n            # has to opt out for M order via c&refit\n            # la cause may have moved out already\n            A.V && G.h->($A,$C,$G,$T,'say','saybl',\" is from earlier\");\n        }\n        _.y.cv = $at;\n        push @M, $_;\n        if (@news) {\n            # bend @news between $la and $_\n            $la ||= y.n;\n            A.V && G.h->($A,$C,$G,$T,'say','saygr',\"Bend from $la to $at:\\n\".ki \\@news);\n            push @M,\n                $bend->($la,$at,@news);\n            @news = ();\n        }\n        $la = $at;\n    }\n    else {\n        A.V && G.h->($A,$C,$G,$T,'say','saybl',\"New _.t\".(_.c.refit && \" (repo)\"));\n        push @news, $_;\n    }\n}\n$bend->($la,y.u,@news) if @news;\n"
                                                                         sc: 
@@ -532,7 +532,7 @@ sc:
                                                                         t: refit
                                                                         "y": 
                                                                           cv: '0.4'
-                                                                          next: &35 
+                                                                          next: &27 
                                                                             c: 
                                                                               s: "my $y = C.y;\nmy $total = sum(map{ _.y.thy || 1 } @$M) || 1;\ny.v.muav = @$M / $total;\n"
                                                                             sc: 
@@ -543,7 +543,7 @@ sc:
                                                                             t: barel
                                                                             "y": 
                                                                               cv: '0.5'
-                                                                              next: &38 
+                                                                              next: &28 
                                                                                 c: 
                                                                                   s: "my $y = C.y;\ny.mu = defined y.thy ? y.thy : 1;\ny.mu = y.mu * y.v.muav if y.v.muav;\nmy $was = y.v.v;\ny.cv = G&roun,y.v.v if !y.cv;\ny.pcv = G&roun,y.i/y.v.Ly.thi;\nmy $in = y.v.aspace * y.mu;\ny.v.v += $in;\ny.ov = G&roun,y.v.v;\ny.spc = y.ov - y.cv;\n\nC.sc.yspc = y.spc if C.sc.nspc;\nC.sc.ml = (y.v.Ly.inde * 40).\"%\" if y.v.Ly.inde;\n"
                                                                                 sc: 
@@ -553,7 +553,7 @@ sc:
                                                                                 t: many
                                                                                 "y": 
                                                                                   cv: '0.6'
-                                                                                  next: &37 
+                                                                                  next: &29 
                                                                                     c: 
                                                                                       s: "my $M = c&M || die \"lum no M\";\nfor my $C (@$M) {\n    my $y = C.y;\n    my $upt = 0;\n    y.spc = 0.01 if y.spc < 0.01;\n    my $fs = y.spc * 20 * 4;\n    if (c&helum) {\n        C&he = G&rou,$fs/c&helum;\n    }\n    else {\n        $fs = 3 if $fs < 3;\n        C&fs = G&rou,$fs;\n    }\n}\n"
                                                                                     sc: 
@@ -564,7 +564,7 @@ sc:
                                                                                     t: lum
                                                                                     "y": 
                                                                                       cv: '0.7'
-                                                                                      next: &36 
+                                                                                      next: &30 
                                                                                         c: 
                                                                                           s: "ref $res || return;\nmy $y = C.y;\nmy $M = c&M;\nmy $ctv = res.ctv;\nfor (@$M) {\n    $ctv.>_.t && delete $ctv.>_.t;\n    $ctv.>_.t = _.y.cv || die \"No cv res yet: \".ki$_;\n}\n"
                                                                                         sc: 
@@ -585,155 +585,155 @@ sc:
                                                                                             t: ground
                                                                                             "y": 
                                                                                               cv: '0.8'
-                                                                                              prev: *36
-                                                                                              up: *3
-                                                                                          prev: *37
-                                                                                          up: *3
-                                                                                      prev: *38
-                                                                                      up: *3
-                                                                                  prev: *35
-                                                                                  up: *3
-                                                                              prev: *39
-                                                                              up: *3
-                                                                          prev: *40
-                                                                          up: *3
-                                                                      prev: *41
-                                                                      up: *3
-                                                                  prev: *42
-                                                                  up: *3
-                                                              prev: *34
-                                                              up: *3
-                                                          prev: *1
-                                                          up: *3
-                                                      prev: *2
-                                                      up: *3
-                                                  prev: *33
-                                                  up: *3
-                                              prev: *32
-                                              up: *3
-                                          prev: *31
-                                          up: *3
-                                      prev: *30
-                                      up: *3
-                                  prev: *4
-                                  up: *3
-                              prev: *29
-                              up: *3
-                          prev: *28
-                          up: *3
-                      prev: *6
-                      up: *3
-                  prev: *7
+                                                                                              prev: *30
+                                                                                              up: *17
+                                                                                          prev: *29
+                                                                                          up: *17
+                                                                                      prev: *28
+                                                                                      up: *17
+                                                                                  prev: *27
+                                                                                  up: *17
+                                                                              prev: *31
+                                                                              up: *17
+                                                                          prev: *26
+                                                                          up: *17
+                                                                      prev: *32
+                                                                      up: *17
+                                                                  prev: *25
+                                                                  up: *17
+                                                              prev: *24
+                                                              up: *17
+                                                          prev: *33
+                                                          up: *17
+                                                      prev: *23
+                                                      up: *17
+                                                  prev: *34
+                                                  up: *17
+                                              prev: *35
+                                              up: *17
+                                          prev: *36
+                                          up: *17
+                                      prev: *37
+                                      up: *17
+                                  prev: *38
+                                  up: *17
+                              prev: *39
+                              up: *17
+                          prev: *40
+                          up: *17
+                      prev: *21
+                      up: *17
+                  prev: *19
                   tv: 
                     M: 
-                      "0.16": *27
+                      "0.16": *41
                   tw: 
-                    M: *27
-                  up: *3
-              prev: *10
+                    M: *41
+                  up: *17
+              prev: *1
               tv: 
                 a: 
-                  "0.1": *9
+                  "0.1": *20
                 many: 
-                  "0.6": *8
+                  "0.6": *42
               tw: 
-                a: *9
-                many: *8
-              up: *3
+                a: *20
+                many: *42
+              up: *17
           tv: 
             L: 
-              "0.1": *25
-              "0.2": *15
+              "0.1": *16
+              "0.2": *4
             M: 
-              "0.1": *11
+              "0.1": *15
             bal: 
-              "0.3": *16
+              "0.3": *10
             barel: 
-              "0.5": *17
+              "0.5": *9
             ground: 
-              "0.8": *26
+              "0.8": *18
             in: 
-              "0.12": *23
+              "0.12": *11
             lum: 
-              "0.23": *21
-              "0.7": *18
+              "0.23": *5
+              "0.7": *8
             "n": 
-              "0.1": *24
+              "0.1": *2
             out: 
-              "0.12": *22
+              "0.12": *3
             refit: 
-              "0.4": *20
+              "0.4": *6
             res: 
-              "0.7": *19
+              "0.7": *7
             rev: 
-              "0.1": *12
+              "0.1": *14
             spc: 
               "0.1": *13
             u: 
-              "0.1": *14
+              "0.1": *12
           tw: 
-            L: *15
-            M: *11
-            bal: *16
-            barel: *17
-            ground: *26
-            in: *23
-            lum: *18
-            "n": *24
-            out: *22
-            refit: *20
-            res: *19
-            rev: *12
+            L: *4
+            M: *15
+            bal: *10
+            barel: *9
+            ground: *18
+            in: *11
+            lum: *8
+            "n": *2
+            out: *3
+            refit: *6
+            res: *7
+            rev: *14
             spc: *13
-            u: *14
-          up: *3
-      Zpace 0.9/L 0.001/L 0.1: *25
-      Zpace 0.9/L 0.001/L 0.2: *15
-      Zpace 0.9/L 0.001/M 0.1: *11
-      Zpace 0.9/L 0.001/bal 0.3: *16
-      Zpace 0.9/L 0.001/barel 0.5: *17
-      Zpace 0.9/L 0.001/ground 0.8: *26
-      Zpace 0.9/L 0.001/in 0.12: *23
-      Zpace 0.9/L 0.001/lum 0.23: *21
-      Zpace 0.9/L 0.001/lum 0.7: *18
-      Zpace 0.9/L 0.001/n 0.1: *24
-      Zpace 0.9/L 0.001/out 0.12: *22
-      Zpace 0.9/L 0.001/refit 0.4: *20
-      Zpace 0.9/L 0.001/res 0.7: *19
-      Zpace 0.9/L 0.001/rev 0.1: *12
+            u: *12
+          up: *17
+      Zpace 0.9/L 0.001/L 0.1: *16
+      Zpace 0.9/L 0.001/L 0.2: *4
+      Zpace 0.9/L 0.001/M 0.1: *15
+      Zpace 0.9/L 0.001/bal 0.3: *10
+      Zpace 0.9/L 0.001/barel 0.5: *9
+      Zpace 0.9/L 0.001/ground 0.8: *18
+      Zpace 0.9/L 0.001/in 0.12: *11
+      Zpace 0.9/L 0.001/lum 0.23: *5
+      Zpace 0.9/L 0.001/lum 0.7: *8
+      Zpace 0.9/L 0.001/n 0.1: *2
+      Zpace 0.9/L 0.001/out 0.12: *3
+      Zpace 0.9/L 0.001/refit 0.4: *6
+      Zpace 0.9/L 0.001/res 0.7: *7
+      Zpace 0.9/L 0.001/rev 0.1: *14
       Zpace 0.9/L 0.001/spc 0.1: *13
-      Zpace 0.9/L 0.001/u 0.1: *14
-      Zpace 0.9/L 0.1: *28
-      Zpace 0.9/L 0.2: *42
-      Zpace 0.9/M 0.1: *29
-      Zpace 0.9/M 0.16: *34
-      Zpace 0.9/a 0.001: *7
-      Zpace 0.9/a 0.001/a 0.1: *9
-      Zpace 0.9/a 0.001/many 0.6: *8
-      Zpace 0.9/a 0.1: *4
-      Zpace 0.9/bal 0.3: *40
-      Zpace 0.9/barel 0.5: *35
+      Zpace 0.9/L 0.001/u 0.1: *12
+      Zpace 0.9/L 0.1: *40
+      Zpace 0.9/L 0.2: *25
+      Zpace 0.9/M 0.1: *39
+      Zpace 0.9/M 0.16: *24
+      Zpace 0.9/a 0.001: *19
+      Zpace 0.9/a 0.001/a 0.1: *20
+      Zpace 0.9/a 0.001/many 0.6: *42
+      Zpace 0.9/a 0.1: *38
+      Zpace 0.9/bal 0.3: *26
+      Zpace 0.9/barel 0.5: *27
       Zpace 0.9/ground 0.8: *43
-      Zpace 0.9/in 0.12: *2
-      Zpace 0.9/lum 0.23: *41
-      Zpace 0.9/lum 0.7: *37
-      Zpace 0.9/many 0.6: *38
-      Zpace 0.9/mo 0.001: *6
-      Zpace 0.9/mo 0.001/M 0.16: *27
-      Zpace 0.9/n 0.1: *30
-      Zpace 0.9/out 0.12: *1
-      Zpace 0.9/refit 0.4: *39
-      Zpace 0.9/res 0.7: *36
-      Zpace 0.9/rev 0.1: *31
-      Zpace 0.9/spc 0.1: *32
-      Zpace 0.9/u 0.1: *33
+      Zpace 0.9/in 0.12: *23
+      Zpace 0.9/lum 0.23: *32
+      Zpace 0.9/lum 0.7: *29
+      Zpace 0.9/many 0.6: *28
+      Zpace 0.9/mo 0.001: *21
+      Zpace 0.9/mo 0.001/M 0.16: *41
+      Zpace 0.9/n 0.1: *37
+      Zpace 0.9/out 0.12: *33
+      Zpace 0.9/refit 0.4: *31
+      Zpace 0.9/res 0.7: *30
+      Zpace 0.9/rev 0.1: *36
+      Zpace 0.9/spc 0.1: *35
+      Zpace 0.9/u 0.1: *34
     sc: 
       iiyt: 
         "0.001": 
-          L: *10
-          a: *7
-          mo: *6
-      top: *3
+          L: *1
+          a: *19
+          mo: *21
+      top: *17
     unreal: 
       sc: 
         iiyt: 1
@@ -741,62 +741,62 @@ sc:
 t: Zpace
 "y": 
   cv: '0.9'
-  in: *10
+  in: *1
   tv: 
     L: 
-      "0.001": *10
-      "0.1": *28
-      "0.2": *42
+      "0.001": *1
+      "0.1": *40
+      "0.2": *25
     M: 
-      "0.1": *29
-      "0.16": *34
+      "0.1": *39
+      "0.16": *24
     a: 
-      "0.001": *7
-      "0.1": *4
+      "0.001": *19
+      "0.1": *38
     bal: 
-      "0.3": *40
+      "0.3": *26
     barel: 
-      "0.5": *35
+      "0.5": *27
     ground: 
       "0.8": *43
     in: 
-      "0.12": *2
+      "0.12": *23
     lum: 
-      "0.23": *41
-      "0.7": *37
+      "0.23": *32
+      "0.7": *29
     many: 
-      "0.6": *38
+      "0.6": *28
     mo: 
-      "0.001": *6
+      "0.001": *21
     "n": 
-      "0.1": *30
+      "0.1": *37
     out: 
-      "0.12": *1
+      "0.12": *33
     refit: 
-      "0.4": *39
+      "0.4": *31
     res: 
-      "0.7": *36
+      "0.7": *30
     rev: 
-      "0.1": *31
+      "0.1": *36
     spc: 
-      "0.1": *32
+      "0.1": *35
     u: 
-      "0.1": *33
+      "0.1": *34
   tw: 
-    L: *42
-    M: *34
-    a: *4
-    bal: *40
-    barel: *35
+    L: *25
+    M: *24
+    a: *38
+    bal: *26
+    barel: *27
     ground: *43
-    in: *2
-    lum: *37
-    many: *38
-    mo: *6
-    "n": *30
-    out: *1
-    refit: *39
-    res: *36
-    rev: *31
-    spc: *32
-    u: *33
+    in: *23
+    lum: *29
+    many: *28
+    mo: *21
+    "n": *37
+    out: *33
+    refit: *31
+    res: *30
+    rev: *36
+    spc: *35
+    u: *34

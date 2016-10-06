@@ -177,7 +177,7 @@ Day: | # world primitives
             my $v = G&hup,$w;
             v.y.argumented = $w;
             vs&args = $args;
-            G&perlcode,$v;
+            G&perlcode,$v,"MakingWay";
             v.c.code || die "no ccode back: ".ki$v;
             $v;
         };
@@ -194,18 +194,30 @@ Day: | # world primitives
         # translate into perl
         G&CoBabbler;
         
-        my $y = eval c&s;
-        die "Nocompile C.t: ".ki($C)
-            .ind('  ',$@)."\n\n c&s \n"
+        G&Code,$C,@Me;
+    # c&code = eval c&s
+    # l = name of situation
+    Code: %acgt:s l
+        ($s,$l) = ($C,$s) if !ref $s;
+        $l = "$l: " if $l;
+        my $Y = $Bun::A;
+        delete Ys&stacktime;
+        
+        my $y = eval sc&s;
+        die $l."Nocompile s.t: ".ki($s)
+            .ind('  ',$@)."\n\n sc&s \n"
             if $@;
-        die "Not code C.t: ".ki($C)
-            if ref $y ne 'CODE' && !s&subpeel;
-        c&code = $y;
+        die $l."Not code s.t: ".ki($s)
+            if ref $y ne 'CODE' && !ss&subpeel;
+        
+        sayre join"\n", "Warning from $l s.t s.y.cv"
+            if delete Ys&stacktime;
+        
+        sc&code = $y;
     
     n $_=>1=>G.way.>$_ for qw'CoArgulate CoBabbler';
     
-    
-    # ^ compiler for old G.w
+    # compiler for old G.w
     n won=>'',join("\n",map{G.way->{$_} || die "no $_"}qw'cono CoBabbler')
     
     #
