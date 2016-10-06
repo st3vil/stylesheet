@@ -1,0 +1,254 @@
+Hosthing: | # <-- Hosting
+    u a
+    # try wormhole/avoidance, wants Tractor to override regularly
+    # force T.H
+    #    1 nothing
+    #    2 stores only
+    #    3 everything (ofs of, of evals code(d))
+    #    4 with wires (tw, iiyt) to resume osc from 76- (evals coded)
+    #    5 ^ stores only
+    #    8+ thaws only
+    thawJ 34: %of:mo,t:y:A:mo:up:mo:c:T:H || y:A:mo:c:T:H
+        c&e && return;
+        
+        keys %{C.c} == 2 && c&W eq c&J && c&W eq C.t || return;
+        
+        # 
+        a&thawable = 1 unless $s < 3 || $s == 5;
+        a&storable = 1 unless $s < 2 || $s > 7;
+        
+        a&storable && A.up.c.store++;
+        a&stowexp = 1 if $s >= 4 && $s < 6;
+        saybl "Thawable ($s) C.t: a&thawable    a&stowexp";
+         
+        a&thawable || return;
+        my $V = A.1.t =~ /^[A-Z]/ && A.2.t ne 'u';
+        my $d = G&thaws,$V || return;
+        
+        $V && saygr " for ".G&sn;
+        
+        # is upCc&parts from s
+        # which may skip s to 76-
+        # or at least not do the pin
+        c&parts = $d;
+        T.Z.7 = $A;
+        delete a&storable;
+        
+    stawJ 78: %of:n,t:y:A:c:store
+        for my $m (@{A&mos||[]}) {
+            ms&storable || next;
+            my $c = mc&s;
+            my $J = cs&J;
+            my $s = Js&s;
+            $A = $m;
+            $C = m.c.s;
+            # hmm ^
+            G&stores,$s;
+            #G.ouJ = $s;
+        }
+        
+    u i
+    thaws:
+        local C.c.V = 1;
+        n Stro=>[get=>$C]
+        delete s&top
+    
+    # make flat list of C that should reosc to what it was
+    stores:
+        my $t = s.sc.top || die "Store no top: ".ki $s;
+        my $m; # for ns&meta - indexes to take
+        my $n; # the first - top
+        if (a&stowexp) {
+            # expensiver keeping ii/tv/etc in a bundle
+            # could fork, ind without hup to shave y
+            # yaml it all
+            return Rw StowExp $C:s;
+        }
+        my @all = G&ind,$t;
+        my ($u) = @all;
+        for (@all) {
+            delete _c&ind;
+            _s&coded = 1 if delete _c&code;
+            _.y = {cv=>_.y.cv};
+            my $in = delete(_c&inside) || [];
+            my $z = delete _s&z;
+            delete _s&J;
+            G&oleak,$_,5 && die "Leaks: @$in: ".ki $_;
+            _s&z = $z;
+        }
+        # put in meta, know not imparted unless m.unreal
+        u.sc.xo = s.sc.xo if s.sc.xo;
+        n Stro=>[put=>$u]
+    
+StowExp: | # as C = s, store itself, see Parts/unreal
+    local A.V = 2;
+    
+    if (my $pid = fork()) {
+        waitpid($pid,0);
+        die "child failed with $?" if $?;
+        return;
+    }
+    
+    my ($ok,$dr);
+    ok.y.>$_ = 1 for qw'up in prev next';
+    ok.y.>$_ = 2 for qw'tv tw';
+    dr.y.>$_ = 1 for qw'D x r s';
+    dr.c.code = 3;
+    ok.sc.ip = 2;
+    
+    my $ha; # have seen
+    my $pa; # paths to seen
+    my $se; # see from
+    my @or;
+    my $ub = &Cd{
+        $ha.>$C = $C;
+        my $p = join "/", @{d.path};
+        $pa.>$p = $C;
+        push @or, 
+        G&chew,$C,'nk,gk',$_ for &v,nk,gk{
+            ref $v || return;
+            $se.>$nk.>$gk.>$v.>$C = $C;
+        };
+        return; # means no c.ind/inside labegy
+    };
+    my @all = G&ind,s&top,$ub,{nohup=>1};
+    
+    my $pass = 1;
+    G&chew,$se,'nk,gk,v',$_ for &vv,nk,gk,v{
+        return if $nk eq 'sc' && $gk =~ /ex$/;
+        my $M = [values %$vv];
+        if (my $k = $ok.>$nk.>$gk ) {
+            my $c = $ha.>$v;
+            $v = "C c.t c.y.cv" if $c;
+            unless ($c || $k == 2) {
+                sayre "Unhad $nk $gk $v from ".ki $M;
+                $pass--;
+            }
+        }
+        elsif (my $k = $dr.>$nk.>$gk ) {
+            #saybl "Droppy $nk $gk $v from ".ki $M;
+            delete $_.>$nk.>$gk for @$M;
+            if ($k == 3) {
+                my $gkd = $gk.'d';
+                _.sc.>$gkd = 1 for @$M;
+            }
+        }
+        else {
+            my $c = $ha.>$v;
+            my $had = " (had: c.t c.y.cv)" if $c;
+            sayre "Unknown $nk $gk $v$had from ".ki $M;
+            delete $_.>$nk.>$gk for @$M;
+            $pass--;
+        }
+    };
+    
+    G&chew,s&iiyt,'cv,t',$_ for &l,cv,t{
+        $ha.>$l && return;
+        $pass--;
+        sayre "Missing iiyt $cv $t: ".ki$l;
+        saygr "Was it ".ki $_ for 
+            grep { _.t eq l.t && _.y.cv eq _.y.cv } values %$ha;
+    };
+    die "Shave missed spots" if $pass != 1;
+    
+    my $t = s&top;
+    ts&meta && die "Already had topscmeta: ".ki($t)."\n  ".ki(ts&meta);
+    my $m = ts&meta = {}; # takes over as impart, sets tv,top,etc in self
+    m.sc.iiyt = s&iiyt;
+    m.unreal.sc.iiyt++; # iiyt maintained xarefully, drop before J for real
+    m.sc.top = $t;
+    m.c.>$_ = C.c.>$_ for qw'imp wil mat';
+    m.sc.xo = s&xo if s&xo;
+    m.paths = $pa;
+    
+    # do in parallel, child kills parent
+    my $dl = 99;
+    if (G&oleak,$t,$dl ) {
+        write_file('eak', wdump $dl, $t);
+        die "t.t t.y.cv still leaks at depth=$dl, wrote file 'eak'";
+    }
+    
+    $YAML::Syck::SortKeys = 1;
+    $YAML::Syck::Headless = 1;
+    G&elph,Stro=>[put=>$t];
+    exit;
+    
+Parts: | # osc eats self
+    local A.V = 2;
+    my $m = delete ds&meta;
+    
+    m.sc.xo = delete ds&xo if ds&xo;
+    for ('c','sc') {
+        my ($s,$c) = ($C.>$_ , $m.>$_ );
+        $c || next;
+        G&hoh,$s,$c;
+    }
+    
+    return# saygr "Parts lightly A.1.t"
+    unless m.unreal;
+    
+    
+    my $ub = &Cd{
+        return unless delete s&coded;
+        G&Code,"Parts";
+        return; # means no c.ind/inside labegy
+    };
+    my @all = G&ind,$d,$ub,{nohup=>1};
+    
+    # make a parts top that o2parts can make look like a ground
+    my $z = [];
+    my $S = d.y.in;
+    while ($S) {
+        push @$z, $S;
+        $S = S.y.next;
+    }
+    ds&z = $z;
+    
+    # makes s Z to 76- un
+    c&imparted = $m;
+Imparted: | # osc continues after eating self
+    # involves intermediate partsing to make lv etc state
+    # so the next lv applies on the remote
+    local A.V = 2;
+    my $J = A.1;
+    sayre "Enhere A.1.t";
+
+    my $t = m.sc.top || die "No metatop";
+    ts&meta = $m;
+    # our c&imparted already deleted
+    c&parts = $t;
+    #delete s&top.y.tv;
+    
+    Jc&gripo = 1;
+    # ^ wants to be a T thing wired into v instead of bounced off the J
+    G&A,s=>8=>$J;
+    
+    while (my ($nk,$v) = each %{m.unreal||die"m not unreal"}) {
+        delete $C.>$nk.>$_ for keys %$v
+    }
+    
+    delete c&parts;
+    # and now returns into o2 with the ground
+Stro: | # storage aJent for Hosthing, just needs A.G
+    T.nose = 2; # no osc but keep J (4s&Jtv)
+    T.pos = 0; # always thinks its right
+    my $f = 'w/St';
+    my $c = e&s; # sets C.c.e.c.s.sc.top = got
+    my @p = map { s/\W//g;$_ } A.4.t, c.t;
+    my $p = join '/', $f, @p;
+    my $f = "$p/head";
+    if (e&t eq 'put') {
+        `mkdir -p $p`;
+        DumpFile($f,$c);
+        C.c.V && sayyl "Store $f";
+    }
+    elsif (e&t eq 'get') {
+        -f $f && -s $f || return;
+        my $u = LoadFile($f);
+        $u || return;
+        cs&top = $u;
+        C.c.V && sayyl "Get $f";
+    }
+    else { G&vent,"NHogo" }
+
+
