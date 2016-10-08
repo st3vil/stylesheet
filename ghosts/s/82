@@ -11,7 +11,6 @@ ElvisDoolify: |
         || return;
     Rw HasWay;
     
-    G.mkoJ->(); # frees us from test exit
     # wants to magnetise tape observation for anything
     
     if (c&Se == 1) {
@@ -42,6 +41,7 @@ ElvisOver: | # way witch
     Rw HasWay;
     return unless c&Se == 1;
     
+    G.mkoJ->(); # frees us from test exit
     my $til = sub {
         my ($d,$cb) = @_;
         Rw timer $d $cb;
@@ -55,19 +55,28 @@ ElvisOver: | # way witch
         ElvisOvary: |
             3 + 5
     
+    $til->(4=>sub {
+    
     t.e =
     n Waytch
-    t.en->('sc lv,olv', "See Tape");
+    t.cs->('sc lv,olv', "Waytch holding listener");
     
     t.e =
     n Listen
-    t.en->('sc lv,olv', "See again");
-    t.en->('sc top', "See again");
+    t.cs->('sc lv,olv', "Listen listening to Goh");
+    t.cs->('sc top', "Listen again");
     
-    $til->(0.2, sub { `echo '    -1' >> $f` });
-    $til->(0.8, sub {
-        sayre "Done";
-        G.wayout
+    $til->(0.02, sub { `echo '    -1' >> $f` });
+    $til->(5.42, sub { `echo '    -1' >> $f` });
+    $til->(9.8, sub {
+        t.e =
+        n Waytch
+        t.cs->('sc top', "Waytch received notifies");
+    });
+    $til->(9.9, sub {
+        exit;
+    });
+    
     });
     
     
@@ -75,42 +84,55 @@ ElvisOver: | # way witch
     
     
 Waytch: | # way listener
-    Js&ein.t.l.sMJ = &sMJj{
-        saygr "Line: $s";
-        
+    # to plot way changed into ElMatron and call the ghoster to calc wanderince
+    u Zpace
+    Js&ein.t.l.sMJ = &sMJjeTC{
+        local A.V = 2;
+        my $es = djson $s;
+        m _.t=>''=>{s=>_c&s}=>{dig=>_s&dig} for @$es;
     };
     S
     n Goh=>-listen
+    y.n = 5;
+    y.cyc = 100;
+    @$M = @{Js&M||[]};
 pi/takeM: |
     y.cyc = 1000;
     @$M = @{c&M};
     @{c&M} = ();
 pi/listen: | # pg listener, makes e to A.2
     # yea heayh
-    sayyl "Yep: ".ki $C;
     n Listen=>[to=>c&s]
     
+Mez: | # listener for mezages with line protocols
+    # inc /^[/ -> many e
+    #     /^CCC (\w+) -> large item in mez where t=$1
+    # like and in front Listen,
+    # line clevered into e as it goes through to client
 Listen: | # pg listen pool
     u Zpace
     u pg
-    y.res = 1;
+    y.res = 1; # M t replant
     my $t = Js&ein.t = {};
     # accumulate the froms
-    t.to.sMJ = &sMJj{
-        sayre "J.t to $s unto j.t";
-        Js&tri.>$s.>j.t ++ && return;
-        m "j.t $s"=>''=>{s=>$s,j=>$j}
+    t.to.sMJ = &sMJjeT{
+        Js&tri.>$s.>j.t ++ && sayre("Ledup j.t")
+            && return T.pos = 0;
+        j.3 eq $j || die "listen $s to j.t not W";
+        m "j.t $s"=>''=>{s=>$s,j=>$j}=>{W=>j.t}
     };
     t.not.sMJ = &sMJj{
-        sayre "J.t not $s";
+        sayre "J.t unlistens $s j.t";
         @$M = grep { _.t ne "j.t $s" } @$M;
     };
-    # send listened to froms
-    t.l = &Tes{
-        sayre "J.t lines $s";
-        for (grep { _c&s eq e&slisten } @$M) {
-            saygr "For ".ki $_;
-        }
+    # distribute noises to froms
+    t.l = &TesC{
+        map {
+            _s&W || die "noW listenee ".ki$_;
+            n _s&W => $C
+        } grep {
+            _c&s eq es&listen 
+        } @{Js&M||[]};
         T.pos = 0;
     };
     S
@@ -123,12 +145,16 @@ Listen: | # pg listen pool
     y.imp++ if T.forked; # relistens all
     G&has,forked=>1; # <^ waker in between
     
+    G&db ->unsubscribe('notification');
     G&db ->on(notification => &dtps{
         $s = encode_utf8($s);
+        my $h = slm(9,dig($s));
+        return sayre "Seen before (from $p)" if 1s&een.>$h ++;
         n Listen=>[l=>''=>{s=>$s}=>{listen=>$t}]
-        1 && saygr "Wants to beep $t  ".ki $s;
     });
     
+    # for oscillation of sc.listen
+    # relative to el - overall C change
     my $l = Js&sels.listen = {};
     l.1 = &acgt{
         G&db ->listen(C.t);
@@ -139,30 +165,16 @@ Listen: | # pg listen pool
         sayre "Should unmod C.t";
     };
     
-    sayre "Have: ".ki $_ for @$M;
-
-    0&&
-    not:
-        my $not = G.W.noti ||= {};
-        $db->on(notification => sub {
-            my ($db, $name, $pid, $s) = @_;
-            Rw GW_Answer $name $s;
-        });
-        for (J.at.Wid, keys %{G.W.noti}) {
-            $db->listen($_);
-            sayyl "Listen: $_";
-        }
-        G.W.lizdb = $db;
 pg: |
     u i
     db:
         use Mojo::Pg;
         G&has,pg=>1;
         my $pg = 4s&pg ||= Mojo::Pg->new('postgresql://s@/s');
-        delete 1s&db unless 1s&db.pid eq $$;
+        delete 1s&db unless 1s&db.stylepid eq $$;
         1s&db ||= do {
             my $db = $pg->db;
-            db.pid = $$;
+            db.stylepid = $$;
             $db
         };
     
