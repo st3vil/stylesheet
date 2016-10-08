@@ -39,7 +39,7 @@ Sea: | # folds of the day
         }
         else {
             my ($y,$c,$sc,@ex) = @e;
-            C.c.s = $c if !ref $c && @e > 1;
+            c&s = $c if !ref $c && @e > 1;
             C.c = $c if ref $c eq 'HASH';
             C.c = G&peel,$$c if ref $c eq 'SCALAR';
             $sc = G&peel,$$sc if $sc eq 'SCALAR';
@@ -52,7 +52,7 @@ Sea: | # folds of the day
             }
             if (ref $y eq 'HASH') {
                 if (y.y) {
-                    C.c.e = $y;
+                    c&e = $y;
                     $y = 'W';
                 }
                 else {
@@ -60,7 +60,10 @@ Sea: | # folds of the day
                 }
             }
             if (!ref $y) {
-                C.c.pi = $1 if $y =~ s/^-(\w+)//;
+                if ($y =~ s/^-(\w+)_?//) {
+                    c&pi = $1;
+                    c&s = C.t if !defined c&s;
+                }
                 if ($y =~ /^\d+(\.\d+)?$/ || !length $y) {
                     C.y.cv = $y
                 }

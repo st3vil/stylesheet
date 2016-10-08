@@ -496,6 +496,9 @@ ElChorus: | # mo->E joins your request to a J
                 if (!ref $pin) {
                     Rw $pin;
                 }
+                elsif (ref $pin eq 'CODE') {
+                    $pin->($T,$e,e.c.s);
+                }
                 else {
                     for my $k (sort keys %$pin) {
                         my $v = $pin.>$k;
@@ -740,8 +743,8 @@ sMJ: | # for Js&M map in
     my $s = e&s;
     my $j = ss&J || die "snoJ" if ref $s eq 'HASH';
     $j ||= do {
-        1 && saygr "On te A.1.t A.2.t ?";
-        A.2;
+        1 && saygr "On te A.1.t A.2.t A.2.3.t ?";
+        A.2.3;
     };
     $v->($s,$M,$J,$j,$e);
     
@@ -988,7 +991,10 @@ Wout: | # sends up
     };
     G.mkoJ->($nethole=>$c);
 Win: |
-    saybl "Elvising: ".wdump 4, e&C;
+    if (my $e = e&C) {
+        saybl "Elvising: ".wdump 7, $e;
+        ec&us = delete ec&s;
+    }
 Junup: | # display z of c&eat (K)
     u urw
     G&xo,y.at||={},$_ for G&peel,'ws:pre,wb,mw:60%,mh:60%';
@@ -997,8 +1003,8 @@ Junup: | # display z of c&eat (K)
     
     return T.nose = 1 unless C.c.eat;
     
-    J.froe = C.c.froe if C.c.froe;
-    my $eat = C.c.eat;
+    J.froe = C.c.froe if C.c.froe; # to get elvis back in
+    my $eat = C.c.eat; # elvis potential out
     # z must leak no refs, except .y.* which will be ycv only
     my $z = [ref $eat eq 'ARRAY' ? @$eat : $eat];
     # dripfeed time
@@ -1026,11 +1032,12 @@ Junup: | # display z of c&eat (K)
     
 Junin: |
     sayre "Handled ! ";
+    my $e = e&C;
     my $us = us&C;
     $us = G&hup,$us;
     shift @{us.p} for 0 .. us.p_i;
     
-    J.froe->(jse=>''=>{s=>$us});
+    J.froe->(jse=>''=>{s=>$us,was=>$e});
     sayre "Etc",0,0;
     Rw talkzyh;
     T.pos = 0;

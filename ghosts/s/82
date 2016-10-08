@@ -11,6 +11,7 @@ ElvisDoolify: |
         || return;
     Rw HasWay;
     
+    G.mkoJ->(); # frees us from test exit
     # wants to magnetise tape observation for anything
     
     if (c&Se == 1) {
@@ -34,6 +35,230 @@ ElvisDoolify: |
         t.en->('sc lv,olv', "See Tape");
         
     }
+ElvisOver: | # way witch
+    # pg way listen (G'd)
+    my $t = Rw Towering Ang
+        || return;
+    Rw HasWay;
+    return unless c&Se == 1;
+    
+    my $til = sub {
+        my ($d,$cb) = @_;
+        Rw timer $d $cb;
+    };
+    my $f = 'g/s/99';
+    die "Already full of ".ki $_ for
+        grep{ 'ElvisOvary' ne join'',keys %$_ }
+        map { LoadFile($_) } grep { -s $_ } $f;
+    
+    write_file($f, <<'');
+        ElvisOvary: |
+            3 + 5
+    
+    t.e =
+    n Waytch
+    t.en->('sc lv,olv', "See Tape");
+    
+    t.e =
+    n Listen
+    t.en->('sc lv,olv', "See again");
+    t.en->('sc top', "See again");
+    
+    $til->(0.2, sub { `echo '    -1' >> $f` });
+    $til->(0.8, sub {
+        sayre "Done";
+        G.wayout
+    });
+    
+    
+    
+    
+    
+Waytch: | # way listener
+    Js&ein.t.l.sMJ = &sMJj{
+        saygr "Line: $s";
+        
+    };
+    S
+    n Goh=>-listen
+pi/takeM: |
+    y.cyc = 1000;
+    @$M = @{c&M};
+    @{c&M} = ();
+pi/listen: | # pg listener, makes e to A.2
+    # yea heayh
+    sayyl "Yep: ".ki $C;
+    n Listen=>[to=>c&s]
+    
+Listen: | # pg listen pool
+    u Zpace
+    u pg
+    y.res = 1;
+    my $t = Js&ein.t = {};
+    # accumulate the froms
+    t.to.sMJ = &sMJj{
+        sayre "J.t to $s unto j.t";
+        Js&tri.>$s.>j.t ++ && return;
+        m "j.t $s"=>''=>{s=>$s,j=>$j}
+    };
+    t.not.sMJ = &sMJj{
+        sayre "J.t not $s";
+        @$M = grep { _.t ne "j.t $s" } @$M;
+    };
+    # send listened to froms
+    t.l = &Tes{
+        sayre "J.t lines $s";
+        for (grep { _c&s eq e&slisten } @$M) {
+            saygr "For ".ki $_;
+        }
+        T.pos = 0;
+    };
+    S
+    
+    # unique listen addresses
+    for (uniq map { _c&s } @{Js&M||[]}) {
+        m $_=>''=>{}=>{listen=>$_}
+    }
+    
+    y.imp++ if T.forked; # relistens all
+    G&has,forked=>1; # <^ waker in between
+    
+    G&db ->on(notification => &dtps{
+        $s = encode_utf8($s);
+        n Listen=>[l=>''=>{s=>$s}=>{listen=>$t}]
+        1 && saygr "Wants to beep $t  ".ki $s;
+    });
+    
+    my $l = Js&sels.listen = {};
+    l.1 = &acgt{
+        G&db ->listen(C.t);
+        sayre "Should mod C.t";
+    };
+    l.9 = &acgt{
+        G&db ->unlisten(C.t);
+        sayre "Should unmod C.t";
+    };
+    
+    sayre "Have: ".ki $_ for @$M;
+
+    0&&
+    not:
+        my $not = G.W.noti ||= {};
+        $db->on(notification => sub {
+            my ($db, $name, $pid, $s) = @_;
+            Rw GW_Answer $name $s;
+        });
+        for (J.at.Wid, keys %{G.W.noti}) {
+            $db->listen($_);
+            sayyl "Listen: $_";
+        }
+        G.W.lizdb = $db;
+pg: |
+    u i
+    db:
+        use Mojo::Pg;
+        G&has,pg=>1;
+        my $pg = 4s&pg ||= Mojo::Pg->new('postgresql://s@/s');
+        delete 1s&db unless 1s&db.pid eq $$;
+        1s&db ||= do {
+            my $db = $pg->db;
+            db.pid = $$;
+            $db
+        };
+    
+    qp:
+        G&db ->query($s,
+        map{!ref && defined $_ ? decode_utf8($_) : $_ }
+        @Me);
+    
+    tyable:
+        $s ||= 'names';
+        my @col = map{split','} @Me;
+        push @col, 't','y real','c json','sc json';
+        my $colum = join', ',map{s/:/ /g;/ /?$_:"$_ text"} @col;
+        my $q = "create table if not exists $s ($colum)";
+        say "Create: $q from".wdump 2, [$s,@Me] ;
+        G&qp,$q
+    
+    qh:
+        my @o;
+        G&qp,$s,@Me ->hashes->map(sub{push @o,$_});
+        for my $o (@o) {
+            for my $k (keys %$o) {
+                my $v = $o.>$k;
+                $o.>$k = encode_utf8($v) if defined $v && !ref $v;
+            }    
+        }
+        sayre "".(@o-1)." rows dropped from: @Me\n$s" if !wantarray && @o > 1;
+        wantarray ? @o : $o[0]
+    
+    Jr:
+        G&qh,<<'',$s
+            select * from names where t = ?
+    
+    # select and then insert somewhat, osc updates it
+    # with o {k=>v}, scalar ref v is sql hack #
+    decj:
+        $s = G&hup,$s unless @Me;
+        my $auto = @Me == 1 && $Me[0] eq '';
+        for (c=>sc=>@Me) {
+            $_ || next;
+            $s.>$_ ||= {} if $auto;
+            $s.>$_ && !ref $s.>$_ || next;
+            $s.>$_ = djson $s.>$_;
+        }
+        $s
+    encj:
+        $s = G&hup,$s;
+        $s.>$_ = sjson $s.>$_ for 'c', 'sc';
+        $s
+    
+    pet: %acgt:s o
+        my @ks = sort keys %$o;
+        my @sel;
+        my $sel = "select * from $s where ".join" and ",map{
+            my $z = $o.>$_;
+            ref $z eq 'SCALAR' ? "$_ $$z" : do {
+                push @sel, $z;
+                "$_ = ?"
+            };
+        }@ks;
+        my $n = G&qh,$sel,@sel;
+        $n ||= do {
+            my @ac = grep { ref $o.>$_ ne 'SCALAR' } @ks;
+            my @in = map { $o.>$_ } @ac;
+            my $in = "insert into $s (".join(',',@ac)
+                .") values (".join(",",('?') x @ac)
+                .") returning *";
+            G&qh,$in,@in;
+        };
+        $n
+    
+    # add listenance via GW
+    liz: %acgt:s J
+        $s ||= C.c.W;
+        $J ||= C.c.W;
+        G.W.noti.>$s = $J;
+        G.W.lizdb->listen($s) if G.W.lizdb;
+        1
+    
+    # send message
+    zen:
+        my $m = @Me > 1 || ref $Me[0] ? sjson(\@Me) : $Me[0];
+        if (length $m > 5000) {
+            #G&tyable,mez=><<'' if !G.tabup++;
+            #    f,s,ts:timestamptz:default:now(),mid:serial:primary:key
+            my $h = G&qh,<<'',G.t,$s,$m;
+                insert into mez (f,t,s) values (?,?,?) returning mid
+            sayyl "Length of zen/notify $s: ".length $m;
+            $m = "CCC h.mid";
+        }
+        else {
+            $m = decode_utf8($m);
+        }
+        G&db ->notify($s,$m);
+
+        
 pi/tiss: |
     c&s = C.t;
     delete s&J, delete s&pi ;
