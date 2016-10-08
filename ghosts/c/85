@@ -374,8 +374,8 @@ climbo: | # hop down tv, for hJ
         elsif (defined $t && defined $cv) {
             my $vt = $cv."\t".$t;
             my $tv = tj.El.Pre.tv;
-            $f = $tv->{$vt}
-                || return sayre "NO $vt on tj.name!!!"
+            $f = $tv->{$vt};
+            $f || return sayre "NO $vt on tj.name!!!"
                 .wdump 3, [$l, OF=>$h,HAD=>$tv];
             
             #f.sc.J || die "no J for $t $cv on tj.t tj.name: ".sayyl wdump 2, $f;
@@ -393,6 +393,10 @@ climbo: | # hop down tv, for hJ
         }
         sayyl "Found: f.t";
         push @C, $f;
+        if (!f.sc.J && f.sc.dos) {
+            # thing to know about itself, dos must route somewhere
+            last;
+        }
         my $fo = $tj;
         $tj = f.sc.J;
         if (!$tj && f.y.cv == 0.9) {
