@@ -4,10 +4,13 @@ Hosthing: | # <-- Hosting
     # force T.H
     #    1 nothing
     #    2 stores only
-    #    3 everything (ofs of, of evals code(d))
-    #    4 with wires in the C, evals code(d), osc meta to resume 76-
+    #    3 both, give parts to osc to live (ofs of: evals code(d))
+    #       for needing osc to wake it
+    #    4 both, with in-bunch wires, evals code(d)
+    #        osc meta resumes 76-
     #    5 ^ stores only
     #    8+ thaws only
+    # 
     thawJ 34: %of:mo,t:y:A:mo:up:mo:c:T:H || y:A:mo:c:T:H
         c&e && return;
         
@@ -86,9 +89,11 @@ Impart: | # gittty Hosting/not interchange
         }
         my ($ok,$dr);
         ok.y.>$_ = 1 for qw'up in prev next';
+        # 2 means ref doesn't have to be one of the many
         ok.y.>$_ = 2 for qw'tv tw';
         dr.y.>$_ = 1 for qw'D x r s';
-        dr.c.code = 3;
+        dr.sc.>$_ = 1 for qw'J';
+        dr.c.code = 3; # say s&coded=1
         ok.sc.ip = 2;
 
         my $ha; # have seen
@@ -157,7 +162,7 @@ Impart: | # gittty Hosting/not interchange
         m.paths = $pa;
 
         # do in parallel, child kills parent
-        my $dl = 99;
+        my $dl = 160;
         if (G&oleak,$t,$dl ) {
             write_file('eak', wdump $dl, $t);
             die "t.t t.y.cv still leaks at depth=$dl, wrote file 'eak'";

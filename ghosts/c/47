@@ -2,7 +2,7 @@
 
 
 scgkindex: | # make scindex
-    C.sc.scgkindex = {map{_.sc.gk=>1}grep{_.sc.nk eq 'sc' && _.sc.gk}@$N};
+    s&scgkindex.>_s&gk = 1 for grep{_s&nk eq 'sc' && _s&gk}@$N;
 jshang: |
     y.at.isle = 'jes';
     y.at.jsl = 1; # send js
@@ -160,20 +160,13 @@ Stripes: | # css
         my $sc = {};
         (my($t), sc.filt, sc.cssk, sc.mor) = @$_;
         if (sc.filt =~ /\W/) {
-            my @l = split /\+/, sc.filt;
-            my $i = 0;
-            map{
-                my ($k,$v);
-                if (/\W/) {
-                    ($k,$v) = /^(\w+):(.+)/;
-                    $v = [split'~',$v] if $v =~ /^\w+(~\w+)+$/;
-                }
-                else {
-                    $k = $_;
-                }
+            for (grep{$_} split /\+/, sc.filt) {
+                my ($k,$v) = ($_);
+                ($k,$v) = /^(\w+):(.+)/ if /\W/;
+                $v = [split'~',$v] if $v && $v =~ /^\w+(~\w+)+$/;
                 $k || die "noundo $_";
-                sc.flex->[$i++]->{$k} = $v;
-            } grep{defined} @l;
+                push @{sc.flex||=[]}, {$k=>$v};
+            }
         }
         sc.mor || delete sc.mor;
         n $t=>4=><<'',$sc
