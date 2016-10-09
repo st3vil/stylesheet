@@ -23,8 +23,13 @@ JugleHue: |
 EliPticMany: | # swim for geometries
     #
 ModNs: | # modulate M/N/etc with way, s=$way(:$s_arg)?
-    my $z = $s =~ s/:(.+)// ? $1 : '';
-    Rw $s + $s:z;
+    if (ref $s eq 'CODE') {
+        $s->($M);
+    }
+    else {
+        my $z = $s =~ s/:(.+)// ? $1 : '';
+        Rw $s + $s:z;
+    }
 nogindex: |
     my ($nk,$of) = split ':', $s;
     $nk && $of || die "not nk:of: $s";
