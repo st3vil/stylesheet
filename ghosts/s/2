@@ -39,9 +39,15 @@ Sea: | # folds of the day
         }
         else {
             my ($y,$c,$sc,@ex) = @e;
-            c&s = $c if !ref $c && @e > 1;
-            C.c = $c if ref $c eq 'HASH';
-            C.c = G&peel,$$c if ref $c eq 'SCALAR';
+            if (ref $c eq 'HASH') { # the c itself
+                C.c = $c;
+            }
+            elsif (ref $c eq 'SCALAR') { # c as stringed hash
+                C.c = G&peel,$$c;
+            }
+            elsif (@e > 1) { # string or ref to ref
+                C.c.s = $c;
+            }
             $sc = G&peel,$$sc if $sc eq 'SCALAR';
             $sc = {} if $sc eq '';
             $sc = G&peel,$sc if !ref $sc;
@@ -62,7 +68,7 @@ Sea: | # folds of the day
             if (!ref $y) {
                 if ($y =~ s/^-(\w+)_?//) {
                     c&pi = $1;
-                    c&s = C.t if !defined c&s;
+                    c&s = C.t if !exists c&s;
                 }
                 if ($y =~ /^\d+(\.\d+)?$/ || !length $y) {
                     C.y.cv = $y
