@@ -9,6 +9,7 @@ Hosthing: | # <-- Hosting
     #    4 both, with in-bunch wires, evals code(d)
     #        osc meta resumes 76-
     #    5 ^ stores only
+    #    6 impart and resume right away, continuing Jco (TODO)
     #    8+ thaws only
     # 
     thawJ 34: %of:mo,t:y:A:mo:up:mo:c:T:H || y:A:mo:c:T:H
@@ -176,6 +177,11 @@ Impart: | # gittty Hosting/not interchange
         my $d = c&parts || die "imparts no parts";
         local A.V = 2;
         my $m = delete ds&meta;
+        
+        if (m.mtime) {
+            return c&sameparts = 1 if s&partsmtime eq m.mtime;
+            s&partsmtime = m.mtime;
+        }
 
         m.A.xo = delete ds&xo if ds&xo;
         for ('c','sc') {
@@ -188,8 +194,9 @@ Impart: | # gittty Hosting/not interchange
         return# saygr "Parts lightly A.1.t"
         unless m.unreal;
         # 
-
+        my $i;
         my $ub = &Cd{
+            $i++;
             return unless delete s&coded;
             G&Code,"imparts";
             return; # means no c.ind/inside labegy
@@ -253,9 +260,10 @@ Stro: | # storage aJent for Hosthing, just needs A.G
     }
     elsif (e&t eq 'get') {
         -f $f && -s $f || return;
-        my $u = LoadFile($f);
-        $u || return;
-        cs&top = $u;
+        my $d = LoadFile($f);
+        $d || return;
+        ds&meta.mtime = (stat $f)[9];
+        cs&top = $d;
         C.c.V && sayyl "Get $f";
     }
     else { G&vent,"NHogo" }
