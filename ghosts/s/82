@@ -26,6 +26,9 @@ ElvisDoolify: | # J webbed events
             map{$tug->()} map{G&op,$_ } 't:!~^[tT] spi:relim';
             y.lum = 2;
             y.thi = 20;
+        
+        n Waytch
+        
         t.e =
         n Dooli
         t.en->('sc lastK c s', "See tarps");
@@ -34,7 +37,9 @@ ElvisDoolify: | # J webbed events
         t.en->('sc lv,olv', "See Tape");
         
     }
-
+pi/tiss: |
+    c&s = C.t;
+    delete s&J, delete s&pi ;
 ElvisOver: | # use Goh notify for way change introduct
     # pg way listen (G'd)
     my $t = Rw Towering Ang
@@ -66,13 +71,14 @@ ElvisOver: | # use Goh notify for way change introduct
         t.e =
         n ElvisOvzio
         t.cs->('sc top', "ElvisOvzio way used");
+        
     t.e =
     n Waytch
-    t.cs->('sc lv,olv', "Waytch holding listener");
+    t.cs->('sc lv,olv', "Waytch holding on to Mez");
     
     t.e =
     n Listen
-    t.cs->('sc lv,olv', "Listen listening to Goh");
+    t.cs->('sc lv,olv', "Listen listening to Goh for Mez");
     t.cs->('sc top', "Listen again");
     
     $til->(0.02, sub { `echo '    -1' >> $f` });
@@ -100,6 +106,13 @@ ElvisOver: | # use Goh notify for way change introduct
         t.cs->('sc top', "ElvisOvzio used new way");
         my $mo = t.ntos->('mo');
         t.dd->(mo.c.want, "ElvisOvzio notices pin change");
+        
+        t.e =
+        n Mez
+        t.cs->('sc top', "see Mez");
+        t.e =
+        n Listen
+        t.cs->('sc top', "see Listen");
 
     });
     $til->(9.9, sub {
@@ -133,16 +146,14 @@ WayHeave: | # hold way updates to G since it began, plumbed by Waytch
 Waytch: | # way listener, sprawl
     # to plot way changed into ElMatron and call the ghoster to calc wanderince
     u Zpace
-    Js&ein.t.l.sMJ = &sMJjeTC{
-        local A.V = 2;
-        # Goh happens to eat sM
-        my $es = djson $s;
-        for (@$es) {
-            m _.t=>''=>{s=>_c&s}=>{dig=>_s&dig}
-        }
+    Js&ein.pi.Gup.sMJ = &sMJjeTC{
+        m e.t=>''=>{s=>ec&s}=>{dig=>es&dig}
     };
+    
+    
     S
-    n Goh=>-listen
+    n Goh=>-mez
+    
     y.n = 5;
     y.cyc = 100;
     @$M = @{Js&M||[]};
@@ -153,6 +164,11 @@ pi/takeM: |
     y.cyc = 1000;
     @$M = @{c&M};
     @{c&M} = ();
+pi/mez: | # interpreted pg listener, makes e to A.2
+    # yea heayh
+    J.bowls ++ ||
+    n Mez=>[to=>c&s]
+    
 pi/listen: | # pg listener, makes e to A.2
     # yea heayh
     J.bowls ++ ||
@@ -163,24 +179,91 @@ Mez: | # listener for mezages with line protocols
     #     /^CCC (\w+) -> large item in mez where t=$1
     # like and in front Listen,
     # line clevered into e as it goes through to client
+    u Zpace
+    u pg
+    y.res = 1; # M t replant
+    
+    Rw sWscribe;
+    
+    Js&eout.t.l = "heard elvises"; # fyi
+    # distribute noises to froms
+    Js&ein.t.l = &TesC{
+        local A.V = 2;
+        
+        # large messages stashed and referred to
+        $s = G&dmez,$1 if $s =~ /^CCC (\d+)$/;
+        
+        my $es = eval { djson $s };
+        if ($@) {
+            sayre "Spat: $@\n\nAbout: ".ki $s if $@;
+            $@ = "";
+            return;
+        }
+        
+        for my $s (ref $es eq 'ARRAY' ? @$es : $es) {
+            # e must go around a kind of corner here
+            # for the hz strick cececece will not divide
+            for (grep{ _c&s eq es&listen } @{Js&M||[]}) {
+                _s&W || die "noW listenee ".ki$_;
+                n _s&W => [$s]
+            }
+        }
+        return T.pos = 0;
+    };
+    
+    S
+    
+    Rw sMres listen;
+    
+    # relative to el - overall C change
+    my $l = Js&sels.listen = {};
+    l.1 = &acgt{
+        n Listen=>[to=>C.t]
+    };
+    l.9 = &acgt{
+        n Listen=>[not=>C.t]
+    };
+    
+    
+    
+    #
+sWscribe: | # for your M of W wanting s
+    Js&ein.t.to.sMJ = &sMJjeT{
+        Js&tri.>$s.>j.t ++ && sayre("Ledup j.t")
+            && return T.pos = 0;
+        j.3 eq $j || die "listen $s to j.t not W";
+        1 && sayyl "J.t list $s  -> j.t  ".ki$e;
+        m "j.t $s"=>''=>{s=>$s,j=>$j}=>{W=>j.t}
+    };
+    Js&ein.t.not.sMJ = &sMJj{
+        sayre "J.t unlistens $s j.t";
+        @$M = grep { _.t ne "j.t $s" } @$M;
+    };
+    
+sMres: | # maps unique Js&M.c.s into m $t:s and sc.$m0 = $s
+    my ($sck) = @{ar.m||[]};
+    # unique listen addresses
+    my $st;
+    $st.>_c&s.>_s&W = 1 for @{Js&M||[]};
+    
+    for my $s (sort keys %$st) {
+        my $v = $st.>$s;
+        my $sc = {};
+        sc.clients = join' ',sort keys %$v;
+        $sc.>$sck = $s if $sck;
+        m $s=>''=>{}=>$sc
+    }
 Listen: | # pg listen pool
     u Zpace
     u pg
     y.res = 1; # M t replant
-    my $t = Js&ein.t = {};
+    
     # accumulate the froms
-    t.to.sMJ = &sMJjeT{
-        Js&tri.>$s.>j.t ++ && sayre("Ledup j.t")
-            && return T.pos = 0;
-        j.3 eq $j || die "listen $s to j.t not W";
-        m "j.t $s"=>''=>{s=>$s,j=>$j}=>{W=>j.t}
-    };
-    t.not.sMJ = &sMJj{
-        sayre "J.t unlistens $s j.t";
-        @$M = grep { _.t ne "j.t $s" } @$M;
-    };
+    Rw sWscribe;
+    
+    Js&eout.t.l = "heard lines"; # fyi
     # distribute noises to froms
-    t.l = &TesC{
+    Js&ein.t.l = &TesC{
         map {
             _s&W || die "noW listenee ".ki$_;
             n _s&W => $C
@@ -191,10 +274,7 @@ Listen: | # pg listen pool
     };
     S
     
-    # unique listen addresses
-    for (uniq map { _c&s } @{Js&M||[]}) {
-        m $_=>''=>{}=>{listen=>$_}
-    }
+    Rw sMres listen;
     
     y.imp++ if T.forked; # relistens all
     G&has,forked=>1; # <^ waker in between
@@ -212,11 +292,9 @@ Listen: | # pg listen pool
     my $l = Js&sels.listen = {};
     l.1 = &acgt{
         G&db ->listen(C.t);
-        sayre "Should mod C.t";
     };
     l.9 = &acgt{
         G&db ->unlisten(C.t);
-        sayre "Should unmod C.t";
     };
     
 pg: |
@@ -324,8 +402,13 @@ pg: |
         }
         G&db ->notify($s,$m);
 
-        
-pi/tiss: |
-    c&s = C.t;
-    delete s&J, delete s&pi ;
+    dmez:
+        my $h = G&qh,<<'',$s;
+            select f,t,s,mid from mez where mid = ?
+        length(h.s) || die "mized mez: $1";
+        Rw timer $d=2 $cb:_ for sub { G&qp,<<'',h.mid };
+            delete from mez where mid = ?
+        $s = h.s;
+        sayre "CCCC: h.t -> ".ki$s;
+        $s
 

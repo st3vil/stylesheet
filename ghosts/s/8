@@ -465,7 +465,7 @@ ElChorus: | # mo->E joins your request to a J
             }) {
             return T.Z.6 = $A;
         }
-    #c e3 enter lingis, try solve, pin if cant
+    #c e3 enter lingis, try solve, pin if cant #
     e 3:
         local A.V = 2;
         my $e = A&e; # endmost e, we got A&oure on C
@@ -479,49 +479,40 @@ ElChorus: | # mo->E joins your request to a J
             push @{ec&trJ||=[]}, A.1;
         }
         
-        my @being = $e;
-        # can multiplex lines, must handle simply here or be lost
-        while (@being) {
-            $e = shift @being;
-            T.com = 1;
-            if (in.o && A.1 ne A.2) { # from other? may talk to self
-                Rw in.o;
-            }
-            elsif (in.li) {
-                Rw in.li;
-            }
-            #  pi (or can translate object through)
-            elsif (my $pin = in.pi && in.pi.>e.sc.pi ) {
-                ref $pin && die "More pinfotic";
+        T.com = 1;
+        my $pin;
+        if (in.o && A.1 ne A.2) { # from other? may talk to self
+            Rw in.o;
+        }
+        elsif (in.li) {
+            Rw in.li;
+        }
+        #  pi (or can translate object through)
+        elsif ($pin = in.pi && in.pi.>e.sc.pi ) {
+        }
+        # c spaced things
+        elsif ($pin = in.t && in.t.>e.t ) {
+        }
+        # 
+        else {
+            T.com = '';
+        }
+        
+        if ($pin) {
+            if (!ref $pin) {
                 Rw $pin;
             }
-            # c spaced things
-            elsif (my $pin = in.t && in.t.>e.t ) {
-                if (!ref $pin) {
-                    Rw $pin;
-                }
-                elsif (ref $pin eq 'CODE') {
-                    $pin->($T,$e,e.c.s,$C);
-                }
-                else {
-                    for my $k (sort keys %$pin) {
-                        my $v = $pin.>$k;
-                        if ($k eq 's' && $v eq 'M') {
-                            # used to open envelopes of e etc without leaving here
-                            my $M = djson e.c.s;
-                            push @being, @$M;
-                            sayre "Multied ".@$M." For ".G&es;
-                        }
-                        else {
-                            Rw $k + $v $us;
-                        }
-                    }
-                }
+            elsif (ref $pin eq 'CODE') {
+                $pin->($T,$e,e.c.s,$C);
             }
-            # 
             else {
-                T.com = '';
+                for my $k (sort keys %$pin) {
+                    my $v = $pin.>$k;
+                    Rw $k + $v $us;
+                }
             }
+        }
+        
             # and then
             if (T.com eq '4') {
                 # handler says keep going into E 4
@@ -553,7 +544,6 @@ ElChorus: | # mo->E joins your request to a J
                     return T.Z.7 = $A;
                 }
             }
-        }
         return if T.Z;
     
     #c e37 treeify hJ/hC
@@ -672,6 +662,7 @@ ElChorus: | # mo->E joins your request to a J
             T.pos = 0;
         }
         else {
+            sayre "Not amongst: ".ki [sort keys %{4s&Jtv}];
             G&vent,"SpaceGoing:$t";
             # could make it up for it wants the name
             # makes networked light injector
@@ -745,8 +736,10 @@ Doable: | # look for dos in hC (vie bo)
 sMJ: | # for Js&M map in
     my $M = Js&M ||= [];
     my $s = e&s;
-    my $j = ss&J if ref $s eq 'HASH';
+    my $j;
+    $j = ss&J if ref $s eq 'HASH';
     $j ||= do {
+        #1 && sayyl "In gand: A.1.t - A.2.t A.2.3.t - A.2.2.t A.2.2.3.t";
         A.2.3;
     };
     $v->($s,$M,$J,$j,$e,$T,$C);
@@ -989,11 +982,13 @@ Wout: | # sends up
     };
     G.mkoJ->($nethole=>$c);
 Win: |
-    if (my $e = e&C) {
-        my $w = delete e.c.was;
-        sayyl "Came from: ".ki $_ for @{w.c.hC};
-        saybl "Elvising: ".wdump 7, $e;
+    Js&ein.t.jse = &TesC{
+        if (my $w = delete e.c.was) {
+            sayyl "Came from: ".ki(wc&z).(wc&hC && "  via: ".ki wc&hC);
+        }
         ec&us = delete ec&s;
+        saybl "Elvising: ".wdump 7, $e;
+        T.com = '6';
     }
 Junup: | # display z of c&eat (K)
     u urw
@@ -1031,15 +1026,13 @@ Junup: | # display z of c&eat (K)
     n itc=>0.0001=>{}=>{z=>\@z,mw=>'70%',mh=>'80%',dos=>'Junin'}
     
 Junin: |
-    sayre "Handled ! ";
     my $e = e&C;
     my $us = us&C;
     $us = G&hup,$us;
     shift @{us.p} for 0 .. us.p_i;
+    us.p_i = 0;
     
     J.froe->(jse=>''=>{s=>$us,was=>$e});
-    sayre "Etc",0,0;
-    Rw talkzyh;
     T.pos = 0;
 Juned: | # handle input
     sayyl "J.t: ".ki us&C;
