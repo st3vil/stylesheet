@@ -162,7 +162,8 @@ ElVerse: | # hyperactive With
         my $cv = A.mo.cv;
         $cv =~ s/^0\.//;
         my $e = G&e,\'C';
-        G&sn .":\n    ".ki($e).(e.c.hC && ki(e.c.hC));
+        G&sn .":\n    ".ki($e)
+            .(e.c.us && "\n        us: ".ki(e.c.us));
     
     # means vector is about to do new ground
     # solves mind - which should row the of=S somewhere
@@ -444,13 +445,14 @@ ElChorus: | # mo->E joins your request to a J
             }
             else {
                 # doesn't need to know anything,
+                # may find body,
                 # gets route, vent if lost
-                return T.Z.6 = $A;
             }
         }
         
         # tractorbeam makes deeper look even if routable
         # so we can log e
+        
         unless (in.tractor && Ec&trJ && Ec&trJ->[-1] ne A.1
             # or not routable
             || !$us
@@ -464,7 +466,8 @@ ElChorus: | # mo->E joins your request to a J
             || us.p && do {
                 # for now the chain must be fully linked also
                 my $tcv = us.p->[Ec&us.p_i - 1];
-                $tcv && $tcv->[0] eq A.1.t
+                my $t = $tcv->[0];
+                $t && $t eq A.1.t
             }) {
             return T.Z.6 = $A;
         }
@@ -519,6 +522,8 @@ ElChorus: | # mo->E joins your request to a J
             # and then
             if (T.com eq '4') {
                 # handler says keep going into E 4
+                # same as if no ein
+                # so pointing to anything results in something
             }
             elsif (T.com eq '6') {
                 # handler says route
@@ -547,7 +552,6 @@ ElChorus: | # mo->E joins your request to a J
                     return T.Z.7 = $A;
                 }
             }
-        return if T.Z;
     
     #c e37 treeify hJ/hC
     # bo or handler will use the remotest does
@@ -555,17 +559,21 @@ ElChorus: | # mo->E joins your request to a J
         local A.V = 2;
         my $e = A&e;
         my $us = e.c.us;
-        my $in = 1s&ein;
+        my $in = 1s&ein; # can find body without
         # detect way in after this route from the tree of J we have
         my $J = A.1;
         my $c = Js&top;
-        $c || return T.Z.6 = $A; #A&pines || A&wantpine ||
+        $c || return do {
+            sayre("notop EZ6");
+            T.Z.6 = $A; #A&pines || A&wantpine ||
             #G&vent,"e4Notop:J.t:J.c.o"; # try again later
+        };
         my $p = $us && us.p || return
             A&pines || G&vent,"NoE4point";
         
         my @p = @$p[ us.p_i .. (@$p-1) ];
         my $i = 0;
+        my @exact; # reresolve our C resolved by other J before here
         for (@p) {
             my ($t,$cv) = @$_;
             my $cc = $c;
@@ -575,8 +583,17 @@ ElChorus: | # mo->E joins your request to a J
             }
             else {
                 $t || die "No way in";
-                my $v = c.y.tv || c.sc.J && c.sc.J.sc.tv
-                    || die "No tv on ".ki$c;
+                my $v;
+                if ($v = c.y.tv) {
+                }
+                elsif (my $Jtv = c.sc.J && c.sc.J.sc.tv) {
+                    A&othward = 1; # resolving C into other J
+                    sayyl "othing c.t in: $t";
+                    $v = $Jtv;
+                }
+                else {
+                    $v = {}; # nothing inside = no tv
+                }
                 $v = $v.>$t;
                 if (!defined $cv) {
                     ($cv,my@mi) = sort keys %$v;
@@ -590,11 +607,30 @@ ElChorus: | # mo->E joins your request to a J
                 splice @p, $i,0,'lost:';
                 my $rea = "E4pointlost: on cc.t cc.y.cv: ".join' ',@p;
                 $rea .= '  among:'.slim(44,join',',sort keys %{cc.y.tw});
-                return G&vent,$rea;
+                A&reslos = $rea;
+                # keeps going, building only known tree v
+                last;
             }
-            push @{e.c.hC ||= []}, $c;
-            push @{e.c.hJ ||= []}, c.sc.J if c.sc.J;
+            my $ii;
+            if ($i == 0 && ec&hC && grep {$ii++;$c eq $_} @{ec&hC}) {
+                $ii--;
+                saygr "Cut: $ii: ".ki ec&hC;
+                @exact = splice @{ec&hC}, $ii;
+            }
+            if (@exact) {
+                # our resolved by others must be same as ours
+                my $o = shift @exact;
+                $o eq $c || G&vent,"PassedwrongC:o.t/c.t";
+            }
+            push @{ec&hC ||= []}, $c;
+            push @{ec&hJ ||= []}, cs&J if cs&J;
             $i++;
+        }
+        if (@exact) {
+            # extra piled on the right of that
+            # so left/right dos linga
+            sayyl "Extended: ".ki(ec&hC).":\n    ".ki \@exact;
+            push @{ec&hC}, @exact;
         }
         
     #c e5 route into J - tree climbing
@@ -608,8 +644,17 @@ ElChorus: | # mo->E joins your request to a J
         ar.e = $e;
         # tug indy uov
         T.com = 1;
-        if (in.bo) {
-            Rw in.bo;
+        if (!A&reslos && !A&othward) {
+            # reslos here if not certain the path points in here
+            #   or is supposed to route
+            # othward if we had to hop through sc.J to resolve path
+            #   to be routed there, hC stretches across
+            if (in.bo) {
+                Rw in.bo;
+            }
+            else {
+                T.com = '';
+            }
         }
         else {
             T.com = '';
@@ -626,11 +671,11 @@ ElChorus: | # mo->E joins your request to a J
             # break from tuggance and transfer desires to A.mo
             T.Z.7 = $A;
             A&ov = 0.9;
-            T.seek = 1;
+            T.seek = 1; # throats with new ov
         }
         else {
             # unhandled
-            G&vent,"E55nosolution";
+            A&reslos ||= "E55nosolution";
         }
         
         
@@ -645,7 +690,8 @@ ElChorus: | # mo->E joins your request to a J
         my $in = 1s&ein;
         
         unless ($us && us.p && ref us.p eq 'ARRAY') {
-            #G&vent,'NoE6point' unless A&pines;
+            G&vent,'NoE6point' unless A&pines;
+            #G&vent,A&reslos if A&reslos;
                return;
         }
         
@@ -654,6 +700,7 @@ ElChorus: | # mo->E joins your request to a J
         my ($t,$cv) = @$point;
         
         my $vs = 4s&Jtv.>$t;
+        undef $cv if $cv == 0.9;
         $cv ||= 0.1;
         my $oJ = $vs.>$cv;
         
@@ -666,7 +713,8 @@ ElChorus: | # mo->E joins your request to a J
         }
         else {
             sayre "Not amongst: ".ki [sort keys %{4s&Jtv}];
-            G&vent,"SpaceGoing:$t";
+            A&reslos ||= "SpaceGoing:$t";
+            G&vent,A&reslos;
             # could make it up for it wants the name
             # makes networked light injector
         }
@@ -730,7 +778,8 @@ Routable: | # look for routes in J (vie li, tractor?)
 Doable: | # look for dos in hC (vie bo)
     my @doers = grep {_.sc.dos} @{e.c.hC};
     @doers || return G&vent,"Nodoing";
-    @doers == 1 || G&vent,"Manydoing";
+    @doers == 1 || G&vent,"Manydoing" ,
+        sayre "Have some: ".ki e.c.hC;
     my ($c) = @doers;
     1&&sayyl "dos e.t for c.sc.dos: ".ki$c;
     
@@ -777,19 +826,7 @@ ElvisDoolify: | # J webbed events
     # wants to magnetise tape observation for anything
     
     if (c&Se == 1) {
-        u Dooli=>'',<<'','%of:w'
-            u Zpace
-            Jc&elvis = 'Dejo';
-            n Fergus =>-imigis=>'eye/fug','%qz,qs'
-            my $tug = sub {
-                m _.t=>''=>\'helum',{tag=>'img',src=>_c&s};
-            };
-            map{$tug->()} map{G&op,$_ } 't:~^[tT] spi:relim';
-            m 'Fergus'=>-tiss
-            map{$tug->()} map{G&op,$_ } 't:!~^[tT] spi:relim';
-            y.lum = 2;
-            y.thi = 20;
-        
+        # with developer changing ghost
         n Waytch
         
         t.e =
@@ -800,6 +837,19 @@ ElvisDoolify: | # J webbed events
         t.en->('sc lv,olv', "See Tape");
         
     }
-pi/tiss: |
+Dooli: |
+    u Zpace
+    
+    Jc&elvis = 'Dejo';
+    S
+    n Fergus =>-imigis=>'eye/fug','%qz,qs'
+    
+    m 'Fergus'=>-tiss
+    m _.t=>''=>\'helum',{tag=>'img',src=>_c&s} for G&op;
+    
+    y.lum = 2;
+    y.thi = 20;
+pi/tiss: | # t is s
     c&s = C.t;
     delete s&J, delete s&pi ;
+
