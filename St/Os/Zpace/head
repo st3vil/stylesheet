@@ -1,4 +1,4 @@
---- &20 
+--- &2 
 sc: 
   coil: tldo
   meta: 
@@ -6,7 +6,7 @@ sc:
       xo: 
         way: 
           Zpace: 
-            2462f53cbde8: 1
+            2ea88a0acff4: 1
           nogindex: 
             a44f426670b4: 1
     c: 
@@ -14,8 +14,8 @@ sc:
       mat: ~
       wil: 1
     paths: 
-      Zpace 0.9: *20
-      Zpace 0.9/L 0.001: &1 
+      Zpace 0.9: *2
+      Zpace 0.9/L 0.001: &5 
         c: 
           W: of
         sc: 
@@ -23,7 +23,7 @@ sc:
         t: L
         "y": 
           cv: '0.001'
-          in: &42 
+          in: &35 
             c: 
               s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\n($A->{c}->{s}) = @$s;\n};"
             sc: 
@@ -36,7 +36,7 @@ sc:
             t: L
             "y": 
               cv: '0.1'
-              next: &4 
+              next: &30 
                 c: 
                   s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $c = $C->{c};\nmy $M = $C->{c}->{M};\n# etc\n};"
                 sc: 
@@ -52,258 +52,294 @@ sc:
                 t: M
                 "y": 
                   cv: '0.1'
-                  next: &3 
+                  next: &34 
                     c: 
-                      s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $n = $C->{y}->{n};\n# to almost fill space\n};"
+                      s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $cyc = $C->{y}->{cyc};\n# sweeping over itself, round and round\n};"
                     sc: 
                       acgt: s
                       act: 1
                       args: A,C,G,T,s
                       coded: 1
-                      dige: 95c647e345c6
-                      gk: 'n'
+                      dige: 1d41415c77ed
+                      gk: cyc
                       nk: 'y'
                       of: L
-                      v: yn
-                    t: 'n'
+                      v: ycyc
+                    t: cyc
                     "y": 
                       cv: '0.1'
-                      next: &2 
+                      next: &31 
                         c: 
-                          s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $spc = $C->{y}->{spc};\n# composite including:\n#   erse - n,u = u,n # stack on floor vs ceiling\n#   1000 - or so thi & overflow replaces cyclicly\n};"
+                          s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $erse = $C->{y}->{erse};\n# flip n,u, stack floor to ceiling\n};"
                         sc: 
                           acgt: s
                           act: 1
                           args: A,C,G,T,s
                           coded: 1
-                          dige: 941902cb4601
-                          gk: spc
+                          dige: 657efe631de8
+                          gk: erse
                           nk: 'y'
                           of: L
-                          v: yspc
-                        t: rev
+                          v: yerse
+                        t: erse
                         "y": 
                           cv: '0.1'
-                          next: &16 
+                          next: &33 
                             c: 
-                              s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $spc = $C->{y}->{spc};\n# to take up space\n};"
+                              s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $n = $C->{y}->{n};\n# to almost fill space\n};"
                             sc: 
                               acgt: s
                               act: 1
                               args: A,C,G,T,s
                               coded: 1
-                              dige: 8d19f907fa60
-                              gk: spc
+                              dige: 95c647e345c6
+                              gk: 'n'
                               nk: 'y'
                               of: L
-                              v: yspc
-                            t: spc
+                              v: yn
+                            t: 'n'
                             "y": 
                               cv: '0.1'
-                              next: &5 
+                              next: &32 
                                 c: 
-                                  s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $u = $C->{y}->{u};\n# to take space up til\n};"
+                                  s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $spc = $C->{y}->{spc};\n# composite \\d+ ? $y->{cyc} : peels into y\n};"
                                 sc: 
                                   acgt: s
                                   act: 1
                                   args: A,C,G,T,s
                                   coded: 1
-                                  dige: 842c9be664b8
-                                  gk: u
+                                  dige: 09ce1c1a3cbb
+                                  gk: spc
                                   nk: 'y'
                                   of: L
-                                  v: yu
-                                t: u
+                                  v: yspc
+                                t: rev
                                 "y": 
                                   cv: '0.1'
-                                  next: &14 
+                                  next: &44 
                                     c: 
-                                      s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $in = $C->{y}->{in};\n$C->{y}->{n} = delete $C->{y}->{in} if !ref $C->{y}->{in};\n};"
+                                      s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $spc = $C->{y}->{spc};\n# to take up space\n};"
                                     sc: 
                                       acgt: s
                                       act: 1
                                       args: A,C,G,T,s
                                       coded: 1
-                                      dige: c6fb2fcf4ecc
-                                      gk: in
+                                      dige: 8d19f907fa60
+                                      gk: spc
                                       nk: 'y'
                                       of: L
-                                      v: yin
-                                      vatis: "!ref"
-                                    t: in
+                                      v: yspc
+                                    t: spc
                                     "y": 
-                                      cv: '0.12'
-                                      next: &11 
+                                      cv: '0.1'
+                                      next: &1 
                                         c: 
-                                          s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $out = $C->{y}->{out};\n$C->{y}->{u} = delete $C->{y}->{out} if !ref $C->{y}->{out}\n};"
+                                          s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $u = $C->{y}->{u};\n# to take space up til\n};"
                                         sc: 
                                           acgt: s
                                           act: 1
                                           args: A,C,G,T,s
                                           coded: 1
-                                          dige: 7d63d8e70d45
-                                          gk: out
+                                          dige: 842c9be664b8
+                                          gk: u
                                           nk: 'y'
                                           of: L
-                                          v: yout
-                                          vatis: "!ref"
-                                        t: out
+                                          v: yu
+                                        t: u
                                         "y": 
-                                          cv: '0.12'
-                                          next: &12 
+                                          cv: '0.1'
+                                          next: &41 
                                             c: 
-                                              s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\n$A->{c}->{y} && die \"You Ay L 2\";\nmy $J = $A->{1};\n$J->{c}->{s} || die \"Jcs not holding mo C: \".$G->{h}->($A,$C,$G,$T,\"sn\");\n#local $A->{V} = 1;\n# mo C that began the J we are now inside is the trick\n# we are probably at 17 of their root mo, which has $C->{c}->{M}\nmy $Jy = $A->{1}->{c}->{s}->{y};\nmy $y = $C->{y};\nmy $M = $C->{c}->{M};\n\nif (my $r = $y->{rev}) {\n    for my $r (split ' ', $r) {\n        if ($r =~ /^\\d+$/) {\n            $y->{cyc} = $r;\n        }\n        else {\n            $G->{h}->($A,$C,$G,$T,\"xot\",$y,$_) for $G->{h}->($A,$C,$G,$T,\"peel\",$r);\n        }\n    }\n}\n\n# some L uC spawns the A nC lattice\n# what to do with the L uC?\nif ($M) {\n    # has M\n    # L uC can be forgotten, probably mo'd with root in J6\n    # it could be placement metadata/unity\n    my @M;\n    while ($y->{thi} && @$M < $y->{thi}) { # copies out to there\n        @M = @$M if !@M;\n        last if !@M;\n        push @$M, $G->{h}->($A,$C,$G,$T,\"hup\",shift@M);\n    }\n    if ($y->{cyc} && @$M > $y->{cyc}) { # sweeping over itself\n        my @M = splice @$M, 0, $y->{cyc} while @$M > $y->{cyc};\n        splice @M, 0, 0+@$M;\n        push @$M, @M;\n        # decommissions them?\n    }\n}\nelse {\n    # is first in its own M\n    # to make holes in space other M must flow around\n    $C->{c}->{M} = $M = [$C];\n    $y->{thi} > 1 &&\n           push @$M, map { $G->{h}->($A,$C,$G,$T,\"hup\",$C) } 1 .. $y->{thi} - 1;\n}\n\n# limits apply, thi being for ^ iterator length \n#                          and v limit of output\nmy $lims = {};\nfor (qw'thi') {\n    $lims->{\"$_\"} = $y->{\"$_\"} if defined $y->{\"$_\"};\n}\n$lims->{limn} = int(9 * $y->{limn} * $Jy->{spc})\n    if $y->{limn} && ($Jy->{spc} || die \"No space! $J->{t}\");\nmy $lim;\nwhile (my ($k,$v) = each %$lims) {\n    @$M > $v || next;\n    $A->{V} && $G->{h}->($A,$C,$G,$T,'say','say',\"Limof: $k $v to $C->{t}\");\n    $lim = $k if !$lim || $lims->{\"$lim\"} > $lims->{\"$k\"};\n}\nif ($lim) {\n    my $it = $lims->{\"$lim\"};\n    my $from = 0;\n    if ($y->{tail}) {\n        $from = -1;\n        $it *= -1;\n    }\n    else {\n        $it -= 1;\n    }\n    $lims = $lim; # name\n    $lim = @$M; # limited from\n    @$M = @{$M}[$from .. $it];\n}\n\n$A->{V} = 0;\n$y->{thi} = @$M;\n$y->{thi} || die \"No M: \".ki $C;\n$y->{thi} = $y->{cyc} if $y->{cyc};\n#c & point/seek to things coming in with our surrounds\n\n# if we were placed with enough room\n# let atoms slide up to the top J\n# things saying they're in both places\n#   leads to nice grouping, ref integrity\n$y->{J} = $A->{3} if $Jy->{spc} > 0.1;\ndelete $y->{J} if $y->{clos};\nmy $clos = $Jy->{spc} && !$y->{J};\n#  they can want to be inside too\n#  geo to chain together floating/not atoms\n#  so its like wires over machines\n\n# ml (margin-left)\n# high lum makes tree bends up towards margin\n# like it is open inside, like bet. rummager.\n$y->{inde} = $Jy->{inde} + 0.06 if $y->{J};\n\n# sliver of attention\nmy $sl = $Jy->{spc} * 0.01;\n$sl = 0.02 if $sl < 0.02;\n# carpenting\n$y->{n} ||= $clos ? 0.3 : $Jy->{J} ? $Jy->{cv} + $sl : 0.1;\n$y->{u} ||= $clos ? 0.4 : $Jy->{J} ? $Jy->{ov} - $sl : 0.9;\n\n# set width\n$y->{u} = $y->{n} + $y->{space} if defined $y->{space};\nif ($y->{erse}) {\n    ($y->{u},$y->{n}) = ($y->{n},$y->{u});\n    $y->{tail} = $y->{thi}; # lightly\n}\n\n# may be way less than 0...\n# a cv scaled back, will have defiantly huge spc\n$y->{u} /= 10 until $y->{u} < 1;\n$y->{n} /= 10 until $y->{n} < 1;\n# corner noted\nif ($lim) {\n    my $s = \"$lim>\".@$M;\n    my $cv = $y->{tail} ? $y->{n} : $y->{u};\n    # TODO += here blows up zopul:\n    $cv -= 0.002;\n    my $M = $A->{c}->{XM} ||= []; # labely meta\n    $G->{h}->($A,$C,$G,$T,\"m\",$M,lim=>$cv,$s,'%fs:7,hs:7487,limit:'.$lims=>'');\n}\n# fit in multiple of\nif (my $ert = $y->{ert}) {\n    $ert += $y->{ert} while $y->{thi} > $ert;\n    $y->{thi} = $ert;\n}\n$y->{space} = $y->{u} - $y->{n};\nmy $outer;\nif ($y->{res}) {\n    $outer = $y->{space} / $y->{thi};\n    $y->{space} -= $outer;\n}\n$y->{space} *= -1 if $y->{space} < 0;\n$y->{v}->{v} = $y->{n}; # rolls\n$y->{v}->{v} += $outer / 2 if $outer; #\n# average size\n$y->{v}->{aspace} = $G->{h}->($A,$C,$G,$T,\"roun\",$y->{space}/$y->{thi});\n# thy -> mu bends out\n$y->{v}->{Ly} = $y; # u is shared placevolve meta\nmy $i;\nfor (@$M) {\n    $_->{y}->{v} = $y->{v};\n    $_->{y}->{i} = $i++;\n    $_->{y}->{a} = $G->{h}->($A,$C,$G,$T,\"tugA\",a=>2=>$_);\n    $_->{y}->{a}->{L} = $A;\n}\n# L can M the C also in a\n\n #c lum uC shapes curve, wants to be with limn\n # might mean a few lum qualities, make them switchupable\n # supposedly osc can measure itself, hoist geometry\n #    descriptions for ascii art buildings\n};"
+                                              s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $in = $C->{y}->{in};\n$C->{y}->{n} = delete $C->{y}->{in} if !ref $C->{y}->{in};\n};"
                                             sc: 
                                               acgt: s
                                               act: 1
                                               args: A,C,G,T,s
                                               coded: 1
-                                              dige: d360575b6845
+                                              dige: c6fb2fcf4ecc
+                                              gk: in
+                                              nk: 'y'
                                               of: L
-                                            t: L
+                                              v: yin
+                                              vatis: "!ref"
+                                            t: in
                                             "y": 
-                                              cv: '0.2'
-                                              next: &10 
+                                              cv: '0.12'
+                                              next: &46 
                                                 c: 
-                                                  s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $lum = $C->{y}->{lum};\nmy $M = $C->{c}->{M} || die \"lum no M\";\nmy $y = $C->{y};\nmy $u;\n($u->{l},$u->{r}) = split ',', $lum;\n$u->{\"$_\"} = do {\n    $u->{\"$_\"} =~ m/^(?:(\\d+)-)??(?:(\\d+))(?:-(\\d)+)?$/\n        || die \"notunder: $_ \".wdump 2, $u;\n    {i=>$1,u=>$2,o=>$3}\n} for grep {$u->{\"$_\"} } keys %$u;\n$u->{l}->{u} ||= 3;\n$u->{r}->{u} ||= $u->{l}->{u} / 4;\n$u->{l}->{o} ||= $u->{r}->{u} / 3;\nmy $i = 0;\nfor (@$M) {\n    $_->{y}->{thy} = 1 if !defined $y->{thy};\n    $_->{y}->{thy} += $u->{l}->{u};\n    $i++;\n    if ($i > $u->{l}->{o}) {\n        $u->{l}->{u} -= 2 if $u->{l}->{u} > 0.1;\n    }\n}\n};"
+                                                  s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $out = $C->{y}->{out};\n$C->{y}->{u} = delete $C->{y}->{out} if !ref $C->{y}->{out}\n};"
                                                 sc: 
                                                   acgt: s
                                                   act: 1
                                                   args: A,C,G,T,s
                                                   coded: 1
-                                                  dige: d721a13e68c5
-                                                  gk: lum
+                                                  dige: 7d63d8e70d45
+                                                  gk: out
                                                   nk: 'y'
                                                   of: L
-                                                  v: ylum
-                                                t: lum
+                                                  v: yout
+                                                  vatis: "!ref"
+                                                t: out
                                                 "y": 
-                                                  cv: '0.23'
-                                                  next: &9 
+                                                  cv: '0.12'
+                                                  next: &40 
                                                     c: 
-                                                      s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $bal = $C->{y}->{bal};\nmy $M = $C->{c}->{M};\n$G->{w}->($A,$C,$G,$T,\"ModNs\",M=>$M,s=>$bal);\n};"
+                                                      s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\n$A->{c}->{y} && die \"You Ay L 2\";\nmy $J = $A->{1};\n$J->{c}->{s} || die \"Jcs not holding mo C: \".$G->{h}->($A,$C,$G,$T,\"sn\");\n#local $A->{V} = 1;\n# mo C that began the J we are now inside is the trick\n# we are probably at 17 of their root mo, which has $C->{c}->{M}\nmy $Jy = $A->{1}->{c}->{s}->{y};\nmy $y = $C->{y};\nmy $M = $C->{c}->{M};\n\nif (my $r = $y->{rev}) {\n    for my $r (split ' ', $r) {\n        if ($r =~ /^\\d+$/) {\n            $y->{cyc} = $r;\n        }\n        else {\n            $G->{h}->($A,$C,$G,$T,\"xot\",$y,$_) for $G->{h}->($A,$C,$G,$T,\"peel\",$r);\n        }\n    }\n}\n\n# some L uC spawns the A nC lattice\n# what to do with the L uC?\nif ($M) {\n    # has M\n    # L uC can be forgotten, probably mo'd with root in J6\n    # it could be placement metadata/unity\n    my @M;\n    while ($y->{thi} && @$M < $y->{thi}) { # copies out to there\n        @M = @$M if !@M;\n        last if !@M;\n        push @$M, $G->{h}->($A,$C,$G,$T,\"hup\",shift@M);\n    }\n    if ($y->{cyc} && @$M > $y->{cyc}) { # sweeping over itself\n        my @M = splice @$M, 0, $y->{cyc} while @$M > $y->{cyc};\n        splice @M, 0, 0+@$M;\n        push @$M, @M;\n        # decommissions them?\n    }\n}\nelse {\n    # is first in its own M\n    # to make holes in space other M must flow around\n    $C->{c}->{M} = $M = [$C];\n    $y->{thi} > 1 &&\n           push @$M, map { $G->{h}->($A,$C,$G,$T,\"hup\",$C) } 1 .. $y->{thi} - 1;\n}\n\n# limits apply, thi being for ^ iterator length \n#                          and v limit of output\nmy $lims = {};\nfor (qw'thi') {\n    $lims->{\"$_\"} = $y->{\"$_\"} if defined $y->{\"$_\"};\n}\n$lims->{limn} = int(9 * $y->{limn} * $Jy->{spc})\n    if $y->{limn} && ($Jy->{spc} || die \"No space! $J->{t}\");\nmy $lim;\nwhile (my ($k,$v) = each %$lims) {\n    @$M > $v || next;\n    $A->{V} && $G->{h}->($A,$C,$G,$T,'say','say',\"Limof: $k $v to $C->{t}\");\n    $lim = $k if !$lim || $lims->{\"$lim\"} > $lims->{\"$k\"};\n}\nif ($lim) {\n    my $it = $lims->{\"$lim\"};\n    my $from = 0;\n    if ($y->{tail}) {\n        $from = -1;\n        $it *= -1;\n    }\n    else {\n        $it -= 1;\n    }\n    $lims = $lim; # name\n    $lim = @$M; # limited from\n    @$M = @{$M}[$from .. $it];\n}\n\n$A->{V} = 0;\n$y->{thi} = @$M;\n$y->{thi} || die \"No M: \".ki $C;\n$y->{thi} = $y->{cyc} if $y->{cyc};\n#c & point/seek to things coming in with our surrounds\n\n# if we were placed with enough room\n# let atoms slide up to the top J\n# things saying they're in both places\n#   leads to nice grouping, ref integrity\n$y->{J} = $A->{3} if $Jy->{spc} > 0.1;\ndelete $y->{J} if $y->{clos};\nmy $clos = $Jy->{spc} && !$y->{J};\n#  they can want to be inside too\n#  geo to chain together floating/not atoms\n#  so its like wires over machines\n\n# ml (margin-left)\n# high lum makes tree bends up towards margin\n# like it is open inside, like bet. rummager.\n$y->{inde} = $Jy->{inde} + 0.06 if $y->{J};\n\n# sliver of attention\nmy $sl = $Jy->{spc} * 0.01;\n$sl = 0.02 if $sl < 0.02;\n# carpenting\n$y->{n} ||= $clos ? 0.3 : $Jy->{J} ? $Jy->{cv} + $sl : 0.1;\n$y->{u} ||= $clos ? 0.4 : $Jy->{J} ? $Jy->{ov} - $sl : 0.9;\n\n# set width\n$y->{u} = $y->{n} + $y->{space} if defined $y->{space};\nif ($y->{erse}) {\n    ($y->{u},$y->{n}) = ($y->{n},$y->{u});\n    $y->{tail} = $y->{thi}; # lightly\n}\n\n# may be way less than 0...\n# a cv scaled back, will have defiantly huge spc\n$y->{u} /= 10 until $y->{u} < 1;\n$y->{n} /= 10 until $y->{n} < 1;\n# corner noted\nif ($lim) {\n    my $s = \"$lim>\".@$M;\n    my $cv = $y->{tail} ? $y->{n} : $y->{u};\n    # TODO += here blows up zopul:\n    $cv -= 0.002;\n    my $M = $A->{c}->{XM} ||= []; # labely meta\n    $G->{h}->($A,$C,$G,$T,\"m\",$M,lim=>$cv,$s,'%fs:7,hs:7487,limit:'.$lims=>'');\n}\n# fit in multiple of\nif (my $ert = $y->{ert}) {\n    $ert += $y->{ert} while $y->{thi} > $ert;\n    $y->{thi} = $ert;\n}\n$y->{space} = $y->{u} - $y->{n};\nmy $outer;\nif ($y->{res}) {\n    $outer = $y->{space} / $y->{thi};\n    $y->{space} -= $outer;\n}\n$y->{space} *= -1 if $y->{space} < 0;\n$y->{v}->{v} = $y->{n}; # rolls\n$y->{v}->{v} += $outer / 2 if $outer; #\n# average size\n$y->{v}->{aspace} = $G->{h}->($A,$C,$G,$T,\"roun\",$y->{space}/$y->{thi});\n# thy -> mu bends out\n$y->{v}->{Ly} = $y; # u is shared placevolve meta\nmy $i;\nfor (@$M) {\n    $_->{y}->{v} = $y->{v};\n    $_->{y}->{i} = $i++;\n    $_->{y}->{a} = $G->{h}->($A,$C,$G,$T,\"tugA\",a=>2=>$_);\n    $_->{y}->{a}->{L} = $A;\n}\n# L can M the C also in a\n\n #c lum uC shapes curve, wants to be with limn\n # might mean a few lum qualities, make them switchupable\n # supposedly osc can measure itself, hoist geometry\n #    descriptions for ascii art buildings\n};"
                                                     sc: 
                                                       acgt: s
                                                       act: 1
                                                       args: A,C,G,T,s
                                                       coded: 1
-                                                      dige: 657e876f07b5
-                                                      gk: bal
-                                                      nk: 'y'
+                                                      dige: d360575b6845
                                                       of: L
-                                                      v: ybal
-                                                    t: bal
+                                                    t: L
                                                     "y": 
-                                                      cv: '0.3'
-                                                      next: &13 
+                                                      cv: '0.2'
+                                                      next: &42 
                                                         c: 
-                                                          s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $res = $C->{y}->{res};\n#local $A->{V} = 2;\nmy $y = $C->{y};\nmy $M = $C->{c}->{M} || die \"refit no M\";\n$y->{res} == 2 && return\n    $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr',\"$A->{1}->{t} fits \".@$M.\" into $C->{t}\");\nmy $res = $y->{res} = $A->{1}->{sc}->{res}->{\"$C->{t}\"} ||= {res=>$res};\nmy $ctv = $res->{ctv} ||= {};\nmy $la; # known from\nmy @news;\nmy $bend = sub {\n    my ($from,$to,@M) = @_;\n    @M = map {\n        $_->{y}->{a} || die \"has no ya: \".ki$_;\n        $_->{y}->{a}->{c}->{s} eq $_ || die \"ya cs not _: \".ki[$_->{y}->{a}->{c}->{s},$_];\n        # their a C becomes for cv/spc for real heighting etc\n        $_->{y}->{realy} = $_->{y}->{a}->{c}->{s} = $G->{h}->($A,$C,$G,$T,\"hup\",$_->{y}->{a}->{c}->{s});\n        # takeover original ref:\n        $_\n    } @M;\n    my $nu = $G->{h}->($A,$C,$G,$T,\"Ct\",[\"Bend$from->$to\",{}]);\n    $nu->{y}->{n} = $from;\n    $nu->{y}->{u} = $to;\n    $nu->{y}->{res} = 2; # makes spc/2 away from edges but not M<>ctv\n    $nu->{c}->{M} = \\@M;\n    $nu->{c}->{oM} = [];\n    # ^ our ground splices this L's stuff into $M\n    # as it is $A->{y}=A in an M of C\n    $G->{h}->($A,$C,$G,$T,\"tugA\",L=>4,$nu);\n};\nreturn keys %$ctv &&\n    $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr',\"All new refit $C->{t} $C->{y}->{res} -- \".$G->{h}->($A,$C,$G,$T,\"sn\"))\n    unless grep{ $ctv->{\"$_->{t}\"} } @$M;\nmy @M;\nfor (@$M) {\n    my $at = $ctv->{\"$_->{t}\"};\n    if ($at && !$_->{c}->{refit}) {\n        $A->{V} && $G->{h}->($A,$C,$G,$T,'say','sayyl',\"Have $_->{t}  -> $at\");\n        if ($la && $at < $la) {\n            # has to opt out for M order via $C->{c}->{refit}\n            # la cause may have moved out already\n            $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saybl',\" is from earlier\");\n        }\n        $_->{y}->{cv} = $at;\n        push @M, $_;\n        if (@news) {\n            # bend @news between $la and $_\n            $la ||= $y->{n};\n            $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr',\"Bend from $la to $at:\\n\".ki \\@news);\n            push @M,\n                $bend->($la,$at,@news);\n            @news = ();\n        }\n        $la = $at;\n    }\n    else {\n        $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saybl',\"New $_->{t}\".($_->{c}->{refit} && \" (repo)\"));\n        push @news, $_;\n    }\n}\n$bend->($la,$y->{u},@news) if @news;\n};"
+                                                          s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $lum = $C->{y}->{lum};\nmy $M = $C->{c}->{M} || die \"lum no M\";\nmy $y = $C->{y};\nmy $u;\n($u->{l},$u->{r}) = split ',', $lum;\n$u->{\"$_\"} = do {\n    $u->{\"$_\"} =~ m/^(?:(\\d+)-)??(?:(\\d+))(?:-(\\d)+)?$/\n        || die \"notunder: $_ \".wdump 2, $u;\n    {i=>$1,u=>$2,o=>$3}\n} for grep {$u->{\"$_\"} } keys %$u;\n$u->{l}->{u} ||= 3;\n$u->{r}->{u} ||= $u->{l}->{u} / 4;\n$u->{l}->{o} ||= $u->{r}->{u} / 3;\nmy $i = 0;\nfor (@$M) {\n    $_->{y}->{thy} = 1 if !defined $y->{thy};\n    $_->{y}->{thy} += $u->{l}->{u};\n    $i++;\n    if ($i > $u->{l}->{o}) {\n        $u->{l}->{u} -= 2 if $u->{l}->{u} > 0.1;\n    }\n}\n};"
                                                         sc: 
                                                           acgt: s
                                                           act: 1
                                                           args: A,C,G,T,s
                                                           coded: 1
-                                                          dige: 3c42b4b62c09
-                                                          gk: res
+                                                          dige: d721a13e68c5
+                                                          gk: lum
                                                           nk: 'y'
                                                           of: L
-                                                          v: yres
-                                                        t: refit
+                                                          v: ylum
+                                                        t: lum
                                                         "y": 
-                                                          cv: '0.4'
-                                                          next: &6 
+                                                          cv: '0.23'
+                                                          next: &43 
                                                             c: 
-                                                              s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $c = $C->{c};\nmy $M = $C->{c}->{M};\nmy $y = $C->{y};\nmy $total = sum(map{ $_->{y}->{thy} || 1 } @$M) || 1;\n$y->{v}->{muav} = @$M / $total;\n};"
+                                                              s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $bal = $C->{y}->{bal};\nmy $M = $C->{c}->{M};\n$G->{w}->($A,$C,$G,$T,\"ModNs\",M=>$M,s=>$bal);\n};"
                                                             sc: 
                                                               acgt: s
                                                               act: 1
                                                               args: A,C,G,T,s
                                                               coded: 1
-                                                              dige: 33c87e80e528
-                                                              gk: M
-                                                              nk: c
+                                                              dige: 657e876f07b5
+                                                              gk: bal
+                                                              nk: 'y'
                                                               of: L
-                                                              v: cM
-                                                            t: barel
+                                                              v: ybal
+                                                            t: bal
                                                             "y": 
-                                                              cv: '0.5'
-                                                              next: &7 
+                                                              cv: '0.3'
+                                                              next: &39 
                                                                 c: 
-                                                                  s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $lum = $C->{y}->{lum};\nmy $M = $C->{c}->{M} || die \"lum no M\";\nfor my $C (@$M) {\n    my $y = $C->{y};\n    my $upt = 0;\n    $y->{spc} = 0.01 if $y->{spc} < 0.01;\n    my $fs = $y->{spc} * 20 * 4;\n    if ($C->{c}->{helum}) {\n        $C->{sc}->{he} = $G->{h}->($A,$C,$G,$T,\"rou\",$fs/$C->{c}->{helum});\n    }\n    else {\n        $fs = 3 if $fs < 3;\n        $C->{sc}->{fs} = $G->{h}->($A,$C,$G,$T,\"rou\",$fs);\n    }\n}\n};"
+                                                                  s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $res = $C->{y}->{res};\n#local $A->{V} = 2;\nmy $y = $C->{y};\nmy $M = $C->{c}->{M} || die \"refit no M\";\n$y->{res} == 2 && return\n    $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr',\"$A->{1}->{t} fits \".@$M.\" into $C->{t}\");\nmy $res = $y->{res} = $A->{1}->{sc}->{res}->{\"$C->{t}\"} ||= {res=>$res};\nmy $ctv = $res->{ctv} ||= {};\nmy $la; # known from\nmy @news;\nmy $bend = sub {\n    my ($from,$to,@M) = @_;\n    @M = map {\n        $_->{y}->{a} || die \"has no ya: \".ki$_;\n        $_->{y}->{a}->{c}->{s} eq $_ || die \"ya cs not _: \".ki[$_->{y}->{a}->{c}->{s},$_];\n        # their a C becomes for cv/spc for real heighting etc\n        $_->{y}->{realy} = $_->{y}->{a}->{c}->{s} = $G->{h}->($A,$C,$G,$T,\"hup\",$_->{y}->{a}->{c}->{s});\n        # takeover original ref:\n        $_\n    } @M;\n    my $nu = $G->{h}->($A,$C,$G,$T,\"Ct\",[\"Bend$from->$to\",{}]);\n    $nu->{y}->{n} = $from;\n    $nu->{y}->{u} = $to;\n    $nu->{y}->{res} = 2; # makes spc/2 away from edges but not M<>ctv\n    $nu->{c}->{M} = \\@M;\n    $nu->{c}->{oM} = [];\n    # ^ our ground splices this L's stuff into $M\n    # as it is $A->{y}=A in an M of C\n    $G->{h}->($A,$C,$G,$T,\"tugA\",L=>4,$nu);\n};\nreturn keys %$ctv &&\n    $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr',\"All new refit $C->{t} $C->{y}->{res} -- \".$G->{h}->($A,$C,$G,$T,\"sn\"))\n    unless grep{ $ctv->{\"$_->{t}\"} } @$M;\nmy @M;\nfor (@$M) {\n    my $at = $ctv->{\"$_->{t}\"};\n    if ($at && !$_->{c}->{refit}) {\n        $A->{V} && $G->{h}->($A,$C,$G,$T,'say','sayyl',\"Have $_->{t}  -> $at\");\n        if ($la && $at < $la) {\n            # has to opt out for M order via $C->{c}->{refit}\n            # la cause may have moved out already\n            $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saybl',\" is from earlier\");\n        }\n        $_->{y}->{cv} = $at;\n        push @M, $_;\n        if (@news) {\n            # bend @news between $la and $_\n            $la ||= $y->{n};\n            $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr',\"Bend from $la to $at:\\n\".ki \\@news);\n            push @M,\n                $bend->($la,$at,@news);\n            @news = ();\n        }\n        $la = $at;\n    }\n    else {\n        $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saybl',\"New $_->{t}\".($_->{c}->{refit} && \" (repo)\"));\n        push @news, $_;\n    }\n}\n$bend->($la,$y->{u},@news) if @news;\n};"
                                                                 sc: 
                                                                   acgt: s
                                                                   act: 1
                                                                   args: A,C,G,T,s
                                                                   coded: 1
-                                                                  dige: d09ffa65976a
-                                                                  gk: lum
+                                                                  dige: 3c42b4b62c09
+                                                                  gk: res
                                                                   nk: 'y'
                                                                   of: L
-                                                                  v: ylum
-                                                                t: lum
+                                                                  v: yres
+                                                                t: refit
                                                                 "y": 
-                                                                  cv: '0.7'
-                                                                  next: &8 
+                                                                  cv: '0.4'
+                                                                  next: &38 
                                                                     c: 
-                                                                      s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $res = $C->{y}->{res};\nref $res || return;\nmy $y = $C->{y};\nmy $M = $C->{c}->{M};\nmy $ctv = $res->{ctv};\nfor (@$M) {\n    $ctv->{\"$_->{t}\"} && delete $ctv->{\"$_->{t}\"};\n    $ctv->{\"$_->{t}\"} = $_->{y}->{cv} || die \"No cv res yet: \".ki$_;\n}\n};"
+                                                                      s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $c = $C->{c};\nmy $M = $C->{c}->{M};\nmy $y = $C->{y};\nmy $total = sum(map{ $_->{y}->{thy} || 1 } @$M) || 1;\n$y->{v}->{muav} = @$M / $total;\n};"
                                                                     sc: 
                                                                       acgt: s
                                                                       act: 1
                                                                       args: A,C,G,T,s
                                                                       coded: 1
-                                                                      dige: c7fe14102d04
-                                                                      gk: res
-                                                                      nk: 'y'
+                                                                      dige: 33c87e80e528
+                                                                      gk: M
+                                                                      nk: c
                                                                       of: L
-                                                                      v: yres
-                                                                    t: res
+                                                                      v: cM
+                                                                    t: barel
                                                                     "y": 
-                                                                      cv: '0.7'
-                                                                      next: &15 
+                                                                      cv: '0.5'
+                                                                      next: &37 
                                                                         c: 
-                                                                          s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $M = $C->{c}->{M} || die \"L 8 with no M: \".ki$C;\nmy $y = $C->{y};\n# first was ourself that is already in mo\nshift @$M if $M->[0] eq $C;\nmy $J = $y->{J} || $A->{1};\n$A->{c}->{XM} && push @$M, @{$A->{c}->{XM}}; # labely meta\n# resolve any L in M to its many\n@$M = map {\n    my $oM = $_->{y} eq $_ && ($_->{c}->{s}->{c}->{oM} || die\n        \"NoM on inner $_->{t} from $C->{t}: \".ki $_->{c}->{s} );\n    $oM ? @$oM : $_\n} @$M;\n# stash out many for the above\n$C->{c}->{oM} && return push @{$C->{c}->{oM}}, @$M;\nif ($A->{V}) {\n    1 && sayyl \"For $J->{t}: \";\n    1 && saygr \"$_->{t}: \".ki $_->{y} for @$M;\n}\n\n$G->{w}->($A,$C,$G,$T,\"ModNs\",M=>$M,s=>$y->{mod}) if $y->{mod};\nreturn sayre \"NOthing!?\" if !@$M;\n$G->{h}->($A,$C,$G,$T,\"A\",n=>8=>$J,@$M);\n};"
+                                                                          s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $lum = $C->{y}->{lum};\nmy $M = $C->{c}->{M} || die \"lum no M\";\nfor my $C (@$M) {\n    my $y = $C->{y};\n    my $upt = 0;\n    $y->{spc} = 0.01 if $y->{spc} < 0.01;\n    my $fs = $y->{spc} * 20 * 4;\n    if ($C->{c}->{helum}) {\n        $C->{sc}->{he} = $G->{h}->($A,$C,$G,$T,\"rou\",$fs/$C->{c}->{helum});\n    }\n    else {\n        $fs = 3 if $fs < 3;\n        $C->{sc}->{fs} = $G->{h}->($A,$C,$G,$T,\"rou\",$fs);\n    }\n}\n};"
                                                                         sc: 
                                                                           acgt: s
                                                                           act: 1
                                                                           args: A,C,G,T,s
                                                                           coded: 1
-                                                                          dige: 0dea1709033f
+                                                                          dige: d09ffa65976a
+                                                                          gk: lum
+                                                                          nk: 'y'
                                                                           of: L
-                                                                        t: ground
+                                                                          v: ylum
+                                                                        t: lum
                                                                         "y": 
-                                                                          cv: '0.8'
-                                                                          prev: *8
-                                                                          up: *1
-                                                                      prev: *7
-                                                                      up: *1
-                                                                  prev: *6
-                                                                  up: *1
-                                                              prev: *13
-                                                              up: *1
-                                                          prev: *9
-                                                          up: *1
-                                                      prev: *10
-                                                      up: *1
-                                                  prev: *12
-                                                  up: *1
-                                              prev: *11
-                                              up: *1
-                                          prev: *14
-                                          up: *1
-                                      prev: *5
-                                      up: *1
-                                  prev: *16
-                                  up: *1
-                              prev: *2
-                              up: *1
-                          prev: *3
-                          up: *1
-                      prev: *4
-                      up: *1
-                  prev: *42
-                  up: *1
-              up: *1
-          next: &17 
+                                                                          cv: '0.7'
+                                                                          next: &36 
+                                                                            c: 
+                                                                              s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\nmy $res = $C->{y}->{res};\nref $res || return;\nmy $y = $C->{y};\nmy $M = $C->{c}->{M};\nmy $ctv = $res->{ctv};\nfor (@$M) {\n    $ctv->{\"$_->{t}\"} && delete $ctv->{\"$_->{t}\"};\n    $ctv->{\"$_->{t}\"} = $_->{y}->{cv} || die \"No cv res yet: \".ki$_;\n}\n};"
+                                                                            sc: 
+                                                                              acgt: s
+                                                                              act: 1
+                                                                              args: A,C,G,T,s
+                                                                              coded: 1
+                                                                              dige: c7fe14102d04
+                                                                              gk: res
+                                                                              nk: 'y'
+                                                                              of: L
+                                                                              v: yres
+                                                                            t: res
+                                                                            "y": 
+                                                                              cv: '0.7'
+                                                                              next: &45 
+                                                                                c: 
+                                                                                  s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $M = $C->{c}->{M} || die \"L 8 with no M: \".ki$C;\nmy $y = $C->{y};\n# first was ourself that is already in mo\nshift @$M if $M->[0] eq $C;\nmy $J = $y->{J} || $A->{1};\n$A->{c}->{XM} && push @$M, @{$A->{c}->{XM}}; # labely meta\n# resolve any L in M to its many\n@$M = map {\n    my $oM = $_->{y} eq $_ && ($_->{c}->{s}->{c}->{oM} || die\n        \"NoM on inner $_->{t} from $C->{t}: \".ki $_->{c}->{s} );\n    $oM ? @$oM : $_\n} @$M;\n# stash out many for the above\n$C->{c}->{oM} && return push @{$C->{c}->{oM}}, @$M;\nif ($A->{V}) {\n    1 && sayyl \"For $J->{t}: \";\n    1 && saygr \"$_->{t}: \".ki $_->{y} for @$M;\n}\n\n$G->{w}->($A,$C,$G,$T,\"ModNs\",M=>$M,s=>$y->{mod}) if $y->{mod};\nif (!@$M) {\n    my $inte;\n    $inte->{\"$_\"} = $y->{\"$_\"} for grep{$y->{\"$_\"} } keys %{$A->{c}->{ybrow}};\n    1 && sayre \"NOthing!? in M $C->{t}\"\n        .($inte && \": intyresty: \".ki $inte);\n    1&&saygr \"For \".ki $A->{c}->{ybrow};\n    1&&saygr \"With \".ki $y,1,2;\n    return\n}\n$G->{h}->($A,$C,$G,$T,\"A\",n=>8=>$J,@$M);\n};"
+                                                                                sc: 
+                                                                                  acgt: s
+                                                                                  act: 1
+                                                                                  args: A,C,G,T,s
+                                                                                  coded: 1
+                                                                                  dige: d699dd378186
+                                                                                  of: L
+                                                                                t: ground
+                                                                                "y": 
+                                                                                  cv: '0.8'
+                                                                                  prev: *36
+                                                                                  up: *5
+                                                                              prev: *37
+                                                                              up: *5
+                                                                          prev: *38
+                                                                          up: *5
+                                                                      prev: *39
+                                                                      up: *5
+                                                                  prev: *43
+                                                                  up: *5
+                                                              prev: *42
+                                                              up: *5
+                                                          prev: *40
+                                                          up: *5
+                                                      prev: *46
+                                                      up: *5
+                                                  prev: *41
+                                                  up: *5
+                                              prev: *1
+                                              up: *5
+                                          prev: *44
+                                          up: *5
+                                      prev: *32
+                                      up: *5
+                                  prev: *33
+                                  up: *5
+                              prev: *31
+                              up: *5
+                          prev: *34
+                          up: *5
+                      prev: *30
+                      up: *5
+                  prev: *35
+                  up: *5
+              up: *5
+          next: &3 
             c: 
               W: of
             sc: 
@@ -311,7 +347,7 @@ sc:
             t: a
             "y": 
               cv: '0.001'
-              in: &18 
+              in: &4 
                 c: 
                   s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\n($A->{c}->{s}) = @$s;\n};"
                 sc: 
@@ -324,7 +360,7 @@ sc:
                 t: a
                 "y": 
                   cv: '0.1'
-                  next: &19 
+                  next: &29 
                     c: 
                       s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $y = $C->{y};\n$y->{mu} = defined $y->{thy} ? $y->{thy} : 1;\n$y->{mu} = $y->{mu} * $y->{v}->{muav} if $y->{v}->{muav};\nmy $was = $y->{v}->{v};\n$y->{cv} = $G->{h}->($A,$C,$G,$T,\"roun\",$y->{v}->{v}) if !$y->{cv};\n$y->{pcv} = $G->{h}->($A,$C,$G,$T,\"roun\",$y->{i}/$y->{v}->{Ly}->{thi});\nmy $in = $y->{v}->{aspace} * $y->{mu};\n$y->{v}->{v} += $in;\n$y->{ov} = $G->{h}->($A,$C,$G,$T,\"roun\",$y->{v}->{v});\n$y->{spc} = $y->{ov} - $y->{cv};\n\n$C->{sc}->{yspc} = $y->{spc} if $C->{sc}->{nspc};\n$C->{sc}->{ml} = ($y->{v}->{Ly}->{inde} * 40).\"%\" if $y->{v}->{Ly}->{inde};\n};"
                     sc: 
@@ -337,10 +373,10 @@ sc:
                     t: many
                     "y": 
                       cv: '0.6'
-                      prev: *18
-                      up: *17
-                  up: *17
-              next: &22 
+                      prev: *4
+                      up: *3
+                  up: *3
+              next: &26 
                 c: 
                   W: of
                 sc: 
@@ -348,15 +384,15 @@ sc:
                 t: mo
                 "y": 
                   cv: '0.001'
-                  in: &23 
+                  in: &28 
                     c: 
-                      s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nreturn if $C->{y}->{a}; # already placed\nreturn if $C->{y}->{L}; # already placing\nmy $D = $T->{D};\nmy $ybrow = $D->{sc}->{nogindex};\n\nmy $M = $C->{c}->{M};\nif ($A->{V}) {\n    $G->{h}->($A,$C,$G,$T,'say','sayre',\"$C->{t} manies!: \".(exists $C->{c}->{M}).\"  \".ki $M);\n    my $D = $T->{D};\n    my $ybrow = $D->{sc}->{nogindex};\n    my @ym = grep{$C->{y}->{\"$_\"} } keys %$ybrow;\n    1 && sayyl \"Neg: $C->{t} y: \".join',',@ym;\n    1 && saybl \"noym: \".wdump 2, [$C->{c},$C->{y}] if !@ym;\n}\n$C->{y}->{L} = $G->{h}->($A,$C,$G,$T,\"A\",L=>8,$C)\n};"
+                      s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nreturn if $C->{y}->{a}; # already placed\nreturn die \"MdubL\" if $C->{y}->{L}; # already placing\nmy $D = $T->{D};\n\nmy $L = $C->{y}->{L} = $G->{h}->($A,$C,$G,$T,\"A\",L=>1,$C);\n$L->{c}->{ybrow} = $D->{sc}->{nogindex};\n$G->{h}->($A,$C,$G,$T,\"A\",$L,8);\n};"
                     sc: 
                       acgt: s
                       act: 1
                       args: A,C,G,T,s
                       coded: 1
-                      dige: 9a21396f368f
+                      dige: a6e370f7f5d6
                       ip: 
                         cM: 
                           exi: 1
@@ -366,8 +402,10 @@ sc:
                           - cM
                           - 'y'
                         "y": 
-                          hasany: &21 
+                          hasany: &27 
                             bal: 1
+                            cyc: 1
+                            erse: 1
                             in: "!ref"
                             lum: 1
                             "n": 1
@@ -376,16 +414,16 @@ sc:
                             spc: 1
                             u: 1
                           or: 1
-                      nogindex: *21
+                      nogindex: *27
                       of: mo
                       t: 1
                       tldo: nogindex:y:L
                       vor: cM
                     t: M
                     "y": 
-                      cv: '0.16'
-                      up: *22
-                  next: &41 
+                      cv: '0.15'
+                      up: *26
+                  next: &25 
                     c: 
                       s: "(A.c.s) = @$s;\n"
                     sc: 
@@ -395,7 +433,7 @@ sc:
                     t: L
                     "y": 
                       cv: '0.1'
-                      next: &24 
+                      next: &6 
                         c: 
                           s: "# etc\n"
                         sc: 
@@ -406,7 +444,7 @@ sc:
                         t: M
                         "y": 
                           cv: '0.1'
-                          next: &25 
+                          next: &7 
                             c: 
                               s: "(A.c.s) = @$s;\n"
                             sc: 
@@ -416,331 +454,367 @@ sc:
                             t: a
                             "y": 
                               cv: '0.1'
-                              next: &40 
+                              next: &8 
                                 c: 
-                                  s: "# to almost fill space\n"
+                                  s: "# sweeping over itself, round and round\n"
                                 sc: 
                                   acgt: s
                                   act: 1
                                   of: L
-                                  v: yn
-                                t: 'n'
+                                  v: ycyc
+                                t: cyc
                                 "y": 
                                   cv: '0.1'
-                                  next: &39 
+                                  next: &9 
                                     c: 
-                                      s: "# composite including:\n#   erse - n,u = u,n # stack on floor vs ceiling\n#   1000 - or so thi & overflow replaces cyclicly\n"
+                                      s: "# flip n,u, stack floor to ceiling\n"
                                     sc: 
                                       acgt: s
                                       act: 1
                                       of: L
-                                      v: yspc
-                                    t: rev
+                                      v: yerse
+                                    t: erse
                                     "y": 
                                       cv: '0.1'
-                                      next: &26 
+                                      next: &10 
                                         c: 
-                                          s: "# to take up space\n"
+                                          s: "# to almost fill space\n"
                                         sc: 
                                           acgt: s
                                           act: 1
                                           of: L
-                                          v: yspc
-                                        t: spc
+                                          v: yn
+                                        t: 'n'
                                         "y": 
                                           cv: '0.1'
-                                          next: &38 
+                                          next: &11 
                                             c: 
-                                              s: "# to take space up til\n"
+                                              s: "# composite \\d+ ? y.cyc : peels into y\n"
                                             sc: 
                                               acgt: s
                                               act: 1
                                               of: L
-                                              v: yu
-                                            t: u
+                                              v: yspc
+                                            t: rev
                                             "y": 
                                               cv: '0.1'
-                                              next: &37 
+                                              next: &24 
                                                 c: 
-                                                  s: "C.y.n = delete C.y.in if !ref C.y.in;\n"
+                                                  s: "# to take up space\n"
                                                 sc: 
                                                   acgt: s
                                                   act: 1
                                                   of: L
-                                                  v: yin
-                                                  vatis: "!ref"
-                                                t: in
+                                                  v: yspc
+                                                t: spc
                                                 "y": 
-                                                  cv: '0.12'
-                                                  next: &36 
+                                                  cv: '0.1'
+                                                  next: &12 
                                                     c: 
-                                                      s: "C.y.u = delete C.y.out if !ref C.y.out\n"
+                                                      s: "# to take space up til\n"
                                                     sc: 
                                                       acgt: s
                                                       act: 1
                                                       of: L
-                                                      v: yout
-                                                      vatis: "!ref"
-                                                    t: out
+                                                      v: yu
+                                                    t: u
                                                     "y": 
-                                                      cv: '0.12'
-                                                      next: &35 
+                                                      cv: '0.1'
+                                                      next: &13 
                                                         c: 
-                                                          s: "return if C.y.a; # already placed\nreturn if C.y.L; # already placing\nmy $D = T.D;\nmy $ybrow = D.sc.nogindex;\n\nmy $M = c&M;\nif (A.V) {\n    G.h->($A,$C,$G,$T,'say','sayre',\"C.t manies!: \".(exists c&M).\"  \".ki $M);\n    my $D = T.D;\n    my $ybrow = D.sc.nogindex;\n    my @ym = grep{C.y.>$_ } keys %$ybrow;\n    1 && sayyl \"Neg: C.t y: \".join',',@ym;\n    1 && saybl \"noym: \".wdump 2, [C.c,C.y] if !@ym;\n}\nC.y.L = G&A,L=>8,$C\n"
+                                                          s: "C.y.n = delete C.y.in if !ref C.y.in;\n"
                                                         sc: 
                                                           acgt: s
                                                           act: 1
-                                                          of: mo
-                                                          tldo: nogindex:y:L
-                                                          vor: cM
-                                                        t: M
+                                                          of: L
+                                                          v: yin
+                                                          vatis: "!ref"
+                                                        t: in
                                                         "y": 
-                                                          cv: '0.16'
-                                                          next: &34 
+                                                          cv: '0.12'
+                                                          next: &14 
                                                             c: 
-                                                              s: "A.c.y && die \"You Ay L 2\";\nmy $J = A.1;\nJ.c.s || die \"Jcs not holding mo C: \".G&sn;\n#local A.V = 1;\n# mo C that began the J we are now inside is the trick\n# we are probably at 17 of their root mo, which has c&M\nmy $Jy = A.1.c.s.y;\nmy $y = C.y;\nmy $M = c&M;\n\nif (my $r = y.rev) {\n    for my $r (split ' ', $r) {\n        if ($r =~ /^\\d+$/) {\n            y.cyc = $r;\n        }\n        else {\n            G&xot,$y,$_ for G&peel,$r;\n        }\n    }\n}\n\n# some L uC spawns the A nC lattice\n# what to do with the L uC?\nif ($M) {\n    # has M\n    # L uC can be forgotten, probably mo'd with root in J6\n    # it could be placement metadata/unity\n    my @M;\n    while (y.thi && @$M < y.thi) { # copies out to there\n        @M = @$M if !@M;\n        last if !@M;\n        push @$M, G&hup,shift@M;\n    }\n    if (y.cyc && @$M > y.cyc) { # sweeping over itself\n        my @M = splice @$M, 0, y.cyc while @$M > y.cyc;\n        splice @M, 0, 0+@$M;\n        push @$M, @M;\n        # decommissions them?\n    }\n}\nelse {\n    # is first in its own M\n    # to make holes in space other M must flow around\n    c&M = $M = [$C];\n    y.thi > 1 &&\n           push @$M, map { G&hup,$C } 1 .. y.thi - 1;\n}\n\n# limits apply, thi being for ^ iterator length \n#                          and v limit of output\nmy $lims = {};\nfor (qw'thi') {\n    $lims.>$_ = $y.>$_ if defined $y.>$_;\n}\nlims.limn = int(9 * y.limn * Jy.spc)\n    if y.limn && (Jy.spc || die \"No space! J.t\");\nmy $lim;\nwhile (my ($k,$v) = each %$lims) {\n    @$M > $v || next;\n    A.V && G.h->($A,$C,$G,$T,'say','say',\"Limof: $k $v to C.t\");\n    $lim = $k if !$lim || $lims.>$lim > $lims.>$k;\n}\nif ($lim) {\n    my $it = $lims.>$lim;\n    my $from = 0;\n    if (y.tail) {\n        $from = -1;\n        $it *= -1;\n    }\n    else {\n        $it -= 1;\n    }\n    $lims = $lim; # name\n    $lim = @$M; # limited from\n    @$M = @{$M}[$from .. $it];\n}\n\nA.V = 0;\ny.thi = @$M;\ny.thi || die \"No M: \".ki $C;\ny.thi = y.cyc if y.cyc;\n#c & point/seek to things coming in with our surrounds\n\n# if we were placed with enough room\n# let atoms slide up to the top J\n# things saying they're in both places\n#   leads to nice grouping, ref integrity\ny.J = A.3 if Jy.spc > 0.1;\ndelete y.J if y.clos;\nmy $clos = Jy.spc && !y.J;\n#  they can want to be inside too\n#  geo to chain together floating/not atoms\n#  so its like wires over machines\n\n# ml (margin-left)\n# high lum makes tree bends up towards margin\n# like it is open inside, like bet. rummager.\ny.inde = Jy.inde + 0.06 if y.J;\n\n# sliver of attention\nmy $sl = Jy.spc * 0.01;\n$sl = 0.02 if $sl < 0.02;\n# carpenting\ny.n ||= $clos ? 0.3 : Jy.J ? Jy.cv + $sl : 0.1;\ny.u ||= $clos ? 0.4 : Jy.J ? Jy.ov - $sl : 0.9;\n\n# set width\ny.u = y.n + y.space if defined y.space;\nif (y.erse) {\n    (y.u,y.n) = (y.n,y.u);\n    y.tail = y.thi; # lightly\n}\n\n# may be way less than 0...\n# a cv scaled back, will have defiantly huge spc\ny.u /= 10 until y.u < 1;\ny.n /= 10 until y.n < 1;\n# corner noted\nif ($lim) {\n    my $s = \"$lim>\".@$M;\n    my $cv = y.tail ? y.n : y.u;\n    # TODO += here blows up zopul:\n    $cv -= 0.002;\n    my $M = A.c.XM ||= []; # labely meta\n    m lim=>$cv,$s,'%fs:7,hs:7487,limit:'.$lims;\n}\n# fit in multiple of\nif (my $ert = y.ert) {\n    $ert += y.ert while y.thi > $ert;\n    y.thi = $ert;\n}\ny.space = y.u - y.n;\nmy $outer;\nif (y.res) {\n    $outer = y.space / y.thi;\n    y.space -= $outer;\n}\ny.space *= -1 if y.space < 0;\ny.v.v = y.n; # rolls\ny.v.v += $outer / 2 if $outer; #\n# average size\ny.v.aspace = G&roun,y.space/y.thi;\n# thy -> mu bends out\ny.v.Ly = $y; # u is shared placevolve meta\nmy $i;\nfor (@$M) {\n    _.y.v = y.v;\n    _.y.i = $i++;\n    _.y.a = G&tugA,a=>2=>$_;\n    _.y.a.L = $A;\n}\n# L can M the C also in a\n\n #c lum uC shapes curve, wants to be with limn\n # might mean a few lum qualities, make them switchupable\n # supposedly osc can measure itself, hoist geometry\n #    descriptions for ascii art buildings\n"
+                                                              s: "C.y.u = delete C.y.out if !ref C.y.out\n"
                                                             sc: 
                                                               acgt: s
                                                               act: 1
                                                               of: L
-                                                            t: L
+                                                              v: yout
+                                                              vatis: "!ref"
+                                                            t: out
                                                             "y": 
-                                                              cv: '0.2'
-                                                              next: &27 
+                                                              cv: '0.12'
+                                                              next: &15 
                                                                 c: 
-                                                                  s: "my $M = c&M || die \"lum no M\";\nmy $y = C.y;\nmy $u;\n(u.l,u.r) = split ',', $lum;\n$u.>$_ = do {\n    $u.>$_ =~ m/^(?:(\\d+)-)??(?:(\\d+))(?:-(\\d)+)?$/\n        || die \"notunder: $_ \".wdump 2, $u;\n    {i=>$1,u=>$2,o=>$3}\n} for grep {$u.>$_ } keys %$u;\nu.l.u ||= 3;\nu.r.u ||= u.l.u / 4;\nu.l.o ||= u.r.u / 3;\nmy $i = 0;\nfor (@$M) {\n    _.y.thy = 1 if !defined y.thy;\n    _.y.thy += u.l.u;\n    $i++;\n    if ($i > u.l.o) {\n        u.l.u -= 2 if u.l.u > 0.1;\n    }\n}\n"
+                                                                  s: "return if C.y.a; # already placed\nreturn die \"MdubL\" if C.y.L; # already placing\nmy $D = T.D;\n\nmy $L = C.y.L = G&A,L=>1,$C;\nL.c.ybrow = D.sc.nogindex;\nG&A,$L,8;\n"
                                                                 sc: 
                                                                   acgt: s
                                                                   act: 1
-                                                                  of: L
-                                                                  v: ylum
-                                                                t: lum
+                                                                  of: mo
+                                                                  tldo: nogindex:y:L
+                                                                  vor: cM
+                                                                t: M
                                                                 "y": 
-                                                                  cv: '0.23'
-                                                                  next: &28 
+                                                                  cv: '0.15'
+                                                                  next: &16 
                                                                     c: 
-                                                                      s: "my $M = c&M;\nRw ModNs $M $s:bal;\n"
+                                                                      s: "A.c.y && die \"You Ay L 2\";\nmy $J = A.1;\nJ.c.s || die \"Jcs not holding mo C: \".G&sn;\n#local A.V = 1;\n# mo C that began the J we are now inside is the trick\n# we are probably at 17 of their root mo, which has c&M\nmy $Jy = A.1.c.s.y;\nmy $y = C.y;\nmy $M = c&M;\n\nif (my $r = y.rev) {\n    for my $r (split ' ', $r) {\n        if ($r =~ /^\\d+$/) {\n            y.cyc = $r;\n        }\n        else {\n            G&xot,$y,$_ for G&peel,$r;\n        }\n    }\n}\n\n# some L uC spawns the A nC lattice\n# what to do with the L uC?\nif ($M) {\n    # has M\n    # L uC can be forgotten, probably mo'd with root in J6\n    # it could be placement metadata/unity\n    my @M;\n    while (y.thi && @$M < y.thi) { # copies out to there\n        @M = @$M if !@M;\n        last if !@M;\n        push @$M, G&hup,shift@M;\n    }\n    if (y.cyc && @$M > y.cyc) { # sweeping over itself\n        my @M = splice @$M, 0, y.cyc while @$M > y.cyc;\n        splice @M, 0, 0+@$M;\n        push @$M, @M;\n        # decommissions them?\n    }\n}\nelse {\n    # is first in its own M\n    # to make holes in space other M must flow around\n    c&M = $M = [$C];\n    y.thi > 1 &&\n           push @$M, map { G&hup,$C } 1 .. y.thi - 1;\n}\n\n# limits apply, thi being for ^ iterator length \n#                          and v limit of output\nmy $lims = {};\nfor (qw'thi') {\n    $lims.>$_ = $y.>$_ if defined $y.>$_;\n}\nlims.limn = int(9 * y.limn * Jy.spc)\n    if y.limn && (Jy.spc || die \"No space! J.t\");\nmy $lim;\nwhile (my ($k,$v) = each %$lims) {\n    @$M > $v || next;\n    A.V && G.h->($A,$C,$G,$T,'say','say',\"Limof: $k $v to C.t\");\n    $lim = $k if !$lim || $lims.>$lim > $lims.>$k;\n}\nif ($lim) {\n    my $it = $lims.>$lim;\n    my $from = 0;\n    if (y.tail) {\n        $from = -1;\n        $it *= -1;\n    }\n    else {\n        $it -= 1;\n    }\n    $lims = $lim; # name\n    $lim = @$M; # limited from\n    @$M = @{$M}[$from .. $it];\n}\n\nA.V = 0;\ny.thi = @$M;\ny.thi || die \"No M: \".ki $C;\ny.thi = y.cyc if y.cyc;\n#c & point/seek to things coming in with our surrounds\n\n# if we were placed with enough room\n# let atoms slide up to the top J\n# things saying they're in both places\n#   leads to nice grouping, ref integrity\ny.J = A.3 if Jy.spc > 0.1;\ndelete y.J if y.clos;\nmy $clos = Jy.spc && !y.J;\n#  they can want to be inside too\n#  geo to chain together floating/not atoms\n#  so its like wires over machines\n\n# ml (margin-left)\n# high lum makes tree bends up towards margin\n# like it is open inside, like bet. rummager.\ny.inde = Jy.inde + 0.06 if y.J;\n\n# sliver of attention\nmy $sl = Jy.spc * 0.01;\n$sl = 0.02 if $sl < 0.02;\n# carpenting\ny.n ||= $clos ? 0.3 : Jy.J ? Jy.cv + $sl : 0.1;\ny.u ||= $clos ? 0.4 : Jy.J ? Jy.ov - $sl : 0.9;\n\n# set width\ny.u = y.n + y.space if defined y.space;\nif (y.erse) {\n    (y.u,y.n) = (y.n,y.u);\n    y.tail = y.thi; # lightly\n}\n\n# may be way less than 0...\n# a cv scaled back, will have defiantly huge spc\ny.u /= 10 until y.u < 1;\ny.n /= 10 until y.n < 1;\n# corner noted\nif ($lim) {\n    my $s = \"$lim>\".@$M;\n    my $cv = y.tail ? y.n : y.u;\n    # TODO += here blows up zopul:\n    $cv -= 0.002;\n    my $M = A.c.XM ||= []; # labely meta\n    m lim=>$cv,$s,'%fs:7,hs:7487,limit:'.$lims;\n}\n# fit in multiple of\nif (my $ert = y.ert) {\n    $ert += y.ert while y.thi > $ert;\n    y.thi = $ert;\n}\ny.space = y.u - y.n;\nmy $outer;\nif (y.res) {\n    $outer = y.space / y.thi;\n    y.space -= $outer;\n}\ny.space *= -1 if y.space < 0;\ny.v.v = y.n; # rolls\ny.v.v += $outer / 2 if $outer; #\n# average size\ny.v.aspace = G&roun,y.space/y.thi;\n# thy -> mu bends out\ny.v.Ly = $y; # u is shared placevolve meta\nmy $i;\nfor (@$M) {\n    _.y.v = y.v;\n    _.y.i = $i++;\n    _.y.a = G&tugA,a=>2=>$_;\n    _.y.a.L = $A;\n}\n# L can M the C also in a\n\n #c lum uC shapes curve, wants to be with limn\n # might mean a few lum qualities, make them switchupable\n # supposedly osc can measure itself, hoist geometry\n #    descriptions for ascii art buildings\n"
                                                                     sc: 
                                                                       acgt: s
                                                                       act: 1
                                                                       of: L
-                                                                      v: ybal
-                                                                    t: bal
+                                                                    t: L
                                                                     "y": 
-                                                                      cv: '0.3'
-                                                                      next: &33 
+                                                                      cv: '0.2'
+                                                                      next: &23 
                                                                         c: 
-                                                                          s: "#local A.V = 2;\nmy $y = C.y;\nmy $M = c&M || die \"refit no M\";\ny.res == 2 && return\n    A.V && G.h->($A,$C,$G,$T,'say','saygr',\"A.1.t fits \".@$M.\" into C.t\");\nmy $res = y.res = A.1.sc.res.>C.t ||= {res=>$res};\nmy $ctv = res.ctv ||= {};\nmy $la; # known from\nmy @news;\nmy $bend = sub {\n    my ($from,$to,@M) = @_;\n    @M = map {\n        _.y.a || die \"has no ya: \".ki$_;\n        _.y.a.c.s eq $_ || die \"ya cs not _: \".ki[_.y.a.c.s,$_];\n        # their a C becomes for cv/spc for real heighting etc\n        _.y.realy = _.y.a.c.s = G&hup,_.y.a.c.s;\n        # takeover original ref:\n        $_\n    } @M;\n    my $nu = G&Ct,[\"Bend$from->$to\",{}];\n    nu.y.n = $from;\n    nu.y.u = $to;\n    nu.y.res = 2; # makes spc/2 away from edges but not M<>ctv\n    nu.c.M = \\@M;\n    nu.c.oM = [];\n    # ^ our ground splices this L's stuff into $M\n    # as it is A.y=A in an M of C\n    G&tugA,L=>4,$nu;\n};\nreturn keys %$ctv &&\n    A.V && G.h->($A,$C,$G,$T,'say','saygr',\"All new refit C.t C.y.res -- \".G&sn)\n    unless grep{ $ctv.>_.t } @$M;\nmy @M;\nfor (@$M) {\n    my $at = $ctv.>_.t;\n    if ($at && !_.c.refit) {\n        A.V && G.h->($A,$C,$G,$T,'say','sayyl',\"Have _.t  -> $at\");\n        if ($la && $at < $la) {\n            # has to opt out for M order via c&refit\n            # la cause may have moved out already\n            A.V && G.h->($A,$C,$G,$T,'say','saybl',\" is from earlier\");\n        }\n        _.y.cv = $at;\n        push @M, $_;\n        if (@news) {\n            # bend @news between $la and $_\n            $la ||= y.n;\n            A.V && G.h->($A,$C,$G,$T,'say','saygr',\"Bend from $la to $at:\\n\".ki \\@news);\n            push @M,\n                $bend->($la,$at,@news);\n            @news = ();\n        }\n        $la = $at;\n    }\n    else {\n        A.V && G.h->($A,$C,$G,$T,'say','saybl',\"New _.t\".(_.c.refit && \" (repo)\"));\n        push @news, $_;\n    }\n}\n$bend->($la,y.u,@news) if @news;\n"
+                                                                          s: "my $M = c&M || die \"lum no M\";\nmy $y = C.y;\nmy $u;\n(u.l,u.r) = split ',', $lum;\n$u.>$_ = do {\n    $u.>$_ =~ m/^(?:(\\d+)-)??(?:(\\d+))(?:-(\\d)+)?$/\n        || die \"notunder: $_ \".wdump 2, $u;\n    {i=>$1,u=>$2,o=>$3}\n} for grep {$u.>$_ } keys %$u;\nu.l.u ||= 3;\nu.r.u ||= u.l.u / 4;\nu.l.o ||= u.r.u / 3;\nmy $i = 0;\nfor (@$M) {\n    _.y.thy = 1 if !defined y.thy;\n    _.y.thy += u.l.u;\n    $i++;\n    if ($i > u.l.o) {\n        u.l.u -= 2 if u.l.u > 0.1;\n    }\n}\n"
                                                                         sc: 
                                                                           acgt: s
                                                                           act: 1
                                                                           of: L
-                                                                          v: yres
-                                                                        t: refit
+                                                                          v: ylum
+                                                                        t: lum
                                                                         "y": 
-                                                                          cv: '0.4'
-                                                                          next: &32 
+                                                                          cv: '0.23'
+                                                                          next: &22 
                                                                             c: 
-                                                                              s: "my $y = C.y;\nmy $total = sum(map{ _.y.thy || 1 } @$M) || 1;\ny.v.muav = @$M / $total;\n"
+                                                                              s: "my $M = c&M;\nRw ModNs $M $s:bal;\n"
                                                                             sc: 
                                                                               acgt: s
                                                                               act: 1
                                                                               of: L
-                                                                              v: cM
-                                                                            t: barel
+                                                                              v: ybal
+                                                                            t: bal
                                                                             "y": 
-                                                                              cv: '0.5'
-                                                                              next: &29 
+                                                                              cv: '0.3'
+                                                                              next: &17 
                                                                                 c: 
-                                                                                  s: "my $y = C.y;\ny.mu = defined y.thy ? y.thy : 1;\ny.mu = y.mu * y.v.muav if y.v.muav;\nmy $was = y.v.v;\ny.cv = G&roun,y.v.v if !y.cv;\ny.pcv = G&roun,y.i/y.v.Ly.thi;\nmy $in = y.v.aspace * y.mu;\ny.v.v += $in;\ny.ov = G&roun,y.v.v;\ny.spc = y.ov - y.cv;\n\nC.sc.yspc = y.spc if C.sc.nspc;\nC.sc.ml = (y.v.Ly.inde * 40).\"%\" if y.v.Ly.inde;\n"
+                                                                                  s: "#local A.V = 2;\nmy $y = C.y;\nmy $M = c&M || die \"refit no M\";\ny.res == 2 && return\n    A.V && G.h->($A,$C,$G,$T,'say','saygr',\"A.1.t fits \".@$M.\" into C.t\");\nmy $res = y.res = A.1.sc.res.>C.t ||= {res=>$res};\nmy $ctv = res.ctv ||= {};\nmy $la; # known from\nmy @news;\nmy $bend = sub {\n    my ($from,$to,@M) = @_;\n    @M = map {\n        _.y.a || die \"has no ya: \".ki$_;\n        _.y.a.c.s eq $_ || die \"ya cs not _: \".ki[_.y.a.c.s,$_];\n        # their a C becomes for cv/spc for real heighting etc\n        _.y.realy = _.y.a.c.s = G&hup,_.y.a.c.s;\n        # takeover original ref:\n        $_\n    } @M;\n    my $nu = G&Ct,[\"Bend$from->$to\",{}];\n    nu.y.n = $from;\n    nu.y.u = $to;\n    nu.y.res = 2; # makes spc/2 away from edges but not M<>ctv\n    nu.c.M = \\@M;\n    nu.c.oM = [];\n    # ^ our ground splices this L's stuff into $M\n    # as it is A.y=A in an M of C\n    G&tugA,L=>4,$nu;\n};\nreturn keys %$ctv &&\n    A.V && G.h->($A,$C,$G,$T,'say','saygr',\"All new refit C.t C.y.res -- \".G&sn)\n    unless grep{ $ctv.>_.t } @$M;\nmy @M;\nfor (@$M) {\n    my $at = $ctv.>_.t;\n    if ($at && !_.c.refit) {\n        A.V && G.h->($A,$C,$G,$T,'say','sayyl',\"Have _.t  -> $at\");\n        if ($la && $at < $la) {\n            # has to opt out for M order via c&refit\n            # la cause may have moved out already\n            A.V && G.h->($A,$C,$G,$T,'say','saybl',\" is from earlier\");\n        }\n        _.y.cv = $at;\n        push @M, $_;\n        if (@news) {\n            # bend @news between $la and $_\n            $la ||= y.n;\n            A.V && G.h->($A,$C,$G,$T,'say','saygr',\"Bend from $la to $at:\\n\".ki \\@news);\n            push @M,\n                $bend->($la,$at,@news);\n            @news = ();\n        }\n        $la = $at;\n    }\n    else {\n        A.V && G.h->($A,$C,$G,$T,'say','saybl',\"New _.t\".(_.c.refit && \" (repo)\"));\n        push @news, $_;\n    }\n}\n$bend->($la,y.u,@news) if @news;\n"
                                                                                 sc: 
                                                                                   acgt: s
                                                                                   act: 1
-                                                                                  of: a
-                                                                                t: many
+                                                                                  of: L
+                                                                                  v: yres
+                                                                                t: refit
                                                                                 "y": 
-                                                                                  cv: '0.6'
-                                                                                  next: &31 
+                                                                                  cv: '0.4'
+                                                                                  next: &21 
                                                                                     c: 
-                                                                                      s: "my $M = c&M || die \"lum no M\";\nfor my $C (@$M) {\n    my $y = C.y;\n    my $upt = 0;\n    y.spc = 0.01 if y.spc < 0.01;\n    my $fs = y.spc * 20 * 4;\n    if (c&helum) {\n        C&he = G&rou,$fs/c&helum;\n    }\n    else {\n        $fs = 3 if $fs < 3;\n        C&fs = G&rou,$fs;\n    }\n}\n"
+                                                                                      s: "my $y = C.y;\nmy $total = sum(map{ _.y.thy || 1 } @$M) || 1;\ny.v.muav = @$M / $total;\n"
                                                                                     sc: 
                                                                                       acgt: s
                                                                                       act: 1
                                                                                       of: L
-                                                                                      v: ylum
-                                                                                    t: lum
+                                                                                      v: cM
+                                                                                    t: barel
                                                                                     "y": 
-                                                                                      cv: '0.7'
-                                                                                      next: &30 
+                                                                                      cv: '0.5'
+                                                                                      next: &18 
                                                                                         c: 
-                                                                                          s: "ref $res || return;\nmy $y = C.y;\nmy $M = c&M;\nmy $ctv = res.ctv;\nfor (@$M) {\n    $ctv.>_.t && delete $ctv.>_.t;\n    $ctv.>_.t = _.y.cv || die \"No cv res yet: \".ki$_;\n}\n"
+                                                                                          s: "my $y = C.y;\ny.mu = defined y.thy ? y.thy : 1;\ny.mu = y.mu * y.v.muav if y.v.muav;\nmy $was = y.v.v;\ny.cv = G&roun,y.v.v if !y.cv;\ny.pcv = G&roun,y.i/y.v.Ly.thi;\nmy $in = y.v.aspace * y.mu;\ny.v.v += $in;\ny.ov = G&roun,y.v.v;\ny.spc = y.ov - y.cv;\n\nC.sc.yspc = y.spc if C.sc.nspc;\nC.sc.ml = (y.v.Ly.inde * 40).\"%\" if y.v.Ly.inde;\n"
                                                                                         sc: 
                                                                                           acgt: s
                                                                                           act: 1
-                                                                                          of: L
-                                                                                          v: yres
-                                                                                        t: res
+                                                                                          of: a
+                                                                                        t: many
                                                                                         "y": 
-                                                                                          cv: '0.7'
-                                                                                          next: &43 
+                                                                                          cv: '0.6'
+                                                                                          next: &19 
                                                                                             c: 
-                                                                                              s: "my $M = c&M || die \"L 8 with no M: \".ki$C;\nmy $y = C.y;\n# first was ourself that is already in mo\nshift @$M if $M->[0] eq $C;\nmy $J = y.J || A.1;\nA.c.XM && push @$M, @{A.c.XM}; # labely meta\n# resolve any L in M to its many\n@$M = map {\n    my $oM = _.y eq $_ && (_.c.s.c.oM || die\n        \"NoM on inner _.t from C.t: \".ki _.c.s );\n    $oM ? @$oM : $_\n} @$M;\n# stash out many for the above\nc&oM && return push @{c&oM}, @$M;\nif (A.V) {\n    1 && sayyl \"For J.t: \";\n    1 && saygr \"_.t: \".ki _.y for @$M;\n}\n\nRw ModNs $M $s:y.mod if y.mod;\nreturn sayre \"NOthing!?\" if !@$M;\nG&A,n=>8=>$J,@$M;\n"
+                                                                                              s: "my $M = c&M || die \"lum no M\";\nfor my $C (@$M) {\n    my $y = C.y;\n    my $upt = 0;\n    y.spc = 0.01 if y.spc < 0.01;\n    my $fs = y.spc * 20 * 4;\n    if (c&helum) {\n        C&he = G&rou,$fs/c&helum;\n    }\n    else {\n        $fs = 3 if $fs < 3;\n        C&fs = G&rou,$fs;\n    }\n}\n"
                                                                                             sc: 
                                                                                               acgt: s
                                                                                               act: 1
                                                                                               of: L
-                                                                                            t: ground
+                                                                                              v: ylum
+                                                                                            t: lum
                                                                                             "y": 
-                                                                                              cv: '0.8'
-                                                                                              prev: *30
-                                                                                              up: *20
-                                                                                          prev: *31
-                                                                                          up: *20
-                                                                                      prev: *29
-                                                                                      up: *20
-                                                                                  prev: *32
-                                                                                  up: *20
-                                                                              prev: *33
-                                                                              up: *20
-                                                                          prev: *28
-                                                                          up: *20
-                                                                      prev: *27
-                                                                      up: *20
-                                                                  prev: *34
-                                                                  up: *20
-                                                              prev: *35
-                                                              up: *20
-                                                          prev: *36
-                                                          up: *20
-                                                      prev: *37
-                                                      up: *20
-                                                  prev: *38
-                                                  up: *20
-                                              prev: *26
-                                              up: *20
-                                          prev: *39
-                                          up: *20
-                                      prev: *40
-                                      up: *20
-                                  prev: *25
-                                  up: *20
-                              prev: *24
-                              up: *20
-                          prev: *41
-                          up: *20
-                      prev: *22
-                      up: *20
-                  prev: *17
+                                                                                              cv: '0.7'
+                                                                                              next: &20 
+                                                                                                c: 
+                                                                                                  s: "ref $res || return;\nmy $y = C.y;\nmy $M = c&M;\nmy $ctv = res.ctv;\nfor (@$M) {\n    $ctv.>_.t && delete $ctv.>_.t;\n    $ctv.>_.t = _.y.cv || die \"No cv res yet: \".ki$_;\n}\n"
+                                                                                                sc: 
+                                                                                                  acgt: s
+                                                                                                  act: 1
+                                                                                                  of: L
+                                                                                                  v: yres
+                                                                                                t: res
+                                                                                                "y": 
+                                                                                                  cv: '0.7'
+                                                                                                  next: &47 
+                                                                                                    c: 
+                                                                                                      s: "my $M = c&M || die \"L 8 with no M: \".ki$C;\nmy $y = C.y;\n# first was ourself that is already in mo\nshift @$M if $M->[0] eq $C;\nmy $J = y.J || A.1;\nA.c.XM && push @$M, @{A.c.XM}; # labely meta\n# resolve any L in M to its many\n@$M = map {\n    my $oM = _.y eq $_ && (_.c.s.c.oM || die\n        \"NoM on inner _.t from C.t: \".ki _.c.s );\n    $oM ? @$oM : $_\n} @$M;\n# stash out many for the above\nc&oM && return push @{c&oM}, @$M;\nif (A.V) {\n    1 && sayyl \"For J.t: \";\n    1 && saygr \"_.t: \".ki _.y for @$M;\n}\n\nRw ModNs $M $s:y.mod if y.mod;\nif (!@$M) {\n    my $inte;\n    $inte.>$_ = $y.>$_ for grep{$y.>$_ } keys %{A.c.ybrow};\n    1 && sayre \"NOthing!? in M C.t\"\n        .($inte && \": intyresty: \".ki $inte);\n    1&&saygr \"For \".ki A.c.ybrow;\n    1&&saygr \"With \".ki $y,1,2;\n    return\n}\nG&A,n=>8=>$J,@$M;\n"
+                                                                                                    sc: 
+                                                                                                      acgt: s
+                                                                                                      act: 1
+                                                                                                      of: L
+                                                                                                    t: ground
+                                                                                                    "y": 
+                                                                                                      cv: '0.8'
+                                                                                                      prev: *20
+                                                                                                      up: *2
+                                                                                                  prev: *19
+                                                                                                  up: *2
+                                                                                              prev: *18
+                                                                                              up: *2
+                                                                                          prev: *21
+                                                                                          up: *2
+                                                                                      prev: *17
+                                                                                      up: *2
+                                                                                  prev: *22
+                                                                                  up: *2
+                                                                              prev: *23
+                                                                              up: *2
+                                                                          prev: *16
+                                                                          up: *2
+                                                                      prev: *15
+                                                                      up: *2
+                                                                  prev: *14
+                                                                  up: *2
+                                                              prev: *13
+                                                              up: *2
+                                                          prev: *12
+                                                          up: *2
+                                                      prev: *24
+                                                      up: *2
+                                                  prev: *11
+                                                  up: *2
+                                              prev: *10
+                                              up: *2
+                                          prev: *9
+                                          up: *2
+                                      prev: *8
+                                      up: *2
+                                  prev: *7
+                                  up: *2
+                              prev: *6
+                              up: *2
+                          prev: *25
+                          up: *2
+                      prev: *26
+                      up: *2
+                  prev: *3
                   tv: 
                     M: 
-                      "0.16": *23
+                      "0.15": *28
                   tw: 
-                    M: *23
-                  up: *20
-              prev: *1
+                    M: *28
+                  up: *2
+              prev: *5
               tv: 
                 a: 
-                  "0.1": *18
+                  "0.1": *4
                 many: 
-                  "0.6": *19
+                  "0.6": *29
               tw: 
-                a: *18
-                many: *19
-              up: *20
+                a: *4
+                many: *29
+              up: *2
           tv: 
             L: 
-              "0.1": *42
-              "0.2": *12
+              "0.1": *35
+              "0.2": *40
             M: 
-              "0.1": *4
+              "0.1": *30
             bal: 
-              "0.3": *9
+              "0.3": *43
             barel: 
-              "0.5": *6
+              "0.5": *38
+            cyc: 
+              "0.1": *34
+            erse: 
+              "0.1": *31
             ground: 
-              "0.8": *15
+              "0.8": *45
             in: 
-              "0.12": *14
+              "0.12": *41
             lum: 
-              "0.23": *10
-              "0.7": *7
+              "0.23": *42
+              "0.7": *37
             "n": 
-              "0.1": *3
+              "0.1": *33
             out: 
-              "0.12": *11
+              "0.12": *46
             refit: 
-              "0.4": *13
+              "0.4": *39
             res: 
-              "0.7": *8
+              "0.7": *36
             rev: 
-              "0.1": *2
+              "0.1": *32
             spc: 
-              "0.1": *16
+              "0.1": *44
             u: 
-              "0.1": *5
+              "0.1": *1
           tw: 
-            L: *12
-            M: *4
-            bal: *9
-            barel: *6
-            ground: *15
-            in: *14
-            lum: *7
-            "n": *3
-            out: *11
-            refit: *13
-            res: *8
-            rev: *2
-            spc: *16
-            u: *5
-          up: *20
-      Zpace 0.9/L 0.001/L 0.1: *42
-      Zpace 0.9/L 0.001/L 0.2: *12
-      Zpace 0.9/L 0.001/M 0.1: *4
-      Zpace 0.9/L 0.001/bal 0.3: *9
-      Zpace 0.9/L 0.001/barel 0.5: *6
-      Zpace 0.9/L 0.001/ground 0.8: *15
-      Zpace 0.9/L 0.001/in 0.12: *14
-      Zpace 0.9/L 0.001/lum 0.23: *10
-      Zpace 0.9/L 0.001/lum 0.7: *7
-      Zpace 0.9/L 0.001/n 0.1: *3
-      Zpace 0.9/L 0.001/out 0.12: *11
-      Zpace 0.9/L 0.001/refit 0.4: *13
-      Zpace 0.9/L 0.001/res 0.7: *8
-      Zpace 0.9/L 0.001/rev 0.1: *2
-      Zpace 0.9/L 0.001/spc 0.1: *16
-      Zpace 0.9/L 0.001/u 0.1: *5
-      Zpace 0.9/L 0.1: *41
-      Zpace 0.9/L 0.2: *34
-      Zpace 0.9/M 0.1: *24
-      Zpace 0.9/M 0.16: *35
-      Zpace 0.9/a 0.001: *17
-      Zpace 0.9/a 0.001/a 0.1: *18
-      Zpace 0.9/a 0.001/many 0.6: *19
-      Zpace 0.9/a 0.1: *25
-      Zpace 0.9/bal 0.3: *28
-      Zpace 0.9/barel 0.5: *32
-      Zpace 0.9/ground 0.8: *43
-      Zpace 0.9/in 0.12: *37
-      Zpace 0.9/lum 0.23: *27
-      Zpace 0.9/lum 0.7: *31
-      Zpace 0.9/many 0.6: *29
-      Zpace 0.9/mo 0.001: *22
-      Zpace 0.9/mo 0.001/M 0.16: *23
-      Zpace 0.9/n 0.1: *40
-      Zpace 0.9/out 0.12: *36
-      Zpace 0.9/refit 0.4: *33
-      Zpace 0.9/res 0.7: *30
-      Zpace 0.9/rev 0.1: *39
-      Zpace 0.9/spc 0.1: *26
-      Zpace 0.9/u 0.1: *38
+            L: *40
+            M: *30
+            bal: *43
+            barel: *38
+            cyc: *34
+            erse: *31
+            ground: *45
+            in: *41
+            lum: *37
+            "n": *33
+            out: *46
+            refit: *39
+            res: *36
+            rev: *32
+            spc: *44
+            u: *1
+          up: *2
+      Zpace 0.9/L 0.001/L 0.1: *35
+      Zpace 0.9/L 0.001/L 0.2: *40
+      Zpace 0.9/L 0.001/M 0.1: *30
+      Zpace 0.9/L 0.001/bal 0.3: *43
+      Zpace 0.9/L 0.001/barel 0.5: *38
+      Zpace 0.9/L 0.001/cyc 0.1: *34
+      Zpace 0.9/L 0.001/erse 0.1: *31
+      Zpace 0.9/L 0.001/ground 0.8: *45
+      Zpace 0.9/L 0.001/in 0.12: *41
+      Zpace 0.9/L 0.001/lum 0.23: *42
+      Zpace 0.9/L 0.001/lum 0.7: *37
+      Zpace 0.9/L 0.001/n 0.1: *33
+      Zpace 0.9/L 0.001/out 0.12: *46
+      Zpace 0.9/L 0.001/refit 0.4: *39
+      Zpace 0.9/L 0.001/res 0.7: *36
+      Zpace 0.9/L 0.001/rev 0.1: *32
+      Zpace 0.9/L 0.001/spc 0.1: *44
+      Zpace 0.9/L 0.001/u 0.1: *1
+      Zpace 0.9/L 0.1: *25
+      Zpace 0.9/L 0.2: *16
+      Zpace 0.9/M 0.1: *6
+      Zpace 0.9/M 0.15: *15
+      Zpace 0.9/a 0.001: *3
+      Zpace 0.9/a 0.001/a 0.1: *4
+      Zpace 0.9/a 0.001/many 0.6: *29
+      Zpace 0.9/a 0.1: *7
+      Zpace 0.9/bal 0.3: *22
+      Zpace 0.9/barel 0.5: *21
+      Zpace 0.9/cyc 0.1: *8
+      Zpace 0.9/erse 0.1: *9
+      Zpace 0.9/ground 0.8: *47
+      Zpace 0.9/in 0.12: *13
+      Zpace 0.9/lum 0.23: *23
+      Zpace 0.9/lum 0.7: *19
+      Zpace 0.9/many 0.6: *18
+      Zpace 0.9/mo 0.001: *26
+      Zpace 0.9/mo 0.001/M 0.15: *28
+      Zpace 0.9/n 0.1: *10
+      Zpace 0.9/out 0.12: *14
+      Zpace 0.9/refit 0.4: *17
+      Zpace 0.9/res 0.7: *20
+      Zpace 0.9/rev 0.1: *11
+      Zpace 0.9/spc 0.1: *24
+      Zpace 0.9/u 0.1: *12
     sc: 
       iiyt: 
         "0.001": 
-          L: *1
-          a: *17
-          mo: *22
-      top: *20
+          L: *5
+          a: *3
+          mo: *26
+      top: *2
     unreal: 
       sc: 
         iiyt: 1
@@ -748,62 +822,68 @@ sc:
 t: Zpace
 "y": 
   cv: '0.9'
-  in: *1
+  in: *5
   tv: 
     L: 
-      "0.001": *1
-      "0.1": *41
-      "0.2": *34
-    M: 
-      "0.1": *24
-      "0.16": *35
-    a: 
-      "0.001": *17
+      "0.001": *5
       "0.1": *25
+      "0.2": *16
+    M: 
+      "0.1": *6
+      "0.15": *15
+    a: 
+      "0.001": *3
+      "0.1": *7
     bal: 
-      "0.3": *28
+      "0.3": *22
     barel: 
-      "0.5": *32
+      "0.5": *21
+    cyc: 
+      "0.1": *8
+    erse: 
+      "0.1": *9
     ground: 
-      "0.8": *43
+      "0.8": *47
     in: 
-      "0.12": *37
+      "0.12": *13
     lum: 
-      "0.23": *27
-      "0.7": *31
+      "0.23": *23
+      "0.7": *19
     many: 
-      "0.6": *29
+      "0.6": *18
     mo: 
-      "0.001": *22
+      "0.001": *26
     "n": 
-      "0.1": *40
+      "0.1": *10
     out: 
-      "0.12": *36
+      "0.12": *14
     refit: 
-      "0.4": *33
+      "0.4": *17
     res: 
-      "0.7": *30
+      "0.7": *20
     rev: 
-      "0.1": *39
+      "0.1": *11
     spc: 
-      "0.1": *26
+      "0.1": *24
     u: 
-      "0.1": *38
+      "0.1": *12
   tw: 
-    L: *34
-    M: *35
-    a: *25
-    bal: *28
-    barel: *32
-    ground: *43
-    in: *37
-    lum: *31
-    many: *29
-    mo: *22
-    "n": *40
-    out: *36
-    refit: *33
-    res: *30
-    rev: *39
-    spc: *26
-    u: *38
+    L: *16
+    M: *15
+    a: *7
+    bal: *22
+    barel: *21
+    cyc: *8
+    erse: *9
+    ground: *47
+    in: *13
+    lum: *19
+    many: *18
+    mo: *26
+    "n": *10
+    out: *14
+    refit: *17
+    res: *20
+    rev: *11
+    spc: *24
+    u: *12

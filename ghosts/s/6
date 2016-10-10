@@ -148,24 +148,16 @@ Zpace: | # hang La space charts off mo
         # stackable A with stitchable others interleaved in time
         # 6 FLIES
     
-    # plumb moment
+    # plumb moment of cM-any
     # or any that nogy things
-    M 16: %of:mo,tldo:nogindex:y:L,vor:cM
+    M 15: %of:mo,tldo:nogindex:y:L,vor:cM
         return if C.y.a; # already placed
-        return if C.y.L; # already placing
+        return die "MdubL" if C.y.L; # already placing
         my $D = T.D;
-        my $ybrow = Ds&nogindex;
         
-        my $M = c&M;
-        if (A.V) {
-            sayre "C.t manies!: ".(exists c&M)."  ".ki $M;
-            my $D = T.D;
-            my $ybrow = Ds&nogindex;
-            my @ym = grep{C.y.>$_ } keys %$ybrow;
-            1 && sayyl "Neg: C.t y: ".join',',@ym;
-            1 && saybl "noym: ".wdump 2, [C.c,C.y] if !@ym;
-        }
-        C.y.L = G&A,L=>8,$C
+        my $L = C.y.L = G&A,L=>1,$C;
+        Lc&ybrow = Ds&nogindex;
+        G&A,$L,8;
     
     0 && # ground descript, floating tool
     J 69: %of:mo,v:sJ
@@ -201,10 +193,11 @@ Zpace: | # hang La space charts off mo
     u: %v:yu
         # to take space up til
     rev: %v:yspc
-        # composite including:
-        #   erse - n,u = u,n # stack on floor vs ceiling
-        #   1000 - or so thi & overflow replaces cyclicly
-    
+        # composite \d+ ? y.cyc : peels into y
+    cyc: %v:ycyc
+        # sweeping over itself, round and round
+    erse: %v:yerse
+        # flip n,u, stack floor to ceiling
     # so goes from ground to mind, instead of in to out
     # since we use y.in now for the first insider
     in 12: %v:yin,vatis:!ref
@@ -543,7 +536,13 @@ Zpace: | # hang La space charts off mo
         }
         
         Rw ModNs $M $s:y.mod if y.mod;
-        return sayre "NOthing!?" if !@$M;
+        if (!@$M) {
+            my $inte;
+            $inte.>$_ = $y.>$_ for grep{$y.>$_ } keys %{A&ybrow};
+            1 && sayre "NOthing!? in M C.t"
+                .($inte && ": intyresty: ".ki $inte);
+            return
+        }
         G&A,n=>8=>$J,@$M;
     
 
