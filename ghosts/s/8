@@ -256,11 +256,15 @@ ElBridge: | # hoisting, desire
         
     # unify harvested xo and hoisted ox (y t xo) as xo
     xo 78: %of:s
-        my $top = s&top || return sayre " : : no top on A.1.t, skip xo";
+        if (c&imparted) { # thawing
+            s&xo = A&xo if A&xo;
+            return 
+        }
+        my $J = A.1;
+        my $top = s&top || return sayre " : : no top on J.t, skip xo";
         my $te = A.mo.c.T;
         my $xo = te.has; # our xo
-        my $x = top.y.x || c&imparted && return
-            || die "No x on A.1.t: ".ki s&top;
+        my $x = top.y.x || die "No x on A.1.t: ".ki s&top;
         my $oxo = xs&xo; # our past xo
         
         $xo = A&xo if A&xo; # thawing
@@ -268,10 +272,9 @@ ElBridge: | # hoisting, desire
         
         my $ox = a&ox; # many y t xo (inc undef goners)
         my $xox = s&xox; # many k y t v past
-        
         $xo || $ox || $oxo || $xox || return delete s&xo;
         
-        if (!$ox && !$xox) { # just ourself
+        if (!$ox && !$xox) { # just oneself
             s&xo = $xo;
             return;
         }
