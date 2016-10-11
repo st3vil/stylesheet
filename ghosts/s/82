@@ -32,7 +32,7 @@ ElvisOver: | # use Goh notify for way change introduct
         t.cs->('sc top', "ElvisOvzio way used");
         
     t.e =
-    n Waytch
+    n Waytch=>W=>{filter=>qr{/s/99$}}
     t.cs->('sc lv,olv', "Waytch holding on to Mez");
     
     t.e =
@@ -102,13 +102,16 @@ WayHeave: | # hold way updates to G since it began, plumbed by Waytch
     
     
     
-Waytch: | # way listener, sprawl
+Waytch: | # for ghost updates
     # to plot way changed into ElMatron and call the ghoster to calc wanderince
     u Zpace
+    
+    
+    Jc&filter = c&filter if c&filter;
     Js&ein.pi.Gup.sMJ = &sMJjeTC{
+        es&file =~ Jc&filter || return if Jc&filter;
         m e.t=>''=>{s=>ec&s}=>{dig=>es&dig}
     };
-    
     
     S
     n Goh=>-mez
@@ -123,12 +126,12 @@ pi/takeM: |
     y.cyc = 1000;
     @$M = @{c&M};
     @{c&M} = ();
-pi/mez: | # interpreted pg listener, makes e to A.2
+pi/mez: | # your interpreted pg listener, makes e to A.2
     # yea heayh
     J.bowls ++ ||
     n Mez=>[to=>c&s]
     
-pi/listen: | # pg listener, makes e to A.2
+pi/listen: | # your pg listener, makes e to A.2
     # yea heayh
     J.bowls ++ ||
     n Listen=>[to=>c&s]
@@ -142,13 +145,11 @@ Mez: | # listener for mezages with line protocols
     u pg
     y.res = 1; # M t replant
     
-    Rw sWscribe;
+    Rw sWscribe; # has clients
     
     Js&eout.t.l = "heard elvises"; # fyi
     # distribute noises to froms
     Js&ein.t.l = &TesC{
-        local A.V = 2;
-        
         # large messages stashed and referred to
         $s = G&dmez,$1 if $s =~ /^CCC (\d+)$/;
         
@@ -172,7 +173,7 @@ Mez: | # listener for mezages with line protocols
     
     S
     
-    Rw sMres listen;
+    Rw sMaps listen; # pour sM s->sc.listen
     
     # relative to el - overall C change
     my $l = Js&sels.listen = {};
@@ -199,7 +200,7 @@ sWscribe: | # for your M of W wanting s
         @$M = grep { _.t ne "j.t $s" } @$M;
     };
     
-sMres: | # maps unique Js&M.c.s into m $t:s and sc.$m0 = $s
+sMaps: | # maps unique Js&M.c.s into m $t:s and sc.$m0 = $s
     my ($sck) = @{ar.m||[]};
     # unique listen addresses
     my $st;
@@ -233,7 +234,7 @@ Listen: | # pg listen pool
     };
     S
     
-    Rw sMres listen;
+    Rw sMaps listen;
     
     y.imp++ if T.forked; # relistens all
     G&has,forked=>1; # <^ waker in between
