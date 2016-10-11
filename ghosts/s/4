@@ -200,8 +200,15 @@ CoBabbler: | # bake code
     C.c.s =~ s/\b(\w)y\&(\w+)/$1\.y\.$2/sgm;
     # sleepomatics
     my $orr = qq{ || return sayre };
-    c&s =~ s/^\s*S(?: (\S+.*?))?\s*$/G\&S,"$1"$orr "GONG J\.t";/sgm;
-    c&s =~ s/^\s*T(?: (\S+.*?))?\s*$/G\&T,"$1"$orr ("TO   J\.t") x 5;/sgm;
+    for ('S','T') {
+        my $l = $_ eq 'S' ? "GONG" : "T   ";
+        # become gotoable, for test frames
+        c&s =~ s{^(\s*)S(?: (\S+.*?))?\s*$}{
+            (my $label = $2) =~ s/\W+/_/sgm;
+            $label = $_."_$label: ";
+            qq[$1${label}G\&S,"$2" || sayre "$l  J\.t \$2";]
+        }sgme;
+    }
     
     c&s =~ s/^(\w+:)\s+$/$1/smeg && sayre "Blockquoter whitespace trimmed";
     
@@ -209,13 +216,15 @@ CoBabbler: | # bake code
     # G may like to track lamda meta in a coderef => $D like way
     #    wants to be a function the sub passes through
     # one word args assumed to be many single letter args
-    c&s =~ s[(\W)\&(\w+(?:,\w+)*)\{]
+    c&s =~ s[(\W)\&(\w+(?:,\w+)*)?\{]
         [my @r = split',',$2;
         my $acgt = shift(@r) if $r[0] eq 'acgt';
         $acgt ||= $r[0] =~ s/^acgt//;
         @r = split '', $r[0] if @r == 1;
         unshift @r, qw'A C G T' if $acgt;
-        $1."sub { my (".join(',',map{'$'.$_}@r).") = \@_;"]smeg;
+        my $arg = " my (".join(',',map{'$'.$_}@r).") = \@_;"
+            if @r;
+        $1."sub {".$arg]smeg;
     
     # all without the not-in-blockquote intelising of:
     C.c.s = G&parse_babbl,C.c.s;
@@ -405,7 +414,8 @@ Zop: | # a G
         
         
         #n ElPassTape=>-test
-        n ElvisOver=>-test
+        #n ElvisOver=>-test
+        n ElvisDesi=>-test
         
         #n ElvisDoolify=>-test
         

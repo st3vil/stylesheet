@@ -1,11 +1,15 @@
 
+
 ElvisOver: | # use Goh notify for way change introduct
+    # must be forked from testrun due to wander, exit
+    # testrun must check that it completes (waitpid & so on)
+    # so pi/test wants to S initially and begin when all of 3's tests are declared
+    # and 3 osc sweeps up children
     # pg way listen (G'd)
     my $t = Rw Towering Ang
         || return;
     Rw HasWay;
     return unless c&Se == 1;
-    
     G.mkoJ->(); # frees us from test exit
     my $til = sub {
         my ($d,$cb) = @_;
@@ -16,9 +20,12 @@ ElvisOver: | # use Goh notify for way change introduct
         grep{ 'ElvisOvary' ne join'',keys %$_ }
         map { LoadFile($_) } grep { -s $_ } $f;
     
+    my $blank = &{
     write_file($f, <<'');
         ElvisOvary: |
             3 + 5
+    };
+    $blank->();
     
     u ElvisOvzio=>''=><<'','of:w'
         my $v = Rw ElvisOvary;
@@ -75,6 +82,7 @@ ElvisOver: | # use Goh notify for way change introduct
 
     });
     $til->(9.9, sub {
+        $blank->();
         exit;
     });
     
