@@ -415,7 +415,8 @@ Zop: | # a G
         
         #n ElPassTape=>-test
         #n ElvisOver=>-test
-        n ElvisDesi=>-test
+        n ElvisMutato=>-test
+        #n ElvisDesi=>-test
         
         #n ElvisDoolify=>-test
         
@@ -716,7 +717,10 @@ Telvis: |
         
         # c&tac=1;
         my $l = c&rsl || oc&rsl || die "no rsl";
-        $l = [grep { c&grepl ->($_) } @$l] if c&grepl;
+        $l = [grep {
+            !ref c&grepl ? c&grepl =~ /^\/(.+)\/$/ ? $_ =~ /$1/
+                : die "notundogrepl: c&grepl"
+            : c&grepl ->($_) } @$l] if c&grepl;
         $l
     };
     c&posts = sub {

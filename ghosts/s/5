@@ -45,7 +45,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         A&V = A.1.t =~ /^[A-Z]/ && A.2.t ne 'u';
         
         if (my $W = $whole) {
-            my $s = G&Wup,$W || G&t,$W || die "no $W on ".G&sn;
+            my $s = ref $W && $W || G&Wup,$W || G&t,$W || die "no $W on ".G&sn;
             sayre "WHole! s: A.1.t: s.t" if A&V;
             # m=A makes 
             A&who = G&A,o=>8,$C,$s,'whole',{m=>'A'};
@@ -383,38 +383,47 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         # maintained by ...
         s&tv = l.y.tv || {};
         
+        my $bu;
         # ii is tw of We things
-        my $ii;
+        bu.ii = {};
         if (keys %{ s&iiyt ||{} }) {
             G&chew,s&iiyt,\'cv,t',$_ for sub {
                 my ($l,$cv,$t) = @_;
-                if (my $o = $ii->{$t}) {
+                if (my $o = bu.ii->{$t}) {
                     # join We things above next/prev
                     o.y.over = $l;
                     l.y.under = $o;
                 }
                 else {
-                    $ii->{$t} = $l;
+                     bu.ii->{$t} = $l;
                 }
             };
         }
-        # i is t = code, from We thing i tw
-        my $i;
-        if ($ii && ii.i) {
-            my $itw = ii.i.y.tw || die "No ytw on ii_i: ".ki ii.i;
+        # i is t -> c.code, from We thing i tw
+        bu.i = {};
+        if (my $i = ii.i) {
+            my $itw = i.y.tw || die "No ytw on ii_i: ".ki $i;
             while (my ($t,$c) = each %$itw) {
                 my $code = c.c.code;
                 $code || sayre("No code on itw: ".ki$c);
                 $code || next;
-                $i->{$t} = $code;
+                bu.i->{$t} = $code;
             }
-            s&ii = $ii
         }
-        s&ii = $ii if $ii;
-        $ii || delete s&ii;
-        $i || delete s&i;
-        s&i = $i if $i;
         
+        # osc, top sc have ^
+        # so we can host/W the top unto u/whole/base 
+        # later should see C.y.A is for osc..?
+        while (my ($k,$v) = each %$bu) {
+            for ($C, $l) {
+                if (values %$v) {
+                    _.sc.>$k = $v;
+                }
+                else {
+                    delete _.sc.>$k;
+                }
+            }
+        }
     #c open con flux, uphoisting xo
     # here even if zop still (O mutes its own stimuli, eg Jo)
     # but not if zip still (no O)
