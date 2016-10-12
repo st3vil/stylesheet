@@ -180,8 +180,7 @@ Circle: | # < copy things
         my $cha = A.c.cha ||= {};
         # falls until array, oo.C.t.cv = [thamany]
         my $dupytt;
-        G&Chew,$oo,'x,t,cv',$_ for sub {
-            my ($o,$x,$t,$cv) = @_;
+        G&chew,$oo,'x,t,cv',$_ for &o,x,t,cv{
             my @o = @$o;
             
             # sort by zipped from A sips
@@ -256,8 +255,7 @@ Circle: | # < copy things
             }
         };
         C.t =~ /^zopul/ ||
-        G&Chew,$dupytt,'cv,t,At',$_ for sub {
-            my ($o,$cv,$t,$At) = @_;
+        G&chew,$dupytt,'cv,t,At',$_ for &o,cv,t,At{
             my $times = 'x'.@$o;
             sayre "Dupe A.1.t o C.t $times: $cv $t: $At";
         };
@@ -268,17 +266,14 @@ Circle: | # < copy things
         my $jj = j.sc.oo;
         my $oo = A.c.oo;
         my $cha = A.c.cha ||= {};
-        G&Chew,$oo,'x,t,cv',$_ for sub {
-            my ($o,$x,$t,$cv) = @_;
+        G&chew,$oo,'x,t,cv',$_ for &o,x,t,cv{
             my $l = o.y.l; # last o
             
             # o.sc.bz.$t.$cv inward check
             my $sc = 'sc';
             my $z = 'z';
             if (my $bz = o.sc.bz) {
-                G&Chew,$bz,'t,cv',$_ for sub {
-                    my ($to,$dt,$dcv) = @_;
-                    
+                G&chew,$bz,'t,cv',$_ for &to,dt,dcv{
                     my $m = !to.c.cha ? 'same' : to.y.l ? 'diff' : 'new';
                     o.c.>$m.>$sc.>$z.>$dt.>$dcv = $to;
                     to.c.cha || return;
@@ -288,8 +283,7 @@ Circle: | # < copy things
             }
             if (my $dz = $l && l.sc.bz) {
                 my $bz = o.sc.bz;
-                G&Chew,$dz,'t,cv',$_ for sub {
-                    my ($to,$dt,$dcv) = @_;
+                G&chew,$dz,'t,cv',$_ for &to,dt,dcv{
                     $bz.>$dt && $bz.>$dt.>$dcv && return;
                     my $m = 'gone';
                     o.c.>$m.>$sc.>$z.>$dt.>$dcv = $to;
@@ -297,23 +291,24 @@ Circle: | # < copy things
                 }
             }
             
-            # wires
+            # wires - unused, could be extra on top of theirs
+            #   which we can relink in o7
             # notes from 2 - see upmost o's origin C ref index,
             # contributed to by all under
             if (my $oz = o.sc.oz) {
                 for my $on (keys %$oz) {
-                    my $to = $oz.>$on;
-                    if (to.y.A eq $A) {
-                        if (oo.C.>to.t && oo.C.>to.t.>to.y.cv eq $to) {
-                            #sayre "  -- have $on: to.t to.y.cv";
-                        }
-                        else {
-                            die "$t $cv Dont have $on: to.t to.y.cv ".wdump 2, oo.C;
-                            # cha.lost? might be above or below o A
-                        }
+                    my $o = $oz.>$on;
+                    my $i = oo.C.>o.t && oo.C.>o.t.>o.y.cv;
+                    
+                    if ($i eq $o || is&oz eq os&oz) {
+                        # have it or a clone
                     }
                     else {
-                        sayre "   ++ $on: to.t to.y.cv from other A";
+                        my $what = (o.y.A ne $A && "otherA ").$on;
+                        die "C.t: $t $cv: Dont have $what: o.t o.y.cv "
+                            .wdump 3, ["Exp: ",ki($o),"Got: ",ki($i),
+                                ooC=>oo.C ];
+                        # cha.lost? might be above or below o A
                     }
                 }
             }
@@ -326,8 +321,7 @@ Circle: | # < copy things
                 $cha.>$x.>$_.>$t.>$cv = $o for 'diff';
             }
         };
-        G&Chew,$jj,'x,t,cv',$_ for sub {
-            my ($o,$x,$t,$cv) = @_;
+        G&chew,$jj,'x,t,cv',$_ for &o,x,t,cv{
             $oo.>$x && $oo.>$x.>$t && $oo.>$x.>$t.>$cv && return;
             say "Goner C.t C.y.cv  --  $x $t $cv ----";
             $cha.>$x.>$_.>$t.>$cv = $o for 'gone';
@@ -352,8 +346,7 @@ Circle: | # < copy things
         # iterate by yt
         my $la;
         my @z;
-        G&Chew,$yt,\'cv,t',$_ for sub {
-            my ($o,$cv,$t) = @_;
+        G&chew,$yt,\'cv,t',$_ for &o,cv,t{
             my $l = o.y.l;
             my $E = l.c.s;
             my $e = o.c.s;
@@ -387,8 +380,7 @@ Circle: | # < copy things
             
             #c make co.path -> {nodestuff,co} trees
             my $co = r.sc.co ||= {};
-            G&Chew,$cha,\'m,nk,gk?',$_ for sub {
-                my ($wa,$m,$nk,$gk) = @_;
+            G&chew,$cha,\'m,nk,gk?',$_ for &wa,m,nk,gk{
                 return if $nk eq 'y' && $gk eq 'cv' && $m eq 'new';
                 my $xe = $cha.>$m.>$nk;
                 my $oe = $E.>$nk;
@@ -405,8 +397,7 @@ Circle: | # < copy things
                 push @{co.p}, $gk if @_ == 4;
                 if ($nk eq 'sc' && $gk eq 'z') {
                     my $wi;
-                    G&Chew,$xe,\'t,cv',$_ for sub {
-                        my ($zb,$t,$cv) = @_;
+                    G&chew,$xe,\'t,cv',$_ for &zb,t,cv{
                         $wi++;
                         if ($m eq 'gone') {
                             co.goneyt.>$cv.>$t = $zb;
@@ -468,8 +459,7 @@ Circle: | # < copy things
                         r.c.z ||= [];
                         # yonder thing disappears (maybe no A)
                         my @rm;
-                        G&Chew,$gt,'cv,t',$_ for sub {
-                            my ($d,$cv,$t) = @_;
+                        G&chew,$gt,'cv,t',$_ for &d,cv,t{
                             my $zr;
                             zr.t = $t;
                             zr.y.cv = $cv;
