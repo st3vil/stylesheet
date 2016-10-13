@@ -46,11 +46,14 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         
         if (my $W = $whole) {
             my $s = ref $W && $W || G&Wup,$W || G&t,$W || die "no $W on ".G&sn;
+            # s is a top not an s, but has s.y.s for s
             sayre "WHole! s: A.1.t: s.t" if A&V;
-            # m=A makes 
+            # m=A makes meta looks
             A&who = G&A,o=>8,$C,$s,'whole',{m=>'A'};
             # s C or J, s&top and/or y.in etc to copy
-            # if ii/i then copy too, repoint as tv to this side
+            # if s.sc.ii/s.y.s.sc.ii (etc) then copy too
+            # repoint as tv to this side, to C.sc.ii
+            # which is our top.y.s.sc.ii (etc)
             # 
             # gives us s&top, tv, i/ii like osc
             #   can make our own lv for our slice of it
@@ -375,11 +378,11 @@ Triangle: | # <>< swim, oscillator, s n, 7,
     # may be flung thawing top and iiyt to rebuild
     s 76:
         my $l = s&top;
-        G&always,l.y,s=>$C || die "s top ys elswhere: "
-                            .wdump 3,[$l,l.y.s,G&sn ];
         # top is this side of zop or thawed stuff
-        # also s&lastA.sc.topO = zip out top as O A
+        # also (A | s&lastA).sc.topO = zip out top as O A
+        #   which hup into Hooped
         # and s&lastK is zop out top as K A, incremental changes
+        #   mungled by Komp
         # maintained by ...
         s&tv = l.y.tv || {};
         
@@ -391,6 +394,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
                 my ($l,$cv,$t) = @_;
                 if (my $o = bu.ii->{$t}) {
                     # join We things above next/prev
+                    # climbing down a ladder into a hole
                     o.y.over = $l;
                     l.y.under = $o;
                 }
@@ -401,7 +405,7 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         }
         # i is t -> c.code, from We thing i tw
         bu.i = {};
-        if (my $i = ii.i) {
+        if (my $i = bu.ii.i) {
             my $itw = i.y.tw || die "No ytw on ii_i: ".ki $i;
             while (my ($t,$c) = each %$itw) {
                 my $code = c.c.code;
@@ -411,16 +415,19 @@ Triangle: | # <>< swim, oscillator, s n, 7,
             }
         }
         
-        # osc, top sc have ^
+        # only osc.sc have such index
+        # unless otherwise whacked out
+        # top.y.s is osc
         # so we can host/W the top unto u/whole/base 
         # later should see C.y.A is for osc..?
         while (my ($k,$v) = each %$bu) {
-            for ($C, $l) {
+            for ($C) {
                 if (values %$v) {
                     _.sc.>$k = $v;
                 }
                 else {
                     delete _.sc.>$k;
+                    
                 }
             }
         }
@@ -432,6 +439,9 @@ Triangle: | # <>< swim, oscillator, s n, 7,
         # other
     #c s8 transfer, send
     s 8:
+        my $l = s&top;
+        G&always,l.y,s=>$C || die "s top ys elswhere: "
+                            .wdump 3,[$l,l.y.s,G&sn ];
         # root of this cone branch
         s&lastA = $A;
         # tie together

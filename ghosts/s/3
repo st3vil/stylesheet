@@ -56,8 +56,12 @@ Circle: | # < copy things
             my $s = c&f = c&s;
             my $top = ss&top || s.y.in
                 || die "o A from no sc top or yin: ".ki$s;
-            c&finds.i = 1 if ss&i;
-            c&finds.ii = 1 if ss&ii;
+            for my $k ('i','ii') {
+                c&finds.>$k =
+                    s.sc.>$k ? 1 :
+                    s.y.s && s.y.s.sc.>$k ? 'ys' :
+                    next;
+            }
             c&s = $top;
             c&m = 'C';
         }
@@ -179,7 +183,7 @@ Circle: | # < copy things
         my $oo = A.c.oo;
         my $cha = A.c.cha ||= {};
         # falls until array, oo.C.t.cv = [thamany]
-        my $dupytt;
+        my $dupytt = A&dupytt = {};
         G&chew,$oo,'x,t,cv',$_ for &o,x,t,cv{
             my @o = @$o;
             
@@ -300,13 +304,17 @@ Circle: | # < copy things
                     my $o = $oz.>$on;
                     my $i = oo.C.>o.t && oo.C.>o.t.>o.y.cv;
                     
-                    if ($i eq $o || is&oz eq os&oz) {
-                        # have it or a clone
+                    if ($i eq $o || is&oz eq os&oz || do {
+                            my $dup = A&dupytt;
+                            my $Ats = $dup.>o.y.cv.>o.t;
+                            grep { $_ eq $i } map { @$_ } values %$Ats
+                    }) {
+                        # have it or a clone or was replaced in the ground
                     }
                     else {
                         my $what = (o.y.A ne $A && "otherA ").$on;
                         die "C.t: $t $cv: Dont have $what: o.t o.y.cv "
-                            .wdump 3, ["Exp: ",ki($o),"Got: ",ki($i),
+                            .wdump 3, ["Exp: o.y.A.c.s.t ",ki($o),$o,"Got: i.y.A.c.s.t ",ki($i),$i,
                                 ooC=>oo.C ];
                         # cha.lost? might be above or below o A
                     }
@@ -842,6 +850,7 @@ Circle: | # < copy things
     #c o7 surroundings/y-repoint our...
     # make an o.y.D -> o C.t -> $l ref index at the top
     # TODO same thing in many places
+    # see also Impart/as
     o 7:
         my $l = c&j.y.in;
         my $Dl = {};
@@ -865,7 +874,13 @@ Circle: | # < copy things
 
         # indexes
         for my $fi (keys %{c&finds||{}}) {
-            my $fr = c&f.sc.>$fi || die "o cf no $fi; ".ki$C;
+            my $wh = c&finds.>$fi;
+            # could be in f-rom sc or the f.y.s osc sc
+            my $fr = $wh eq 'ys' ?
+                c&f.y.s && c&f.y.s.sc.>$fi
+                         : c&f.sc.>$fi;
+            $fr || die "o cf no $fi; ".ki$C;
+            # put in i-nto (osc?) sc
             my $to = c&i.sc.>$fi ||= {};
             for my $k (keys %$fr) {
                 my $v = $fr.>$k;
