@@ -18,15 +18,18 @@ ElvisMutato: | # change normal/theu (every u's base)
     my $j = t.ntos->('J');
     my $yl = t.anii->(j.ii);
     t.toc.slimvague = 200;
-    t.cs->({rsl=>$yl,grepl=>'/lying whee/'}, "Empty ii not with Mutante");
-    t.cs->({rsl=>$yl,grepl=>'/ xo /'}, "Empty ii matches some xo");
+    t.cs->({rsl=>$yl,grepl=>'/lying whee/'},
+                            "Empty ii not with Mutante");
+    t.cs->({rsl=>$yl,grepl=>'/ xo /'},
+                             "Empty ii matches some xo");
     ok 0+@$yl > 140 && 0+@$yl < 200, "Empty ii yay many";
     
     
     t.e =
     n ElvisMutante
     my $top = T.op;
-    is top.t, 'ElvisMutante', "Mutante top.t = ElvisMutante";
+    is top.t, 'ElvisMutante',
+                          "Mutante top.t = ElvisMutante";
     is top.sc.ii, undef, "No topscii";
     is ref top.y.s, 'HASH', "topys";
     is top.y.s.t, 's', "topys is s";
@@ -37,13 +40,15 @@ ElvisMutato: | # change normal/theu (every u's base)
     t.cs->('sc top y tw O,nonext,grepl:/lying whee/',
         "Mutante top ytw O match");
     my $el = t.lookii->();
-    t.cs->({rsl=>$el,grepl=>'/lying whee/'}, "Mutante ii O match");
+    t.cs->({rsl=>$el,grepl=>'/lying whee/'},
+                                   "Mutante ii O match");
     is 0+@$el, 2+@$yl, "Mutante ii two more";
     
     t.e =
     n ElvisMuClos=>W=>{whole=>T.op}
     my $sl = t.lookii->();
-    t.cs->({rsl=>$el,grepl=>'/lying whee/'}, "MuClos ii O match");
+    t.cs->({rsl=>$el,grepl=>'/lying whee/'},
+                                    "MuClos ii O match");
     is 0+@$sl, 0+@$el, "MuClos ii count same as Mutante";
     
     t.e =
@@ -56,7 +61,8 @@ ElvisMutato: | # change normal/theu (every u's base)
 
     t.e =
     n ElvisMutated
-    t.cs->('sc lv,olv', "ElvisMutated");
+    t.cs->('sc lv,olv', "ElvisMutated"); 
+    t.xo->("Mutated with T dogon");
     
     # should have T tracked somewhere ^
     
@@ -152,10 +158,14 @@ Sleep: | # desire and not
     u i
     
     # sleep/engage mind
-    # $s && mark pages of osc for groups of time
+    # want to substrata bits of the ground,
+    # or headers from bodies of work, making sleep if same
+    # $s:
+    #    names sleep/wake features to have
+    #    names/numbers groups of time/etc in the pin
+    #      eg test frames
     S:
         if ($s eq 'no') { # backwards for once
-            # where 
             if (1c&want.once) { # got in somehow
                 G&unrea,A.1;
                 T.nose = 7; # still, osc
@@ -172,11 +182,50 @@ Sleep: | # desire and not
          
         1 unless "can" eq "sleep";
         
-    # marks a point for ghost chopchoping, see pud
+    # marks a point for ghost chopchoping, see ElvisDesi
+    # also # 38 makes a numerical
+    # know line in the way it came from
+    # to disambiguate unnamed T points, which just say 'here'
     T:
-        G&S;
-        1&&saygr "T C.t ".G&sn;
+        G&S; # no s, just engage mind
+        (my $label = 'T_'.$s) =~ s/\W+/_/sgm;
+        my $line = G&find_caller_line_labelled,$label;
+        my $w = T.w || die "T no w: ".ki $T;
+        if (my $te = A.mo && A.mo.c.T) {
+            # care for finding for way name > T name
+            te.has.Tin.>w.t.>$s.>$line ++;
+        }
+        else {
+            warn "T $s outerspace: ".G&sn
+        }
         1;
+    
+    # could also look back for most h/w/throat/J6 call... somehow
+    # c/64 Bun uses confess to find printed list of args
+    # which we can lookup refs for A,
+    # which could overload to print its t/ip
+    find_caller_line_labelled:
+        my @h;
+        my $line; # to disambiguate unnamed T points
+        for (0..7) {
+            my $l;
+            my @q = qw'package filename line subroutine hasargs
+            wantarray evaltext is_require hints bitmask hinthash';
+            my @ca = caller($_);
+            $l.>$_ = shift @ca for @q;
+            @q = qw'hinthash line subroutine';
+            $l = {map{$_=>$l.>$_ }@q};
+            push @h, $l;
+            if (my $hh = l.hinthash) {
+                if ($hh->{':'} eq $s) {
+                    $line = l.line;
+                    last;
+                }
+            }
+        }
+        $line || sayre "Cannot find $s above: ".ddump \@h;
+        $line
+        
     
     u c
     n \'of:mo'

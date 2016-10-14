@@ -6,10 +6,21 @@ ElvisOver: | # use Goh notify for way change introduct
     # so pi/test wants to S initially and begin when all of 3's tests are declared
     # and 3 osc sweeps up children
     # pg way listen (G'd)
-    my $t = Rw Towering Ang _ Sleepin
+    my $t = Rw Towering Ang
         || return;
     Rw HasWay;
     return unless c&Se == 1;
+    
+    if (0) { # find way to relay test info
+    # number of failures doesnt show in $? if we use exit?
+    if (my $pid = fork()) {
+        waitpid($pid,0);
+        die "child failed with $?" if $?;
+        is $?, 0, "Child completed";
+        return;
+    }
+    }
+    
     G.mkoJ->(); # frees us from test exit
     my $til = sub {
         my ($d,$cb) = @_;
