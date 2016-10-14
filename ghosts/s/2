@@ -585,7 +585,6 @@ Jelly: | # mo Town making
         if (A&twotoeight) {
             1 && sayyl "Alighting J.t";
             return T.not = 1;
-            T.Z.8 = $A;
         }
         # 1 wants J indexing through rest of now ^
         #     could be for types of the J present,
@@ -593,29 +592,32 @@ Jelly: | # mo Town making
         # via the osc to it could replant the Jtv
         # preserving the tubing if same J, like xo
         # map{_s&J} G&pint,A&Jup,sc=>tv=>C.t,C.y.cv;
-        
+    
+    # J encode π 
     J 3:
-        if (!s&J) {
+        unless (s&J) {
             s&J = G&J,A&Jup,C.t;
-            my $bla = " C.y.cv -".c&pi if c&pi ;
-                   # encodes entity π without ^
-            length(C.t) > 2 && sayyl "J ! C.t$bla";
+            length(C.t) > 2 && sayyl "J ! C.t"
+                .(c&pi && " C.y.cv -".c&pi);
+            A&el = c&W ? 2 : 1;
         }
+        A&el ||= 3;
         A.3 = s&J if c&W;
         A.2 = A.1;
         A.1 = s&J;
         # J inherits from A before ^
         s&J.1 = s&J;
-        s&J.2 = A.2 if s&J.2 eq A.4;
+        s&J.2 = A.4 if s&J.2 eq A.4;
         s&J.3 = s&J if c&W;
         A.1.C = $C;
         A.1.T = $T;
         #G&sJ,A.1,'s';
+    
     pi 3:
+        s&pi = $pi;
         my $J = s&J;
         Jc&d = A.2.c.d + 1;
         Js&name = "J.c.d $pi*C.t";
-        s&pi = $pi;
         # distance from A.3 as ip
     
     #c J.C/T wants to be? drop in A spawn?
@@ -758,6 +760,7 @@ Walks: | # othering, many C
         $y ||= sub { shift };
         my $d = {%{$d||{}}};
         d.path = [@{d.path||[]}, "s.t s.y.cv"];
+        d.ind = "  " if !defined d.ind;
         d.d++;
         my @out;
         if (my $z = s.sc.z) {
@@ -768,10 +771,11 @@ Walks: | # othering, many C
         }
         my $my = [];
         @out = map {
-            ! ref$_ ? "  ".$_ :
+            ! ref$_ ? d.ind .$_ :
             ref $_ eq 'HASH' ? do{
                 if (!_.c.ind) {
                     _.c.ind = d.d;
+                    _.c.inds = join'', (d.ind) x d.d;
                     push @$my, $_;
                 };
                 unshift @{_.c.inside||=[]},s.t;
