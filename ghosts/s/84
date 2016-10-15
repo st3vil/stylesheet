@@ -92,6 +92,18 @@ ElvisMutated: |
     u ExvisMutante
     T dogon
     n too=>2=> G&videola,'s'  
+ElvisDaury: |
+    u Zpace
+
+    m $_=>-daury for 1..6;
+pi/daury: |
+    s&fs = 31; # y
+    if ($s % 2) {
+        T odd
+        s&fs = 41
+    }
+    s&time = join' ',('~@~') x ++ Jc&bowls;
+    
 ElvisDesi: | # decide what to do after Waytch
     # may be about starting plans for the other to 
     my $t = Rw Towering Ang _ Sleepin
@@ -99,50 +111,32 @@ ElvisDesi: | # decide what to do after Waytch
     Rw HasWay;
     return unless c&Se == 1;
     G.mkoJ->(); # frees us from test exit
-
-    my $f = 'g/s/99desi';
-    die "Already full of ".ki $_ for
-        grep{ 'ElvisDaury pi/daury' ne join' ',sort keys %$_ }
-        map { LoadFile($_) } grep { -s $_ } $f;
     
-    my $dow = <<'';
-        ElvisDaury: |
-            u Zpace
-            
-            m $_=>-daury for 1..6;
-        pi/daury: |
-            s&fs = 31; # y
-            if ($s % 2) {
-                T odd
-                s&fs = 41
-            }
-            s&time = join' ',('~@~') x ++ Jc&bowls;
+    my $dow;
+    $dow.>$_ = _.c.s for map { G&wup,$_ } qw'ElvisDaury pi/daury';
     
-    my $dowo = $dow;
-    write_file($f, $dowo);
     my $had;
     my $ha = &{
         my @r;
-        my $d = Load($dow);
-        while (my ($pin,$s) = each %$d) {
+        while (my ($pin,$s) = each %$dow) {
             push @r, [$pin=>'',
                 {s=>$s},
-                {file=>$f,pi=>'Gup',dig=>slm 9,dig $s}
+                {file=>'g/s/84',pi=>'Gup',dig=>slm 9,dig $s}
             ]
                 if $had.>$pin ne $s;
             $had.>$pin = $s;
         }
         @r
     };
-    $ha->($dow);
+    $ha->();
     # put our way updates through this instead of the filesystem
     # WayHeave must come after hosted way (to Towering before _)
     my $hadow = &{
-        G&elph,Waytch=>$_ for $ha->($dow);
+        G&elph,Waytch=>$_ for $ha->()
     };
     
     t.e =
-    n Waytch=>W=>{filter=>qr{/s/(84|99desi)$}}
+    n Waytch=>W=>{filter=>qr{/s/84$}}
     t.cs->('sc lv,olv', "Waytch holding on to Mez");
     
     t.e =
@@ -272,8 +266,13 @@ Sleep: | # desire and not
         
 Sleepin: | # ways in to knowing which dream is where
     u alc
-    Sleap 3: %of:mo,v:cW
-        1 && saybl "        The: ".G&sn;
+    # classify wave, particle knowing in ElvisMatu
+    Sleap 31: %of:mo,v:cW
+        my $t = 1s&typed ||= {};
+        my $k = c&e ? 'e' : 'W';
+        $t.>$k.>A.2 = A.2;
+        #$t = ki $t;
+        #1 && saybl sprintf "        The: %-20s %-30s", G&sn,3 , $t
 Ghoster: |
     # remotely four about all Jtv, u/ning sorting update paths, doing
     sayyl "Got here! ".ki $C;
@@ -296,11 +295,13 @@ ElvisMatu: | # T room on Os
         $ts.>$J = $tt.>$t = G&Ct,[$t,$cv,{},{J=>$J}];
     };
     
-    # make A.2 or T hier
-    for my $C (values %$tt) {
+    # make A.2 hierarchy
+    # should all be A.4
+    for my $k (sort keys %$tt) {
+        my $C = $tt.>$k;
         my $upJ = s&J.2;
         C.c.>$_ = s&J.>$_ ->{t} for 1..5;
-        if (my $upC = $ts.>$upJ || upJ.t eq 'u' && tt.u) {
+        if (my $upC = $ts.>$upJ) {
             next if $upC eq $C;
             delete $tt.>C.t;
             push @{upC.sc.z||=[]}, $C;
@@ -310,17 +311,71 @@ ElvisMatu: | # T room on Os
     my @t = values %$tt;
     @t > 1 && sayre "Many tops: ".ki \@t;
     
-    # that makes T into tests with extremities
+    
+    
+    
+    
+    #c that makes T into tests with extremities
+    # things recognised out from ...
     my @al = map {
         my $ub = &C{
             my $J = s&J;
             c&s = "C.t".(!J.c.o &&"   ,");
-            s&xo = ki Js&xo;
+            if (my $xo = Js&xo) {
+                my $un;
+                while (my ($k,$v) = each %$xo) {
+                    if ($k eq 'way') {
+                        s&way = {%{s&way||{}}, %$v};
+                    }
+                    else {
+                        $un.>$k = $v;
+                    }
+                }
+                s&xo = $un if $un;
+            }
+            if (my $t = Js&typed) {
+                my $un;
+                while (my ($k,$v) = each %$t) {
+                    my $to;
+                    $to = 'jointed' if $k eq 'W';
+                    $to = 'elvised' if $k eq 'e';
+                    if (!$to) {
+                        $un.>$k = $v;
+                        next;
+                    }
+                    while (my ($ref,$R) = each %$v) {
+                        # is means its doing that for its 2
+                        my $is = Rc&is || '';
+                        my $oJ = R.2 if $is;
+                        my $t = $oJ && oJ.t || R.t;
+                        
+                        my $c = s&mix.>$to.>$is.>$t ||= {};
+                        
+                        c.J && c.J ne $R && die "Ne R.t:".ki(c.J)
+                            ."\n   ".ki($R);
+                        c.oJ = $oJ if $oJ;
+                        c.i++;
+                    }
+                }
+                s&typed = $un if $un;
+            }
+            # string
+            if (my $w = s&way) {
+                s&way = join ',',sort keys %$w;
+            }
+            if (my $mix = s&mix) {
+                my @l;
+                G&chew,$mix,\'to,is,t',$_ for &c,to,is,t{
+                    
+                };
+            }
             $C
         };
         G&ind,$_,$ub;
     } @t;
-    my $s = join "\n", map { _c&inds . _c&s } @al;
+    my $s = join "\n", map { 
+        sprintf "%-20s %-30s", _c&inds . _c&s , _s&xo
+    } @al;
     
     if (A.1.t ne "ElvisMatu") {
         1 && saybl "Soup of fo.t:\n$s";
