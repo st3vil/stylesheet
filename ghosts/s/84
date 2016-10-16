@@ -112,8 +112,11 @@ ElvisDesi: | # decide what to do after Waytch
     return unless c&Se == 1;
     G.mkoJ->(); # frees us from test exit
     
+    my @l = qw'ElvisDaury pi/daury';
     my $dow;
-    $dow.>$_ = _.c.s for map { G&wup,$_ } qw'ElvisDaury pi/daury';
+    ($dow.>$_ ) = map { _.c.s } G&wops,$_ for @l;
+    
+    my $pi = \ $dow->{'pi/daury'};
     
     my $had;
     my $ha = &{
@@ -151,7 +154,7 @@ ElvisDesi: | # decide what to do after Waytch
     # way change in the indent that T is on especially for those who hit that T
     
     
-    $dow =~ s/fs = 41/fs = 34/;
+    $$pi =~ s/fs = 41/fs = 34/;
     $hadow->();
     # sends way notify ^ which re-ElMatrons and Ghosters before returning
     #exit;
@@ -159,7 +162,7 @@ ElvisDesi: | # decide what to do after Waytch
     
     t.cs->('sc top', "only odd numbers update");
     
-    $dow =~ s/time = /inflation = '(3..'/;
+    $$pi =~ s/time = /inflation = '(3..'/;
     $hadow->();
     
     t.cs->('sc top', "everything updates");
@@ -292,15 +295,15 @@ ElvisMatu: | # T room on Os
     G&chew,fo.sc.Jtv,'t,cv',$_ for sub {
         my ($J,$t,$cv) = @_;
         $tt.>$t && die "Already had $t: ".ki($J)."\nunt: ".ki($tt.>$t);
-        $ts.>$J = $tt.>$t = G&Ct,[$t,$cv,{},{J=>$J}];
+        $ts.>$J = $tt.>$t = G&Ct,[$t,$cv,{J=>$J},{}];
     };
     
     # make A.2 hierarchy
     # should all be A.4
     for my $k (sort keys %$tt) {
         my $C = $tt.>$k;
-        my $upJ = s&J.2;
-        C.c.>$_ = s&J.>$_ ->{t} for 1..5;
+        my $upJ = c&J.2;
+        C.c.>$_ = c&J.>$_ && c&J.>$_ ->{t} for 1..5;
         if (my $upC = $ts.>$upJ) {
             next if $upC eq $C;
             delete $tt.>C.t;
@@ -319,7 +322,7 @@ ElvisMatu: | # T room on Os
     # things recognised out from ...
     my @al = map {
         my $ub = &C{
-            my $J = s&J;
+            my $J = c&J;
             c&s = "C.t".(!J.c.o &&"   ,");
             if (my $xo = Js&xo) {
                 my $un;
@@ -363,20 +366,33 @@ ElvisMatu: | # T room on Os
             if (my $w = s&way) {
                 s&way = join ',',sort keys %$w;
             }
-            if (my $mix = s&mix) {
-                my @l;
+            if (my $mix = delete s&mix) {
+                my $h = {};
                 G&chew,$mix,\'to,is,t',$_ for &c,to,is,t{
-                    
+                    my $k = "$to".($is&&"($is)");
+                    acu $h,$k,$t;
                 };
+                s&mix = join "\n", map{
+                    "$_: ".join ",",@{$h.>$_ }
+                } sort keys %$h;
             }
             $C
         };
         G&ind,$_,$ub;
     } @t;
-    my $s = join "\n", map { 
-        sprintf "%-20s %-30s", _c&inds . _c&s , _s&xo
+    my $s = join "\n", map {
+        my $in = _c&inds;
+        my $sc = _.sc;
+        my $ha = (keys %$sc && "\n").join "\n", map {
+            my $v = $sc.>$_;
+            $v = ki $v if ref $v;
+            "$in  $_:".($v !~ /\n/ ? " $v"
+                : "\n".join "\n", map { "$in    $_" }
+                split /\n/, $v);
+        } grep {$_ ne 'z'} sort keys %$sc;
+        sprintf "%-20s %-30s", $in . _c&s , $ha
     } @al;
-    
+    #
     if (A.1.t ne "ElvisMatu") {
         1 && saybl "Soup of fo.t:\n$s";
         return;
