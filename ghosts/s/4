@@ -227,24 +227,33 @@ CoBabbler: | # bake code
             if @r;
         $1."sub {".$arg]smeg;
     
-    # each e,t,c $data {    into:
+    # each etc $data {    into:
     # while (my ($e,$tv) = each %$data) {
     # while (my ($t,$c) = each %$tv) {
-    # or so, note the tv for named v outside t
+    #   so the value tv is for t-ing into
     # DIY closing brackets
-    # could replace with G&chew-ish
+    # could replace with G&chew-ish call if more spec
     # and know indents to close
-    c&s =~ s/^(\s*)each (\w+(,\w+)?) (\S+) {(\s+)$/
-        my @in = split ',' $2;
+    my $doi = sub {
+        my ($ind,$in,$from) = @_;
+        my @in = split ',', $in;
+        @in = split '', $in[0] if @in == 1;
         my @open;
-        my $v;
-        push @open, 'while (my ($'.shift(@in).',$'.
-            .(($v = @in > @open + 1) ?
-                $in[-1].'v'
-                : shift(@in)
-             ).',$'.
-            
+        while (@in) {
+            my $s = 'while (my ($'.shift(@in).',$';
+            my $v = @in > @open + 1 ? 
+                $in[0].'v' : shift(@in);
+            $s .= $v;
+            $s .= ') = each %{'.$from.' }) {';
+            $from = '$'.$v;
+            push @open, $s;
+        }
+        @open = map { $ind.$_ } @open;
+        join "\n", @open;
+    };
         
+    c&s =~ s/^(\s*)each (\w+(,\w+)?) (\S+) \{(\s*)$/
+        $doi->($1,$2,$4);
     /smeg;
     
     
