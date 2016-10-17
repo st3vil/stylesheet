@@ -265,9 +265,10 @@ ElvisMatu: | # T room on Os
                         my $oJ = R.2 if $is;
                         my $t = $oJ && oJ.t || R.t;
                         
-                        my $c = s&mix.>$to.>$is.>$t ||= {};
+                        my $c = C.sc.>$to.>$is.>$t ||= {};
                         
-                        c.J && c.J ne $R && die "Ne R.t:".ki(c.J)
+                        c.J && c.J ne $R && die
+                            "Dup typed->mix $t/R.t:".ki(c.J)
                             ."\n   ".ki($R);
                         c.oJ = $oJ if $oJ;
                         c.i++;
@@ -279,16 +280,17 @@ ElvisMatu: | # T room on Os
             if (my $w = s&way) {
                 s&way = join ',',sort keys %$w;
             }
-            if (my $mix = delete s&mix) {
+            for my $to ('jointed', 'elvised') {
+                # becomes more specific
+                my $mix = delete C.sc.>$to || next;
                 my $h = {};
-                G&chew,$mix,\'to,is,t',$_ for &c,to,is,t{
+                G&chew,$mix,\'is,t',$_ for &c,is,t{
                     my $k = "$to".($is&&"($is)");
                     $k = 'u' if $k eq 'jointed(mind)';
                     acu $h,$k,$t;
                 };
-                s&mix = join "\n", map{
-                    "$_: ".join ",",@{$h.>$_ }
-                } sort keys %$h;
+                C.sc.>$_ = join ",",@{$h.>$_ }
+                    for sort keys %$h;
             }
             $C
         };

@@ -227,6 +227,27 @@ CoBabbler: | # bake code
             if @r;
         $1."sub {".$arg]smeg;
     
+    # each e,t,c $data {    into:
+    # while (my ($e,$tv) = each %$data) {
+    # while (my ($t,$c) = each %$tv) {
+    # or so, note the tv for named v outside t
+    # DIY closing brackets
+    # could replace with G&chew-ish
+    # and know indents to close
+    c&s =~ s/^(\s*)each (\w+(,\w+)?) (\S+) {(\s+)$/
+        my @in = split ',' $2;
+        my @open;
+        my $v;
+        push @open, 'while (my ($'.shift(@in).',$'.
+            .(($v = @in > @open + 1) ?
+                $in[-1].'v'
+                : shift(@in)
+             ).',$'.
+            
+        
+    /smeg;
+    
+    
     # all without the not-in-blockquote intelising of:
     C.c.s = G&parse_babbl,C.c.s;
     
