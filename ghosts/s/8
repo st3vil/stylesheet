@@ -187,7 +187,7 @@ HasWay: | # pin upsurge
         # should multi the name from the first one
         my $w = v.y.argumented || die "Not argumented? ".ki$v;
         A.mo || return sayre "Nowhere to mo T hasway: ".G&sn;
-        G&has,\'mo'=>way=>w.t=>w.sc.dige=>1;
+        G&has,\'mo'=>way=>w.t=>w.sc.dige=>$w;
     };
 ElBridge: | # hoisting, desire
     u i
@@ -258,13 +258,11 @@ ElBridge: | # hoisting, desire
         }
         elsif ($s eq 'way') {
             my $td = {};
-            map {
-                while (my ($t,$ds) = each %$_) {
-                    while (my ($d,$q) = each %$ds) {
-                        $td.>$t.>$d += $q
-                    }
-                }
-            } map{_.c.s}@Me;
+            for (map{_.c.s}@Me) {
+                each tdw $_ {
+                    $td.>$t.>$d = $w;
+                }}
+            };
             $sa->(" $s from ".join(',',map{_.t}@Me).": ".ki $td);
             $td
         }
