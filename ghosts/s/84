@@ -233,18 +233,42 @@ Ghoster: | # Rw being for the 5
     my @c; # {c:now, l:before}
     for my $W (grep {_.t eq 'w'} @$z) {
         next if Wc&el >6;
-        for my $c (@{Ws&z}) {
+        way: for my $c (@{Ws&z}) {
             next if cc&el >6;
-            my $l = c.y.r.c.o.y.L.c.s;
+            my $l = c.y.r && c.y.r.c.o.y.L && c.y.r.c.o.y.L.c.s;
             if (!$l) {
-                if (my $had = G.sc.pinark.>c.t) {
-                    die "GManyhad c.t: ".ki $had if keys %$had > 1;
+                if ($l = h.adway.>c.t ) {
+                    sayre "l c.t found only in hadway, not 5u osc";
+                } #
+                elsif (my $had = G.sc.pinark.>c.t ) {
                     my $ww;
                     each dige,arg,w $had {
                         $w = w.y.argumented;
                         $ww.>$w = $w;
                     }}
-                    die "GMany manyways: ".ki $ww if keys %$ww > 1;
+                    if (keys %$ww > 1) {
+                        my $older;
+                        each ref,w $ww {
+                            if (my $ha = T.w && T.w.y.argumented) {
+                                if ($ha eq $w) {
+                                    1 && sayyl "w.t vs w.t";
+                                    next way;
+                                }
+                            }
+                            ws&digup || next;
+                            if ($older) {
+                                sayre "Many older: w.t";
+                                undef $older;
+                                last;
+                            }
+                        }
+                    }
+                    if (keys %$ww > 1) {
+                        say "For ".ki $c;
+                        my $n = keys %$ww;
+                        die "GMany manyways x$n: ".wdump 3, $ww;
+                        
+                    }
                     ($l) = values %$ww;
                 }
                 else {
@@ -252,6 +276,7 @@ Ghoster: | # Rw being for the 5
                 }
             }
             $l || die "Cannot find last ".ki $c;
+            h.adway.>c.t = $c;
             push @c, {c=>$c,l=>$l}; # c
         }
     }
@@ -273,7 +298,7 @@ Ghoster: | # Rw being for the 5
     my $tw;
     each Wt,wt,q $Wwq {
         my $W = q.W; # one Matu atom
-        G&always,$tw,$Wt=>$W || die "GDupe Wt W.t";
+        $tw.>$Wt = $W;
         my $r = $Wr.>$Wt ||= {};
         my $c = q.c; # many c by w.t
         if (my $in = Ws&Tin && Ws&Tin.>$wt ) {
@@ -285,7 +310,7 @@ Ghoster: | # Rw being for the 5
                     my @h;
                     push @h, shift @l until !@l || $l[0] =~ /^\s*T $label/;
                     if (!@l) {
-                        sayre "No finding ^\\s+T $label in:",_.c.s;
+                        sayre "No finding ^\\s+T $label in:", _.c.s;
                         ""
                     }
                     else {
@@ -297,22 +322,49 @@ Ghoster: | # Rw being for the 5
                         push @o, shift @l while @l && $l[0] =~ /^$ind/;
                         join "\n", @o;
                     }
-                } q.c.c,q.c.l;
+                } q.c.c, q.c.l;
                 
                 my ($how,$s) = !$cs || !$ls ? ("go","Tinlos")
-                    : $cs eq $ls ? ("vague","Tinelse")
-                    : ("go","Tinchange");
+                    : $cs eq $ls ? ("vague","Tinels")
+                    : ("go","Tincha");
                 
                 # needs to give distributed Travelings
                 # clues about only Tin so and so updating
-                $r.>$how.>$s = {label=>$label,line=>$line,
-                    now=>$cs,was=>$ls]; # strange thing
+                my $v = $r.>$how.>$s = {t=>"Tin $label $wt:$line"};
+                vs&was = $ls;
+                vs&now = $cs;
+                vc&how = $how;
+                vc&forxo = [Tin=>$label=>$line];
             }}
         }
         r.go.flow = "ambience";
     }}
+    my $rec;
+    each Wt,W $tw {
+        my $r = $Wr.>$Wt;
+        my $c = $rec.>$Wt = {t=>$Wt};
+        c.y.V = $W; # Vibe it has, foamed data unpacking layer
+        c.y.cv = W.y.cv;
+        
+        my $no = keys %{r.no||{}};
+        if ($no / keys %$r > 0.6) {
+            saygr "Still Travel W.t";
+            c.c.el = 8;
+        }
+        else {
+            c.c.el = 3;
+            each how,s,v $r {
+                ref $v || next;
+                c.c.with.>$_ = $v for v.t;
+            }}
+        }
+    }
     
-    saybl wdump 4, $Wr;
+    my @to;
+    for my $Wt (sort keys %$rec) {
+        my $c = $rec.>$Wt;
+        saygr " - ". ki $c;
+    }
     
         
     # u/ning sorting update paths
@@ -419,7 +471,7 @@ ElvisMatu: | # T room on Os
                 }
                 s&typed = $un if $un;
             }
-            # constring
+            #c constring
             if (my $w = s&way) {
                 # pin: dige: count
                 s&pins = join ',',sort keys %$w;
@@ -465,7 +517,7 @@ ElvisMatu: | # T room on Os
     #
     my ($top,@l) = @al;
     if (A.1.t ne "ElvisMatu") {
-        1 && saybl "Soup of fo.t:\n$s";
+        #1 && saybl "Soup of fo.t:\n$s";
         4s&Matsoup = $s;
         4s&Matsup = $s; # to be more digital
         return @al
