@@ -224,18 +224,18 @@ Sleepin: | # ways in to knowing which dream is where
         #$t = ki $t;
         #1 && saybl sprintf "        The: %-20s %-30s", G&sn,3 , $t
 Ghoster: | # Rw being for the 5
-    my $s = 1s&u.sc.s || die "Nou";
+    # Ghoster is part of 5, working of its u lv
     # should track lv but not import it
-    # for the last change simply
+    # assume none missed
+    my $s = 1s&u.sc.s || die "Nou";
     my $z = ss&KC.sc.z;
     my $h = 1s&Ghoster ||= {};
-    my $w;
+    my $w; # pin: {c:now, l:before}
     for my $W (grep {_.t eq 'w'} @$z) {
         next if Wc&el > 6;
         for my $c (@{Ws&z}) {
             next if cc&el > 6;
             my $l = c.y.r.c.o.y.L.c.s;
-            #sayyl "Have ".ki $c;
             if (!$l) {
                 if (my $had = G.sc.pinark.>c.t) {
                     die "GManyhad c.t: ".ki $had if keys %$had > 1;
@@ -251,18 +251,20 @@ Ghoster: | # Rw being for the 5
                     sayre "Ghoster: Didnt Rw c.t";
                 }
             }
-            #saybl "Was: ".ki $l;
             $l || die "Cannot find last ".ki $c;
             $w.>c.t = {c=>$c,l=>$l};
         }
     }
     # remotely four about all Jtv, u/ning sorting update paths, doing
     my @l = Rw ElvisMatu;
+    my $t;
+    for my $l (@l) {
+        next unless grep { _s&way && _s&way.>$_ } keys %$w;
+        # for W having any $w
+        # Tin calculate lines to reduce travel
+    saybl "\n  _.t:",ki _.sc.way for grep {_.sc.way} @l;
     
-    saybl wdump 4, \@l
-    
-    # for W having any $w
-    # Tin calculate lines to reduce travel
+    }
     
     
     
@@ -401,7 +403,8 @@ ElvisMatu: | # T room on Os
             "$in  $_:".($v !~ /\n/ ? " $v"
                 : "\n".join "\n", map { "$in    $_" }
                 split /\n/, $v);
-        } grep { $_ ne 'z' && $_ ne 'strung' && !sc.strung.>$_ } sort keys %$sc;
+        } grep { $_ ne 'z' && $_ ne 'strung'
+            && !(sc.strung && sc.strung.>$_ ) } sort keys %$sc;
         
         sprintf "%-20s %-30s", $in . _c&s , $ha
     } @al;
@@ -411,7 +414,7 @@ ElvisMatu: | # T room on Os
         1 && saybl "Soup of fo.t:\n$s";
         4s&Matsoup = $s;
         4s&Matsup = $s; # to be more digital
-        return @l;
+        return @al;
     }
     
     n so=>1=>G&sn 
