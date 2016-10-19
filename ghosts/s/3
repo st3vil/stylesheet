@@ -277,22 +277,22 @@ Circle: | # < copy things
             my $sc = 'sc';
             my $z = 'z';
             if (my $bz = o.sc.bz) {
-                G&chew,$bz,'t,cv',$_ for &to,dt,dcv{
+                each dt,dcv,to $bz {
                     my $m = !to.c.cha ? 'same' : to.y.l ? 'diff' : 'new';
                     o.c.>$m.>$sc.>$z.>$dt.>$dcv = $to;
-                    to.c.cha || return;
+                    to.c.cha || next;
                     #sayyl " - $t $cv has: $dt $dcv ".ki to.c if to.c.cha; 
                     o.c.cha.>$m.>$sc.>$z.>$dt.>$dcv = $to;
-                }
+                }}
             }
             if (my $dz = $l && l.sc.bz) {
                 my $bz = o.sc.bz;
-                G&chew,$dz,'t,cv',$_ for &to,dt,dcv{
-                    $bz.>$dt && $bz.>$dt.>$dcv && return;
+                each dt,dcv,to $dz {
+                    $bz.>$dt && $bz.>$dt.>$dcv && next;
                     my $m = 'gone';
                     o.c.>$m.>$sc.>$z.>$dt.>$dcv = $to;
                     o.c.cha.>$m.>$sc.>$z.>$dt.>$dcv = $to;
-                }
+                }}
             }
             
             # wires - unused, could be extra on top of theirs
@@ -300,8 +300,7 @@ Circle: | # < copy things
             # notes from 2 - see upmost o's origin C ref index,
             # contributed to by all under
             if (my $oz = o.sc.oz) {
-                for my $on (keys %$oz) {
-                    my $o = $oz.>$on;
+                each on,o $oz {
                     my $i = oo.C.>o.t && oo.C.>o.t.>o.y.cv;
                     
                     if ($i eq $o || is&oz eq os&oz || do {
@@ -329,11 +328,11 @@ Circle: | # < copy things
                 $cha.>$x.>$_.>$t.>$cv = $o for 'diff';
             }
         };
-        G&chew,$jj,'x,t,cv',$_ for &o,x,t,cv{
-            $oo.>$x && $oo.>$x.>$t && $oo.>$x.>$t.>$cv && return;
+        each x,t,cv,o $jj {
+            $oo.>$x && $oo.>$x.>$t && $oo.>$x.>$t.>$cv && next;
             say "Goner C.t C.y.cv  --  $x $t $cv ----";
             $cha.>$x.>$_.>$t.>$cv = $o for 'gone';
-        };
+        }}}
         !keys %$cha && delete A.c.cha;
         # names -> A fall replace to check inside
         j.sc.oo = $oo;
