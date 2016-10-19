@@ -891,9 +891,15 @@ Telvis: |
         my $bang = 0; # path?! means avoid o
         if (my $p = c&ntos) {
             my $sp = sub {[split / |,/, shift ]};
-            my $output = $sp->($1) if $p =~ s/^(.*)\?(\S+)?(!)( .+)?$/$1$4/;
-            my $nav = $2;
-            $bang = 1 if $3;
+            # tes/cs returns thing if ? (output pud) or ! (skips o-ing)
+            my $output; # surface to work $p from
+            my $nav;
+            if ($p =~ s/^(.*)(\?)(\S+)?(!)?( .+)?$/$1$5/ ||
+                $p =~ s/^(.*)()()(!)( .+)?$/$1$5/) {
+                $output = $sp->($1) if $2;
+                $nav = $3 if $3;
+                $bang = 1 if $4;
+            }
             $p = $sp->($p);
             $se = t.ntos->($se);
             Qc&so = $se;
