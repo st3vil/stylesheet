@@ -172,6 +172,8 @@ Zome: | # compile PiMachine, return a new J
     
     $J
 CoBabbler: | # bake code
+    my $sc; # exports, for bab caching
+
     my $sw = {};
     $sw.>$_ = 'say' for qw'saygr saybl sayyl sayre say';
     %$sw = () if C.sc.nobasay;
@@ -199,17 +201,23 @@ CoBabbler: | # bake code
     C.c.s =~ s/\b((?!u)\w)s\&(\w+)/$1\.sc\.$2/sgm;
     C.c.s =~ s/\b(\w)c\&(\w+)/$1\.c\.$2/sgm;
     C.c.s =~ s/\b(\w)y\&(\w+)/$1\.y\.$2/sgm;
+    # S / T
     # sleepomatics
-    my $orr = qq{ || return sayre };
-    for ('S','T') {
-        my $l = $_ eq 'S' ? "GONG" : "T   ";
+    my @num;
+    for my $s ('S','T') {
         # become gotoable, for test frames
-        c&s =~ s{^(\s*)$_(?: (\S+.*?))?\s*$}{
-            (my $label = $2) =~ s/\W+/_/sgm;
-            $label = $_."_$label: ";
-            qq[$1${label}G\&$_,"doming","$2" || sayre "$l  J\.t \$2";]
+        c&s =~ s{^(\s*)$s(?: (\S+.*?))?\s*$}{
+            my $l = $2;
+            (my $label = $l) =~ s/\W+/_/sgm;
+            if ($label eq '' && $s eq 'S') {
+                $label = $l = 1 + @num;
+                push @num, $label;
+            }
+            $label = $s."_$label: ";
+            qq[$1${label}G\&$s,"doming","$l" || return;]
         }sgme;
     }
+    sc.num = @num if @num;
     
     c&s =~ s/^(\w+:)\s+$/$1/smeg && sayre "Blockquoter whitespace trimmed";
     
@@ -264,7 +272,7 @@ CoBabbler: | # bake code
     C.c.s =~ s{\$J->\{([unm])\}->\((\$A,\$C,\$G,\$T?)(, ?\$M)?}
         {\$G->\{h\}->($2,"$1"$3}sgm;
     
-    C.c.s
+    $sc
 Spells: | # compile pabble (perlouse) and jabble (jsouse)
     # see  and levitate
     u i
@@ -467,6 +475,7 @@ of: | # compile/collect
             # coded while the W goes through the wall
             my $coded = delete(s&coded) || s&args && s&acgt;
             my $digs;
+            my $scbab;
             unless ($coded) {
                 # shade the edges, args, parsables etc.
                 Rw CoArgulate $C;
@@ -476,17 +485,18 @@ of: | # compile/collect
                 #   (caused by block quotes, argulation...)
                 $digs = dig c&s;
                 if (my $y = $ark.>$of.>C.t.>$digs) {
-                    (c&s, c&code) = @$y;
+                    (c&s, c&code, $scbab) = @$y;
                     undef $digs;
                 }
                 else {
                     # translate into perl
-                    Rw CoBabbler $C;
+                    $scbab = Rw CoBabbler $C;
                 }
             }
             G&Code,$C,"Of=$of" if !c&code;
             
-            $ark.>$of.>C.t.>$digs = [c&s,c&code] if $digs;
+            G&hoh,C.sc,$scbab if $scbab;
+            $ark.>$of.>C.t.>$digs = [c&s,c&code,$scbab] if $digs;
             
         }
         track: # etc
@@ -643,10 +653,11 @@ Zop: | # a G
         #n ElPassTape=>-test
         #n ElvisOver=>-test
         #n ElvisMutato=>-test
-        n ElvisDesi=>-test
-        
         #n ElvisAny=>-test
-        #n ElvuseZpace=>-test=>{man=>'Zup'}
+        #n ElvisDesi=>-test
+        #n ElvisDesi=>-test
+        n ElvisRhythmSection=>-test
+        
         
         # goal:
         #n ElvisDoolify=>-test
