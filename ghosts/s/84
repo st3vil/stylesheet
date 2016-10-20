@@ -101,27 +101,20 @@ ElvisAny: | # swim cleaver
         || return;
     Rw HasWay;
     return unless c&Se == 1;
-    
+    t.toc.slimvague = 1;
     t.e =
     n Sleepin=>V
-    t.cs->('sc top', 'Sleepin');
-    my $J = t.ntos->("J");
-    t.dd(J.c.chaos, "Sleepin chaos");
-    t.dd(J.c.o, "Sleepin order");
+    t.cs->('sc top,grepl:/45 /', 'Sleepin already');
     t.e =
     n SleepAndin
-    t.cs->('sc top', 'Sleep top, prefer later');
+    t.cs->('sc top,grepl:/45 /', 'Sleep top, prefer later');
     
-    local G.supsi = 1;
     t.e =
     n Normal=>W=>{intur=>1}
     t.cs->('sc top,grepl:/45 /', 'Normal pref Sleepin');
     
     t.cs->('c zop c rsl,grepl:/\.45 /,isl',
         'Normal rsl');
-    
-    n ElvisMatu
-    return;
     
     
 SleepAndin: |
@@ -759,11 +752,15 @@ Normal: | # u receives adjustments to anything
     # and sending it lv diffs
     
     # until base and its growth is not implanted by g/c and WayHeave:
-    Jc&base = c&base if c&base;
+    Jc&bases = c&base if c&base;
+    n NormalWas=>W=>{base=>Jc&bases}
     Jc&plus = c&plus if c&plus;
     my $plus = Jc&plus;
     sayyl "Plus: ".ki $_ for @$plus;
     n $_=>4=>\'W' for @$plus;
+    
+NormalWas: |
+    Jc&base = c&base || die "Give base to J.t";
     
 Os: | # our 4
     G&mk4,$A;
