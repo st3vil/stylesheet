@@ -41,7 +41,7 @@ ElvisDesi: | # decide what to do after Waytch
     
     t.e =
     n ElvisDaury
-    t.cs->('sc top', "complete with ElvisDaury");
+    t.cs->('sc top', "complete with ElvisDaury?");
     
      5s&desi = "Ghoster";
     
@@ -62,6 +62,8 @@ ElvisDesi: | # decide what to do after Waytch
     {
         local t.e = 5s&u || die "NOu On: ".ki A.5.sc;
         t.cs->('sc lastK c s',"5's u's last lv");
+        t.cs->('sc top',"5's u's latop");
+        # somehow Sleepin gets in there
         t.cs->('sc lastK c s sc z 0 sc z,olv',"5's u's w 0.001 z");
     }
     
@@ -71,8 +73,8 @@ ElvisDesi: | # decide what to do after Waytch
     $$pi =~ s/time = /inflation = '(3..'./;
     $hadow->();
     
-    t.cs->('sc top', "everything updates?");
-    
+    t.cs->('sc top', "everything updates");
+    G.ouJ = A.5.sc.out if A.5.sc.out;
 ElvisBabEach: | # random babble test
     my $st;
     st.do.eo = 'eol';
@@ -304,7 +306,16 @@ Sleepin: | # ways in to knowing which dream is where
         
         if ($eq < 0) {
             saybl "Sleeeeep $eq   $des";
-            sayyl "Substitute ground: ".wdump 4, G&grist,A.1;
+             
+            my $ou = G&grist,A.2;
+            my $out;
+            $out.>_.c.s.t = _.c.s for values %$ou;
+            my $this = $out.>C.t;
+            
+            # we can skip 6, our mo C should re-sc from within too
+            sayyl "Substitute ground: ".ki $this;
+            #5s&out = $this;
+            
             my $to = $eq < -6 ? '8' : '7';
             T.Z.>$to = $A;
         }
@@ -393,7 +404,6 @@ Ghoster: | # Rw being for the 5
         my $c = q.c; # many c by w.t
         if (my $in = Ws&Tin && Ws&Tin.>$wt ) {
             each label,line,count $in {
-                sayyl "For $label :$line x$count";
                 # forget line and seek the T string
                 my ($cs,$ls) = map {
                     my @l = split "\n", _.c.s;
@@ -489,7 +499,6 @@ Ghoster: | # Rw being for the 5
     # travel
     
 ElvisMatu: | # T room on Os
-    saygr "Upon: ".G&sn;
     # puddle display
     my $fo = A.4;
     my $ts;
@@ -530,7 +539,7 @@ ElvisMatu: | # T room on Os
         my $ub = &C{
             my $J = c&J;
             c&s = "C.t";
-            s&chaos = Jc&chaos if !Jc&o;
+            s&chaos = keys %{Jc&chaos||{}} && Jc&chaos if !Jc&o;
             if (my $xo = Js&xo) {
                 my $un;
                 while (my ($k,$v) = each %$xo) {
@@ -657,7 +666,7 @@ Towering: | # os->Os for test frames
     defined ar.n || die "4 making no arn";
     my $c = {t=>$t, main=>'ElvisLower', estC=>c&estC, est=>C.t, estn=>1+ar.n};
     c.oJtv = $oJtv if $oJtv;
-    c.inc = incs.fo if incs.fo;
+    c.inc = incs.five if incs.five;
     n Os=>W=>$c
     return
 ElvisLower: | # Os's main as tests like to dispatch
@@ -754,10 +763,10 @@ Normal: | # u receives adjustments to anything
     # until base and its growth is not implanted by g/c and WayHeave:
     Jc&bases = c&base if c&base;
     n NormalWas=>W=>{base=>Jc&bases}
+    
     Jc&plus = c&plus if c&plus;
     my $plus = Jc&plus;
-    sayyl "Plus: ".ki $_ for @$plus;
-    n $_=>4=>\'W' for @$plus;
+    n $_ for @$plus;
     
 NormalWas: |
     Jc&base = c&base || die "Give base to J.t";
@@ -784,10 +793,10 @@ Os: | # our 4
     c&main ||= "Beer";
     Rw c&main;
 Beer: | # our 3
-    saygr "Uponee: ".G&sn;
     #
-    c&to || sayre "Noop: ".ki $C;
-    1 && saygr " - ".ki $_ for @{c&to};
+    c&to || return sayre "Noop: ".ki $C;
+    saygr "Beering ".ki c&to;
+    saygr " - ".ki $_ for @{c&to};
     T.nose = 1;
     n $_ for @{c&to};
 
