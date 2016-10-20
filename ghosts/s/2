@@ -352,7 +352,16 @@ With: | # J's stuff, its Js, osc page, etc.
         my $zip = ns&a.>$ch;
         $zip = defined $zip && keys %$zip && $zip;
         ($zip,$ch)
-        
+    
+    # last ground
+    grist: %acgt:J s
+        my $ch = $s || '';
+        my $zi = Jc&zi - 1; # page of history
+        my $zip = Js&Z && Js&Z.>$zi.>$ch
+            || die "No history J.t ($zi/$ch): ".G&sn;
+        $zip = defined $zip && keys %$zip && $zip;
+        $zip
+    
     # partition ground - increment ch and swap out the s
     # all osc s live on Js&S by channel they're for
     # channel is the time dive/page
@@ -574,7 +583,7 @@ Jelly: | # mo Town making
         A&twotoeight++;
     W 12:
         ref $s && die;
-        $W = c&W ||= C.t if !$W;
+        $W = c&W = C.t if !$W || $W eq '1';
         c&J = $W;
         A&Jup = A.4;
         A&Jcv = 0.1;
@@ -652,6 +661,7 @@ Jelly: | # mo Town making
         T.nose && return sayyl "C.t 6 knows";
         # takeover ground/page
         Js&n && G&rea,$J;
+        Jc&chaos.rea = 1;
         Js&u && G&rea,Js&u,$J;
         # particle holds our wave, 1Cs&ac -> A.2.c.s.sc.ac, mo C above
         # 2Cy&A is A.mo.up.mo
@@ -672,6 +682,8 @@ Jelly: | # mo Town making
           Rw A.c.pin + $J $y $M $s;
         }
         T.nose && return;
+        delete Jc&chaos.rea;
+        Jc&chaos.tilosc = 1;
         c.M = $M if @$M;
         Jc&imping = 1 if delete y.imp; # reset lv
         (r.i,r.ii) = (J.i,J.ii);
@@ -690,6 +702,7 @@ Jelly: | # mo Town making
         
         sayyl "Oscillate J.t";
         G&A,s=>8=>$J;
+        delete Jc&chaos.tilosc;
         sayyl "Oscillate J.t done!@!";
     
     # coms to overT
