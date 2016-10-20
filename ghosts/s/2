@@ -414,7 +414,7 @@ With: | # J's stuff, its Js, osc page, etc.
         }
         delete Js&Z.>$zi;
     
-    # adapt to J interior as perhaps exterior
+    #c adapt to J interior as perhaps exterior
     # here A.1 is the doer
     n: %acgt
         pop @Me if $Me[-1] eq '';
@@ -433,7 +433,11 @@ With: | # J's stuff, its Js, osc page, etc.
     #   e could be reliabilitied by grounding and osc work
     elph: %acgt
         pop @Me if $Me[-1] eq '';
+        my $st = shift @Me if ref $Me[0] eq 'SCALAR';
         my $n = G&A,n=>1=>A.1,\@Me;
+        if ($st = $st && G&peel,$$st ) {
+            G&hoh,n.c,$st;
+        }
         nc&nomind =
             nc&nogro = 1;
         G&A,$n,8;
@@ -524,10 +528,13 @@ Tunnel: | # mind & world
             $l = [$l] if ref $l eq 'HASH';
             sayre "None in ".ki($l)."   ".G&sn if !@$l;
             my $mo = G&tugA,mo=>1,@$l;
+            # know it
             unless (mo.c.s.c.nogro || mo.c.nogro || A&nogro) {
                 G&ground,$mo;
                 $grounded++;
             }
+            # pass travel in
+            mo.c.>$_ = A.c.>$_ for grep { A.c.>$_ } qw'nomem';
             if (my $r = delete T.ATR) { # T
                 G&xot,mo.c.T,$r;
             }
@@ -594,7 +601,8 @@ Jelly: | # mo Town making
         my $J = s&J && return;
         A&Jup ||= A.1;
         A&Jcv ||= C.y.cv;
-        $J = G&pint,A&Jup,sc=>Jtv=>C.t,A&Jcv;
+        $J = G&pint,A&Jup,sc=>Jtv=>C.t,A&Jcv
+            unless A&nomem;
         s&J = $J;
         if (A&twotoeight) {
             1 && sayyl "Alighting J.t";
@@ -703,6 +711,7 @@ Jelly: | # mo Town making
         sayyl "Oscillate J.t";
         G&A,s=>8=>$J;
         delete Jc&chaos.tilosc;
+        delete Jc&chaos if !keys %{Jc&chaos};
         sayyl "Oscillate J.t done!@!";
     
     # coms to overT
