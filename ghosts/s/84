@@ -15,9 +15,16 @@ ElvisObs: | # criteria for travel, observables
     n ShoGoings
     
     t.e =
-    n ElvisTape
+    n TapeChecker
+    n TapeChecker
     local t.toc.largesse = 1;
-    t.cs->("sc lv,olv", "you say");
+    t.cs->("sc top", "you say");
+    
+TapeChecker: | # see
+    n ElvisTape
+    my $M = [];
+    m _.t=>''=>ki($_) for G&op;
+    G&elph,Mudit=>[M=>$M]
     
 ShoGoings: |
     n flow=>$_=>"Flow" for 1..(6 + Jc&bowls++);
@@ -29,7 +36,7 @@ Ghostig: | # 5/someone doing ghost networking
 Mudit: |
     u Zpace
     y.res = 1;
-    #Jc&elvis = 'Dejo';
+    Jc&elvis = 'Dejo';
     Js&ein.t.M = &TesC{
         Jc&es = $s;
     };
@@ -54,7 +61,10 @@ Dimmer: |
         my $c = sum @c;
         $c -= 10 until $c < 10;
         my $l = int 9 / @c;
-        s&hs ||= $c.'9'.$l;
+        $l = int $l + 8 / 2;
+        $l -= 10 until $l < 10;
+        # !? #
+        s&hs ||= $c.$l.$l;
         
         
 pi/cud: | # understood qualities on Matu mats
@@ -82,7 +92,7 @@ pi/mud: | # visible qualities on Matu mats
     n t=>1=>C.t,'%fs:20,dos:enlighten'
     G&isC,$s || return
         n notC=>4=>"notC: ".ki $s;
-    
+    # !
     my $i = 4;
     for my $k (qw'y c sc') {
         my $v = G&pint,$s,$k || next;
@@ -97,6 +107,7 @@ Trips: | # to be distributed to W
     # host instructures
 enlighten: |
     1 && sayyl "Enlighten ".ki $e;
+    T.pos = 1;
     # find or create hC in Trips
     # to be fed to growth
     # 
