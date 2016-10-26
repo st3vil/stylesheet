@@ -53,9 +53,15 @@ Sea: | # folds of the day
             $sc = G&peel,$sc if !ref $sc;
             C.sc = $sc if $sc;
             if (ref $y eq 'ARRAY') {
-                C.c.e = @$y == 1 ? $y->[0] : # [$e]
-                    @$y <3 ? G&s,@$y : # [t=>s]
-                    G&Ct,$y;
+                if (@$y == 1) {
+                    ($y) = @$y;
+                    C.c.e = ref $y ? $y : # [$e]
+                        G&s,$y; # [t]
+                }
+                else {
+                    C.c.e = @$y <3 ? G&s,@$y : # [t=>s]
+                        G&Ct,$y; # C
+                }
                 $y = 'W';
             }
             if (ref $y eq 'HASH') {
