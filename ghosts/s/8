@@ -593,11 +593,12 @@ ElChorus: | # mo->E joins your request to a J
             }
             else {
                 $t || die "No way in";
+                my $J = c.sc.J;
                 my $v;
                 if ($v = c.y.tv) {
                 }
-                elsif (my $Jtv = c.sc.J && c.sc.J.sc.tv) {
-                    A&othward = 1; # resolving C into other J
+                elsif (my $Jtv = $J && Js&tv) {
+                    A&othward = 1 if $J->{3} eq $J; # resolving C into other J
                     sayyl "othing c.t in: $t";
                     $v = $Jtv;
                 }
@@ -611,6 +612,10 @@ ElChorus: | # mo->E joins your request to a J
                         G&vent,"Amb:$t:".join',',$cv,@mi; # could keep going
                 }
                 $c = $v.>$cv;
+                if (my $top = !$c && $J && J.t eq $t && $cv == 0.9
+                    && Js&top) {
+                    $c = $top if top.t eq $t && top.y.cv == 0.9;
+                }
             }
             if (!$c) {
                 my @p = map { "@$_" } @p;
@@ -788,8 +793,8 @@ Routable: | # look for routes in J (vie li, tractor?)
 Doable: | # look for dos in hC (vie bo)
     my @doers = grep {_.sc.dos} @{e.c.hC};
     @doers || return G&vent,"Nodoing";
-    @doers == 1 || G&vent,"Manydoing" ,
-        sayre "Have some: ".ki e.c.hC;
+    @doers == 1 || #G&vent,"Manydoing" ,
+        sayre "Manydoing: ".ki(e.c.hC)."   Have some: ".ki\@doers;
     my ($c) = @doers;
     1&&sayyl "dos e.t for c.sc.dos: ".ki$c;
     
