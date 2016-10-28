@@ -17,12 +17,14 @@ ElvisObs: | # criteria for travel, observables
     n ShoGoings
     
     t.e =
+    n Mat=>V
     n Mudit=>V
     #n TapeChecker
-    
+    t.cs->("sc lv,olv", "you sayn");
+    return;
     local t.toc.largesse = 1;
     t.cs->("sc lv,olv", "you sayn");
-    t.cs->("sc top y tv view 0.02 sc J sc top", "you say");
+    #t.cs->("sc top y tv view 0.02 sc J sc top", "you say");
     
 TapeChecker: | # see
     n ElvisTape
@@ -42,7 +44,8 @@ Ghostig: | # 5/someone doing ghost networking
     G&elph,Mudit=>[M=>$M]
 Mudit: | # display, with its own travels of 
     u Zpace
-    y.res = 1;
+    u Mat
+    #y.res = 1;
     Jc&elvis = 'Dejo';
     Js&ein.t.M = &TesC{
         Jc&es = $s;
@@ -51,8 +54,7 @@ Mudit: | # display, with its own travels of
     
     S
     
-    n view=>o2=>\'pi:pit,s:mud cud'
-    
+    n view=>o2=>\'pi:pit,s:cud mud'
     n so=>o1=>G&sn 
     
     c&dimmer = 1;
@@ -60,7 +62,43 @@ Mudit: | # display, with its own travels of
     return unless J.c.es;
     $s = J.c.es;
     my $pi = Js&view || die 'No view';
+    my $z = G&A,Mat=>9=>@$s;
+    $s = z.c.M;
     m _.t=>"-$pi"=>{s=>$_} for @$s;
+Mat: |
+    u a
+    
+    n \'of:Mat'
+    Mat 1:
+        A.Mat = $A;
+        G&tugA,mat=>1,$_ for @$s;
+        A&M = [];
+    Mat 8:
+        #
+    
+    n \'of:mat'
+    mat 1:
+        $C = A&s = $s->[0];
+        C.y.A = $A;
+    
+    osout 3: %v:su
+        return unless $s =~ /\bos\b/;
+        sayre "C.t has u: $s";
+    
+    non 5:
+        my @outer;
+        my $M = [];
+        @$M = grep {
+            !(_s&u && _s&u =~ /\bos\b/ && push @outer, $_)
+        } @$M;
+        if (@outer) {
+            m outer=>''=>"Outers:",'%fs:22'
+            push @$M, @outer;
+        }
+    
+    mat 8:
+        push @{A.Mat.c.M}, $C;
+    
 pi/pit: |
     y.at.dos = 'pitchange';
     S
@@ -68,14 +106,12 @@ pi/pit: |
     my $set = A.3.sc.>C.t ||= $o->[0];
     my $i = 1;
     for (@$o) {
-        say "$_ vs $set ".($_ eq $set);
         n $_=>'0.0'.$i++=>$_=>($_ eq $set && '%fs:26')
     }
 pitchange: |
     sayre "Pit chabnge: ".ki($e)."\n ".ki e&hC;
     my ($qua,$lit) = map {_.t} map{ $_->[0], $_->[-1] } e&hC;
     A.3.sc.>$qua = $lit;
-    T.pos = 1;
 Seeing: | # qualities of the threads
     u i
     isC:
@@ -112,8 +148,8 @@ pi/cud: | # understood qualities on Matu mats
         } grep { $_ ne 'z' && $_ ne 'strung'
             && !(sc.strung && sc.strung.>$_ ) } sort keys %$sc;
     
-    my $s = sprintf "%-20s %-30s", $in . sc&s , $ha;
-    n s=>2=>$s
+    my $sc;
+    n s=>2=>$ha,$sc
     
 pi/mud: | # visible qualities on Matu mats
     y.at.dos = 'enlighten';
@@ -663,6 +699,11 @@ Matu: | # T room on Os
                         # is means its doing that for its 2
                         my $is = Rc&is || '';
                         my $oJ = R.2 if $is;
+                        if (!$is && $R ne R.3) {
+                            $oJ = R.3 if $R ne R.3;
+                            #$is = "unW";
+                        }
+                        
                         my $t = $oJ && oJ.t || R.t;
                         
                         my $c = C.sc.>$to.>$is.>$t ||= {};
