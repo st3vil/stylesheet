@@ -68,12 +68,6 @@ Zpace: | # hang La space charts off mo
     n \'of:L'
     y.at.coil = 'tldo';
     
-    c&banana &&
-    Banana 5:
-        2 + 3
-    c&mango &&
-    Mango 5: %of:mo
-        2 + 3
     # fix Zuup re something
     
     # A.3 pools lists up from c.y.A.1 pi etc.
@@ -175,6 +169,7 @@ Zpace: | # hang La space charts off mo
         
         # some L uC spawns the A nC lattice
         # what to do with the L uC?
+        # always gets M
         if ($M) {
             # has M
             # L uC can be forgotten, probably mo'd with root in J6
@@ -409,20 +404,24 @@ Zpace: | # hang La space charts off mo
     # a eats space, sliding y.v.v along (Ya-Habibi)
     # spiral much space away from spine
     # build wave plot manifold, solar systems
-    many 6: %of:a
-        my $y = C.y;
-        y.mu = defined y.thy ? y.thy : 1;
-        y.mu = y.mu * y.v.muav if y.v.muav;
-        my $was = y.v.v;
-        y.cv = G&roun,y.v.v if !y.cv;
-        y.pcv = G&roun,y.i/y.v.Ly.thi;
-        my $in = y.v.aspace * y.mu;
-        y.v.v += $in;
-        y.ov = G&roun,y.v.v;
-        y.spc = y.ov - y.cv;
+    # TODO: causes Mudit to place a out of order (tug..?):
+    #many 6: %of:a
+    many 6: %v:cM
+        for my $C (@$M) {
+            my $y = C.y;
+            y.mu = defined y.thy ? y.thy : 1;
+            y.mu = y.mu * y.v.muav if y.v.muav;
+            my $was = y.v.v;
+            y.cv = G&roun,y.v.v if !y.cv;
+            y.pcv = G&roun,y.i/y.v.Ly.thi;
+            my $in = y.v.aspace * y.mu;
+            y.v.v += $in;
+            y.ov = G&roun,y.v.v;
+            y.spc = y.ov - y.cv;
 
-        C.sc.yspc = y.spc if C.sc.nspc;
-        C.sc.ml = (y.v.Ly.inde * 40)."%" if y.v.Ly.inde;
+            C.sc.yspc = y.spc if C.sc.nspc;
+            C.sc.ml = (y.v.Ly.inde * 40)."%" if y.v.Ly.inde;
+        }
     
     # feel effects of...
     res 7: %v:yres
@@ -468,9 +467,9 @@ Zpace: | # hang La space charts off mo
         } @$M;
         # stash out many for the above
         c&oM && return push @{c&oM}, @$M;
-        if (A.V) {
+        if (A.V || 1c&Mhat) {
             1 && sayyl "For J.t: ";
-            1 && saygr "_.t: ".ki _.y for @$M;
+            1 && saygr "_.t: _.y.cv (spc=_.y.spc)" for @$M;
         }
         
         Rw ModNs $M $s:y.mod if y.mod;
