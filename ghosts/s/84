@@ -8,20 +8,23 @@ ElvisObs: | # criteria for travel, observables
      5s&desi = "Ghostig";
     n Waytch
     
-    n Tape=>['to']
-    n ShoGoings
+    #n Tape=>['to']
+    #n ShoGoings
     #n ElMatron
     t.e =
     n Ghostig
+    t.e =
+    n Mudit=>V
+    t.cs->("sc lv,olv", "you sayn");
+    return;
     n ShoGoings
     n ShoGoings
     
     t.e =
-    n Mat=>V
     n Mudit=>V
+    n Mat=>V
     #n TapeChecker
     t.cs->("sc lv,olv", "you sayn");
-    return;
     local t.toc.largesse = 1;
     t.cs->("sc lv,olv", "you sayn");
     #t.cs->("sc top y tv view 0.02 sc J sc top", "you say");
@@ -42,7 +45,8 @@ Ghostig: | # 5/someone doing ghost networking
     # preening and researching, like Ghoster
     # 
     G&elph,Mudit=>[M=>$M]
-Mudit: | # display, with its own travels of 
+Mudit: | # display, with its own travels of
+    
     u Zpace
     u Mat
     #y.res = 1;
@@ -62,43 +66,75 @@ Mudit: | # display, with its own travels of
     return unless J.c.es;
     $s = J.c.es;
     my $pi = Js&view || die 'No view';
-    my $z = G&A,Mat=>9=>@$s;
+    my $z = G&A,Mat=>1,@$s;
+    z.c.pi = $pi;
+    G&A,$z=>9;
     $s = z.c.M;
-    m _.t=>"-$pi"=>{s=>$_} for @$s;
+    @$M = @$s;
+    saybl "ZOut: _.t _.y.cv" for @$s;
+    return;
+    m $_ for @$s;
 Mat: |
     u a
     
     n \'of:Mat'
     Mat 1:
         A.Mat = $A;
-        G&tugA,mat=>1,$_ for @$s;
-        A&M = [];
+        A&M = [map { _c&s } map { G&tugA,mat=>1,$_ } @$s];
     Mat 8:
-        #
+        @{A&M} = map {
+            if (_.y.A) {
+                my $c;
+                c.pi = A&pi if A&pi ;
+                c.s = $_;
+                G&Ct,[_.t=>''=>$c];
+            }
+            else {
+                $_
+            }
+        } @{A&M};
+        1 && sayyl "Fo: ".wdump 3, [map{
+            "_.t _.y.cv - ".join ',', sort keys %{_.sc}
+        } @{A&M}];
     
     n \'of:mat'
     mat 1:
         $C = A&s = $s->[0];
         C.y.A = $A;
+        
     
     osout 3: %v:su
-        return unless $s =~ /\bos\b/;
-        sayre "C.t has u: $s";
+        return unless $s =~ /\bos\b/i;
+        a&grup.os++;
     
-    non 5:
-        my @outer;
-        my $M = [];
-        @$M = grep {
-            !(_s&u && _s&u =~ /\bos\b/ && push @outer, $_)
-        } @$M;
-        if (@outer) {
-            m outer=>''=>"Outers:",'%fs:22'
-            push @$M, @outer;
+    alto 4: %of:Mat
+        my $M = A&M;
+        
+        my $gr = {};
+        for my $C (@$M) {
+            my $m = C.y.A || next;
+            my $g = ms&grup || next;
+            sayre "Many groups: ".ki $g if keys %$g > 1;
+            my ($k) = keys %$g;
+            acu $gr,$k,$C;
         }
+        1 && saybl "Groups: ".ki $gr;
+        my @ad;
+        my $no;
+        each tN $gr {
+            sayre "$t gr ".@$N;
+            push @ad, G&Ct,[$t=>'-label'=>{}];
+            push @ad, @$N;
+            $no.>$_ = $_ for @$N;
+        }
+        
+        @$M = grep { !$no.>$_ || sayre("Rm _.t") && 0 } @$M;
+        push @$M, @ad;
+        
     
-    mat 8:
-        push @{A.Mat.c.M}, $C;
     
+pi/label: |
+    n label=>1=>C.t=>'hs:888,fs:20'
 pi/pit: |
     y.at.dos = 'pitchange';
     S
