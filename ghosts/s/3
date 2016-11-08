@@ -937,4 +937,288 @@ Circle: | # < copy things
                 }
             }
         }
+Compliers: | # othered
+    u i
+    # join/etc linked lists
+    toget:
+        G&together,$s,@Me
+        
+    together: %acgt:k c d
+        my $o = c.y.>$k;
+        c.y.>$k = $d;
+        my $ok = {qw{next prev prev next}}->{$k};
+        if ($ok) {
+            d.y.>$ok = $c;
+            if ($o) {
+                d.y.>$k = $o;
+                o.y.>$ok = $d;
+            }
+        }
+    
+    apart: %acgt:k c d
+        $d ||= c.y.>$k;
+        my $o = d.y.>$k;
+        delete c.y.>$k;
+        if ($o) {
+            if ($c eq $o) { # mutual
+                delete d.y.>$k;
+            }
+            else {
+                c.y.>$k = $o;
+            }
+        }
+        my $ok = {qw{next prev prev next}}->{$k};
+        if ($ok) {
+            delete d.y.>$k;
+            if ($o) {
+                delete d.y.>$ok;
+                o.y.>$ok = $c;
+            }
+        }
+    
+Walks: | # othering, many C
+    u i
+    # search last mo things top
+    op:
+        my $Wr = T.op || die "No Top to op";
+        my $ub = !$s ? sub {
+            my ($D,$d) = @_;
+            $D if d.d == 2;
+        } : do {
+            my $C;
+            C.t = 'oping';
+            s&t = $s || die "No t to op";
+            Rw conot $C;
+            sub {
+                my ($D,$d) = @_;
+                $D if G&ip,s&ip,$D;
+            }
+        };
+        my @ma = G&ind,$Wr,$ub;
+        @ma
+    # climb in/next/z with a sub giving returns in list
+    ind: %acgt:s y d
+        my $D = $s;
+        $s = G&hup,$s unless d.nohup;
+        s.y.D = $D;
+        $y ||= sub { shift };
+        my $d = {%{$d||{}}};
+        d.path = [@{d.path||[]}, "s.t s.y.cv"];
+        d.ind = "  " if !defined d.ind;
+        d.d++;
+        my @out;
+        if (my $z = s.sc.z) {
+            @$z = grep{defined} @$z;
+            d.zort && d.zort->($z,$s,$d);
+            push @out, map{ G&ind,$_,$y,$d } @$z;
+        }
+        if (my $in = s.y.in) {
+            push @out, G&ind,$in,$y,$d;
+        }
+        my $my = [];
+        @out = map {
+            ! ref$_ ? d.ind .$_ :
+            ref $_ eq 'HASH' ? do{
+                if (!_.c.ind) {
+                    _.c.ind = d.d;
+                    _.c.inds = join'', (d.ind) x d.d;
+                    push @$my, $_;
+                };
+                unshift @{_.c.inside||=[]},s.t;
+                $_
+            } :
+            $_
+        } grep {defined} @out;
+        
+        if (my $next = s.y.next) {
+            my $d = {%$d};
+            d.path = [@{d.path||[]}];
+            pop @{d.path};
+            push @out, G&ind,$next,$y,{%$d,d=>d.d-1};
+        }
+        
+        unshift @out, $s = $y->($s,$d);
+        
+        @out = grep{$_} @out;
+        return () if !@out;
+        
+        if (d.d == 1 && !grep{ref}@out) {
+            join "\n", grep{defined} @out;
+        }
+        else { # an $N?
+            s.sc.z = $my if @$my && ref $s eq 'HASH';
+            return grep{$_} @out;
+        }
+        
+    # make yt (cv/t) from tv (t/cv)
+    yttv: %acgt
+        my $yt = {};
+        for my $on (@Me) {
+            G&chew,$on,'t,cv',$_ for sub {
+                my ($o,$t,$cv) = @_;
+                $yt->{$cv}->{$t} = $o;
+            };
+        }
+        $yt
+    # iterator/map for index
+    chew:
+        my $sort;
+        my $it = pop @Me if ref $Me[-1] eq 'CODE';
+        if (@Me == 1) {
+            my $i = shift @Me;
+            if (ref $i eq 'SCALAR') {
+                $sort = 1;
+                $i = $$i;
+            }
+            @Me = split ',', $i;
+        }
+        my $in;$in = sub {
+            my ($p,$s,$i) = @_;
+            if (!@$i || @$i==1 &&
+                ref $s ne 'HASH' && $i->[0] =~ /\?$/) {
+                return [$s,@$p];
+            }
+            defined $s || return;
+            ref $s eq 'HASH' || return;
+            shift @$i;
+            my @r = keys %$s;
+            @r = sort @r if $sort;
+            map {
+                my $v = $s.>$_;
+                $in->([@$p,$_],$v,[@$i]);
+            } @r;
+            
+        };
+        my @are = grep{defined} $in->([],$s,[@Me]);
+        if ($it) {
+            $it->(@$_) for @are 
+        }
+        else {
+            sub { shift @are }
+        }
+        
+    
+Stashi: | # recursors/ways to track A stuff
+    u i
+    # tiny little git, hash stabiliser
+    # reuses refs if they look the same
+    superindex: %acgt
+        my $had = {map { $_=>C.sc.>$_ } @Me};
+        (sub {
+            my $pass = 1;
+            my $now = {map { $_=>C.sc.>$_ } @Me};
+            
+            ddump($had) eq ddump($now) || return;
+            return unless $pass;
+            
+            C.sc.>$_ = $had.>$_ for @Me;
+            
+        }, map { C.sc.>$_ = {} } @Me);
+    
+    # c&$j = above.sc.$jo.path
+    # above is our c&$jC or root c&$r
+    # @Me is C nkgks for path
+    #
+    # out of throat order, first/deepest coops others
+    # j is usually j
+    offis: %acgt:r j
+        my $ik = $j.'C';
+        my $ok = $j.'o';
+        my $tw;
+        my $oi;$oi = sub {
+            my ($C) = @_;
+            die "loop C.t" if $tw->{$C}++;
+            my $jon;
+            if (my $D = C.c.>$ik) {
+                # tune in parents first
+                $jon = D.c.>$j ||= $oi->($D);
+            }
+            else {
+                # origin
+                $jon = C.c.>$r;
+            }
+            my $i = jon.sc.>$ok ||= {t=>C.t};
+            for my $nk (@Me) {
+                ($nk,my $gk) = ($1,$nk) if $nk =~ s/^(y|c|sc)//;
+                my $v = $C->{$nk};
+                $v = $v->{$gk} if $gk;
+                $i = $i->{$v} ||= {};
+            }
+            C.c.>$j = $i;
+        };
+        $oi->($C);
+    
+
+    # hash then & now, makes histories
+    # prop up non val o.c.$cha.$nk.$gk = {}
+    # which unify cha ne same into o.c.cha.$cha.$nk.$gk 
+    # {} may extend meaning, eg z tys into
+    Chang: %acgt:l o
+        my $E = l.c.s if $l;
+        my $e = o.c.s;
+        my @p = (['t'],[y=>'cv'],[c=>{}],[sc=>{}]);
+        while (@p) {
+            my $p = shift @p;
+            my ($nk,$gk) = @$p;
+            my $u = $E.>$nk; # Eustobe
+            my $v = $e.>$nk; # revelation
+            if (ref $gk) {
+                keys %$gk == 0 || die "Given a ref: ".ki $gk;
+                $gk.>$_++ for keys(%$u), keys (%$v);
+                unshift @p, [$nk,$_] for keys %$gk;
+                next;
+            }
+            my $i = {};
+            if ($gk) {
+                if (!exists $u.>$gk) {
+                    o.c.new.>$nk.>$gk = $i;
+                }
+                elsif (!exists $v.>$gk) {
+                    o.c.gone.>$nk.>$gk = $i;
+                }
+                elsif ($u.>$gk ne $v.>$gk) {
+                    o.c.diff.>$nk.>$gk = $i;
+                }
+                else {
+                    o.c.same.>$nk.>$gk = $i;
+                }
+                
+            }
+            else {
+                if (!exists $E.>$nk) {
+                    o.c.new.>$nk = $i;
+                }
+                elsif (!exists $e.>$nk) {
+                    o.c.gone.>$nk = $i;
+                }
+                elsif ($u ne $v) {
+                    o.c.diff.>$nk = $i;
+                }
+                else {
+                    o.c.same.>$nk = $i;
+                }
+            }
+        }
+        for (grep { o.c.>$_ } qw'new gone diff') {
+            o.c.cha->{$_} = o.c.>$_;
+        }
+    
+    # sort by many y.As
+    sortysip:
+        my $so;$so = sub {
+            my ($i,@try) = @_;
+            my ($yk) = @try;
+            my ($c,$d) = (a.y->{$yk},b.y->{$yk});
+            $c && $d || return;
+            ($c,$d) = (c.c.ip,d.c.ip);
+            $c && $d || die "sort noy$yk ip";
+            unless (exists $c->[$i] || exists $d->[$i]) {
+                shift @try;
+                return $so->(0,@try) if @try;
+                die "ip sort ran out:\n  ".ki($a)."\n  ".ki($b);
+            }
+            $c->[$i] <=> $d->[$i]
+            || $so->($i+1,@try);
+        };
+        sort {$so->(0,@Me)} @$s;
 
