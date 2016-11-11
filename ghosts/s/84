@@ -13,7 +13,7 @@ ElvisObs: | # criteria for travel, observables
         t.cs->("c o,rss", "Waytch up");
     }
     if (c&Se == 2) {
-        #n Tape=>['to']
+        n Tape=>['to']
         #n ShoGoings
         #n ElMatron
         t.e =
@@ -21,6 +21,7 @@ ElvisObs: | # criteria for travel, observables
         # sends its Mat figure to:
         t.e =
         n Mudit=>V
+        n TapeChecker
         # for regrouping
         #t.cs->("sc lv,olv", "you sayn");
         return;
@@ -30,7 +31,6 @@ ElvisObs: | # criteria for travel, observables
         t.e =
         n Mudit=>V
         n Mat=>V
-        #n TapeChecker
         t.cs->("sc lv,olv", "you sayn");
         local t.toc.largesse = 1;
         t.cs->("sc lv,olv", "you sayn");
@@ -55,6 +55,7 @@ Ghostig: | # 5/someone doing ghost networking
     G&elph,Mudit=>[M=>$M]
 Mudit: | # display, with its own travels of
     1c&noHu = 1;
+    y.imp = 1;
     u Zpace
     u Mat
     # want a u making in here thing, to make named A
@@ -63,6 +64,8 @@ Mudit: | # display, with its own travels of
     #y.res = 1;
     Jc&elvis = 'Dejo';
     Js&ein.t.M = &TesC{
+        1 && sayyl "Mudit eats ".@$s." from C.y.A.2.t";
+        Jc&from = C.y.A.2;
         Jc&es = $s;
     };
     Js&ein.bo = 'Doable';
@@ -74,14 +77,21 @@ Mudit: | # display, with its own travels of
     
     c&dimmer = 1;
     #n woov=>2=>$s
-    return unless J.c.es;
+    return sayre("Nothing") unless J.c.es;
     $s = J.c.es;
     my $pi = Js&view || die 'No view';
-    my $z = G&A,Mat=>1,@$s;
-    z.c.pi = $pi;
-    G&A,$z=>9;
-    $s = z.c.M;
-    @$M = @$s;
+    1 && saybl "it will be Jc&from.t ";
+    if (Jc&from.t eq 'Ghostig') {
+        my $z = G&A,Mat=>1,@$s;
+        z.c.pi = $pi;
+        G&A,$z=>9;
+        $s = z.c.M;
+        return;
+        @$M = @$s;
+    }
+    else {
+        m _.t=>-mud=>{s=>$_} for @$s;
+    }
 Mat: |
     u a
     
