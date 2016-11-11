@@ -50,9 +50,8 @@ Circle: | # < copy things
         }
         c&m ||= C.t;
         c&s = $f;
-    #c o2 intermediate whats-where, diff o/oo per zing
+    #c o2 input protocols read bunches of C
     o 2:
-        my $oo = A.c.oo = {};
         # resolving to stuff
         if (c&m eq 'A') {
             my $s = c&f = c&s;
@@ -67,15 +66,21 @@ Circle: | # < copy things
             c&s = $top;
             c&m = 'C';
         }
+        
         # eating stuff
         # < space-for (C) < t < y [many o with .c.s = $e, o.y.etc = etc]
+        my $oo = A.c.oo = {};
+        my $oat = &o{
+            push @{ oo.C.>o.t.>o.y.cv ||=[]}, $o;
+        };
+        
         # per other itself in 3, way in is noise-ish
         if (c&m eq 'zip') {
             for my $k (keys %{c&s}) {
                 my $v = c&s ->{$k};
                 v.y && v.y eq $v || die "zip yon not A ".wdump 2, c&s;
                 next if $v eq $A;
-                next if v.c.T && v.c.T.not;
+                next if vc&T && vc&T.not;
                 # light cones holding C or doing another o bunch
                 my $D = v.c.s;
                 if (v.t eq 'o') {
@@ -90,10 +95,7 @@ Circle: | # < copy things
                         my $vs = ii.C->{$t};
                         for my $cv (keys %$vs) {
                             my $os = $vs->{$cv};
-                            push @{oo.C->{$t}->{$cv}||=[]}, map {
-                                $_ = G&hup,$_;
-                                $_
-                            } @$os;
+                            $oat->( G&hup,$_ ) for @$os;
                             $i++ for @$os;
                         }
                     }
@@ -106,7 +108,7 @@ Circle: | # < copy things
                     o.y.D = $D;
                     o.y.R = $v;
                     o.y.k = $k;
-                    push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
+                    $oat->($o);
                 }
             }
         }
@@ -120,7 +122,7 @@ Circle: | # < copy things
                 e.c.s = $v;
                 my $o = G&Chs,$e;
                 o.y.k = $k;
-                push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
+                $oat->($o);
             }
         }
         elsif (c&m eq 'ii') {
@@ -131,26 +133,26 @@ Circle: | # < copy things
                 my $o = G&Chs,$e;
                 o.y.k = $k;
                 o.y.D = $v;
-                push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
+                $oat->($o);
             }
         }
         elsif (c&m eq 'C') {
             # C
             my $S = c&s;
-            my $pr;
+            my $p;
             while ($S) {
                 ref $S eq 'HASH' || die "NothashC: C.t: ".ki(c&s).":\n  ".ki $S;
                 !defined S.t && die "Dodge o m=C: ".wdump 3,
-                    ["ot: C.t",S=>$S,after=>$pr];
+                    ["ot: C.t",S=>$S,after=>$p];
                 my $e = G&hup,$S;
-                my $o = G&Chs,$e,$S;
+                my $o = G&Chs,$e;
                 o.y.D = $S;
-                push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
-                if ($pr) {
-                    o.sc.oz.yprev = $pr;
-                    pr.sc.oz.ynext = $o;
+                if ($p) {
+                    os&oz.yprev = $p;
+                    ps&oz.ynext = $o;
                 }
-                $pr = $o;
+                $oat->($o);
+                $p = $o;
                 $S = S.y.next;
                 undef $S if c&nonext;
             }
@@ -163,7 +165,7 @@ Circle: | # < copy things
                 my $e = G&hup,$S;
                 my $o = G&Chs,$e;
                 o.y.D = $S;
-                push @{oo.C->{o.t}->{o.y.cv}||=[]}, $o;
+                $oat->($o);
             }
         }
         elsif (c&m eq 'rl') {
