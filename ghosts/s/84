@@ -14,15 +14,17 @@ ElvisObs: | # criteria for travel, observables
     }
     if (c&Se == 2) {
         n Tape=>['to']
-        #n ShoGoings
-        #n ElMatron
-        t.e =
-        n Ghostig
-        # sends its Mat figure to:
-        t.e =
-        n Mudit=>V
+        n ShoGoings
+        n ShoGoings
+        n ShoGoings
         n TapeChecker
+        #n ElMatron
+        #t.e =
+        #n Ghostig
+        # sends its Mat figure to:
         # for regrouping
+        #t.e =
+        #n Mudit=>V
         #t.cs->("sc lv,olv", "you sayn");
         return;
         n ShoGoings
@@ -48,6 +50,7 @@ ShoGoings: |
 Ghostin: | # for Matu J Ghostig
     n Ghostig
 Ghostig: | # 5/someone doing ghost networking
+    sayyl "GHostingk";
     @{$M=[]} = Rw Matu;
     my $s = 4s&Matsup;
     T.imWu = T.oT.imWu if T.oT.imWu;
@@ -90,7 +93,6 @@ Mudit: | # display, with its own travels of
         z.c.pi = $pi;
         G&A,$z=>9;
         $s = z.c.M;
-        return;
         @$M = @$s;
     }
     else {
@@ -156,7 +158,7 @@ Mat: |
     
 pi/label: |
     n label=>1=>C.t=>'hs:888,fs:20'
-pi/pit: |
+pi/pit: | # perception altar
     y.at.dos = 'pitchange';
     S
     my $o = Js&options = [split ' ', $s];
@@ -165,7 +167,7 @@ pi/pit: |
     for (@$o) {
         n $_=>'0.0'.$i++=>$_=>($_ eq $set && '%fs:26')
     }
-pitchange: |
+pitchange: | # alter perception
     sayre "Pit chabnge: ".ki($e)."\n ".ki e&hC;
     my ($qua,$lit) = map {_.t} map{ $_->[0], $_->[-1] } e&hC;
     A.3.sc.>$qua = $lit;
@@ -183,7 +185,7 @@ Dimmer: |
         s&hs ||= $c.$l.$l;
         
         
-pi/cud: | # understood qualities on Matu mats
+pi/cud: | # Matu piece
     n t=>1=>C.t,'%fs:20'
     G&isC,$s || return
         n notC=>4=>"notC: ".ki $s;
@@ -215,16 +217,21 @@ pi/mud: | # visible qualities on Matu mats
     n ind=>o1=>sc&inds;
     
     my $i = 4;
-    for my $k (qw'y c sc') {
-        my $v = G&pint,$s,$k || next;
-        n $k=>$i.'1'=>$k,'%fs:14'
-        if (my $s = join' ', sort keys %$v) {
+    for my $nk (qw'y c sc') {
+        my $v = G&pint,$s,$nk || next;
+        n $nk=>$i.'1'=>$nk,'%fs:14'
+        
+        my @k = sort keys %$v;
+        if (my $s = join' ', @k) {
             my $sc;
-            if ($k eq 'y') {
+            if ($nk eq 'y') {
                 sc.hs = '786';
                 T odd
             }
-            n $k=>$i.'2'=>$s,$sc
+            n $nk=>$i.'2'=>$s,$sc
+            @k < 7 && sayre("Many!") && 
+            n $nk=>$i.'3'=>ki($v)
+            
         }
         $i++;
     }
