@@ -17,7 +17,9 @@ ElvisObs: | # criteria for travel, observables
         n ShoGoings
         n ShoGoings
         n ShoGoings
+        t.e =
         n TapeChecker
+        t.cs->("sc top", "TapeChecker");
         #n ElMatron
         #t.e =
         #n Ghostig
@@ -38,12 +40,18 @@ ElvisObs: | # criteria for travel, observables
         t.cs->("sc lv,olv", "you sayn");
         #t.cs->("sc top y tv view 0.02 sc J sc top", "you say");
     }
+    if (c&Se == 3) {
+        t.e =
+        n TapeChecker
+        t.cs->("sc top", "TapeChecker");
+    }
     
 TapeChecker: | # see
+    is:
+        here
     n ElvisTape
-    my $M = [];
-    m _.t=>''=>ki($_) for G&op;
-    G&elph,Mudit=>[M=>$M]
+    my $M = [ G&op ];
+    G&elph,Mudit=>[M=>$M];
     
 ShoGoings: |
     n flow=>$_=>"Flow" for 1..(6 + Jc&bowls++);
@@ -229,8 +237,8 @@ pi/mud: | # visible qualities on Matu mats
                 T odd
             }
             n $nk=>$i.'2'=>$s,$sc
-            @k < 7 && sayre("Many!") && 
-            n $nk=>$i.'3'=>ki($v)
+            @k < 7 &&
+            n $nk=>$i.'2'=>ki($v)
             
         }
         $i++;
