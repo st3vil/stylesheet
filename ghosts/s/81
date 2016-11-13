@@ -33,9 +33,10 @@ comput: |
     die "BVack:";
     exit;
 
+pi/py: | # tip of the protoberg
+    # etc
 pi/pud: |
     $s = Rw Typerack;
-    
     
     # how many M inners before 'more' (depth first)
     A.3.C.c.intlim ||= 15;
@@ -50,7 +51,7 @@ pi/pud: |
     c&dl += 2 if C.t eq 'in' && A.2.C.t eq 'y' && A.2.2.C.sc.istycsc;
     
     y.in = 0.21;
-    my $ind = join'', ('  ') x (J.A.d - 1);
+    my $ind = join'', ('  ') x (c&depth - 1);
     
     n ind=>0.07=>"\n$ind"
     n sli=>0.08=>"<  ",'%hs:784'
@@ -113,13 +114,13 @@ pi/pud: |
                 c&dl = 1 if C.t eq 'N';
             }
         }
-        if (J.A.d > c&dl) {
+        if (c&depth > c&dl) {
             return
             n no=>2=>ki($s),'%fs:7,hs:458'
         }
     }
     else {
-        if (ref $s ne 'HASH' || J.A.d > c&dl) {
+        if (ref $s ne 'HASH' || c&depth > c&dl) {
             my $z = ki $s;
             my $bg;
             if (!ref $s) {
@@ -142,6 +143,16 @@ pi/pud: |
                     $z = $s;
                     $fs = 23;
                 }
+                if (C.t eq 'y') {
+                    T ys
+                    my $ig;
+                    if (s.cv) {
+                        ig.cv++;
+                        n mainly=>19=>"cv"
+                        n mainly=>191=>s.cv,'%hs:286,fs:14'
+                    }
+                    $z = Rw yki $s $ig $we:A.2.C;
+                }
             }
             if (A.2.2.C.sc.istycsc) {
                 if (A.2.C.t eq 'y') {
@@ -152,7 +163,7 @@ pi/pud: |
             n no=>2=>$z,"%fs:$fs,hs:398,lh:0.5,mt:1,mh:5$bg"
             return
         }
-        if (s.y eq $s && J.A.d > c&dl) {
+        if (s.y eq $s && c&depth > c&dl) {
             return
             n A=>2=>"A s.t s.y.cv; ".ki(s.c)."    ".ki(s.sc);
         }
@@ -160,7 +171,6 @@ pi/pud: |
     
     #c hash out
     my ($hash,@ks) = Rw HashKs $s $ks $vs;
-    
     n ind=>0.07=>"\n$ind"
     n siz=>12=>" x ".@ks,'%hs:283,fs:6';
     if (A.3.C.c.intl++ > A.3.C.c.intlim) {
@@ -172,7 +182,7 @@ pi/pud: |
         return
         n more=>4=>"more",'%hs:544'
     }
-    return if C.t =~ /^(up|T)$/
+    return sayre "Cos C&type and so..." if C.t =~ /^(up|T)$/
         || ( (C&type eq 'A' || A.2.C.sc.type eq 'A') && C.t =~ /^ii?/)
         || ( A.2.C.sc.type ne 'array' && C.t =~ /^\d+$/)
         #|| J.A.d > 5
@@ -185,9 +195,30 @@ pi/pud: |
     @ks = @ks[0..($limit-1)] if $lim;
     
     m $_=>-pud=>{s=>$hash->{$_}},'%ma:1' for @ks;
+    #m "looking: ".$_=>''=>{s=>ki $hash->{$_}} for @ks;
     
     $lim && 
     m limited=>''=>{s=>"Limited from $was to $limit"},{hs=>"888",ws=>1}
+yki: |
+    my @ks = sort keys %$s;
+    my $ks = &v{
+        join',',sort keys %$v
+    };
+    join ' ', map {
+        my $v = $s.>$_;
+        ar.ig && ar.ig.>$_ ? '' :
+        "$_:".(ref $v eq 'HASH' ? (
+            v.y eq $v ? "A:v.t" :
+            v.t && v.y && (v.c||v.sc) ? do {
+                my $title = ar.we && ar.we.t eq v.t && ar.we.y.cv ? "^"
+                    : "v.t v.y.cv";
+                "C:$title (".$ks->(v.c).")".$ks->(v.sc)
+            } :
+            "?:".ki $v
+        )
+        : ref $v || $v
+        );
+    } @ks;
 Typerack: | # makes a J for whitespaced typograph
     y.at.qs=1;
     y.at.ws=1;
