@@ -188,13 +188,23 @@ CoBabbler: | # bake code
     }
     
     #
-    # A22Cs&blue -> A.2.2.c.s.sc.blue
+    # 22Cs&blue -> A.2.2.c.s.sc.blue
     for my $l (qw'y c s') {
         my $nk = $l eq 's' ? 'sc' : $l;
-        C.c.s =~ s/\b(up|\d+)(C)?$l\&(\w+)/
-            my $net = join'.','A',$1 eq 'up' ? $1 : split'',$1;
-            my $see = ".c\.s" if $2;
-            my $gks = "\.$3" if $3 ne 'C';
+        C.c.s =~ s/\b(up|\d+|A\w+?)(C)?$l\&(\w+)/
+            my ($net,$see,$gks) = ($1,$2,$3);
+            if ($net eq 'up') {
+                $net = join'.','A',$net;
+            }
+            elsif ($net =~ m{^A.+}) { # A.L...
+                # TODO split lc like words, know cs is c.s, etc
+                $net = join'.',split'',$net;
+            }
+            else { # numbers
+                $net = join'.','A',split'',$net;
+            }
+            $see = ".c\.s" if $see;
+            $gks = "\.$gks" if $gks ne 'C';
             "$net$see\.$nk$gks"
         /smeg;
     }
