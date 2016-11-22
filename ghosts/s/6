@@ -20,11 +20,12 @@ JugleHue: | # y.mod for dealing out and colouration
         _s&hue = $h += $d;
         _s&deal = 0.014;
     }
-ModNs: | # modulate M/N/etc with way, s=$way(:$s_arg)?
+ModNs: | # modulate M with way, s=$way(:$s_arg)?
     if (ref $s eq 'CODE') {
         $s->($M);
     }
     else {
+        ar.J ||= A.1;
         my $z = $s =~ s/:(.+)// ? $1 : '';
         Rw $s + $s:z;
     }
@@ -169,7 +170,7 @@ Zpace: | # hang La space charts off mo
             }
         }
         
-        # y.man, $M-odulate before L does anything
+        #c y.man, $M-odulate before L does anything
         Rw ModNs $M $s:y.man if y.man;
         
         # positation of many from L C to a C lattice
@@ -316,10 +317,10 @@ Zpace: | # hang La space charts off mo
         }
         # L can M the C also in a
     
-     #c lum uC shapes curve, wants to be with limn
-     # might mean a few lum qualities, make them switchupable
-     # supposedly osc can measure itself, hoist geometry
-     #    descriptions for ascii art buildings
+    #c lum uC shapes curve, wants to be with limn
+    # might mean a few lum qualities, make them switchupable
+    # supposedly osc can measure itself, hoist geometry
+    #    descriptions for ascii art buildings
     lum 23: %v:ylum
         my $M = c&M || die "lum no M";
         my $y = C.y;
@@ -343,10 +344,11 @@ Zpace: | # hang La space charts off mo
             }
         }
     
-    # 3 the allocations, M start happening
+    #c y.bal $M-odulate after lum, before togethering/allocations, M start happening
     bal 3: %v:ybal
         my $M = c&M;
-        Rw ModNs $M $s:bal;
+        
+        Rw ModMs $M $s:bal;
     #c refit cv by t, spawn L per added pieces
     # to fit back into M above,
     refit 4: %v:yres
@@ -488,7 +490,7 @@ Zpace: | # hang La space charts off mo
             1 && saygr "_.t: _.y.cv (spc=_.y.spc)" for @$M;
         }
         
-        # y.mod, $M-odulate after curvation, before ground/mo
+        #c y.mod, $M-odulate after cv-ation, before ground/mo
         Rw ModNs $M $s:y.mod if y.mod;
         if (!@$M) {
             my $inte;
