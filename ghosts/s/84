@@ -1,5 +1,3 @@
-
-
 ElvisObs: | # criteria for travel, observables
     my $t = Rw Towering Ang _ Dimmer Zpace
         || return;
@@ -275,119 +273,119 @@ Four: | # savepoint/fork and wait
         G.forked = $parent;
     }
 Ghroup: | # convolute muds - make hierarchy
-            for (@$M) {
-                # by G&ind, keep c&ind
-                delete _c&inds;
-                delete _c&inside;
-            }
-            my $gr = {};
-            # notice groupables
-            for (@$M) {
-                my $r;
-                r.os++ if _s&u =~ /\bos\b/i;
-                $r || next;
-                my ($to,@much) = keys %$r;
-                die "Many for _.t: ".ki $r if @much;
-                acu $gr, $to, $_; 
-            }
-            
-            # add them to the end under labels
-            my @ad;
-            my $su;
-            my $no;
-            each tN $gr {
-                push @ad, map{$su.>$_ = $_} G&Ct,[$t=>'-label'=>{}];
-                push @ad, map{$no.>$_ = $_} @$N;
-            }
-            # dedupe & append
-            @$M = grep { !$no.>$_ } @$M;
-            push @$M, @ad;
-            
-            # group change wants to forget is y.resing
-            # Travel tussles such cachements
-            my $en = &{ grep { !$su.>$_ } @$M };
+    for (@$M) {
+        # by G&ind, keep c&ind
+        delete _c&inds;
+        delete _c&inside;
+    }
+    my $gr = {};
+    # notice groupables
+    for (@$M) {
+        my $r;
+        r.os++ if _s&u =~ /\bos\b/i;
+        $r || next;
+        my ($to,@much) = keys %$r;
+        die "Many for _.t: ".ki $r if @much;
+        acu $gr, $to, $_; 
+    }
+    
+    # add them to the end under labels
+    my @ad;
+    my $su;
+    my $no;
+    each tN $gr {
+        push @ad, map{$su.>$_ = $_} G&Ct,[$t=>'-label'=>{}];
+        push @ad, map{$no.>$_ = $_} @$N;
+    }
+    # dedupe & append
+    @$M = grep { !$no.>$_ } @$M;
+    push @$M, @ad;
+    
+    # group change wants to forget is y.resing
+    # Travel tussles such cachements
+    my $en = &{ grep { !$su.>$_ } @$M };
 
-            my $tw = {};
-            $tw.>_.t = $_ for $en->();
-            
-            my $in = {}; # under.t -> over join (t, c.J/oJ)
-            # for simplest joins by one other
-            for ($en->()) {
-                #next unless _.t eq 'Normal';
-                my $jo = _c&jointed || next;
-                my ($imple,$c,$many) = %$jo;
-                
-                next if $many;
-                next if $imple ne '';
-                ($imple,$c,$many) = %$c;
-                next if $many;
-                die "For $imple tee creation: ".ki$c if $imple ne c.t;
-                $in.>_.t = $c;
+    my $tw = {};
+    $tw.>_.t = $_ for $en->();
+    
+    my $in = {}; # under.t -> over join (t, c.J/oJ)
+    # for simplest joins by one other
+    for ($en->()) {
+        #next unless _.t eq 'Normal';
+        my $jo = _c&jointed || next;
+        my ($imple,$c,$many) = %$jo;
+        
+        next if $many;
+        next if $imple ne '';
+        ($imple,$c,$many) = %$c;
+        next if $many;
+        die "For $imple tee creation: ".ki$c if $imple ne c.t;
+        $in.>_.t = $c;
+    }
+    local A.V = 2;
+    my $dt = {};
+    # prepare by depth + detect loops
+    each tc $in {
+        my ($see,$l) = ({},[]);
+        my $S = $c;
+        while ($S) {
+            $see.>S.t && die "c.t hier already S.t: ".ki $l;
+            $tw.>S.t || last;
+            push @$l, S.t;
+            $see.>S.t = $S;
+            $S = $in.>S.t;
+        }
+        my $d = @$l || next;
+        my ($ut) = @$l;
+        $dt.>$d.>$ut.>$t ++;
+        #saybl "$t is under @$l";
+    }
+    #saybl "JOinted: ".wdump 2, $dt;
+    # move under overs
+    for my $d (sort keys %$dt) {
+        my $utt = $dt.>$d;
+        my $no = {};
+        my $for = {};
+        @$M = map { 
+            if (my $al = $for.>_.t ) {
+                ($_, @$al);
             }
-            local A.V = 2;
-            my $dt = {};
-            # prepare by depth + detect loops
-            each tc $in {
-                my ($see,$l) = ({},[]);
-                my $S = $c;
-                while ($S) {
-                    $see.>S.t && die "c.t hier already S.t: ".ki $l;
-                    $tw.>S.t || last;
-                    push @$l, S.t;
-                    $see.>S.t = $S;
-                    $S = $in.>S.t;
-                }
-                my $d = @$l || next;
-                my ($ut) = @$l;
-                $dt.>$d.>$ut.>$t ++;
-                #saybl "$t is under @$l";
+            else {
+                $_
             }
-            #saybl "JOinted: ".wdump 2, $dt;
-            # move under overs
-            for my $d (sort keys %$dt) {
-                my $utt = $dt.>$d;
-                my $no = {};
-                my $for = {};
-                @$M = map { 
-                    if (my $al = $for.>_.t ) {
-                        ($_, @$al);
-                    }
-                    else {
-                        $_
-                    }
-                } grep { !delete $no.>_.t } map {
-                    if (my $ts = $utt.>_.t ) {
-                        my $u = $tw.>_.t;
-                        my @z = map {
-                            $no.>$_ ++;
-                            $tw.>$_ || die "Cant find $_ in ".ki $tw;
-                        } sort keys %$ts;
-                        #say "Putting $d: u.t: _.t" for @z;
-                        acu $for, u.t, @z;
-                        _c&ind = uc&ind + 1 for @z;
-                        $_ eq $u || die "No muke sense: ".ki $u;
-                        $_;
-                    }
-                    else {
-                        $_
-                    }
-                } @$M;
-                
+        } grep { !delete $no.>_.t } map {
+            if (my $ts = $utt.>_.t ) {
+                my $u = $tw.>_.t;
+                my @z = map {
+                    $no.>$_ ++;
+                    $tw.>$_ || die "Cant find $_ in ".ki $tw;
+                } sort keys %$ts;
+                #say "Putting $d: u.t: _.t" for @z;
+                acu $for, u.t, @z;
+                _c&ind = uc&ind + 1 for @z;
+                $_ eq $u || die "No muke sense: ".ki $u;
+                $_;
             }
-            #exit;
-            # TODO
-            # put those jointed/elvised to only one under them as z-ish
-            # care for circular jointedness, which should happen at Os...
-            # make instructures a la JJ
-            
-            if (my $pi = Js&view) {
-                @$M = map {
-                    my $pi = $pi;
-                    #$pi = "pud" if _.t eq 'Normal';
-                    $su.>$_ ? $_ :
-                        G&Ct,[_.t=>''=>{pi=>$pi,s=>$_}];
-                } @$M;
+            else {
+                $_
             }
+        } @$M;
+        
+    }
+    #exit;
+    # TODO
+    # put those jointed/elvised to only one under them as z-ish
+    # care for circular jointedness, which should happen at Os...
+    # make instructures a la JJ
+    
+    if (my $pi = Js&view) {
+        @$M = map {
+            my $pi = $pi;
+            #$pi = "pud" if _.t eq 'Normal';
+            $su.>$_ ? $_ :
+                G&Ct,[_.t=>''=>{pi=>$pi,s=>$_}];
+        } @$M;
+    }
 Ghoster: | # Rw being for the 5
     # 1 = 5
     # to nowify this bunch of G
