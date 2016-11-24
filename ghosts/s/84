@@ -3,6 +3,7 @@ ElvisObs: | # criteria for travel, observables
         || return;
     ##
     if (c&Se == 1) {
+        u Smalldog
         # directs 5 to its minder
          5s&desi = "Ghostin";
         # 5s&desi = "Ghoster";
@@ -49,6 +50,10 @@ ElvisObs: | # criteria for travel, observables
         t.cs->("sc top y tw ElvisTape sc J sc top", "TapeChecker again");
     }
     
+Smalldog: |
+    feji:
+        d__)
+         nn
 TapeChecker: | # see
     Jc&notape = 1;
     is:
@@ -75,10 +80,8 @@ Ghostig: | # 5/someone doing ghost networking
     # 
     G&elph,Mudit=>[M=>$M]
 Mudit: | # display, with its own travels of groupage
-    #1c&noHu = 1;
     y.imp = 1;
     u Zpace
-    #u Mat
     # want a u making in here thing, to make named A
     # mutated with scheme
     # for the many indentation, Rw looking thing...
@@ -282,12 +285,13 @@ Ghroup: | # convolute muds - make hierarchy
     # notice groupables
     for (@$M) {
         my $r;
-        r.os++ if _s&u =~ /\bos\b/i;
+        r.u++ if _s&u;
         $r || next;
         my ($to,@much) = keys %$r;
         die "Many for _.t: ".ki $r if @much;
         acu $gr, $to, $_; 
     }
+    # TODO things grouped out of that group should retain some trace
     
     # add them to the end under labels
     my @ad;
@@ -311,15 +315,11 @@ Ghroup: | # convolute muds - make hierarchy
     my $in = {}; # under.t -> over join (t, c.J/oJ)
     # for simplest joins by one other
     for ($en->()) {
-        #next unless _.t eq 'Normal';
         my $jo = _c&jointed || next;
-        my ($imple,$c,$many) = %$jo;
-        
-        next if $many;
-        next if $imple ne '';
-        ($imple,$c,$many) = %$c;
-        next if $many;
-        die "For $imple tee creation: ".ki$c if $imple ne c.t;
+        my $c = $jo->{""} || next; # only simple joins
+        keys %$c == 1 || next; # to one other
+        ($c) = values %$c;
+        1 && sayyl "So is ".ki $c;
         if (_.t eq c.t) {
             _s&istoppy = 1;
             next;
@@ -385,7 +385,7 @@ Ghroup: | # convolute muds - make hierarchy
     if (my $pi = Js&view) {
         @$M = map {
             my $pi = $pi;
-            #$pi = "pud" if _.t eq 'Normal';
+            #$pi = "pud" if _.t eq 'Zpace';
             $su.>$_ ? $_ :
                 G&Ct,[_.t=>''=>{pi=>$pi,s=>$_}];
         } @$M;
@@ -656,10 +656,15 @@ Matu: | # T room on Os
                     }
                     while (my ($ref,$R) = each %$v) {
                         # is means its doing that for its 2
+                        # eg. Js&u.c.is = 'mind'
                         my $is = Rc&is || '';
-                        my $oJ = R.2;
+                        my $oJ = R.3;
                         $is || undef $oJ;
-                        $oJ = R.3 if !$is && $R ne R.3;
+                        if (!$is && $R ne R.3) {
+                            # non A.3 making elvis, probably
+                            sayre "C.t typed $k by non3 (3=R.3.t) R.t, JCc=".ki(R.C.c);
+                            $oJ = R.3;
+                        }
                         my $t = $oJ && oJ.t || R.t;
                         # joints going in to its creation
                         my $c = C.sc.>$to.>$is.>$t ||= {};
