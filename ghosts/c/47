@@ -141,7 +141,7 @@ Stripes: | # css
         ['ori:all~none' => 'poi^nter'=>'^events'],
         [whipre => white=>'space'],
         ['wordbreakwords'=>'word'=>'break'],
-        ['ori:block~none'=>'dis^play'],
+        ['ori:block~none~inline-block'=>'dis^play'],
     ];
     
     for (@$patterns) {
@@ -151,7 +151,7 @@ Stripes: | # css
             for (grep{$_} split /\+/, sc.filt) {
                 my ($k,$v) = ($_);
                 ($k,$v) = /^(\w+):(.+)/ if /\W/;
-                $v = [split'~',$v] if $v && $v =~ /^\w+(~\w+)+$/;
+                $v = [split'~',$v] if $v && $v =~ /^\w+(~[\w-]+)+$/;
                 $k || die "noundo $_";
                 push @{sc.flex||=[]}, {$k=>$v};
             }
@@ -287,7 +287,14 @@ Oscgrin: | # artwork function
         s.v || s.et
     
     ori:
-        @{s.et} > 2 && die "Many et for ori s.v: @{s.et}";
+        if (@{s.et} > 2) {
+            if (s.v =~ /^\d+$/) {
+                return s.et->[s.v - 1];
+            }
+            else {
+                die "Many et for ori s.v: @{s.et}";
+            }
+        }
         my ($t,$f) = @{s.et};
         return s.v =~ /[1ay]/ ? $t : $f
     
