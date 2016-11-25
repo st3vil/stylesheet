@@ -151,7 +151,8 @@ pi/cud: | # Matu piece
     
     # should dampen depending on all M
     y.at.ml = sc&ind * 3;
-    y.at.dis = 3;
+    s&dis = 4; # table-row
+    y.at.dis = 3; # inline-block
     
         my $in = sc&inds;
         my $sc = s.sc;
@@ -277,6 +278,7 @@ Four: | # savepoint/fork and wait
         G.forked = $parent;
     }
 Ghroup: | # convolute muds - make hierarchy
+    local A.V = 2;
     for (@$M) {
         # by G&ind, keep c&ind
         delete _c&inds;
@@ -316,8 +318,11 @@ Ghroup: | # convolute muds - make hierarchy
     my $in = {}; # under.t -> over join (t, c.J/oJ)
     # for simplest joins by one other
     for ($en->()) {
-        my $jo = _c&jointed || next;
-        my $c = $jo->{""} || next; # only simple joins
+        my $jo = _c&jointed || _c&elvised || next;
+        my $c = $jo->{""}
+            || keys %$jo == 1 && jo.mind
+            || next;
+        _.t eq 'Listen' && saybl "_.t joints: ". ki _c&elvised;
         keys %$c == 1 || next; # to one other
         ($c) = values %$c;
         if (_.t eq c.t) {
@@ -326,7 +331,6 @@ Ghroup: | # convolute muds - make hierarchy
         }
         $in.>_.t = $c;
     }
-    local A.V = 2;
     my $dt = {};
     # prepare by depth + detect loops
     each tc $in {
@@ -385,7 +389,7 @@ Ghroup: | # convolute muds - make hierarchy
     if (my $pi = Js&view) {
         @$M = map {
             my $pi = $pi;
-            #$pi = "pud" if _.t eq 'Zpace';
+            #$pi = "pud" if _.t eq 'Listen';
             $su.>$_ ? $_ :
                 G&Ct,[_.t=>''=>{pi=>$pi,s=>$_}];
         } @$M;
