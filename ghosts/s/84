@@ -149,6 +149,12 @@ pi/cud: | # Matu piece
     G&isC,$s || return
         n notC=>4=>"notC: ".ki $s;
     
+    sc&plane &&
+        n plane=>o8=>sc&plane.' ','%fs:17,hs:375'
+    
+    sc&emb &&
+        n emb=>12=>' '.join(' ',sort keys %{sc&emb}),'%hs:485'
+    
     # should dampen depending on all M
     y.at.ml = sc&ind * 3;
     s&dis = 4; # table-row
@@ -163,7 +169,7 @@ pi/cud: | # Matu piece
                 : "\n".join "\n", map { "$in    $_" }
                 split /\n/, $v);
         } grep { $_ ne 'z' && $_ ne 'strung'
-            && !(sc.strung && sc.strung.>$_ ) } sort keys %$sc;
+            && !(sc.strung && exists sc.strung.>$_ ) } sort keys %$sc;
     
     my $sc;
     sc.hs = '248';
@@ -283,7 +289,37 @@ Ghroup: | # convolute muds - make hierarchy
         # by G&ind, keep c&ind
         delete _c&inds;
         delete _c&inside;
+        
+        if (!_s&way) {
+            _c&emb->{'!way'} = 'way';
+        }
+        elsif (_s&way.>_.t) {
+            _s&strung.pins = '' if 1 == keys %{_s&way};
+            # wants to re-A Matu constringing of way ^
+            # and know it's able to do that safely
+        }
+        else {
+            _c&emb->{'!pin'} = 'pins';
+        }
+        
+        if (my $J = _c&J) {
+            if (my $s = Js&s) {
+                unless (sc&o) {
+                    _c&emb->{'!noso'} = '';
+                }
+                if (sc&imparted) {
+                    _c&emb.i = 's.c.imparted';
+                }
+            }
+            else {
+                _c&emb->{'!nos'} = '';
+            }
+        }
+        else {
+            _c&emb->{'!noJ'} = '';
+        }
     }
+    
     my $gr = {};
     # notice groupables
     for (@$M) {
@@ -316,19 +352,31 @@ Ghroup: | # convolute muds - make hierarchy
     $tw.>_.t = $_ for $en->();
     
     my $in = {}; # under.t -> over join (t, c.J/oJ)
-    # for simplest joins by one other
+    # for simplest, joins by one other
+    # could also do deepest elvision, first join...
     for ($en->()) {
-        my $jo = _c&jointed || _c&elvised || next;
-        my $c = $jo->{""}
-            || keys %$jo == 1 && jo.mind
-            || next;
-        _.t eq 'Listen' && saybl "_.t joints: ". ki _c&elvised;
+        my ($sym,$jo) = ('n',_c&jointed);
+        ($sym,$jo) = ('e',_c&elvised) if !$jo;
+        $jo || next;
+        my $c = $jo->{""};
+        if (!$c && keys %$jo == 1 && jo.mind && $sym eq 'n') {
+            $sym = 'u';
+            $c = jo.mind;
+        }
+        $c || next;
         keys %$c == 1 || next; # to one other
         ($c) = values %$c;
-        if (_.t eq c.t) {
+        if (_.t eq c.t) { # jointed to self (4)
             _s&istoppy = 1;
             next;
         }
+        if (_c&plane = $sym) {
+            my $src = 'jointed' if $sym eq 'n';
+            $src = 'elvised' if $sym eq 'e';
+            $src = 'u' if $sym eq 'u';
+            _s&strung.>$src = '';
+        }
+        saybl "Jointey: _.t: ".ki $c if _.t =~ /Mez|Zpace/;
         $in.>_.t = $c;
     }
     my $dt = {};
@@ -389,11 +437,14 @@ Ghroup: | # convolute muds - make hierarchy
     if (my $pi = Js&view) {
         @$M = map {
             my $pi = $pi;
-            #$pi = "pud" if _.t eq 'Listen';
+            #$pi = "pud" if _.t eq 'ElvisWayliases';
             $su.>$_ ? $_ :
                 G&Ct,[_.t=>''=>{pi=>$pi,s=>$_}];
         } @$M;
     }
+    
+    delete $tw.>_.t for @$M;
+    die "Lost Maturble: ".ki[sort keys %$tw] if keys %$tw;
 Ghoster: | # Rw being for the 5
     # 1 = 5
     # to nowify this bunch of G
@@ -632,6 +683,7 @@ Matu: | # T room on Os
             
             s&chaos = keys %{Jc&chaos||{}} && Jc&chaos if !Jc&o;
             
+            C.t eq 'ElvisWayliases' && sayre "Got: ".wdump 2, J.C;
             if (my $xo = Js&xo) {
                 my $un;
                 while (my ($k,$v) = each %$xo) {
