@@ -93,6 +93,8 @@ Besides: | # have more info next to open
     ##
 Besider: |
     Jc&tape = 'Dejo';
+    Js&ein.bo = 'Doable';
+    y.imp = 1;
     # see 8 
     # TODO move to another page? so we can keep it but not show it
     n "/h/Codo-openness\.yml"=>-openness=>{}=>'%not'
@@ -100,24 +102,71 @@ Besider: |
     S
     u OscNotter
     
-    n Blag=>2=>"\nToo\n\n"
+    n Blag=>2=>"\nToo\n\n","%dos:Toterise"
     T.op = $op; # TODO wtf
     saygr "Yyol:",map { _.t } G&op;
     
     y.lum = 6;
     y.n = 21;
     m _.t=>-codo=>{fope=>$_} for G&op,'pi:fopenness';
+Toterise: | # up inspector, etc
+    n Toter
 pi/codo: |
     delete C.sc.fs;
     n t=>1=>C.t=>'%fs:24,hs:598'
     C.y.spc > 0.1 || return;
+    u Zpace
     T fulloy
+    
     my $f = c&fope;
+    T.op = fs&J.sc.top || die "fope not a J C";
+    
+    my $code = read_file('g/'.C.t);
+    my $hashc = '#'.'c';
+    my @chunks = split /\n(?=\S|[^\n]+$hashc)/sm, $code;
+    
+    my $ope;
+    $ope.>_.t = $_ for G&op,'ycv:0.3';
+    my $tot = map{_c&s} G&op,'t:total';
+    if ($tot ne @chunks) {
+        n totnechunks=>-wrong,[$tot,scalar @chunks]
+    }
+    my $i = 0;
+    for (@chunks) {
+        my ($tip) = split "\n",$_;
+        my $t = $1 if $tip =~ /^([\/\w]+):|$hashc.*?(\w\w+)/;
+        $t ||= $tip;
+        if ($ope.>$i) {
+            m $t=>''=>$tip=>'%fs:15'
+        }
+        else {
+            m $t=>''=>$tip=>'%fs:7'
+        }
+        $i++;
+    }
+    
     my $J = fs&J;
     my $bu = Js&top.y.tw;
-    n bu=>-pud=>$bu;
+    #
+    #n bu=>2=>{pi=>pud=>s=>\@ope}
+    
+    #n not=>8=>'---------'
     #n spc=>2=>wdump(3,$bu)
     
+pi/wrong: | # thing to T out
+    s&p = 'wrong';
+    C.sc.hs = '697';
+    wrong:
+        wrong 
+    n t=>1=>C.t=>'%fs:12'
+    n s=>6=>ki $s=>'%fs:7'
+    # makes travel to know wrong tape goes somewhere
+Toter: |
+    y.imp = 1;
+    Jc&tape = 'Oue';
+    sayyl "Here";
+    n Besider=>V
+    n el=>-pud=>T.op
 OscNotter: | # vanish C mid osc
     u alS
     # sc.not vanishes in osc
@@ -149,7 +198,8 @@ pi/fopenness: |
     n t=>1=>C.t
     if (my $c = c&chunks) {
         my $total = keys %$c;
-        n has=>2=>" x$total",'%fs:6'
+        n hastotal=>19=>" x",'%fs:6'
+        n total=>2=>$total,'%fs:6'
         my @op = grep { $c.>$_ eq 'Open' } keys %$c;
         n $_=>3=>{} for sort @op;
     }
