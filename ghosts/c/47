@@ -141,7 +141,7 @@ Stripes: | # css
         ['ori:all~none' => 'poi^nter'=>'^events'],
         [whipre => white=>'space'],
         ['wordbreakwords'=>'word'=>'break'],
-        ['ori:block~none~inline-block~table-row'=>'dis^play'],
+        ['ori:none~block~inline-block~table-row'=>'dis^play'],
     ];
     
     for (@$patterns) {
@@ -287,16 +287,13 @@ Oscgrin: | # artwork function
         s.v || s.et
     
     ori:
-        if (@{s.et} > 2) {
-            if (s.v =~ /^\d+$/) {
-                return s.et->[s.v - 1];
-            }
-            else {
-                die "Many et for ori s.v: @{s.et}";
-            }
+        s.v = 0 + s.v =~ /[1ay]/ if @{s.et} <= 2;
+        if (s.v =~ /^\d+$/) {
+            return s.et->[s.v];
         }
-        my ($t,$f) = @{s.et};
-        return s.v =~ /[1ay]/ ? $t : $f
+        else {
+            die "Many et for ori s.v: @{s.et}";
+        }
     
     whipre:
         return $s =~ /[1p]/ ? 'pre' : 
