@@ -99,66 +99,104 @@ Besider: |
     # TODO move to another page? so we can keep it but not show it
     n "/h/Codo-openness\.yml"=>-openness=>{}=>'%not'
     my $op = T.op;
-    S
     u OscNotter
-    
-    n Blag=>2=>"\nToo\n\n","%dos:Toterise"
-    T.op = $op; # TODO wtf
-    saygr "Yyol:",map { _.t } G&op;
-    
+    S
     y.lum = 6;
     y.n = 21;
+    
+    n Blag=>2=>"\nToo\n","%dos:Toterise,dis:1"
+    T.op = $op; # TODO wtf
+    
     m _.t=>-codo=>{fope=>$_} for G&op,'pi:fopenness';
 Toterise: | # up inspector, etc
     n Toter
-pi/codo: |
+pi/codo: | # the patch of code
+    # the whole thing gets written
     delete C.sc.fs;
     n t=>1=>C.t=>'%fs:24,hs:598'
     C.y.spc > 0.1 || return;
-    u Zpace
     T fulloy
     
-    my $f = c&fope;
-    T.op = fs&J.sc.top || die "fope not a J C";
+    u OscNotter
+    u Zpace
+    y.n = 11;
     
-    my $code = read_file('g/'.C.t);
-    my $hashc = '#'.'c';
-    my @chunks = split /\n(?=\S|[^\n]+$hashc)/sm, $code;
+    my $ope = {};
+    my $tot;
+    if (my $f = c&fope) {
+        T.op = fs&J.sc.top || die "fope not a J C";
+        # fopenness will have to track open/close/elvoltage to know intention
+        $ope.>_.t = $_ for G&op,'3';
+        ($tot) = map{_c&s} G&op,'t:total';
+    }
     
-    my $ope;
-    $ope.>_.t = $_ for G&op,'ycv:0.3';
-    my $tot = map{_c&s} G&op,'t:total';
+    
+    n C.t=>-codof=>{}=>'%not,dis:0'
+    my @chunks = G&op,'3';
+    
     if ($tot ne @chunks) {
         n totnechunks=>-wrong,[$tot,scalar @chunks]
     }
-    my $i = 0;
     for (@chunks) {
-        my ($tip) = split "\n",$_;
-        my $t = $1 if $tip =~ /^([\/\w]+):|$hashc.*?(\w\w+)/;
+        my $sc;
+        my $open = $ope.>_s&i;
+        sc.fs = $open ? 15 : 7;
+        sc.dis = 1;
+        m _.t=>-codon=>{fn=>$_}=>$sc
+    }
+    
+pi/codof: | # the file of code, yaml about pin=>way
+    # TODO Glocation
+    u Zpace
+    y.n = 3;
+    y.u = 4;
+    
+    my $f = 'g/'.c&s;
+    n $f=>-ftimedig
+    S
+    my $code = read_file($f);
+    my $hashc = '#'.'c';
+    my @chunks = split /\n(?=\S|[^\n]+$hashc)/sm, $code;
+    
+    my $i = 0;
+    for my $s (@chunks) {
+        $s =~ /\S/ || next;
+        my ($tip) = my @l = split "\n",$s;
+        my $t = $1 || $2 if $tip =~ /^([\/\w]+):|$hashc.*?(\w\w+)/;
+        my ($pren,$note) = split /\b\Q$t\E\b/, $tip, 2 if $t;
+        s/^: \|//, s/^\s*//, s/^\s*$hashc\s*//, s/# // for $note;
+        
         $t ||= $tip;
-        if ($ope.>$i) {
-            m $t=>''=>$tip=>'%fs:15'
-        }
-        else {
-            m $t=>''=>$tip=>'%fs:7'
-        }
+        my $sc;
+        sc.note = $note if $note;
+        sc.pren = $pren if $pren;
+        sc.l = \@l;
+        sc.i = $i;
+        m $t=>''=>{s=>$s},$sc
         $i++;
     }
     
-    my $J = fs&J;
-    my $bu = Js&top.y.tw;
-    #
-    #n bu=>2=>{pi=>pud=>s=>\@ope}
+pi/codon: | # the pumpkin of code
+    if (my $C = c&fn || G&Ct,[C.t,3,{s=>c&s}]) {
+    s&pren &&
+        n pren=>o8=>s&pren,'%fs:8,hs:888'
     
-    #n not=>8=>'---------'
-    #n spc=>2=>wdump(3,$bu)
+        n t=>1=>C.t=>'%fs:13,hs:498'
+    
+    s&note &&
+        n not=>12=>s&note,'%fs:8,hs:888'
+        # !
+    }
+    delete c&s;
+    
+    
     
 pi/wrong: | # thing to T out
     s&p = 'wrong';
     C.sc.hs = '697';
-    wrong:
+    wrong: %hs:249
         wrong 
-    n t=>1=>C.t=>'%fs:12'
+    n t=>12=>C.t=>'%fs:12'
     n s=>6=>ki $s=>'%fs:7'
     # makes travel to know wrong tape goes somewhere
 Toter: |
@@ -178,11 +216,11 @@ pi/openness: | # read Codo-openness
     S
     u Zpace
     y.n = 3;
+    y.u = 4;
     
     my @ya = `tail $s -n 200`;
     shift @ya until $ya[0] =~ /^-/;
     my $open = Load(join'',@ya);
-    
     for (reverse @$open) {
         my ($t,$chunks) = @$_;
         m $t=>-fopenness=>{chunks=>$chunks}

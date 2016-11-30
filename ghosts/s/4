@@ -590,7 +590,24 @@ conot: | # expand sc.t->ip, compiled throat clause
     my $ip = C.sc.ip = {};
     my $or;
     my @o;
-    for my $k (split ' ', C.sc.t) {
+    my $t = C.sc.t;
+    
+    # convert 3-4 or 3 to >=0.3 <0.4
+    #            or 33 to >=0.33 <0.34
+    #            or 3+ to >=0.3   (with 9er)
+    if ($t =~ /^((\d+)(?:(\-|\+)(\d+))?)/) {
+        my $s = $1;
+        my $n = 0+('0.'.$2);
+        my $se = "ycv:>=$n";
+        if ($3 ne '+') {
+            my $u = $4 ? 0+('0.'.$4)
+                : $n + 1 / 10 ** length($2);
+            $se .= " ycv:<$u";
+        }
+        $t =~ s/^\Q$s\E/$se/s || die "Not replacable $se in $t";
+    }
+    
+    for my $k (split ' ', $t) {
         $or++, next if $k eq '||';
         my $ok = $k;
         my $is;
