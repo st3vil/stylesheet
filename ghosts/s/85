@@ -48,7 +48,7 @@ TripScaler: |
     
     
     
-Tips: | # your ball of knowing
+Tips: | # test your ball of knowing
     my $t = Rw Towering Ang _ Dimmer Zpace
         || return;
     # as an out of bander...
@@ -61,25 +61,35 @@ Tipz: |
          5s&desi = "Ghoster";
         n Waytch
         
-        my $c;
-        c.l = G&Ct,[Catchelism=>''=>\'W:Friv,At:s,Acv:4'];
-        my $code = &acgtlr{
-            sayre "Caught throat at: ".G&sn;
-            #saygr "C: ".ki $C;
-        
-            #saybl " l: ".G&aC,ts&l , " r: ".G&aC,ts&r;
-            acu $G, trip=>[$l,"@Me",{A=>$A},$C];
+        my $Te = &lry{
+            ($y,$r) = ($r,undef) if ref $r eq 'CODE';
+            $r ||= [acgt=>''];
+            my $c = {l=>G&Ct,$l , r=>G&Ct,$r };
+            c.r.c.code = $y if $y;
+            $c
         };
-        c.r = G&Ct,[acgt=>''=>{code=>$code}];
-        t.e = 
-        n Trips=>[to=>''=>$c]
         
-        t.cs->('sc top','Trips');
+        t.e = 
+        n Trips=>[to=>$_] for $Te->(
+            [Catchelism=>''=>\'W:Friv,At:s,Acv:4'] => &acgtlr{
+                acu $G, trip=>[$l,"@Me",{A=>$A},$C];
+            }
+        );
+        
+        t.e = 
+        n Trips=>[to=>$_] for $Te->(
+            [InjectO=>''=>\'W:Friv,At:O,Acv:5,Ct:e'] => &acgtlr{
+                acu $G, trip=>[$l,"@Me",{A=>$A},$C];
+                C.sc.fri = 3 if C.t eq 'e';
+            }
+        );
+        
+        t.cs->('sc lv,olv','Trips');
         
         # n Fri
         t.e =
         n Nowish
-        t.cs->('sc top','Other reflects shows');
+        t.cs->('sc top','Other reflects shows!');
         #t.e =
         #n OscNotter=>V
         n Toter
@@ -110,12 +120,17 @@ Tripin: |
         # may like to know progress esp if full nothing
         #lc&sense && acu $G, trip=>[l.t,"@Me"];
         
-        for my $k (qw'At Acv') {
+        for my $k (qw'At Acv Ct') {
             my $v = l.c.>$k || next;
             A&tripped.>$k && next;
             # run on to find
             # assume first is fally, rest are on the A
             # should be able to pass a thread of work down
+            if ($k eq 'Ct') {
+                # is test for now
+                $v eq C.t ? next : return;
+            }
+            # otherwise install the next trip in
             A&trip.>$k.>$v = $t;
             saygr "Has to find: $k $v (l.t)";
             return
@@ -161,11 +176,13 @@ TripDrop: |
         my $al = ts&top.y.tw;
         my $i = $al.>C.t || return;
         my $n = is&J.sc.top;
-        $n = n.y.tw;
-        # from W locate A
+        $n = n.y.tv;
+        # from W locate A by t
         for my $p ('At') {
-            my $d = $n.>$p || next;
-            A.trip.>$p.>dc&s = $d;
+            each cv,d $n.>$p {
+                A.trip.>$p.>dc&s = $d;
+                acu $G,trip=>$d;
+            }
         }
         1 && saygr "Sorted: ".G&sn ,wdump 4, A.trip;
 Trips: | # to be distributed to W
@@ -177,10 +194,14 @@ Trips: | # to be distributed to W
     #Jc&tape = 'Dejo';
     Js&ein.t.to.sMJ = &sMJjeT{
         my ($l,$r) = (e&l , e&r);
+        # e&l keeps returning from the first elvis?
+        #acu $G, trip=>[$e,l.t,e.c.l.t,$s];
+        $l = e.c.l;
+        $r = e.c.r;
         $l && $r || return G&vent,"Nottravel(l/r)";
-        $s ||= l.t;
+        $s = l.t;
         
-        Js&tri.>$s ++ && sayre("Ledup $s")
+        Js&tri.>$s ++ && sayre("Ledup $s en ".G&es )
             && return T.pos = 0;
             
         my $forW = l.c.W || die "l not cW";
@@ -204,16 +225,21 @@ pi/trip: | # bag of tricks to pass to a W
     n t=>1=>C.t."\n"
     # should be slept via 
     my $m = {}; # Aim: method/unknown = r
+    saybl "Got ".ki $s;
+    #exit;
     # is A mania ^
     # some r could group clutter
     my $i = 1;
     for my $t (@$s) {
         my ($l,$r) = (tc&l, tc&r);
         
+        # braid for action
         r.y.t = $t;
         l.y.t = $t;
         lc&Acv /= 10 while lc&Acv && lc&Acv >= 1;
-        # and attaches by first distinction
+        # conot for C c&tC, A, etc.
+        # 
+        # and attaches to the throat
         if (lc&At) {
             m.At.>lc&At = $r;
         }
@@ -226,9 +252,10 @@ pi/trip: | # bag of tricks to pass to a W
         n r=>$i.'3',{pi=>pud=>s=>$r};
         $i++;
     }
-    
+    my $i = 1;
     each tsr $m {
-        n $t=>2=>{s=>$s},{l=>r.y.t.c.l,r=>$r};
+        n $t=>"2$i"=>{s=>$s},{l=>r.y.t.c.l,r=>$r};
+        $i++;
     }}
 Open: | # have openness
     # have T next to things... alt click to alter, shift click to accept
@@ -378,7 +405,7 @@ Toter: | # to receive ongoing truths from trees
     
     #n Besider=>V
     my $w = G.trip || $C;
-    n el=>-pud=>{s=>$w,dl=>3}
+    n el=>-pud=>{s=>$w,dl=>4}
 OscNotter: | # vanish C mid osc
     u alS
     # sc.not vanishes in osc
