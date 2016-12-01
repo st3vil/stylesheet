@@ -63,9 +63,12 @@ Tipz: |
         
         my $c;
         c.l = G&Ct,[Catchelism=>''=>\'W:Friv,At:s,Acv:4'];
-        my $code = &acgt{
+        my $code = &acgtlr{
             sayre "Caught throat at: ".G&sn;
-            saygr "C: ".ki $C;
+            #saygr "C: ".ki $C;
+        
+            #saybl " l: ".G&aC,ts&l , " r: ".G&aC,ts&r;
+            acu $G, trip=>[$l,"@Me",{A=>$A},$C];
         };
         c.r = G&Ct,[acgt=>''=>{code=>$code}];
         t.e = 
@@ -73,12 +76,13 @@ Tipz: |
         
         t.cs->('sc top','Trips');
         
-        n Friv
-        
-        n Toter
+        # n Fri
+        t.e =
+        n Nowish
+        t.cs->('sc top','Other reflects shows');
         #t.e =
         #n OscNotter=>V
-        #t.cs->('sc top','OscNotter shows');
+        n Toter
     }
     
 Tripical: |
@@ -88,18 +92,24 @@ Tripin: |
     u i
     # apply levels of looking-for-ness, run hook if done
     # called by tripping an A.trip.$whereabouts...
+    # which gives you A.c to keep trip in and/or set antitrip
     trip: %acgt
         my $d = A.trip || die "trippingout";
-        my $t = G&pint,$d,@Me || die "tripnotripped @Me";
+        my $t = G&pint,A.trip,@Me;
+        my $emp = !$t;
+        $t ||= G&pint,A.c.trip,@Me || die "tripnotripped @Me";
+        
         G&punt,$A,c=>tripped=>@Me,1;
         local A.V = 1;
-        saygr "Want to apply @Me to ".G&sn ."\t  ".G&aC,$C;
+        #saygr "Want to apply @Me to ".G&sn ."\t  ".G&aC,$C;
         
         # from A locate next business
-        # could be another search, for A.trip to fall
+        # could be another falling everywhere A.trip
         # or A.c.trip to further this A
         my $l = ts&l;
-        acu $G, trip=>[l.t,"@Me"];
+        # may like to know progress esp if full nothing
+        #lc&sense && acu $G, trip=>[l.t,"@Me"];
+        
         for my $k (qw'At Acv') {
             my $v = l.c.>$k || next;
             A&tripped.>$k && next;
@@ -114,10 +124,7 @@ Tripin: |
         # do hook
         my $r = ts&r;
         rc&code || die "what r: ".ki$r;
-        rc&code ->($A,$C,$G,$T);
-        
-        saybl " l: ".G&aC,ts&l , " r: ".G&aC,ts&r;
-        acu $G, trip=>[$l,"@Me",{A=>$A},$C];
+        rc&code ->($A,$C,$G,$T,$l,$r);
 
     punt:
         my $v = pop @Me;
@@ -132,6 +139,11 @@ Tripin: |
         my $sk = join ' ',sort keys %{s.sc};
         "s.t s.y.cv ".($yk ? "($yk)" : " - ")
             ." $ck".($sk && " % $sk");
+Nowish: |
+    u TripDrop
+    Jc&tape = 'Dejo';
+    n Friv
+    n _.t=>_.y.cv=>_.t=>{fs=>14 * (_s&fri || 1)} for G&op;
 Friv: | # dece
     n d=>1
     n e=>2
