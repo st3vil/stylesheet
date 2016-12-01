@@ -6,6 +6,7 @@ PiMachine: | # all that is
     n ThatWillBe
     
     n Elvising
+    n Tripical
 Sequencing: | # stuff throat
     n To
     n Day
@@ -233,6 +234,30 @@ CoBabbler: | # bake code
         }sgme;
     }
     sc.num = @num if @num;
+    
+    # look for th/$ing in A.?.th.ing and A.c.?.th.ing
+    for my $s ('trip') {
+        c&s =~ s{^(\s*)$s (\S+)\s*$}{
+            my $ind = $1;
+            # 
+            my (@n) = split '/', $2;
+            my @opt = map {
+                my $st = $_;
+                my @lot;
+                join " && ", $st, map {
+                    push @lot, $_;
+                    $st.join'',map{
+                        /^\w+/ && !/\./ ? "\.$_" : "\.>$_";
+                    } @lot;
+                } undef, @n;
+                
+                } "A\.$s", "A\.c\.$s";
+            my $in = "(".join(" || ", 
+            ).")";
+            my $quot = join',',map { /^\w+/ && !/\./ ? qq{"$_"} : $_ } @n;
+            "$in && G"."&$s,".$quot
+        }sgme;
+    }
     
     c&s =~ s/^(\w+:)\s+$/$1/smeg && sayre "Blockquoter whitespace trimmed";
     

@@ -55,6 +55,7 @@ Tips: | # your ball of knowing
     # makes points to hang around
     Rw Tipz + $t;
 Tipz: |
+    u TripDrop
     if (c&Se == 1) {
         # these two make ghost updating
          5s&desi = "Ghoster";
@@ -71,12 +72,90 @@ Tipz: |
         n Trips=>[to=>''=>$c]
         
         t.cs->('sc top','Trips');
-        #n Toter
+        
+        n Friv
+        
+        n Toter
         #t.e =
         #n OscNotter=>V
         #t.cs->('sc top','OscNotter shows');
     }
     
+Tripical: |
+    n Tripin
+    # n Tripserv # TODO 
+Tripin: |
+    u i
+    # apply levels of looking-for-ness, run hook if done
+    # called by tripping an A.trip.$whereabouts...
+    trip: %acgt
+        my $d = A.trip || die "trippingout";
+        my $t = G&pint,$d,@Me || die "tripnotripped @Me";
+        G&punt,$A,c=>tripped=>@Me,1;
+        local A.V = 1;
+        saygr "Want to apply @Me to ".G&sn ."\t  ".G&aC,$C;
+        
+        # from A locate next business
+        # could be another search, for A.trip to fall
+        # or A.c.trip to further this A
+        my $l = ts&l;
+        acu $G, trip=>[l.t,"@Me"];
+        for my $k (qw'At Acv') {
+            my $v = l.c.>$k || next;
+            A&tripped.>$k && next;
+            # run on to find
+            # assume first is fally, rest are on the A
+            # should be able to pass a thread of work down
+            A&trip.>$k.>$v = $t;
+            saygr "Has to find: $k $v (l.t)";
+            return
+        }
+        
+        # do hook
+        my $r = ts&r;
+        rc&code || die "what r: ".ki$r;
+        rc&code ->($A,$C,$G,$T);
+        
+        saybl " l: ".G&aC,ts&l , " r: ".G&aC,ts&r;
+        acu $G, trip=>[$l,"@Me",{A=>$A},$C];
+
+    punt:
+        my $v = pop @Me;
+        my $la = pop @Me;
+        $s = $s.>$_ ||= {} for @Me;
+        $s.>$la = $v;
+    
+    # describe a C's surface
+    aC:
+        my $yk = join ' ',sort grep{$_ ne 'cv'} keys %{s.y};
+        my $ck = join ' ',sort keys %{s.c};
+        my $sk = join ' ',sort keys %{s.sc};
+        "s.t s.y.cv ".($yk ? "($yk)" : " - ")
+            ." $ck".($sk && " % $sk");
+Friv: | # dece
+    n d=>1
+    n e=>2
+    n c=>3
+    n e=>4
+TripDrop: |
+    u s
+    # tripper supplies trips for name
+    W 31: %of:mo
+        my $t = 4s&tripper || return;
+        if (A.trip) {
+            saygr "Trips undoing: ".ki A.trip;
+            delete A.trip;
+        }
+        my $al = ts&top.y.tw;
+        my $i = $al.>C.t || return;
+        my $n = is&J.sc.top;
+        $n = n.y.tw;
+        # from W locate A
+        for my $p ('At') {
+            my $d = $n.>$p || next;
+            A.trip.>$p.>dc&s = $d;
+        }
+        1 && saygr "Sorted: ".G&sn ,wdump 4, A.trip;
 Trips: | # to be distributed to W
     # host instructures
     # elvis garden of stuff for others
@@ -108,6 +187,7 @@ Trips: | # to be distributed to W
     each Wz $WT {
         n $W=>-trip=>$z
     }
+    4s&tripper = $J;
 pi/trip: | # bag of tricks to pass to a W
     n t=>1=>C.t."\n"
     # should be slept via 
@@ -117,8 +197,11 @@ pi/trip: | # bag of tricks to pass to a W
     my $i = 1;
     for my $t (@$s) {
         my ($l,$r) = (tc&l, tc&r);
+        
         r.y.t = $t;
         l.y.t = $t;
+        lc&Acv /= 10 while lc&Acv && lc&Acv >= 1;
+        # and attaches by first distinction
         if (lc&At) {
             m.At.>lc&At = $r;
         }
@@ -133,7 +216,7 @@ pi/trip: | # bag of tricks to pass to a W
     }
     
     each tsr $m {
-        n $t=>2=>{s=>$s},{r=>$r};
+        n $t=>2=>{s=>$s},{l=>r.y.t.c.l,r=>$r};
     }}
 Open: | # have openness
     # have T next to things... alt click to alter, shift click to accept
@@ -280,9 +363,10 @@ Toter: | # to receive ongoing truths from trees
     y.imp = 1;
     Jc&tape = 'Oue';
     Js&ein.bo = 'Doable';
-    sayyl "Here";
-    n Besider=>V
-    n el=>-pud=>{s=>$C}
+    
+    #n Besider=>V
+    my $w = G.trip || $C;
+    n el=>-pud=>{s=>$w,dl=>3}
 OscNotter: | # vanish C mid osc
     u alS
     # sc.not vanishes in osc
