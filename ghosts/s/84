@@ -282,7 +282,7 @@ Four: | # savepoint/fork and wait
     }
 Ghroup: | # convolute muds - make hierarchy
     local A.V = 2;
-    
+    A&M = $M;
     Rw Normat;
     Rw Joimat;
     Rw Gaint;
@@ -349,7 +349,6 @@ Normat: | # normalise into a mind section
     push @$M, @ad;
     
 Joimat: | # hierarch by jointed-ness
-    
     my $su = A&suM ||= {};
     my $en = &{ grep { !$su.>$_ } @$M };
 
@@ -373,6 +372,11 @@ Joimat: | # hierarch by jointed-ness
         ($c) = values %$c;
         if (_.t eq c.t) { # jointed to self (4)
             _s&istoppy = 1;
+            next;
+        }
+        my $J = _c&J;
+        if ($sym eq 'e' && Js&loose) {
+            # elvis with one umbilocal
             next;
         }
         if (_c&plane = $sym) {
@@ -441,26 +445,66 @@ Joimat: | # hierarch by jointed-ness
     # make instructures a la JJ
     
 Gaint: | # paint the view that aint
-    my $su = A&suM; # superstructure
     if (my $pi = Js&view) {
         # lastliness
+        my $h;
+        G&M,$_ for &acgt{
+            #saybl "c&inds C.t c&ind";
+            undef $h  if $h && c&ind <= hc&ind;
+            $h = $C if C.t eq 'ElMatron';
+            if ($h) {
+                s&take.fs = 6 - (c&ind - hc&ind);
+                say "Shrink C.t c&ind <= hc&ind (aft h.t)";
+            }
+            $C
+        };
         
-        @$M = map {
-            if ($su.>$_ ) {
-                $_
+        G&M,$_ for &acgt{
+            # these little throws of truth
+            # sc plays, lies pile in
+            if (s&istoppy) {
+                s&strung.istoppy = 'istoppy';
+                s&strung.chaos = 'istoppy' if s&chaos;
+                s&strung.jointed = 'istoppy' if s&jointed eq C.t;
             }
-            else {
-                if (_s&istoppy) {
-                    _s&strung.istoppy = '';
-                    _s&strung.chaos = '' if _s&chaos;
-                }
-                my $pi = $pi;
-                #$pi = "pud" if _.t eq 'ElvisWayliases';
-                G&Ct,[_.t=>''=>{pi=>$pi,s=>$_}];
+            my $sc = {};
+            if (my $ta = s&take) {
+                s&strung.take = 'took';
+                %$sc = %$ta;
+                #G&ho,$sc,$ta;
             }
-        } @$M;
+            # makes a holder
+            my $pi = $pi;
+            #$pi = "pud" if _.t eq 'ElMatron';
+            G&Ct,[C.t=>''=>{pi=>$pi,s=>$C},$sc];
+        };
     }
     
+More: | # list helpers
+    u i
+    # map reals with an acgt
+    M:
+        my $M = A&M || die "No M";
+        my $su = A&suM; # superstructure
+        my $go = {}; # leaving
+        @$M = grep {!$go.>$_ } map {
+            my $C = $_;
+            if ($su.>$C ) {
+                $C
+            }
+            else {
+                my $new = $s->($A,$C,$G,$T);
+                # as &h, have T checki
+                # counts its keys around the call
+                # that passes waved to throat
+                # as W=Usual knows T.C, .Z/not/etc is throaty
+                if (!$new || delete T.not) {
+                    $new = $go.>$_ = $_ for {};
+                }
+                $new
+            }
+        } @$M;
+        
 Ghoster: | # Rw being for the 5
     # 1 = 5
     # to nowify this bunch of G
