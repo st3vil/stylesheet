@@ -21,8 +21,8 @@ Art: | # collection of
     #n Zpace
     # ^ only compilable on Os
     
-    #n Rhythms
-    # todo know
+    #n Texture
+    # know/make patterns for believer's beliefs
 Knowing: | # T overalls
     # yaya
     # Matuio for art mixation, for joining, suggesting pinables
@@ -172,6 +172,9 @@ Zpace: | # hang La space charts off mo
         my $Jy = 1Cy&C;
         my $y = C.y;
         my $M = c&M;
+        my $had = $M;
+        $M ||= [];
+        A&M = $M; # for the ModNs
         
         if (my $r = y.rev) {
             for my $r (split ' ', $r) {
@@ -191,8 +194,8 @@ Zpace: | # hang La space charts off mo
         # what else to do with the L C?
         # may be the one to get multiplied out
         # always gets M
-        if ($M) {
-            # has M
+        if ($had) {
+            # C had M
             # L C can be forgotten, probably mo'd with root in J6
             # it could be placement metadata/unity
             my @M;
@@ -211,20 +214,23 @@ Zpace: | # hang La space charts off mo
         else {
             # is first in its own M
             # to make holes in space other M must flow around
-            c&M = $M = [$C];
-            y.thi > 1 &&
-                   push @$M, map { G&hup,$C } 1 .. y.thi - 1;
+            @$M = ($C);
+            c&M = $M;
+            push @$M, map { G&hup,$C } 1 .. y.thi - 1
+                if y.thi > 1;
         }
         
         
         # limits apply, thi being for ^ iterator length 
-        #                          and v limit of output
+        #                         and v limit of output
         my $lims = {};
         for (qw'thi') {
             $lims.>$_ = $y.>$_ if defined $y.>$_;
         }
-        lims.limn = int(9 * y.limn * Jy.spc)
-            if y.limn && (Jy.spc || die "No space! J.t");
+        if (y.limn) {
+            Jy.spc || die "No space! J.t";
+            lims.limn = int(9 * y.limn * Jy.spc);
+        }
         my $lim;
         while (my ($k,$v) = each %$lims) {
             @$M > $v || next;
@@ -246,7 +252,6 @@ Zpace: | # hang La space charts off mo
             @$M = @{$M}[$from .. $it];
         }
         
-        A.V = 0;
         y.thi = @$M;
         y.thi || die "No M: ".ki $C;
         y.thi = y.cyc if y.cyc;

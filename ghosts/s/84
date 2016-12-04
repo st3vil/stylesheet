@@ -282,8 +282,7 @@ Four: | # savepoint/fork and wait
     }
 Ghroup: | # convolute muds - make hierarchy
     local A.V = 2;
-    A&M = $M;
-    A&suM = {};
+    $M eq A&M || die "AM not M";
     Rw Normat;
     Rw Joimat;
     Rw Gaint;
@@ -296,7 +295,7 @@ Normat: | # normalise into a mind section
         if (!s&way) {
             c&emb->{'!way'} = 'way';
         }
-        elsif (s&way.>C.t) {
+        elsif (s&way.>C.t) { # named is only way
             s&strung.pins = '' if 1 == keys %{s&way};
             # wants to re-A Matu constringing of way ^
             # and know it's able to do that safely
@@ -340,6 +339,9 @@ Normat: | # normalise into a mind section
     my $no;
     each tN $gr {
         push @ad, map{$su.>$_ = $_} G&Ct,[$t=>'-label'=>{}];
+        if ($t eq 'u') {
+            _s&shrink.>$t = '' for @$N
+        }
         push @ad, map{$no.>$_ = $_} @$N;
     }
     # dedupe & append
@@ -451,9 +453,7 @@ Gaint: | # paint the view that aint
         G&M,$_ for &acgt{
             #saybl "c&inds C.t c&ind";
             undef $h  if $h && c&ind <= hc&ind;
-            if (my $J = c&J) {
-                $h = $C if Js&loose;
-            }
+            $h = $C if s&shrink;
             s&take.fs = 6 - (c&ind - hc&ind) if $h;
             $C
         };
@@ -807,6 +807,8 @@ Matu: | # T room on Os
                 }
                 s&typed = $un if $un;
             }
+            
+            s&shrink.loose = Js&loose if Js&loose;
             #c constring even upper-er language
             if (my $w = s&way) {
                 # pin: dige: count
