@@ -196,7 +196,7 @@ LineOut: | # K hoisting
             G&oleak,$_,5 && die "Leaks: @$in: ".ki $_;
             _s&z = $z;
         }
-Dejo: | # cyclical spreebuilding, bunch of oscillators to keep draining
+Dejo: | # cyclical spreebuilding, given oscillators to drain somewhere
     u Zpace
     u TapePlay
     # Tower uplink, wants to secure names
@@ -205,23 +205,25 @@ Dejo: | # cyclical spreebuilding, bunch of oscillators to keep draining
     y.rev = 8;
     Js&loose = 1;
     # sends lv hoisted z out via:
-    Js&zeat = ar.zeat || 'Junup';
+    Js&zeat = 'Junup';
     Js&ze = 'Monitor Wout';
     # keeps unique s
-    Js&ein.t.s.sMJ = &sMJj{
+    Js&ein.t.s.sMJ = &sMJje{
         Js&tri.>$s ++ && return;
-        m j.t=>''=>{}=>{oJ=>$j,s=>$s}
+        my $sc;
+        sc.oJ = $j;
+        sc.s = $s;
+        sc.curve = es&curve if es&curve;
+        m j.t=>''=>{}=>$sc
     };
     S
     @$M = grep {
         # add o (orderliness) for TapePlay
-        # which makes A&J/s&Jo just for the lv hoisting in K 2
         _s&o = _s&s && _s&s.c.o
             || die "nots: ".ki$_;
+        # which makes A&J/s&Jo just for the lv hoisting in K 2
     } @{Js&M||=[]};
-Oue: |
-    Rw Dejo + $zeat=Junug
-    
+
 TapePlay: | # osc follow s&jJ's s&s, using K 2 Jo
     u alacgts
     # retrieve list stored as string in 1s&$s
@@ -240,13 +242,18 @@ TapePlay: | # osc follow s&jJ's s&s, using K 2 Jo
         a&J = ls&oJ || die "NotJ";
         a&ys = ls&s || die "No o";
         delete s&oJ;
-    # sends chunks of tape (not including us?) to Js&ze
+    # sends chunks of tape
+    # (not including us?)
+    # to Js&ze
     o 3: %of:K
         my $z = s&z || return;
         C.t = "Our C.t";
         delete s&o;
-        G&elph,$_=>[z=>$z] for smel&ze;
-        #delete s&z;
+        my $l = a&l || die "Noel";
+        my $sc = {};
+        sc.curve = ls&curve if ls&curve;
+        ref $z eq 'ARRAY' || die "ztape not: ".ki$z;
+        G&elph,$_=>[z=>'',$z,$sc] for smel&ze;
 Monitor: | # batches for ocean views
     u Zpace
     y.rev = 100;
@@ -263,8 +270,9 @@ Monitor: | # batches for ocean views
     push @$M, @{Js&M||=[]};
     
 Wout: | # sends up
-    my $z = e&t eq 'z' && e&s || return sayre "Not";
-    my $nethole = 2s&zeat || "losos";
+    my $e = e&C;
+    my $z = e.t eq 'z' && ec&s || return sayre "Not";
+    my $nethole = es&curve || 2s&zeat || "losos";
     # via g/c stylehouse
     my $c = {eat=>$z};
     c.froe = sub {
