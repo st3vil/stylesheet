@@ -283,44 +283,42 @@ Four: | # savepoint/fork and wait
 Ghroup: | # convolute muds - make hierarchy
     local A.V = 2;
     A&M = $M;
+    A&suM = {};
     Rw Normat;
     Rw Joimat;
     Rw Gaint;
 Normat: | # normalise into a mind section
-    for (@$M) {
+    G&M,$_ for &acgt{
         # by G&ind, keep c&ind
-        delete _c&inds;
-        delete _c&inside;
+        delete c&inds;
+        delete c&inside;
         
-        if (!_s&way) {
-            _c&emb->{'!way'} = 'way';
+        if (!s&way) {
+            c&emb->{'!way'} = 'way';
         }
-        elsif (_s&way.>_.t) {
-            _s&strung.pins = '' if 1 == keys %{_s&way};
+        elsif (s&way.>C.t) {
+            s&strung.pins = '' if 1 == keys %{s&way};
             # wants to re-A Matu constringing of way ^
             # and know it's able to do that safely
         }
         else {
-            _c&emb->{'!pin'} = 'pins';
+            c&emb->{'!pin'} = 'pins';
         }
         
-        if (my $J = _c&J) {
+        if (my $J = c&J) {
             if (my $s = Js&s) {
-                unless (sc&o) {
-                    _c&emb->{'!noso'} = '';
-                }
-                if (sc&imparted) {
-                    _c&emb.i = 's.c.imparted';
-                }
+                c&emb.noso = '' if !sc&o;
+                c&emb.i = 's.c.imparted' if sc&imparted;
             }
             else {
-                _c&emb->{'!nos'} = '';
+                c&emb.nos = ''
             }
         }
         else {
-            _c&emb->{'!noJ'} = '';
+            c&emb.noJ = ''
         }
-    }
+        $C
+    };
     
     my $gr = {};
     # notice groupables
@@ -349,44 +347,46 @@ Normat: | # normalise into a mind section
     push @$M, @ad;
     
 Joimat: | # hierarch by jointed-ness
-    my $su = A&suM ||= {};
-    my $en = &{ grep { !$su.>$_ } @$M };
 
     my $tw = {};
-    $tw.>_.t = $_ for $en->();
-    
+    G&M,$_ for &acgt{
+        $tw.>_.t = $_
+    };
     my $in = {}; # under.t -> over join (t, c.J/oJ)
-    # for simplest, joins by one other
+    # groups unto single other
     # could also do deepest elvision, first join...
-    for ($en->()) {
-        my ($sym,$jo) = ('n',_c&jointed);
-        ($sym,$jo) = ('e',_c&elvised) if !$jo;
-        $jo || next;
-        my $c = $jo->{""};
-        if (!$c && keys %$jo == 1 && jo.mind && $sym eq 'n') {
-            $sym = 'u';
-            $c = jo.mind;
-        }
-        $c || next;
-        keys %$c == 1 || next; # to one other
+    G&M,$_ for &acgt{
+        my ($sym,$jo) = ('n',c&jointed);
+        ($sym,$jo) = ('e',c&elvised) if !$jo;
+        $jo || return $C;
+        my $c = $jo->{""}
+            || keys %$jo == 1 && jo.mind && $sym eq 'n' && do {
+                $sym = 'u';
+                jo.mind;
+            };
+        
+        $c && keys %$c == 1 || return $C; # to one other
         ($c) = values %$c;
-        if (_.t eq c.t) { # jointed to self (4)
-            _s&istoppy = 1;
-            next;
+        if (C.t eq c.t) { # jointed to self (4)
+            s&istoppy = 1;
+            return $C
         }
-        my $J = _c&J;
-        if ($sym eq 'e' && Js&loose) {
+        my $J = c&J;
+        if (Js&loose) {
             # elvis with one umbilocal
-            next;
+            return $C
         }
-        if (_c&plane = $sym) {
+        if (c&plane = $sym) {
             my $src = 'jointed' if $sym eq 'n';
             $src = 'elvised' if $sym eq 'e';
             $src = 'u' if $sym eq 'u';
-            _s&strung.>$src = '';
+            s&strung.>$src = '';
         }
-        $in.>_.t = $c;
-    }
+        
+        $in.>C.t = $c;
+        
+        $C
+    };
     my $dt = {};
     # prepare by depth + detect loops
     each tc $in {
@@ -451,11 +451,10 @@ Gaint: | # paint the view that aint
         G&M,$_ for &acgt{
             #saybl "c&inds C.t c&ind";
             undef $h  if $h && c&ind <= hc&ind;
-            $h = $C if C.t eq 'ElMatron';
-            if ($h) {
-                s&take.fs = 6 - (c&ind - hc&ind);
-                say "Shrink C.t c&ind <= hc&ind (aft h.t)";
+            if (my $J = c&J) {
+                $h = $C if Js&loose;
             }
+            s&take.fs = 6 - (c&ind - hc&ind) if $h;
             $C
         };
         
