@@ -285,6 +285,7 @@ Ghroup: | # convolute muds - make hierarchy
     
     Rw Normat;
     Rw Joimat;
+    Rw Gaint;
 Normat: | # normalise into a mind section
     for (@$M) {
         # by G&ind, keep c&ind
@@ -380,7 +381,6 @@ Joimat: | # hierarch by jointed-ness
             $src = 'u' if $sym eq 'u';
             _s&strung.>$src = '';
         }
-        saybl "Jointey: _.t: ".ki $c if _.t =~ /Mez|Zpace/;
         $in.>_.t = $c;
     }
     my $dt = {};
@@ -432,23 +432,35 @@ Joimat: | # hierarch by jointed-ness
         } @$M;
         
     }
+    delete $tw.>_.t for @$M;
+    die "Lost Maturble: ".ki[sort keys %$tw] if keys %$tw;
     #exit;
     # TODO
     # put those jointed/elvised to only one under them as z-ish
     # care for circular jointedness, which should happen at Os...
     # make instructures a la JJ
     
+Gaint: | # paint the view that aint
+    my $su = A&suM; # superstructure
     if (my $pi = Js&view) {
+        # lastliness
+        
         @$M = map {
-            my $pi = $pi;
-            #$pi = "pud" if _.t eq 'ElvisWayliases';
-            $su.>$_ ? $_ :
+            if ($su.>$_ ) {
+                $_
+            }
+            else {
+                if (_s&istoppy) {
+                    _s&strung.istoppy = '';
+                    _s&strung.chaos = '' if _s&chaos;
+                }
+                my $pi = $pi;
+                #$pi = "pud" if _.t eq 'ElvisWayliases';
                 G&Ct,[_.t=>''=>{pi=>$pi,s=>$_}];
+            }
         } @$M;
     }
     
-    delete $tw.>_.t for @$M;
-    die "Lost Maturble: ".ki[sort keys %$tw] if keys %$tw;
 Ghoster: | # Rw being for the 5
     # 1 = 5
     # to nowify this bunch of G
