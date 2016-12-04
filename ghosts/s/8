@@ -235,7 +235,7 @@ ElBridge: | # hoisting, desire
             push @$inf, shift;
             sayyl "Inf A.1.t: ".$inf->[-1]
         };
-        if ($s eq 'Tin') {
+        if ($s eq 'Tin') { # T ... markers
             my $td = {};
             for my $x (map{_.c.s}@Me) {
                 G&chew,$x,'pin,label,line',$_ for &itsl{
@@ -246,8 +246,9 @@ ElBridge: | # hoisting, desire
         }
         elsif ($s eq 'way') {
             my $td = {};
-            for (map{_.c.s}@Me) {
-                each tdq $_ {
+            for (@Me) {
+                next if _s&W;
+                each tdq _c&s {
                     $td.>$t.>$d += $q;
                 }}
             };
@@ -335,7 +336,11 @@ ElBridge: | # hoisting, desire
             my @M;
             G&chew,$yt,\'cv,t',$_ for sub {
                 my ($v,$cv,$t) = @_;
-                push @M, {t=>$t,y=>{cv=>$cv},c=>{s=>$v}};
+                my $z = G&Ct,[$t,$cv,{s=>$v},{}];
+                if (my $D = top.y.tv.>$t.>$cv) {
+                    zs&W = Ds&W if Ds&W;
+                }
+                push @M, $z;
             };
             if (!@M) {
                 delete $xo.>$k;
