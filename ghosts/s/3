@@ -862,23 +862,36 @@ Circle: | # < copy things
         my $l = c&j.y.in;
         my $Dl = {};
         my @Do;
-        my $el;$el = sub {
-            my ($l,$ind,$way) = @_;
-            my $r = l.y.r || die "l no yr: ".ki$l;
-            my $o = r.c.o || die "r no co: ".ki$r;
-            my $D = o.y.D || die "o no yD: ".ki$o;
-            my $j = o.y.j || die "o no yj: ".ki$o;
-            if (my $pre = $Dl.>$D) {
-                die "Has already a D.t D.y.cv: from ".ki$pre;
+        my @A = ([0,$l]);
+        while (@A) {
+            my ($cv,$l,$ind,$way) = @{ $A[-1] };
+            
+            if ($cv <3) {
+                my $r = l.y.r || die "l no yr: ".ki$l;
+                my $o = r.c.o || die "r no co: ".ki$r;
+                my $D = o.y.D || die "o no yD: ".ki$o;
+                my $j = o.y.j || die "o no yj: ".ki$o;
+                if (my $pre = $Dl.>$D) {
+                    die "Has already a D.t D.y.cv: from ".ki$pre;
+                }
+                $Dl.>$D.>j.c.Co.t = $l;
+                push @Do, $o;
+                
+                $cv = 3;
+                @{ $A[-1] } = ($cv,$l,$ind,$way);
+                
+                if (l.y.in) {
+                    push @A, [0, l.y.in, $ind."    ", "yin  "];
+                    next;
+                }
             }
-            $Dl.>$D.>j.c.Co.t = $l;
-            push @Do, $o;
-
-            l.y.in && $el->(l.y.in, $ind."    ", "yin  ");
-            l.y.next && $el->(l.y.next, "$ind", "ynext");
-        };
-        $el->($l);
-
+            
+            pop @A;
+            
+            l.y.next &&
+                push @A, [0, l.y.next, "$ind", "ynext"];
+        }
+        
         # indexes like ii repoint to l on this side
         for my $fi (keys %{c&finds||{}}) {
             my $wh = c&finds.>$fi;
