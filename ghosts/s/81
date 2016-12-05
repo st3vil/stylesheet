@@ -81,6 +81,12 @@ pi/pud: |
     
     c&block = 'same' if $s eq 2Cc&s;
     c&block = 'b' if C.t eq 'ip' && A.2.C.t eq 'c';
+    my $idA = &s{
+        my $v = sc&s;
+        "s.t"
+            .(s.cv > 0 && " s.cv")
+            .(ref $v eq 'HASH' && v.t && v.t ne s.t && " (v.t)")
+    };
     
     # classify bits of the slide
     if (!c&block && ref $s eq 'HASH') {
@@ -96,8 +102,7 @@ pi/pud: |
             c&block = 'yA' if A.2.C.t eq 'y';
             c&block = 'AA' if A.2.C.sc.type eq 'A';
             if (c&block) {
-                c&blos = "s.t s.cv";
-                c&blos .= " (s.c.s.t)" if ref s.c.s eq 'HASH';
+                c&blos = $idA->($s);
             }
         }
     }
@@ -145,7 +150,8 @@ pi/pud: |
     else {
         if (ref $s ne 'HASH' || c&depth > c&dl) {
             T nonhash
-            my $z = ki $s;
+            my $z = s&type eq 'A' ? $idA->($s)
+                : ki $s;
             my $bg;
             if (!ref $s) {
                 $z =~ s/^!%://;
