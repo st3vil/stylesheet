@@ -47,27 +47,39 @@ pi/pud: |
     $s = Rw Typerack;
     
     # how many M inners before 'more' (depth first)
-    A.3.C.c.intlim ||= 15;
+    3Cc&intlim ||= 15;
     # max depth before like nothash
-    c&dl ||= A.2.C.c.dl;
+    c&dl ||= 2Cc&dl;
     c&dl = 2 if !defined c&dl;
     
     # travel boosts/cons depth
     # c&dl += 2 if c&depth < 5 && C.t eq 'sc';
-    c&dl += 2 if c&depth < 6 && C.t eq 's' && A.2.2.C.sc.istycsc;
-    c&dl -= 3 if C.t eq 'y' && A.2.C.sc.istycsc;
-    c&dl += 2 if C.t eq 'in' && A.2.C.t eq 'y' && A.2.2.C.sc.istycsc;
+    c&dl += 2 if c&depth < 6 && C.t eq 's' && 22Cs&istycsc;
+    c&dl -= 3 if C.t eq 'y' && 2Cs&istycsc;
+    c&dl += 2 if C.t eq 'in' && A.2.C.t eq 'y' && 22Cs&istycsc;
     
     T glow
     
     y.in = 0.21;
     my $ind = join'', ('  ') x (c&depth - 1);
     
-    n ind=>0.07=>"\n$ind"
-    n sli=>0.08=>"<  ",'%hs:784,dos:crankdown'
+    n ind=>o7=>"\n$ind"
+    n sli=>o8=>"<  ",'%hs:784,dos:crankdown'
     n title=>1=>"C.t",'%dos:crankup'
     
-    c&block = 'same' if $s eq A.2.C.c.s;
+    my ($return,$sy);
+    if (G&isC,$s) {
+        # try
+        if (!keys %{s.y} && !keys %{s.sc}
+            && keys %{s.c} == 1 && exists s.c.s) {
+            n short=>12=>" t: s.t","%hs:457"
+            m "c\.s"=>-pud=>{s=>sc&s,ima=>[qw'c s']}
+            $return = 2;
+        }
+        $sy = 'C';
+    }
+    
+    c&block = 'same' if $s eq 2Cc&s;
     c&block = 'b' if C.t eq 'ip' && A.2.C.t eq 'c';
     
     # classify bits of the slide
@@ -80,7 +92,7 @@ pi/pud: |
             }
         }
         if (s.y eq $s) {
-            C.sc.type = 'A';
+            s&type = 'A';
             c&block = 'yA' if A.2.C.t eq 'y';
             c&block = 'AA' if A.2.C.sc.type eq 'A';
             if (c&block) {
@@ -98,20 +110,21 @@ pi/pud: |
     }
     
     #c classify
-    if (C&type eq 'A') {
-        my ($sy,$si);
+    if (s&type eq 'A') {
+        $sy = 'A';
         if (s.sc && s.sc.n) {
             $sy = "J";
-            $si = 3;
         }
         # T # seen to/from ghost, they osc pool up to direct change in
         # chasing up all the J that hit it
         # osc pool meaning a vortex of self, changes moving upward, 
         # just copying changed hashes - replace {} from changed up to root
         # and copy it in at the other J
-        $sy &&
-        n sy=>11=>$sy=>"%hs:3574,ab:1,fs:".int(300 / c&depth)
     }
+    if ($sy) {
+        n sy=>o75=>$sy=>"%hs:7574,ab:1,poi:0,lh:40%,fs:".int(100 / c&depth)
+    }
+    return if $return;
     
     my ($ks,$vs);
     if (ref $s eq 'ARRAY') {
@@ -119,7 +132,7 @@ pi/pud: |
         C.sc.type = 'array';
         $vs = [@$s];
         $ks = [0..(@$s-1)];
-        if (A.2.2.C.sc.istycsc) {
+        if (22Cs&istycsc) {
             if (A.2.C.t eq 'c') {
                 c&dl = 1 if C.t eq 'N';
             }
