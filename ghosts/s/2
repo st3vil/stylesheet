@@ -45,6 +45,12 @@ Sea: | # folds of the day
         }
         else {
             my ($y,$c,$sc,@ex) = @e;
+            if (ref $y eq 'SCALAR' && @e == 1) {
+                $c = G&peel,$$y;
+                $y = {};
+                y.cv = delete c.cv if c.cv;
+            }
+            
             if (ref $c eq 'HASH') { # the c itself
                 C.c = $c;
             }
@@ -54,10 +60,12 @@ Sea: | # folds of the day
             elsif (@e > 1) { # string or ref to ref
                 C.c.s = $c;
             }
+            
             $sc = G&peel,$$sc if $sc eq 'SCALAR';
             $sc = {} if $sc eq '';
             $sc = G&peel,$sc if !ref $sc;
             C.sc = $sc if $sc;
+            
             if (ref $y eq 'ARRAY') {
                 if (@$y == 1) {
                     ($y) = @$y;
