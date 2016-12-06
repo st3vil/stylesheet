@@ -61,6 +61,8 @@ TripScaler: |
     #n Besides=>-test
     # observe changes
     #n ElvisObs=>-test
+Sh: | # high dial
+    n ShouldI=>-test
 ShouldI: | # hold lines for abseilers
     my $t = Rw Towering Ang _ Zpace
         || return;
@@ -329,6 +331,7 @@ Tripical: |
     # n Tripserv # TODO
     n TripDrop
     n More
+    n Jold
 Tripin: | # trip applicators
     u i
     # apply levels of looking-for-ness, run hook if done
@@ -415,6 +418,23 @@ TripDrop: | # bind Trips at moment of W
         for my $p ('At') {
             each cv,d $n.>$p {
                 A.trip.>$p.>dc&s = $d;
+            }
+        }
+Jold: | # for J universal handling
+    u i
+    dedu:
+        my $x = J.sc.>$s ||= {};
+        G&pint,$x,@Me && return T.pos = 0;
+        G&punt,$x,@Me,1;
+        1
+    # andor sanity/scheme checks
+    musb:
+        for (@Me) {
+            if ($s eq 'W') {
+                _.3 eq $_ || die "Wants W not: ".ki$_
+            }
+            else {
+                die "how else? $s"
             }
         }
 Trips: | # to be distributed to W
