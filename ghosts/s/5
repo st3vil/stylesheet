@@ -672,14 +672,17 @@ Komp: | # K/D line protoClattice, post prod
         }
         # mute refs
         # tells you things that are not there, see o 7 apply
-        my $oksc = {z=>1,ip=>1};
+        my $ok;
+        ok.sc.>$_ = 1 for qw'z ip';
+        G&oh,$ok,3s&oks if 3s&oks;
         for my $nk ('c','sc') {
             my $gh = $C.>$nk;
             my $mute;
             for my $gk (keys %$gh) {
                 my $ref = ref $gh.>$gk || next;
                 # eg nogindex 
-                next if $nk eq 'sc' && ($oksc.>$gk || $gk =~ /ex$/);
+                next if $ok.>$nk && $ok.>$nk.>$gk
+                    || $nk eq 'sc' && $gk =~ /ex$/;
                 next if $ref eq 'CODE';
                 # and if in some known universal
                 # We stirred index piling into here

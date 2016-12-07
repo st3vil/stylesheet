@@ -14,7 +14,7 @@ TripScaler: |
     
     Adds intros into its output.
     
-    Can get a fork a rip itself up, playing from the top/whereever whenever.
+    Can get a fork a rip itself up, playing from the top/whereever.
     
     =head1 post parts
     
@@ -48,40 +48,24 @@ TripScaler: |
     
     =cut
     
-    # TepulEase eventuat
-    n ShouldI=>-test
-    
+    if(1){
+    ## TepulEase eventuat
+    n ElvisEndo=>-test
+    }
     # working out
     #n TapesThatGo=>-test
     # T self
     #n MindHole=>-test
-    # senso complicator
-    #n Tips=>-test
+    else{
+    # T senso complicator
+    n Tips=>-test
+    }
     # ghost bays
     #n Besides=>-test
     # observe changes
     #n ElvisObs=>-test
 Sh: | # high dial
-    n ShouldI=>-test
-ShouldI: | # hold lines for abseilers
-    my $t = Rw Towering Ang _ Zpace
-        || return;
-    
-    if (c&Se == 1) {
-        n SureDie
-    }
-    
-SureDie: | # be impulse monitor for agents at the future
-    Jc&tape = 'Dejo:curve:Junov';
-    n Waytch
-    
-    is 1:
-        here
-    is 2:
-        here
-    is 3:
-        there
-    
+    n ElvisEndo=>-test
 TapesThatGo: |
     my $t = Rw Towering Ang _ Zpace
         || return;
@@ -275,34 +259,22 @@ Tips: | # test your ball of knowing
     # makes points to hang around
     Rw Tipz + $t;
 Tipz: | # test trip applicator
-    u TripDrop
     if (c&Se == 1) {
         # these two make ghost updating
          5s&desi = "Ghoster";
         n Waytch
         
-        my $Te = &lry{
-            ($y,$r) = ($r,undef) if ref $r eq 'CODE';
-            $r ||= [acgt=>''];
-            my $c = {l=>G&Ct,$l , r=>G&Ct,$r };
-            c.r.c.code = $y if $y;
-            $c
-        };
-        
-        t.e = 
-        n Trips=>[to=>$_] for $Te->(
-            [Catchelism=>''=>\'W:Friv,At:s,Acv:4'] => &acgtlr{
+        G&Ti,Trips=>[Catchelism=>''=>\'W:Friv,At:s,Acv:4'],$_
+            for  &acgtlr{
                 acu $G, trip=>[$l,"@Me",{A=>$A},$C];
-            }
-        );
+            };
         
         t.e = 
-        n Trips=>[to=>$_] for $Te->(
-            [InjectO=>''=>\'W:Friv,At:O,Acv:5,Ct:e'] => &acgtlr{
+        G&Ti,Trips=>[InjectO=>''=>\'W:Friv,At:O,Acv:5,Ct:e'],$_
+            for &acgtlr{
                 acu $G, trip=>[$l,"@Me",{A=>$A},$C];
                 C.sc.fri = 3 if C.t eq 'e';
-            }
-        );
+            };
         
         t.cs->('sc lv,olv','Trips');
         
@@ -314,7 +286,6 @@ Tipz: | # test trip applicator
         #n OscNotter=>V
         n Toter
     }
-    
 Nowish: |
     u TripDrop
     Jc&tape = 'Dejo';
@@ -332,8 +303,16 @@ Tripical: |
     n TripDrop
     n More
     n Jold
-Tripin: | # trip applicators
+Tripin: | # trip applicator
     u i
+    # elvis $s with to-l,r for travel grab/do giving to 4s&trip
+    # r may be acgtlr
+    Ti: %acgt:s l r
+        (my$y,$r) = ($r,undef) if ref $r eq 'CODE';
+        $r ||= [acgt=>''];
+        my $c = {l=>G&Ct,$l , r=>G&Ct,$r };
+        c.r.c.code = $y if $y;
+        n $s=>[to=>$c]
     # apply levels of looking-for-ness, run hook if done
     # called by tripping an A.trip.$whereabouts...
     # which gives you A.c to keep trip in and/or set antitrip
@@ -373,7 +352,7 @@ Tripin: | # trip applicators
         # do hook
         my $r = ts&r;
         rc&code || die "what r: ".ki$r;
-        rc&code ->($A,$C,$G,$T,$l,$r);
+        rc&code ->($A,$C,$G,$T,$l,$r,@Me);
 TruPic: | # descript
     u i
     # describe a C's surface
@@ -412,6 +391,7 @@ TripDrop: | # bind Trips at moment of W
         }
         my $al = ts&top.y.tw;
         my $i = $al.>C.t || return;
+        #1 && sayyl "Have trips for C.t";
         my $n = is&J.sc.top;
         $n = n.y.tv;
         # from W locate A by t
@@ -447,13 +427,11 @@ Trips: | # to be distributed to W
     Js&ein.t.to.sMJ = &sMJjeT{
         # e&l keeps returning from the first elvis?
         #my ($l,$r) = (e&l , e&r);
-        #acu $G, trip=>[$e,l.t,e.c.l.t,$s];
-        my ($l,$r) = (e.c.l,e.c.r);
+        my ($l,$r) = (ec&l,ec&r);
         $l && $r || return G&vent,"Nottravel(l/r)";
         $s = l.t;
         
-        Js&tri.>$s ++ && sayre("Ledup $s en ".G&es )
-            && return T.pos = 0;
+        G&dedu,tri=>$s || return;
             
         my $forW = l.c.W || die "l not cW";
         m $forW=>''=>{l=>$l,r=>$r}
