@@ -685,6 +685,7 @@ conot: | # expand sc.t->ip, compiled throat clause
     }
     ip.order = \@o if @o > 1;
 Zop: | # a G
+    J.space = 1;
     Rw Bagin
     || do {
     
@@ -864,14 +865,19 @@ MemCpu: | # print memory and cpu time (non-waiting)
 Zuup: | # Zupe slowly
     G.slowly = 4;
     n Zupe
-pi/test: |
+pi/test: | # wants to run slowly by osc above
+    no warnings 'recursion';
     G.wakey.>C.t = 'restar';
     my $c;
     c.pin = 'ATest';
     c.tell = J.mo.J;
     c.man = c&man if c&man;
     c.estC = $C;
-    n C.t =>W=> $c
+    c.tell.space ? ++G.outrun && Rw timer $d=0.00001 $cb:_
+        : $_->() for sub {
+        #Carp::confess( "It");
+        n C.t =>W=> $c
+    };
 ATest: |
     my $m = [ C.t ];
     my $out = Rw Tesh + $m;
