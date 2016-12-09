@@ -16,6 +16,21 @@ ElvisEndo: | # hold lines for abseilers
     Rw ElvisEnda + $t;
 ElvisEnda: |
     if (c&Se == 1) {
+        if (my $pid = fork()) {
+            waitpid($pid,0);
+            sayre "Done $pid";
+            chomp && saygr "And: $_" while <STDIN>;
+        }
+        else {
+            # wants to sync ElM and redo from Os
+            # someone sends ElM sorted out Way
+            sayre "Child: !";
+            #saybl wdump 3, A.ii.i.y.tw;
+            die "AWk";
+            exit;
+        }
+    
+        
         n ElvisEnde
         
         G&Ti,Trips=>[Catchelism=>''=>\'W:Zem,At:K,Acv:2'],$_
@@ -306,7 +321,7 @@ Mez: | # listener for mezages with line protocols
     Js&ein.t.l = &TesC{
         # large messages stashed and referred to
         $s = G&dmez,$1 if $s =~ /^CCC (\d+)$/;
-        
+        1 && saybl "Bakc";
         my $es = eval { djson $s };
         if ($@) {
             G&vent,$_ for "Spat: $@\n\nAbout: ".ki $s;
@@ -314,14 +329,21 @@ Mez: | # listener for mezages with line protocols
             return;
         }
         
+        
+        1 && saybl "Bakc2";
         for my $s (ref $es eq 'ARRAY' ? @$es : $es) {
             # e must go around a kind of corner here
             # for the hz strick cececece will not divide
             for (grep{ _c&s eq es&listen } @{Js&M||[]}) {
                 _s&W || die "noW listenee ".ki$_;
+                1 && saybl "BakEEc ".ki $_;
+                1 && saygr G.h .q[
+                    n _s&W => [$s]
+                ];
                 n _s&W => [$s]
             }
         }
+        1 && saybl "Bakc3";
         T.pos = 0;
     };
     
