@@ -106,31 +106,51 @@ Day: | # world primitives
         }
         $w
     
+    # W is the of=W, could be pointer to load the rest
+    # 
     Wup: %acgt:s of
         $of ||= 'W';
         my $W = G&wup,$s,$of || return;
-        # W is the of=W, could be pointer to load the rest
-        # 
         my $s = W.c.s;
         ref $s eq 'HASH' || die "No Wup $of: $s: ".ki $W;
         $s;
     
     # make call, in i
     # looks up to 5 many rare/little subs
-    # precompiled args
+    # s is code or i t
+    # Me precompiled args
+    # contexts calls, kinds of frame:
+    # B lexical cell joinery
+    # D tube joinery of A
     h:
-        my $y;
-        my $D = T.D if T.D;
+        my $y; # code
+        my $D; # C about code
         if (ref $s eq 'CODE') {
             $y = $s;
+            if (my $d = T.D) {
+                # passed code, happens to be T.D
+                $D = $d if dc&code && dc&code eq $y;
+            }
         }
         elsif (!ref $s && A.i && A.i.>$s) {
             $y = A.i.>$s;
+            if (my $i = A.ii && A.ii.i) {
+                $D = i.y.tw.>$s;
+            }
+        }
+        elsif (ref $s eq 'HASH' && ref s.c eq 'HASH' && ref sc&code eq 'CODE') {
+            $y = sc&code;
+            $D = $s;
         }
         else {
+            # must be string i name or C for t lookup
             my $C = G&s,$s;
             c&on = 'i';
             $y = G.i.t->($A,$C,$G,$T,$C);
+            my $Y = c&from;
+            if (my $i = Y.ii && Y.ii.>c&on ) {
+                $D = i.y.tw.>$s;
+            }
         };
         $y || die "no h: $s";
         my @r;
