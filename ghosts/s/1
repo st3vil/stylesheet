@@ -115,13 +115,14 @@ Day: | # world primitives
         ref $s eq 'HASH' || die "No Wup $of: $s: ".ki $W;
         $s;
     
-    # make call, in i
+    #c make call, in i
     # looks up to 5 many rare/little subs
     # s is code or i t
     # Me precompiled args
     # contexts calls, kinds of frame:
     # B lexical cell joinery
-    # D tube joinery of A
+    # D cell itself, T.D is of A throat
+    # < T.h is an error handler
     h:
         my $y; # code
         my $D; # C about code
@@ -153,6 +154,26 @@ Day: | # world primitives
             }
         };
         $y || die "no h: $s";
+        
+        my $uB = Gc&B || {t=>'nowhere',sc=>{A=>A.up}};
+        my $B = {t=>Ds&of||"?",y=>{cv=>D.y.cv||''}};
+        B.y.out = $uB;
+        if (my $p = uB.y.in) {
+            # pevious B-level call inside the uB call
+            p.y.next = $B;
+            B.y.prev = $p;
+        }
+        else {
+            uB.y.in = $B;
+        }
+        Bs&y = $y;
+        Bs&D = $D if $D;
+        Bc&s = $s;
+        Bc&h = delete T.h if T.h;
+        Bs&A = $A;
+        Bs&C = $C;
+        Gc&B = $B;
+        
         my @r;
         if (wantarray || !Ds&raysens) {
             @r = eval { $DB::single = G.ydrop; $y->($A,$C,$G,$T,@Me) };
@@ -160,16 +181,89 @@ Day: | # world primitives
         else {
             $r[0] = eval { $DB::single = G.ydrop; $y->($A,$C,$G,$T,@Me) };
         }
+        
+        #c sum
+        Gc&B = $uB;
         if ($@) {
-            if ($@ !~ /Throh/) {
-                $D ||= A.i.ii.i.y.tw->{$s};
-                1 && saybl D.c.s;
+            (my$ba,$@) = ($@,'');
+            if (Bs&hand) {
+                # T.h figured it safe from below
             }
-            die "Throh D.y.cv D.t: ".ind('  ',$@)."\n";
+            elsif (Bs&foot) {
+                # bang polished, pass out
+                die $ba;
+            }
+            else {
+                # tell aboves we did this
+                my $S = $B;
+                my @B;
+                while ($S && !Sc&h) {
+                    unshift @B, $S;
+                    Ss&foot = $B;
+                    $S = S.y.out;
+                }
+                
+                Bc&h && die "< Have the handler to $ba things.";
+                
+                my @tri;
+                if ($D && $ba =~ /.+ line (\d+)/g) {
+                    my $line = $1;
+                    my @s = split "\n", Dc&s;
+                    my ($for,$aft) = (5,3);
+                    @tri = ([]); # split into three
+                    my $i = 1;
+                    for (@s) {
+                        $i eq $line && push @tri, [];
+                        $i > $line - $for && $i < $line + $aft
+                            && push @{$tri[-1]}, $_;
+                        $i eq $line && push @tri, [];
+                        $i++;
+                    }
+                    @tri = map {join "\n", @$_ } @tri
+                }
+                
+                my $la = {};
+                my @Bs;
+                for (@B) {
+                    my @s = "_.t _.y.cv _s&D.t";
+                    next if $s[0] eq 'i 0.1 h';
+                    # notice particle hops
+                    my $Y = _s&A;
+                    if (Y.1 ne la.A.1) {
+                        push @s, G&sn,$Y;
+                        la.A = $Y;
+                    }
+                    # fold of=i 0.1 in same A, etc.
+                    if (my $L = @s == 1 && $Bs[-1]) {
+                        my ($Lt,$st) = map { /(\S+ \S+)/ } $L->[0],$s[0];
+                        if ($Lt eq $st) {
+                            $L->[0] .= ", _s&D.t";
+                            next;
+                        }
+                    }
+                    push @Bs,\@s;
+                    # < the one line it came through in D?...
+                }
+                my $ind = '';
+                my $Bs = join "\n", map {$_=$ind.$_;$ind.='  ';$_}
+                    map{join'  ',@$_} @Bs;
+                
+                my $code = join "\n>>>>>>>>>>\n", @tri if @tri;
+                
+                $ba = join "\n\n", grep {defined} $Bs, $code, $ba;
+                
+                # die...\n keeps first line number
+                die $ba."\n";
+            }
         }
         wantarray ? @r : $r[0];
     
-    
+    # lum code by line number
+    # < indent/glamping
+    lineart: %acgt:line lines
+        # thing
+    # and more of h, wants to be hard coded for robusticity
+        
     
     
     
@@ -183,7 +277,7 @@ Day: | # world primitives
             %$ar = %$ra;
         }
         # use this w call's ACGT
-        (ar.A,ar.C,ar.G,ar.T) = ($A,$C,$G,$T);
+        #(ar.A,ar.C,ar.G,ar.T) = ($A,$C,$G,$T);
         # their args
         my @o = @Me;
         while (@Me) {
@@ -194,7 +288,7 @@ Day: | # world primitives
         }
         ar.__D && die "w __D deprecated: ".ki$ar;
         my @args = sort keys %$ar;
-        my $args = join',','ar',@args;
+        my $args = join',','A,C,G,T,ar',@args;
         
         # look in of=w up the network to 5
         # they are pins near network of knowledge via T
@@ -230,8 +324,13 @@ Day: | # world primitives
         
         G&has,\'mo'=>way=>w.t=>w.sc.dige=>1 if A.mo;
         
-        ar.T.w = $v if ar.T;
-        vc&code ->($ar,map{ $ar.>$_ }@args);
+        $A = ar.A if ar.A;
+        $C = ar.C if ar.C;
+        $G = ar.G if ar.G;
+        $T = ar.T if ar.T;
+        T.w = $v;
+        my @arg = map{ $ar.>$_ }@args;
+        G&h,$v,$ar,@arg;
     
     # make s.c.code, see of (which sets dige)
     perlcode:
