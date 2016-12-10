@@ -70,11 +70,11 @@ ElvisEnda: |
         };
         n ElvisEnde
         
-        G&Ti,Trips=>[Catchelism=>''=>\'W:Zem,At:K,Acv:2'],$_
+        G&Ti,Trips=>[Catchelisa=>''=>\'W:Zem,At:K,Acv:2'],$_
             for  &acgtlr{
                 s&sending eq 'Should' || return;
                 
-                acu $G, trip=>["l.t at @Me".G&sn ,s&z];
+                #acu $G, trip=>["l.t at @Me".G&sn ,s&z];
             };
         
         n Should=>-zem=>{s=>$_} for G&Ct,[evap=>3=>"Latist"];
@@ -87,6 +87,11 @@ ElvisEnda: |
     
 ElvisEnde: | # be impulse monitor for agents at the future
     Jc&tape = 'Dejo:curve:Junov';
+    Js&ein.pi.dispatch.sMJ = &sMJjeTC{
+        1 && sayyl "Alright alright: ".wdump 4, $e;
+        1 && saybl "FOrv ".G&es;
+        T.pos = '';
+    };
     { # Gish
         # basic wakeuppy
         n Waytch
@@ -157,7 +162,7 @@ Zem: | # speaker of mezages with line protocols & Ging
             #@$z = map { G&Ct,[cab=>''=>{s=>_c&s}] } @$z;
             push @$W, G&Ct,[toW=>''=>{}=>{W=>$w,z=>$z}]
         }
-        m $k=>''=>{}=>{sending=>$g,z=>$W}
+        m $k=>-dispatch=>{}=>{sending=>$g,z=>$W}
     }
     
     my $nets = &t{
@@ -165,9 +170,9 @@ Zem: | # speaker of mezages with line protocols & Ging
         my $to = readlink($f);
         $to || die "No $f host for $t"
     };
-    # send message
-    zem: %acgt:s e
-        my $m = @Me > 1 || ref $Me[0] ? sjson(\@Me) : $Me[0];
+    
+    my $zem = &acgtse{
+        my $m = sjson $e;
         if (length $m > 5000) {
             #G&tyable,mez=><<'' if !G.tabup++;
             #    f,s,ts:timestamptz:default:now(),mid:serial:primary:key
@@ -180,13 +185,16 @@ Zem: | # speaker of mezages with line protocols & Ging
             $m = decode_utf8($m);
         }
         G&db ->notify($s,$m);
-
+    };
     
     # relative to el - overall C change
-    my $l = Js&sels.sending = {};
+    my $l = Js&Kels.sending = {};
     l.1 = &acgt{
         1 && saygr "Wants to send: ".G&aC,$C;
+        my $s = G&stores,sub{};
+        #G&give,Toter=>$C;
         my $ip = $nets->(s&sending);
+        G&h,$zem,$ip,$s;
         #sayre "OUtput: ".wdump 3, $C;
         # some
         #n Listen=>[to=>C.t]
@@ -195,6 +203,12 @@ Zem: | # speaker of mezages with line protocols & Ging
         #n Listen=>[not=>C.t]
     };
     
+    
+pi/dispatch: | # a bunch of messages to send to a G
+    # at one point in time/desire
+    # should be update/resume into correct fork
+    # sleeps if same z
+    n $_ for @{ delete s&z };
     
 ElvisOver: | # Goh-listening way update channeling
     # must be forked from testrun due to wander, exit
