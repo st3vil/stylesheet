@@ -148,6 +148,7 @@ Day: | # world primitives
             my $C = G&s,$s;
             c&on = 'i';
             $y = G.i.t->($A,$C,$G,$T,$C);
+            $y || die "t Look fail: ".G&sn ."\n    ".ki $C;
             my $Y = c&from;
             if (my $i = Y.ii && Y.ii.>c&on ) {
                 $D = i.y.tw.>$s;
@@ -173,6 +174,8 @@ Day: | # world primitives
         Bs&A = $A;
         Bs&C = $C;
         Gc&B = $B;
+        ref $y eq 'CODE' || ref \$y eq 'GLOB' || die "B.t not code: ($s) ".G&sn ."  $y ref:"
+            .ref($y)."\n   refref".ref(\$y)."\n   ".ki($y)."\n   ".ki $D;
         
         my @r;
         if (wantarray || !Ds&raysens) {
@@ -276,8 +279,6 @@ Day: | # world primitives
             my $ra = shift @Me;
             %$ar = %$ra;
         }
-        # use this w call's ACGT
-        #(ar.A,ar.C,ar.G,ar.T) = ($A,$C,$G,$T);
         # their args
         my @o = @Me;
         while (@Me) {
@@ -287,6 +288,10 @@ Day: | # world primitives
             $ar.>$k = $v;
         }
         ar.__D && die "w __D deprecated: ".ki$ar;
+        my $nar;
+        # use this w call's ACGT
+        # replaced once our A finds code, before its h'd
+        $nar.>$_ = delete $ar.>$_ for grep {exists $ar.>$_ } qw'A C G T';
         my @args = sort keys %$ar;
         my $args = join',','A,C,G,T,ar',@args;
         
@@ -324,12 +329,15 @@ Day: | # world primitives
         
         G&has,\'mo'=>way=>w.t=>w.sc.dige=>1 if A.mo;
         
-        $A = ar.A if ar.A;
-        $C = ar.C if ar.C;
-        $G = ar.G if ar.G;
-        $T = ar.T if ar.T;
         T.w = $v;
+        my $A = exists nar.A ? nar.A : $A;
+        my $C = exists nar.C ? nar.C : $C;
+        my $G = exists nar.G ? nar.G : $G;
+        my $T = exists nar.T ? nar.T : $T;
         my @arg = map{ $ar.>$_ }@args;
+        if (ref $A ne 'HASH') {
+            die "Not hashA: ".wdump 3, [$nar,$ar];
+        }
         G&h,$v,$ar,@arg;
     
     # make s.c.code, see of (which sets dige)
@@ -475,7 +483,7 @@ Tube: |
                 my $y = z.c.code;
                 ref $y || die "Compile z.y z.y.cv!";
                 
-                G.i.h->($A,$C,$G,$T,$y,$s);
+                G.i.h->($A,$C,$G,$T,$z,$s);
                 
                 T.ut && G&Tut,$s;
                 T.Z && G&Tz,$z;
