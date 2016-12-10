@@ -261,15 +261,18 @@ CoBabbler: | # bake code
     # G may like to track lamda meta in a coderef => $D like way
     #    wants to be a function the sub passes through
     # one word args assumed to be many single letter args
-    c&s =~ s[(\W)\&(\w+(?:,\w+)*)?\{]
-        [my @r = split',',$2;
-        my $acgt = shift(@r) if $r[0] eq 'acgt';
-        $acgt ||= $r[0] =~ s/^acgt//;
+    my $codes = sub {
+        my @r = split',',shift;
+        my $acgt;
+        $acgt = shift(@r) if $r[0] eq 'acgt';
+        $acgt = 1 if $r[0] =~ s/^acgt//;
         @r = split '', $r[0] if @r == 1;
         unshift @r, qw'A C G T' if $acgt;
         my $arg = " my (".join(',',map{'$'.$_}@r).") = \@_;"
             if @r;
-        $1."sub {".$arg]smeg;
+        "sub {".$arg
+    };
+    c&s =~ s[(\W)\&(\w+(?:,\w+)*)?\{][$1.$codes->($2)]smeg;
     
     # each etc $data {    into:
     # while (my ($e,$tv) = each %$data) {
