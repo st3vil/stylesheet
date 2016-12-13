@@ -146,7 +146,7 @@ else {
 };
 sub sigstackwarn {
 my ($s) = @_;
-return if $s =~ /Deep recursion on subroutine/
+return if $s =~ /Deep recursion on (anonymous )?subroutine/
     || $s =~ /masks earlier declaration in same/;
 $A->{I}->{sigstackend}->($s);
 warn "Warndg: $s";
@@ -177,7 +177,7 @@ I:
         args: 1
         bab: ~
         code: I
-        dige: 4e0bcff964ae
+        dige: a9dc91fac89f
         eg: Bun
         of: I
       t: sigstackwarn
