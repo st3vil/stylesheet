@@ -1108,11 +1108,9 @@ Stashi: | # recursors/ways to track A stuff
     superindex: %acgt
         my $had = {map { $_=>C.sc.>$_ } @Me};
         (sub {
-            my $pass = 1;
             my $now = {map { $_=>C.sc.>$_ } @Me};
             
             ddump($had) eq ddump($now) || return;
-            return unless $pass;
             
             C.sc.>$_ = $had.>$_ for @Me;
             
@@ -1142,7 +1140,7 @@ Stashi: | # recursors/ways to track A stuff
             }
             my $i = jon.sc.>$ok ||= {t=>C.t};
             for my $nk (@Me) {
-                ($nk,my $gk) = ($1,$nk) if $nk =~ s/^(y|c|sc)//;
+                ($nk,my $gk) = ($1,$nk) if $nk ne 't' && $nk =~ s/^(y|c|sc)//;
                 my $v = $C->{$nk};
                 $v = $v->{$gk} if $gk;
                 $i = $i->{$v} ||= {};
