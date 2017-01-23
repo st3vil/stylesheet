@@ -3,7 +3,6 @@ ElvisYou: | # YOUR
     my $M = [];
     G.c.bay = 'bay';
     `rm -rf bay/p/*`;
-    `rm -rf bay/r/*`;
     m Opper
     m Udder
     for my $C (@$M) {
@@ -15,9 +14,10 @@ ElvisYou: | # YOUR
     }
 CellDivision: |
     my $i = G.c.oipi++;
-    my $oid = join '-', grep{defined} G.c.oip, ;
+    my $pa = $$;
     (s&pid = fork()) && return;
-    G.c.oip = $oid;
+    G.c.oparent = $pa;
+    G.c.oipi = 0;
     $0 .= " $i";
     if ($C && ref $C eq 'HASH') {
         $0 .= ":C.t";
@@ -50,6 +50,10 @@ Washup: | # G term
         $! && sayre "$f open noise: $!";
         undef $!;
     }
+    write_file($d."/pa", G.c.oparent);
+    my ($so) = $0 =~ /^got (.+)$/;
+    $so || die "Not so? $0";
+    write_file($d."/so", $so);
     
     
     
@@ -105,3 +109,4 @@ Bayed: | # Opper's read line into mo
     T.nose = 2;
     sayyl "QWelis";
     
+
