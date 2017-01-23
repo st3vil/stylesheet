@@ -1,0 +1,107 @@
+
+ElvisYou: | # YOUR
+    my $M = [];
+    G.c.bay = 'bay';
+    `rm -rf bay/p/*`;
+    `rm -rf bay/r/*`;
+    m Opper
+    m Udder
+    for my $C (@$M) {
+        # opens new land
+        Rw CellDivision $C;
+        s&pid || return;
+        # first handles output
+        G.c.opid ||= s&pid;
+    }
+CellDivision: |
+    my $i = G.c.oipi++;
+    my $oid = join '-', grep{defined} G.c.oip, ;
+    (s&pid = fork()) && return;
+    G.c.oip = $oid;
+    $0 .= " $i";
+    if ($C && ref $C eq 'HASH') {
+        $0 .= ":C.t";
+        ar.take = C.t;
+    }
+    saybl "CellDivision: $0";
+    Rw Washup;
+    n $C
+Washup: | # G term
+    my $d = G.c.bay."/p/$$";
+    `mkdir -p $d`;
+    if (ar.take) {
+        my $l = G.c.bay."/p/ar.take";
+        unlink $l if -l $l;
+        symlink $$, $l;
+    }
+    my $te = {
+        out => \*STDOUT,
+        err => \*STDERR,
+        in => \*STDIN,
+    };
+    each ch,ha $te {
+        my $f = "$d/$ch";
+        -e $f && die "Had $f!";
+        `touch $f`;
+        close $ha;
+        my $mode = $ch eq 'in' ? '<' : '>';
+        open($ha, $mode, $f)
+            || die "$f open fail: $!";
+        $! && sayre "$f open noise: $!";
+        undef $!;
+    }
+    
+    
+    
+Baye: | # Opper's readline of <STDIN> loop
+    # fantabulously troubled
+    # listen to first thing, switch up by remote entrant
+    my $til = 0.06;
+    #my $bo = Js&bowls++;
+    my $nom;$nom = Js&nom = &{
+        G&timer,$til,$nom if $nom eq Js&nom;
+        my $s = -s STDIN;
+        $s && $s > Js&size || return;# sayre " Still $s or ".eof(*STDIN);
+        #1 && saygr " ISon or ".eof(*STDIN);
+        Js&size = $s;
+        Rw Baying;
+    };
+    $nom->();
+    
+Baying: | # Opper reads line
+    while (1) {
+        $_ = <STDIN>;
+        chomp;
+        if (/./) {
+            #1 && say "in in: $_";
+            my $W = G&Ct,[Bayed=>[s=>$_]];
+            4s&toy->({to=>[$W]});
+        }
+        eof(*STDIN)# && sayyl("The end>?")
+            && last;
+    }
+    
+Bayed: | # Opper's read line into mo
+    Js&ein.t.s.sMJ = &sMJjeTCA{
+        if ($s =~ /^(\[|\{)/) {
+            my $C = eval { djson $s };
+            if ($@) {
+                sayre "NOT json C: $_";
+                $@ = '';
+                return;
+            }
+            $C = G&Ct,$C if ref $C eq 'ARRAY'; # TODO may be z
+            #sayre "Amos: ".wdump 3, [$s, $C, C.c.e];
+            n $C
+        }
+        else {
+            sayre "Ames: ".wdump 3, $s;
+        }
+        T.pos = '';
+        # processes the line or forks an interpreter to pull cleanedup C from
+        # interpreter = instruction elabouration
+    };
+    S
+    T.nose = 2;
+    sayyl "QWelis";
+    
