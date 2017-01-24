@@ -61,33 +61,55 @@ Ilan: | # O's zip of U, W switchup
             C.t = $t;
             C.c.pi = 'plaz';
             s&pid = $p;
-            my $z = read_file($s);
-            $z = djson $z;
             
-            my $elv;$elv = &C{
-                $C = G&Ct,$C;
-                s&z = [map{$elv->($_)}@{s&z}] if s&z;
-                $C
-            };
-            #sayre "Do ".wdump 4, $z;
-            $z = [map{ $elv->($_) }@$z];
+            my $Nf = [];
+            if ($i > 0) {
+                if (!defined s&i || s&i < $i - 1) {
+                    my ($i,$p) = ($i,$p);
+                    my $oi = $i;
+                    $i--;
+                    branch: while (-f "$d/p/$p/pa") {
+                        1 && say "   in to: ".`cat $d/p/$p/so`." For W/$t.$i";
+                        $p = read_file "$d/p/$p/pa";
+                        -e "$d/p/$p" || die "No find pid $p ";
+                        while (-f "$d/p/$p/W/$t.$i") {
+                            1 && say "    -W $d/p/$p/W/$t.$i";
+                            last branch if defined s&i && $i == s&i;
+                            unshift @$Nf, "$d/p/$p/W/$t.$i";
+                            last branch if $i == 0;
+                            $i--;
+                            
+                        }
+                    }
+                    @$Nf || die "Wanted news $d $t: s&i-$oi"
+                }
+            }
+            push @$Nf, $s;
             
-            # try to find pid in Fish
+            for my $s (@$Nf) {
+                my $z = read_file($s);
+                $z = djson $z;
+
+                my $elv;$elv = &C{
+                    $C = G&Ct,$C;
+                    s&z = [map{$elv->($_)}@{s&z}] if s&z;
+                    $C
+                };
+                #sayre "Do ".wdump 4, $z;
+                $z = [map{ $elv->($_) }@$z];
+
+                push @{s&zin||=[]}, @$z;
+            }
+            return unless $new;
             
-            push @{s&zin||=[]}, @$z;
             $new && push @$M, $C;
         }
         else {
             die "Other Ilan ting: $s";
         }
     };
-    Js&ein.bo = 'Doable';
-    Jc&tape = 'Dejo:curve:Junov';
-    y.at.dis = 3;
+    Rw Tiot;
     S
-    n t=>''=>"Ilan"=>'%fs:15,hs:488,dis:2'
-    y.n = 9;
-    y.u = 2;
     m $_ for @{Js&M||[]};
 pi/plaz: |
     y.at.dis = 3;
