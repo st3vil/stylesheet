@@ -420,14 +420,16 @@ Zpace: | # hang La space charts off mo
             # as it is A.y=A in an M of C
             G&tugA,L=>4,$nu;
         };
+        A&refit_t ||= 1c&refit_t || &C{ C.t };
         return keys %$ctv &&
             saygr "All new refit C.t C.y.res -- ".G&sn
-            unless grep{ $ctv.>_.t } @$M;
+            unless grep{ my $t = A&refit_t->($_); $ctv.>$t } @$M;
         my @M;
         for (@$M) {
-            my $at = $ctv.>_.t;
+            my $t = A&refit_t->($_);
+            my $at = $ctv.>$t;
             if ($at && !_.c.refit) {
-                sayyl "Have _.t  -> $at";
+                sayyl "Have $t  -> $at";
                 if ($la && $at < $la) {
                     # has to opt out for M order via c&refit
                     # la cause may have moved out already
@@ -446,7 +448,7 @@ Zpace: | # hang La space charts off mo
                 $la = $at;
             }
             else {
-                saybl "New _.t".(_.c.refit && " (repo)");
+                saybl "New $t".(_.c.refit && " (repo)");
                 push @news, $_;
             }
         }
@@ -487,8 +489,9 @@ Zpace: | # hang La space charts off mo
         my $M = c&M;
         my $ctv = res.ctv;
         for (@$M) {
-            $ctv.>_.t && delete $ctv.>_.t;
-            $ctv.>_.t = _.y.cv || die "No cv res yet: ".ki$_;
+            my $t = A&refit_t ->($_); # TODO store from 4
+            $ctv.>$t && delete $ctv.>$t;
+            $ctv.>$t = _.y.cv || die "No cv res yet: ".ki$_;
         }
     
     # t-rewirey formulae:
