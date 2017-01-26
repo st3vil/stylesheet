@@ -3,24 +3,44 @@
 Opera: | # put instructions together
     Rw Tiot;
     Rw Elationist;
+    Js&ein.t.opt.sMJ = &sMJ{
+        my ($p,$t,$etc) = split ':', $s, 3;
+        my $c = {};
+        c.etc = G&peel,$etc if $etc;
+        c.asap = 1;
+        c.oncer = 1;
+        1 && say "Received to $p $t\n\n\n\n";
+        m "$p:$t"=>-comtu=>$c
+    };
     if (my $i = Jc&es) {
         my $p = G&Ct,[p=>i.c.s];
         
         #m Ghostig=>-comtu=>Ghostig
-        G&give,Toter=>Operaselects=>$i;
     }
     #$i
-    my @l = split "\n", <<'';
-        Udder:DoSomi asap
-        Udder:Calg
-        DoSomi:ReSim
-        Calg
-        Calg:Dopud
-    for my $l (@l) {
-        my ($t,$c) = split ' ',$l;
-        $c = G&peel,$c;
-        m $t=>-comtu=>{%$c}
-    }
+    Js&M ||= do {
+        my $M = [];
+        my @l = split "\n", <<'';
+            Udder:Blinks asap
+            Blinks:Dopud asap
+            :Chase
+
+        0 && <<'';
+            Udder:DoSomi asap
+            Udder:Calg
+            DoSomi:ReSim
+            Calg
+            Calg:Dopud
+        for my $l (@l) {
+            my ($t,$c) = split ' ',$l;
+            $c = G&peel,$c;
+            m $t=>-comtu=>{%$c}
+        }
+        $M
+    };
+    m $_ for @{Js&M};
+    @{Js&M} = grep {!_c&oncer} @{Js&M};
+    
 pi/comtu: |
     y.at.dos = 'Continues';
     
@@ -40,7 +60,7 @@ pi/comtu: |
     
     my $pid;
     if (!$to) {
-        my $i = Jc&es || return
+        my $i = 2c&es || return
             n wha=>4=>"with?"=>"%hs:289"
         if (i.t eq 'p') {
             $pid = ic&s
@@ -50,6 +70,8 @@ pi/comtu: |
         }
     }
     my $d = G.c.bay."/p";
+    $pid = c&pid if c&pid;
+    
     if (!$pid) {
         $pid = readlink "$d/$to";
         G&always,J.sc,atpid=>$pid ||
@@ -61,6 +83,7 @@ pi/comtu: |
     
     my $in = "$d/$pid/in";
     my $s = G&Ct,[$t=>'W'];
+    G&xo,s.c,c&etc if c&etc;
     sayyl "Writing $in For ".ki $s;
     write_file($in,{append=>1},sjson($s)."\n");
 Fish: | # infinite plantulism
@@ -124,13 +147,20 @@ Fish: | # infinite plantulism
             my $tu = s&turnum;
             each t,v $tu {
                 next unless ls&num eq $v && ls&sot eq s&sot;
-
+                next if ls&insys;
                 s&hasnum.>ls&num = $l;
                 G&xo,s&hasnum,ls&hasnum if ls&hasnum;
                 _s&surp = C.t for values %{s&hasnum};
             }
         }
     }
+    for my $C (@$M) {
+        if (my $s = -s c&s) {
+            s&hase.err = $s;
+            delete s&surp;
+        }
+    }
+    
     @$M = grep {!_s&surp || Js&opens.>_s&surp } @$M;
     #G&give,Toter=>sem=>[@{$M}[-3..-1]];
     
@@ -172,7 +202,35 @@ pi/proc: | # picture in picture rock
         n hasnum=>4=>" +".$bush,'%hs:247,fs:8,dos:Uncoverprocs';
     }
     
+    if (my $has = s&hase) {
+        each type,v $has {
+            n $type=>41=>"$type: $v",'%hs:385,fs:17,dos:Chaseout'
+        }
+    }
+    
     Js&ope || return;
+    
+Chaseout: |
+    my $j = e&_hJ;
+    my $o = e&hC ->[-3];
+    G&elph,Opera=>[opt=>"Udder:Chase:the:os&pid"];
+    T.pos = '';
+    
+Chase: | # follow
+    Jc&tape = 'Dejo';
+    Js&pid = c&the if c&the;
+    Jc&pd = G.c.bay.'/p/'.Js&pid;
+    n t=>1=>Jc&pd,'%hs:347,fs:14'
+    m err=>-has
+    m out=>-has
+    
+pi/has: | # log tail
+    Js&len ||= 30;
+    my $f = 2c&pd || die "2 by c pd.";
+    $f .= "/C.t";
+    my @l = `tail -n Js&len $f`;
+    n C.t=>-pud=>\@l
+    #G&give,Toter=>o=>\;
     
 Uncoverprocs: |
     my $j = e&_hJ;
@@ -366,9 +424,9 @@ Calg: | # lum spin cycle
             y.imp++ ;#if J.bowls =
     
 Dopud: | # show graphs
-    n Calg=>V
+    n Dejo=>V
     my @m = G&op;
-    my $v = [$J,$v];
+    my $v = [[$J],\@m];
     G&give,Toter=>s=>$v;
 Continues: | # reactiona
     my $p = e&_hJ;
