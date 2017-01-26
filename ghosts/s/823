@@ -18,17 +18,17 @@ Opera: | # put instructions together
         G&give,Toter=>Operaselects=>$i;
     }
     #$i
-    for my $l (split "\n", <<'') {
-            Udder:DoSomi asap
-            Udder:Calg asap
-            DoSomi:ReSim
-            Calg
-            Calg:Dopud
+    my @l = split "\n", <<'';
+        Udder:DoSomi asap
+        Udder:Calg asap
+        DoSomi:ReSim
+        Calg
+        Calg:Dopud
+    for my $l (@l) {
         my ($t,$c) = split ' ',$l;
         $c = G&peel,$c;
-        
+        m $t=>-comtu=>{%$c}
     }
-    m Calg=>-comtu=>Dopud
 Dopud: |
     n Calg=>V
     my @m = G&op;
@@ -36,19 +36,47 @@ Dopud: |
 pi/comtu: |
     y.at.dos = 'Continues';
     
-    my $d = G.c.bay."/p";
-    my $pid = readlink "$d/C.t";
-    G&always,J.sc,atpid=>$pid ||
-        n pidchange=>1=>"pidchange",'%hs:666'
-    n am=>1=>"d"
-    n t=>2=>C.t
+    Js&ope ||= c&asap if c&asap;
+    
+    my ($to,$t) = split ':', C.t;
+    $t ||= $to;
+    if ($t ne $to) {
+        $to &&
+            n src=>12=>$to
+        n pings=>13=>':','%hs:489,fs:6'
+    }
+    n t=>2=>$t
     
     
-    Js&ope == Js&bowls || return;
+    sayre "Have Js&ope > Js&bowls";
+    
+    Js&ope > Js&bowls || return;
     Js&bowls++;
     
+    my $pid;
+    if (!$to) {
+        my $i = Jc&es || return
+            n wha=>4=>"with?"=>"%hs:289"
+        if (i.t eq 'p') {
+            $pid = ic&s
+        }
+        else {
+            die "send comptu to ".ki$i;
+        }
+    }
+    my $d = G.c.bay."/p";
+    if (!$pid) {
+        $pid = readlink "$d/$to";
+        G&always,J.sc,atpid=>$pid ||
+            n pidchange=>1=>"pidchange",'%hs:666'
+    }
+    
+    $pid || die "Continuing with no pid";
+    $t || die "Contuinuing with no t";
+    
     my $in = "$d/$pid/in";
-    my $s = G&Ct,[c&s=>'W'];
+    my $s = G&Ct,[$t=>'W'];
+    sayyl "Writing $in For ".ki $s;
     write_file($in,{append=>1},sjson($s)."\n");
 Fish: | # infinite plantulism
     Rw Tiot;
@@ -161,15 +189,19 @@ Ilan: | # O's zip of U, W switchup
                 ps&so;
             };
 
-            if (my $pa = delete $in.>$t.>s&ppa ) {
-                my $p = G&hup,$pa;
-                %$pa = %$C;
-                %{pa.sc} = (%{p.sc},%{C.sc});
-                $in.>$t.>$p = $C = $pa;
+            if (my $p = delete $in.>$t.>s&ppa ) {
+                s&ie = ps&ie;
+                @$M = map { $_ eq $p ? $C : $_ } @$M;
                 $new = 0;
                 my $M = c&forum = [];
-                ps&conti_so = s&so;
-                m "$t old"=>-pold=>{}=>p.sc;
+                if (my $hi = ps&history) {
+                    my $am = [[@$M],"Seek to rid M of ",$hi];
+                    G&give,Toter=>stir=>$am;
+                    @$M = grep { _c&s ne $hi } @$M
+                }
+                s&history = $p;
+                ps&future = $C;
+                m "$t ps&so"=>-pold=>{s=>$p}
                 Js&blab = 1;
             }
             
@@ -192,7 +224,7 @@ Ilan: | # O's zip of U, W switchup
     S
     my $m = Js&M||[];
     @$m = map { @{delete(_c&forum)||[]}, $_ } @$m;
-    delete Js&blab && G&give,Toter=>s=>[Could=>$m];
+    delete Js&blab && y.imp++; #G&give,Toter=>s=>[Could=>$m];
     m $_ for @$m;
 pi/plaz: |
     s&dis = 3;
@@ -218,15 +250,20 @@ pi/plaz: |
     n z=>6=>{}=>$sc
 pi/pold: |
     s&dis = 3;
-    Rw Thrext so $next_t=C.t;
+    my $t = s.t || C.t;
+    s&so = ss&so;
+    Rw Thrext so $next_t:t;
     
-    n t=>2=>C.t=>'%hs:555,fs:18'
+    n t=>2=>$t=>'%hs:555,fs:18'
     
-    s&ie &&
-    n ie=>22=>{s=>".s&ie"},'%fs:12,hs:258'
+    if (my $C = c&s) {
+        s&ie &&
+        n ie=>22=>{s=>".s&ie"},'%fs:12,hs:258'
+    }
     
-    n conti=>3=>" on ",'%fs:7'
-    n conti_=>3=>s&conti_so,'%hs:488'
+    my $f = ss&future;
+    n conti=>28=>" on ",'%fs:7'
+    n future=>3=>fs&so,'%hs:488,fs:8'
     
     
 DoSomi: |
@@ -275,6 +312,7 @@ ReSim: |
 Continues: | # reactiona
     my $p = e&_hJ;
     ps&ope += us&S ? -1 : 1;
+    saygr G&sn,$p ,"p.t continues to ps&ope";
 Forsys: | # to
     my $v = e&_hC;
     my $p = vs&pid || die "No pid on ".ki$c;
