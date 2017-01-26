@@ -32,7 +32,8 @@ Opera: | # put instructions together
 Dopud: |
     n Calg=>V
     my @m = G&op;
-    G&give,Toter=>s=>\@m;
+    my $v = [$J,$v];
+    G&give,Toter=>s=>$v;
 pi/comtu: |
     y.at.dos = 'Continues';
     
@@ -46,9 +47,6 @@ pi/comtu: |
         n pings=>13=>':','%hs:489,fs:6'
     }
     n t=>2=>$t
-    
-    
-    sayre "Have Js&ope > Js&bowls";
     
     Js&ope > Js&bowls || return;
     Js&bowls++;
@@ -110,17 +108,16 @@ Fish: | # infinite plantulism
     $tp.>$_ =1 for grep {-l} @im;
     
     m $_=>-proc for @pi;
+    my $la;
+    map {
+        _.y.prey = $la;
+        $la = $_;
+    } @$M;
     sayyl "Fishes ... ";
-    n Ilan=>V
-    
+    y.res = 100;
     #y.at.over = 'scroll';
     #y.at.dis = 1;
     #y.at.mh = '12';
-    T.op || return;
-    return;
-    my @o = G&op;
-    @o = map { G&Ct,[_.t,_.y.cv,{s=>sc&s}] } @o;
-        G&give,Toter=>s=>\@o;
     #n Twang
 pi/proc: | # picture in picture rock
     my ($d,$p) = $s =~ /^(.+)\/p\/(\d+)$/;
@@ -130,6 +127,12 @@ pi/proc: | # picture in picture rock
     y.at.dos = 'Continues';
     
     my $so = read_file("$s/so");
+    my ($num,$t) = split ':', $so;
+    C&num = $num;
+    if (my $p = C.y.prey) {
+        $num =~ s/ \d+$//;
+    }
+    
     my @lives = split ' ', $so;
     my $it = pop @lives;
     $so = join ' ', (map{/^(\d+)/}@lives), $it;
@@ -188,21 +191,37 @@ Ilan: | # O's zip of U, W switchup
                 s&ppa = ps&ppa;
                 ps&so;
             };
-
+    
+            # continuing W with parent pid
             if (my $p = delete $in.>$t.>s&ppa ) {
                 s&ie = ps&ie;
                 @$M = map { $_ eq $p ? $C : $_ } @$M;
                 $new = 0;
-                my $M = c&forum = [];
                 if (my $hi = ps&history) {
-                    my $am = [[@$M],"Seek to rid M of ",$hi];
-                    G&give,Toter=>stir=>$am;
                     @$M = grep { _c&s ne $hi } @$M
                 }
+                my $M = c&forum = [];
                 s&history = $p;
                 ps&future = $C;
                 m "$t ps&so"=>-pold=>{s=>$p}
                 Js&blab = 1;
+            }
+            # same W stage appears from next fork
+            elsif (s&so =~ /^(.+)(\d+):/) {
+                my ($tun,$ti) = ($1,$2);
+                $ti--;
+                if ($ti >= 0) {
+                    my ($p) = grep { _s&so =~ /^$tun$ti:$t/ } @$M;
+                    if ($p) {
+                        my $t = "$t ps&so";
+                        my $n = G&Ct,[$t=>-pold=>{s=>$p}];
+                        @$M = grep { ps&progresses ne $_ } @$M;
+                        ps&progress = $C;
+                        s&progresses = $n;
+                        @$M = map { $_ eq $p ? $n : $_ } @$M;
+                        Js&blab = 1;
+                    }
+                }
             }
             
             Rw Rebase $C $d $p $t $i;
@@ -229,7 +248,7 @@ Ilan: | # O's zip of U, W switchup
 pi/plaz: |
     s&dis = 3;
     y.at.dos = 'Continues';
-    y.at.fs = 7;
+    y.at.fs = 8;
     
     Rw Thrext so $next_t=C.t;
     
@@ -247,23 +266,45 @@ pi/plaz: |
     my $sc;
     sc.dis = Js&ope >= 0 ? 3 : 0;
     sc.zout = \@once if @once;
-    n z=>6=>{}=>$sc
+    n z=>89=>{}=>$sc
 pi/pold: |
     s&dis = 3;
     my $t = s.t || C.t;
     s&so = ss&so;
+    y.at.dos = 'Retrieve';
+    y.at.fs = 7;
+    
     Rw Thrext so $next_t:t;
     
-    n t=>2=>$t=>'%hs:555,fs:18'
+    n t=>2=>$t=>'%hs:555,fs:16'
     
     if (my $C = c&s) {
         s&ie &&
         n ie=>22=>{s=>".s&ie"},'%fs:12,hs:258'
     }
     
-    my $f = ss&future;
-    n conti=>28=>" on ",'%fs:7'
-    n future=>3=>fs&so,'%hs:488,fs:8'
+    my $symb = "?";
+    if (ss&progress) {
+        # to another self
+        # TODO fork testing
+        $symb = ",";
+    }
+    if (ss&future) {
+        # to a future
+        $symb = ".";
+    }
+    n conti=>28=>$symb,'%fs:26'
+    
+    
+Store: | # cops W (dos)
+    G&give,Toter=>'storesitch'=>$e;
+Retrieve: | # resurrect a point
+    if (us&S ) {
+        sayre "Leaving ";
+        G&give,Toter=>leaving=>$e;
+    }
+    my $j = e&hJ;
+    G&give,Toter=>'resurref'=>$j;
     
     
 DoSomi: |
