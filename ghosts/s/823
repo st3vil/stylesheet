@@ -15,14 +15,24 @@ Opera: | # put instructions together
         my $p = G&Ct,[p=>i.c.s];
         
         #m Ghostig=>-comtu=>Ghostig
-        G&give,Toter=>s=>$i;
+        G&give,Toter=>Operaselects=>$i;
     }
     #$i
-    m Udder=>-comtu=>DoSomi
-    m DoSomi=>-comtu=>ReSim
-    m Udder=>-comtu=>Calg
-    
-    m Calg=>-comtu=>Calg
+    for my $l (split "\n", <<'') {
+            Udder:DoSomi asap
+            Udder:Calg asap
+            DoSomi:ReSim
+            Calg
+            Calg:Dopud
+        my ($t,$c) = split ' ',$l;
+        $c = G&peel,$c;
+        
+    }
+    m Calg=>-comtu=>Dopud
+Dopud: |
+    n Calg=>V
+    my @m = G&op;
+    G&give,Toter=>s=>\@m;
 pi/comtu: |
     y.at.dos = 'Continues';
     
@@ -142,7 +152,26 @@ Ilan: | # O's zip of U, W switchup
             C.t ||= $t;
             C.c.pi ||= 'plaz';
             s&pid = $p;
-            s&ie = $i;
+            
+            # find so/pa for self
+            s&so ||= do {
+                my $p = G&Ct,[p=>''=>$p];
+                G&elph,Fish=>[$p];
+                s&ppa = ps&ppa;
+                ps&so;
+            };
+
+            if (my $pa = delete $in.>$t.>s&ppa ) {
+                my $p = G&hup,$pa;
+                %$pa = %$C;
+                %{pa.sc} = (%{p.sc},%{C.sc});
+                $in.>$t.>$p = $C = $pa;
+                $new = 0;
+                my $M = c&forum = [];
+                ps&conti_so = s&so;
+                m "$t old"=>-pold=>{}=>p.sc;
+                Js&blab = 1;
+            }
             
             Rw Rebase $C $d $p $t $i;
             
@@ -152,13 +181,6 @@ Ilan: | # O's zip of U, W switchup
             #   spawning little differ above, as old self
             # 
             
-            # try to find pid in Fish
-            s&so ||= do {
-                my $p = G&Ct,[p=>''=>$p];
-                G&elph,Fish=>[$p];
-                ps&so;
-            };
-
             $new && push @$M, $C;
         }
         else {
@@ -168,7 +190,10 @@ Ilan: | # O's zip of U, W switchup
     Rw Tiot;
     Jc&tape = 'Dejo';
     S
-    m $_ for @{Js&M||[]};
+    my $m = Js&M||[];
+    @$m = map { @{delete(_c&forum)||[]}, $_ } @$m;
+    delete Js&blab && G&give,Toter=>s=>[Could=>$m];
+    m $_ for @$m;
 pi/plaz: |
     s&dis = 3;
     y.at.dos = 'Continues';
@@ -191,6 +216,19 @@ pi/plaz: |
     sc.dis = Js&ope >= 0 ? 3 : 0;
     sc.zout = \@once if @once;
     n z=>6=>{}=>$sc
+pi/pold: |
+    s&dis = 3;
+    Rw Thrext so $next_t=C.t;
+    
+    n t=>2=>C.t=>'%hs:555,fs:18'
+    
+    s&ie &&
+    n ie=>22=>{s=>".s&ie"},'%fs:12,hs:258'
+    
+    n conti=>3=>" on ",'%fs:7'
+    n conti_=>3=>s&conti_so,'%hs:488'
+    
+    
 DoSomi: |
     Jc&tape = 'Dejo';
     thing:

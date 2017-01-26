@@ -79,6 +79,7 @@ pi/pud: |
             n short=>12=>" t: s.t","%hs:457"
             m "c\.s"=>-pud=>{s=>sc&s,ima=>[qw'c s']}
             $return = 2;
+            c&dl += 2;
         }
         $sy = 'C';
     }
@@ -120,9 +121,13 @@ pi/pud: |
     
     #c classify
     if (s&type eq 'A') {
+        T Aye
         $sy = 'A';
-        if (s.sc && s.sc.n) {
+        if (s.1 && s.1 eq $s) {
             $sy = "J";
+            
+            return if 
+                Rw Jpud;
         }
         # T # seen to/from ghost, they osc pool up to direct change in
         # chasing up all the J that hit it
@@ -210,6 +215,17 @@ pi/pud: |
     #c hash out
     my ($hash,@ks) = Rw HashKs $s $ks $vs;
     n siz=>12=>" x ".@ks,'%hs:283,fs:6';
+    if (my $kg = delete A&kg) {
+        my @sh;
+        @ks = grep {
+            if ($kg->($_)) {
+                push @sh, $_; 0
+            } 
+            else { $_ }
+        } @ks;
+        @sh &&
+        n sh=>28=>"sh x".@sh=>'%hs:483,fs:6';
+    }
     if (A.3.C.c.intl++ > A.3.C.c.intlim) {
         if (ref $s eq 'HASH') {
             if (defined s.t) {
@@ -237,6 +253,17 @@ pi/pud: |
     
     $lim && 
     m limited=>''=>{s=>"Limited from $was to $limit"},{hs=>"888",ws=>1}
+Jpud: |
+    my $spc = c&dl - c&depth;
+    n sn=>21=>$_ for G&sn,$s;
+    n co=>22=>(sc&o||"?")=>'%hs:374'
+    if ($spc < 1) {
+        my $dw = {map{$_=>1}qw'y 1 2 3 4 5 i ii'};
+        A&kg = &k{ $dw.>$k };
+    }
+    n szaps=>3=>"Ja c&dl>c&depth"
+    # return if
+    $spc <= 0;
 yki: | # ki() again
     my @ks = sort keys %$s;
     my $ks = &v{
