@@ -3,14 +3,22 @@ ElvisMe: | # increase res
     # forked from Udder
     # which needs to release its STDIN loop and Baye for new Opper
     my $pid = $$;
+    my @da = qw'bay islan is/fa is/lo is/ma is/se is/do';
+    my $now;
+    $now = shift @da until !@da || $now eq G.c.bay;
+    !@da && die "No day after G.c.bay";
+    c&s = shift @da;
     Rw ElvisYou $bay:c&s;
-    T.oT.Uddoff = 1 if $pid ne $$;
+    say "Came out of You $0  ($$)";
+    #T.oT.Uddoff = 1 if $pid ne $$;
     
     
 ElvisYou: | # YOUR
     my $M = [];
-    G.c.bay ||= ar.bay || 'bay';
+    G.c.lastbay = G.c.bay;
+    G.c.bay = ar.bay || 'bay';
     `rm -rf G.c.bay/p/*`;
+    `mkdir -p G.c.bay/p`;
     # to fork an output handler (O) and children (U)
     m Opper
     m Udder
@@ -23,13 +31,20 @@ ElvisYou: | # YOUR
             $O ||= G.c.bay."/p/Opper/in";
         }
         Rw CellOvulation $C $O;
-        s&pid || return;
+        s&pid || return
+            saygr "Flies out as: C.t $$";
+        sayyl "Still above Elvising on $$";
         # first handles output
         if (!$opid) {
             $opid = s&pid;
         }
     }
 Opper: | # consolidato
+    if (my $l = G.c.lastbay) {
+        my $dirs = split('/', $l) - 1 + 2;
+        my $ting = join'',('../') x $dirs;
+        `ln -s ${ting}G.c.bay/p/$$ $l/p/$$`;
+    }
     Js&bowls++ ||
         Rw GhosMe;
     # receive W and switch through same telephone wire
@@ -55,9 +70,10 @@ CellOvulation: |
         $0 .= ":C.t";
         ar.take = C.t;
     }
-    saybl "CellOvulation: $0";
     Rw Washup;
+    saybl "CellOvulation: $0";
     n $C
+    saybl "Wandering Ovv";
 Udder: | # go waiter
     # to resume
     while (1) {
@@ -74,13 +90,17 @@ Udder: | # go waiter
         Rw CellOvulation
             || next;
         saybl "Done Udder";
-        return saybl "Uddoff" if T.Uddoff;
+        if (T.Uddoff) {
+            T.not = 1;
+            return saybl "Uddoff";
+        }
     }
 Ualve: | # Udders' W z out for an Opper
     # 
     e&t eq 'z' || die "Not e z";
     my $z = e&s;
     my ($t) = @$z;
+    G.c.Wot.>t.t++;
     my $i = Js&teli.>t.t ++;
     
     my $elv;$elv = &C{
@@ -91,6 +111,10 @@ Ualve: | # Udders' W z out for an Opper
         [C.t,C.y,C.c,C.sc]
     };
     my $d = "G.c.bay/p/$$/W";
+    if (!-e "G.c.bay/p/$$") {
+        warn "Where am I? $0";
+        Rw Washup;
+    }
     `mkdir -p $d`;
     my $f = "$d/t.t\.$i";
     write_file($f, sjson([map{ $elv->($_) }@$z])."\n");
