@@ -1,0 +1,241 @@
+--- &8 
+sc: 
+  meta: 
+    A: 
+      xo: 
+        way: 
+          ElBridge: 
+            e79d8100e553: 1
+    c: 
+      imp: 1
+      mat: ~
+      wil: 1
+    paths: 
+      ElBridge 0.9: *8
+      ElBridge 0.9/O 0.001: &1 
+        c: 
+          W: of
+        sc: 
+          z: ~
+        t: O
+        "y": 
+          cv: '0.001'
+          in: &2 
+            c: 
+              s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\n$C->{c}->{Jo} || return;\nmy $x = $A->{sc}->{x};\nmy $J = $A->{sc}->{J};\nmy $s = $J->{sc}->{s};\n$s->{sc}->{xo} || $x->{sc}->{xo} || return;\nmy $Y = $A->{sA} || die \"No us osc O xo: \".ki $C;\nmy $xo = $Y->{sc}->{ox}->{\"$C->{y}->{cv}\"}->{\"$C->{t}\"} = $G->{h}->($A,$C,$G,$T,\"newxo\",$s->{sc}->{xo},$x);\n\n};"
+            sc: 
+              acgt: s
+              act: 1
+              args: A,C,G,T,s
+              coded: 1
+              dige: 8f5be932523a
+              of: O
+            t: xo
+            "y": 
+              cv: '0.6'
+              up: *1
+          next: &5 
+            c: 
+              W: of
+            sc: 
+              z: ~
+            t: i
+            "y": 
+              cv: '0.001'
+              in: &3 
+                c: 
+                  s: "sub {\nmy ($A,$C,$G,$T,@Me) = @_;\n@Me || die \"Nothing to have\";\nmy $Y = $A;\nif (ref $Me[0]) {\n    my $move = shift @Me;\n    $move = [$$move] if ref $move eq 'SCALAR';\n    for (@$move) {\n        $Y = $Y->{\"$_\"} || die \"No move: @$move (at $_) from \".ki $Y;\n    }\n}\nmy $v = @Me == 1 ? 1 : pop @Me;\nmy $T = $Y->{c}->{T};\nmy $S = $T->{has} ||= {};\nmy $last = pop @Me;\n$S = $S->{\"$_\"} ||= {} for @Me;\nreturn $S->{\"$last\"} += $v if $v eq '1';\n$S->{\"$last\"} = $v;\n};"
+                sc: 
+                  acgt: 1
+                  args: A,C,G,T
+                  coded: 1
+                  dige: d4336176a9d0
+                  of: i
+                t: has
+                "y": 
+                  cv: '0.1'
+                  next: &4 
+                    c: 
+                      s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $inf = $A->{sc}->{infxo};\nmy $sa = sub {\n    push @$inf, shift;\n    $A->{V} && $G->{h}->($A,$C,$G,$T,'say','sayyl',\"Inf $A->{1}->{t}: \".$inf->[-1])\n};\nif ($s eq 'Tin') { # T ... markers\n    my $td = {};\n    for my $x (map{$_->{c}->{s}}@Me) {\n        $G->{h}->($A,$C,$G,$T,\"chew\",$x,'pin,label,line',$_) for sub { my ($i,$t,$s,$l) = @_;\n            $td->{\"$t\"}->{\"$s\"}->{\"$l\"} += $i;\n        };\n    } ;\n    $td;\n}\nelsif ($s eq 'way') {\n    my $td = {};\n    for (@Me) {\n        next if $_->{sc}->{W};\n        # TODO know W separately up to a...\n        while (my ($t,$dv) = each %{$_->{c}->{s} }) {\n        while (my ($d,$q) = each %{$dv }) {\n            $td->{\"$t\"}->{\"$d\"} += $q;\n        }}\n    };\n    $sa->(\" $s from \".join(',',map{$_->{t}}@Me).\": \".ki $td);\n    $td\n}\nelse {\n    my $total = sum map {$_->{c}->{s}} @Me;\n    $sa->(\" $s totals $total from: \".ki \\@Me);\n    $total;\n}\n};"
+                    sc: 
+                      acgt: s
+                      args: A,C,G,T,s
+                      coded: 1
+                      dige: 8d76ce25d703
+                      of: i
+                    t: multiv
+                    "y": 
+                      cv: '0.1'
+                      next: &13 
+                        c: 
+                          s: "sub {\nmy ($A,$C,$G,$T,@M)=@_;\nmy ($xo,$x,@Me) = @M;\nmy $so = $xo;\n$xo = {};\nmy $oxo = $x->{sc}->{xo};\nfor my $k (keys %$so) {\n    my $v = $so->{\"$k\"};\n    my $ov = $oxo->{\"$k\"};\n    $xo->{\"$k\"} = $v eq $ov ? $ov : $v;\n}\nfor my $k (keys %$oxo) {\n    exists $xo->{\"$k\"} && next;\n    $xo->{\"$k\"} = undef;\n}\n$x->{sc}->{xo} = $xo;\n};"
+                        sc: 
+                          acgt: xo x
+                          args: A,C,G,T,xo,x
+                          coded: 1
+                          dige: 11b6eb6fac6d
+                          of: i
+                        t: newxo
+                        "y": 
+                          cv: '0.1'
+                          prev: *4
+                          up: *5
+                      prev: *3
+                      up: *5
+                  up: *5
+              next: &6 
+                c: 
+                  W: of
+                sc: 
+                  z: ~
+                t: s
+                "y": 
+                  cv: '0.001'
+                  in: &7 
+                    c: 
+                      s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nif ($C->{c}->{imparted}) { # thawing\n    $C->{sc}->{xo} = $A->{c}->{xo} if $A->{c}->{xo};\n    return \n}\nmy $J = $A->{1};\nmy $top = $C->{sc}->{top} || return sayre \" : : no top on $J->{t}, skip xo\";\nmy $te = $A->{mo}->{c}->{T};\nmy $xo = $te->{has}; # our xo\nmy $x = $top->{y}->{x} || die \"No x on $A->{1}->{t}: \".ki $C->{sc}->{top};\nmy $oxo = $x->{sc}->{xo}; # our past xo\n\n$xo = $A->{c}->{xo} if $A->{c}->{xo}; # thawing\nmy $we = $G->{h}->($A,$C,$G,$T,\"newxo\",$xo,$x) if $xo || $oxo;\n\nmy $ox = $A->{sc}->{ox}; # many y t xo (inc undef goners)\nmy $xox = $C->{sc}->{xox}; # many k y t v past\n$xo || $ox || $oxo || $xox || return delete $C->{sc}->{xo};\n\nif (!$ox && !$xox) { # just oneself\n    $C->{sc}->{xo} = $xo;\n    return;\n}\n\nif ($we) {\n    my $cv = 0.9;\n    $ox->{\"$cv\"}->{\"$A->{1}->{t}\"} = $xo;\n}\n# ox is y t to xo\n# unified back to single xo with others\nmy $kyt = {};\n$G->{h}->($A,$C,$G,$T,\"chew\",$ox,\\'cv,t,k',$_) for sub {\n    my ($v,$cv,$t,$k) = @_;\n    my $ov = $G->{h}->($A,$C,$G,$T,\"pint\",$xox,[$k,$cv,$t]);\n    if ($v ne $ov) {\n        $kyt->{\"$k\"}++;\n    }\n    if (!defined $v) {\n        delete $xox->{\"$k\"}->{\"$cv\"}->{\"$t\"};\n        delete $xox->{\"$k\"}->{\"$cv\"} if !keys%{$xox->{\"$k\"}->{\"$cv\"} };\n        delete $xox->{\"$k\"} if !keys%{$xox->{\"$k\"} };\n    }\n    else {\n        $xox->{\"$k\"}->{\"$cv\"}->{\"$t\"} = $v;\n    }\n};\n\n# xo is our k v\n$A->{sc}->{infxo} = [];\n$xo = $C->{sc}->{xo};\nfor my $k (sort keys %$kyt) {\n    my $yt = $xox->{\"$k\"} || {};\n    my @M;\n    $G->{h}->($A,$C,$G,$T,\"chew\",$yt,\\'cv,t',$_) for sub {\n        my ($v,$cv,$t) = @_;\n        my $z = $G->{h}->($A,$C,$G,$T,\"Ct\",[$t,$cv,{s=>$v},{}]);\n        if (my $D = $top->{y}->{tv}->{\"$t\"}->{\"$cv\"}) {\n            $z->{sc}->{W} = $D->{sc}->{W} if $D->{sc}->{W};\n        }\n        push @M, $z;\n    };\n    if (!@M) {\n        delete $xo->{\"$k\"};\n    }\n    else {\n        $xo->{\"$k\"} = $G->{h}->($A,$C,$G,$T,\"multiv\",$k,@M);\n    }\n}\n$C->{sc}->{xox} = $xox;\n$C->{sc}->{xo} = $xo;\ndelete $C->{sc}->{xo} if !keys %$xo;\n};"
+                    sc: 
+                      acgt: s
+                      act: 1
+                      args: A,C,G,T,s
+                      coded: 1
+                      dige: a251b0f1baff
+                      of: s
+                    t: xo
+                    "y": 
+                      cv: '0.78'
+                      up: *6
+                  next: &9 
+                    c: 
+                      s: "@Me || die \"Nothing to have\";\nmy $Y = $A;\nif (ref $Me[0]) {\n    my $move = shift @Me;\n    $move = [$$move] if ref $move eq 'SCALAR';\n    for (@$move) {\n        $Y = $Y.>$_ || die \"No move: @$move (at $_) from \".ki $Y;\n    }\n}\nmy $v = @Me == 1 ? 1 : pop @Me;\nmy $T = Y.c.T;\nmy $S = T.has ||= {};\nmy $last = pop @Me;\n$S = $S.>$_ ||= {} for @Me;\nreturn $S.>$last += $v if $v eq '1';\n$S.>$last = $v;\n"
+                    sc: 
+                      acgt: 1
+                      of: i
+                    t: has
+                    "y": 
+                      cv: '0.1'
+                      next: &10 
+                        c: 
+                          s: "my $inf = A.sc.infxo;\nmy $sa = sub {\n    push @$inf, shift;\n    A.V && G.h->($A,$C,$G,$T,'say','sayyl',\"Inf A.1.t: \".$inf->[-1])\n};\nif ($s eq 'Tin') { # T ... markers\n    my $td = {};\n    for my $x (map{_.c.s}@Me) {\n        G&chew,$x,'pin,label,line',$_ for sub { my ($i,$t,$s,$l) = @_;\n            $td.>$t.>$s.>$l += $i;\n        };\n    } ;\n    $td;\n}\nelsif ($s eq 'way') {\n    my $td = {};\n    for (@Me) {\n        next if _.sc.W;\n        # TODO know W separately up to a...\n        while (my ($t,$dv) = each %{_.c.s }) {\n        while (my ($d,$q) = each %{$dv }) {\n            $td.>$t.>$d += $q;\n        }}\n    };\n    $sa->(\" $s from \".join(',',map{_.t}@Me).\": \".ki $td);\n    $td\n}\nelse {\n    my $total = sum map {_.c.s} @Me;\n    $sa->(\" $s totals $total from: \".ki \\@Me);\n    $total;\n}\n"
+                        sc: 
+                          acgt: s
+                          of: i
+                        t: multiv
+                        "y": 
+                          cv: '0.1'
+                          next: &11 
+                            c: 
+                              s: "my $so = $xo;\n$xo = {};\nmy $oxo = x.sc.xo;\nfor my $k (keys %$so) {\n    my $v = $so.>$k;\n    my $ov = $oxo.>$k;\n    $xo.>$k = $v eq $ov ? $ov : $v;\n}\nfor my $k (keys %$oxo) {\n    exists $xo.>$k && next;\n    $xo.>$k = undef;\n}\nx.sc.xo = $xo;\n"
+                            sc: 
+                              acgt: xo x
+                              of: i
+                            t: newxo
+                            "y": 
+                              cv: '0.1'
+                              next: &12 
+                                c: 
+                                  s: "c&Jo || return;\nmy $x = A.sc.x;\nmy $J = A.sc.J;\nmy $s = J.sc.s;\ns.sc.xo || x.sc.xo || return;\nmy $Y = A.sA || die \"No us osc O xo: \".ki $C;\nmy $xo = Y.sc.ox.>C.y.cv.>C.t = G&newxo,s.sc.xo,$x;\n\n"
+                                sc: 
+                                  acgt: s
+                                  act: 1
+                                  of: O
+                                t: xo
+                                "y": 
+                                  cv: '0.6'
+                                  next: &14 
+                                    c: 
+                                      s: "if (c&imparted) { # thawing\n    C&xo = A.c.xo if A.c.xo;\n    return \n}\nmy $J = A.1;\nmy $top = C&top || return sayre \" : : no top on J.t, skip xo\";\nmy $te = A.mo.c.T;\nmy $xo = te.has; # our xo\nmy $x = top.y.x || die \"No x on A.1.t: \".ki C&top;\nmy $oxo = x.sc.xo; # our past xo\n\n$xo = A.c.xo if A.c.xo; # thawing\nmy $we = G&newxo,$xo,$x if $xo || $oxo;\n\nmy $ox = A.sc.ox; # many y t xo (inc undef goners)\nmy $xox = C&xox; # many k y t v past\n$xo || $ox || $oxo || $xox || return delete C&xo;\n\nif (!$ox && !$xox) { # just oneself\n    C&xo = $xo;\n    return;\n}\n\nif ($we) {\n    my $cv = 0.9;\n    $ox.>$cv.>A.1.t = $xo;\n}\n# ox is y t to xo\n# unified back to single xo with others\nmy $kyt = {};\nG&chew,$ox,\\'cv,t,k',$_ for sub {\n    my ($v,$cv,$t,$k) = @_;\n    my $ov = G&pint,$xox,[$k,$cv,$t];\n    if ($v ne $ov) {\n        $kyt.>$k++;\n    }\n    if (!defined $v) {\n        delete $xox.>$k.>$cv.>$t;\n        delete $xox.>$k.>$cv if !keys%{$xox.>$k.>$cv };\n        delete $xox.>$k if !keys%{$xox.>$k };\n    }\n    else {\n        $xox.>$k.>$cv.>$t = $v;\n    }\n};\n\n# xo is our k v\nA.sc.infxo = [];\n$xo = C&xo;\nfor my $k (sort keys %$kyt) {\n    my $yt = $xox.>$k || {};\n    my @M;\n    G&chew,$yt,\\'cv,t',$_ for sub {\n        my ($v,$cv,$t) = @_;\n        my $z = G&Ct,[$t,$cv,{s=>$v},{}];\n        if (my $D = top.y.tv.>$t.>$cv) {\n            z.sc.W = D.sc.W if D.sc.W;\n        }\n        push @M, $z;\n    };\n    if (!@M) {\n        delete $xo.>$k;\n    }\n    else {\n        $xo.>$k = G&multiv,$k,@M;\n    }\n}\nC&xox = $xox;\nC&xo = $xo;\ndelete C&xo if !keys %$xo;\n"
+                                    sc: 
+                                      acgt: s
+                                      act: 1
+                                      of: s
+                                    t: xo
+                                    "y": 
+                                      cv: '0.78'
+                                      prev: *12
+                                      up: *8
+                                  prev: *11
+                                  up: *8
+                              prev: *10
+                              up: *8
+                          prev: *9
+                          up: *8
+                      prev: *6
+                      up: *8
+                  prev: *5
+                  tv: 
+                    xo: 
+                      "0.78": *7
+                  tw: 
+                    xo: *7
+                  up: *8
+              prev: *1
+              tv: 
+                has: 
+                  "0.1": *3
+                multiv: 
+                  "0.1": *4
+                newxo: 
+                  "0.1": *13
+              tw: 
+                has: *3
+                multiv: *4
+                newxo: *13
+              up: *8
+          tv: 
+            xo: 
+              "0.6": *2
+          tw: 
+            xo: *2
+          up: *8
+      ElBridge 0.9/O 0.001/xo 0.6: *2
+      ElBridge 0.9/has 0.1: *9
+      ElBridge 0.9/i 0.001: *5
+      ElBridge 0.9/i 0.001/has 0.1: *3
+      ElBridge 0.9/i 0.001/multiv 0.1: *4
+      ElBridge 0.9/i 0.001/newxo 0.1: *13
+      ElBridge 0.9/multiv 0.1: *10
+      ElBridge 0.9/newxo 0.1: *11
+      ElBridge 0.9/s 0.001: *6
+      ElBridge 0.9/s 0.001/xo 0.78: *7
+      ElBridge 0.9/xo 0.6: *12
+      ElBridge 0.9/xo 0.78: *14
+    sc: 
+      iiyt: 
+        "0.001": 
+          O: *1
+          i: *5
+          s: *6
+      top: *8
+    unreal: 
+      sc: 
+        iiyt: 1
+  z: ~
+t: ElBridge
+"y": 
+  cv: '0.9'
+  in: *1
+  tv: 
+    O: 
+      "0.001": *1
+    has: 
+      "0.1": *9
+    i: 
+      "0.001": *5
+    multiv: 
+      "0.1": *10
+    newxo: 
+      "0.1": *11
+    s: 
+      "0.001": *6
+    xo: 
+      "0.6": *12
+      "0.78": *14
+  tw: 
+    O: *1
+    has: *9
+    i: *5
+    multiv: *10
+    newxo: *11
+    s: *6
+    xo: *14
