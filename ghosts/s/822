@@ -1,19 +1,33 @@
   
 ElvisMe: | # increase res
-    my $bay = ar.bay ||= 'bay';
+    # forked from Udder
+    # which needs to release its STDIN loop and Baye for new Opper
+    my $pid = $$;
+    Rw ElvisYou $bay:c&s;
+    T.oT.Uddoff = 1 if $pid ne $$;
+    
     
 ElvisYou: | # YOUR
     my $M = [];
-    G.c.bay ||= 'bay';
+    G.c.bay ||= ar.bay || 'bay';
     `rm -rf G.c.bay/p/*`;
+    # to fork an output handler (O) and children (U)
     m Opper
     m Udder
+    my $O;
+    my $opid;
     for my $C (@$M) {
         # opens new land
-        Rw CellDivision $C;
+        if ($opid) {
+            # sets our W output
+            $O ||= G.c.bay."/p/Opper/in";
+        }
+        Rw CellOvulation $C $O;
         s&pid || return;
         # first handles output
-        G.c.opid ||= s&pid;
+        if (!$opid) {
+            $opid = s&pid;
+        }
     }
 Opper: | # consolidato
     Js&bowls++ ||
@@ -24,10 +38,16 @@ Opper: | # consolidato
     snooze 222;
     n Fish
     n Opera
-CellDivision: |
+CellOvulation: |
     my $i = G.c.oipi++;
     my $pa = $$;
     (s&pid = fork()) && return;
+    if (ar.O) {
+        # get Dejo to send new chunks of tape (z) to:
+        G.c.tapeze = 'Ualve';
+        # which stores and sends that address to O-ward:
+        G.c.Oin = ar.O;
+    }
     G.c.oparent = $pa;
     G.c.oipi = 0;
     $0 .= " $i";
@@ -35,13 +55,10 @@ CellDivision: |
         $0 .= ":C.t";
         ar.take = C.t;
     }
-    saybl "CellDivision: $0";
+    saybl "CellOvulation: $0";
     Rw Washup;
     n $C
 Udder: | # go waiter
-    # sets our W output
-    Js&bowls++ ||
-        Rw CleanUdder;
     # to resume
     while (1) {
         $_ = <STDIN>;
@@ -54,18 +71,11 @@ Udder: | # go waiter
             $@ = '';
             return;
         }
-        Rw CellDivision
+        Rw CellOvulation
             || next;
         saybl "Done Udder";
         return saybl "Uddoff" if T.Uddoff;
     }
-CleanUdder: | # dream feed connection Dejo->Ualve
-    # set trip Dejo mo 7 to Js&ze = 'Flap'
-    G&Ti,Trips=>[Catchelism=>''=>\'W:Dejo,At:mo,Acv:7'],$_
-        for  &acgtlr{
-            my $J = s&J;
-            Js&ze = 'Ualve'
-        };
 Ualve: | # Udders' W z out for an Opper
     # 
     e&t eq 'z' || die "Not e z";
@@ -86,7 +96,8 @@ Ualve: | # Udders' W z out for an Opper
     write_file($f, sjson([map{ $elv->($_) }@$z])."\n");
     
     my $pull = [Ilan=>[f=>$f]];
-    write_file("G.c.bay/p/Opper/in",{append=>1},sjson($pull)."\n");
+    G.c.Oin || die "No GcOin from $d $$";
+    write_file(G.c.Oin,{append=>1},sjson($pull)."\n");
     
 Rebase: | # pull W into C=plaz
     # from many place's writings
