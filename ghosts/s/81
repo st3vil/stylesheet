@@ -69,10 +69,11 @@ pi/pud: |
     
     n ind=>o7=>"\n$ind"
     n sli=>o8=>"<  ",'%hs:784,dos:crankdown'
-    n title=>1=>"C.t",'%dos:crankup'
+    n t=>1=>"C.t",'%dos:crankup'
     
     my ($return,$sy);
-    if (G&isC,$s) {
+    if (ref $s eq 'HASH' && keys %$s < 5 && 
+        G&isC,$s) {
         # try
         if (!keys %{s.y} && !keys %{s.sc}
             && keys %{s.c} == 1 && exists s.c.s) {
@@ -81,7 +82,9 @@ pi/pud: |
             $return = 2;
             c&dl += 2;
         }
-        $sy = 'C';
+        s&type = $sy = 'C';
+        $return ||=
+        Rw Cpud;
     }
     
     c&block = 'same' if $s eq 2Cc&s;
@@ -156,7 +159,7 @@ pi/pud: |
             n no=>2=>ki($s),'%fs:7,hs:458'
         }
     }
-    else {
+    elsif (s&type ne 'C') {
         if (ref $s ne 'HASH' || c&depth > c&dl) {
             T nonhash
             my $z = s&type eq 'A' ? $idA->($s)
@@ -260,6 +263,7 @@ Jpud: |
         n sn=>167=>" $_ ",'%hs:897,fs:7' for G&sn,$s;
         n co=>168=>(sc&o||"?")=>'%hs:374'
     }
+    #
     T there
     if ($spc < 1) {
         my $dw = {map{$_=>1}qw'y 1 2 3 4 5 i ii'};
@@ -267,6 +271,31 @@ Jpud: |
     }
     # return if
     $spc <= 0;
+Cpud: |
+    my $spc = c&dl - c&depth;
+    if ($spc < 1) {
+        my $ac = G&aC,$s,'Ck5';
+        
+        $ac->[1] =~ s/^0\./$2/;
+        my $over = length($ac->[0]) / 14;
+        my $fs = int(12 / ($over < 1 ? 1 : $over * 0.89));
+        $fs = 3 if $fs < 3;
+        
+        n t=>2=>shift @$ac,"%hs:356,fs:$fs,mw:14"
+        n ycv=>2=>shift @$ac,'%hs758,fs:12,ma:0.3'
+        n y=>201=>shift @$ac,'%hs:856,fs:7'
+        n c=>21=>shift @$ac,'%hs:656,fs:8'
+        n sc=>22=>shift @$ac,'%hs:456,fs:10'
+    }
+    elsif ($spc < 2) {
+        n ki=>2=>ki($s)
+        # splitup #
+    }
+    else {
+        # dive into
+        return 0;
+    }
+    1
 yki: | # ki() again
     my @ks = sort keys %$s;
     my $ks = &v{

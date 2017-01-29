@@ -108,7 +108,7 @@ pi/proc: | # picture in picture rock
     n t=>1=>s&sot,'%hs:655,fs:15'
     n spc=>12=>' '
     
-    n pid=>2=>$p,'%fs:7,hs:256'
+    n pid=>2=>$p,'%fs:7,hs:256,dos:Chaseout'
     s&pid = $p;
     
     -e "/proc/$p" || return
@@ -137,8 +137,9 @@ pi/proc: | # picture in picture rock
     my ($mem) = `cat /proc/$p/statm` =~ /(\d+)/;
     $mem *= 3900.25;
     
+    my $fs = $mem > 70000000000 ? 14 : 7;
     my $ms = Rw sciun $s:mem;
-    n memu=>45=>" $ms","%fs:7,dos:Reap"
+    n memu=>45=>" $ms","%fs:$fs,dos:Reap"
     
     Js&ope || return;
     
