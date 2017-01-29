@@ -326,21 +326,22 @@ Cpud: |
         delete $y.>$_ for @sel, 'cv';
         my $sel = join("*",sort @sel)." " if @sel;
         my $ys = join " ", map {
-            "$_:".slm(14,G&aC,$y.>$_ )
+            "$_"#:".slm(14,G&aC,$y.>$_ )
         } sort keys %$y;
         n y=>201=>$sel.$ys,'%hs:856,fs:7'
         
-        n c=>21=>ki(s.c),'%hs:656,fs:8'
-        n sc=>22=>ki(s.sc),'%hs:456,fs:10'
-        
-        if (s.t =~ /^guitar/) {
-            ###
-            my $uN = A.mo.up.c.mos;
-            #my @m = 
-            1 && sayyl "Hetre!";
-            T mosi
-            G&give,Toter=>seepage=>$uN
+        my $c = {%{s.c}};
+        if (c.inside && c.ind && exists c.inds) {
+            delete $c.>$_ for qw'inds inside';
         }
+        if (exists c.s) {
+            my $s = delete c.s;
+            my $fs = $fss->($s);
+            n s=>23=>$s,"%hs:356,fs:$fs,mw:14,ab:1,mt:2"
+        }
+        n c=>21=>ki($c),'%hs:656,fs:8'
+        n sc=>22=>ki(s.sc, 1,1),'%hs:456,fs:10'
+        
     }
     else {
         # dive into
