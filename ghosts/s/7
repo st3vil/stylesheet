@@ -291,12 +291,16 @@ Stro: | # storage aJent for Hosthing, just needs a G
     Js&loose = 1;
     T.nose = 2; # no osc but keep J (4s&Jtv)
     T.pos = 0; # always thinks its right
-    my $f = G.c.Stash || 'w/St';
+    my $na = &V,W,t{
+        my $d = G.c.Stash || 'w/St'; # could be bay
+        $t = 'head' if !defined $t;
+        join('/', $d, map { s/\W//g;$_ } grep {$_} $V, $W, $t);
+    };
     my $c = e&s; # sets C.c.e.c.s.sc.top = got
-    my @p = map { s/\W//g;$_ } A.4.t, c.t;
-    my $p = join '/', $f, @p;
-    my $f = "$p/head";
+    
+    my $f = $na->(A.4.t, c.t);
     if (e&t eq 'put') {
+        my $p = $na->(A.4.t, c.t, '');
         `mkdir -p $p`;
         DumpFile($f,$c);
         if (G.c.Stash) {
@@ -305,9 +309,6 @@ Stro: | # storage aJent for Hosthing, just needs a G
                 my $xof = "$p/xo";
                 DumpFile($xof,$xo);
             }
-            1 && saybl "from store ".ki c.sc.meta;
-            my $m = c.sc && c.sc.meta && c.sc.meta.c;
-            1 && saybl "from store ",map{ki$_} $m, c.sc.meta;
             if (my $mc = G&pint,$c,sc=>meta=>'c' ) {
                 my $cf = "$p/c";
                 DumpFile($cf,$mc);
@@ -316,7 +317,17 @@ Stro: | # storage aJent for Hosthing, just needs a G
         C.c.V && sayyl "Store $f";
     }
     elsif (e&t eq 'get') {
-        -f $f && -s $f || return;
+        unless (-f $f && -s $f) {
+            my $t = G.c.t6 || return;
+            # travel agency, like A.6.t
+            # a loosely in pile by the gondola in this bay
+            # could ask for net with A.8
+            # our pull/push in A.7
+            # another place to check for W src
+            # stores (not auto?) in our place (A.4.t)
+            $f = $na->($t, c.t);
+            -f $f && -s $f || return;
+        }
         my $d = LoadFile($f);
         $d || return;
         ds&meta.mtime = (stat $f)[9];
