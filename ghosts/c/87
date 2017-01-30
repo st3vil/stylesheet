@@ -101,8 +101,6 @@ sleep_if_hot: |
         }
     }
     
-
-
 TimeTape: | # r %int/ini attach sense of time
     my $t = J.Ti ||= {};
     if (c&for) {
@@ -308,7 +306,10 @@ pi/pape: |
     Rw pap_b;
     C&b = 'normal' if C.t =~ /^[1]/;
     
-    C&r = int(700 * $fo);
+    C&r = int(700 * $fo) unless c&rot;
+    if (c&rot eq 'ends') {
+        C&r = 180 if 4 < rand 5;
+    }
     C&pxp = int C&pxp if C&pxp;
     C&pyp = int C&pyp if C&pyp;
     C.sc->{$_} = G&ron,C.sc->{$_}
@@ -316,6 +317,8 @@ pi/pape: |
     
 pap_b: |
     my @op = (
+    0 ? (qw'normal normal color-burn add multiply')
+    : (
     #'negation',# 'source-over', 'source-in',
     #'source-out',    #'source-atop',
     #'darken', 'lighten',
@@ -340,6 +343,7 @@ pap_b: |
     #'exclusion', #'hue', 'saturation', 'luminosity', 'color', 'add', 'subtract'
     , 'average', 'pin-light', 'negation', 'source-over', 'source-in', 'source-out', 'source-atop', 'destination-over', 'destination-in', 'destination-out', 'destination-atop', 'lighter', 'darker', 'copy', 
     #'darker'
+    )
     );
     if (c&lino) {
         @op = ('normal', 'normal','difference');

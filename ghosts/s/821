@@ -100,14 +100,19 @@ Thrext: | # n head of a so
     n t=>1=>$name=>'%fs:12'
     
 Reimp: |
-    if (my $cb = Js&Simp) {
-        my $S = us&S ;
-        
-        if ($S) {
+    if (my $cb = Js&Cimp) {
+        if ( us&C ) {
             sayre "Reimp Calling $cb";
             Rw $cb;
         }
     }
+    if (my $cb = Js&Simp) {
+        if ( us&S ) {
+            sayre "Reimp Calling $cb";
+            Rw $cb;
+        }
+    }
+    return T.pos = '' if delete T.done;
     Jc&imping = 1;
     T.pos = 1;
 
