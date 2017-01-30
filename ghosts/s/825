@@ -116,26 +116,40 @@ Woov: |
     n Stuvv=>-xofor
     # ##
     n Elvising=>-xofor_2
-    n Elvising=>-forWosc=>3
+    n Elvising=>-Wave_3
     n G.c.bay=>-bay_4
     #n Ghostig
     
 pi/xofor: |
     Rw pi/forWosc
         && return;
-    $s = c&s;
+    $s = c&osc;
     my $xo = ss&xo || return
         n err=>2=>"Noxo",'%hs:138'
     n xo=>-pud_2=>{s=>$xo}
+pi/Wave: | # find their W
+    Rw pi/forWosc
+        && return;
+    m osc=>-pud_2=>{s=>$s}
+    # inclusions whose lv feed into this lv (probably) have sJ
+    my @m = G&op,'sW:';
+    m inc=>-pud_3=>{s=>\@m}
+    # expulsions - included in our lv/topuary, no 0.9, implies elvising
+    # thus n c&W s&z = [what c&W should have] (according to us)
+    my @w = G&op,'cW:';
+    m exp=>-pud_4=>{s=>\@w}
+    
+    
 pi/forWosc: | # find their W
+    # can be Rw to sort this out first
     y.at.dis=3;
-    n w=>12=>s&pi=>'%hs:694,fs:7'
     n t=>1=>c&s
+    n w=>12=>s&pi=>'%hs:694,fs:7'
     n c&s=>V
     my $t = T.op;
     $t || return
-        n err=>2=>"Notop",'%hs:138'
-    c&s = t.y.s || return
+        n err=>2=>"Notop:c&s",'%hs:138'
+    c&oscs = t.y.s || return
         n err=>2=>"Noosc",'%hs:138'
     return;
 pi/bay: |
@@ -187,22 +201,6 @@ Whats: | # given f, a piece of the bay or a bit of any kind of name to acquire
     n s.t=>-pud_2=>{s=>sc&s,dl=>4}
     
     
-    
-    
-
-pi/Win: | # find their W
-    Rw pi/forWosc
-        && return;
-    $s = c&s;
-    T.op = ss&top || die "s.t no top";
-    m osc=>-pud=>{s=>$s}
-    # inclusions whose lv feed into this lv (probably) have sJ
-    my @m = G&op,'sW';
-    m inc=>-pud=>{s=>\@m}
-    # expulsions - included in our lv/topuary, no 0.9, implies elvising
-    # thus n c&W s&z = [what c&W should have] (according to us)
-    my @w = G&op,'cW';
-    m exp=>-pud=>{s=>\@w}
     
     
 Stuvv: |
