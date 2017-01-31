@@ -80,12 +80,14 @@ pi/thumb: |
             `ffmpegthumbnailer -s 420 -t 20% -i $s -o $th`
         }
         else {
-            c&size ||= 1200;
-            my $size = c&size.'x'.c&size;
-            -s $s < 200_000 ?
+            if (-s $s < 200_000) {
                 `cp $s $th` # webserver likes no symlink
-                :
+            }
+            else {
+                c&size ||= 1200;
+                my $size = c&size.'x'.c&size;
                 `convert $s -thumbnail $size $th`
+            }
         }
     }
     C.sc.src = $thl;
