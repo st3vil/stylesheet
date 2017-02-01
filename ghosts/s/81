@@ -290,6 +290,7 @@ Apud: |
     $spc <= 0;
 Cpud: |
     my $spc = c&dl - c&depth;
+    $spc = 1 if c&block;
     my $fss = &s{
         my $over = length($s) / 14;
         my $fs = int(12 / ($over < 1 ? 1 : $over * 0.89));
@@ -302,11 +303,11 @@ Cpud: |
         $ac->[1] =~ s/^0\./$2/;
         my $fs = $fss->($ac->[0]);
         #
-        n t=>2=>shift @$ac,"%hs:356,fs:$fs,mw:14"
-        n ycv=>2=>shift @$ac,'%hs758,fs:12,ma:0.3'
-        n y=>201=>shift @$ac,'%hs:856,fs:7'
-        n c=>21=>shift @$ac,'%hs:656,fs:8'
-        n sc=>22=>shift @$ac,'%hs:456,fs:10'
+        n t=>2=>{s=>shift @$ac},"%hs:356,fs:$fs,mw:14"
+        n ycv=>2=>{s=>shift @$ac},'%hs758,fs:12,ma:0.3'
+        n y=>201=>{s=>shift @$ac},'%hs:856,fs:7'
+        n c=>21=>{s=>shift @$ac},'%hs:656,fs:8'
+        n sc=>22=>{s=>shift @$ac},'%hs:456,fs:10'
     }
     elsif ($spc < 2) {
         my $ac = G&aC,$s,'Ck5';
@@ -315,8 +316,8 @@ Cpud: |
         my $fs = $fss->($ac->[0]);
         $fs += 2;
         
-        n t=>2=>shift @$ac,"%hs:356,fs:$fs,mw:14"
-        n ycv=>2=>shift @$ac,'%hs758,fs:12,ma:0.3'
+        n t=>2=>{s=>shift @$ac},"%hs:356,fs:$fs,mw:14"
+        n ycv=>2=>{s=>shift @$ac},'%hs758,fs:12,ma:0.3'
         my @sel = grep { my $C = s.y.>$_;
             ref $C eq 'HASH' && C.y && C.y ne $C && G&isC,$C &&
             C.t eq s.t && C.y.cv eq s.y.cv
