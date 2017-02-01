@@ -125,46 +125,48 @@ Ualve: | # Udders' W z out for an Opper
 Rebase: | # pull W into C=plaz
     # from many place's writings
     # from d p t i
-    
-            my $Nf = [];
-            if ($i > 0) {
-                if (!defined s&ie || s&ie < $i - 1) {
-                    my ($i,$p) = ($i,$p);
-                    my $oi = $i;
+    my $flv = s&flv ||= [];
+    if (@$flv > $i) {
+        sayre "Remote IMpreset C.t";
+        @$flv = ();
+    }
+    if ($i >= @$flv) {
+        my $M = [];
+        saygr "New $i and s&ie";
+        if ($i > @$flv) { # jumps ahead, fill in
+            my ($oi) = my ($i,$p) = ($i,$p);
+            $i--;
+            # follow lineage
+            branch: while (-f "$d/p/$p/pa") {
+                1 && say "   in to: ".`cat $d/p/$p/so`." For W/$t.$i";
+                $p = read_file "$d/p/$p/pa";
+                -e "$d/p/$p" || die "No find pid $p ";
+                while (-f "$d/p/$p/W/$t.$i") {
+                    1 && say "    -W $d/p/$p/W/$t.$i";
+                    last branch if $i+1 == @$flv;
+                    m $i=>-lv=>{s=>"$d/p/$p/W/$t.$i"}
+                    last branch if $i == 0;
                     $i--;
-                    branch: while (-f "$d/p/$p/pa") {
-                        1 && say "   in to: ".`cat $d/p/$p/so`." For W/$t.$i";
-                        $p = read_file "$d/p/$p/pa";
-                        -e "$d/p/$p" || die "No find pid $p ";
-                        while (-f "$d/p/$p/W/$t.$i") {
-                            1 && say "    -W $d/p/$p/W/$t.$i";
-                            last branch if defined s&ie && $i == s&ie;
-                            unshift @$Nf, "$d/p/$p/W/$t.$i";
-                            last branch if $i == 0;
-                            $i--;
-                            
-                        }
-                    }
-                    @$Nf || die "Wanted news $d $t: s&i-$oi"
                 }
             }
-            s&ie = $i;
-            push @$Nf, "$d/p/$p/W/$t.$i";
+            @$M || die "Wanted news $d $t: ".(@$flv-1)."->$oi";
+        }
+        @$M = reverse @$M;
+        m $i=>-lv=>{s=>"$d/p/$p/W/$t.$i"}
+        
+        for my $C (@$M) {
+            my $z = read_file(c&s);
+            $z = djson $z;
             
-    Rw UpZs $Nf;
-UpZs: |
-            for my $s (@$Nf) {
-                my $z = read_file($s);
-                $z = djson $z;
-
-                my $elv;$elv = &C{
-                    $C = G&Ct,$C;
-                    s&z = [map{$elv->($_)}@{s&z}] if s&z;
-                    $C
-                };
-                #sayre "Do ".wdump 4, $z;
-                $z = [map{ $elv->($_) }@$z];
-
-                push @{s&zin||=[]}, @$z;
-            }
+            # [t,y,c,sc] -> C
+            my $elv;$elv = &C{
+                $C = G&Ct,$C;
+                s&z = [map{$elv->($_)}@{s&z}] if s&z;
+                $C
+            };
+            s&lv = [map{ $elv->($_) }@$z];
+            push @$flv, $C;
+        }
+    }
+    s&ie = $i;
 
