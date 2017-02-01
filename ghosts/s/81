@@ -1,16 +1,13 @@
 
-crankup: | # add trips for hC to glow more
-    my $hC = e&hC;
-    G&give,Toter=>cup=>[$hC];
-    
-    sayyl "You want to crank up: ", map{ki$_} e&_hC;
-    saybl "Btw ".G&es;
-    T.pos = 0;
-    # make into Trips
+Crank: | # add trips for hC to glow more
+    my $j = e&hJ ->[-1];
+    my $i = 1;
+    $i *= -1 if us&S;
+    js&boost += $i;
+    sayyl "Crank to js&boost: ".G&sn,$j;
+    # make into Trips?
     # makes Matu wakeup happen
     # as a G.A would unify
-crankdown: | # has
-    # etheroff
 P: |
     u urw
     u UpPg
@@ -57,6 +54,7 @@ pi/pud: |
     c&dl = 2 if !defined c&dl;
     
     # travel boosts/cons depth
+    c&dl += Js&boost * 2 if Js&boost;
     # c&dl += 2 if c&depth < 5 && C.t eq 'sc';
     c&dl += 2 if c&depth < 6 && C.t eq 's' && 22Cs&istycsc;
     c&dl -= 3 if C.t eq 'y' && 2Cs&istycsc;
@@ -72,8 +70,8 @@ pi/pud: |
     my $ind = join'', ('  ') x (c&depth - 1);
     
     n ind=>o7=>"\n$ind"
-    n sli=>o8=>"<  ",'%hs:784,dos:crankdown'
-    n t=>1=>"C.t",'%dos:crankup'
+    n sli=>o8=>"<  ",'%hs:784,dos:Crank'
+    n t=>1=>"C.t",'%dos:Crank'
     
     my ($return,$sy);
     if (ref $s eq 'HASH' && keys %$s < 5 && 
@@ -91,7 +89,7 @@ pi/pud: |
         Rw Cpud;
     }
     
-    c&block = 'same' if $s eq 2Cc&s;
+    c&block = 'same' if $s eq 2Cc&s && 2Cs&pi eq s&pi ;
     c&block = 'b' if C.t eq 'ip' && A.2.C.t eq 'c';
     my $idA = &s{
         my $v = sc&s;
