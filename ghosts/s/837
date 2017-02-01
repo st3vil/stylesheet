@@ -7,26 +7,90 @@ Valve: | # Ilan's switch tree, heading to elvis sorted under opera
         m s.t=>-lvf=>{s=>$s}
     };
     S
-    m $_ for @{Js&M};
+    if (my $not = delete Js&notif) {
+        #n not=>11=>ki($not),'%fs:8,hs:000'
+    }
+    my $m = Js&M ||= [];
+    for my $C (@$m) {
+        if (c&pi eq 'lvf') {
+            if (!s&seen) {
+                s&file = G.c.bay."/t/".C.t;
+                if (-f s&file) {
+                    s&base = [map{djson$_} split"\n", read_file s&file];
+                    c&forum = my $M = [];
+                    m "t C.t"=>-tl=>{s=>$C}
+                }
+                s&seen = 1;
+            }
+        }
+    }
+    @$m = map { @{delete(_c&forum)||[]}, $_ } @$m;
+    m $_ for @$m;
     y.cyc = 100;
+    
+pi/tl: | # test lvs
+    y.at.dis = 2;
+    n t=>1=>C.t,"%dis:2"
+    y.at.dos = 'Continues';
+    Js&ope || return
+        n on=>12=>" and G.c.bay",'%hs:347,fs:7'
+    
+    my @l = @{ss&base};
+    my $z = sc&s; # -tl holds -lvf holds -plaz or so
+    my @v = map { @{_s&lv} } @{zs&flv};
+    #n dwko=>-pud=>{s=>[\@l,\@v]}
+    #return;
+    
+    my $i = 0;
+    while (1) {
+        my ($l,$v) = ($l[$i],$v[$i]);
+        last if !$l && !$v;
+        # both Cs of the top level
+        my $C = G&Ct,[$i=>''=>{}];
+        my $c = G&A,o=>6,$C,$l,'compare' if $l;
+        my $o = G&A,o=>6,$C,$v,'compare' if $v;
+        if (!$v || @{oc&rsl||[]}) {
+            my $ba = !$v ? "missing" : !$l ? "madeup" : "changed";
+            $ba = "$i $ba" if $i;
+            m no=>''=>"ss&file! $ba",'%hs:777'
+            
+            m good=>''=>join("\n",@{cc&rsl||[]}),'%fs:7,hs:340,dis'
+            m bad=>''=>join("\n",@{oc&rsl||[]}),'%fs:7,hs:999,dis'
+            undef $C
+        }
+        else {
+            c&s = " correct";
+        }
+        $C &&
+        m $C
+    }
+    continue {
+        $i++;
+    }
+    
+    
     
 pi/lvf: |
     y.at.dis = 3;
     n t=>1=>C.t,"%dis:2"
     n flav=>-aims_12=>'ind-aC ind-aC-w/etc ind-ki o-rsl ind-Mpud'
-    n lvf=>-pud_2=>{dl=>1,s=>$s}
+    #n lvf=>-pud_2=>{dl=>1,s=>$s}
     y.n = 3;
     
     my $flv = ss&flv;
     my $i = 3;
+    my @l;
     for my $f (@{ss&flv}) {
         my $lv = fs&lv;
+        my ($li,$more) = (8);
         for my $C (@$lv) {
+            push @l, $C;
             my $s;
             my $pi = '';
             my $m = Js&flav;
             if ($m <3) {
                 my $y = &Cd{
+                    $more++, return if $li-- < 1;
                     $m == 0 ?
                         G&aC,$C
                     : $m == 1 ?
@@ -55,10 +119,18 @@ pi/lvf: |
             $h .= "$1\n" while $s =~ s/\t([^\n]+)$//m;
             $h &&
             m flev=>$pi=>{s=>$h},"%hs:${i}467,hue:180,ab,ml:30%,mt:0.4,dis,sha:1 1 3 847,zi:-5"
+            
+            $s .= "\n... $more more" if $more;
             m flv=>$pi=>{s=>$s},"%hs:${i}46,dis"
         }
         $i = 3 if $i++ > 8;
     }
+    y.at.dos = &{
+        my $f = s&file || die "nofile:C.t";
+        write_file $f, join "\n", map{ sjson $_ } @l;
+        push @{3s&notif||=[]}, "C.t saves";
+        
+    };
 pi/aims: | # select a number
     my @pos = split ' ', $s;
     Js&clsc = A.2.sc;
