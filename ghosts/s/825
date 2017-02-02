@@ -7,12 +7,31 @@ Doings: | # Opera's changables, patch bay...
     y.at.ab = 1;
     
     
-    my $t = 'Vin';
+    my $t = 'Player';
     47s&being = $t;
     my $no;
     my $first = !Js&bowls++;
     # etc
-    if ($t eq 'Vin') {
+    if ($t eq 'Player') {
+        if ($first) {
+            G&timer,0.4,$_ for &{ G&elph,Ghostrepel=>''; };
+        }
+        m comtu=>''=><<''
+            U:Vindego  loop:2
+            U:Player
+    }
+    elsif ($t eq 'Ayer') {
+        if ($first) {
+            G&timer,0.4,$_ for &{ G&elph,Ghostrepel=>''; };
+        }
+        m comtu=>''=><<''
+            U:Vindego  loop:2
+            U:Ayer
+            U:Flips
+            U:Text
+            U:ElvisMe
+    }
+    elsif ($t eq 'Vin') {
         if ($first) {
             G&timer,0.4,$_ for &{ G&elph,Ghostrepel=>''; };
         }
@@ -185,16 +204,21 @@ Clutter: | # codes
     Js&ein.bo = 'Doable';
     y.at.miw = 22;
     y.at.dis = 2;
+    Js&ein.t.w = &Te{
+        Jc&es = e.c.s;
+    };
     S
     # s = pin
     Jc&es = $s if $s;
     $s = Jc&es;
-    if (0) { # out of memory
+    Js&ever = [uniq @{Js&ever}, $s];
+    if (1) { # out of memory
         my $f = 's/825';
         n $f=>-codof=>{}=>'%not,dis:0'
-        m $f=>-snakes=>{s=>$s},{z=>[ G&op,'3' ]}
+        m "$f are"=>-snakes=>{s=>$s},{ze=>[ G&op,'3' ]}
     }
     
+    n hist=>8=>"h: @{Js&ever}",'%dis,hs:347'
     my $codon = &t{
         my $w = G&wops,$t;
         my $s = "wc&s";
@@ -206,34 +230,55 @@ Clutter: | # codes
     #$codon->('Clutter');
     
     # make a timer that asks Opper to redo it
-    y.res = 3;
+    #y.imp++;
     #T.oT.ok = 1;
 pi/snakes: | # centered views of clutter
-    my $z = delete s&z || die "No clutter";
+    y.at.mw = 25;
+    y.at.lh = 0.6;
+    y.at.ml = 4;
+    y.at.dis = 1;
+    y.at.bo = '4px solid black';
+    delete c&s;
+            
+    my $z = delete s&ze || die "No clutter";
     my @c = @$z;
     my $i = 0;
     for (@c) {
+        $_ = G&Ct=>[$_=>''] if ref $_ ne 'HASH';
         _.t eq $s && last;
         $i++;
     }
     my $c = $c[$i];
     my $ii = $i;
-    $i -= 2;
-    $i = 0 if $i < 0;
+    if (c&wi) {
+        $i -= c&wi / 2;
+        $i = 0 if $i < 0;
+    }
+    else {
+        $i = 0;
+    }
     while (exists $c[$i]) {
-        $_ = $c[$i];
+        my $C = $c[$i];
         my $d = $ii - $i;
         $d *= -1 if $d < 0;
-        my $fs = int(15 - $d ^ 2);
+        my $fs = int(40 / ($d+1) );
         $fs = 3 if $fs < 3;
-        m _.t=>''=>_.t=>{fs=>$fs}
+        m C.t=>''=>C.t=>{fs=>$fs}
         $i++;
-        last if $i > $ii + 2;
+        last if c&wi && $i > $ii + c&wi / 2;
+    }
+    for my $C (@$M) {
+        s&ma = 0.3;
+        s&hs = int(rand 9).int(3+rand 6).int(3+rand 6);
+        #C&fs = int(6 + rand 14);
+        s&dos = 'Snack';
+        s&sha = '2 2 5 849'
     }
     
-    #A.V = 2;
-    #n "sna ".C.t=>o1=>{s=>wdump 3, $c}
-    
+Snack: |
+    my $l = e&hC ->[-1];
+    #G&give,Toter=>se=>[];
+    G&elph,Clutter=>W=>{s=>lc&s}
 Woov: | # look at Stoov, who is doing W
     Jc&tape = 'Dejo';
     Js&ein.bo = 'Doable';
@@ -311,44 +356,7 @@ pi/forWosc: | # find their W
     c&osc = t.y.s || return
         n err=>2=>"Noosc",'%hs:138'
     return;
-pi/bay: |
-    # the view
-    y.at.dis = 2;
-    s&dis = 3;
-    y.at.ml = c&depth;
-    n t=>1=>C.t,'%dis:2'
-    if (-f $s) {
-        n f=>2=>"-f",'%hs:048'
-        n ti=>21=>{s=>"x".-s$s},'%fs:7,hs:487,dos:Continues'
-        if (Js&ope > Js&bowls) {
-            sayre "Isopen: $s";
-            Js&bowls++;
-            my $he = `head -n1 $s`;
-            if ($he =~ /^---\s+/) {
-                my $yam = LoadFile($s);
-                G&give,Whats=>$s=>{how=>'yamlfile',s=>$yam}
-                #n yaml=>-pud=>{s=>$yam,dl=>c&depth + 3}
-                
-            }
-            else {
-                n cont=>22=>{s=>slim(80,''.read_file($s))},'%fs:7,dis:2'
-            }
-        }
-        return;
-    }
-    if (c&depth == 1) {
-        my $void;
-        $void = "pids" if C.t =~ /^(p)$/;
-        $void && return 
-            n void=>23=>" $void",'%hs:847'
-    }
-    my @im = Rw Exe;
-    y.cyc = 100;
-    y.n = 12;
-    for (@im) {
-        my $f = $1 if /^c&s\/(.+)$/ || die "Nof c&s in $_";
-        m $f=>-bay=>{s=>$_,depth=>c&depth + 1}
-    }
+
 Whats: | # given f, a piece of the bay or a bit of any kind of name to acquire
     Rw Tiot;
     Rw Elationist;

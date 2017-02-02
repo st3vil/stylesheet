@@ -91,10 +91,11 @@ pi/lvf: |
             my $s;
             my $pi = '';
             my $m = Js&flav;
+            saybl wdump 3, $C;
             if ($m <3) {
                 my $y = &Cd{
                     $C = C.y.D;
-                    $more++, return if $li-- < 1;
+                    $more++, return '' if $li-- < 1;
                     $m == 0 ?
                         G&aC,$C
                     : $m == 1 ?
@@ -119,6 +120,7 @@ pi/lvf: |
                 n no=>1=>"No flac $m"
             }
             defined $pi || next;
+            $s =~ s/\s+$//s;
             my $h;
             $h .= "$1\n" while $s =~ s/\t([^\n]+)$//m;
             $h &&
@@ -151,4 +153,60 @@ pi/aims: | # select a number
     n col=>2=>':','%hs:489,fs:6'
     n s=>3=>$pos[$i]=>'%fs:8'
     
+Player: |
+    Jc&tape = 'Dejo';
+    Js&ein.bo = 'Doable';
+    Js&ein.t.play.sMJ = &sM{
+        m $s=>-plalv
+    };
+    c&s = G.c.bay.'/t';
+    S
+    my @l = Rw Exe;
+    m $_=>''=>{s=>$_}=>{dis=>2,dos=>"Fratil"} for @l;
+    m $_ for @{Js&M||[]};
+pi/plalv: |
+    n t=>1=>C.t
+    n a=>2=>"Play "
+    n s=>-pud_3=>{s=>$s}
+Fratil: |
+    G&elph,J.t=>[play=>c.c.s];
+    sayyl "Done to J.t the ".ki c.c.s;
+pi/bay: |
+    # the view
+    y.at.dis = 2;
+    s&dis = 3;
+    y.at.ml = c&depth;
+    n t=>1=>C.t,'%dis:2'
+    if (-f $s) {
+        n f=>2=>"-f",'%hs:048'
+        n ti=>21=>{s=>"x".-s$s},'%fs:7,hs:487,dos:Continues'
+        if (Js&ope > Js&bowls) {
+            sayre "Isopen: $s";
+            Js&bowls++;
+            my $he = `head -n1 $s`;
+            if ($he =~ /^---\s+/) {
+                my $yam = LoadFile($s);
+                G&give,Whats=>$s=>{how=>'yamlfile',s=>$yam}
+                #n yaml=>-pud=>{s=>$yam,dl=>c&depth + 3}
+                
+            }
+            else {
+                n cont=>22=>{s=>slim(80,''.read_file($s))},'%fs:7,dis:2'
+            }
+        }
+        return;
+    }
+    if (c&depth == 1) {
+        my $void;
+        $void = "pids" if C.t =~ /^(p)$/;
+        $void && return 
+            n void=>23=>" $void",'%hs:847'
+    }
+    my @im = Rw Exe;
+    y.cyc = 100;
+    y.n = 12;
+    for (@im) {
+        my $f = $1 if /^c&s\/(.+)$/ || die "Nof c&s in $_";
+        m $f=>-bay=>{s=>$_,depth=>c&depth + 1}
+    }
 

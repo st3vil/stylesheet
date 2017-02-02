@@ -1,4 +1,6 @@
 Vindego: |
+    my $en = $0;
+    map { rand 3 } 1..$1 while $en =~ s/(\d+)//;
     while (1) {
         J.koe++;
         c&de = 2.27;
@@ -19,6 +21,7 @@ Vinding: |
     Jc&tape = 'Dejo';
     y.imp++;
     c&lim = 200;
+    n sa=>''=>"Ham: $0"
     
     my $i = Js&bowls++;
     my $on = Js&M ||= Rw TheVin;
@@ -44,8 +47,8 @@ Vinding: |
 TheVin: | # art source patchbay
     my @im;
     c&do = 'ls -1t';
-    c&unl = 1;
-    my @l = split "\n", <<'';
+    c&unl = 1 if !defined c&unl;
+    my @l = split "\n", c&s || <<'';
         sc/DT/2017_01_30
         x/Downloads
     for (@l) {
@@ -55,7 +58,7 @@ TheVin: | # art source patchbay
             Rw Chunkfall;
         push @im, @$m;
     }
-    @im = shuffle @im;
+    @im = shuffle @im unless c&nosh;
     for (0..@im-1) {
         next if $_ % 3 > 0.4;
         next if $_ > @im - 16;
@@ -63,7 +66,6 @@ TheVin: | # art source patchbay
         =
         (@im[-$_+12..-$_+15], $im[-$_+9], @im[-$_..-$_+3], $im[-$_+6])
     }
-    sayyl "For $_  " for @im;
     \@im;
 Chunkfall: | # image list
     c&only = 'images';
@@ -91,4 +93,103 @@ Photon: |
     
     my $d = G&ron,hitime()-$h;
     n delta=>4=>"Took $d",'dis:1'
+Ayer: |
+    for (1..5) {
+        n Ayee
+        last;
+        sleep 7;
+    }
+Ayee: |
+    Jc&tape = 'Dejo';
+    c&s = 'x/art';
+    y.at.ml = '-40%';
+    Js&images ||= Rw TheVin;
+    Js&bowls++;
+    y.at.con = 8;
+    y.at.tag = 'marquee';
+    y.at.wi = 8;
+    y.at.over = 'hidden';
+    
+    my $thy = 0.4;
+    my $up = 0.5;
+    my $exp = 1 + (0.7 * Js&bowls);
+    my (@up,@n,@u);
+    for (@{Js&images}) {
+        m awa=>{thy=>$thy}=>{}=>{tag=>'img',src=>$_}
+        $thy += $up;
+        $up *= $exp;
+        if (@up > 5) {
+            if (!@n) {
+                @n = @up;
+                pop @n;
+            }
+            if (@u) {
+                $thy = shift @u;
+            }
+            else {
+                $thy = pop @n;
+                if (!@n) {
+                    @u = @up;
+                    rand 3 > 2 &&
+                    m n=>''=>"\n"
+                }
+            }
+        }
+        else {
+            push @up, $thy
+        }
+        last if @$M > 55;
+    }
+    y.mod = &M{
+        map {
+            _s&he = _.y.spc * 20 * 4;
+            _s&wi = 2;
+        }grep{_s&src} @$M
+    }
+    
+    
+Flips: |
+    Jc&tape = 'Dejo';
+    c&s = 'sc/DT/2017_01_31';
+    c&unl = 1;
+    c&nosh = 1;
+    Js&images ||= Rw TheVin;
+    my $las;
+    my $i = 0;
+    my $d = 'sc/Flips';
+    if (!-d $d) {
+        `mkdir $d`;
+        my $la;
+        for my $o (@{Js&images}) {
+            my $s = -s $o;
+            next if !$s || $s eq $las;
+            $las = $s;
+            for (1..3) {
+                my $f = "$d/a_".sprintf('%04d',$i++).".jpg";
+                if ($la && $_ <3) {
+                    my $pc = $_ * 33;
+                    `composite $la $o -blend $pc $f`;
+                }
+                else {
+                    $la = $o;
+                    `cp $o $f`;
+                }
+                $la = $f;
+                $i % 40 || saygr "... copied $f";
+            }
+            #last if $i > 100;
+        }
+    }
+    my $v = "it";
+    $v .= ".mp4";
+    if (!-f "$d/$v") {
+        sayre "Encoding";
+        my $sh = '.jpg';
+        `cd $d; ffmpeg -i a_%4d$sh -vcodec mpeg4 -b:v 8000k -s 1280x720 $v`;
+    }
+    n t=>""=>"Som C.t"
+    
+    n vi=>-video_2=>{s=>"x/$d/$v"}
+    
+    
 
