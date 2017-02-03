@@ -1,13 +1,25 @@
 
+Ulan: |
+    Rw Ilan;
+    y.at.left = '100%';
+    y.at.top = 0;
+    y.at.ab = 1;
+    y.at.zi = -40;
+    
+    
 Ilan: | # O's zip of U, W switchup
     # & tractor e into a new Udder
     Rw Tiot;
-    Jc&tape = 'Dejo';
+    Jc&tape = 'Dejo' if J.t eq 'Ilan';
     y.res = 100;
     Js&Simp = 'Sweeptapes';
     Js&Cimp = 'Pause';
     Jc&refit_t = &C{
         "s&so C.t"
+    };
+    Js&ein.t.plaz.sMJ = &sM{
+        # from another self, sends a plaz
+        m $s
     };
     Js&ein.t.f.sMJ = &sMJjeTCA{
         if ($s =~ m{(.+)/p/(\d+)/W/(\w+)\.(\d+)}) {
@@ -63,6 +75,19 @@ Ilan: | # O's zip of U, W switchup
             
             Rw Rebase $C $d $p $t $i;
             
+            if (my $f = s&flv->[-1]) {
+                if (my $r = fs&lv->[0]) {
+                    saybl "Last: ".ki $r;
+                    s&poe = rs&poe if rs&poe;
+                    if (my $on = c&sit || rs&sit) {
+                        c&sit = $on;
+                        # 9 says hold over there
+                        $on = $on.'lan' if 1 == length $on;
+                        G&elph,$on=>[plaz=>{s=>$C}];
+                        return T.pos = 0;
+                    }
+                }
+            }
             return unless $new;
             
             # so takesover parent's t not insys
@@ -114,6 +139,8 @@ pi/plaz: |
 ElvisRo: | # routing to remote from W mount
     my $j = e&_hJ;
     my $p = e&hC ->[-3];
+    return T.pos = '' if ps&poe;
+    
     my $us = e.c.us;
     shift @{us.p} for 1..4;
     unshift @{us.p}, [p.t];
@@ -172,11 +199,13 @@ Store: | # cops W (dos)
     elsif ( us&C ->{C} ) { # us&C returns whole $us, like e&C
         # spill guts
         G&elph,Valve=>[C=>$Q]
+        T.pos = 0;
     }
     elsif ( us&A ) {
-        # reflect in trees
-        # switch to neighbours/parents with most elviso
+        # reflect in trees? restart?
+        # switch to neighbours/parents with most elviso/notbung?
         G&elph,Valve=>[A=>$Q]
+        T.pos = 0;
     }
     else {
         # wants diffs to neighbouring versions
@@ -188,6 +217,7 @@ Store: | # cops W (dos)
             # feed time to the node, more elviso
             my $pid = Qs&pid || die "Nopid: ".ki$Q;
             G&elph,Elvis=>[opt=>''=>{s=>"$pid:Q.t"}];
+            T.pos = 0;
             #G&elph,Valve=>[C=>$Q]
         }
     }

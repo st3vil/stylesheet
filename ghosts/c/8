@@ -652,8 +652,11 @@ Web: |
     
     G.Websen = J.Websen ||= sub {
         my $m = shift;
+        $m = decode_utf8($m);
         @$txm || return sayre "No client, dropping: ".slim 50, $m;
-        $_->send(decode_utf8($m)) for @$txm;
+        for my $tx (@$txm) {
+            $tx->send($m)
+        }
     };
     
     my $ya = G.onfork.Web = sub {

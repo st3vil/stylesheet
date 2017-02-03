@@ -204,14 +204,27 @@ Tunes: | # see time?
     }
 Ritim: | # play that
     Jc&tape = 'Dejo';
+    y.at.sit = 'Ulan'; # lives there
+    y.at.poe = 1; # not elvisy
+    
     my $t = '03';
     my $d = "x/art";
+    my $l = [map{ [/^(.+?)(?: (\d+)(?: (\d+))?)?$/] } split "\n", <<'' ];
+        03 0 16
+        03 
+        ritimco 0 22
+        ritimco 123
+    $l = $l->[Js&bowls++];
+    my ($t,$seek,$til) = @$l;
+    
     my ($f) = glob "$d/$t*";
+    ($f) = glob "x/*/$t*" if !$f;
     $f || return
-        n err=>1=>"No $t in $d"
+        n err=>1=>"No $t in x/*"
     
     my $c = {};
-    c.seek = 123 if Js&bowls++;
+    c.seek = 123 if $seek;
+    y.at.til = $til - $seek if $til;
     c.s = $f;
     n $t=>-med=>$c
     
@@ -223,15 +236,21 @@ pi/med: | # media to play
     my $vid = '<video width="900" autoplay controls><source src="'.$s.'"></video>';
     
     m sat=>-slid_12
+    m con=>-slid_13
+    m inv=>-slid_14
+    m hue=>-slid_15
+    
+    
     seeker 11: %e
         a.sook = function(e) {
-            var v = $(A.on).find('video').get(0);
-            a.m('@ ',v.currentTime);
+            var v = $('video').get(0);
+            var o = v.currentTime;
+            a.m('@ '+o);
         }
     sook 5: %on:c:sook
         currentTime
 
-    n s=>6=>$vid,'%ht,ml:-50%,zi:-34,tra:3 40';
+    n s=>6=>$vid,'%ht,ml:-25%,zi:-34,tra:3 40';
     
     c&seek &&
     seek 7: %e,seek:c&seek

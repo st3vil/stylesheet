@@ -17,8 +17,18 @@ ElvisEndo: | # hold lines for abseilers, is Fishes
     Rw ElvisFishes + $t;
 ElvisFishes: |
     return unless c&Se == 1;
-    return
-        Rw ElvisYou;
+    my $p = $$;
+    town: my $to = Rw ElvisYou;
+    return unless $p eq $$;
+    
+    sleep 1;
+    
+    my $op = readlink "$to/Opper";
+    saygr "Waiting fr $op $to/Opper";
+    waitpid($op,0);
+    sayyl "Done!";
+    sleep 1;
+    goto town;
 Selfis: | # i for forking yourself
     u i
     # your initiation
