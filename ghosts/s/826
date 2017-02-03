@@ -148,7 +148,9 @@ Ayee: |
     }
     
     
-Flips: |
+Flips: | # make stopmotion movies
+    # wants many S-ections to break down the job, do status
+    # to travel the main processing loop out of time
     Jc&tape = 'Dejo';
     c&s = 'sc/DT/2017_01_31';
     c&unl = 1;
@@ -192,4 +194,51 @@ Flips: |
     n vi=>-video_2=>{s=>"x/$d/$v"}
     
     
+Tunes: | # see time?
+    Jc&tape = 'Dejo';
+    y.at.fs = 38;
+    my $i = Js&bowls++;
+    for (0..$i) {
+        n "3$_"=>6 + $_ ^ 3=>"Satch",'%hs:696'
+        n "2$_"=>3 + $_ ^ 2=>"$_",'%hs:398'
+    }
+Ritim: | # play that
+    Jc&tape = 'Dejo';
+    my $t = '03';
+    my $d = "x/art";
+    my ($f) = glob "$d/$t*";
+    $f || return
+        n err=>1=>"No $t in $d"
+    
+    my $c = {};
+    c.seek = 123 if Js&bowls++;
+    c.s = $f;
+    n $t=>-med=>$c
+    
+    #
+pi/med: | # media to play
+    y.at.qs = 1;
+    n t=>1=>C.t,'%ab,fs:40,hs:837,top:30%';
+    
+    my $vid = '<video width="900" autoplay controls><source src="'.$s.'"></video>';
+    
+    m sat=>-slid_12
+    seeker 11: %e
+        a.sook = function(e) {
+            var v = $(A.on).find('video').get(0);
+            a.m('@ ',v.currentTime);
+        }
+    sook 5: %on:c:sook
+        currentTime
+
+    n s=>6=>$vid,'%ht,ml:-50%,zi:-34,tra:3 40';
+    
+    c&seek &&
+    seek 7: %e,seek:c&seek
+        a.yl(300, function(){
+            console.log('qyua');
+            var v = $(A.on).find('video').get(0);
+            v.currentTime = C.sc.seek;
+        });
+        
 

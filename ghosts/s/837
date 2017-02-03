@@ -91,7 +91,6 @@ pi/lvf: |
             my $s;
             my $pi = '';
             my $m = Js&flav;
-            saybl wdump 3, $C;
             if ($m <3) {
                 my $y = &Cd{
                     $C = C.y.D;
@@ -127,7 +126,7 @@ pi/lvf: |
             m flev=>$pi=>{s=>$h},"%hs:${i}467,hue:180,ab,ml:30%,mt:0.4,dis,sha:1 1 3 847,zi:-5"
             
             $s .= "\n... $more more" if $more;
-            m flv=>$pi=>{s=>$s},"%hs:${i}46,dis"
+            m flv=>$pi=>{s=>$s},"%hs:${i}46,dis,fs:7"
         }
         $i = 3 if $i++ > 8;
     }
@@ -144,8 +143,8 @@ pi/aims: | # select a number
     my $i = Js&clsc.>$t || 0;
     s&dos = &AC{
         $i += us&S ? -1 : 1;
-        $i = 0 if $i < 0;
-        $i = 5 if $i > 5;
+        $i = @pos-1 if $i < 0;
+        $i = 0 if $i > @pos-1;
         1 && sayyl "Claim to $t ".ki us&C;
         Js&clsc.>$t = $i;
     };
@@ -154,20 +153,66 @@ pi/aims: | # select a number
     n s=>3=>$pos[$i]=>'%fs:8'
     
 Player: |
-    Jc&tape = 'Dejo';
-    Js&ein.bo = 'Doable';
+    Rw Tiot;
+    Js&Simp = 'Sweeptapes';
+    Js&Cimp = 'Pause';
     Js&ein.t.play.sMJ = &sM{
         m $s=>-plalv
     };
     c&s = G.c.bay.'/t';
     S
     my @l = Rw Exe;
-    m $_=>''=>{s=>$_}=>{dis=>2,dos=>"Fratil"} for @l;
-    m $_ for @{Js&M||[]};
+    m $_=>''=>{s=>$_}=>{dis=>3,dos=>"Fratil"} for @l;
+    
+    my $m = Js&M ||= [];
+    @$m = G&Ct,[$l[0]=>-plalv] if @l == 1 && !@$m;
+    
+    for my $p (@$m) {
+        @$M = grep { p.t ne _.t } @$M;
+        # engage Sequines with our osc l
+        Jc&sung.Sequines = 1;
+        # but only if its not above us already
+        delete Jc&sung.Sequines if A.2.t eq 'Sequines';
+        m $p
+    }
+    
+    
 pi/plalv: |
-    n t=>1=>C.t
+    s&dis = 3;
+    y.at.dis = 2;
+    y.at.dos = 'Fratil';
+    delete c&s;
+    n t=>1=>C.t,'%hs:389';
     n a=>2=>"Play "
-    n s=>-pud_3=>{s=>$s}
+    -f $s || die "Notafile: $s";
+    my $p = Js&plays ||= [map{djson$_} split"\n", read_file $s];
+    my $i = Js&playi++;
+    n at=>23=>($i+1)."/".@$p,'%fs:6,hs:498'
+    s&done = 1 if !exists $p->[$i+1];
+    my $z = $p->[$i];
+    n s=>-pud_3=>{s=>$z}
+    $z = [$z] if ref $z ne 'ARRAY';
+    n z=>6=>{}=>{zout=>$z,dis=>3}
+Sequines: | # never returns, plays Player
+    my $x = Js&feed ||= {};
+    Js&ein.t.seq = &sMJ{
+        $x.>s.t = $s;
+    };
+    S
+    
+    my $i;
+    while (1) {
+        $i++ || next;
+        # for x/t=top, Player if any plalv not s&done
+        sayre "Playing Player";
+        n Player
+        
+        return sayre "Done" unless grep {!_s&done} G&op,'pi:plalv';
+        $i > 5 && return sayre "Runout";
+    }
+    continue {
+        sleep 4;
+    }
 Fratil: |
     G&elph,J.t=>[play=>c.c.s];
     sayyl "Done to J.t the ".ki c.c.s;
