@@ -101,6 +101,7 @@ Ayer: |
     }
 Ayee: |
     Jc&tape = 'Dejo';
+    y.at.sit = 'Ulan'; # lives there
     c&s = 'x/art';
     y.at.ml = '-40%';
     Js&images ||= Rw TheVin;
@@ -204,21 +205,30 @@ Tunes: | # see time?
     }
 Ritim: | # play that
     Jc&tape = 'Dejo';
-    y.at.sit = 'Ulan'; # lives there
+    #y.at.sit = 'Ulan'; # lives there
     y.at.poe = 1; # not elvisy
+    Jc&imping = 1;
     
     my $t = '03';
     my $d = "x/art";
     my $l = [map{ [/^(.+?)(?: (\d+)(?: (\d+))?)?$/] } split "\n", <<'' ];
-        03 0 16
-        03 
         ritimco 0 22
-        ritimco 123
+        ritimco 183
+        N*D*/*River* 44
+        N*D*/*River* 123 135
+        03 0 16
+        03 50
     $l = $l->[Js&bowls++];
+    say "Ritim select: ". wdump 3, $l;
     my ($t,$seek,$til) = @$l;
     
-    my ($f) = glob "$d/$t*";
-    ($f) = glob "x/*/$t*" if !$f;
+    my $f;
+    my $glob = "$d/$t*";
+    my ($f) = glob $glob;
+    if (!$f) {
+        $glob = "x/*/$t*";
+        ($f) = glob "x/*/$t*";
+    }
     $f || return
         n err=>1=>"No $t in x/*"
     
@@ -226,24 +236,40 @@ Ritim: | # play that
     c.seek = 123 if $seek;
     y.at.til = $til - $seek if $til;
     c.s = $f;
+    c.glob = $glob if $glob;
     n $t=>-med=>$c
     
+    m sat=>-slid_12
     #
 pi/med: | # media to play
     y.at.qs = 1;
-    n t=>1=>C.t,'%ab,fs:40,hs:837,top:30%';
+    Jc&imping = 1;
     
-    my $vid = '<video width="900" autoplay controls><source src="'.$s.'"></video>';
+    my $look = c&glob || $s;
+    my $tag = `file $look` =~ /audio/i ? 'audio' : 'video';
+    my $id = slm 9, dig $J;
+    my $vid = qq[<$tag id="$id" width="100%" autoplay controls><source src="$s"></$tag>];
     
-    m sat=>-slid_12
-    m con=>-slid_13
-    m inv=>-slid_14
-    m hue=>-slid_15
+    if ($tag eq 'audio') {
+        use Audio::Scan;
+        my $data = Audio::Scan->scan($s);
+        s&duration = data.info.song_length_ms / 1000;
+        my $ta = data.tags;
+        s&album = ta.ALBUM || ta.TALB;
+        s&artist = ta.ARTIST || ta.TPE1;
+        s&title = ta.TITLE || ta.TIT2;
+        s&year = ta.TITLE || ta.TIT2;
+        #n scan=>-pud=>{s=> $data }
+        
+    }
+    my $say = join" - ",grep{defined} s&artist,s&album,s&title;
+    $say ||= C.t;
     
+    n t=>14=>$say,'%ab,fs:22,hs:637,mt:1em,width:5em,sha:4 4 6 389,ws:l';
     
-    seeker 11: %e
+    seeker 11: %e,ide:$id
         a.sook = function(e) {
-            var v = $('video').get(0);
+            var v = $('#'+C.sc.ide).get(0);
             var o = v.currentTime;
             a.m('@ '+o);
         }
@@ -253,11 +279,12 @@ pi/med: | # media to play
     n s=>6=>$vid,'%ht,ml:-25%,zi:-34,tra:3 40';
     
     c&seek &&
-    seek 7: %e,seek:c&seek
-        a.yl(300, function(){
-            console.log('qyua');
-            var v = $(A.on).find('video').get(0);
+    seek 7: %e,seek:c&seek,ide:$id
+        a.yl(200, function(){
+            var v = $('#'+C.sc.ide).get(0);
+            console.log(C,v);
             v.currentTime = C.sc.seek;
+            v.play();
         });
         
 
