@@ -611,12 +611,13 @@ Web: |
     s:
         t
     
+    my $txm = J.txm ||= [];
     G.Websock = J.Websock ||= sub {
         my $mojo = shift;
         say "Web is socked!";
         my $s = $mojo;
         my $tx = $s->tx;
-        J.tx = $tx;
+        push @$txm, $tx;
         my $addr = $tx->remote_address;
         Mojo::IOLoop->stream($tx->connection)->timeout(300000);
         $tx->max_websocket_size(512000);
@@ -638,6 +639,7 @@ Web: |
         });
         $s->on(finish => sub {
             my ($M, $code, $reason) = @_;
+            @$txm = grep { $_ ne $tx } @$txm;
             sayre "Gone: $addr $code $reason";
         });
         $tx->send(' clon();keon();');
@@ -650,8 +652,8 @@ Web: |
     
     G.Websen = J.Websen ||= sub {
         my $m = shift;
-        J.tx || return sayre "No client, dropping: ".slim 50, $m;
-        J.tx->send(decode_utf8($m));
+        @$txm || return sayre "No client, dropping: ".slim 50, $m;
+        $_->send(decode_utf8($m)) for @$txm;
     };
     
     my $ya = G.onfork.Web = sub {
