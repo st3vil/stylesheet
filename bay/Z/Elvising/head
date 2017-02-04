@@ -1,4 +1,4 @@
---- &3 
+--- &1 
 sc: 
   meta: 
     A: 
@@ -11,8 +11,8 @@ sc:
       mat: ~
       wil: 1
     paths: 
-      Elvising 0.9: *3
-      Elvising 0.9/E 0.001: &24 
+      Elvising 0.9: *1
+      Elvising 0.9/E 0.001: &22 
         c: 
           W: of
         sc: 
@@ -20,7 +20,7 @@ sc:
         t: E
         "y": 
           cv: '0.001'
-          in: &31 
+          in: &29 
             c: 
               s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nlocal $A->{V} = 2;\nmy $mo = $A->{mo};\n$A->{c}->{s} = $C = $s->[0];\nmy $e = $A->{c}->{oure} = $C->{c}->{e} || die \"E no e: \".wdump 3, $A->{c}->{N};\n# routes do new $C->{c}->{e} = C this e came from\n# reel in the tube of routes before the request\nmy @hz;\nwhile ($e) {\n    push @hz, $e;\n    $e = $e->{c}->{e} || last;\n}\nif (@hz > 1) {\n    $e->{c}->{hz} = \\@hz;\n}\nelse {\n    if (!$e->{c}->{us} && $e->{c}->{s} =~ /^\\{/) {\n        # network line comes in on e as listen event\n        # should onward aft hz an e as meaning/request\n        # making the meaning beyond the book\n        # and the readers in front of it\n        my $us = eval{djson $e->{c}->{s}};\n        die \"elvis line decode error: $@\\n\\n cs: \".slim 300, $e->{c}->{s} if $@;\n        # stylehut says {event:{...}}\n        if (keys %$us == 1 && $us->{event}) {\n            $us = $us->{event};\n        }\n        if ($us->{p}) {\n            # parse string/not to [[t,cv]...]\n        }\n\n    }\n    if ($e->{c}->{p}) {\n        $e->{c}->{us}->{p} = [map{[split '-', $_]}@{delete $e->{c}->{p}}];\n    }\n}\n\n# opens\n$A->{c}->{E} = $A;\n$A->{c}->{e} = $e;\n\n$G->{h}->($A,$C,$G,$T,\"block\",$_) && return for sub {\n    !($A->{1}->{sc}->{ein} || $A->{1}->{sc}->{seemstoe} || $A->{c}->{pines} ||\n        do { $A->{c}->{inbytv} = 1 if $A->{1}->{sc}->{tv}  }\n        )\n};\n};"
             sc: 
@@ -33,7 +33,7 @@ sc:
             t: e
             "y": 
               cv: '0.1'
-              next: &30 
+              next: &24 
                 c: 
                   s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nlocal $A->{V} = 2;\nmy $E = $A->{c}->{e};\nmy $us = $E->{c}->{us};\nmy $in = $A->{1}->{sc}->{ein};\n\nif (!$in) { # ein & seemstoe may be, pins if \n    if ($A->{c}->{pines}) {\n        # just did pin that e& - finished\n        return $T->{Z}->{8} = $A\n    }\n    elsif ($A->{1}->{sc}->{seemstoe}) {\n        # may want hC etc in the pin, if $us->{p}...\n        # e should be before S, or it keeps going\n        # so e is self in the equation that uses it\n        # and handles it, since it hands it...\n        die \"Got toking E unknown too late: \".$G->{h}->($A,$C,$G,$T,\"es\") if $A->{mo}->{cv} > 0.5;\n        $A->{c}->{wantpine} = 1;\n        $A->{mo}->{c}->{want}->{elvis} = 6;\n        return $T->{Z}->{6} = $A;\n    }\n    else {\n        # doesn't need to know anything,\n        # may find body,\n        # gets route, vent if lost\n    }\n}\n\n# tractorbeam makes deeper look even if routable\n# so we can log e\n\nunless ($in->{tractor} && $E->{c}->{trJ} && $E->{c}->{trJ}->[-1] ne $A->{1}\n    # or not routable\n    || !$us\n    # or is routed to us\n    || $us->{ids} && do {\n        # not anymore, but could warp them up\n        # the J finds its easiest way in\n        # for now the chain must be linked\n        $us->{ids}->[$us->{idi} - 1] eq $A->{1}->{sc}->{id}\n    }\n    || $us->{p} && do {\n        # for now the chain must be fully linked also\n        my $tcv = $us->{p}->[$E->{c}->{us}->{p_i} - 1];\n        my $t = $tcv->[0];\n        $t && $t eq $A->{1}->{t}\n    }) {\n    return $T->{Z}->{6} = $A;\n}\n};"
                 sc: 
@@ -85,7 +85,7 @@ sc:
                             t: e
                             "y": 
                               cv: '0.4'
-                              next: &29 
+                              next: &23 
                                 c: 
                                   s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nlocal $A->{V} = 2;\nmy $E = $A->{c}->{e};\nmy $us = $E->{c}->{us};\nmy $in = $A->{1}->{sc}->{ein};\n\nunless ($us && $us->{p} && ref $us->{p} eq 'ARRAY') {\n    $G->{h}->($A,$C,$G,$T,\"vent\",'NoE6point') unless $A->{c}->{pines};\n    #$G->{h}->($A,$C,$G,$T,\"vent\",$A->{c}->{reslos}) if $A->{c}->{reslos};\n       return;\n}\n\nmy $point = $us->{p}->[$us->{p_i}||=0];\n$point || return $G->{h}->($A,$C,$G,$T,\"vent\",'Nomorepoint');\nmy ($t,$cv) = @$point;\n\nmy $vs = $A->{4}->{sc}->{Jtv}->{\"$t\"};\nundef $cv if $cv == 0.9;\n$cv ||= 0.1;\nmy $oJ = $vs->{\"$cv\"};\n\nif ($oJ) {\n    $us->{p_i}++;\n    # readers move in in front of the meaning\n    $_->{c}->{mo}->{c}->{T}->{not} = 1 for\n    $G->{h}->($A,$C,$G,$T,\"n\",$oJ->{t}=>W=>{e=>$C}=>'');\n    $T->{pos} = 0;\n}\nelse {\n    $G->{h}->($A,$C,$G,$T,'say','sayre',\"Not amongst: \".ki [sort keys %{$A->{4}->{sc}->{Jtv}}]);\n    $A->{c}->{reslos} ||= \"SpaceGoing:$t\";\n    $G->{h}->($A,$C,$G,$T,\"vent\",$A->{c}->{reslos});\n    # could make it up for it wants the name\n    # makes networked light injector\n}\n};"
                                 sc: 
@@ -111,7 +111,7 @@ sc:
                                     t: e
                                     "y": 
                                       cv: '0.7'
-                                      next: &32 
+                                      next: &21 
                                         c: 
                                           s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nlocal $A->{V} = 2;\nif ($T->{rep} == 3) {\n    $G->{h}->($A,$C,$G,$T,'say','sayre',\"8->3ing elvis\");\n    $T->{rep}--;\n    $T->{Z}->{3} = $A;\n    $T->{seek} = 1; # throat one way\n    return;\n}\n$A->{c}->{vent} || return;\nmy $e = $A->{c}->{e};\n$A->{4}->{c}->{sit} && return $G->{h}->($A,$C,$G,$T,\"elph\",$A->{4}->{c}->{sit},[e=>$e]);\n};"
                                         sc: 
@@ -125,21 +125,21 @@ sc:
                                         "y": 
                                           cv: '0.8'
                                           prev: *28
-                                          up: *24
-                                      prev: *29
-                                      up: *24
+                                          up: *22
+                                      prev: *23
+                                      up: *22
                                   prev: *27
-                                  up: *24
+                                  up: *22
                               prev: *26
-                              up: *24
+                              up: *22
                           prev: *25
-                          up: *24
-                      prev: *30
-                      up: *24
-                  prev: *31
-                  up: *24
-              up: *24
-          next: &1 
+                          up: *22
+                      prev: *24
+                      up: *22
+                  prev: *29
+                  up: *22
+              up: *22
+          next: &19 
             c: 
               W: of
             sc: 
@@ -147,7 +147,7 @@ sc:
             t: O
             "y": 
               cv: '0.001'
-              in: &2 
+              in: &20 
                 c: 
                   s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\n$C->{c}->{Jo} || return;\nmy $x = $A->{sc}->{x};\nmy $J = $A->{sc}->{J};\nmy $s = $J->{sc}->{s};\n$s->{sc}->{xo} || $x->{sc}->{xo} || return;\nmy $Y = $A->{sA} || die \"No us osc O xo: \".ki $C;\nmy $xo = $Y->{sc}->{ox}->{\"$C->{y}->{cv}\"}->{\"$C->{t}\"} = $G->{h}->($A,$C,$G,$T,\"newxo\",$s->{sc}->{xo},$x);\n\n};"
                 sc: 
@@ -160,8 +160,8 @@ sc:
                 t: xo
                 "y": 
                   cv: '0.6'
-                  up: *1
-              next: &4 
+                  up: *19
+              next: &7 
                 c: 
                   W: of
                 sc: 
@@ -169,7 +169,7 @@ sc:
                 t: i
                 "y": 
                   cv: '0.001'
-                  in: &22 
+                  in: &18 
                     c: 
                       s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $e = $C->{c}->{e} || return ();\n(my$q,$s) = (1,$$s) if ref $s eq 'SCALAR';\n$e = $A->{c}->{E}->{c}->{e} if $A->{c}->{E}; # endmost\n$A->{c}->{E} && !$q && $A->{c}->{E}->{c}->{pines}++;\nreturn $e if $s eq 'C';\nreturn $e->{t} if $s eq 't';\nmy $list = $s =~ s/^_//;\nmy ($nk,$gk) = $G->{h}->($A,$C,$G,$T,\"pang\",$s,'c');\nexists $e->{\"$nk\"} || return ();\n$e = $e->{\"$nk\"};\nif (defined $gk) {\n    return $e if $gk eq 'C';\n    exists $e->{\"$gk\"} || return ();\n    $e = $e->{\"$gk\"};\n}\n$list ? @$e : $e\n};"
                     sc: 
@@ -181,7 +181,7 @@ sc:
                     t: e
                     "y": 
                       cv: '0.1'
-                      next: &21 
+                      next: &15 
                         c: 
                           s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $cv = $A->{mo}->{cv};\n$cv =~ s/^0\\.//;\nmy $e = $G->{h}->($A,$C,$G,$T,\"e\",\\'C');\n$G->{h}->($A,$C,$G,$T,\"sn\") .\":\\n    \".ki($e)\n    .($e->{c}->{us} && \"\\n        us: \".ki($e->{c}->{us}));\n};"
                         sc: 
@@ -193,7 +193,7 @@ sc:
                         t: es
                         "y": 
                           cv: '0.1'
-                          next: &20 
+                          next: &14 
                             c: 
                               s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $es = ref $Me[0] eq 'ARRAY' ? $G->{h}->($A,$C,$G,$T,\"Ct\",shift@Me)\n    : do {\n        @Me == 1 && unshift @Me, 's';\n        $G->{h}->($A,$C,$G,$T,\"s\",@Me)\n    };\n$G->{h}->($A,$C,$G,$T,\"elph\",$s=>[forget=>$es])\n};"
                             sc: 
@@ -205,7 +205,7 @@ sc:
                             t: forget
                             "y": 
                               cv: '0.1'
-                              next: &19 
+                              next: &13 
                                 c: 
                                   s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $es = ref $Me[0] eq 'ARRAY' ? $G->{h}->($A,$C,$G,$T,\"Ct\",shift@Me)\n    : do {\n        @Me == 1 && unshift @Me, 's';\n        $G->{h}->($A,$C,$G,$T,\"s\",@Me)\n    };\n$G->{h}->($A,$C,$G,$T,\"elph\",$s=>[give=>$es])\n};"
                                 sc: 
@@ -217,7 +217,7 @@ sc:
                                 t: give
                                 "y": 
                                   cv: '0.1'
-                                  next: &18 
+                                  next: &12 
                                     c: 
                                       s: "sub {\nmy ($A,$C,$G,$T,@Me) = @_;\n@Me || die \"Nothing to have\";\nmy $Y = $A;\nif (ref $Me[0]) {\n    my $move = shift @Me;\n    $move = [$$move] if ref $move eq 'SCALAR';\n    for (@$move) {\n        $Y = $Y->{\"$_\"} || die \"No move: @$move (at $_) from \".ki $Y;\n    }\n}\nmy $v = @Me == 1 ? 1 : pop @Me;\nmy $T = $Y->{c}->{T};\nmy $S = $T->{has} ||= {};\nmy $last = pop @Me;\n$S = $S->{\"$_\"} ||= {} for @Me;\nreturn $S->{\"$last\"} += $v if $v eq '1';\n$S->{\"$last\"} = $v;\n};"
                                     sc: 
@@ -229,7 +229,7 @@ sc:
                                     t: has
                                     "y": 
                                       cv: '0.1'
-                                      next: &13 
+                                      next: &16 
                                         c: 
                                           s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $inf = $A->{sc}->{infxo};\nmy $sa = sub {\n    push @$inf, shift;\n    $A->{V} && $G->{h}->($A,$C,$G,$T,'say','sayyl',\"Inf $A->{1}->{t}: \".$inf->[-1])\n};\nif ($s eq 'Tin') { # T ... markers\n    my $td = {};\n    for my $x (map{$_->{c}->{s}}@Me) {\n        $G->{h}->($A,$C,$G,$T,\"chew\",$x,'pin,label,line',$_) for sub { my ($i,$t,$s,$l) = @_;\n            $td->{\"$t\"}->{\"$s\"}->{\"$l\"} += $i;\n        };\n    } ;\n    $td;\n}\nelsif ($s eq 'way') {\n    my $td = {};\n    for (@Me) {\n        next if $_->{sc}->{W};\n        # TODO know W separately up to a...\n        while (my ($t,$dv) = each %{$_->{c}->{s} }) {\n        while (my ($d,$q) = each %{$dv }) {\n            $td->{\"$t\"}->{\"$d\"} += $q;\n        }}\n    };\n    $sa->(\" $s from \".join(',',map{$_->{t}}@Me).\": \".ki $td);\n    $td\n}\nelse {\n    my $total = sum map {$_->{c}->{s}} @Me;\n    $sa->(\" $s totals $total from: \".ki \\@Me);\n    $total;\n}\n};"
                                         sc: 
@@ -241,7 +241,7 @@ sc:
                                         t: multiv
                                         "y": 
                                           cv: '0.1'
-                                          next: &14 
+                                          next: &11 
                                             c: 
                                               s: "sub {\nmy ($A,$C,$G,$T,@M)=@_;\nmy ($xo,$x,@Me) = @M;\nmy $so = $xo;\n$xo = {};\nmy $oxo = $x->{sc}->{xo};\nfor my $k (keys %$so) {\n    my $v = $so->{\"$k\"};\n    my $ov = $oxo->{\"$k\"};\n    $xo->{\"$k\"} = $v eq $ov ? $ov : $v;\n}\nfor my $k (keys %$oxo) {\n    exists $xo->{\"$k\"} && next;\n    $xo->{\"$k\"} = undef;\n}\n$x->{sc}->{xo} = $xo;\n};"
                                             sc: 
@@ -253,7 +253,7 @@ sc:
                                             t: newxo
                                             "y": 
                                               cv: '0.1'
-                                              next: &15 
+                                              next: &10 
                                                 c: 
                                                   s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nif (ref $s eq 'HASH' && $s->{y} eq $s) {\n    $A = $s;\n}\n$s ||= 6;\nmy @net = ('y',1,2,3,4,5);\nshift @net if $s < 6;\npop @net if $s < 5;\npop @net if $s < 4;\n\nmy ($s,$h,$la);\nfor my $i (@net) {\n    my $Y = $A->{$i} || die \"Npo $i on \".ki $A;\n    ref $Y eq 'HASH' || die \"Got $i from $A->{t}: \".ki $Y;\n    my ($cvb) = $Y->{cv} =~ /^0\\.(\\d+)$/ if $Y eq $A;\n    my $sep = '.' if $s;\n    $sep = '@' if $la eq $A;\n    my $th = $Y->{t};\n    if (my $ii = $h->{\"$Y\"} ) {\n        # number position if seen before\n        $th = ','.$ii;\n        $sep = '';\n    }\n    $h->{\"$Y\"} ||= $i;\n    if ($la eq $A->{2}) {\n        # can go funny directions\n        if ($la ne $A->{5} && $la ne $A->{4} && $la->{3} ne $A->{3}) {\n            # J inherit 12345 before its set right\n            $sep = \"(\".($la eq $la->{3} ? \"\" : \"$la->{3}->{t})\");\n        }\n    }\n    $s .= \"$sep$th$cvb\";\n    $la = $Y;\n}\n$s =~ s/\\(,/(/g;\n$s\n};"
                                                 sc: 
@@ -265,7 +265,7 @@ sc:
                                                 t: sn
                                                 "y": 
                                                   cv: '0.1'
-                                                  next: &16 
+                                                  next: &9 
                                                     c: 
                                                       s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $es = ref $Me[0] eq 'ARRAY' ? $G->{h}->($A,$C,$G,$T,\"Ct\",shift@Me)\n    : do {\n        @Me == 1 && unshift @Me, 's';\n        $G->{h}->($A,$C,$G,$T,\"s\",@Me)\n    };\n$G->{h}->($A,$C,$G,$T,\"elph\",$s=>[take=>$es])\n};"
                                                     sc: 
@@ -277,7 +277,7 @@ sc:
                                                     t: take
                                                     "y": 
                                                       cv: '0.1'
-                                                      next: &17 
+                                                      next: &8 
                                                         c: 
                                                           s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $e = $C->{c}->{e} || return ();\n(my$q,$s) = (1,$$s) if ref $s eq 'SCALAR';\n$e = $A->{c}->{E}->{c}->{e} if $A->{c}->{E}; # endmost\n$e = $e->{c}->{us} || return ();\n$A->{c}->{E} && !$q && $A->{c}->{E}->{c}->{pines}++;\nreturn $e if $s eq 'C';\nmy $list = $s =~ s/^_//;\nmy ($nk,$gk) = split'_',$s;\nexists $e->{\"$nk\"} || return ();\n$e = $e->{\"$nk\"};\nif (defined $gk) {\n    exists $e->{\"$gk\"} || return ();\n    $e = $e->{\"$gk\"};\n}\n$list ? @$e : $e\n};"
                                                         sc: 
@@ -289,7 +289,7 @@ sc:
                                                         t: us
                                                         "y": 
                                                           cv: '0.1'
-                                                          next: &23 
+                                                          next: &17 
                                                             c: 
                                                               s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $E = $A->{mo}->{c}->{E};\nmy ($cvb) = $E->{cv} =~ /^0\\.(\\d+)$/;\nmy $clear = \"  (in by 1s\\&tv)\" if $E->{c}->{inbytv};\n$s = \"Elos $cvb $s\\n  at \".$G->{h}->($A,$C,$G,$T,\"es\");\npush @{$G->{ohno}||=[]},$s;\npush @{$E->{c}->{vent}||=[]},$s;\n$s =~ s/\\n/$clear\\n/;\n$A->{4}->{c}->{mutelos} || sayre $s;\n$T->{Z}->{8} = $A;\n};"
                                                             sc: 
@@ -301,28 +301,28 @@ sc:
                                                             t: vent
                                                             "y": 
                                                               cv: '0.1'
-                                                              prev: *17
-                                                              up: *4
-                                                          prev: *16
-                                                          up: *4
-                                                      prev: *15
-                                                      up: *4
-                                                  prev: *14
-                                                  up: *4
-                                              prev: *13
-                                              up: *4
-                                          prev: *18
-                                          up: *4
-                                      prev: *19
-                                      up: *4
-                                  prev: *20
-                                  up: *4
-                              prev: *21
-                              up: *4
-                          prev: *22
-                          up: *4
-                      up: *4
-                  next: &5 
+                                                              prev: *8
+                                                              up: *7
+                                                          prev: *9
+                                                          up: *7
+                                                      prev: *10
+                                                      up: *7
+                                                  prev: *11
+                                                  up: *7
+                                              prev: *16
+                                              up: *7
+                                          prev: *12
+                                          up: *7
+                                      prev: *13
+                                      up: *7
+                                  prev: *14
+                                  up: *7
+                              prev: *15
+                              up: *7
+                          prev: *18
+                          up: *7
+                      up: *7
+                  next: &4 
                     c: 
                       W: of
                     sc: 
@@ -330,7 +330,7 @@ sc:
                     t: mo
                     "y": 
                       cv: '0.001'
-                      in: &6 
+                      in: &5 
                         c: 
                           s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $c = $C->{c};\nmy $e = $C->{c}->{e};\nif ($A->{1} eq $A->{2}) {\n    snooze 500;\n    $G->{h}->($A,$C,$G,$T,'say','sayre',\"Elvising same: $e->{t} on \".$G->{h}->($A,$C,$G,$T,\"sn\"));\n}\n$A->{c}->{E} && die \"Elvising already: $A->{c}->{E}->{c}->{s}->{c}->{e}->{t} vs $e->{t}\";\n$A->{c}->{E} = $G->{h}->($A,$C,$G,$T,\"tugA\",E=>1,$C);\n};"
                         sc: 
@@ -346,7 +346,7 @@ sc:
                         t: e
                         "y": 
                           cv: '0.36'
-                          next: &7 
+                          next: &6 
                             c: 
                               s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nmy $c = $C->{c};\nmy $e = $C->{c}->{e};\nmy $E = $A->{c}->{E};\nreturn if $E->{cv} >= 0.6 && !$E->{c}->{wantpine} && !$E->{c}->{pines};\nif ($E->{c}->{pines}) {\n    $A->{1}->{sc}->{seemstoe} = 1;\n}\nelse {\n    $G->{h}->($A,$C,$G,$T,\"vent\",\"Notcompleted\");\n}\n};"
                             sc: 
@@ -362,10 +362,10 @@ sc:
                             t: e
                             "y": 
                               cv: '0.72'
-                              prev: *6
-                              up: *5
-                          up: *5
-                      next: &8 
+                              prev: *5
+                              up: *4
+                          up: *4
+                      next: &3 
                         c: 
                           W: of
                         sc: 
@@ -373,7 +373,7 @@ sc:
                         t: s
                         "y": 
                           cv: '0.001'
-                          in: &12 
+                          in: &31 
                             c: 
                               s: "sub {\nmy ($A,$C,$G,$T,$s,@Me) = @_;\nif ($C->{c}->{imparted}) { # thawing\n    $C->{sc}->{xo} = $A->{c}->{xo} if $A->{c}->{xo};\n    return \n}\nmy $J = $A->{1};\nmy $top = $C->{sc}->{top} || return sayre \" : : no top on $J->{t}, skip xo\";\nmy $te = $A->{mo}->{c}->{T};\nmy $xo = $te->{has}; # our xo\nmy $x = $top->{y}->{x} || die \"No x on $A->{1}->{t}: \".ki $C->{sc}->{top};\nmy $oxo = $x->{sc}->{xo}; # our past xo\n\n$xo = $A->{c}->{xo} if $A->{c}->{xo}; # thawing\nmy $we = $G->{h}->($A,$C,$G,$T,\"newxo\",$xo,$x) if $xo || $oxo;\n\nmy $ox = $A->{sc}->{ox}; # many y t xo (inc undef goners)\nmy $xox = $C->{sc}->{xox}; # many k y t v past\n$xo || $ox || $oxo || $xox || return delete $C->{sc}->{xo};\n\nif (!$ox && !$xox) { # just oneself\n    $C->{sc}->{xo} = $xo;\n    return;\n}\n\nif ($we) {\n    my $cv = 0.9;\n    $ox->{\"$cv\"}->{\"$A->{1}->{t}\"} = $xo;\n}\n# ox is y t to xo\n# unified back to single xo with others\nmy $kyt = {};\n$G->{h}->($A,$C,$G,$T,\"chew\",$ox,\\'cv,t,k',$_) for sub {\n    my ($v,$cv,$t,$k) = @_;\n    my $ov = $G->{h}->($A,$C,$G,$T,\"pint\",$xox,[$k,$cv,$t]);\n    if ($v ne $ov) {\n        $kyt->{\"$k\"}++;\n    }\n    if (!defined $v) {\n        delete $xox->{\"$k\"}->{\"$cv\"}->{\"$t\"};\n        delete $xox->{\"$k\"}->{\"$cv\"} if !keys%{$xox->{\"$k\"}->{\"$cv\"} };\n        delete $xox->{\"$k\"} if !keys%{$xox->{\"$k\"} };\n    }\n    else {\n        $xox->{\"$k\"}->{\"$cv\"}->{\"$t\"} = $v;\n    }\n};\n\n# xo is our k v\n$A->{sc}->{infxo} = [];\n$xo = $C->{sc}->{xo};\nfor my $k (sort keys %$kyt) {\n    my $yt = $xox->{\"$k\"} || {};\n    my @M;\n    $G->{h}->($A,$C,$G,$T,\"chew\",$yt,\\'cv,t',$_) for sub {\n        my ($v,$cv,$t) = @_;\n        my $z = $G->{h}->($A,$C,$G,$T,\"Ct\",[$t,$cv,{s=>$v},{}]);\n        if (my $D = $top->{y}->{tv}->{\"$t\"}->{\"$cv\"}) {\n            $z->{sc}->{W} = $D->{sc}->{W} if $D->{sc}->{W};\n        }\n        push @M, $z;\n    };\n    if (!@M) {\n        delete $xo->{\"$k\"};\n    }\n    else {\n        $xo->{\"$k\"} = $G->{h}->($A,$C,$G,$T,\"multiv\",$k,@M);\n    }\n}\n$C->{sc}->{xox} = $xox;\n$C->{sc}->{xo} = $xo;\ndelete $C->{sc}->{xo} if !keys %$xo;\n};"
                             sc: 
@@ -386,151 +386,151 @@ sc:
                             t: xo
                             "y": 
                               cv: '0.78'
-                              up: *8
-                          next: &11 
+                              up: *3
+                          next: &30 
                             sc: 
                               W: ElBridge
                             t: ElBridge
                             "y": 
                               cv: '0.1'
-                              next: &9 
+                              next: &32 
                                 sc: 
                                   W: ElChorus
                                 t: ElChorus
                                 "y": 
                                   cv: '0.1'
-                                  next: &10 
+                                  next: &33 
                                     sc: 
                                       W: ElVerse
                                     t: ElVerse
                                     "y": 
                                       cv: '0.1'
-                                      next: &33 
+                                      next: &2 
                                         sc: 
                                           W: Elation
                                         t: Elation
                                         "y": 
                                           cv: '0.1'
-                                          prev: *10
-                                          up: *3
-                                      prev: *9
-                                      up: *3
-                                  prev: *11
-                                  up: *3
-                              prev: *8
-                              up: *3
-                          prev: *5
+                                          prev: *33
+                                          up: *1
+                                      prev: *32
+                                      up: *1
+                                  prev: *30
+                                  up: *1
+                              prev: *3
+                              up: *1
+                          prev: *4
                           tv: 
                             xo: 
-                              "0.78": *12
+                              "0.78": *31
                           tw: 
-                            xo: *12
-                          up: *3
-                      prev: *4
+                            xo: *31
+                          up: *1
+                      prev: *7
                       tv: 
                         e: 
-                          "0.36": *6
-                          "0.72": *7
+                          "0.36": *5
+                          "0.72": *6
                       tw: 
-                        e: *7
-                      up: *3
-                  prev: *1
+                        e: *6
+                      up: *1
+                  prev: *19
                   tv: 
                     e: 
-                      "0.1": *22
-                    es: 
-                      "0.1": *21
-                    forget: 
-                      "0.1": *20
-                    give: 
-                      "0.1": *19
-                    has: 
                       "0.1": *18
-                    multiv: 
-                      "0.1": *13
-                    newxo: 
-                      "0.1": *14
-                    sn: 
+                    es: 
                       "0.1": *15
-                    take: 
+                    forget: 
+                      "0.1": *14
+                    give: 
+                      "0.1": *13
+                    has: 
+                      "0.1": *12
+                    multiv: 
                       "0.1": *16
+                    newxo: 
+                      "0.1": *11
+                    sn: 
+                      "0.1": *10
+                    take: 
+                      "0.1": *9
                     us: 
-                      "0.1": *17
+                      "0.1": *8
                     vent: 
-                      "0.1": *23
+                      "0.1": *17
                   tw: 
-                    e: *22
-                    es: *21
-                    forget: *20
-                    give: *19
-                    has: *18
-                    multiv: *13
-                    newxo: *14
-                    sn: *15
-                    take: *16
-                    us: *17
-                    vent: *23
-                  up: *3
-              prev: *24
+                    e: *18
+                    es: *15
+                    forget: *14
+                    give: *13
+                    has: *12
+                    multiv: *16
+                    newxo: *11
+                    sn: *10
+                    take: *9
+                    us: *8
+                    vent: *17
+                  up: *1
+              prev: *22
               tv: 
                 xo: 
-                  "0.6": *2
+                  "0.6": *20
               tw: 
-                xo: *2
-              up: *3
+                xo: *20
+              up: *1
           tv: 
             e: 
-              "0.1": *31
-              "0.2": *30
+              "0.1": *29
+              "0.2": *24
               "0.3": *25
               "0.37": *26
               "0.4": *27
-              "0.63": *29
+              "0.63": *23
               "0.7": *28
-              "0.8": *32
+              "0.8": *21
           tw: 
-            e: *32
-          up: *3
-      Elvising 0.9/E 0.001/e 0.1: *31
-      Elvising 0.9/E 0.001/e 0.2: *30
+            e: *21
+          up: *1
+      Elvising 0.9/E 0.001/e 0.1: *29
+      Elvising 0.9/E 0.001/e 0.2: *24
       Elvising 0.9/E 0.001/e 0.3: *25
       Elvising 0.9/E 0.001/e 0.37: *26
       Elvising 0.9/E 0.001/e 0.4: *27
-      Elvising 0.9/E 0.001/e 0.63: *29
+      Elvising 0.9/E 0.001/e 0.63: *23
       Elvising 0.9/E 0.001/e 0.7: *28
-      Elvising 0.9/E 0.001/e 0.8: *32
-      Elvising 0.9/ElBridge 0.1: *11
-      Elvising 0.9/ElChorus 0.1: *9
-      Elvising 0.9/ElVerse 0.1: *10
-      Elvising 0.9/Elation 0.1: *33
-      Elvising 0.9/O 0.001: *1
-      Elvising 0.9/O 0.001/xo 0.6: *2
-      Elvising 0.9/i 0.001: *4
-      Elvising 0.9/i 0.001/e 0.1: *22
-      Elvising 0.9/i 0.001/es 0.1: *21
-      Elvising 0.9/i 0.001/forget 0.1: *20
-      Elvising 0.9/i 0.001/give 0.1: *19
-      Elvising 0.9/i 0.001/has 0.1: *18
-      Elvising 0.9/i 0.001/multiv 0.1: *13
-      Elvising 0.9/i 0.001/newxo 0.1: *14
-      Elvising 0.9/i 0.001/sn 0.1: *15
-      Elvising 0.9/i 0.001/take 0.1: *16
-      Elvising 0.9/i 0.001/us 0.1: *17
-      Elvising 0.9/i 0.001/vent 0.1: *23
-      Elvising 0.9/mo 0.001: *5
-      Elvising 0.9/mo 0.001/e 0.36: *6
-      Elvising 0.9/mo 0.001/e 0.72: *7
-      Elvising 0.9/s 0.001: *8
-      Elvising 0.9/s 0.001/xo 0.78: *12
+      Elvising 0.9/E 0.001/e 0.8: *21
+      Elvising 0.9/ElBridge 0.1: *30
+      Elvising 0.9/ElChorus 0.1: *32
+      Elvising 0.9/ElVerse 0.1: *33
+      Elvising 0.9/Elation 0.1: *2
+      Elvising 0.9/O 0.001: *19
+      Elvising 0.9/O 0.001/xo 0.6: *20
+      Elvising 0.9/i 0.001: *7
+      Elvising 0.9/i 0.001/e 0.1: *18
+      Elvising 0.9/i 0.001/es 0.1: *15
+      Elvising 0.9/i 0.001/forget 0.1: *14
+      Elvising 0.9/i 0.001/give 0.1: *13
+      Elvising 0.9/i 0.001/has 0.1: *12
+      Elvising 0.9/i 0.001/multiv 0.1: *16
+      Elvising 0.9/i 0.001/newxo 0.1: *11
+      Elvising 0.9/i 0.001/sn 0.1: *10
+      Elvising 0.9/i 0.001/take 0.1: *9
+      Elvising 0.9/i 0.001/us 0.1: *8
+      Elvising 0.9/i 0.001/vent 0.1: *17
+      Elvising 0.9/mo 0.001: *4
+      Elvising 0.9/mo 0.001/e 0.36: *5
+      Elvising 0.9/mo 0.001/e 0.72: *6
+      Elvising 0.9/s 0.001: *3
+      Elvising 0.9/s 0.001/xo 0.78: *31
     sc: 
       iiyt: 
         "0.001": 
-          E: *24
-          O: *1
-          i: *4
-          mo: *5
-          s: *8
-      top: *3
+          E: *22
+          O: *19
+          i: *7
+          mo: *4
+          s: *3
+      top: *1
     unreal: 
       sc: 
         iiyt: 1
@@ -538,35 +538,35 @@ sc:
 t: Elvising
 "y": 
   cv: '0.9'
-  in: *24
+  in: *22
   tv: 
     E: 
-      "0.001": *24
+      "0.001": *22
     ElBridge: 
-      "0.1": *11
+      "0.1": *30
     ElChorus: 
-      "0.1": *9
+      "0.1": *32
     ElVerse: 
-      "0.1": *10
-    Elation: 
       "0.1": *33
+    Elation: 
+      "0.1": *2
     Elvising: {}
 
     O: 
-      "0.001": *1
+      "0.001": *19
     i: 
-      "0.001": *4
+      "0.001": *7
     mo: 
-      "0.001": *5
+      "0.001": *4
     s: 
-      "0.001": *8
+      "0.001": *3
   tw: 
-    E: *24
-    ElBridge: *11
-    ElChorus: *9
-    ElVerse: *10
-    Elation: *33
-    O: *1
-    i: *4
-    mo: *5
-    s: *8
+    E: *22
+    ElBridge: *30
+    ElChorus: *32
+    ElVerse: *33
+    Elation: *2
+    O: *19
+    i: *7
+    mo: *4
+    s: *3
