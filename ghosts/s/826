@@ -1,6 +1,6 @@
 Vindego: |
     my $en = $0;
-    map { rand 3 } 1..$1 while $en =~ s/(\d+)//;
+    map { rand 3 } 1..$1 while $en =~ s/(\d)//;
     while (1) {
         J.koe++;
         c&de = 2.27;
@@ -15,10 +15,11 @@ Vindego: |
             n Vinding
         last if delete T.done;
         saygr "Doing";
-        sleep 5 + c&de;
+        sleep 1 + c&de;
     }
 Vinding: |
     Jc&tape = 'Dejo';
+    y.at.sit = 'Ulan'; # lives there
     y.imp++;
     c&lim = 200;
     n sa=>''=>"Ham: $0"
@@ -212,10 +213,9 @@ Ritim: | # play that
     my $t = '03';
     my $d = "x/art";
     my $l = [map{ [/^(.+?)(?: (\d+)(?: (\d+))?)?$/] } split "\n", <<'' ];
-        ritimco 0 22
-        ritimco 183
-        N*D*/*River* 44
-        N*D*/*River* 123 135
+        medlos
+        ritimco 0 29
+        ritimco 176
         03 0 16
         03 50
     $l = $l->[Js&bowls++];
@@ -233,8 +233,11 @@ Ritim: | # play that
         n err=>1=>"No $t in x/*"
     
     my $c = {};
-    c.seek = 123 if $seek;
+    c.seek = $seek if $seek;
     y.at.til = $til - $seek if $til;
+    # put time since last one, plaz could record, sTore beside lv
+    y.at.plat = delete Js&plat if Js&plat;
+    Js&plat = y.at.til if y.at.til;
     c.s = $f;
     c.glob = $glob if $glob;
     n $t=>-med=>$c
@@ -274,7 +277,7 @@ pi/med: | # media to play
             a.m('@ '+o);
         }
     sook 5: %on:c:sook
-        currentTime
+        T
 
     n s=>6=>$vid,'%ht,ml:-25%,zi:-34,tra:3 40';
     
@@ -284,7 +287,29 @@ pi/med: | # media to play
             var v = $('#'+C.sc.ide).get(0);
             console.log(C,v);
             v.currentTime = C.sc.seek;
+            
             v.play();
         });
         
+Puzl: |
+    Jc&tape = 'Dejo';
+    n te=>-tin
+ACGT: | # slide show
+    Jc&tape = 'Dejo';
+    c&Se = Js&bowls++;
+    if (c&Se < 2) {
+        m self=>-pud=>{s=>$C}
+        m other=>-pud=>{s=>Js&top},'%hue:100'
+        m s=>-pud=>{s=>Js&s},'%hue:200'
+    }
+    elsif (c&Se == 2) {
+        m other=>-pud=>{dl=>4,s=>Js&top}
+    }
+    else {
+        my @m = G&ind,Js&top;
+        m others=>-pud=>{dl=>4,s=>\@m}
+    }
+    
+    
+    
 

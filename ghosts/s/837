@@ -188,31 +188,54 @@ pi/plalv: |
     -f $s || die "Notafile: $s";
     my $p = Js&plays ||= [map{djson$_} split"\n", read_file $s];
     my $i = Js&playi++;
-    n at=>23=>($i+1)."/".@$p,'%fs:6,hs:498'
-    s&done = 1 if !exists $p->[$i+1];
     my $z = $p->[$i];
-    n s=>-pud_3=>{s=>$z}
+    if (my $n = $p->[$i+1]) {
+        if (ns&plat) {
+            s&plat = ns&plat;
+            sayyl "C.t next plays at s&plat";
+        }
+    }
+    else {
+        s&done = 1;
+    }
+    
+    n at=>23=>($i+1)."/".@$p,'%fs:6,hs:498'
     $z = [$z] if ref $z ne 'ARRAY';
     n z=>6=>{}=>{zout=>$z,dis=>3}
 Sequines: | # never returns, plays Player
     my $x = Js&feed ||= {};
-    Js&ein.t.seq = &sMJ{
+    Js&ein.t.seq.sMJ = &sMJ{
         $x.>s.t = $s;
     };
     S
     
     my $i;
+    my $time = 0;
+    my @next;
     while (1) {
         $i++ || next;
         # for x/t=top, Player if any plalv not s&done
-        sayre "Playing Player";
-        n Player
-        
-        return sayre "Done" unless grep {!_s&done} G&op,'pi:plalv';
+        for (@next) {
+            sayre "Playing $_";
+            n $_
+        }
         $i > 5 && return sayre "Runout";
     }
     continue {
-        sleep 4;
+        @next = ();
+        my $next;
+        each t,op $x {
+            T.op = $op;
+            my @ha = grep {!_s&done} G&op,'pi:plalv';
+            map { $next = $_ if $_ < $next || !$next }
+                grep {defined} map {_s&plat} @ha;
+            saygr "As of $t (op.t): $next  x".@ha;
+            push @next, $t if @ha;
+        }
+        return sayre "Done" if !@next;
+        $next ||= 4;
+        sleep $next;
+        $time += $next;
     }
 Fratil: |
     G&elph,J.t=>[play=>c.c.s];
