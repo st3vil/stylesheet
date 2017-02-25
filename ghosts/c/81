@@ -370,7 +370,7 @@ Exe: | # find bits for the show
     c&s =~ s/\/$//;
     c&do ||= 'l'; # or find
     c&do = 'ls -1' if c&do eq 'l';
-    c&lsins = 1 if c&do =~ /^ls -1/;
+    c&lsins = 1 if c&do =~ /^ls -1/ && c&s !~ /\*/;
     c&cmd ||= "c&do".(defined c&s && ' '.c&s);
     c&cmd .= "| grep c&grep" if c&grep;
     J.mo.J.sizeup = split"\n",''.`c&cmd` if c&sizeup;
@@ -385,6 +385,7 @@ Exe: | # find bits for the show
     my $i;
     @img = grep { !$i || $i++ >= c&skov ? do{$i=1} : 0 } @img
         if c&skov;
+    c&simg = [@img] if c&lsins;
     @img = map {c&s.'/'.$_} @img if c&lsins;
     @img
     
