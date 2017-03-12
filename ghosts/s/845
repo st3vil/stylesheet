@@ -45,39 +45,97 @@ Sequa: |
     n Spells
     n Tube
 Man: |
-    sayre "Was";
-    
-    
-    1 &&
     u lac
+    
     sayre "Dioe";
     n lac=>''=>"Lac"
     Jc&tape = 'Dejo';
-    #S
+    S
     n WashIn
+    n co=>-wormh
+    return;
+    my $f = 4s&co ->[0]->[0];
+    my @l = G&foly,$f,'out';
+    my ($S) = grep { _s&D.t eq 'S' } @l;
+    
+    @l = map { _s&C.t .' '. _s&D.t } @l;
+    n f=>-pud_4=>{dl=>2,s=>join(", ", @l)}
+    n fout=>-pud_7=>{dl=>4,s=>[[[Ss&A]],Ss&D,Ss&C]}
+    #n Mun
+pi/wormh: | # see all the h leading here
+    # floats semi out of vectors, leaving
+    # wants pi/aim to find 4s&co.0.0
+    c&s = 4s&co ->[0]->[0] || "noco" if c&s eq 'co';
+    c&s ||= 'B';
+    c&s = Gc&B if c&s eq 'B';
+    my @l = reverse G&foly,c&s,'out';
+    my @gr; # [C,D,D,D,D]+
+    for my $B (@l) {
+        my $C = Bs&C;
+        my $l = @gr && $gr[-1]->[0];
+        push @gr, [$C] if !$l || l.t ne C.t;
+        push @{$gr[-1]}, $B;
+    }
+    for my $CDs (@gr) {
+        my ($C,@B) = @$CDs;
+        C.t = '?' if !C.t;
+        m C.t=>-Cing=>{s=>\@B},'%dis:1'
+    }
+    #return;
+OnMas: | # stream to p/mas debug h trail
+    my $i = 30;
+    Gc&mas = &acgts{
+        return delete Gc&mas if $i-- < 1;
+        my $in = @{A&ip};
+        $s = "$in - A.t A.1.t  $s\n";
+        my $f = Gc&dir.'/mas';
+        write_file($f, {append=>1}, $s);
+    };
+pi/Cing: | # A C's B-ing
+    n t=>o1=>C.t,'%dis:1'
+    m Bing=>''=>{s=>"  _.t _s&D.t\n",B=>$_},'%hs:345,dos:enB' for @$s;
+    # partition more consecutive bits of info
+    # sucking that id out of the result
+    
+enB: | # plant A looking at something
+    # e
+    sayyl "In A.1.t for ".ki $c;
+    G&give,Toter=>s=>cc&B;
+Mun: |
+    u lac
+    Jc&tape = 'Dejo';
+    S
+    n Man=>V
     G&lac;
-    n some=>''=>"!tiow!"
-    my $t = "Source of ".(T.op && T.op.t || '?');
-    my @l = G&op;
-    n $t =>-pud=>{s=>\@l}
+    
 lac: | # for 3 C
     u i
+    # puds the last J's stuff
     lac:
         # TODO babz T.op|t
         my $t = $s || T.op && T.op.t;
         my @l = G&op;
         n $t =>-pud=>{s=>\@l}
-    
+    foly: %acgt:s k lim
+        my @l = $s;
+        while (1) {
+            $s = s.y.>$k;
+            G&isC,$s || last;
+            !$lim || $lim-- > 1 || last;
+            push @l, $s;
+        }
+        @l;
+        
 WashIn: |
     u pisle
     #Jc&tape = 'Dejo';
     S
-    n dev=>-watch=>"mmcblk0"=>'%T:s'
+    n "mmcblk0"=>-watch=>=>'%T:s'
     S
     sayre "Next thing!";
     
 pi/watch: |
-    c&type ||= C.t;
+    c&type ||= 'dev';
     my $f = c&type eq 'dev' ? "/dev/c&s" : die "typeno";
     s&done = 1 if -e $f;
     s&todo = 1 unless s&done;
