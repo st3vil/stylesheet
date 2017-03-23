@@ -8,6 +8,15 @@ Experience: |
     # bet somewhere else:
     A.7.t = 'gou';
     
+    # remember aft s
+    1c&sang = &acgt{
+        local A.V = 2;
+        sayyl "Wrioting";
+        Rw Write;
+    };
+    
+    # wake up now
+    Rw Read;
 Locate: | # A J and its space
     my $s = ar.s;
     # center of us
@@ -21,6 +30,7 @@ Locate: | # A J and its space
     # inners join by W(/j/j.t)+
     if (A.1 ne A.3) {
         my $j = A.1;
+        saybl "j.t up to j.up.t or j.2.t";
         while (j.2) {
             $j = j.2;
             unshift @J, j.t=>'j';
@@ -72,49 +82,29 @@ Locate: | # A J and its space
 Read: | # the J you're in remembers itself
     # having created a place for it to land
     my $s = ''; # TODO osc channel, api here too Jeneral
-    my $f = Rw Locate $s $read=1;
-    my $d = 1s&Read.>$f ||= {};
-    my $m = (stat $f)[9];
+    my $f = Rw Locate $s $read=1
+        || saybl("Nothing to read A.1.t") && return;
+    saybl "Read located: $f";
+    my $head = "$f/head";
+    my $d = 1s&Read.>$head ||= {};
+    my $m = (stat $head)[9];
     if (ds&meta.mtime eq $m) {
         # sleep J?
     }
     else {
-        $d = LoadFile($f);
+        -f $head || die "Read no $head";
+        $d = LoadFile("$f/head");
         ds&meta.mtime = $m;
         1s&Read.>$f = $d;
     }
     
     return $d
-    
-    
-    
-    my $f = $na->(A.4.t, c.t);
-    if (e&t eq 'put') {
-        my $p = $na->(A.4.t, c.t, '');
-        DumpFile($f,$c);
-        if (G.c.Stash) {
-        }
-        C.c.V && sayyl "Store $f";
-    }
-    elsif (e&t eq 'get') {
-        unless (-f $f && -s $f) {
-            my $t = G.c.t6 || return;
-            # travel agency, like A.6.t
-            # a loosely in pile by the gondola in this bay
-            # could ask for net with A.8
-            # our pull/push in A.7
-            # another place to check for W src
-            # stores (not auto?) in our place (A.4.t)
-            $f = $na->($t, c.t);
-            -f $f && -s $f || return;
-        }
-    }
-    else { G&vent,"NHogo" }
 Write: | # the 
     # C is a completed s, Jc&sang = &acgt{ to get here
     c&imp || die "C not completed s: ".ki$C;
     
     my $f = Rw Locate $write=1;
+    saybl "Write located: $f";
     
     my $write = &C{
         # forked, C is the top (9)
@@ -123,6 +113,7 @@ Write: | # the
         
         if (my $m = s&meta) {
             # applies to the Reading s
+            # separately for map makers
             if (my $xo = m.A.xo) {
                 DumpFile("$f/xo",$xo);
             }
@@ -135,5 +126,6 @@ Write: | # the
     # but keep in/next/tv etc connected
     # wants to output lines of [C] but for the same ref Tricks
     G&stowexp,$write;
+    saybl "Write done";
     
 
