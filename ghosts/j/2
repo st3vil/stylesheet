@@ -1,6 +1,9 @@
 Jig: |
     Jc&tape = 'Dejo';
+    Js&ein.bo = 'Doable';
+    
     n Jigna
+    
     n Jigna=>-pud=>{s=>[ G&op ]}
     my $d = 1s&Jignad;
     n eco=>-pre=>{s=>"InJig: ".wdump 5, $d};
@@ -10,14 +13,12 @@ Jig: |
     # system may feed back
     # [
 Jigna: |
-    my $d = Rw Experience;
-    2s&Jignad = $d;
+    n "G.c.bay/{gou,stay}"=>-lies_02=>"/*{,j/*,j/*/j/*}/head"
+    m _.t=>''=>"_.t: ".slim(30,_c&s) for G&op;
+    
     # users (A.3) will stratify (into J) stages of their transform
     # unless the input looks the same
     # 
-    n fivir=>5=>'Sequ'
-    n fivir=>56=>'ence'
-    n sev=>7=>'seas'
 Lize: | # watch ghost/wormhole watcher
     Jc&tape = 'Dejo';
     # see stylehouse openness 
@@ -25,6 +26,7 @@ Lize: | # watch ghost/wormhole watcher
     # see latest them
     n "G.c.bay/Z"=>-lies=>"*/xo"
     S
+    n zome=>-beli=>{s=>T.op}
     # next things take that ^ as input
     # and continue/restart branches of thinking
     # until something comes out the other end
@@ -37,30 +39,101 @@ Lize: | # watch ghost/wormhole watcher
         lies good
     
 pi/lies: | # watch wormhole (mtimes)
-    my $lim = 4;
-    C: my $c;
-    c.do = 'ls -1ct';
-    c.lim = $lim;
-    c.s = "C.t/$s" if $s =~ /^\W/;
+    # i increases in flood
+    my $list = &i{
+        my $c;
+        c.lim = 4 * $i;
+        c.do = 'bash -c "ls -1ct';
+        c.s = "C.t/$s" if $s =~ /^\W/;
+        c.s .= ' 2>/dev/null"';
+        c.s =~ s/\/\//\//g;
+        my $C = G&Ct,[C.t=>''=>$c];
+        # or: $C = C C.t $lim $s:at % $universal=3
+        my @im = Rw Exe;
+        saybl "Im c.s: ".wdump 3, \@im;
+        # make
+        s&sz = \@im;
+        s&done = 1 if @im < c&lim;
+        $C
+    };
+    
+    # en-2 each file
+    my $forms = &s{
+        my ($si,$mt) = (stat $s)[7,9];
+        $s=>1=>{},{mtime=>$mt,size=>$si}
+    };
     
     my $d = Rw Experience;
     
-    my $C = G&Ct,[C.t=>''=>$c];
-    # or: $C = C C.t $lim $s:at
-    my @im = Rw Exe;
-    #n anMe=>-pud=>{s=>\@im}
-    
-    for (@im) {
-        my $c = d.y.tw.>$_;
-        my $mt = (stat $_)[9];
-        
-        my $diff = $mt - cs&mtime;
-        
-        n $_=>''=>" $_   $diff\n",{mtime=>$mt}
+    # osc changing atom loads contents
+    map {
+    m $_
     }
+    Rw Modulate $d $list $forms;
+    
     
     # stretches out lim to keep reading until it hits old news
     # imparting to self again, next thing will require version bump
     # since there is no hashing the reverse of travel yet
+    
+ 
+Modulate: | # loadup M news
+    # stop when old news found
+    my $done;
+    my $list_done;
+    my $seen;
+    my @l;
+    my $page = 1;
+    my $M = [];
+    my $keen; # whether to read into the rest of the page
+              # once something same has been found
+    until ($done && (!$keen || !@l)) {
+        if (!@l && !$done) {
+            last if $list_done;
+            my $C = $list->($page++);
+            $list_done = 1 if s&done;
+            @l = grep { !$seen.>$_ } @{s&sz};
+            @l || last;
+        }
+        my $s = shift @l;
+        $seen.>$s = 1;
+        
+        my @C = $forms->($s);
+        my $C = G&Ct,\@C;
+        my $c = d.y.tw.>C.t;
+        
+        my $cha;
+        
+        # could use the thing beneath o
+        my $l = G&Ct,[c.t=>''=>{s=>$c}];
+        my $o = G&Ct,[C.t=>''=>{s=>$C}];
+        G&Chang,$l,$o;
+        $cha = oc&cha;
+        
+        # or just
+        $cha = ki(c.sc) ne ki C.sc;
+        
+        if ($cha) {
+            $done = 0;
+            saybl "Cha: C.t:  ".ki(c.sc)." ne ".ki C.sc;
+        }
+        else {
+            sayyl "Done upon C.t";
+            $done = 1;
+        }
+        c&s = read_file(C.t);
+        push @$M, $C;
+    }
+    
+    each t,C d.y.tw {
+        next if $seen.>$t;
+        next if !-e $t;
+        saybl "Cached C.t";
+        push @$M, $C;
+    }
+    @$M
+pi/beli: | # wormhoe
+    T.op = $s;
+    n beli=>-pud=>[ G&op ]
     
 

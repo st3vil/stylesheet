@@ -71,7 +71,7 @@ pi/pud: |
     
     n ind=>o7=>"\n$ind"
     n sli=>o8=>"<  ",'%hs:784,dos:Crank'
-    n t=>1=>"C.t",'%dos:Crank'
+    n t=>1=>"C.t ",'%dos:Crank'
     
     my ($return,$sy);
     if (ref $s eq 'HASH' && keys %$s < 5 && 
@@ -211,7 +211,7 @@ pi/pud: |
                 }
             }
             
-            n no=>2=>$z,"%fs:$fs,hs:398,lh:0.5,mt:1,mh:5$bg"
+            n no=>2=>$z,"%fs:$fs,hs:398,lh:0.9,mh:5$bg,dis:2"
             return
         }
         if (s.y eq $s && c&depth > c&dl) {
@@ -288,6 +288,7 @@ Apud: |
 Cpud: |
     my $spc = c&dl - c&depth;
     $spc = 1 if c&block;
+    # scale t fontsize
     my $fss = &s{
         my $over = length($s) / 14;
         my $fs = int(12 / ($over < 1 ? 1 : $over * 0.89));
@@ -303,8 +304,19 @@ Cpud: |
         n t=>2=>{s=>shift @$ac},"%hs:356,fs:$fs,mw:14"
         n ycv=>2=>{s=>shift @$ac},'%hs758,fs:12,ma:0.3'
         n y=>201=>{s=>shift @$ac},'%hs:856,fs:7'
-        n c=>21=>{s=>shift @$ac},'%hs:656,fs:8'
-        n sc=>22=>{s=>shift @$ac},'%hs:456,fs:10'
+        
+        my $c = ki s.c;
+        my $cac = shift @$ac;
+        $c = $cac if length $c > 40;
+        my $cfs = $fss->($c);
+        n c=>21=>{s=>$c},"%hs:656,fs:$cfs"
+        
+        # < spot s&J
+        my $sc = ki s.sc;
+        my $scac = shift @$ac;
+        $sc = $scac if length $sc > 80;
+        my $scfs = $fss->($sc);
+        n sc=>22=>{s=>$sc},"%hs:456,fs:$scfs"
     }
     elsif ($spc < 2) {
         my $ac = G&aC,$s,'Ck5';
