@@ -200,9 +200,11 @@ pi/pud: |
                     my $ig;
                     if (s.cv) {
                         ig.cv++;
-                        n cv=>191=>s.cv,'%hs:286,fs:14'
+                        my $cv = s.cv;
+                        $cv =~ s/^0\.//;
+                        n cv=>191=>$cv,'%hs:286,fs:12'
                     }
-                    $z = Rw yki $s $ig $we:A.2.C;
+                    $z = Rw yki $s $ig $we:A.2.C.c.s;
                 }
             }
             if (22Cs&istycsc) {
@@ -298,12 +300,14 @@ Cpud: |
     if ($spc < 1) {
         my $ac = G&aC,$s,'Ck5';
         
-        $ac->[1] =~ s/^0\./$2/;
+        $ac->[1] =~ s/^0\.//;
         my $fs = $fss->($ac->[0]);
         #
         n t=>2=>{s=>shift @$ac},"%hs:356,fs:$fs,mw:14"
-        n ycv=>2=>{s=>shift @$ac},'%hs758,fs:12,ma:0.3'
-        n y=>201=>{s=>shift @$ac},'%hs:856,fs:7'
+        n ycv=>2=>{s=>shift @$ac},'%fs:12,ma:0.3'
+        my $y = shift @$ac;
+        ($y) = Rw Deyer $y;
+        n y=>201=>{s=>$y},'%hs:856,fs:7'
         
         my $c = ki s.c;
         my $cac = shift @$ac;
@@ -327,20 +331,14 @@ Cpud: |
         
         n t=>2=>{s=>shift @$ac},"%hs:356,fs:$fs,mw:14"
         n ycv=>2=>{s=>shift @$ac},'%hs758,fs:12,ma:0.3'
-        my @sel = grep { my $C = s.y.>$_;
-            ref $C eq 'HASH' && C.y && C.y ne $C && G&isC,$C &&
-            C.t eq s.t && C.y.cv eq s.y.cv
-            } keys %{s.y};
-        my $y = {%{s.y}};
-        delete $y.>$_ for @sel, 'cv';
-        my $sel = join("*",sort @sel)." " if @sel;
-        my $ys = join " ", map {
-            "$_"#:".slm(14,G&aC,$y.>$_ )
-        } sort keys %$y;
-        n y=>201=>$sel.$ys,'%hs:856,fs:7'
+        my $y = shift @$ac;
+        $y =~ s/\bcv\b//;
+        ($y) = Rw Deyer $y;
+        
+        n y=>201=>$y,'%hs:856,fs:7'
         
         my $c = {%{s.c}};
-        if (exists c.s) {
+        if (exists c.s && 0) {
             my $s = delete c.s;
             my $fs = $fss->($s);
             n s=>23=>$s,"%hs:356,fs:$fs,mw:14,ab:1,mt:2"
@@ -354,12 +352,31 @@ Cpud: |
         return 0;
     }
     1
+Deyer: | # fold y familiar
+    my $ig = ar.ig || {};
+        my @yt = qw'D r x up|next|prev:+';
+        my $m;
+        for my $k (@yt) {
+            ($k,my$la) = split ':', $k;
+            $la ||= $k;
+            $m .= "$la " if grep { $y =~ s/\b$_\b//g && ++$ig.>$_ }
+                split /\|/, $k;
+        }
+        my $ys = join " ", grep{$_} split /\s+/, $y;
+        $y = join " ", grep{$_} $m, $ys;
+        ($y,$m,$ys)
 yki: | # ki() again
+    my $ig = ar.ig || {};
     my @ks = sort keys %$s;
     my $ks = &v{
-        join',',sort keys %$v
+        join' ',sort keys %$v
     };
-    join ' ', map {
+    my $m;
+    if ($we && C.t eq 'y') {
+        my $y = join ' ', @ks;
+        ($y,$m) = Rw Deyer $y $ig;
+    }
+    my @l = map {
         my $v = $s.>$_;
         ar.ig && ar.ig.>$_ ? '' :
         "$_:".(ref $v eq 'HASH' ? (
@@ -374,6 +391,7 @@ yki: | # ki() again
         : ref $v || $v
         );
     } @ks;
+    join ' ', grep {$_} $m, @l;
 Typerack: | # makes a J for whitespaced typograph
     y.at.qs=1;
     y.at.ws=1;
