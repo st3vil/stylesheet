@@ -3,53 +3,37 @@ pi/od: | # pud clo
     # recursion
     Rw HaveDepth;
     Rw MayC;
-    #Rw ThinTrunk;
     # ident
-    Rw Indentity
+    Rw Indentity;
+    Rw Trunks;
     
-    # do preliminary identify
-    #  with marks that cancel if others supply
-    if (a&isC) {
-        Rw SeeC;
-    }
-    elsif (a&isA) {
-        Rw SeeA;
-    }
-    else {
-        Rw Sees;
-    }
-    
-    # above or part of a C/A/s?
-    c&block = 'same' if $s eq 2Cc&s && 2Cs&pi eq s&pi ;
-    c&block = 'b' if C.t eq 'ip' && A.2.C.t eq 'c';
-    # mute bits of the slide that go other fast
-    unless (c&block || ref $s ne 'HASH') {
-        T hashi
-        if (C.t eq 'G') {
-            my $w = s.w;
-            if (ref $w eq 'CODE' || ref \$w eq 'GLOB') {
-                c&block = 'G';
-            }
-        }
-        if (s.y eq $s) {
-            c&block = 'yA' if A.2.C.t eq 'y';
-            c&block = 'AA' if 2s&isA;
-            if (c&block) {
-                c&blos = G&sn,$s;
-            }
-        }
-    }
     if (c&block) {
         n block=>2=>c&block,'%hs:855'
         c&blos &&
         n blocked=>21=>' '.c&blos,'%hs:827'
         return
     }
-
-    if ($sy) {
-        n sy=>o75=>$sy=>"%hs:7574,ab:1,poi:0,lh:40%,fs:".int(100 / c&depth)
+    
+    # do preliminary identify
+    #  with marks that cancel if others supply
+    if (c&isC) {
+        Rw SeeC;
     }
+    elsif (c&isA) {
+        Rw SeeA;
+    }
+    else {
+        Rw Sees;
+    }
+    
+    
+
+    s&sy &&
+        n sy=>o75=>s&sy=>"%hs:7574,ab:1,poi:0,lh:40%,fs:".int(100 / c&depth)
+    
     return if s&return;
+    n mo=>4=>"Mo?"
+    
 SeeC: |
     s&sy = 'C';
     s&return ||= Rw Cpud;
@@ -57,7 +41,7 @@ SeeC: |
     # see the C, calcify it...
     return;
     
-    # Quant: if C is t-cs- only
+    # Quant: if C is t-cs- only, it's an empty-ish layer
     if (G&q,$s,'o?.cs') {
     
     }
@@ -71,14 +55,12 @@ SeeC: |
             s&return = 2;
             c&dl += 2;
         }
-        s&type = $sy = 'C';
         s&return ||=
             Rw Cpud;
     }
 SeeA: |
     if (s.1 && s.1 eq $s || s.sc && s.sc.n) {
         s&sy = "J";
-            
         s&return ||=
             Rw Jpud;
     }
@@ -96,23 +78,23 @@ Sees: |
     my ($ks,$vs);
     if (ref $s eq 'ARRAY') {
         n is=>11=>'[','%hs:457'
-        C.sc.type = 'array';
+        #C.sc.type = 'array';
         $vs = [@$s];
         $ks = [0..(@$s-1)];
-        if (22Cs&istycsc) {
+        if (22Cc&istycsc) {
             if (A.2.C.t eq 'c') {
                 c&dl = 1 if C.t eq 'N';
             }
         }
         if (c&depth > c&dl) {
-            return
+            s&return++;
             n no=>2=>ki($s),'%fs:7,hs:458'
         }
     }
     else {
         if (ref $s ne 'HASH' || c&depth > c&dl) {
             T nonhash
-            my $z = s&type eq 'A' ? $idA->($s)
+            my $z = s&type eq 'A' ? G&sn,$s
                 : ki $s;
             my $bg;
             if (!ref $s) {
@@ -134,7 +116,7 @@ Sees: |
             }
             my $fs = 6;
             $fs = 8 if !ref $s;
-            if (2Cs&istycsc) {
+            if (2Cc&istycsc) {
                 if (C.t eq 't') {
                     $z = $s;
                     $fs = 23;
@@ -151,23 +133,25 @@ Sees: |
                     $z = Rw yki $s $ig $we:A.2.C.c.s;
                 }
             }
-            if (22Cs&istycsc) {
+            if (22Cc&istycsc) {
                 if (A.2.C.t eq 'y') {
                     $fs = 16 if C.t eq 'cv';
                 }
             }
             
             n no=>2=>$z,"%fs:$fs,hs:398,lh:0.9,mh:5$bg,dis:2"
+            s&return++;
             return
         }
         if (s.y eq $s && c&depth > c&dl) {
-            return
+            s&return++;
             n A=>2=>"A s.t s.y.cv; ".ki(s.c)."    ".ki(s.sc);
         }
     }
     
 Quant: | # FactorEase
     u i
+    # matches a C for having only t and cs (etc)
     q: %acgt:s q
         my ($mode) = $q =~ s/^(o)//;
         my ($t) = $q =~ s/^(\?)//;
@@ -202,15 +186,36 @@ HaveDepth: |
     c&dl += Js&boost * 2 if Js&boost;
     
     a&space = c&dl - c&depth
-Trunks: | # adj depth for shape
+Trunks: | # adj depth for shape/truncation of too-hyperlinkage
     # 
-    c&dl += 2 if c&depth < 6 && C.t eq 's' && 22Cs&istycsc;
-    c&dl -= 3 if C.t eq 'y' && 2Cs&istycsc;
-    c&dl += 2 if C.t eq 'in' && A.2.C.t eq 'y' && 22Cs&istycsc;
+    c&dl += 2 if c&depth < 6 && C.t eq 's' && 22Cc&istycsc;
+    c&dl -= 3 if C.t eq 'y' && 2Cc&istycsc;
+    c&dl += 2 if C.t eq 'in' && A.2.C.t eq 'y' && 22Cc&istycsc;
     # crawling up a long thin trunk
     if (0 && C.t ne 'y' && (c&dl - c&depth) < 1 && 3Cc&intl < (3Cc&intlim / 3)) {
         T wtf
         c&dl += 1;
+    }
+    
+    # above or part of a C/A/s?
+    c&block = 'same' if $s eq 2Cc&s && 2Cs&pi eq s&pi ;
+    c&block = 'b' if C.t eq 'ip' && A.2.C.t eq 'c';
+    # mute bits of the slide that go other fast
+    if (!c&block && ref $s eq 'HASH') {
+        T hashi
+        if (C.t eq 'G') {
+            my $w = s.w;
+            if (ref $w eq 'CODE' || ref \$w eq 'GLOB') {
+                c&block = 'G';
+            }
+        }
+        if (s.y eq $s) {
+            c&block = 'yA' if A.2.C.t eq 'y';
+            c&block = 'AA' if 2Cc&isA;
+            if (c&block) {
+                c&blos = G&sn,$s;
+            }
+        }
     }
 Indentity: |
     y.at.qs=1;
@@ -224,12 +229,12 @@ Indentity: |
     
 MayC: |
     if (ref $s eq 'HASH' && defined s.t && s.y && (s.c || s.sc)) {
-        s&istycsc = 1;
+        c&istycsc = 1;
         if (s.y ne $s) {
-            a&isC = 1;
+            c&isC = 1;
         }
         else {
-            a&isA = 1;
+            c&isA = 1;
         }
     }
 
