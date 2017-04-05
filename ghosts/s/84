@@ -216,56 +216,6 @@ enlighten: | # handle mud clicks, feed change into origin via Trips
     #   and hop along slight s to feed change upwards
     # so any resource the osc can feed through should be osc handled
 
-ElvisMalta: |
-    S
-    1 && saybl "Dune";
-    t.dd->(1, "One thing");
-    S
-    sayre "Five finged";
-Forks: | # we decide to fork
-    my $t = G&sn,3 .(ar.s && " ar.s");
-    saygr "We decide to fork $t";
-Four: | # savepoint/fork and wait
-    my $parent = $$;
-    if (my $pid = fork()) {
-        1 && saygr "
-            oooo
-               o o
-              o   o";
-        
-        $SIG{INT} = sub {
-            sayre "Killing $pid...";
-            kill 'KILL', $pid;
-            delete $SIG{INT}
-        };
-        my $and;
-        $SIG{HUP} = sub {
-            $and = 1;
-        };
-        
-        waitpid($pid,0);
-        
-        if ($and) {
-            saybl "child wants restart!";
-            return
-            Rw waitme
-        }
-        
-        saybl "Refork $t ? <";
-        
-        my $IN = \*STDIN;
-        while (my $k = <$IN>) {
-            chomp $k;
-            return if G.c.loopst;
-            #!G.reing && !$k && return 2;
-            J.me = $k;
-            say "__ $k";
-            return 2;
-        }
-    }
-    else {
-        G.forked = $parent;
-    }
 Ghroup: | # convolute muds - make hierarchy
     local A.V = 2;
     $M eq A&M || die "AM not M";

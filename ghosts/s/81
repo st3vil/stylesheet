@@ -452,9 +452,11 @@ HashKs: | # order children, returns $hash,@ks
         [ map { [ $_ => $s.>$_ ] } @$he, @mi, @$ta ];
     };
     my (@he,@ta);
-    push @he, qw't cv y' if C.sc.istycsc;
-    push @ta, qw'c sc' if C.sc.istycsc;
-    push @ta, qw'ip sip ipi T' if A.2.C.sc.istycsc && C.t eq 'c';
+    push @he, qw't cv y' if c&istycsc || C.sc.istycsc;
+    push @ta, qw'c sc' if c&istycsc || C.sc.istycsc;
+    push @ta, qw'ip sip ipi T' if (2Cc&istycsc || A.2.C.sc.istycsc) && C.t eq 'c';
+    ar.ks = c&ks if c&ks;
+    ar.vs = c&vs if c&vs;
     
     my $se = ar.ks ? {map{$_=>shift@{ar.vs}}@{ar.ks}} : $s;
     my @ks = map{$_->[0]}map{@$_} $hord->($se,\@he,\@ta) if ref $se eq 'HASH';
