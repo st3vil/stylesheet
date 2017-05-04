@@ -137,7 +137,15 @@ TripDrop: | # bind Trips at moment of W
             delete A.trip;
         }
         my $al = ts&top.y.tw;
-        my $i = $al.>C.t || return;
+        my $i = $al.>C.t;
+        unless ($i) {
+            if (my $tripany = ts&tripany) {
+                $tripany->($A,$C,$G,$T);
+            }
+            else {
+                return
+            }
+        }
         #1 && sayyl "Have trips for C.t";
         my $n = is&J.sc.top;
         $n = n.y.tv;
@@ -188,6 +196,10 @@ Trips: | # to be distributed to W
         $s ||= e&l ->{t};
         @$M = grep { _c&l.t ne $s } @$M;
     };
+    # see Jigup
+    Js&ein.t.tripany.sMJ = &sMJj{
+        Js&tripany = $s;
+    };
     S
     # make Troom for the Words
     my $WT = {};
@@ -233,3 +245,4 @@ pi/trip: | # bag of tricks to pass to a W
         n $t=>"2$i"=>{s=>$s},{l=>r.y.t.c.l,r=>$r};
         $i++;
     }}
+
