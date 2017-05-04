@@ -13,7 +13,7 @@ Sound: |
     # for spectrograms:
     # apt-get install spek
     
-Jig: |
+Jig: | # direction to Jigup
     Jc&tape = 'Dejo';
     Js&ein.bo = 'Doable';
     # awareness of G gou in G gou is feedback, in G view is not
@@ -33,6 +33,7 @@ Jig: |
     
     my $l = [];
     G&elph,Trips=>[tripany=>$_] for &acgt{
+        return unless $l;
         my $ay = $A;
         my @A = $ay;
         push @A, ($ay = ay.up) while ay.up && ay.up ne $ay;
@@ -41,17 +42,23 @@ Jig: |
         # deals with land itself
         return if A.up.up.t =~ /^(u|s)$/;
         # nor the Storage or any other agents
-        my $space = "  " if C.t =~ /^(Stro)$/;
-        push @$l, $space . G&aC,$C . "\t" . $Ats;
+        return if C.t =~ /^(Stro)$/;
+        push @$l, G&aC,$C . "\t" . $Ats;
+        # around method wrapper
+        c&pin = 'Jigup';
     };
-    my $la =
-    n Trips=>V
-    n Sequencing=>-acuW
+    
+    my $t = 'Triangle';
+    n $t
+    
+    my @l = G&op; #,'cW:';
+    n ese=>o1=>"Seeing $t in beW"
+    n $t=>-od=>{dl=>2,s=>[ @l ]}
     
     #n Jigna
     
-    my $ce = la.c.mo.c.s;
-    n tripany=>-pud=>{dl=>2,s=>$l}
+    #my $ce = la.c.mo.c.s;
+    #n tripany=>-pud=>{dl=>2,s=>$l}
     my $d = 1s&Jignad;
     #n eco=>-pre=>{s=>"InJig: ".wdump 3, $l};
     
@@ -59,6 +66,11 @@ Jig: |
     # with W commits of gou -> stay
     # system may feed back
     # [
+    undef $l;
+Jigup: | # recursively (with Trip) follow & store dependencies
+    my $d = Rw Experience;
+    Rw C.t;
+    #n oput=>8=>"Somewhere?"
 pi/acuW: |
     n C.t=>W=>{pin=>'Jigup'}
 
@@ -69,10 +81,6 @@ pi/beW: |
     #my $d = Rw Experience;
     n C.t
     #n C.t=>''=>"Np"
-Jigup: | # recursively (with Trip) follow & store dependencies
-    my $d = Rw Experience;
-    Rw C.t;
-    n oput=>8=>"Somewhere?"
 Jigna: |
     G.c.leakmax = 40;
     n "G.c.bay/{gou,stay}"=>-lies_02=>"/*{,/j/*,/j/*/j/*}/head"
