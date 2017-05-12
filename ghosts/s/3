@@ -1006,13 +1006,15 @@ Walks: | # othering, many C
     ind: %acgt:s y d
         my $D = $s;
         $s = G&hup,$s unless d.nohup;
-        s.y.D = $D;
+        s.y.D = $D unless d.nohup;
         $y ||= sub { shift };
         my $d = {%{$d||{}}};
         d.path = [@{d.path||[]}, "s.t s.y.cv"];
-        d.ind = "  " if !defined d.ind;
+        d.ind = '  ' if !defined d.ind;
+        # ^ accumulates on every depth's return
         d.d++;
         my @out;
+        # the two ways to go deep, should both?
         if (my $z = s.sc.z) {
             @$z = grep{defined} @$z;
             d.zort && d.zort->($z,$s,$d);
@@ -1051,7 +1053,8 @@ Walks: | # othering, many C
         return () if !@out;
         
         if (d.d == 1 && !grep{ref}@out) {
-            join "\n", grep{defined} @out;
+            @out = grep{defined} @out;
+            wantarray ? @out : join "\n", @out;
         }
         else { # an $N?
             s.sc.z = $my if @$my && ref $s eq 'HASH';

@@ -68,7 +68,9 @@ Locate: | # A J and its space
     for my $num (@search) {
         my $j = $A.>$num;
         next if !$j;
-        $f = join '/', $star, j.t, @J;
+        my $jt = j.t;
+        $jt =~ s/\W+/-/gs;
+        $f = join '/', $star, $jt, @J;
         my $e = -e $f;
         $read && !$e && next;
         $t = j.t;
@@ -82,7 +84,8 @@ Read: | # the J you're in remembers itself
     my $s = ''; # TODO osc channel, api here too Jeneral
     my $f = Rw Locate $s $read=1
         || saybl("Nothing to read A.1.t") && return;
-    saybl "Read located: $f";
+    Jc&read_from = $f;
+    #saybl "Read located: $f";
     my $head = "$f/head";
     my $d = 1s&Read.>$head ||= {};
     my $m = (stat $head)[9];
@@ -102,7 +105,8 @@ Write: | # the
     c&imp || die "C not completed s: ".ki$C;
     
     my $f = Rw Locate $write=1;
-    saybl "Write located: $f";
+    #saybl "Write located: $f";
+    1c&write_to = $f;
     
     my $write = &C{
         # forked, C is the top (9)
@@ -118,6 +122,10 @@ Write: | # the
             if (my $c = m.c) {
                 DumpFile("$f/c",$c);
             }
+        }
+        
+        if (my $y = 7s&writer) {
+            $y->($A,$C,$G,$T);
         }
     };
     # fork and disconnect subtle/wirings
