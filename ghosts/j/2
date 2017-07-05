@@ -180,24 +180,74 @@ Line: |
     # 
     my $t = C.t;
     my $y = C.y.cv;
-    $y =~ /^0\.//;
+    $y =~ s/^0\.//;
     my $simp = &s{
         $s =~ /^[\w\.\-]+$/ && length $s < 24
     };
     my $h; # hath
     h.c = C.c || {};
     h.sc = C.sc || {};
-    my $n; # needs json
-    my $q; # needs blockquote
+    my $n = {}; # needs json
+    my $q = {}; # needs blockquote
     each nk,gk,v $h {
+        if (!$simp->($gk)) {
+            $n.>$nk.>$gk = $v;
+            next;
+        }
         if (ref $v) {
-            if (G&oleak,
+            if (G&oleak,$v,4 ) {
+                G&oleak,$v,9 && die "Leaky $nk $gk: ".ki $v;
+                # big enough to quote, simplifies remainder
+                $q.>$nk.>$gk = $v;
+            }
+            else {
+                # ref too small to quote, json hemisphere
+                $n.>$nk.>$gk = $v;
+            }
         }
         else {
-            $simp->($v);
+            if (length $v > 42 && $v =~ /\n/) {
+                # long enough to quote
+                $q.>$nk.>$gk = $v;
+            }
+            elsif ($simp->($v)) {
+                # decipherable to G&peel
+            }
+            else {
+                # midway to unwieldy
+                $n.>$nk.>$gk = $v;
+            }
+        }
+    }}
+    
+    
+    each nk,gk,v $q {
+        delete $h.>$nk.>$gk;
+    }}
+    
+    my $enj = &s{
+        $s = sjson[$s];
+        $s =~ s/^\[|\]$//sg;
+        $s
+    };
+    
+    my $l;
+    if ($simp->($t)) {
+        $l = $t;
+    }
+    else {
+        $t = $jt;
+    }
+        1 && saybl "X: ".sjson[$t];
+    $l .= "\t$y";
+    
+    each nk,g $h {
+        if ($n.>$nk) {
+            #
         }
     }
     
+    1 && sayyl "Found $l - ".wdump 4,[sim=>ki($h),need=>ki($n),quote=>ki($q)];
     
     
     
@@ -206,10 +256,7 @@ Line: |
     
     
     
-    
-    
-    
-    #
+    $l
 Jigup: | # recursively (with Trip) follow & store dependencies
     my $d = Rw Experience;
     #n oput=>8=>"Somewhere?"
