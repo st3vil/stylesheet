@@ -50,7 +50,7 @@ Locate: | # A J and its space
     # there is a moving part between infinity and finity
     # we may work off and onto several G
     # place of work, the worker and the Gallery
-    # travelling process sense and wormhole sense
+    # travelling process sense and wormhole sense                              
     # probably all: A.4.t, same name as worker
     my @search = $read ?
         # 6 for travel instructor
@@ -65,12 +65,14 @@ Locate: | # A J and its space
     # < any of them implementing a more complicated search/resolver
     
     my $f; # path to dir full of head/xo/c/etc files and s/j/etc dirs
+    my $gd; # the G dir its in, before Jing
     for my $num (@search) {
         my $j = $A.>$num;
         next if !$j;
         my $jt = j.t;
         $jt =~ s/\W+/-/gs;
-        $f = join '/', $star, $jt, @J;
+        $gd = join '/', $star, $jt;
+        $f = join '/', $gd, @J;
         my $e = -e $f;
         $read && !$e && next;
         $t = j.t;
@@ -78,7 +80,7 @@ Locate: | # A J and its space
     }
     
     return if $read && !$t;
-    $f
+    ($f,$gd)
 Read: | # the J you're in remembers itself
     # having created a place for it to land
     my $s = ''; # TODO osc channel, api here too Jeneral
@@ -104,9 +106,10 @@ Write: | # the
     # C is a completed s, Jc&sang = &acgt{ to get here
     c&imp || die "C not completed s: ".ki$C;
     
-    my $f = Rw Locate $write=1;
+    my ($f,$gd) = Rw Locate $write=1;
     #saybl "Write located: $f";
     1c&write_to = $f;
+    1c&write_bay = $gd;
     
     my $write = &C{
         # forked, C is the top (9)
