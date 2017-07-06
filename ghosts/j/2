@@ -113,29 +113,25 @@ Jig: | # direction to Jigup
     # [
     #n Ghostig
     undef $l;
-AWriter: | # 1234
+AWriter: | # 7s&writer makes 12345
     7s&writer = &acgt{
         my $f = 1c&write_to;
         my $gd = 1c&write_bay;
         1 && saygr "We are A.1.t ($f)";
         
-        my $meta;
+        # not s but the top/9
         my $s = G&hup,$C;
+        
+        # take meta off the 9, put ha on W
+        my $meta;
         my $ub = &Cd{
-            
-            my $p = join "/", @{d.path};
-            my $and;
-            my $l;
-            eval {
-            
-            s&z && die "Hadz";
-            delete s&z;
-            delete C.y.>$_ for qw'next prev in more up tv tw';
+            # the 9 has this old meta bunch
+            # helped impart itself to s
             if (my $m = delete s&meta) {
                 $meta && die "doublemeta";
                 $meta = $m;
             }
-            # 
+            # assume W is in G
             if (my $t = s&W) {
                 $t =~ s/\W+/-/gs;
                 my $d = "$gd/$t";
@@ -144,44 +140,144 @@ AWriter: | # 1234
                 $ha =~ s/^h\///;
                 s&ha = $ha;
             }
+        };
+        G&ind,$s,$ub,{nohup=>1};
+        
+        # gist to first t/y sc{shape,stringth,c,sc,etc}
+        # < histogram and group like things
+        # < and compress styles
+        # and collect W joins for 5
+        my $W = G&Ct,['W',1];
+        $ub = &Cd{
+            return undef if d.d > 2;
+            if (s&W) {
+                my $D = G&Ct,[C.t,C.y.cv];
+                Ds&W = s&W;
+                Ds&ha = s&ha || die "W without ha";
+                push @{Ws&z||=[]}, $D;
+            }
+            my $D = G&Ct,[C.t,C.y.cv];
+            # assuming gk is safe to join with -
+            # < imply the style's encoding for FactorEase
+            # like we can do for Line's
+            for my $k (qw'c sc') {
+                my $v = $C.>$k || {};
+                keys %$v || next;
+                D.sc.>$k = join'-',sort keys %$v;
+            }
+            # seem to prefer ytv than z connection
+            # < both
+            Ds&zs = @{s&z||[]} if s&z;
+            Ds&zs = map{values %$_} values %{C.y.tv} if C.y.tv;
+            # < more shape, classify language
+            Ds&slines = split "\n", c&s if c&s;
             
-            $l = Rw Line $C;
+            Ds&W = s&W if s&W && s&W ne C.t;
+            Ds&ha = s&ha if s&ha;
+            
+            if (d.d == 1 && C.y.cv == 0.9) {
+                Ds&ha = 'HAHAR';
+            }
+            Rw Line $C:D;
+        };
+        my @four = G&ind,$s,$ub;
+        
+        $ub = &Cd{
+            my $p = join "/", @{d.path};
+            my $l = eval {
+            
+            s&z && die "Hadz";
+            delete s&z;
+            delete C.y.>$_ for qw'next prev in more up tv tw';
+            Rw Line $C;
             
             };
             $@ && die "For $p:\n  C: ".ki($C)."\n$@";
             
-            my $se = G&aC;
-            $se .= "\t\t $and" if $and;
-            
-            return $l;
+            $l
         };
-        my @all = G&ind,$C,$ub,{nohup=>1};
+        my @all = G&ind,$s,$ub,{nohup=>1};
         
-        my $con = join "\n", @all,'';
-        my $ha = slm 9, dig $con;
-        s&hash = $ha; # eg, like .c.o
-        
-        # make an object: h/$hash = content
-        my $hf = "h/$ha";
-        `mkdir -p $f/h`;
-        write_file("$f/$hf", $con);
+        #c storage the bits: h/$hash = content
+        my $st = &st{
+            $s = join "\n", @$s,'' if ref $s eq 'ARRAY';
+            my $ha = slm 9, dig $s;
+            `mkdir -p $f/h` if !-d "$f/h";
+            my $hf = "h/$ha";
+            write_file("$f/$hf", $s);
+            if ($t) {
+                `unlink $f/$t` if -e "$f/$t";
+                `ln -s h/$ha $f/$t`;
+            }
+            $ha
+        };
         
         # point to object: 1 -> h/$hash
-        `unlink $f/1`;
-        `ln -s h/$ha $f/1`;
+        my $ha = $st->(\@all,'1');
         
-        # status check point: 2 versions 1,4,5
-        delete meta.paths;
-        my $xo = meta.A.xo;
-        my @wo = grep { _s&W } map {values %$_} values %{ s.y.tv };
-        
-        1 && sayyl wdump 6, [\@wo,$xo];
-        
-        # changelog/tree: 3 .= 2
-        
-        # lum feeling: 4 ~= content
+        # lum feeling: 4 ~= content, 
+        $four[0] =~ s/HAHAR/$ha/;
+        my $foha = $st->(\@four,'4');
         
         # meta/5cience behind it: 5
+        my $fi = G&Ct,[C.t,C.y.cv];
+        fi.sc.ha = $ha;
+        my $z = [];
+        
+        # belief structure dependage
+        my $xo = meta.A.xo;
+        if (my $way = xo.way) {
+            my $w = G&Ct,[w=>1];
+            my $wz = ws&z = [];
+            for my $pin (sort keys %$way) {
+                my $p = G&Ct,[$pin,1];
+                push @$wz, $p;
+                my $v = $way.>$pin;
+                if (keys %$v > 1) {
+                    pc&s = $v;
+                    ps&way_variants = keys %$v;
+                    next;
+                }
+                (ps&dige,ps&used) = %$v;
+                delete ps&used if ps&used eq 1;
+            }
+            push @$z, $w if @$wz;
+        }
+        
+        # other meta stuff
+        delete $xo.>$_ for qw'way o sWo';
+        if (keys %$xo) {
+            push @$z, G&Ct,[xo=>1=>{s=>$xo}]
+        }
+        
+        # other W and their ha
+        push @$z, $W if @{Ws&z||[]};
+        
+        fi.sc.z = $z if @$z;
+        $ub = &Cd{
+            delete s&z;
+            Rw Line $C;
+        };
+        my @five = G&ind,$fi,$ub;
+        my $fiha = $st->(\@five,'5');
+        
+        # status check point: 2 versions 1,4,5
+        my $t = G&Ct,[C.t,C.y.cv];
+        ts&1 = $ha;
+        ts&4 = $foha;
+        ts&5 = $fiha;
+        my @two = G&ind,$t,$ub;
+        (my $was = readlink "$f/2") =~ s/^h\///
+            if -s "$f/2";
+        my $twha = $st->(\@two,'2');
+        
+        # changelog/tree: 3 -> 2, last 2... Gum batch?
+        my $r = G&Ct,[C.t,C.y.cv];
+        rs&parent = $was;
+        rs&2 = $twha;
+        my @three = G&ind,$r,$ub;
+        my $rwha = $st->(\@three,'3');
+        
         
         
         1 && sayre "HJave $ha on A.1.t (A.t): ".ki $C;
@@ -192,14 +288,18 @@ AWriter: | # 1234
         1 && saybl $_ for grep /ha:/, @all;
     };
     
-Line: |
+Line: | # C as a tabby line
     # make a line to crawl up some beach
     my $t = C.t;
     my $y = C.y.cv;
     $y =~ s/^0\.//;
     
-    # 
-    C.c.flow.er.ar.e.e.rl.o++ if C.t eq 'A';
+    # aims for simplicity of notation for G&C, G&peel
+    # block quotes (BQ) big strings or data after the  line
+    # uses json for anything complicated
+    # z insides done by the process around this one Line
+    #  - they have the same indent as BQs
+    #    but their t should json or not look like BQ
     
     my $simp = &s{
         $s =~ /^[\w\.\-]+$/ && length $s < 24
@@ -240,7 +340,7 @@ Line: |
         }
     }}
     
-    each nk,g $n {
+    each nk,g $n { 
         my $v = $h.>$nk;
         next if !keys%$v;
         if (keys(%$g) / keys(%$v) < 0.3) {
@@ -268,11 +368,13 @@ Line: |
         $l = $enj->($t);
     }
     
+    # even if 1? indent
     $l .= "\t$y";
     
     for my $nk (qw'c sc') {
         my $v = $h.>$nk;
         if ($nk eq 'c' && 0 == keys %$v) {
+            # blank
             $l .= "\t";
         }
         elsif ($nk eq 'c' && 1 == keys%$v && v.s) {
@@ -294,31 +396,25 @@ Line: |
     each nk,gk,v $q {
         my $k = "  $nk $gk:";
         if (ref $v) {
+            # BQ yaml data
             $v = Dump $v;
             $v =~ s/^--- \n//s;
             $v = join "\n", map{"    $_"}split"\n",$v;
             $k .= "\n".$v;
         }
         elsif ($v =~ /^\w([\w ,]*\w)?$/) {
+            # simple strings
+            # not to confuse into 'Thing 2'
             $k .= " $v";
         }
         else {
+            # BQ string
             $k .= " |\n".join "\n", map{"    $_"}split"\n",$v;
         }
         push @l, $k
     }}
     
-    
     $l = join "\n", $l, @l;
-    
-    #1 && sayyl "Found $l - ".wdump 4,[sim=>ki($h),need=>ki($n),quote=>ki($q)];
-    
-    
-    
-    
-    
-    
-    
     
     $l
 Jigup: | # recursively (with Trip) follow & store dependencies
