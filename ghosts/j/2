@@ -23,7 +23,7 @@ Atool: | # reliable/old A
         push @A, ($ay = ay.up) while ay.up && ay.up ne $ay;
         my $Ats = join' ',reverse map{_.t}@A;
         
-Jig: | # direction to Jigup
+Jig: | # initiates W to Jigup
     Jc&tape = 'Dejo';
     Js&ein.bo = 'Doable';
     # awareness of G gou in G gou is feedback, in G view is not
@@ -31,6 +31,9 @@ Jig: | # direction to Jigup
     
     # to be toplevel code stitch and branching controller
     #   G ionvolk.
+    # but really, wrap a bunch of Lize beings, like tests
+    # with W commits of gou -> stay
+    # system may feed back
     =pod
     
     super
@@ -49,8 +52,6 @@ Jig: | # direction to Jigup
     catch it in the throat maker
     
     =cut
-    
-    
     
     # - put Jigup wrapper on any W
     my $l = [];
@@ -107,12 +108,26 @@ Jig: | # direction to Jigup
     my $d = 1s&Jignad;
     #n eco=>-pre=>{s=>"InJig: ".wdump 3, $l};
     
-    # but really, wrap a bunch of Lize beings, like tests
-    # with W commits of gou -> stay
-    # system may feed back
     # [
     #n Ghostig
     undef $l;
+Jigup: | # recursively (with Trip) follow & store dependencies
+    my $d = Rw Experience;
+    #n oput=>8=>"Somewhere?"
+    Rw C.t;
+Jigdo: | # bootstrap a G from W
+    Jc&tape = 'Dejo';
+    Js&ein.bo = 'Doable';
+    A.6.t = 'via';
+    my $f = Rw Locate $read=1 $t=Sequencing;
+    $f .= "/1";
+    my $N = Rw Beach $f;
+    
+    n file=>''=>"File is $f"
+    # < clicking od not reliving Beach
+    n re=>-od=>{s=>$N}
+    #
+    
 AWriter: | # 7s&writer makes 12345
     7s&writer = &acgt{
         my $f = 1c&write_to;
@@ -121,6 +136,7 @@ AWriter: | # 7s&writer makes 12345
         
         # not s but the top/9
         my $s = G&hup,$C;
+        s.c.feo.f.f.f.f.e.e.e.e = 1;
         
         # take meta off the 9, put ha on W
         my $meta;
@@ -267,12 +283,12 @@ AWriter: | # 7s&writer makes 12345
         ts&4 = $foha;
         ts&5 = $fiha;
         my @two = G&ind,$t,$ub;
-        (my $was = readlink "$f/2") =~ s/^h\///
-            if -s "$f/2";
         my $twha = $st->(\@two,'2');
         
-        # changelog/tree: 3 -> 2, last 2... Gum batch?
+        # changelog/tree: 3 -> 2, last 3...
         my $r = G&Ct,[C.t,C.y.cv];
+        (my $was = readlink "$f/3") =~ s/^h\///
+            if -s "$f/3";
         rs&parent = $was;
         rs&2 = $twha;
         my @three = G&ind,$r,$ub;
@@ -368,8 +384,8 @@ Line: | # C as a tabby line
         $l = $enj->($t);
     }
     
-    # even if 1? indent
-    $l .= "\t$y";
+    # just indent if 1
+    $l .= "\t".($y ne '1' ? $y : '');
     
     for my $nk (qw'c sc') {
         my $v = $h.>$nk;
@@ -417,20 +433,101 @@ Line: | # C as a tabby line
     $l = join "\n", $l, @l;
     
     $l
-Jigup: | # recursively (with Trip) follow & store dependencies
-    my $d = Rw Experience;
-    #n oput=>8=>"Somewhere?"
-    Rw C.t;
-pi/acuW: |
-    n C.t=>W=>{pin=>'Jigup'}
-
-    my @l = G&op; #,'cW:';
-    n ese=>o1=>"Seeing C.t in beW"
-    n C.t=>-od=>{dl=>2,s=>[ @l ]}
-pi/beW: |
-    #my $d = Rw Experience;
-    n C.t
-    #n C.t=>''=>"Np"
+Beach: | # inhale Lines
+    my @l = split "\n", ''.`cat $f`;
+    my $tot = @l;
+    my $N = [];
+    #local A.V = 1;
+    my @in;
+    my $l;
+    my $lastC;
+    my $peel = &s{
+        {map { split':',$_ } split ',', $s}
+    };
+    eval{
+    while (@l) {
+        $l = shift @l;
+        my ($in) = $1 if $l =~ s/^(\s+)//;
+        my $d = length($in) / 2;
+        my ($t,$y,$c,$sc,$s) = split "\t", $l;
+        
+        sayyl "$in $l";
+            
+        $t = djson $t if $t =~ /^\W/;
+        
+        $y = 1 if !length$y;
+        $y = 0+('0.'.$y);
+        
+        if ($s =~ /^\W/) {
+            # fifth thing would be c.s
+            $s = djson $s;
+        }
+        if ($c =~ /^"/) {
+            $s = djson $c;
+            $c = {};
+        }
+        elsif ($c =~ /^\W/) {
+            $c = djson $c
+        }
+        elsif ($c) {
+            $c = $peel->($c);
+        }
+        else { $c = {} }
+        c.s = $s if $s;
+        
+        if ($sc =~ /^\W/) {
+            $sc = djson $sc
+        }
+        elsif ($sc) {
+            $sc = $peel->($sc)
+        }
+        else { $sc = {} }
+        
+        my $C = {t=>$t,y=>{cv=>$y},c=>$c,sc=>$sc};
+        
+        # add blockquoted c/sc
+        while ($l[0] =~ /^$in  (\w[\S ]+):( (\||.+))?$/) {
+            my ($k,$v) = ($1,$3);
+            my $string;
+            if ($v eq '|') {
+                $string++;
+                undef $v;
+            }
+            shift @l;
+            my ($nk,$gk) = split ' ', $k, 2;
+            sayyl "$in C.t C.y.cv - $nk $gk ($string) $v";
+            unless ($v) {
+                saybl $in."Beaming in";
+                my @s;
+                while ($l[0] =~ /^$in    (.*)$/) {
+                    push @s, $1;
+                    shift @l;
+                }
+                $v = join "\n", @s;
+                sayyl "Loaded til $l[0]\n with $nk $gk - ".slim(30,$v);
+            }
+            unless ($string) {
+                $v = Load $v
+            }
+            $C.>$nk.>$gk = $v;
+        }
+        
+        saygr "Popped $in".ki$C;
+        $in[$d] = $C;
+        if ($d) {
+            my $p = $in[$d-1];
+            push @{ps&z||=[]}, $C;
+        }
+        else {
+            push @$N, $C;
+        }
+    }
+    };
+    $@ && die "On line ".($tot - @l).": $l\n\n$@";
+    $N
+Believe: | # fold Waters together into i
+    #
+    
 Jigna: |
     G.c.leakmax = 40;
     n "G.c.bay/{gou,stay}"=>-lies_02=>"/*{,/j/*,/j/*/j/*}/head"
