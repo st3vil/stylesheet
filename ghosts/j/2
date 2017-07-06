@@ -116,7 +116,7 @@ Jigdo: | # bootstrap a G from W
     my $eh = hitime();
     
     my $M = [];
-    for my $t (qw'To Tube') {
+    for my $t (qw'Sequencing Intel ForJ') {
         my $f = Rw Locate $read=1 $t;
         $f .= "/1";
         my $N = Rw Beach $f;
@@ -259,6 +259,7 @@ AWriter: | # 7s&writer makes 12345
                     next;
                 }
                 (ps&dige,ps&used) = %$v;
+                # could be a map to where/who it was used from?
                 delete ps&used if ps&used eq 1;
             }
             push @$z, $w if @$wz;
@@ -293,7 +294,8 @@ AWriter: | # 7s&writer makes 12345
         my $r = G&Ct,[C.t,C.y.cv];
         (my $was = readlink "$f/3") =~ s/^h\///
             if -s "$f/3";
-        rs&parent = $was;
+        # < was's 2 may eq twha, when no change, no commit?
+        rs&parent = $was if $was;
         rs&2 = $twha;
         my @three = G&ind,$r,$ub;
         my $rwha = $st->(\@three,'3');
@@ -425,7 +427,15 @@ Line: | # C as a tabby line
         push @l, $k
     }}
     
-    $l = join "\n", $l, @l;
+    @l = sort @l;
+    my @large;
+    @l = grep{$_} map {
+        if (300 < length $_) {
+            push @large, $_;
+            undef
+        } else { $_ };
+    } @l;
+    $l = join "\n", $l, @l, @large;
     
     $l
 Beach: | # inhale Lines
@@ -570,7 +580,7 @@ Believe: | # fold Waters together into i
             
             die "Throcompile Ds&of D.y.cv: D.t:"
             .ind('  ',$@)."\n\n D.c.s\n" if $@;
-            die "Not code: D.t D.y.cv: $@\n".ki $D if ref Dc&code ne 'CODE';
+            die "Not code: D.t D.y.cv: $@\n".ki $D if ref Dc&code ne 'CODE' && !Ds&subpeel;
             
             if (!$la) {
                 C.y.in = $D;
@@ -595,7 +605,7 @@ Believe: | # fold Waters together into i
     }
     
     {i=>$i,ii=>$ii}
-Jigna: |
+Jigna: | # see heads
     G.c.leakmax = 40;
     n "G.c.bay/{gou,stay}"=>-lies_02=>"/*{,/j/*,/j/*/j/*}/head"
     my ($l) = G&op;
