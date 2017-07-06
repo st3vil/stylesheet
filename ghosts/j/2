@@ -52,7 +52,7 @@ Jig: | # direction to Jigup
     
     
     
-    
+    # - put Jigup wrapper on any W
     my $l = [];
     G&elph,Trips=>[tripany=>$_] for &acgt{
         return unless $l;
@@ -72,6 +72,8 @@ Jig: | # direction to Jigup
         c&pin = 'Jigup';
     };
     
+    # - the Jigups invoke Experience/writing into bay
+    # supplement that with a linier storage format
     Rw AWriter;
     
     my $eh = hitime();
@@ -96,7 +98,7 @@ Jig: | # direction to Jigup
     $j = j.sc.J; 
     $j = tr.y.tv;
     n $t=>-od=>{dl=>2,s=>\@l}
-    
+    return;
     
     #n Jigna
     
@@ -118,7 +120,7 @@ AWriter: | # 1234
         1 && saygr "We are A.1.t ($f)";
         
         my $meta;
-        my $s = $C;
+        my $s = G&hup,$C;
         my $ub = &Cd{
             
             my $p = join "/", @{d.path};
@@ -143,44 +145,62 @@ AWriter: | # 1234
                 s&ha = $ha;
             }
             
-            my $l = Rw Line $C;
+            $l = Rw Line $C;
             
             };
             $@ && die "For $p:\n  C: ".ki($C)."\n$@";
             
             my $se = G&aC;
-            
             $se .= "\t\t $and" if $and;
-            return $se;
+            
+            return $l;
         };
         my @all = G&ind,$C,$ub,{nohup=>1};
         
         my $con = join "\n", @all,'';
         my $ha = slm 9, dig $con;
         s&hash = $ha; # eg, like .c.o
-        # make an object
+        
+        # make an object: h/$hash = content
         my $hf = "h/$ha";
         `mkdir -p $f/h`;
         write_file("$f/$hf", $con);
-        # hash point to
+        
+        # point to object: 1 -> h/$hash
+        `unlink $f/1`;
         `ln -s h/$ha $f/1`;
-        # write 2 as 9 with meta and ha to 1/4
-        # 3 is changelog/tree
-        # 4 is feel, lumited vision
+        
+        # status check point: 2 versions 1,4,5
+        delete meta.paths;
+        my $xo = meta.A.xo;
+        my @wo = grep { _s&W } map {values %$_} values %{ s.y.tv };
+        
+        1 && sayyl wdump 6, [\@wo,$xo];
+        
+        # changelog/tree: 3 .= 2
+        
+        # lum feeling: 4 ~= content
+        
+        # meta/5cience behind it: 5
+        
         
         1 && sayre "HJave $ha on A.1.t (A.t): ".ki $C;
         
         return unless A.1.t eq 'Sequencing';
         
         
-        1 && saybl $_ for @all;
+        1 && saybl $_ for grep /ha:/, @all;
     };
     
 Line: |
-    # 
+    # make a line to crawl up some beach
     my $t = C.t;
     my $y = C.y.cv;
     $y =~ s/^0\.//;
+    
+    # 
+    C.c.flow.er.ar.e.e.rl.o++ if C.t eq 'A';
+    
     my $simp = &s{
         $s =~ /^[\w\.\-]+$/ && length $s < 24
     };
@@ -220,9 +240,18 @@ Line: |
         }
     }}
     
+    each nk,g $n {
+        my $v = $h.>$nk;
+        next if !keys%$v;
+        if (keys(%$g) / keys(%$v) < 0.3) {
+            # quote some freaks
+            $q.>$nk.>$_ = $h.>$nk.>$_ for keys %$g;
+        }
+    }
     
     each nk,gk,v $q {
         delete $h.>$nk.>$gk;
+        delete $n.>$nk.>$gk;
     }}
     
     my $enj = &s{
@@ -236,18 +265,53 @@ Line: |
         $l = $t;
     }
     else {
-        $t = $jt;
+        $l = $enj->($t);
     }
-        1 && saybl "X: ".sjson[$t];
+    
     $l .= "\t$y";
     
-    each nk,g $h {
-        if ($n.>$nk) {
-            #
+    for my $nk (qw'c sc') {
+        my $v = $h.>$nk;
+        if ($nk eq 'c' && 0 == keys %$v) {
+            $l .= "\t";
+        }
+        elsif ($nk eq 'c' && 1 == keys%$v && v.s) {
+            # t y "the s" sc
+            $l .= "\t".$enj->(v.s);
+        }
+        elsif ($n.>$nk) {
+            # t y {c} {sc}
+            $l .= "\t".$enj->($v);
+        }
+        elsif (keys %$v) {
+            # t y W:At et:3,se:te
+            my @k = sort keys %$v;
+            $l .= "\t".join",",map{ "$_:".$v.>$_ } @k;
         }
     }
     
-    1 && sayyl "Found $l - ".wdump 4,[sim=>ki($h),need=>ki($n),quote=>ki($q)];
+    my @l;
+    each nk,gk,v $q {
+        my $k = "  $nk $gk:";
+        if (ref $v) {
+            $v = Dump $v;
+            $v =~ s/^--- \n//s;
+            $v = join "\n", map{"    $_"}split"\n",$v;
+            $k .= "\n".$v;
+        }
+        elsif ($v =~ /^\w([\w ,]*\w)?$/) {
+            $k .= " $v";
+        }
+        else {
+            $k .= " |\n".join "\n", map{"    $_"}split"\n",$v;
+        }
+        push @l, $k
+    }}
+    
+    
+    $l = join "\n", $l, @l;
+    
+    #1 && sayyl "Found $l - ".wdump 4,[sim=>ki($h),need=>ki($n),quote=>ki($q)];
     
     
     
