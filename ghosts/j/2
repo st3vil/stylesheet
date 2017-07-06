@@ -119,13 +119,18 @@ Jigdo: | # bootstrap a G from W
     Jc&tape = 'Dejo';
     Js&ein.bo = 'Doable';
     A.6.t = 'via';
-    my $f = Rw Locate $read=1 $t=Sequencing;
-    $f .= "/1";
-    my $N = Rw Beach $f;
+    my $M = [];
+    for my $t (qw'To Tube') {
+        my $f = Rw Locate $read=1 $t=Sequencing;
+        $f .= "/1";
+        my $N = Rw Beach $f;
+        push @$M, @$N;
+    }
+    my $Y = Rw Believe $N:M;
     
-    n file=>''=>"File is $f"
+    #n file=>''=>"File is $f"
     # < clicking od not reliving Beach
-    n re=>-od=>{s=>$N}
+    n re=>-od=>{s=>$Y,dl=>6}
     #
     
 AWriter: | # 7s&writer makes 12345
@@ -293,15 +298,6 @@ AWriter: | # 7s&writer makes 12345
         rs&2 = $twha;
         my @three = G&ind,$r,$ub;
         my $rwha = $st->(\@three,'3');
-        
-        
-        
-        1 && sayre "HJave $ha on A.1.t (A.t): ".ki $C;
-        
-        return unless A.1.t eq 'Sequencing';
-        
-        
-        1 && saybl $_ for grep /ha:/, @all;
     };
     
 Line: | # C as a tabby line
@@ -332,7 +328,7 @@ Line: | # C as a tabby line
         }
         if (ref $v) {
             if (G&oleak,$v,4 ) {
-                G&oleak,$v,9 && die "Leaky $nk $gk: ".ki $v;
+                G&oleak,$v,24 && die "Leaky $nk $gk: ".ki $v;
                 # big enough to quote, simplifies remainder
                 $q.>$nk.>$gk = $v;
             }
@@ -437,12 +433,12 @@ Beach: | # inhale Lines
     my @l = split "\n", ''.`cat $f`;
     my $tot = @l;
     my $N = [];
-    #local A.V = 1;
+    local A.V = 0;
     my @in;
     my $l;
     my $lastC;
     my $peel = &s{
-        {map { split':',$_ } split ',', $s}
+        return {map { split':',$_ } split ',', $s}
     };
     eval{
     while (@l) {
@@ -526,7 +522,77 @@ Beach: | # inhale Lines
     $@ && die "On line ".($tot - @l).": $l\n\n$@";
     $N
 Believe: | # fold Waters together into i
-    #
+    # take $N, produces A.i/A.ii
+    
+    
+    my $tv = {}; # t v = C what are
+    for my $P (@$N) { # Punter 9
+        for my $C (@{Ps&z||[]}) { # Water 0.001
+            c&W || next;
+            
+            $C = G&hup,$C;
+            C.y = {cv=>C.y.cv};
+            my $z = delete s&z;
+            
+            if (my $c = $tv.>C.t.>C.y.cv ) {
+                # merge sc from the rest?
+                cs&contrib .= ",P.t";
+                $C = $c;
+            }
+            else {
+                s&contrib = P.t;
+                $tv.>C.t.>C.y.cv = $C;
+            }
+            s&z ||= [];
+            for my $D (@$z) { # Doing 1
+                if (my $over = C.y.tv.>D.t && C.y.tv.>D.t.>D.y.cv ) {
+                    @{s&z} = grep { $_ ne $over } @{s&z};
+                    delete C.y.tw.>D.t if C.y.tw.>D.t eq $over;
+                }
+                C.y.tv.>D.t.>D.y.cv = $D;
+                C.y.tw.>D.t ||= $D;
+                push s&z, $D;
+            }
+        }
+    }
+    
+    # tw of 
+    my $ii = {};
+    for my $t
+    
+    for my $of (keys %$v) {
+        my $o = $ii->{$of} = {t=>$of,y=>{cv=>0.001},c=>{W=>'of'}};
+        my $c = $v->{$of};
+        my $la = $o;
+        for my $cv (sort keys %$c) {
+            my $ts = $c->{$cv};
+            for my $t (sort keys %$ts) {
+                my $z = $ts->{$t};
+                
+                z.sc.coded ||
+                Rw CoBabbler $C:z;
+                
+                my $y = eval z.c.s;
+                
+                die "Throcompile $of z.y.cv: z.t:"
+                    .ind('  ',$@)."\n\n z.c.s\n" if $@;
+                die "Not code: z.t z.y.cv: $@\n".ki $z if ref $y ne 'CODE' && !z.sc.subpeel;
+                
+                z.c.code = $y;
+                
+                if ($la eq $o) {
+                    la.y.in = $z;
+                }
+                else {
+                    la.y.next = $z;
+                    z.y.prev = $la;
+                }
+                o.y.tw.>$t = $z;
+                o.y.tv.>$t.>$cv = $z;
+                $la = $z;
+            }
+        }
+    }
     
 Jigna: |
     G.c.leakmax = 40;
