@@ -22,6 +22,7 @@ Atool: | # reliable/old A
         my @A = $ay;
         push @A, ($ay = ay.up) while ay.up && ay.up ne $ay;
         my $Ats = join' ',reverse map{_.t}@A;
+        return $Ats;
         
 Jig: | # initiates W to Jigup
     Jc&tape = 'Dejo';
@@ -109,28 +110,104 @@ Jigup: | # recursively (with Trip) follow & store dependencies
     #n oput=>8=>"Somewhere?"
     Rw C.t;
 Jigdo: | # bootstrap a G from W
-    Jc&tape = 'Dejo';
-    Js&ein.bo = 'Doable';
+    #Jc&tape = 'Dejo';
+    #Js&ein.bo = 'Doable';
     A.6.t = 'via';
+    G.c.bay = 'bay';
     
     my $eh = hitime();
     
+    my $set = [];
     my $M = [];
-    for my $t (qw'Sequencing Intel ForJ') {
+    for my $t (qw'Atool Sequencing Intel ForJ') {
         my $f = Rw Locate $read=1 $t;
         $f .= "/1";
+        -f $f || die "NO such $t ($f ?)";
+        if ($set) {
+            push @$set, $f;
+            next;
+        }
         my $N = Rw Beach $f;
         push @$M, @$N;
     }
+    if ($set) {
+        my @suub;
+        for ([Beach=>'f'],[Believe=>'N']) {
+            my ($t,$args) = @$_;
+            my $s = G.way.>$t || die "No $t";
+            my $C = G&Ct,[$t=>1=>{s=>$s},{args=>$args,of=>'w'}];
+            G&perlcode,$C;
+            push @suub, 'my $'.$t.' = '.c&s;
+        }
+        my $bab = &s{
+            my $C = G&Ct,["someba"=>1=>{s=>$s}];
+            G&CoBabbler;
+            C.c.s
+        };
+        
+        my @inc = 'G';
+        my $l = join "\n\n",
+            G.way.strictwarn,
+            'use FindBin qw($Bin);',
+            'use lib "$Bin/othlia";',
+            'use lib "$Bin/slib";',
+            (map{"use $_;"}@inc),
+            'my ($A,$C,$G,$T);',
+            @suub,
+            'my @f = ('.join(",",map{"'$_'"}@$set).');',
+            $bab->(<<'');
+                saygr 'Some more';
+                my $N = [map{ @{ $Beach->($_) } }@f];
+                my $A = $Believe->($N);
+                G.c.mas = sub {
+                    my ($A,$C,$G,$T,$s) = @_;
+                    1 && saygr "Es: $s";
+                };
+                A.t = 'toplevel';
+                G.h = A.i.h || die "No h";
+                G.i.t = A.i.t || die "No t";
+                G.c.bay = 'bay';
+                1 && sayre "Ontop";
+                
+                G.ydrop = 1;
+                my @ha =  G&Aup;
+                $A = G&A,'twanga';
+                push @ha,  G&Aup;
+                1 && sayyl wdump 3, [Thes=>@ha]
+                
+        write_file "q\.pl", $l;
+        sayre "Done";
+        exit;
+        #
+    }
     my $Y = Rw Believe $N:M;
+    my @seen;
+    for my $A ($Y) {
+        A.t = 'top';
+        my $G = {};
+        1 && sayre "Doing:". q{
+        push @seen, G&Aup;
+        };
+        G.ydrop = 1;
+        push @seen, G&Aup;
+        1 && sayre "Toka";
+        $A = G&A,'tokative';
+        1 && sayre "Two";
+        push @seen, G&Aup;
+        1 && sayre "Ze";
+        
+    }
+    
     
     my $ts = hitime() - $eh;
     my $delta = Rw mass $s:ts;
     n tripes=>4=>"took: $delta"
     
+    n seen=>2=>{s=>\@seen};
+    
     #n file=>''=>"File is $f"
     # < clicking od not reliving Beach
-    n re=>-od=>{s=>$Y,dl=>6}
+    n re=>-od_3=>{s=>$Y,dl=>3}
     #
     
 AWriter: | # 7s&writer makes 12345
@@ -532,13 +609,19 @@ Beach: | # inhale Lines
     $N
 Believe: | # fold Waters together into i
     # take $N, produces A.i/A.ii
+    my $hup = &s{
+        my $C = {%$s};
+        $C.>$_ = {%{$C.>$_ }} for
+            grep {ref $C.>$_ eq 'HASH'} keys %$C;
+        $C
+    };
     # t v = C what are with sz D
     my $tv = {};
     for my $P (@$N) { # Punter 9
         for my $C (@{Ps&z||[]}) { # Water 0.001
             c&W || next;
             
-            $C = G&hup,$C;
+            $C = $hup->($C);
             C.y = {cv=>C.y.cv};
             my $z = delete s&z;
             
@@ -574,6 +657,7 @@ Believe: | # fold Waters together into i
         }
         my $la;
         for my $D (@{s&z}) {
+            $D = $hup->($D);
             Ds&coded || sayre "Not coded: ".ki$D;
             delete Ds&coded;
             Dc&code = eval Dc&s;
