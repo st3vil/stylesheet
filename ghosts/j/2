@@ -24,7 +24,7 @@ Atool: | # reliable/old A
         my $Ats = join' ',reverse map{_.t}@A;
         return $Ats;
         
-Jig: | # initiates W to Jigup
+Jig: | # initiates W to store somewhere
     Jc&tape = 'Dejo';
     Js&ein.bo = 'Doable';
     # awareness of G gou in G gou is feedback, in G view is not
@@ -54,7 +54,7 @@ Jig: | # initiates W to Jigup
     
     =cut
     
-    # - put Jigup wrapper on any W
+    # - put wrapper on any W
     my $l = [];
     G&elph,Trips=>[tripany=>$_] for &acgt{
         return unless $l;
@@ -70,8 +70,8 @@ Jig: | # initiates W to Jigup
         my $Ats = join' ',reverse map{_.t}@A;
         push @$l, G&aC,$C . "\t" . $Ats;
         
-        # around method wrapper
-        c&pin = 'Jigup';
+        # before method wrapper, returning $d to c&phind
+        c&phin = 'Experience';
     };
     
     # - the Jigups invoke Experience/writing into bay
@@ -79,6 +79,7 @@ Jig: | # initiates W to Jigup
     Rw AWriter;
     
     =pod
+    n Placement
     n Sequencing
     n Intel
     n ForJ
@@ -92,23 +93,19 @@ Jig: | # initiates W to Jigup
     n Tripical
     =cut
     
-    my $eh = hitime();
-    my $t = 'Sequencing';
-    n $t
-    my $tr = T.op;
-    
-    my $ts = hitime() - $eh;
-    my $delta = Rw mass $s:ts;
-    n tripes=>4=>"took: $delta"
-    
-    my @l = G&op;
-    n $t=>-od=>{dl=>2,s=>\@l}
-    
+    for my $t (qw'Atool Placement Sequencing Intel ForJ') {
+        #next unless $t =~ /^P/;
+        my $eh = hitime();
+        n $t
+        my $tr = T.op;
+
+        my $ts = hitime() - $eh;
+        my $delta = Rw mass $s:ts;
+
+        my @l = ("took: $delta", G&op );
+        n $t=>-od=>{dl=>2,s=>\@l}
+    }
     undef $l;
-Jigup: | # recursively (with Trip) follow & store dependencies
-    my $d = G&Experience;
-    #n oput=>8=>"Somewhere?"
-    Rw C.t;
 Jigdo: | # bootstrap a G from W
     Jc&tape = 'Dejo';
     Js&ein.bo = 'Doable';
@@ -119,7 +116,7 @@ Jigdo: | # bootstrap a G from W
     
     my $set = [];
     my $M = [];
-    for my $t (qw'Atool Sequencing Intel ForJ') {
+    for my $t (qw'Atool Placement Sequencing Intel ForJ') {
         my $f = G&Locate_read,$t;
         $f .= "/1";
         -f $f || die "NO such $t ($f ?)";
