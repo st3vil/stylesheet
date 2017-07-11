@@ -106,7 +106,7 @@ while (@l) {
 };
 $@ && die "On line ".($tot - @l).": $l\n\n$@";
 $N
-};;
+};
 
 my $Believe = sub {
 my ($N,@Me) = @_;
@@ -192,7 +192,7 @@ while ($n) {
 }
 
 {i=>$i,ii=>$ii}
-};;
+};
 
 my @f = ('bay/via/Atool/1','bay/via/Sequencing/1','bay/via/Intel/1','bay/via/ForJ/1');
 
