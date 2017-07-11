@@ -1,4 +1,512 @@
-Experience: |
+AWriter: | # way up 7s&writer to make 12345
+    7s&writer = &acgt{
+        my $f = 1c&write_to;
+        my $gd = 1c&write_bay;
+        1 && saygr "We are A.1.t ($f)";
+        
+        # not s but the top/9
+        my $s = G&hup,$C;
+        
+        # take meta off the 9, put ha on W
+        my $meta;
+        my $ub = &Cd{
+            # the 9 has this old meta bunch
+            # helped impart itself to s
+            if (my $m = delete s&meta) {
+                $meta && die "doublemeta";
+                $meta = $m;
+            }
+            # assume W is in G
+            if (my $t = s&W) {
+                $t =~ s/\W+/-/gs;
+                my $d = "$gd/$t";
+                -d $d || die "Nod $d";
+                my $ha = readlink "$d/1";
+                $ha =~ s/^h\///;
+                s&ha = $ha;
+            }
+        };
+        G&ind,$s,$ub,{nohup=>1};
+        
+        # gist to first t/y sc{shape,stringth,c,sc,etc}
+        # < histogram and group like things
+        # < and compress styles
+        # and collect W joins for 5
+        my $W = G&Ct,['W',1];
+        $ub = &Cd{
+            return undef if d.d > 2;
+            if (s&W) {
+                my $D = G&Ct,[C.t,C.y.cv];
+                Ds&W = s&W;
+                Ds&ha = s&ha || die "W without ha";
+                push @{Ws&z||=[]}, $D;
+            }
+            my $D = G&Ct,[C.t,C.y.cv];
+            # assuming gk is safe to join with -
+            # < imply the style's encoding for FactorEase
+            # like we can do for Line's
+            for my $k (qw'c sc') {
+                my $v = $C.>$k || {};
+                keys %$v || next;
+                D.sc.>$k = join'-',sort keys %$v;
+            }
+            # seem to prefer ytv than z connection
+            # < both
+            Ds&zs = @{s&z||[]} if s&z;
+            Ds&zs = map{values %$_} values %{C.y.tv} if C.y.tv;
+            # < more shape, classify language
+            Ds&slines = split "\n", c&s if c&s;
+            
+            Ds&W = s&W if s&W && s&W ne C.t;
+            Ds&ha = s&ha if s&ha;
+            
+            if (d.d == 1 && C.y.cv == 0.9) {
+                Ds&ha = 'HAHAR';
+            }
+            G&Line,$D;
+        };
+        my @four = G&ind,$s,$ub;
+        
+        $ub = &Cd{
+            my $p = join "/", @{d.path};
+            my $l = eval {
+            
+            s&z && die "Hadz";
+            delete s&z;
+            delete C.y.>$_ for qw'next prev in more up tv tw';
+            G&Line,$C;
+            
+            };
+            $@ && die "For $p:\n  C: ".ki($C)."\n$@";
+            
+            $l
+        };
+        my @all = G&ind,$s,$ub,{nohup=>1};
+        
+        #c storage the bits: h/$hash = content
+        my $st = &st{
+            $s = join "\n", @$s,'' if ref $s eq 'ARRAY';
+            my $ha = slm 9, dig $s;
+            `mkdir -p $f/h` if !-d "$f/h";
+            my $hf = "h/$ha";
+            write_file("$f/$hf", $s);
+            if ($t) {
+                `unlink $f/$t` if -e "$f/$t";
+                `ln -s h/$ha $f/$t`;
+            }
+            $ha
+        };
+        
+        # point to object: 1 -> h/$hash
+        my $ha = $st->(\@all,'1');
+        
+        # lum feeling: 4 ~= content, 
+        $four[0] =~ s/HAHAR/$ha/;
+        my $foha = $st->(\@four,'4');
+        
+        # meta/5cience behind it: 5
+        my $fi = G&Ct,[C.t,C.y.cv];
+        fi.sc.ha = $ha;
+        my $z = [];
+        
+        # belief structure dependage
+        my $xo = meta.A.xo;
+        if (my $way = xo.way) {
+            my $w = G&Ct,[w=>1];
+            my $wz = ws&z = [];
+            for my $pin (sort keys %$way) {
+                my $p = G&Ct,[$pin,1];
+                push @$wz, $p;
+                my $v = $way.>$pin;
+                if (keys %$v > 1) {
+                    pc&s = $v;
+                    ps&way_variants = keys %$v;
+                    next;
+                }
+                (ps&dige,ps&used) = %$v;
+                # could be a map to where/who it was used from?
+                delete ps&used if ps&used eq 1;
+            }
+            push @$z, $w if @$wz;
+        }
+        
+        # other meta stuff
+        delete $xo.>$_ for qw'way o sWo';
+        if (keys %$xo) {
+            push @$z, G&Ct,[xo=>1=>{s=>$xo}]
+        }
+        
+        # other W and their ha
+        push @$z, $W if @{Ws&z||[]};
+        
+        fi.sc.z = $z if @$z;
+        $ub = &Cd{
+            delete s&z;
+            G&Line,$C;
+        };
+        my @five = G&ind,$fi,$ub;
+        my $fiha = $st->(\@five,'5');
+        
+        # status check point: 2 versions 1,4,5
+        my $t = G&Ct,[C.t,C.y.cv];
+        ts&1 = $ha;
+        ts&4 = $foha;
+        ts&5 = $fiha;
+        my @two = G&ind,$t,$ub;
+        my $twha = $st->(\@two,'2');
+        
+        # changelog/tree: 3 -> 2, last 3...
+        my $r = G&Ct,[C.t,C.y.cv];
+        (my $was = readlink "$f/3") =~ s/^h\///
+            if -s "$f/3";
+        # < was's 2 may eq twha, when no change, no commit?
+        rs&parent = $was if $was;
+        rs&2 = $twha;
+        my @three = G&ind,$r,$ub;
+        my $rwha = $st->(\@three,'3');
+    };
+    
+Placement: | # org about Locate and Line
+    n Liney
+    J.gloway.>$_ = 1 for qw'Line Beach Believe';
+    n Placey
+    J.gloway.>$_ = 1 for qw'Experience Read Write Locate';
+Liney: | # read/write/ lines
+    u i
+    # C becomes Lines (AWriter handles the many)
+    n Line=>''=>G.way.Line
+    # $f file of Lines becomes N=[C] with s&z for the many
+    n Beach=>''=>G.way.Beach,'%acgt:f'
+    # $N=[C] with s&z becomes {i,ii} with y.in/next for many
+    n Believe=>''=>G.way.Believe,'%acgt:N'
+Line: | # C as a tabby line
+    # make a line to crawl up some beach
+    my $t = C.t;
+    my $y = C.y.cv;
+    $y =~ s/^0\.//;
+    
+    # aims for simplicity of notation for G&C, G&peel
+    # block quotes (BQ) big strings or data after the  line
+    # uses json for anything complicated
+    # z insides done by the process around this one Line
+    #  - they have the same indent as BQs
+    #    but their t should json or not look like BQ
+    
+    my $simp = &s{
+        $s =~ /^[\w\.\-]+$/ && length $s < 24
+    };
+    my $h; # hath
+    h.c = C.c || {};
+    h.sc = C.sc || {};
+    my $n = {}; # needs json
+    my $q = {}; # needs blockquote
+    each nk,gk,v $h {
+        if (!$simp->($gk)) {
+            $n.>$nk.>$gk = $v;
+            next;
+        }
+        if (ref $v) {
+            if (G&oleak,$v,4 ) {
+                G&oleak,$v,24 && die "Leaky $nk $gk: ".ki $v;
+                # big enough to quote, simplifies remainder
+                $q.>$nk.>$gk = $v;
+            }
+            else {
+                # ref too small to quote, json hemisphere
+                $n.>$nk.>$gk = $v;
+            }
+        }
+        else {
+            if (length $v > 42 && $v =~ /\n/) {
+                # long enough to quote
+                $q.>$nk.>$gk = $v;
+            }
+            elsif ($simp->($v)) {
+                # decipherable to G&peel
+            }
+            else {
+                # midway to unwieldy
+                $n.>$nk.>$gk = $v;
+            }
+        }
+    }}
+    
+    each nk,g $n { 
+        my $v = $h.>$nk;
+        next if !keys%$v;
+        if (keys(%$g) / keys(%$v) < 0.3) {
+            # quote some freaks
+            $q.>$nk.>$_ = $h.>$nk.>$_ for keys %$g;
+        }
+    }
+    
+    each nk,gk,v $q {
+        delete $h.>$nk.>$gk;
+        delete $n.>$nk.>$gk;
+    }}
+    
+    my $enj = &s{
+        $s = sjson[$s];
+        $s =~ s/^\[|\]$//sg;
+        $s
+    };
+    
+    my $l;
+    if ($simp->($t)) {
+        $l = $t;
+    }
+    else {
+        $l = $enj->($t);
+    }
+    
+    # just indent if 1
+    $l .= "\t".($y ne '1' ? $y : '');
+    
+    for my $nk (qw'c sc') {
+        my $v = $h.>$nk;
+        if ($nk eq 'c' && 0 == keys %$v) {
+            # blank
+            $l .= "\t";
+        }
+        elsif ($nk eq 'c' && 1 == keys%$v && v.s) {
+            # t y "the s" sc
+            $l .= "\t".$enj->(v.s);
+        }
+        elsif ($n.>$nk) {
+            # t y {c} {sc}
+            $l .= "\t".$enj->($v);
+        }
+        elsif (keys %$v) {
+            # t y W:At et:3,se:te
+            my @k = sort keys %$v;
+            $l .= "\t".join",",map{ "$_:".$v.>$_ } @k;
+        }
+    }
+    
+    my @l;
+    each nk,gk,v $q {
+        my $k = "  $nk $gk:";
+        if (ref $v) {
+            # BQ yaml data
+            $v = Dump $v;
+            $v =~ s/^--- \n//s;
+            $v = join "\n", map{"    $_"}split"\n",$v;
+            $k .= "\n".$v;
+        }
+        elsif ($v =~ /^\w([\w ,]*\w)?$/) {
+            # simple strings
+            # not to confuse into 'Thing 2'
+            $k .= " $v";
+        }
+        else {
+            # BQ string
+            $k .= " |\n".join "\n", map{"    $_"}split"\n",$v;
+        }
+        push @l, $k
+    }}
+    
+    @l = sort @l;
+    my @large;
+    @l = grep{$_} map {
+        if (300 < length $_) {
+            push @large, $_;
+            undef
+        } else { $_ };
+    } @l;
+    $l = join "\n", $l, @l, @large;
+    
+    $l
+Beach: | # inhale Lines
+    my @l = split "\n", ''.`cat $f`;
+    my $tot = @l;
+    my $N = [];
+    local A.V = 0;
+    my @in;
+    my $l;
+    my $lastC;
+    my $peel = &s{
+        return {map { split':',$_ } split ',', $s}
+    };
+    eval{
+    while (@l) {
+        $l = shift @l;
+        my ($in) = $1 if $l =~ s/^(\s+)//;
+        my $d = length($in) / 2;
+        my ($t,$y,$c,$sc,$s) = split "\t", $l;
+        
+        sayyl "$in $l";
+            
+        $t = djson $t if $t =~ /^\W/;
+        
+        $y = 1 if !length$y;
+        $y = 0+('0.'.$y);
+        
+        if ($s =~ /^\W/) {
+            # fifth thing would be c.s
+            $s = djson $s;
+        }
+        if ($c =~ /^"/) {
+            $s = djson $c;
+            $c = {};
+        }
+        elsif ($c =~ /^\W/) {
+            $c = djson $c
+        }
+        elsif ($c) {
+            $c = $peel->($c);
+        }
+        else { $c = {} }
+        c.s = $s if $s;
+        
+        if ($sc =~ /^\W/) {
+            $sc = djson $sc
+        }
+        elsif ($sc) {
+            $sc = $peel->($sc)
+        }
+        else { $sc = {} }
+        
+        my $C = {t=>$t,y=>{cv=>$y},c=>$c,sc=>$sc};
+        
+        # add blockquoted c/sc
+        while ($l[0] =~ /^$in  (\w[\S ]+):( (\||.+))?$/) {
+            my ($k,$v) = ($1,$3);
+            my $string;
+            if ($v eq '|') {
+                $string++;
+                undef $v;
+            }
+            shift @l;
+            my ($nk,$gk) = split ' ', $k, 2;
+            sayyl "$in C.t C.y.cv - $nk $gk ($string) $v";
+            unless ($v) {
+                saybl $in."Beaming in";
+                my @s;
+                while ($l[0] =~ /^$in    (.*)$/) {
+                    push @s, $1;
+                    shift @l;
+                }
+                $v = join "\n", @s;
+                sayyl "Loaded til $l[0]\n with $nk $gk - ".slim(30,$v);
+            }
+            unless ($string) {
+                $v = Load $v
+            }
+            $C.>$nk.>$gk = $v;
+        }
+        
+        saygr "Popped $in".ki$C;
+        $in[$d] = $C;
+        if ($d) {
+            my $p = $in[$d-1];
+            push @{ps&z||=[]}, $C;
+        }
+        else {
+            push @$N, $C;
+        }
+    }
+    };
+    $@ && die "On line ".($tot - @l).": $l\n\n$@";
+    $N
+Believe: | # fold Waters together into i/ii
+    # take $N, produces A.i/A.ii
+    my $hup = &s{
+        my $C = {%$s};
+        $C.>$_ = {%{$C.>$_ }} for
+            grep {ref $C.>$_ eq 'HASH'} keys %$C;
+        $C
+    };
+    # t v = C what are with sz D
+    my $tv = {};
+    for my $P (@$N) { # Punter 9
+        for my $C (@{Ps&z||[]}) { # Water 0.001
+            c&W || next;
+            
+            $C = $hup->($C);
+            C.y = {cv=>C.y.cv};
+            my $z = delete s&z;
+            
+            if (my $c = $tv.>C.t.>C.y.cv ) {
+                # merge sc from the rest?
+                cs&contrib .= ",P.t";
+                $C = $c;
+            }
+            else {
+                s&contrib = P.t;
+                $tv.>C.t.>C.y.cv = $C;
+            }
+            s&z ||= [];
+            for my $D (@$z) { # Doing 1
+                if (my $over = C.y.tv.>D.t && C.y.tv.>D.t.>D.y.cv ) {
+                    @{s&z} = grep { $_ ne $over } @{s&z};
+                    delete C.y.tw.>D.t if C.y.tw.>D.t eq $over;
+                }
+                C.y.tv.>D.t.>D.y.cv = $D;
+                C.y.tw.>D.t ||= $D;
+                push @{s&z}, $D;
+            }
+        }
+    }
+    
+    # tw of 
+    my $ii = {};
+    each t,cv,C $tv {
+        $ii.>$t && die "$t comes again at $cv";
+        if (s&contrib =~ /,/) {
+            # wants to sort in to z above?
+            @{s&z} = sort {a.y.cv <=> b.y.cv || a.t cmp b.t} @{s&z}
+        }
+        my $la;
+        for my $D (@{s&z}) {
+            $D = $hup->($D);
+            Ds&coded || sayre "Not coded: ".ki$D;
+            delete Ds&coded;
+            Dc&code = eval Dc&s;
+            
+            die "Throcompile Ds&of D.y.cv: D.t:"
+            .ind('  ',$@)."\n\n D.c.s\n" if $@;
+            die "Not code: D.t D.y.cv: $@\n".ki $D if ref Dc&code ne 'CODE' && !Ds&subpeel;
+            
+            if (!$la) {
+                C.y.in = $D;
+            }
+            else {
+                la.y.next = $D;
+                C.y.prev = $la;
+            }
+            $la = $D;
+        }
+        $ii.>$t = $C;
+    }}
+    
+    my $i = {};
+    my $n = ii.i;
+    while ($n) {
+        if (nc&code) {
+            $i.>n.t = nc&code;
+            ii.i.y.tw->{n.t} = $n;
+        }
+        $n = n.y.in || n.y.next;
+    }
+    
+    {i=>$i,ii=>$ii}
+Placey: | # locate lines
+    u i
+    
+    n Experience=>''=>G.way.Experience
+    
+    n Read=>''=>G.way.Read
+    
+    n Write=>''=>G.way.Write
+    
+    Locate_read: %acgt:t s
+        G&Locate,'read',$t,$s
+    
+    Locate_write: %acgt:t s
+        G&Locate,'',$t,$s
+    
+    n Locate=>''=>G.way.Locate,'%acgt:read t s'
+Experience: | # wake ourself up, short of resuming osc
     # wakeup, dome, goto sleep
     # domes build like carpentry
     # force needs ways to build across language
@@ -11,15 +519,14 @@ Experience: |
     # remember aft s
     1c&sang = &acgt{
         local A.V = 2;
-        Rw Write;
+        G&Write;
     };
     
     # wake up now
-    Rw Read;
+    G&Read;
 Locate: | # A J and its space
-    my $s = ar.s;
     # looking for/center of us
-    my @J = ar.t || A.1.t;
+    my @J = $t || A.1.t;
     
     # right: our osc page by /s/$s, if not ''
     # layers/partitions upon a piece of the tree
@@ -27,7 +534,7 @@ Locate: | # A J and its space
     
     # left up to A.3, Word to the overmind, amongst A.4/G
     # inners join by W(/j/j.t)+
-    unless (ar.t || A.1 eq A.3) {
+    unless ($t || A.1 eq A.3) {
         my $j = A.1;
         while (j.2) {
             $j = j.2;
@@ -41,7 +548,6 @@ Locate: | # A J and its space
     
     # most left, beyond all sense
     my $star = G.c.bay || die "no community of G";
-    my $read = ar.read;
     
     # second most left, edge of sense
     my $t; # G having W
@@ -60,7 +566,8 @@ Locate: | # A J and its space
         (6,5,4)
         # 7 for explicit output place, a branch
         # 4 for usual overwriting ourselves
-        # with A.8 having a stabilised A.4.t and running tests through forks
+        # with A.8 having a stabilised A.4.t,
+        #   running tests through forks
       : (7,4);
     # < any of them implementing a more complicated search/resolver
     
@@ -84,7 +591,7 @@ Locate: | # A J and its space
 Read: | # the J you're in remembers itself
     # having created a place for it to land
     my $s = ''; # TODO osc channel, api here too Jeneral
-    my $f = Rw Locate $s $read=1
+    my $f = G&Locate_read
         || saybl("Nothing to read A.1.t") && return;
     Jc&read_from = $f;
     #saybl "Read located: $f";
@@ -106,7 +613,7 @@ Write: | # the
     # C is a completed s, Jc&sang = &acgt{ to get here
     c&imp || die "C not completed s: ".ki$C;
     
-    my ($f,$gd) = Rw Locate $write=1;
+    my ($f,$gd) = G&Locate_write;
     #saybl "Write located: $f";
     1c&write_to = $f;
     1c&write_bay = $gd;
@@ -133,9 +640,9 @@ Write: | # the
     };
     # fork and disconnect subtle/wirings
     # but keep in/next/tv etc connected
-    # wants to output lines of [C] but for the same ref Tricks
+    # wants to output lines of [C], but for the same ref Tricks
     G&stowexp,$write;
-Stylehousing: |
+Stylehousing: | # org Karamean new stuff
     #
     n Zequines
     
