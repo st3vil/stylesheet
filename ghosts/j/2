@@ -259,6 +259,7 @@ Lize: | # watch ghost/wormhole watcher
     
     # look at everything
     #m zome=>-beli=>{s=>$lies}
+    
     # next things take that ^ as input
     # and continue/restart branches of thinking
     # until something comes out the other end
@@ -272,25 +273,55 @@ Lize: | # watch ghost/wormhole watcher
     # and build a possibly meshy hierarchy to click changes through, like JJ
     
     
-pi/respec: | # compare w/W situations
-    # FactorEase w/*
-    each kv s.y.tw {
-        my $ub = &Cd{ C.y = {cv=>C.y.cv}; ki $C };
-        my @stu = G&ind,$v,$ub;
-        n "so$k" => 1=> "$k: ".join("\n", @stu,'')
-    }
-    return;
-    my ($w,$W,$K) = map{ T.op = s.y.tw.>$_ || die "No $_ given"; [ G&op ]}qw'w W K';
+pi/respec: | # compare w/W situations, make pile
+    # w/W -> [W]
+    my $rs = {}; # what is
+    my $tr = {}; # what is trouble
+    # FactorEase w/* etc (G&ind follows thing's next)
+    # this is probably where to start growing FactorEase
+    my $nex;$nex = &C{
+        $C, C.y.next ? $nex->(C.y.next) : ();
+    };
     for my $k (qw'w W K') {
-        my $v = s.y.tw.>$k;
-        T.op = $v;
-        my @l = G&op;
-        my $l = join "\n", map { "  ".G&aC,$_ } @l;
-        n $k=>''=>"Tocheck $k: $l\n\n";
+        my $n = s.y.tw.>$k || next;
+        $rs.>$k = [$nex->(n.y.in || next)];
     }
+    
+    # check way used vs now
+    for my $w (@{rs.w||[]}) {
+        my $y = G&wops,w.t;
+        if (ws&dige ne ys&dige) {
+            my $r = tr.w ||= G&Ct,[w=>1];
+            my $t = G&Ct,[w.t=>1];
+            ts&dige = ys&dige;
+            ts&dige_was = ws&dige;
+            ts&z = [$nex->(w.y.in)]; # affected W
+            push @{rs&z||=[]}, $t;
+        }
+    }
+    
+    # check W's W included vs W now (K)
+    my $K = { map { _.t => $_ }@{rs.K||[]} }
+    for my $W (@{rs.W||[]}) {
+        $W = G&hup,$W;
+        saygr "Going to check W.t:";
+        my @l = [$nex->(W.y.in || next)];
+        for my $l (@l) {
+            my $k = $K.>l.t;
+            if (ls&ha ne ks&ha) {
+                my $r = tr.W ||= G&Ct,[W=>1];
+                
+            }
+        }
+        my $ub = &Cd{ ki $C };
+        saybl "\t$_" for G&ind,$W,$ub,{nohup=>1};
+    }
+    
+    saybl wdump 5, $tr;
+    
+    # distribute trouble to W, make ind pile with notes
+    
     #
-    my $W = s.y.tw.W;
-    my $W = s.y.tw.K;
 pi/jackpole: | # map bay/$W/5 to $W and collect w/W outputs
     # to 5ile, way, W in, W out
     my $types = {};
