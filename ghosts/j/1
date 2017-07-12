@@ -175,8 +175,10 @@ Liney: | # read/write/ lines
     u i
     # C becomes Lines (AWriter handles the many)
     n Line=>''=>G.way.Line
-    # $f file of Lines becomes N=[C] with s&z for the many
-    n Beach=>''=>G.way.Beach,'%acgt:f'
+    # $f file/$s string/array of Lines becomes N=[C] with s&z for the many
+    Beas:
+        G&Beach,'',$s
+    n Beach=>''=>G.way.Beach,'%acgt:f s'
     # $N=[C] with s&z becomes {i,ii} with y.in/next for many
     n Believe=>''=>G.way.Believe,'%acgt:N'
 Line: | # C as a tabby line
@@ -317,7 +319,7 @@ Line: | # C as a tabby line
     
     $l
 Beach: | # inhale Lines
-    my @l = split "\n", ''.`cat $f`;
+    my @l = ref $s ? @$s : split "\n", ($s || ''.`cat $f`);
     my $tot = @l;
     my $N = [];
     local A.V = 0;
