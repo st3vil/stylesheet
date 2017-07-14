@@ -195,7 +195,7 @@ while ($n) {
 {i=>$i,ii=>$ii}
 };
 
-my @f = ('bay/via/Atool/1','bay/via/Placement/1','bay/via/Sequencing/1','bay/via/Intel/1','bay/via/ForJ/1');
+my @f = ('bay/via/Atool/1','bay/via/Sequencing/1','bay/via/Placement/1','bay/via/Intel/1','bay/via/ForJ/1','bay/via/Stylehousing/1');
 
 $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr','Some more');
 my $N = [map{ @{ $Beach->('',$_) } }@f];
@@ -206,11 +206,18 @@ $G->{c}->{mas} = sub {
 };
 $A->{t} = 'toplevel';
 $G->{h} = $A->{i}->{h} || die "No h";
+$G->{w} = $A->{i}->{w} || die "No w";
 $G->{i}->{t} = $A->{i}->{t} || die "No t";
+$G->{h}->($A,$C,$G,$T,"Gee"); # gives $G->{way}, going
 $G->{c}->{bay} = 'bay';
 1 && sayre "Ontop";
 
 my @ha =  $G->{h}->($A,$C,$G,$T,"Aup");
 $A = $G->{h}->($A,$C,$G,$T,"A",'twanga');
 push @ha,  $G->{h}->($A,$C,$G,$T,"Aup");
-1 && sayyl wdump 3, [Thes=>@ha]
+
+my $mo = $G->{h}->($A,$C,$G,$T,"t",'mo');
+my $ar = {};
+$G->{w}->($A,$C,$G,$T,"Beginning",$ar);
+
+1 && sayyl wdump 3, [Thes=>$mo]
