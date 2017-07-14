@@ -15,8 +15,8 @@ use G;
 my ($A,$C,$G,$T);
 
 my $Beach = sub {
-my ($f,@Me) = @_;
-my @l = split "\n", ''.`cat $f`;
+my ($s,$f,@Me) = @_;
+my @l = ref $s ? @$s : split "\n", ($s || ''.`cat $f`);
 my $tot = @l;
 my $N = [];
 local $A->{V} = 0;
@@ -195,10 +195,10 @@ while ($n) {
 {i=>$i,ii=>$ii}
 };
 
-my @f = ('bay/via/Atool/1','bay/via/Sequencing/1','bay/via/Intel/1','bay/via/ForJ/1');
+my @f = ('bay/via/Atool/1','bay/via/Placement/1','bay/via/Sequencing/1','bay/via/Intel/1','bay/via/ForJ/1');
 
 $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr','Some more');
-my $N = [map{ @{ $Beach->($_) } }@f];
+my $N = [map{ @{ $Beach->('',$_) } }@f];
 my $A = $Believe->($N);
 $G->{c}->{mas} = sub {
     my ($A,$C,$G,$T,$s) = @_;
@@ -210,7 +210,6 @@ $G->{i}->{t} = $A->{i}->{t} || die "No t";
 $G->{c}->{bay} = 'bay';
 1 && sayre "Ontop";
 
-$G->{ydrop} = 1;
 my @ha =  $G->{h}->($A,$C,$G,$T,"Aup");
 $A = $G->{h}->($A,$C,$G,$T,"A",'twanga');
 push @ha,  $G->{h}->($A,$C,$G,$T,"Aup");

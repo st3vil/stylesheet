@@ -146,36 +146,31 @@ Jigdoer: | # bootstrap a G from W
     
     my $eh = hitime();
     
-    my $set = [];
-    my $M = [];
-    for my $t (qw'Atool Placement Sequencing Intel ForJ') {
-        my $f = G&Locate_read,$t;
+    # slurp these stored W for composing normal
+    my @set = map {
+        my $f = G&Locate_read,$_;
         $f .= "/1";
-        -f $f || die "NO such $t ($f ?)";
-        if ($set) {
-            push @$set, $f;
-            next;
-        }
-        my $N = G&Beach,$f;
-        push @$M, @$N;
-    }
-    if ($set) {
-        my @suub;
-        for ([Beach=>'f'],[Believe=>'N']) {
+        -f $f || die "NO such $_ ($f ?)";
+        $f
+    } qw'Atool Placement Sequencing Intel ForJ';
+    
+        # make $Believe->($N) able
+        my @suub = map {
             my ($t,$args) = @$_;
             my $s = G.way.>$t || die "No $t";
             my $C = G&Ct,[$t=>1=>{s=>$s},{args=>$args,of=>'w'}];
             G&perlcode,$C;
-            push @suub, 'my $'.$t.' = '.c&s;
-        }
+            'my $'.$t.' = '.c&s;
+        } [Beach=>'s,f'],[Believe=>'N'];
+        
         my $bab = &s{
             my $C = G&Ct,["someba"=>1=>{s=>$s}];
             G&CoBabbler;
             C.c.s
         };
         
-        my @inc = 'G';
-        my $l = join "\n\n",
+        my @inc = ('G');
+        my $perl = join "\n\n",
             G.way.strictwarn,
             'use FindBin qw($Bin);',
             'use lib "$Bin/othlia";',
@@ -183,10 +178,10 @@ Jigdoer: | # bootstrap a G from W
             (map{"use $_;"}@inc),
             'my ($A,$C,$G,$T);',
             @suub,
-            'my @f = ('.join(",",map{"'$_'"}@$set).');',
+            'my @f = ('.join(",",map{"'$_'"}@set).');',
             $bab->(<<'');
                 saygr 'Some more';
-                my $N = [map{ @{ $Beach->($_) } }@f];
+                my $N = [map{ @{ $Beach->('',$_) } }@f];
                 my $A = $Believe->($N);
                 G.c.mas = sub {
                     my ($A,$C,$G,$T,$s) = @_;
@@ -198,49 +193,17 @@ Jigdoer: | # bootstrap a G from W
                 G.c.bay = 'bay';
                 1 && sayre "Ontop";
                 
-                G.ydrop = 1;
                 my @ha =  G&Aup;
                 $A = G&A,'twanga';
                 push @ha,  G&Aup;
                 1 && sayyl wdump 3, [Thes=>@ha]
         
-        my $f = "q\.pl";
-        write_file $f, $l;
+        my $f = "stylehouse\.pl";
+        write_file $f, $perl;
         `chmod +x $f`;
         sayre "Done";
         exit;
         #
-    }
-    my $Y = G&Believe,$M;
-    my @seen;
-    for my $A ($Y) {
-        A.t = 'top';
-        my $G = {};
-        1 && sayre "Doing:". q{
-        push @seen, G&Aup;
-        };
-        G.ydrop = 1;
-        push @seen, G&Aup;
-        1 && sayre "Toka";
-        $A = G&A,'tokative';
-        1 && sayre "Two";
-        push @seen, G&Aup;
-        1 && sayre "Ze";
-        
-    }
-    
-    
-    my $ts = hitime() - $eh;
-    my $delta = Rw mass $s:ts;
-    n tripes=>4=>"took: $delta"
-    
-    n seen=>2=>{s=>\@seen};
-    
-    #n file=>''=>"File is $f"
-    # < clicking od not reliving Beach
-    n re=>-od_3=>{s=>$Y,dl=>3}
-    #
-    
 Jigna: | # see heads
     G.c.leakmax = 40;
     n "G.c.bay/{gou,stay}"=>-lies_02=>"/*{,/j/*,/j/*/j/*}/head"
