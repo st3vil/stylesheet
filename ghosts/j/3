@@ -125,11 +125,11 @@ DAy: | # world primitives
             }
         }
         my %way;
-        tie %way,'Wormhole','w/way',{nonyam=>1};
-        G.way = \%way
+        tie %way,'Wormhole',{base=>'w/way'},{nonyam=>1};
+        G.way = \%way;
         $G
     
-    #c te args (i,(ii),W,w) $t $t
+    #c te args (i,(ii),W,w) $t $t...
     # find local(ish) things
     # looking up the slope/trail of con centers A.1..5...
     #  ii/We things by default
@@ -138,66 +138,79 @@ DAy: | # world primitives
     # i stuff is subs, ii stuff is classes
     # you might also be only after 5uperficia, not the code itself
     # gently pulls in remote resources... if that A takes charge
-    t: %acgt:s c y
-        ($y,$c) = ($c,$y) if ref $c eq 'CODE';
-        $C = ref $s ? $s : {t=>$s,y=>{},c=>($c||{})};
-        c&on ||= 'ii';
+    
+    # only used by throat, possibly osc
+    
+    # G&t,I=>$of      # for an A.ii.$of/We thing/bunch of steps for throat
+    # G&t,i=>$sub     # for an A.i.$sub/G&$sub
+    # ^ should be compiled nearby
+    # G&t,w=>$w     # for a way
+    # ^ vaugely nearby
+    # G&t,W=>$W        # for a W
+    # maybe:
+    # G&t,'>'=>$W     # for where you can write a W
+    # W would want to find themselves then write themselves...
+    # < W come up knowing the next gd/staging area
+    # < you might want some historic view of it...
+    t: %acgt:s t c
+        ($s,$t) = ('I',$s) if !$t;
+        $C = {t=>$t,y=>{},c=>($c||{})};
+        $s = 'ii' if $s eq 'I'; # going
+        c&on = $s; # i/ii/w/W
+        if ($s eq 'i' || $s eq 'w' || $s eq 'W') {
+            (c&on,c&andon) = ('ii',$s);
+        }
         c&max ||= 5;
         c&min ||= 0;
         for my $i (c&min .. c&max) {
-            my $from = $i == 0 ? $A : $A.>$i;
-            $from || next;
+            my $Y = ($i == 0 ? $A : $A.>$i) || next;
+            my $on = $Y.>c&on || next;
+            if (c&andon) {
+                # on = ii, go ii.W
+                $on = on.y.tw.>c&andon;
+            }
             
-            my $on = $from.>c&on || next;
-            
-            my $t = $on.>C.t || next;
-            $t = $y->($t,$from,$i) if $y;
+            my $t = $on.>C.t;
+            if (my $by = !$t && Ys&tby) {
+                my $A = $Y;
+                $t = G&$by,$s,$t;
+            }
             $t || next;
-            c&from = $from;
+            c&from = $Y;
             c&inet = $i;
             return $t;
+            # t may be just a pointer, to negotiate with c&desire
         }
         return
     
-    # look for thing named $s in We thing named $of, on A net
-    #   old way to look inside a ii.$t thing
-    wup: %acgt:s of
-        $of ||= 'w';
-        my $want = sub {
-            my ($t,$f,$i) = @_;
-            # if i > netmask
-            # if t mentions some other way to get it
-            keys %$t < 2 && sayre "wup t looks funny: ".ki($t)."\n  ".G&sn;
-            my $tw = t.y.tw || die "w $s found no ytw on"
-                ." A.1.t s A.t @ $i (f.t): ".ki$t;
-            $tw.>$s
-        };
-        G&t,$of,$want;
-    
-    # wup including G.way (going)
-    wops:
-        my $w = G&wup,$s;
-        
-        # or the old way,
-        if (!$w) {
+    # an extension to this A's G&t capacity
+    # < search path for w/W
+    # < G&has linking resource to moment of use (G&w does)
+    byt: %acgt:s t
+        if ($s eq 'W') {
+            my $f = G&Locate_read,$t;
+            G&Ct,[$t=>1=>{resume=>$f}];
+        }
+        elsif ($s eq 'w') {
             # going, hash tied to a directory
             # makes digest when way entered
             (my $fi = $s) =~ s/\W/-/g;
-            $w = {t=>$s};
+            my $w = {t=>$s,y=>{}};
             wc&s = G.way->{$fi} || die "No way: $fi";
             ws&dige = G.way.o.dige->{$fi}
                 || die "Not Gway not diges $fi: wayo: ".ki G.way.o;
             ws&of = 'w';
+            $w
         }
-        $w
+        else {
+            die "Unknown search $s $t";
+        }
     
-    # W is the of=W, could be pointer to load the rest
-    # 
-    Wup: %acgt:s of
-        $of ||= 'W';
-        my $W = G&wup,$s,$of || return;
-        my $s = W.c.s;
-        ref $s eq 'HASH' || die "No Wup $of: $s: ".ki $W;
-        $s;
+    # deprecated
+    # look for thing named $s in We thing named $of, on A net
+    wup:
+        G&t,w=>$s
+    Wup:
+        G&t,W=>$s
     
 
