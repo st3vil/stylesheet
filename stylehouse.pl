@@ -195,7 +195,7 @@ while ($n) {
 {i=>$i,ii=>$ii}
 };
 
-my @f = ('bay/via/Atool/1','bay/via/Sequencing/1','bay/via/Placement/1','bay/via/Intel/1','bay/via/ForJ/1','bay/via/Stylehousing/1');
+my @f = ('bay/via/Atool/1','bay/via/Sequencing/1','bay/via/Placement/1','bay/via/Intel/1','bay/via/ForJ/1','bay/via/Tangle/1','bay/via/Stuff/1','bay/via/Stylehousing/1','bay/via/Art/1','bay/via/Storage/1','bay/via/Elvising/1','bay/via/Tripical/1');
 
 $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr','Some more');
 my $N = [map{ @{ $Beach->('',$_) } }@f];
