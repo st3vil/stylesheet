@@ -48,10 +48,13 @@ Hosthing: | # store/thaw s's outside
     #    6 impart and resume right away, continuing Jco (TODO)
     #    8+ thaws only
     # 
+    
     thawJ 34: %of:mo,t:y:A:mo:up:mo:c:T:H || y:A:mo:c:T:H
         c&e && return;
         
-        keys %{C.c} == 2 && c&W eq c&J && c&W eq C.t || return;
+        my $okc = {map{$_=>1}qw'W J phin'}; # < Scuttle sleepable c
+        return for grep { !$okc.>$_ }keys %{C.c};
+        c&W eq c&J && c&W eq C.t || return;
         
         # 
         a&thawable = 1 unless $s < 3 || $s == 5;
@@ -210,12 +213,15 @@ Impart: | # gittty Hosting/not interchange
         m.paths = $pa;
         
         my $dl = G.c.leakmax || 160;
-        if (G&oleak,$t,$dl ) {
+        if (!ts&massive && G&oleak,$t,$dl ) {
             write_file('eak', wdump $dl, $t);
             die "t.t t.y.cv still leaks at depth=$dl, wrote file 'eak'";
         }
         if (ref $s eq 'CODE') {
             $s->($t)
+        }
+        elsif (ts&massive) {
+            return sayre "massive t.t voiding Stro put";
         }
         else {
             G&elph,Stro=>[put=>$t];
