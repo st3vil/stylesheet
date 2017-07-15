@@ -33,7 +33,7 @@ LeMachine: | # drip feeding PiMachine
     #n Tripical
 Atool: | # reliable/old A
     u i
-    # snakinf
+    # snakinfo
     Aup:
         my $ay = $A;
         my @A = $ay;
@@ -68,18 +68,6 @@ Jig: | # initiates W to store somewhere
     the code has lost its 
     catch it in the throat maker
     
-    n Placement
-    n Sequencing
-    n Intel
-    n ForJ
-    n Tangle
-    n Stuff
-    
-    n Art
-    
-    n Storage
-    n Elvising
-    n Tripical
     =cut
     
     Js&ein.pi.Gdo.sMJ = &sMJjeTC{
@@ -99,7 +87,8 @@ Jig: | # initiates W to store somewhere
     die "many Gdo" if @t > 1;
     
     my @todo; # W steps
-    my $tw; # to know which W to sleep
+    my $tw; # which W to sleep
+    my $aw; # which W to awake everything under
     for my $y (@t) {
         my ($bay,$gd) = y.t =~ /^(G.c.bay)\/(.+)$/;
         $bay || die "bay not our bay? G.c.bay / y.t";
@@ -110,10 +99,14 @@ Jig: | # initiates W to store somewhere
             $tw.>t.t = $t;
         }
         undef $tw if ys&everything;
+        $aw.>$_ ++ for grep{$_} split ',', ys&everything_under;
     }
+    
+    
     
     # - put wrapper on any W
     my $l = [];
+    my @wake;
     G&elph,Trips=>[tripany=>$_] for &acgt{
         return unless $l;
         # avoid W for the mind or the oscillator
@@ -128,7 +121,15 @@ Jig: | # initiates W to store somewhere
         my $Ats = join' ',reverse map{_.t}@A;
         push @$l, G&aC,$C . "\t" . $Ats;
         
-        if ($tw && !$tw.>C.t) {
+        if ($aw.>C.t) {
+            # wake everything under here
+            push @wake, $A;
+        }
+        elsif (grep { Ac&sip =~ /^_c&sip/ } @wake) {
+            # is subnetically within an all-awaker
+            1 && saygr " --- C.t awake within";
+        }
+        elsif ($tw && !$tw.>C.t) {
             sayre "Could sleep C.t?";
             T.H = 4;
         }
@@ -153,14 +154,14 @@ Jig: | # initiates W to store somewhere
         my @l = ("took: $delta", G&op );
         n tr.t=>-od=>{dl=>2,s=>\@l}
     }
+    # the -od must overwrite the W so we can web ourselves
+    #@$M = reverse @$M;
     undef $l; # untrip
-Lize: | # watch ghost/wormhole watcher
+Lize: | # watch ghost/wormhole watcher TODO
     Jc&tape = 'Dejo';
     Js&ein.bo = 'Doable';
     # see stylehouse openness/movingness
     =pod TODO
-    
-    Jig sleep not working?
     
     have AWriter copy some 9 sc (in 4) to 5
         so eg the s&massive LeMachine never gets mixed
@@ -244,6 +245,44 @@ letsclick: | # click pile
     # (J that made C above the 9)
     my $o = $n[-1];
     my $i = $h[-1];
+    # click name to go
+    # can wire the button down for some G
+    # exhausting for the edge of development
+    my $com = &s,sc{
+                my @y = $o; # deep
+                while ($o && os&ml) {
+                    $o = o.y.prev || last;
+                    my $l = $y[-1];
+                    # skip 22 in 1222(3)
+                    os&depth < ls&depth || next;
+                    push @y, $o;
+                }
+                # top..deep
+                @y = reverse @y;
+                ($o) = (@y); # highest caretaker of o
+                # < along @y may be tests wanting
+                my ($run) = grep{$_} map {_s&runs} reverse @n;
+                # fill out the form for action
+                my $R = G&Ct,$run;
+                my $E= Rc&e || die "run form not elvis";
+                
+                Ec&s = $s || "An Update";
+                
+                # runs deepest first for fast compile check
+                # then the rest in the same process
+                # < J sleeping (wants to check G&t deps)
+                Es&z = [map{ G&Ct,[_.t] }reverse @y];
+                
+                G&hoh,E.sc,$sc if $sc;
+                saygr "For ".ki($sc)." Over ".ki E.sc;
+                
+                my $d = G.c.bay."/p";
+                my $in = "$d/Udder/in";
+                sayyl "Writing $in For ".ki $R;
+                sayre "OrE ".ki $E;
+                write_file($in,{append=>1},
+                    sjson($R)."\n");
+    };
     if (os&pi eq 'lets') {
         # is an edge
         if (i.t eq 't') {
@@ -251,32 +290,9 @@ letsclick: | # click pile
                 G&give:Budge=>"Add o.t to batch";
             }
             else {
-                # click name to go
-                # wire the button down for some G
-                # exhausting for the edge of development
-                my @y = $o;
-                while ($o && os&ml) {
-                    $o = o.y.prev || last;
-                    push @y, $o;
-                }
-                @y = reverse @y;
-                $o = (@y); # highest caretaker of o
-                # < along @y may be tests wanting
-                my ($run) = grep{$_} map {_s&runs} reverse @n;
-                # fill out the form for action
-                my $R = G&Ct,$run;
-                my $E= Rc&e || die "run form not elvis";
-                Ec&s = "An Update";
-                # runs -1 first for fast compile check
-                # then the rest in the same process
-                Es&z = [map{ G&Ct,[_.t] }reverse @y];
-                
-                my $d = G.c.bay."/p";
-                my $in = "$d/Udder/in";
-                sayyl "Writing $in For ".ki $R;
-                write_file($in,{append=>1},
-                    sjson($R)."\n");
-                
+                my $sc = {};
+                sc.everything_under = o.t if us&C ->{C};
+                $com->('',$sc);
             }
         }
         else {
@@ -289,14 +305,24 @@ letsclick: | # click pile
         }
     }
     else {
+        $o = $i; # the very end of it is t=$W
         # general ghost/Wsitch interest in something
         # or pushing the key that didn't necessarily want to be pushed
         if ( us&S ) {
-            G&give:Budge=>"Rise out of i.t";
+            my $sc = {};
+            # everything under the toplevel
+            sc.everything = 1 if us&C ->{C};
+            $com->("Entirety",$sc);
+            #G&give:Budge=>"Rise out of i.t";
             # or wind backward?
         }
+        elsif ( us&C ->{C}) {
+            my $sc = {};
+            sc.everything_under = o.t if us&C ->{C};
+            $com->("Especially",$sc);
+        }
         else {
-            G&give:Budge=>"Get interested in i.t";
+            G&give:Budge=>["Get interested in i.t",1,{s=>[$o,$i]}];
             # or wind forwards?
         }
     }
@@ -350,6 +376,7 @@ pi/lenot: | # make pile of something
         }
     }
     my @tops = grep { !$got.>_.t } @$z;
+    die "No tops: ".ki$z if !@tops;
     
     my @l = map { G&ind,$_ } @tops;
     my $have;
@@ -357,7 +384,10 @@ pi/lenot: | # make pile of something
         $have.>I.t ++;
         my $R = I.y.D.y.R;
         my $K = G&Ct,[I.t=>''=>{s=>I.t}];
-        Ks&ml = Ic&ind if Ic&ind;
+        if (Ic&ind) {
+            # depth to stay a number for later
+            Ks&depth = Ks&ml = Ic&ind;
+        }
         Ks&dis = 1; # one line
         if (exists Rs&z) {
             Kc&pi = 'lets';
