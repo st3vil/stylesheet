@@ -198,14 +198,16 @@ Line: | # C as a tabby line
     #  - they have the same indent as BQs
     #    but their t should json or not look like BQ
     
-    my $simp = &s{
-        $s =~ /^[\w\.\-]+$/ && length $s < 24
-    };
     my $h; # hath
     h.c = C.c || {};
     h.sc = C.sc || {};
     my $n = {}; # needs json
     my $q = {}; # needs blockquote
+    
+    # check out how sayable the values on the line are
+    my $simp = &s{
+        $s =~ /^[\w\.\-]+$/ && length $s < 24
+    };
     each nk,gk,v $h {
         if (!$simp->($gk)) {
             $n.>$nk.>$gk = $v;
@@ -237,37 +239,35 @@ Line: | # C as a tabby line
         }
     }}
     
+    # quote freaks, if just a few break the peelability of many
     each nk,g $n { 
         my $v = $h.>$nk;
         next if !keys%$v;
         if (keys(%$g) / keys(%$v) < 0.3) {
-            # quote some freaks
             $q.>$nk.>$_ = $h.>$nk.>$_ for keys %$g;
         }
     }
     
+    # remove quoted things from the line
     each nk,gk,v $q {
         delete $h.>$nk.>$gk;
         delete $n.>$nk.>$gk;
     }}
     
+    # get a json encoded string
     my $enj = &s{
         $s = sjson[$s];
         $s =~ s/^\[|\]$//sg;
         $s
     };
     
-    my $l;
-    if ($simp->($t)) {
-        $l = $t;
-    }
-    else {
-        $l = $enj->($t);
-    }
+    # t can be messy
+    my $l = $simp->($t) ? $t : $enj->($t);
     
-    # just indent if 1
+    # y.cv = 1 is implied
     $l .= "\t".($y ne '1' ? $y : '');
     
+    # throw it one way or another
     for my $nk (qw'c sc') {
         my $v = $h.>$nk;
         if ($nk eq 'c' && 0 == keys %$v) {
@@ -290,6 +290,8 @@ Line: | # C as a tabby line
     }
     
     my @l;
+    # add quoted things at the z indent
+    # < quoting with Line other N/C looking vals
     each nk,gk,v $q {
         my $k = "  $nk $gk:";
         if (ref $v) {
@@ -301,7 +303,7 @@ Line: | # C as a tabby line
         }
         elsif ($v =~ /^\w([\w ,]*\w)?$/) {
             # simple strings
-            # not to confuse into 'Thing 2'
+            # not confusible into 'Thing 2'
             $k .= " $v";
         }
         else {
@@ -398,6 +400,10 @@ Beach: | # inhale Lines
             unless ($string) {
                 $v = Load $v
             }
+            else {
+                $v .= "\n" unless $v =~ /\n$/s;
+            }
+            
             $C.>$nk.>$gk = $v;
         }
         
