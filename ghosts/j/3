@@ -5,7 +5,8 @@ Stylehousing: | # org Karamean new stuff
 Jigdoer: | # 0 bootstrap a G from W
     Jc&tape = 'Dejo';
     Js&ein.bo = 'Doable';
-    A.6.t = 'via';
+    A.6.t = 'vil';
+    A.5.t = 'via';
     G.c.bay = 'bay';
     # < get traceably these things its adding...
     
@@ -45,7 +46,7 @@ Jigdoer: | # 0 bootstrap a G from W
         (map{"use $_;"}@inc),
         'my ($A,$C,$G,$T);',
         @suub,
-        'my @f = ('.join(",",map{"'$_'"}@set).');',
+        'my @f = ('.join(",",map{"\n    '$_'"}@set)."\n);",
         $bab->(G.way.Begin);
     
     my $f = "stylehouse\.pl";
@@ -65,9 +66,9 @@ Begin: | # 0 stylehouse.pl starts Aing somehow, by Jigdoer
     G.h = A.i.h || die "No h";
     G.w = A.i.w || die "No w";
     G.i.t = A.i.t || die "No t";
+    G.ii = A.ii;
     G&Gee; # gives G.way, going
-    # should base all G gk here-ish
-    G.c.bay = 'bay';
+    
     1 && sayre "Ontop";
     $A = G&A,'begin';
     
@@ -77,22 +78,222 @@ Begin: | # 0 stylehouse.pl starts Aing somehow, by Jigdoer
     1 && sayyl wdump 3, [Thes=>$mo]
 Beginning: | # 0 stylehouse.pl's first way
     1 && saybl "In the beginning";
-    { # test
+    { # test I
         my $t = G&t,i=>'t';
         $t && ts&args eq 'A,C,G,T,s,t,c' || die "t t fail: ".ki$t;
     }
-    my $y = {};
+    # stacktrace
+    Rw Bangular;
+    
+    # should base all G gk here-ish
+    G.c.bay = 'bay';
     # these are really J, the particle
     # which is what happens when A gets put somewhere
-    my $i = G&A,'ElM';
-    my $o = G&A,'Os';
+    my $i = $A = G&A,'House';
+    my $o = $A = G&A,'Motor';
+    # coming from each other
+    i.1 = i.3 = i.5 = o.5 = o.2 = $i;
+    o.1 = o.3 = o.4 = i.4 = i.2 = $o;
+    my $one = 0.1;
+    4s&Jtv.>_.t.>$one = $_ for $i,$o;
+    # 5/House forms Normal, from its I
+    # which stylehouse.pl Beaches
+    G.ydrop = 1;
+    n House
+    # 4/Motor uses House and has moments
+    
+    
+    
+    # 4/Os spawns haps
     
     
     
     
+    #n Lize
     
-    n Lize
+Bangular: |
+    my $end;
+    $SIG{__WARN__} = &{
+        my ($s) = @_;
+        return if $s =~ /Deep recursion on (anonymous )?subroutine/
+            || $s =~ /masks earlier declaration in same/;
+        $end->($s);
+        warn "Warndg: $s";
+    };
+    my $lastts;
+    $SIG{__DIE__} = $end = &s{
+        return if $lastts >  hitime() - 1;
+        $lastts =  hitime();
+        $s && $@ && sayre "stackend with \$@ and arg0";
+        $s ||= $@;
+        $s ||= do { saygr "\$@ was blank"; $_[0] };
+        local $@;
+        eval { G::confess( '' ) };
+        my @stack = split m/\n/, $@;
+        shift @stack for 1..2;
+        if ($stack[-1] =~ /^\s+Mojo::IOLoop::start/) {
+            pop @stack until $stack[-1] !~ /Mojo|eval/;
+        }
+        @stack = map{[$_, /^\s*(?:eval \{\.\.\.\} |([^\(\s]+)::([^\s\(]+?)\((.+)\) )called at (\S+|\(eval \S+\)) line (\d+)$/]} @stack;
+        @stack = map{[$_->[2],'',{l=>$_},{pack=>$_->[1],call=>$_->[3],file=>$_->[4],line=>$_->[5]}]}@stack;
+        @stack = map{{t=>$_->[0],y=>{},c=>$_->[2],sc=>$_->[3]}}@stack;
+        #s/\t/  /g for @stackend;
+        # write on the train thats about to derail
+        for (@stack) {
+            my $i = -1;
+            _.sc.Aref = $1 if _.sc.call =~ s/'?(HASH\(\S+\))'?, (?:'?(HASH\(\S+\))'?, ){3}//;
+        }
+        saybl "Stack:";
+        my $ind = " ";
+        my $le;
+        my $know;
+        know.h->{'Ngwe'} = 1;
+        my $KnowA = $G::KA;
+        @stack = reverse @stack;
+        my @sum;
+        push @sum, shift @stack while @stack > 20;
+        my @fo;
+        unshift @stack, grep { push @fo, $_; _.t =~ 'w' || _.t eq 'h' && _.sc.call =~ /^'loop'/
+            || @fo > 2 && $fo[-2]->{t} eq 'h' && $fo[-2]->{sc}->{call} =~ /^'exood'/}
+            @sum;
+        my ($h,$A);
+        for (@stack) {
+            my $sc = {%{_.sc}};
+            my $called = delete sc.call;
+            $called =~ s/'((?:(.)(ASH|RRAY)|(\S+))\(\S+\))'/$2||$4/seg;
+            my $file = delete sc.file;
+            $file =~ s/^$main::Bin\///;
+            $file =~ s/^othlia\/// && $file =~ s/\//::/s && $file =~ s/\.pm$//;
+            my $pack = delete sc.pack;
+            my $fi = join "/", split '::', $pack;
+            if ($file =~ /$fi\.pm$/) {
+                $file = $pack;
+                undef $pack;
+            }
+            my $line = delete sc.line;
+            my $mayknow = delete sc.Aref;
+            my $An = $KnowA->{$mayknow} if $mayknow;
+            my $tal = An.talk if $An;
+            _.c.tal = $tal;
+            if ($know->{_.t}->{_.sc.pack}) {
+                $file = "<";
+                undef $pack;
+                _.sc.waspack = le.sc.pack;
+            }
+            if ($le) {
+                #undef $tal if $tal eq le.c.tal;
+                $ind .= " " if _.sc.pack ne le.sc.pack &&
+                    !le.sc.waspack || le.sc.waspack ne _.sc.pack;
+                undef $file if $file eq le.sc.pack
+                    || $file eq le.sc.waspack;
+                undef $pack if $pack eq le.sc.pack;
+            }
+            if (!$file && $pack) {
+                $file = $pack;
+                undef $pack;
+            }
+            if ($file =~ /^\(eval (\d+)/) {
+                $file = ($pack&&"$pack > ")."?".$1;
+                undef $pack;
+            }
+            _.t = '?' if _.t eq '__ANON__';
+            
+            $A = $An if $An;
+            if (_.t =~ /^(h|w)$/) {
+                my $k = $1;
+                $called =~ /^"(.+?)"/;
+                _.c->{$k} = $1;
+                $h = $1 if $k eq 'h';
+            }
+            $tal = "$tal via" if $tal && $pack;
+            say " ".$ind."_.t\t$file :$line\t\t $called\t\t$tal $pack   ".ki($sc);
+            #
+            $le = $_;
+        }
+        # TODO call/hook in to the A to land the message
+        $A && $h || return sayre "Err (noh): $s ", ki(Gc&B) , map {ki$_} @stack;
+        my $l = $stack[-1];
+        my $less = -@stack;
+        $less = -10 if $less < -10;
+        $l = $_ for grep { _.c.w || _.c.h } @stack[-10..-1];
+        my $D = l.c.w ? $l : do {
+            my $findII = sub {
+                my $A = shift;
+                ref A.t eq 'CODE' ? A.J.A.II : A.II;
+            };
+            my $findDt = sub {
+                my ($II,$t) = @_;
+                $II || return;
+                II.I->{0.1}->{$t} || 
+                grep {_.t eq $t} map{ values %$_ }map{ values %$_ } 
+                    map{$II->{$_}} grep {!/^(ooI|Ii)$/} keys %$II
+            };
+            my ($D,@m) = $findDt->($findII->($A), $h);
+            $D
+        };
+        $s =~ s/\n//;
+        sayre "Err: $s";
+        if (!$D) {
+            return sayre "NoD: $h    ".wdump 1, $A;
+        }
+        else {
+            say "For D.t D.y.cv: ".ki D.sc;
+            saybl "Call: l.sc.call";
+            my $line = $s =~ /line (\d+)/ ? $1 : l.sc.line;
+            (my $lucow = l.c.w) =~ s/\W/-/g if l.c.w;
+            my @lines = $lucow ? `cat w/way/$lucow` :
+                l.sc.file =~ /^\(eval/ ? split "\n", D.c.s :
+                "???";
+            $line += l.c.w ? -4 : -1;
+            my $i = 0;
+            my $bef = @lines - 5 > $line ? 9 : 6;
+            for (@lines) {
+                chomp;
+                $i == $line ? sayyl $_ :
+                $i > $line - $bef &&
+                $i < $line + 5 ? saygr $_ : 1;
+                $i++;
+            }
+            sayre " !! !!";
+        }
+    };
+    sayre "Bangular loaded";
+House: | # sheets of mind you want handy
+    my $laC;
+    my $fiC;
+    my $ii = G.ii; # stylehouse.pl Beaches
+    for my $k (sort keys %$ii) {
+        $in ||= my $C = $ii.>$k;
+        if ($laC) {
+            laC.y.next = $D;
+            C.y.prev = $la;
+        }
+        $laC = $C;
+    }
+    # < Normal pin-able so what it was becomes the base
+    my $u = G&Ct,[Normal=>1=>'Steve'];
+    # ylinks so it can c&base a new u
+    u.y.in = $fiC;
+    u.y.tw = $ii;
+    us&ii = $ii;
+    us&i.>_.t = _c&code for grep {_c&code} values %{ii.i.y.tw};
+    5c&normal = $u;
     
+    # puts it as of:W, remixes it if needed
+    my $c;
+    # c.plus
+    u TheU
+    
+TheU: | # posit our 4.ii as normal (theu), share as W
+    # host
+    my $u = 5c&normal;
+    saygr wdump 4, $u;
+    if (5c&plus) {
+        n Normal=>W=>{base=>$u,plus=>5c&plus};
+        $u = T.op;
+    }
+    n theu=>1=>{s=>$u},'%of:W'
+    n normal=>1=>{s=>$u},'%of:W'
 Zequines: | # 1 things from the network
     # ja
     n DAy
@@ -181,6 +382,7 @@ DAy: | # world primitives
     # < you might want some historic view of it...
     t: %acgt:s t c
         ($s,$t) = ('I',$s) if !$t;
+        $t = t.t if ref $t eq 'HASH';
         $C = {t=>$t,y=>{},c=>($c||{})};
         $s = 'ii' if $s eq 'I'; # going
         c&on = $s; # i/ii/w/W
@@ -243,5 +445,162 @@ DAy: | # world primitives
         G&t,w=>$s
     Wup:
         G&t,W=>$s
+    
+    #c ha make call, in i
+    # looks up to 5 many rare/little subs
+    # s is code or i t
+    # Me precompiled args
+    # contexts calls, kinds of frame:
+    # B lexical cell joinery
+    # D cell itself, T.D is of A throat
+    # < T.h is an error handler
+    h:
+        my $y; # code
+        my $D; # C about code
+        if (ref $s eq 'CODE') {
+            $y = $s;
+            if (my $d = T.D) {
+                # passed code, happens to be T.D
+                $D = $d if dc&code && dc&code eq $y;
+            }
+        }
+        elsif (!ref $s && A.i && A.i.>$s) {
+            $y = A.i.>$s;
+            if (my $i = A.ii && A.ii.i) {
+                $D = i.y.tw.>$s;
+            }
+        }
+        elsif (ref $s eq 'HASH' && ref s.c eq 'HASH' && ref sc&code eq 'CODE') {
+            $y = sc&code;
+            $D = $s;
+        }
+        else {
+            # must be string i name or C for t lookup
+            my $C = !ref $s ? {t=>$s,y=>{},c=>{}} : G&s,$s;
+            c&on = 'i';
+            $y = G.i.t->($A,$C,$G,$T,$C);
+            $y || die "t Look fail: ".G&sn ."\n    ".ki $C;
+            my $Y = c&from;
+            if (my $i = Y.ii && Y.ii.>c&on ) {
+                $D = i.y.tw.>$s;
+            }
+        };
+        $y || die "no h: $s";
+        
+        my $uB = Gc&B || {t=>'nowhere',sc=>{A=>A.up}};
+        my $B = {t=>Ds&of||"?",y=>{cv=>D.y.cv||''}};
+        B.y.out = $uB;
+        if (my $p = uB.y.in) {
+            # pevious B-level call inside the uB call
+            p.y.next = $B;
+            B.y.prev = $p;
+        }
+        else {
+            uB.y.in = $B;
+        }
+        Bs&y = $y;
+        Bs&D = $D if $D;
+        Bc&s = $s;
+        Bc&h = delete T.h if T.h;
+        Bs&A = $A;
+        Bs&C = $C;
+        Gc&B = $B;
+        Gc&mas && Gc&mas->($A,$C,$G,$T," h B.t D.t");
+        ref $y eq 'CODE' || ref \$y eq 'GLOB' || die "B.t not code: ($s) ".G&sn ."  $y ref:"
+            .ref($y)."\n   refref".ref(\$y)."\n   ".ki($y)."\n   ".ki $D;
+        
+        my @r;
+        if (wantarray || !Ds&raysens) {
+            @r = eval { $DB::single = G.ydrop; $y->($A,$C,$G,$T,@Me) };
+        }
+        else {
+            $r[0] = eval { $DB::single = G.ydrop; $y->($A,$C,$G,$T,@Me) };
+        }
+        Gc&mas && Gc&mas->($A,$C,$G,$T,"<h B.t D.t");
+        Gc&B = $uB;
+        
+        #c sum h
+        if ($@) {
+            (my$ba,$@) = ($@,'');
+            if (Bs&hand) {
+                # T.h figured it safe from below
+            }
+            elsif (Bs&foot) {
+                # bang polished, pass out
+                die $ba;
+            }
+            else {
+                # tell aboves we did this
+                my $S = $B;
+                my @B;
+                while ($S && !Sc&h) {
+                    unshift @B, $S;
+                    Ss&foot = $B;
+                    $S = S.y.out;
+                }
+                
+                Bc&h && die "< Have the handler to $ba things.";
+                
+                
+                my $d = delete(T.bangC) || $D;
+                1 && saybl "Got code from d.t";
+                my $code = dc&s;
+                
+                my @tri;
+                (my $clear = $ba) =~ s/, <DATA> line \d+\.//;
+                if ($D && $clear =~ /.+ line (\d+)/g) {
+                    my $line = $1;
+                    my @s = split "\n", $code;
+                    my ($for,$aft) = (5,3);
+                    @tri = ([]); # split into three
+                    my $i = 1;
+                    for (@s) {
+                        $i eq $line && push @tri, [];
+                        $i > $line - $for && $i < $line + $aft
+                            && push @{$tri[-1]}, $_;
+                        $i eq $line && push @tri, [];
+                        $i++;
+                    }
+                    @tri = map {join "\n", @$_ } @tri
+                }
+                
+                my $la = {};
+                my @Bs;
+                for (@B) {
+                    my @s = "_.t _.y.cv _s&D.t";
+                    next if $s[0] eq 'i 0.1 h';
+                    # notice particle hops
+                    my $Y = _s&A;
+                    if (Y.1 ne la.A.1) {
+                        push @s, G&sn,$Y;
+                        la.A = $Y;
+                    }
+                    # fold of=i 0.1 in same A, etc.
+                    if (my $L = @s == 1 && $Bs[-1]) {
+                        my ($Lt,$st) = map { /(\S+ \S+)/ } $L->[0],$s[0];
+                        if ($Lt eq $st) {
+                            $L->[0] .= ", _s&D.t";
+                            next;
+                        }
+                    }
+                    push @Bs,\@s;
+                    # < the one line it came through in D?...
+                }
+                my $ind = '';
+                my $Bs = join "\n", map {$_=$ind.$_;$ind.='  ';$_}
+                    map{join'  ',@$_} @Bs;
+                
+                my $code = join "\n>>>>>>>>>>\n", @tri if @tri;
+                
+                $ba = join "\n\n", grep {defined} $Bs, $code, $ba;
+                
+                # die...\n keeps first line number
+                die $ba."\n";
+            }
+        }
+        wantarray ? @r : $r[0];
+    
+    
+    
     
 

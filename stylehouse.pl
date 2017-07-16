@@ -179,7 +179,7 @@ while (my ($cv,$C) = each %{$cvv }) {
         }
         else {
             $la->{y}->{next} = $D;
-            $C->{y}->{prev} = $la;
+            $D->{y}->{prev} = $la;
         }
         $la = $D;
     }
@@ -199,7 +199,20 @@ while ($n) {
 {i=>$i,ii=>$ii}
 };
 
-my @f = ('bay/via/Atool/1','bay/via/Sequencing/1','bay/via/Placement/1','bay/via/Intel/1','bay/via/ForJ/1','bay/via/Tangle/1','bay/via/Stuff/1','bay/via/Stylehousing/1','bay/via/Art/1','bay/via/Storage/1','bay/via/Elvising/1','bay/via/Tripical/1');
+my @f = (
+    'bay/via/Atool/1',
+    'bay/via/Sequencing/1',
+    'bay/via/Placement/1',
+    'bay/via/Intel/1',
+    'bay/via/ForJ/1',
+    'bay/via/Tangle/1',
+    'bay/via/Stuff/1',
+    'bay/vil/Stylehousing/1',
+    'bay/via/Art/1',
+    'bay/via/Storage/1',
+    'bay/via/Elvising/1',
+    'bay/via/Tripical/1'
+);
 
 $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr','Some more');
 my $N = [map{ @{ $Beach->('',$_) } }@f];
@@ -212,15 +225,12 @@ $A->{t} = 'toplevel';
 $G->{h} = $A->{i}->{h} || die "No h";
 $G->{w} = $A->{i}->{w} || die "No w";
 $G->{i}->{t} = $A->{i}->{t} || die "No t";
+$G->{ii} = $A->{ii};
 $G->{h}->($A,$C,$G,$T,"Gee"); # gives $G->{way}, going
-$G->{c}->{bay} = 'bay';
+
 1 && sayre "Ontop";
+$A = $G->{h}->($A,$C,$G,$T,"A",'begin');
 
-my @ha =  $G->{h}->($A,$C,$G,$T,"Aup");
-$A = $G->{h}->($A,$C,$G,$T,"A",'twanga');
-push @ha,  $G->{h}->($A,$C,$G,$T,"Aup");
-
-my $mo = $G->{h}->($A,$C,$G,$T,"t",'mo');
 my $ar = {};
 $G->{w}->($A,$C,$G,$T,"Beginning",$ar);
 
