@@ -218,7 +218,7 @@ $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr','Some more');
 my $N = [map{ @{ $Beach->('',$_) } }@f];
 my $A = $Believe->($N);
 $A->{t} = 'toplevel';
-$G->{h} = $A->{i}->{h} || die "No h";
+$G->{h} = $G->{i}->{h} = $A->{i}->{h} || die "No h";
 $G->{w} = $A->{i}->{w} || die "No w";
 $G->{i}->{t} = $A->{i}->{t} || die "No t";
 $G->{ii} = $A->{ii};

@@ -59,7 +59,7 @@ Begin: | # 0 stylehouse.pl starts Aing somehow, by Jigdoer
     my $N = [map{ @{ $Beach->('',$_) } }@f];
     my $A = $Believe->($N);
     A.t = 'toplevel';
-    G.h = A.i.h || die "No h";
+    G.h = G.i.h = A.i.h || die "No h";
     G.w = A.i.w || die "No w";
     G.i.t = A.i.t || die "No t";
     G.ii = A.ii;
@@ -102,10 +102,9 @@ Beginning: | # 0 stylehouse.pl's first way
     # 5/House forms Normal, from its I
     # which stylehouse.pl Beaches
     G.ydrop = 1;
-    A.V = 1;
     #*main::h = G.h;
-    die "siomewhee?!";
-    return;
+    #Rw Benigning + $fruit=3 orpu;
+    #return;
     
     n House
     # 4/Motor uses House and has moments
@@ -166,12 +165,20 @@ Bangular: |
     sayre "Bangular loaded";
 Bangilate: |
     my $D = Bs&D;
+    my $deB = &B{
+        sprintf(" B %-6s %5s %10s", B.t,
+            (B.y.cv ne '0.1' && B.y.cv),
+            (ref Bc&s ? Bc&s.t : ki Bc&s) 
+        );
+    };
     
     # T.h figured it safe from below
     Bs&hand && return;
     
+    # make Bc&s little
     # bang polished, pass out
     Bs&foot && return $ba;
+    # index landmarks
     my $na = {};
     my $Bs = {%{B.sc},%{B.c}};
     Bs.G = $G;
@@ -187,47 +194,71 @@ Bangilate: |
         my $r = "$v";
         $na.>$r = "arg".$i++;
     }
+    
+    # find landmarks in callstack
     my $st = Bs&stack;
     for my $t (@$st) {
         t.t = delete ts&file;
         t.t = 'h' if t.t eq Bs&hs_file;
-        ts&Mes =~ s/\Q$_\E/$na.>$_/ for keys %$na;
+        ts&Mes =~ s/\Q$_\E/$na.>$_/
+            && do { ts&matches->{ $na.>$_ }++ }
+            for keys %$na;
     }
-    1  && say "Eat ".wdump 4, $na;
-    saybl " _.t -  _s&line: _s&Mes" for @$st;
     
-    saybl q[
-        Rw Fal;
-    ];
+    # split callstack around B stack
+    # near the beginning of it should be our h call
+    # < deduce every h, just to first and from last
+    my ($lit) = my ($for,$aft) = ([],[]);
+    for my $t (@$st) {
+        $lit = $aft if t.t eq 'h';
+            #&& 5 == grep{ ts&matches.>$_ } qw'A C G T D';
+        push @$lit, $t;
+    }
     
-    # some eval number
-    # near the beginning of that should be our h call
     
-        my @Bs = my $BB = $B;
-        push @Bs, $BB = BB.y.out while $BB;
-        for my $B (@Bs) {
-            saybl " - ".G&aC,$B;
-            if (my $s = Bc&s) {
-                sayyl "   s=".G&aC,$s;
-            
-            }
-            saygr "      sMe/args: @{Bs&Me}" if Bs&Me;
+    #saybl sprintf(" - %-18s %4s: %s", _.t, _s&line, _s&Mes) for @$st;
+    
+    my $l = [map{
+        # beyond h/B stack
+        sprintf(" - %-18s %4s: %s", _.t, _s&line, _s&Mes)
+    }@$for];
+    
+    my @Bs;
+    my $BB = $B;
+    while ($BB) {
+        push @Bs, $BB;
+        $BB = BB.y.out;
+    }
+    $BB = $B;
+    for my $B (@Bs) {
+        # tell aboves we did this
+        Bs&foot = $BB;
+    
+        # form B.t=of, Bcs=$pin
+        push @$l, $deB->($B);
+        next unless $B eq $BB;
+        my $i = 1;
+        for my $arg (@{Bs&Me||[]}) {
+            push @$l, sprintf("    arg%d %5s",$i++,ki $arg);
         }
-        
-                # tell aboves we did this
-                my $S = $B;
-                my @B;
-                while ($S && !Sc&h) {
-                    unshift @B, $S;
-                    Ss&foot = $B;
-                    $S = S.y.out;
-                }
-                
+    }
+    
+    my @fin;
+    for (reverse @$aft) {
+        last if _.t eq 'h';
+        push @fin, sprintf(" - %-18s %4s: %s", _.t, _s&line, _s&Mes);
+    }
+    if (@fin) {
+        push @$l, "trailing stack:";
+        push @$l, reverse @fin;
+    }
+    
+    #c codesplatter
+    
                 Bc&h && die "< Have the handler to $ba things.";
                 
                 
                 my $d = delete(T.bangC) || $D;
-                1 && saybl "Got code from d.t";
                 my $code = dc&s;
                 
                 my @tri;
@@ -248,9 +279,10 @@ Bangilate: |
                     @tri = map {join "\n", @$_ } @tri
                 }
                 
+                if(0) {
                 my $la = {};
                 my @Bs;
-                for (@B) {
+                for (@Bs) {
                     my @s = "_.t _.y.cv _s&D.t";
                     next if $s[0] eq 'i 0.1 h';
                     # notice particle hops
@@ -270,11 +302,16 @@ Bangilate: |
                     push @Bs,\@s;
                     # < the one line it came through in D?...
                 }
+                
                 my $ind = '';
                 my $Bs = join "\n", map {$_=$ind.$_;$ind.='  ';$_}
                     map{join'  ',@$_} @Bs;
+                }
+                my $Bs = join "\n", @$l;
+                my $code = join "\n>>>>>>>>>>\n", map{
+                    join "\n", map{"| ".$_} split "\n", $_
+                } @tri if @tri;
                 
-                my $code = join "\n>>>>>>>>>>\n", @tri if @tri;
                 
                 $ba = join "\n\n", grep {defined} $Bs, $code, $ba;
                 
@@ -509,16 +546,18 @@ DAy: | # world primitives
         };
         $y || die "no h: $s";
         
-        my $uB = Gc&B || {t=>'nowhere',sc=>{A=>A.up}};
+        my $uB = Gc&B;# || {t=>'nowhere',sc=>{A=>A.up}};
         my $B = {t=>Ds&of||"?",y=>{cv=>D.y.cv||''}};
-        B.y.out = $uB;
-        if (my $p = uB.y.in) {
-            # pevious B-level call inside the uB call
-            p.y.next = $B;
-            B.y.prev = $p;
-        }
-        else {
-            uB.y.in = $B;
+        if ($uB) {
+            B.y.out = $uB;
+            if (my $p = uB.y.in) {
+                # uB yin points to first call
+                p.y.next = $B;
+                B.y.prev = $p;
+            }
+            else {
+                uB.y.in = $B;
+            }
         }
         Bs&y = $y;
         Bs&D = $D if $D;
