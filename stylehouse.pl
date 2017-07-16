@@ -91,6 +91,10 @@ while (@l) {
         unless ($string) {
             $v = Load $v
         }
+        else {
+            $v .= "\n" unless $v =~ /\n$/s;
+        }
+
         $C->{"$nk"}->{"$gk"} = $v;
     }
 
