@@ -217,15 +217,13 @@ my @f = (
 $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr','Some more');
 my $N = [map{ @{ $Beach->('',$_) } }@f];
 my $A = $Believe->($N);
-$G->{c}->{mas} = sub {
-    my ($A,$C,$G,$T,$s) = @_;
-    1 && saygr "Es: $s";
-};
 $A->{t} = 'toplevel';
 $G->{h} = $A->{i}->{h} || die "No h";
 $G->{w} = $A->{i}->{w} || die "No w";
 $G->{i}->{t} = $A->{i}->{t} || die "No t";
 $G->{ii} = $A->{ii};
+$A->{c}->{C} = $C = $G->{h}->($A,$C,$G,$T,"Ct",['topCevel'=>1]);
+$A->{c}->{T} = $T = {};
 $G->{h}->($A,$C,$G,$T,"Gee"); # gives $G->{way}, going
 
 1 && sayre "Ontop";
@@ -234,4 +232,4 @@ $A = $G->{h}->($A,$C,$G,$T,"A",'begin');
 my $ar = {};
 $G->{w}->($A,$C,$G,$T,"Beginning",$ar);
 
-1 && sayyl wdump 3, [Thes=>$mo]
+1 && saybl "ende.";
