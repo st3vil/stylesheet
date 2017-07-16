@@ -140,7 +140,7 @@ Bangular: |
         eval { G::confess( 'yab' ) };
         my @stack = split m/\n/, $@;
         
-        shift @stack for 1;
+        shift @stack for 1,2; # this sub and that eval ^
         if (0 || $stack[-1] =~ /^\s+Mojo::IOLoop::start/) {
             pop @stack until $stack[-1] !~ /Mojo|eval/;
         }
@@ -160,6 +160,8 @@ Bangular: |
         } @stack;
         my $B = Gc&B;
         Bs&stack = \@stack;
+        
+        Bs&callers = [map{ [caller($_)] }0..4];
     };
     sayre "Bangular loaded";
 Bangilate: |
@@ -170,8 +172,36 @@ Bangilate: |
     
     # bang polished, pass out
     Bs&foot && return $ba;
+    my $na = {};
+    my $Bs = {%{B.sc},%{B.c}};
+    Bs.G = $G;
+    Bs.T = $T;
+    Bs.Dw = D.y.argumented if D.y.argumented;
+    each gk,v $Bs {
+        next unless $gk =~ /^..?$/;
+        my $r = "$v";
+        $na.>$r = "$gk";
+    }
+    my $i = 1;
+    for my $v (@{Bs&Me||[]}) {
+        my $r = "$v";
+        $na.>$r = "arg".$i++;
+    }
+    my $st = Bs&stack;
+    for my $t (@$st) {
+        t.t = delete ts&file;
+        t.t = 'h' if t.t eq Bs&hs_file;
+        ts&Mes =~ s/\Q$_\E/$na.>$_/ for keys %$na;
+    }
+    1  && say "Eat ".wdump 4, $na;
+    saybl " _.t -  _s&line: _s&Mes" for @$st;
     
+    saybl q[
+        Rw Fal;
+    ];
     
+    # some eval number
+    # near the beginning of that should be our h call
     
         my @Bs = my $BB = $B;
         push @Bs, $BB = BB.y.out while $BB;
@@ -181,8 +211,7 @@ Bangilate: |
                 sayyl "   s=".G&aC,$s;
             
             }
-            sayre "   in to: ".ki B.y.in if B.y.in;
-            saygr "      sMe/args: ".ki Bs&Me if Bs&Me;
+            saygr "      sMe/args: @{Bs&Me}" if Bs&Me;
         }
         
                 # tell aboves we did this
@@ -249,7 +278,6 @@ Bangilate: |
                 
                 $ba = join "\n\n", grep {defined} $Bs, $code, $ba;
                 
-                1 && saygr "BNe: $ba";
                 # die...\n keeps first line number
                 return $ba."\n";
 House: | # sheets of mind you want handy
@@ -291,6 +319,7 @@ TheU: | # posit our 4.ii as normal (theu), share as W
 Zequines: | # 1 things from the network
     # ja
     n DAy
+    n ThWay
 DAy: | # world primitives
     u i
     # sympathetic to design some stuff
@@ -401,7 +430,6 @@ DAy: | # world primitives
                 my $A = $Y;
                 $t = G&$by,$s,$t;
             }
-            saygr "Han ". ki($C);
             $t || next;
             c&from = $Y;
             c&inet = $i;
@@ -498,8 +526,6 @@ DAy: | # world primitives
         Bc&h = delete T.h if T.h;
         Bs&A = $A;
         Bs&C = $C;
-        Bs&G = $G;
-        Bs&T = $T;
         Bs&Me = \@Me;
         Gc&B = $B;
         Gc&mas && Gc&mas->($A,$C,$G,$T," h B.t D.t");
@@ -519,8 +545,8 @@ DAy: | # world primitives
         # sum h
         if ($@) {
             (my$ba,$@) = ($@,'');
-            sleep 1;
-            sayyl "opr - B.t Bc&s.t says: $ba";
+            # stack syncy to know what G&h's eval number is
+            Bs&hs_file = (caller(0))[1];
             my $s = Rw Bangilate $ba $B;
             die $s if $s;
         }
@@ -528,5 +554,112 @@ DAy: | # world primitives
     
     
     
+    
+ThWay: | # meaning of word/contenter
+    u i
+    # compiles for given args
+    w:
+        my $ar = {};
+        # their $ar (+)
+        $ar = shift @Me if ref $Me[0];
+        # their args
+        my @o = @Me;
+        while (@Me) {
+            my $k = shift @Me;
+            @Me || die "w odd hash after $k: ".ki\@o;
+            my $v = shift @Me;
+            $ar.>$k = $v;
+        }
+        ar.__D && die "w __D deprecated: ".ki$ar;
+        my $nar;
+        # use this w call's ACGT
+        # replaced once our A finds code, before its h'd
+        $nar.>$_ = delete $ar.>$_ for grep {exists $ar.>$_ } qw'A C G T';
+        my @args = sort keys %$ar;
+        my $args = join',','A,C,G,T,ar',@args;
+        
+        # look in of=w up the network to 5
+        # they are pins near network of knowledge via T
+        my $w = G&wup,$s;
+        
+        # or the old way,
+        if (!$w) {
+            # going, hash tied to a directory
+            # makes digest when way entered
+            (my $fi = $s) =~ s/\W/-/g;
+            $w = {t=>$s};
+            wc&s = G.way->{$fi} || die "No way: $fi";
+            ws&dige = G.way.o.dige->{$fi}
+                || die "Not Gway not diges $fi: wayo: ".ki G.way.o;
+            ws&of = 'w';
+        }
+        $w || die "No way to $s (on A.1.t's A.t)";
+        
+        ws&dige || die "w no dige: ".ki$w;
+        ws&of || die "w not of: ".ki$w;
+        
+        my $ark = G.sc.pinark ||= {};
+        # dige same across all arg variations
+        my $v = $ark.>w.t.>ws&dige.>$args ||= do {
+            my $v = G&hup,$w;
+            v.y.argumented = $w;
+            vs&args = $args;
+            G&perlcode,$v,"MakingWay";
+            v.c.code || die "no ccode back: ".ki$v;
+            $v;
+        };
+        v.sc.called++;
+        
+        G&has,\'mo'=>way=>w.t=>w.sc.dige=>1 if A.mo;
+        
+        T.w = $v;
+        my $A = exists nar.A ? nar.A : $A;
+        my $C = exists nar.C ? nar.C : $C;
+        my $G = exists nar.G ? nar.G : $G;
+        my $T = exists nar.T ? nar.T : $T;
+        my @arg = map{ $ar.>$_ }@args;
+        if (ref $A ne 'HASH') {
+            die "Not hashA: ".wdump 3, [$nar,$ar];
+        }
+        A.i.h->($A,$C,$G,$T,$v,$ar,@arg);
+        #vc&code ->($A,$C,$G,$T,$ar,@arg);
+    
+    # make s.c.code, see of (which sets dige)
+    perlcode:
+        $C = $s;
+        # encapsulate sub with args
+        G&CoArgulate;
+        # translate into perl
+        G&hoh,C.sc,$_ for grep{$_} G&CoBabbler;
+        # c&code = eval c&s
+        G&Code,$C,@Me;
+    
+    # c&code = eval c&s
+    # l = name of situation
+    Code: %acgt:s l
+        ($s,$l) = ($C,$s) if !ref $s;
+        $l = "$l: " if $l;
+        my $Y = $Bun::A;
+        delete Ys&stacktime;
+        
+        T.bangC = $s;
+        my $y = eval sc&s;
+        die $l."Nocompile s.t: ".ki($s)
+            .ind('  ',$@)."\n\n sc&s \n"
+            if $@;
+        die $l."Not code s.t: ".ki($s)
+            if ref $y ne 'CODE' && !ss&subpeel;
+        delete T.bangC;
+        sayre join"\n", "Warning from $l s.t s.y.cv"
+            if delete Ys&stacktime;
+        
+        sc&code = $y;
+    
+    n $_=>1=>G.way.>$_ for qw'CoArgulate CoBabbler';
+    
+    # compiler for old G.w
+    n won=>'',join("\n",map{G.way->{$_} || die "no $_"}qw'CoArgulate CoBabbler')
+    
+    #
     
 
