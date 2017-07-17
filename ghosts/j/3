@@ -1,6 +1,7 @@
 Stylehousing: | # org Karamean new stuff
     # new t, old G.way
     n Zequines
+    n Zunnel
     
 Jigdoer: | # 0 bootstrap a G from W
     Jc&tape = 'Dejo';
@@ -136,7 +137,7 @@ Bangular: |
     my $lastts;
     $SIG{__DIE__} = $end = &s{
         return if $lastts >  hitime() - 1;
-        sayre "SIGDIE began: $s";
+        sayre "SIGDIE began: ".slim(40,$s);
         $lastts =  hitime();
         $s && $@ && sayre "stackend with \$@ and arg0";
         $s ||= $@;
@@ -336,14 +337,17 @@ Bangilate: |
     #c codesplatter
     
     (my $clear = $ba) =~ s/, <DATA> line \d+\.//;
-    my $line = $d && $clear =~ /.+ line (\d+)/g;
+    my ($line) = $clear =~ /.+ line (\d+)/g;
     if (my $v = @$for == 1 && $for->[0]) {
-        $line = vs&line if v.t =~ /^\(eval \d+\)$/;
+        if (v.t =~ /^\(eval \d+\)$/) {
+            1 && saygr "line from ".ki v.t;
+            $line = vs&line;
+        }
     }
                 
                 my @tri;
                 if ($line) {
-                    sayyl "Line is $line";
+                    1 && sayyl "Line is $line";
                     my @s = split "\n", dc&s;
                     my ($for,$aft) = (5,3);
                     @tri = ([]); # split into three
@@ -391,6 +395,15 @@ Bangilate: |
                     join "\n", map{"| ".$_} split "\n", $_
                 } @tri if @tri;
                 
+                my $li = [split "\n", $ba];
+                if (@$li > 30) {
+                    my (@st,@ar);
+                    push @st, shift @$li while @$li && @st < 30;
+                    while (@$li && @ar < 5) {
+                        push @ar, shift @$li;
+                    }
+                    $ba = join "\n", @st, @ar ? ("...snip ".(@$li)."...", @ar) : ();
+                }
                 
                 $ba = join "\n\n", grep {defined} $Bs, $code, $ba;
                 
@@ -414,8 +427,8 @@ House: | # sheets of mind you want handy
     # ylinks so it can c&base a new u
     u.y.in = $fiC;
     u.y.tw = $ii;
-    #u.sc.ii = $ii;
-    #u.sc.i.>_.t = _c&code for grep {_c&code} values %{ii.i.y.tw};
+    u.sc.ii = $ii;
+    u.sc.i.>_.t = _c&code for grep {_c&code} values %{ii.i.y.tw};
     5c&normal = $u;
     
     A.ii.W.y.tw.theu = $u;
@@ -426,8 +439,47 @@ House: | # sheets of mind you want handy
         G.way.>$pin = G.way.>$was;
     }
     
+    if (1) {
+    
+    my $u = G&sJ,A.1,'u';
+    u.c.base = 'theu'; # the PiMachine
+    # base if grind (ground, needs root), whole if just theu
+    my $rev = ".u.sc.ch" if u.sc.ch;
+    my $V = A.1.t =~ /^[A-Z]/;
+    my $gr = G&grind,$u;
+    if ($gr) {
+        G&A,n=>8=>$u=>[uuu=>9=>{root=>1}];
+        # slowly opening & closing a J of the u better than ^
+        # but also want to hold u n at 3 til cachable known
+        # the relevant page of s (man sesh) then ^ getting whole=?
+        # those u s pages get cached somewhere in 4stw.ucache
+        #   if simple enough
+    }
+    saybl "resolves mind$rev: A.1.t".($gr && " (u)");
+    # resolve our mind
+    # < having the M of u to do now, cache with
+    local A.trip;
+    local A&trip;
+    my $so = G&A,s=>8=>$u;
+    
+    A.V = 1;
+    1 && saygr "\nu looks: ".G&aC,$u;
+    1 && saygr "\nuss looks: ".G&aC,u.sc.s;
+    1 && saygr "\nthats looks: ".G&aC,$so;
+    
+    my $s = u.sc.s;
+    saygr "s sc: ".ki s.sc;
+            
+    
+    saygr "Don";
+    exit;
+    
+    }
+    
     my $U = G&Wup,'theu';
-    #exit;
+    
+    1 && saybl wdump 4, $U;
+    exit;
     # puts it as of:W, remixes it if needed
     my $c;
     # c.plus
@@ -804,4 +856,183 @@ ThWay: | # meaning of word/contenter
     
     #
     
+Zunnel: | # ground action
+    u a
+    #c n2 ground assembles mind
+    n 2:
+        my $u = A&u;
+        return if A.1.t eq 'os' || A&nomind;
+        if (!uc&o) {
+            u.c.base = 'theu'; # the PiMachine
+            # base if grind (ground, needs root), whole if just theu
+            my $rev = ".u.sc.ch" if u.sc.ch;
+            my $V = A.1.t =~ /^[A-Z]/;
+            my $gr = G&grind,$u;
+            if ($gr) {
+                G&A,n=>8=>$u=>[uuu=>9=>{root=>1}];
+                # slowly opening & closing a J of the u better than ^
+                # but also want to hold u n at 3 til cachable known
+                # the relevant page of s (man sesh) then ^ getting whole=?
+                # those u s pages get cached somewhere in 4stw.ucache
+                #   if simple enough
+            }
+            saybl "resolves mind$rev: A.1.t".($gr && " (u)");
+            # resolve our mind
+            # < having the M of u to do now, cache with
+            local A.trip;
+            local A&trip;
+            my $so = G&A,s=>8=>$u;
+            # merge its i/ii thing ideas into our 1
+            if (u.sc.ii) {
+                # A.mo = the 6er this n is mindupping
+                # A = this A, already fell off A.mo
+                # A.1 = an fyi for the J, may want only the most something mind
+                for (A.mo, $A, A.1) {
+                    _.ii = u.sc.ii;
+                    _.i = u.sc.i || die "No i on A.1.t u";
+                }
+                # the mo of A.2 minds from above til here
+                # a J's mind has how to get into a J and do its mind
+                # see Elvising for inside-outside cooperation
+            }
+            else {
+                sayre "No ii on A.1.t u (o Whole TODO?)";
+                1 && saygr "u looks: ".ki $u;
+                1 && saygr "uss looks: ".ki u.sc.s;
+                for (A.mo, $A, A.1) {
+                    _.ii = A.4.ii;
+                    _.i = A.4.i || die "No i on A.1.t u ish A.4.t not-whole";
+                }
+            }
+            T.seek = 1;
+        }
+    #c o2 input protocols read bunches of C
+    o 2:
+        # resolving to stuff
+        if (c&m eq 'A') {
+            my $s = c&f = c&s;
+            1 && saybl "Having mA for ".ki $s;
+            my $top = ss&top || s.y.in
+                || die "o A from no sc top or yin: ".ki$s;
+            for my $k ('i','ii') {
+                c&finds.>$k =
+                    s.sc.>$k ? 1 :
+                    s.y.s && s.y.s.sc.>$k ? 'ys' :
+                    next;
+            }
+            c&s = $top;
+            c&m = 'C';
+        }
+        
+        # eating stuff
+        # < space-for (C) < t < y [many o with .c.s = $e, o.y.etc = etc]
+        my $oo = A.c.oo = {};
+        my $oat = &o{
+            push @{ oo.C.>o.t.>o.y.cv ||=[]}, $o;
+        };
+        
+        # per other itself in 3, way in is noise-ish
+        if (c&m eq 'zip') {
+            for my $k (keys %{c&s}) {
+                my $v = c&s ->{$k};
+                v.y && v.y eq $v || die "zip yon not A ".wdump 2, c&s;
+                next if $v eq $A;
+                next if vc&T && vc&T.not;
+                # light cones holding C or doing another o bunch
+                my $D = v.c.s;
+                if (v.t eq 'o') {
+                    # D is inner o's C - index windups
+                    D.c.i eq c&i || die "o oth i C.c.i.t <-> D.c.i.t";
+                    D.c.j && die "o D.c.t already got j";
+                    D.c.jC && die "o D.c.t already got jC";
+                    D.c.jC = $C;
+                    my $ii = v.c.oo || die "Too early to oo: D.t";
+                    my $i = 0;
+                    for my $t (keys %{ii.C}) {
+                        my $vs = ii.C->{$t};
+                        for my $cv (keys %$vs) {
+                            my $os = $vs->{$cv};
+                            $oat->( G&hup,$_ ) for @$os;
+                            $i++ for @$os;
+                        }
+                    }
+                    say "A.t A.c.sip C.t claims $i from: v.t v.c.sip D.t";
+                }
+                else {
+                    # D is J moment C material to shade
+                    my $e = G&hup,$D;
+                    my $o = G&Chs,$e;
+                    o.y.D = $D;
+                    o.y.R = $v;
+                    o.y.k = $k;
+                    $oat->($o);
+                }
+            }
+        }
+        elsif (c&m eq 'i') {
+            for my $k (keys %{c&s}) {
+                my $v = c&s ->{$k};
+                # inflated t -> s
+                my $e;
+                e.t = $k;
+                e.y.cv = 0.1;
+                e.c.s = $v;
+                my $o = G&Chs,$e;
+                o.y.k = $k;
+                $oat->($o);
+            }
+        }
+        elsif (c&m eq 'ii') {
+            for my $k (keys %{c&s}) {
+                my $v = c&s ->{$k};
+                # t -> C
+                my $e = G&hup,$v;
+                my $o = G&Chs,$e;
+                o.y.k = $k;
+                o.y.D = $v;
+                $oat->($o);
+            }
+        }
+        elsif (c&m eq 'C') {
+            # C
+            my $S = c&s;
+            my $p;
+            while ($S) {
+                ref $S eq 'HASH' || die "NothashC: C.t: ".ki(c&s).":\n  ".ki $S;
+                !defined S.t && die "Dodge o m=C: ".wdump 3,
+                    ["ot: C.t",S=>$S,after=>$p];
+                my $e = G&hup,$S;
+                my $o = G&Chs,$e;
+                o.y.D = $S;
+                if ($p) {
+                    os&oz.yprev = $p;
+                    ps&oz.ynext = $o;
+                }
+                $oat->($o);
+                $p = $o;
+                $S = S.y.next;
+                undef $S if c&nonext;
+            }
+        }
+        elsif (c&m eq 'z') {
+            # whole [ C... ], not rl
+            for my $S (@{ c&s }) {
+                ref $S eq 'HASH' || die "Nothashzin: C.t:\n ".ki(c&s).":\n  ".ki $S;
+                !defined S.t && die "Dodge o m=z: ".wdump 3, [$S];
+                my $e = G&hup,$S;
+                my $o = G&Chs,$e;
+                o.y.D = $S;
+                $oat->($o);
+            }
+        }
+        elsif (c&m eq 'rl') {
+            # rl same array growing more el=3 updatey dives
+            # make A.c.r from el=3
+            die "code rl";
+            T.Z.599 = 1;
+        }
+        else {
+            die "How to read ".ki $C;
+        }
+        
 
