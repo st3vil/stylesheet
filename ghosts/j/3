@@ -81,7 +81,6 @@ Beginning: | # 0 stylehouse.pl's first way
         $t && ts&args eq 'A,C,G,T,s,t,c' || die "t t fail: ".ki$t;
     }
     # stacktrace
-    A.V = 1;
     Rw Bangular;
     G.c.mas = sub {
         my ($A,$C,$G,$T,$s) = @_;
@@ -313,12 +312,15 @@ Bangilate: |
         my $i = 1;
         for my $r (@{Bs&Me||[]}) {
             my $s = ki $r;
+            my @also;
             if ($r eq $d) {
                 $s = G&aC,$r;
                 my $sc = ki r.sc;
                 $s =~ s/%.+$/%: $sc/;
+                @also = "      * described below";
             }
-            push @$l, sprintf("    arg%d %5s",$i++,$s);
+            
+            push @$l, sprintf("    arg%d %5s",$i++,$s), @also;
         }
     }
     
@@ -333,11 +335,14 @@ Bangilate: |
     
     #c codesplatter
     
+    (my $clear = $ba) =~ s/, <DATA> line \d+\.//;
+    my $line = $d && $clear =~ /.+ line (\d+)/g;
+    if (my $v = @$for == 1 && $for->[0]) {
+        $line = vs&line if v.t =~ /^\(eval \d+\)$/;
+    }
                 
                 my @tri;
-                (my $clear = $ba) =~ s/, <DATA> line \d+\.//;
-                if ($D && $clear =~ /.+ line (\d+)/g) {
-                    my $line = $1;
+                if ($line) {
                     sayyl "Line is $line";
                     my @s = split "\n", dc&s;
                     my ($for,$aft) = (5,3);
@@ -396,11 +401,12 @@ House: | # sheets of mind you want handy
     my $fiC;
     my $ii = G.ii; # stylehouse.pl Beaches
     for my $k (sort keys %$ii) {
-        $in ||= my $C = $ii.>$k;
+        my $C = $ii.>$k;
         if ($laC) {
             laC.y.next = $C;
-            C.y.prev = $la;
+            C.y.prev = $laC;
         }
+        $fiC ||= $C;
         $laC = $C;
     }
     # < Normal pin-able so what it was becomes the base
@@ -408,19 +414,38 @@ House: | # sheets of mind you want handy
     # ylinks so it can c&base a new u
     u.y.in = $fiC;
     u.y.tw = $ii;
-    us&ii = $ii;
-    us&i.>_.t = _c&code for grep {_c&code} values %{ii.i.y.tw};
+    #u.sc.ii = $ii;
+    #u.sc.i.>_.t = _c&code for grep {_c&code} values %{ii.i.y.tw};
     5c&normal = $u;
     
+    A.ii.W.y.tw.theu = $u;
+    # we switched Mo to mo with PiMachine
+    #   whose builder wants to compile the u for Mo
+    my $x = {qw'c alc  s als  a alact  i alacgts'};
+    each pin,was $x {
+        G.way.>$pin = G.way.>$was;
+    }
+    
+    my $U = G&Wup,'theu';
+    #exit;
     # puts it as of:W, remixes it if needed
     my $c;
     # c.plus
+    saygr "Begin House u:";
     u TheU
+    u Zaphoddity
+    S
     
+    A.V = 1;
+    saygr "Housing with ".ki[sort keys %{A.ii}];
+    
+Zaphoddity: |
+    u i
+    extigen: %of:mambo
+        # tanga
 TheU: | # posit our 4.ii as normal (theu), share as W
     # host
     my $u = 5c&normal;
-    saygr wdump 4, $u;
     if (5c&plus) {
         n Normal=>W=>{base=>$u,plus=>5c&plus};
         $u = T.op;
@@ -436,6 +461,9 @@ DAy: | # world primitives
     # sympathetic to design some stuff
     #c ge, see 64 got
     # hidey machine thats giving you things
+    # abstracts w/way/$pin to G.way.$pin
+    # $pin must be like-this
+    # makes G.way.o.dige.$pin when given overrides etc (House)
     Gee:
         # make G.way.$pin retrieve code
         # going once G&t does all readins
