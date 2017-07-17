@@ -105,8 +105,13 @@ Beginning: | # 0 stylehouse.pl's first way
     #*main::h = G.h;
     #Rw Benigning + $fruit=3 orpu;
     #return;
+    #Rw Showit;
     
-    n House
+    my $n = G&A,n=>1=>A.1=>['House'];
+    nc&nomind = 1;
+    G&A,$n,8;
+    
+    #n House
     # 4/Motor uses House and has moments
     
     
@@ -118,6 +123,8 @@ Beginning: | # 0 stylehouse.pl's first way
     
     #n Lize
     
+Showit: |
+    3 3 3
 Bangular: |
     my $end;
     $SIG{__WARN__} = &{
@@ -144,17 +151,48 @@ Bangular: |
             pop @stack until $stack[-1] !~ /Mojo|eval/;
         }
         
+        my @stock;
+        my $stacking;
+        # suckup string spilling out of a line
+        for my $l (@stack) {
+            if ($stacking) {
+                if ($l =~ /^\t\S/) {
+                    $stacking = 0;
+                    push @stock, $l;
+                }
+                else {
+                    push @{$stock[-1]}, $l
+                }
+            }
+            elsif ($l =~ /^\teval '/) {
+                $stacking = 1;
+                push @stock, [$l];
+            }
+            else {
+                push @stock, $l;
+            }
+        }
+        @stack = map { ref $_ ? join "\n", @$_ : $_ } @stock;
+        
         @stack = map{
             my $l = {y=>{}};
             ls&dataline = $1 if s/, <DATA> line (\d+)\.\n?$//s;
             
-            lc&s = $_ unless
-                /^\s*(?:eval \{\.\.\.\} |([^\(\s]+)::([^\s\(]+?)\((.+)\) )called at (\S+|\(eval \S+\)) line (\d+)$/;
-            ls&pack = $1 if $1; # usu main, undef for eval{}
-            ls&sub = $2 if $2; # usu __ANON__, "
-            ls&Mes = $3 if $3; # stringified @_
-            ls&file = $4 if $4; # usu (eval \d+) or stylehouse.pl
-            ls&line = $5 if $5; # in the code above this call
+            if (/^\s*(?:eval \{\.\.\.\} |([^\(\s]+)::([^\s\(]+?)\((.+)\) )called at (\S+|\(eval \S+\)) line (\d+)$/) {
+                ls&pack = $1 if $1; # usu main, undef for eval{}
+                ls&sub = $2 if $2; # usu __ANON__, "
+                ls&Mes = $3 if $3; # stringified @_
+                ls&file = $4 if $4; # usu (eval \d+) or stylehouse.pl
+                ls&line = $5 if $5; # in the code above this call
+            }
+            elsif ($_ =~ /^\teval '(.+)' called .+?$/sgm) {
+                ls&file = 'eval $s';
+                ls&string = $1;
+                lc&s = $_
+            }
+            else {
+                lc&s = $_
+            }
             $l
         } @stack;
         my $B = Gc&B;
@@ -164,20 +202,33 @@ Bangular: |
     };
     sayre "Bangular loaded";
 Bangilate: |
-    my $D = Bs&D;
-    my $deB = &B{
-        sprintf(" B %-6s %5s %10s", B.t,
-            (B.y.cv ne '0.1' && B.y.cv),
-            (ref Bc&s ? Bc&s.t : ki Bc&s) 
-        );
-    };
-    
     # T.h figured it safe from below
     Bs&hand && return;
     
-    # make Bc&s little
     # bang polished, pass out
+    # on each enclosing h
+    # < look at caller() eval nums for more stack sync
     Bs&foot && return $ba;
+    
+    Bc&h && die "< Have the handler to $ba things.";
+    
+    # Bc&s is the first argument to h, may be a D
+    my $deB = &B{
+        sprintf(" B %-4s %4s %8s", B.t,
+            (B.y.cv ne '0.1' && B.y.cv),
+            (ref Bc&s ? Bc&s.t : Bc&s),
+        );
+    };
+    my $destack =&t{
+        t.t ?
+            sprintf(" - %-18s %4s: %s", t.t, ts&line, ts&Mes)
+        :   sprintf(" ? %s", G&aC,$t )
+    };
+    
+    # here
+    my $D = Bs&D;
+    my $d = Bs&bangC || delete(T.bangC) || $D;
+    
     # index landmarks
     my $na = {};
     my $Bs = {%{B.sc},%{B.c}};
@@ -194,12 +245,38 @@ Bangilate: |
         my $r = "$v";
         $na.>$r = "arg".$i++;
     }
+    for my $n (2..5,'up','up.up','up.up.up') {
+        my $k = "A$n";
+        my $Y = $A;
+        if ($n =~ /\./) {
+            my @ks = split /\./, $n;
+            $Y = $Y.>$n || next for @ks;
+            $Y || next;
+        }
+        else {
+            $Y = $Y.>$n || next;
+        }
+        my $r = "$Y";
+        $na.>$r = $k;
+        if (my $C = Y.c && Y.c.s) {
+            my $k = $n."C";
+            my $r = "$C";
+            $na.>$r = $k;
+        }
+        if (my $T = Y.c && Y.c.T) {
+            my $k = $n."T";
+            my $r = "$T";
+            $na.>$r = $k;
+        }
+    }
     
     # find landmarks in callstack
+    # stack syncy to know G&h's eval number:
+    my $hs_file = (caller(0))[1];
     my $st = Bs&stack;
     for my $t (@$st) {
         t.t = delete ts&file;
-        t.t = 'h' if t.t eq Bs&hs_file;
+        t.t = 'h' if t.t eq $hs_file;
         ts&Mes =~ s/\Q$_\E/$na.>$_/
             && do { ts&matches->{ $na.>$_ }++ }
             for keys %$na;
@@ -215,14 +292,10 @@ Bangilate: |
         push @$lit, $t;
     }
     
+    # beyond h/B stack
+    my $l = [map{ $destack->($_) }@$for];
     
-    #saybl sprintf(" - %-18s %4s: %s", _.t, _s&line, _s&Mes) for @$st;
-    
-    my $l = [map{
-        # beyond h/B stack
-        sprintf(" - %-18s %4s: %s", _.t, _s&line, _s&Mes)
-    }@$for];
-    
+    # 
     my @Bs;
     my $BB = $B;
     while ($BB) {
@@ -234,38 +307,39 @@ Bangilate: |
         # tell aboves we did this
         Bs&foot = $BB;
     
-        # form B.t=of, Bcs=$pin
         push @$l, $deB->($B);
+        
         next unless $B eq $BB;
         my $i = 1;
-        for my $arg (@{Bs&Me||[]}) {
-            push @$l, sprintf("    arg%d %5s",$i++,ki $arg);
+        for my $r (@{Bs&Me||[]}) {
+            my $s = ki $r;
+            if ($r eq $d) {
+                $s = G&aC,$r;
+                my $sc = ki r.sc;
+                $s =~ s/%.+$/%: $sc/;
+            }
+            push @$l, sprintf("    arg%d %5s",$i++,$s);
         }
     }
     
     my @fin;
-    for (reverse @$aft) {
-        last if _.t eq 'h';
-        push @fin, sprintf(" - %-18s %4s: %s", _.t, _s&line, _s&Mes);
+    for my $t (reverse @$aft) {
+        last if t.t eq 'h';
+        push @fin, $destack->($t);
     }
     if (@fin) {
-        push @$l, "trailing stack:";
         push @$l, reverse @fin;
     }
     
     #c codesplatter
     
-                Bc&h && die "< Have the handler to $ba things.";
-                
-                
-                my $d = delete(T.bangC) || $D;
-                my $code = dc&s;
                 
                 my @tri;
                 (my $clear = $ba) =~ s/, <DATA> line \d+\.//;
                 if ($D && $clear =~ /.+ line (\d+)/g) {
                     my $line = $1;
-                    my @s = split "\n", $code;
+                    sayyl "Line is $line";
+                    my @s = split "\n", dc&s;
                     my ($for,$aft) = (5,3);
                     @tri = ([]); # split into three
                     my $i = 1;
@@ -324,7 +398,7 @@ House: | # sheets of mind you want handy
     for my $k (sort keys %$ii) {
         $in ||= my $C = $ii.>$k;
         if ($laC) {
-            laC.y.next = $D;
+            laC.y.next = $C;
             C.y.prev = $la;
         }
         $laC = $C;
@@ -584,8 +658,6 @@ DAy: | # world primitives
         # sum h
         if ($@) {
             (my$ba,$@) = ($@,'');
-            # stack syncy to know what G&h's eval number is
-            Bs&hs_file = (caller(0))[1];
             my $s = Rw Bangilate $ba $B;
             die $s if $s;
         }
@@ -682,9 +754,12 @@ ThWay: | # meaning of word/contenter
         delete Ys&stacktime;
         
         T.bangC = $s;
+        if (my $B = Gc&B) {
+            Bs&bangC = $s;
+        }
         my $y = eval sc&s;
-        die $l."Nocompile s.t: ".ki($s)
-            .ind('  ',$@)."\n\n sc&s \n"
+        die $l."Nocompile s.t:\n"
+            .ind('  ',$@)."\n"
             if $@;
         die $l."Not code s.t: ".ki($s)
             if ref $y ne 'CODE' && !ss&subpeel;
