@@ -111,6 +111,13 @@ Beginning: | # 0 stylehouse.pl's first way
     nc&nomind = 1;
     G&A,$n,8;
     
+    
+    1 && saygr "Near Motor u: ". ki G&t,W=>'Normal';
+    1 && saygr "Hve iiW: ".ki A.ii.W;
+    1 && saygr "Hve 5iiW: ".ki A.5.ii.W;
+    
+    n Motor
+    
     #n House
     # 4/Motor uses House and has moments
     
@@ -123,8 +130,7 @@ Beginning: | # 0 stylehouse.pl's first way
     
     #n Lize
     
-Showit: |
-    3 3 3
+
 Bangular: |
     my $end;
     $SIG{__WARN__} = &{
@@ -410,28 +416,47 @@ Bangilate: |
                 # die...\n keeps first line number
                 return $ba."\n";
 House: | # sheets of mind you want handy
-    my $laC;
-    my $fiC;
-    my $ii = G.ii; # stylehouse.pl Beaches
-    for my $k (sort keys %$ii) {
-        my $C = $ii.>$k;
-        if ($laC) {
-            laC.y.next = $C;
-            C.y.prev = $laC;
+    # normal is base of Normal
+    # which TheU exports as of:W
+    # and may have mixed 5c&plus = [W,W...] into
+    # so G&t,W=>'Normal' will find:
+    # before/as S, this $u with s=Steve
+    # after S/as 4 etc, the Normal from TheU
+    my $u = 5c&normal ||= do {
+        my $laC;
+        my $fiC;
+        my $ii = {%{G.ii}}; # stylehouse.pl Beaches
+        for my $k (sort keys %$ii) {
+            my $C = $ii.>$k;
+            if ($laC) {
+                laC.y.next = $C;
+                C.y.prev = $laC;
+            }
+            $fiC ||= $C;
+            $laC = $C;
         }
-        $fiC ||= $C;
-        $laC = $C;
-    }
-    # < Normal pin-able so what it was becomes the base
-    my $u = G&Ct,[Normal=>1=>'Steve'];
-    # ylinks so it can c&base a new u
-    u.y.in = $fiC;
-    u.y.tw = $ii;
-    u.sc.ii = $ii;
-    u.sc.i.>_.t = _c&code for grep {_c&code} values %{ii.i.y.tw};
-    5c&normal = $u;
+        # < Normal pin-able so what it was becomes the base
+        my $u = G&Ct,[Normal=>3=>'Steve'];
+        # ylinks so it can c&base a new u
+        u.y.in = $fiC;
+        u.y.tw = $ii;
+        u.sc.ii = $ii;
+        u.sc.i.>_.t = _c&code for grep {_c&code} values %{ii.i.y.tw};
+        # supposedly you would whole an s, not the top itself?
+        u.sc.top = $u;
+        
+        $u
+    };
     
-    A.ii.W.y.tw.theu = $u;
+    # this is the original G.ii getting W.theu
+    # u.sc.ii etc doesn't have itself
+    if (A.ii.W) {
+        warn "Faking Normal into an ii with W: ".ki A.ii.W;
+    }
+    #A.ii = {%{A.ii}};
+    A.ii.W.y.tw.Normal = $u;
+    my $fi = A.ii;
+    
     # we switched Mo to mo with PiMachine
     #   whose builder wants to compile the u for Mo
     my $x = {qw'c alc  s als  a alact  i alacgts'};
@@ -439,57 +464,23 @@ House: | # sheets of mind you want handy
         G.way.>$pin = G.way.>$was;
     }
     
-    if (1) {
-    
-    my $u = G&sJ,A.1,'u';
-    u.c.base = 'theu'; # the PiMachine
-    # base if grind (ground, needs root), whole if just theu
-    my $rev = ".u.sc.ch" if u.sc.ch;
-    my $V = A.1.t =~ /^[A-Z]/;
-    my $gr = G&grind,$u;
-    if ($gr) {
-        G&A,n=>8=>$u=>[uuu=>9=>{root=>1}];
-        # slowly opening & closing a J of the u better than ^
-        # but also want to hold u n at 3 til cachable known
-        # the relevant page of s (man sesh) then ^ getting whole=?
-        # those u s pages get cached somewhere in 4stw.ucache
-        #   if simple enough
-    }
-    saybl "resolves mind$rev: A.1.t".($gr && " (u)");
-    # resolve our mind
-    # < having the M of u to do now, cache with
-    local A.trip;
-    local A&trip;
-    my $so = G&A,s=>8=>$u;
-    
-    A.V = 1;
-    1 && saygr "\nu looks: ".G&aC,$u;
-    1 && saygr "\nuss looks: ".G&aC,u.sc.s;
-    1 && saygr "\nthats looks: ".G&aC,$so;
-    
-    my $s = u.sc.s;
-    saygr "s sc: ".ki s.sc;
-            
-    
-    saygr "Don";
-    exit;
-    
-    }
-    
-    my $U = G&Wup,'theu';
-    
-    1 && saybl wdump 4, $U;
-    exit;
     # puts it as of:W, remixes it if needed
     my $c;
     # c.plus
-    saygr "Begin House u:";
+    saygr "Begin House u: ".G&sn;
+    saygr "Begin House u: ". ki G&t,W=>'Normal';
     u TheU
     u Zaphoddity
     S
     
     A.V = 1;
     saygr "Housing with ".ki[sort keys %{A.ii}];
+    saygr "W with ".ki[sort keys %{A.ii.W.y.tw}];
+    saygr "End House u: ". ki G&t,W=>'Normal';
+    sayyl "Aka: ".ki A.ii.W.y.tw.Normal;
+    # so the G.ii no have
+    delete fi.W.y.tw.Normal;
+    delete fi.W if !keys %{fi.W.y.tw};
     
 Zaphoddity: |
     u i
@@ -499,11 +490,14 @@ TheU: | # posit our 4.ii as normal (theu), share as W
     # host
     my $u = 5c&normal;
     if (5c&plus) {
+        sayre "Going reNormaling: ".ki 5c&plus;
         n Normal=>W=>{base=>$u,plus=>5c&plus};
         $u = T.op;
     }
-    n theu=>1=>{s=>$u},'%of:W'
-    n normal=>1=>{s=>$u},'%of:W'
+    sayyl "Hosting: ".ki $u;
+    n Normal=>1=>{s=>$u},'%of:W'
+Motor: | # be a G
+    sayyl "Be a G";
 Zequines: | # 1 things from the network
     # ja
     n DAy
@@ -863,7 +857,7 @@ Zunnel: | # ground action
         my $u = A&u;
         return if A.1.t eq 'os' || A&nomind;
         if (!uc&o) {
-            u.c.base = 'theu'; # the PiMachine
+            u.c.base = 'Normal'; # the PiMachine
             # base if grind (ground, needs root), whole if just theu
             my $rev = ".u.sc.ch" if u.sc.ch;
             my $V = A.1.t =~ /^[A-Z]/;
