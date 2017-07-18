@@ -224,6 +224,7 @@ Bangilate: |
     # bang polished, pass out
     # on each enclosing h
     # < look at caller() eval nums for more stack sync
+    #   be good to have lines calling from last Jpin, w, and h
     Bs&foot && return $ba;
     
     Bc&h && die "< Have the handler to $ba things.";
@@ -309,6 +310,16 @@ Bangilate: |
     }
     
     # beyond h/B stack
+    if (!@$for) {
+        my ($t) = @$for = shift @$aft if !@$for;
+        if (t.t eq 'h') {
+            eval {
+            $d = G&t,i=>'h';
+            };
+            sayre "Tried to show you h" if $@;
+            # dying in G&h, you probably want to know where it came from tho
+        }
+    }
     my $l = [map{ $destack->($_) }@$for];
     
     # 
@@ -377,6 +388,7 @@ Bangilate: |
                     }
                     @tri = map {join "\n", @$_ } @tri
                 }
+                
                 
                 if(0) {
                 my $la = {};
@@ -537,9 +549,7 @@ Motor: | # be a G
     
     # have Domes of stuff to osc separato
 WithStyle: |
-    my $ii = G&t,'L';
-    saybl "Style: ".wdump 2, $ii;
-    m $_=>''=>"Somewhere!" for 1..5;
+    m $_=>''=>"Somewhere!",{fs=>7+$_} for 1..5;
 BayFishing: |
     my $p = $$;
     town: my $to = Rw ElvisYou;
@@ -760,15 +770,10 @@ DAy: | # world primitives
             $D = $s;
         }
         else {
-            # must be string i name or C for t lookup
-            my $C = !ref $s ? {t=>$s,y=>{},c=>{}} : G&s,$s;
-            c&on = 'i';
-            $y = G.i.t->($A,$C,$G,$T,$C);
-            $y || die "t Look fail: ".G&sn ."\n    ".ki $C;
-            my $Y = c&from;
-            if (my $i = Y.ii && Y.ii.>c&on ) {
-                $D = i.y.tw.>$s;
-            }
+            # avoid using G&h inside G&h:
+            $D = G.i.t->($A,$C,$G,$T,'i',$s);
+            $D || die "t Look fail:  i/$s   from ".G&sn;
+            $y = Dc&code;
         };
         $y || die "no h: $s";
         
