@@ -516,19 +516,18 @@ DAy: | # world primitives
         $t = t.t if ref $t eq 'HASH';
         $C = {t=>$t,y=>{},c=>($c||{})};
         $s = 'ii' if $s eq 'I'; # going
-        c&on = $s; # i/ii/w/W
-        if ($s eq 'i' || $s eq 'w' || $s eq 'W') {
-            (c&on,c&andon) = ('ii',$s);
-        }
+        # everything looks in A.ii
+        c&on ||= 'ii';
+        # s leads us through a We thing to its t
+        c&andon ||= $s if $s ne c&on;
         c&max ||= 5;
         c&min ||= 0;
         for my $i (c&min .. c&max) {
             my $Y = ($i == 0 ? $A : $A.>$i) || next;
             my $on = $Y.>c&on || next;
-            # on = ii, +$t to We thing, what I wants
             if (c&andon) {
                 # want We thing's things
-                # put us on ii.W.y.tw
+                # put us on ii.$s.y.tw
                 $on = $on.>c&andon;
                 $on = on.y.tw;
             }
