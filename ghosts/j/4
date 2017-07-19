@@ -108,7 +108,7 @@ Motor: | # be a G
         # travellers adapting tape: Gc&N -> Gs&N
         ar.t = c&t if c&t;
         c&main ||= "Beer";
-        Rw c&main;
+        Rw c&main
     }
     
     # mkoJ called by Wout, sends lines inc Ilan on Opper
@@ -121,19 +121,30 @@ Motor: | # be a G
         n NetPut=>[out=>1=>$c]
     };
     
-    Rw BayFishing $bay=peace;
-    # over-pid never returns
-    #   should be signalled to reexec stylehouse.pl
-    #   have a watch loop?
-    # forked workers return from work through here:
-    if (G.t eq 'Opper') {
-        n Opera=>V
-        my $y = &Cd{ G&aC };
-        my @in = G&ind:T.op,$y;
-        saybl "Opera got up to: ", @in;
-    }
     
-    # have Domes of stuff to osc separato
+    if (c&to) {
+        n $_ for @{c&to||[]};
+    }
+    elsif (@ARGV) {
+        my $t = shift @ARGV;
+        saybl "Read ARGV: $t";
+        n $t
+    }
+    else {
+        Rw BayFishing $bay=peace;
+        # over-pid never returns
+        #   should be signalled to reexec stylehouse.pl
+        #   have a watch loop?
+        # forked workers return from work through here:
+        if (G.t eq 'Opper') {
+            n Opera=>V
+            my $y = &Cd{ G&aC };
+            my @in = G&ind:T.op,$y;
+            saybl "Opera got up to: ", @in;
+        }
+
+        # have Domes of stuff to osc separato
+    }
 Electrica: | # not
     n PiMachine
 BayFishing: | # become Op/Ud node, see 822
@@ -165,4 +176,22 @@ NetPut: | # see what's there, send to js
         1 && saygr "Webbing from: ".G&sn,$Y ."\n  ".ki $C;
     };
     S
+Statics: | # Jig for-u, causing static u
+    # 
+    $M = [];
+    m TheStatics
+    
+    n Jig=>['bay/sac'=>-Gdo=>{},{z=>$M}]
+    
+TheStatics: |
+    n i
+    n alacgts
+    n a
+    n alact
+    n s
+    n als
+    n c
+    n alc
+    n Ang
+    
 
