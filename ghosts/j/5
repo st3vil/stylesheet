@@ -127,8 +127,19 @@ Motor: | # be a G
     }
     elsif (@ARGV) {
         my $t = shift @ARGV;
-        saybl "Read ARGV: $t";
-        n $t
+        argve: saybl "Read ARGV: $t";
+        if (my $pid = fork()) {
+            saygr "Waiting fr $pid";
+            waitpid($pid,0);
+            sayyl "Done! $pid on $$";
+            sayre "will restart..?";
+            <STDIN>;
+            goto argve;
+        }
+        else {
+            n $t
+        }
+        
     }
     else {
         Rw BayFishing $bay=peace;
