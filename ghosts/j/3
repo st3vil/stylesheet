@@ -420,6 +420,7 @@ Stylehousing: | # org Karamean new stuff
     n ThArt
     n Hoop
     n ImStatic
+    #n Babblar
     
 Zequines: | # 1 things from the network
     # ja
@@ -1157,18 +1158,13 @@ Babblar: | # unpack deceptions in the code for the perl
     CoBabbler:
         my $sc; # exports, for bab caching
         my $p = G.sc.bitsof_babble ||= G&bitsof_babble;
-        # gone:
-        my $Jsrc = qr/(J\d*(?:\.\w+)?) (\w+)/;
-        my $Jlump = qr/(\S+) (\S+)\s+(\S.+)/;
-        $s =~ s/p.mwall$Jsrc $Jlump$/$1.$2->("$3\\t$4" => $5);/smg;
-        
         
         my @s;
         my $indbe;
         my $inend;
         my $indun;
         my $angt = '<'.'<';
-        for my $l (split "\n", $s) {
+        for my $l (split "\n", c&s) {
             my $s = $l;
             # things:
             $s =~ s{^(\w+)(?: (-?\w+))?:(?: (%.+))?$}
@@ -1221,14 +1217,14 @@ Babblar: | # unpack deceptions in the code for the perl
             %$sw = () if C.sc.nobasay;
             for (keys %$sw) {
                 my $if = $_ ne 'sayre' ? "A\.V && " : "";
-                C.c.s =~ s/^(\s*)$_ ([^\n]+?)((?: (?:for|if) .+)?;?)$/${1}${if}G\.h->(\$A,\$C,\$G,\$T,'$sw->{$_}','$_',$2)$3/sgm;
+                $s =~ s/^(\s*)$_ ([^\n]+?)((?: (?:for|if) .+)?;?)$/${1}${if}G\.h->(\$A,\$C,\$G,\$T,'$sw->{$_}','$_',$2)$3/sgm;
             }
 
             #
             # 22Cs&blue -> A.2.2.c.s.sc.blue
             for my $l (qw'y c s') {
                 my $nk = $l eq 's' ? 'sc' : $l;
-                C.c.s =~ s/\b(up|\d+|A\w+?)(C)?$l\&(\w+)/
+                $s =~ s/\b(up|\d+|A\w+?)(C)?$l\&(\w+)/
                     my ($net,$see,$gks) = ($1,$2,$3);
                     if ($net eq 'up') {
                         $net = join'.','A',$net;
@@ -1247,18 +1243,18 @@ Babblar: | # unpack deceptions in the code for the perl
             }
 
             # s&eo -> C.sc.eo etc
-            C.c.s =~ s/\bs\&(\w+)/C\&$1/sgm;
-            C.c.s =~ s/\bA\&(\w+)/A\.c\.$1/sgm;
-            C.c.s =~ s/\ba\&(\w+)/A\.sc\.$1/sgm;
-            C.c.s =~ s/\b((?!u)\w)s\&(\w+)/$1\.sc\.$2/sgm;
-            C.c.s =~ s/\b(\w)c\&(\w+)/$1\.c\.$2/sgm;
-            C.c.s =~ s/\b(\w)y\&(\w+)/$1\.y\.$2/sgm;
+            $s =~ s/\bs\&(\w+)/C\&$1/sgm;
+            $s =~ s/\bA\&(\w+)/A\.c\.$1/sgm;
+            $s =~ s/\ba\&(\w+)/A\.sc\.$1/sgm;
+            $s =~ s/\b((?!u)\w)s\&(\w+)/$1\.sc\.$2/sgm;
+            $s =~ s/\b(\w)c\&(\w+)/$1\.c\.$2/sgm;
+            $s =~ s/\b(\w)y\&(\w+)/$1\.y\.$2/sgm;
             # S / T
             # sleepomatics
             my @num;
             for my $s ('S','T') {
                 # become gotoable, for test frames
-                c&s =~ s{^(\s*)$s(?: (\S+.*?))?\s*$}{
+                $s =~ s{^(\s*)$s(?: (\S+.*?))?\s*$}{
                     my $l = $2;
                     (my $label = $l) =~ s/\W+/_/sgm;
                     if ($label eq '' && $s eq 'S') {
@@ -1274,7 +1270,7 @@ Babblar: | # unpack deceptions in the code for the perl
             # look for th/$ing in A.?.th.ing and A.c.?.th.ing
             # trip if so
             for my $s ('trip') {
-                c&s =~ s{^(\s*)$s (\S+)\s*$}{
+                $s =~ s{^(\s*)$s (\S+)\s*$}{
                     my $ind = $1;
                     # 
                     my (@n) = split '/', $2;
@@ -1311,7 +1307,7 @@ Babblar: | # unpack deceptions in the code for the perl
                     if @r;
                 "sub {".$arg
             };
-            c&s =~ s[(\W)\&(\w+(?:,\w+)*)?\{][$1.$codes->($2)]smeg;
+            $s =~ s[(\W)\&(\w+(?:,\w+)*)?\{][$1.$codes->($2)]smeg;
 
             # each etc $data {    into:
             # while (my ($e,$tv) = each %$data) {
@@ -1337,13 +1333,13 @@ Babblar: | # unpack deceptions in the code for the perl
                 @open = map { $ind.$_ } @open;
                 join "\n", @open;
             };
-            c&s =~ s/^(\s*)each (\w+(,\w+)*) (\S+) \{(\s*)$/
+            $s =~ s/^(\s*)each (\w+(,\w+)*) (\S+) \{(\s*)$/
                 $doi->($1,$2,$4);
             /smeg;
 
 
             # change J.n (goner)
-            C.c.s =~ s{\$J->\{([unm])\}->\((\$A,\$C,\$G,\$T?)(, ?\$M)?}
+            $s =~ s{\$J->\{([unm])\}->\((\$A,\$C,\$G,\$T?)(, ?\$M)?}
                 {\$G->\{h\}->($2,"$1"$3}sgm;
             
             #c expect closing brackets and insert J
@@ -1361,6 +1357,7 @@ Babblar: | # unpack deceptions in the code for the perl
             $s =~ s/(p.mwall)(m) (.+?)(;| for .+?)?$/
                 "${1}J\.$2->(\$A,\$C,\$G,\$T,\$M,$3=>'')".($4||';')/smeg;
             
+            # going
             $s =~ s/I\.d\&(p.oint)/G\&$1/g;
             
             # C&hs = 388 # C.sc.>hs
@@ -1406,10 +1403,10 @@ Babblar: | # unpack deceptions in the code for the perl
                 my ($old, $op, $oa) = ($1, $2, $3);
                 my $g;
                 $g ||= '$G';
-                .
+                
                 my $ne = ""; # hidden reverse
                 $ne = $1 if $oa =~ s/(p.sur)$//;
-                .
+                
                 my @n;
                 my @m;
                 # want to mix {m m m %$ar m m} whereever + is
@@ -1453,16 +1450,9 @@ Babblar: | # unpack deceptions in the code for the perl
             # sc.k -> $sc->{k};
             $s =~ s/([A-Za-z_]\w*)((?:\.\w+)+)/"\$$1".join"",map {"->{$_}"} grep {length} split '\.', $2;/segm;
             # 
-            $s =~ s/aft \{/acum \$F[0] => _after_do => sub {/sg;
-            #
-            .
             push @s, $s;
         }
         push @s, $inend if $indbe && $inend;
-        $s = join "\n", @s;
-        .
-        $s;
-
-
+        c&s = join "\n", @s;
         $sc
 
