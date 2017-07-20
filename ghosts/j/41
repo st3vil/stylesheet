@@ -218,6 +218,7 @@ Styleslops: | # minimal page that sucks in more stuff from Stylehut
           </body></html>
 Stylehut: | # not stylehut, see also Styleslops for the html/mount
     n Stylephone
+    n Stylicks
 Stylephone: | # to being there, basics
     # to begin, hang up your desires
     u j
@@ -264,51 +265,6 @@ Stylephone: | # to being there, basics
         a.lim(a.log,-9);
         says.length and s = s+': '+says.join(' ');
         $('#msgs').prepend(s+"\n");
-    
-    # datasm:
-    
-    # scale to fraction < 1
-    sca:
-        while (s > 1) { s = s / 10 }
-        return s;
-    
-    # limit list, calling callback for each removal
-    lim: %acgt:s lim cb
-        var len = s.length;
-        lim ||= 9;
-        var rev;
-        lim < 0 and rev = 1; lim *= -1;
-        var rem = [];
-        while (len > lim) {
-            var v;
-            rev and v = s.pop()
-            else {  v = s.shift() }
-            cb and cb(v);
-            rem.push(v);
-            len--;
-        }
-        rem.length and return rem
-    
-    # hash into ke,ys string
-    ks:
-        var ks = [];
-        for (var k in s) {
-            ks.push(k);
-        }
-        return ks.join(',');
-    
-    # ke:va,ys:lue string into hash
-    peel:
-        var c = {};
-        !s.length and return c
-        $.each(s.split(','), function(i,kv) {
-            kv = kv.split(':');
-            var k = kv[0];
-            var v = kv[1];
-            v.match('^-?\\\d+.\\\d+$') and v = v * 1
-            c[k] = v;
-        });
-        return c
     
 Stylicks: | # Elvis' tongue
     u j
@@ -407,6 +363,80 @@ Stylicks: | # Elvis' tongue
         d.C = 0+ev.ctrlKey;
         d.A = 0+ev.altKey;
         d.M = 0+ev.metaKey;
+Stylesea: | # the C and data
+    u j
+    # parse ONE C-like scrap of something, not a Line
+    inC:
+        C = s;
+        if (C.constructor == Array) {
+            C = {t:C[0],y:C[1],c:C[2],sc:C[3]};
+            typeof C.c  === 'string' and C.c =  G&peel,C.c;
+            typeof C.sc === 'string' and C.sc = G&peel,C.sc;
+        }
+        else
+        if (C.constructor == Object &&
+            !C.t && !C.y && !C.c && !C.sc) {
+            $.each(C, &k,v{ G&$k,v }); T.not = 1;
+        }
+        else
+        typeof C === 'string' and C = {c: {s: C}};
+        typeof C.c === 'string' and C.c = {s: C.c};
+        typeof C.y === 'string' || typeof C.y === 'number' and C.y = {cv: G&sca,C.y };
+        !typeof C.t === 'string' and console.log('queda',C);
+        C.c ||= {};
+        C.sc ||= {};
+        return C;
+    
+    # used?
+    die: %args:A C G T s etc
+        ~dead: s, etc, A, C
+        throw s
+    
+    # datasm:
+    
+    # scale to fraction < 1
+    sca:
+        while (s > 1) { s = s / 10 }
+        return s;
+    
+    # limit list, calling callback for each removal
+    lim: %acgt:s lim cb
+        var len = s.length;
+        lim ||= 9;
+        var rev;
+        lim < 0 and rev = 1; lim *= -1;
+        var rem = [];
+        while (len > lim) {
+            var v;
+            rev and v = s.pop()
+            else {  v = s.shift() }
+            cb and cb(v);
+            rem.push(v);
+            len--;
+        }
+        rem.length and return rem
+    
+    # hash into ke,ys string
+    ks:
+        var ks = [];
+        for (var k in s) {
+            ks.push(k);
+        }
+        return ks.join(',');
+    
+    # ke:va,ys:lue string into hash
+    peel:
+        var c = {};
+        !s.length and return c
+        $.each(s.split(','), function(i,kv) {
+            kv = kv.split(':');
+            var k = kv[0];
+            var v = kv[1];
+            v.match('^-?\\\d+.\\\d+$') and v = v * 1
+            c[k] = v;
+        });
+        return c
+    
 Stylating: | # A ting
     u j
     # A.* falls, A.c/sc dont
@@ -429,27 +459,14 @@ Stylating: | # A ting
         T.d ||= 1;
         return A
     
-    # attaches ground
-    # on last A.b
-    nn:
-        !A.W and a.c("no aW",[A,C]);
-        A.W.b ||= {};
-        A.b ||= A.W.b;
-        A.b[C.y.cv] ||= {};
-        A.b[C.y.cv][C.t] ||= {};
-        A.b.t ||= {};
-        A.b.t[C.t] ||= {};
-        A.b.t[C.t][C.y.cv] ||= A.b[C.y.cv][C.t];
-        var b = A.b[C.y.cv][C.t];
-        b.A = A;
-        return b;
-    
     # TODO look in A.ii.i.$way
     # subroutine call
-    # TODO many args
-    h: %acgt:way s
-        !G[way] and throw "No way: "+way
-        return G[way](A,C,G,T,s);
+    # TODO many args, up to acgt+5 & clued on D?
+    h: %acgt:s so st sh sf si
+        var z = s;
+        typeof s === 'string' and z = G.i.t(A,C,G,T,'i',s);
+        !z and throw "No way: "+s;
+        return z.c.code(A,C,G,T,s);
     
     # look up A slope for the I/$t (embryo) or the I/$s/$t (part)
     t: %acgt:s t
@@ -476,7 +493,7 @@ Stylating: | # A ting
     om:
         A = G&A,'om';
         C = G&inC,C;
-        G&throat,2;
+        G&throat,2,C;
         T.alk = 'w'+T.d+' '+C.t+' '+a.ks(C.c)+'%'+a.ks(C.sc);
         C.sc ||= {};
         C.sc.css ||= {};
@@ -490,37 +507,406 @@ Stylating: | # A ting
         ov and A&ov = G&sca,ov;
         sC and A&s = C;
         var t = G&t,A.t;
-        !t and G&er:"throat no "+A.t,A;
-        G&ex,A.I;
+        !t and G&er:"throat no "+A.t, A;
+        
+        z = t.y.in;
+        while (z && A.c.ov >= z.y.cv) {
+            T.not and return;
+            A.c.cv > z.y.cv and next;
+            C = A&s;
+            z.sc.nk and !C[z.sc.nk] and next;
+            z.sc.gk and !C[z.sc.nk][z.sc.gk] and next;
+            var es;
+            z.sc.gk and es = C[z.sc.nk][z.sc.gk];
+            z.sc.s and es = z.sc.s;
+            G&h,z,es;
+            A.c.cv = z.y.cv;
+            z = z.y.next;
+        }
         return !T.not;
     
-    # wants to sort in
-    eine:
-        var K = s[0];
-        var e = s[1];
-        var k = 'e_'+K;
-        G[k] = e;
     
-    ex:
-        s.ei ||= 0;
-        while (1) {
-            T.not and return
-            var v = A.e[s.ei];
-            !v and return
-            v[0] > s.cv and return
-            s.ei++;
-            $.each(v[1],function(i,D){
-                T.not and return
-                var t = D[0];
-                var sc = D[1];
-                sc.nk and !C[sc.nk] and return
-                sc.gk and !C[sc.nk][sc.gk] and return
-                var es;
-                sc.gk and es = C[sc.nk][sc.gk];
-                sc.s and es = sc.s;
-                G&$t,es;
+Styleground: | # helps moment find itself
+    u j
+    # gets bit of attached ground
+    # on last A.b, has universals, the now A (?),
+    #   all yt amongst and ty under t
+    nn:
+        !A.W and G&c:"no aW",[A,C];
+        A.W.b ||= {};
+        A.b ||= A.W.b;
+        A.b[C.y.cv] ||= {};
+        A.b[C.y.cv][C.t] ||= {};
+        A.b.t ||= {};
+        A.b.t[C.t] ||= {};
+        A.b.t[C.t][C.y.cv] ||= A.b[C.y.cv][C.t];
+        var b = A.b[C.y.cv][C.t];
+        b.A = A;
+        return b;
+    
+    # munge weird characters, avoiding tagnames
+    tcl:
+        var t = C.t.replace(/\W/g,'e');
+        t = 'n'+t+'n';
+        return t;
+    
+    # find element, s must be munged t, uses your C.y.cv (?)
+    f:
+        var t = '';
+        s and t=s
+        var at = '';
+        C.y.cv and at += "[cv='"+C.y.cv+"']";
+        t || at || console.log("No attach: "+T.alk);
+        return $(A.on).find('> '+t+at);
+    
+Stylewholes: | # Gs clocking on
+    u j
+    
+    Xi:
+        !s and s = C.c.W;
+        !s and s = C.c.M;
+        $W = ww[s];
+        W ||= mm[s];
+        !(W && W.W && W.W.on) and ~die~nottunedin: s
+        return W;
+        
+    Xin:
+        $W = ww[s];
+        W ||= G&Win;
+        return W;
+    
+    Win:
+        !(c&Wid && c&Mid) and ~die~noWMC: C
+        $W = ww[c&Wid] = {};
+        W.id = c&Wid;
+        W.t = c&Mid;
+        mm[W.t] = W;
+        W.A = {};
+        W.A.W = W;
+        ~newW: W.t, W.id, W
+        return W
+        
+    Wout:
+        var W = ww[A.W.id];
+        W.t and mm[W.t] = W;
+        delete ww[W.id];
+        ~leaves W.t, W.id
+    
+    u jc
+    n \'of:om'
+
+    # same remote relay thing (GW)
+    # comes with different Mid (G.t)
+    Mid 26:
+        C.t == 'GW' and C.t = s
+        !c&Wid and G&die,"noWID!"
+        delete c&s;
+    
+    # and Wid (G address) creates W
+    Wid 27:
+        c&id = s;
+        c&Mid ||= C.t;
+        $W = G&Xin,s;
+        c&el == '6' and c&el = '2'; c&scub = 1;
+        W.W = A;
+        A.on = $('#ux');
+        $.extend(A,W.A);
+        c&tag ||= 'ww';
+        s&ab ||= '100';
+        s&poi ||= 'none';
+        ~made Wid: s
+    
+    # either may be G.t or G address here
+    M 28:
+        $W = G&Xi,s;
+        A.on = W.W.on;
+        $.extend(A,W.A);
+    
+    W 28:
+        $W = G&Xi,s;
+        A.on = W.W.on;
+        $.extend(A,W.A);
+    
+Stylemoment: | # sequencing itself
+    u jc
+    n \'of:om'
+    
+    # grab another element
+    nobody 31:
+        s !== 'body' and s = '#'+s;
+        A.on = $(s);
+        !$(A.on).length and G&c:"no nobody at "+s;
+    
+    # eval
+    e 32: %nk:sc
+        s == '1' and s = c&s;
+        eval(s);
+        T.not = 1;
+    
+    # inside rows
+    z 6: %nk:sc
+        var del = 0;
+        $B = {bac:{}};
+        
+        $.each(s, function(i,v) {
+            B.last and return
+            var c = G&inC,v;
+            var ub = &{
+                var T = $.extend({d:T.d+1},B);
+                var C = v;
+                G&om;
+            };
+            c.sc.deal and del += 1000 * c.sc.deal; a.yl(del, ub);
+            else { ub() }
+        });
+        B.bac.length and ~gotm: B.bac
+    
+    
+    # whole time...
+    el 333:
+        s&attr ||= {};
+        if (s&atr) {
+            var h = G&peel,s&atr;
+            $.each(h, &k,v{
+                v === undefined and v = C.sc[k];
+                s&attr[k] = v;
             });
         }
+        var last;
+        var t = G&tcl;
+        
+        $fad = 0;
+        if (s == '2' && c&slow) { 
+            $e = $(A.on).find('> [t="'+C.t+'"]');
+            $d = (c&slow||1)*1000;
+            a.yl(d, &{ 
+            $(e).remove(); 
+            });
+            fad = 8;
+        }
+        else
+        s == '2' and $(A.on).find('> [t="'+C.t+'"]').remove();
+        
+        s == '2' and s = '1';
+        
+        var el = G&f,t;
+        
+        s == '9' && A.om == A and G&Wout;
+        
+        !fad && (s == '1' || s == '9') and $(el).remove();
+        
+        s == '8' and return T.aft = el; // last on for next v
+        if (s == '1') {
+            s&attr.cv = C.y.cv;
+            s&attr.t = C.t;
+            c&tag and t = c&tag;
+            s&attr.title ||= C.t+' '+C.y.cv;
+            // extract bareword attributes
+            var con = [];
+            $.each(s&attr, &k,v{ 
+                v == '!' and con.push(k)
+            });
+            con.length and con.unshift('');
+            con = con.join(' ');
+            var div = $("<"+t+con+">", s&attr);
+            $(div).appendTo(A.on).each( &i,v{ el=v });
+        }
+        delete s&attr;
+        // the before
+        A.b = G&nn;
+        if (A.b.cod) {
+            c&cod ||= '3';
+        }
+        if (A.b.pa) {
+            s&pa ||= '3';
+        }
+        if (typeof c&s === 'string' && !c&cod && !s&pa) {
+            c&ht and $(el).html(c&s);
+            else
+            $(el).text(c&s);
+        }
+        A.on = el;
+   
+    # set attributes
+    el 4:
+        var f = ['id','src','dig'];
+        var fl = function (v,z) {
+            s&attr and s&attr[v] = z;
+            else {
+                $(A.on).attr(v,z);
+            }
+        };
+        $.each(f,function(i,v) {
+            C.sc[v] and fl(v, C.sc[v])
+            else
+            C.c[v] and fl(v, C.c[v])
+        });
+Stylemomentum: | # sequencing for the universal
+    u js
+    n \'of:om'
+    
+    # h call
+    doo 32:
+        G&$s;
+        T.not = 1;
+    
+    cssdel 589:
+        var re = s.split(',');
+        $.each(re,&i,v{ delete s&css[v] });
+    
+    # compression of absolute/top/left/rotation/scale
+    geo 5:
+        s = s.split(' ');
+        var aung = s[0].match('^a(\\d+)');
+        if (aung) {
+            s.shift();
+            aung.shift();
+            s&ab = aung.shift();
+            //absolu
+        }
+        s = {x:s[0],y:s[1],rad:s[2],scale:s[3]};
+        s&css.top = (s.y * 100)+'%';
+        s&css.left = (s.x * 100)+'%';
+        s&css['transform-origin'] = '0% 0%';
+        s.tro and s&css['transform-origin'] = s.tro;
+        s.rad and s&css['transform-rotate'] = s.rad+'rad';
+        s.scale and s&css['transform-scale'] = s.scale;
+    
+    ab 51:
+        if (s === '100') {
+            s&css.width = '100%';
+            s&css.height = '100%';
+        }
+        s&css.position = 'absolute';
+    
+    # apply attributes
+    # < not losing filter: con sat when adjusting bri
+    # Stylebridge compiles many sc to css
+    css 59:
+        if (typeof s === 'string') {
+            var re = s.split(';');
+            s = {};
+            $.each(re, &i,v{
+                var kv = v.split(':');
+                s[kv[0]] = kv[1];
+            });
+        }
+        $.each(s, &i,v{
+            if (v.constructor === Object) {
+                var swav = [];
+                $.each(v, &ve,ss{
+                    var se = ve+'('+ss+')';
+                    swav.push(se);
+                });
+                v = swav.join(' ');
+            }
+            i === 'filter' and i = '-webkit-filter';
+            $(A.on).css(i, v);
+        });
+    
+    anc 59:
+        $(A.on).animate(s&anc, (s&ant||900));
+    
+Stylebridge: | # join Ang's state of styleing
+    n Ang=>W=>{}=>'%noii'
+    
+    # FactorEase Style{cW:of}/*, -s&of
+    my ($t) = grep { _.t eq 'Style' } G&op,'cW:of';
+    my $S = t.y.in;
+    my $N = [$S];
+    push @$N, $S while $S = S.y.next;
+    delete _s&of for @$N;
+    
+    Rw Stylebridger $N;
+    
+Stylebridger: | # Style decompressions for js clients
+    # given $N of=Style with s&cssk
+    
+    # thy expanding s&blr to s&css[filter-blur] = $v
+    my $e;
+    e.thy->{_s&gk} = _s&cssk for grep {_s&cssk} @$N;
+    my @pooling = (
+        {k=>transform=>also=>[qw'rotate scale']},
+        {k=>filter=>also=>[qw'
+            blur saturate brightness hue-rotate
+            sepia invert grayscale
+        ']},
+    );
+    for my $g (@pooling) {
+        for my $al (@{g.also}) {
+            my $lie = g.k.'-'.$al;
+            e.roi->{$lie} = [g.k,$al];
+        }
+    }
+    # roi packs s&css[filter-blur]
+    #         to: s&css[filter][blur]
+    # which css 59 understands as:
+    #   for filter: blur(4px) saturate(...
+
+    u js
+    n css =>58,<<'',{any=>1,s=>$e,of=>'om'}
+        $.each(s.thy,&k,v{
+            C.sc[k] and s&css[v] = C.sc[k];
+        });
+        $.each(s.roi,&k,v{
+            var o = s&css[k];
+            !o and return;
+            var ve = v[0];
+            var ss = v[1];
+            s&css[ve] ||= {};
+            s&css[ve][ss] = o;
+            delete s&css[k];
+        });
+Stylaplicants: | # gears, talkyboxes
+    u j
+    codsav:
+        var cm = s;
+        var d = {};
+        G&entag(d, $(A.on));
+        A.b.jus = d.code = cm.getValue();
+        d.dig = $(A.on).attr('dig');
+        G&ethro(d, ws);
+    
+    u jc
+    n \'%of:om'
+    
+    cod:
+        var cm = A.b.cod;
+        .
+        if (typeof s === 'string') {
+            if (s === '3') {
+                !cm and return G&c:'no cod !';
+                s = {};
+            }
+            else {
+                s = {mode:'perl'};
+                cm = 0;
+            }
+        }
+        .
+        var def = {mode:'perl',theme:'midnight',lineWrapping:true};
+        var set = $.extend(def, s);
+        cm and $.each(set,&k,v{ cm.setOption(k,v) });
+        !cm and cm = CodeMirror(A.on, set);
+        A.b.cod = cm;
+        
+        if (c&s) {
+            c&s !== A.b.jus and cm.setValue(c&s);
+            else { G&c:'vv vv'+C.t; }
+        }
+        
+        cm.refresh();
+        G&yl:400,&{ cm.refresh(); });
+        
+        var sav = &{
+            G&codsav,cm;
+        };
+        cm.setOption('extraKeys', {Esc:sav});
+        cm.on('focus',function(){clof();keof();});
+        cm.on('blur',function(){clon();keon();sav();});
+    
+    #    $('#'+id).css('width','15em','max-height','70%','overflow','scroll');
+    #   $('#'+id+' > .CodeMirror');//.css('height','auto');
     
 Jar: |
     # of roots
