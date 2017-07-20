@@ -1,43 +1,63 @@
-ym/jsbabz: |
+JaBabz: |
     my $poing = qr/\w+(?:\.\w+)?/;
     my $nlp = qr/[^\n]+/;
     
-    C.c.s =~ s/\bA&(\w+)\b/A\.c\.$1/g;
-    C.c.s =~ s/\ba&(\w+)\b/A\.sc\.$1/g;
-    C.c.s =~ s/\bs&(\w+)\b/C\.sc\.$1/g;
-    C.c.s =~ s/\bC&(\w+)\b/C\.sc\.$1/g;
-    C.c.s =~ s/\bc&(\w+)\b/C\.c\.$1/g;
+    c&s =~ s/\bA&(\w+)\b/A\.c\.$1/g;
+    c&s =~ s/\ba&(\w+)\b/A\.sc\.$1/g;
+    c&s =~ s/\bs&(\w+)\b/C\.sc\.$1/g;
+    c&s =~ s/\bC&(\w+)\b/C\.sc\.$1/g;
+    c&s =~ s/\bc&(\w+)\b/C\.c\.$1/g;
     
-    C.c.s =~ s/^t\&([^\s;]+)(;)?/!G\&t,$1 and return;/gm;
-    C.c.s =~ s/($poing)\&(\$)?(\w+)(,[^\s;]+)?(;)?/
+    c&s =~ s/^t\&([^\s;]+)(;)?/!G\&t,$1 and return;/gm;
+    
+    # G&thing:args,"with space";
+    c&s =~ s/($poing)\&(\$)?($poing)(:\S+[^\n;]+)(;)?/
+        my ($on,$var,$p,$e,$t) = ($1,$2,$3,$4,$5);
+        $e =~ s{^:}{,};
+        ($on,my$in) = ("G\.h",'A,C,G,T,')
+            if $on eq 'G';
+        $p = "\"$p\"" unless $var;
+        my $s = $on."($in$p$e)$t";
+        $s = '$'.$s if $on !~ m{\.};
+        $s
+    /smge;
+    
+    # G&thing,args && without space
+    c&s =~ s/($poing)\&(\$)?($poing)(,[^\s;]+)?(;)?/
         my $t = $2 ? "$3" : "'$3'";
         my $h = $1 eq 'G' ? ".h(A,C,G,T,$t" : "\[$t\](A,C,G,T";
         $1.$h."$4)$5"
     /smge;
+    
     # true or assign
-    C.c.s =~ s/^\s*($nlp) \|\|\= ($nlp)(;)?$/if (!$1) {
+    c&s =~ s/^\s*($nlp) \|\|\= ($nlp)(;)?$/if (!$1) {
         $1 = $2
     }/gm;
     # left-hand if
-    C.c.s =~ s/^\s*([^\n]+?) and ($nlp)(;)?$/if ($1) {
+    c&s =~ s/^\s*([^\n]+?) and ($nlp)(;)?$/if ($1) {
         $2
     }/gm for 1..3;
     
     # tiny sub maker, &raw,args{
-    C.c.s =~ s/[^G&]&(\w*(,\w+)*)\{/function($1){/gm;
+    c&s =~ s/([^G&])&(\w*(,\w+)*)\{/$1function($2){/gm;
     
     # com message
-    C.c.s =~ s{(^|\{) *~(?:(\w+)~)?(\w+(?:$nlp:)?)(?: ($nlp))?;?$}{
+    c&s =~ s{(^|\{) *~(?:(\w+)~)?(\w+(?:$nlp:)?)(?: ($nlp))?;?$}{
         my $ope = $1;
         my $r = $2 ? 'A,C,G,T,' : '';
-        my$c=$2||'c';my$s=$3;my$e=$4;$s=~s/:$//; $ope."a\.$c($r'$s',[$e]);"}segm;
+        my$c=$2||'c';
+        my$s=$3;
+        my$e=$4;
+        $s=~s/:$//;
+        $ope."a\.$c($r'$s',[$e]);"
+    }segm;
     
-    C.c.s =~ s/^\s*\$(\w+)\b/var $1/gm;
-jst: |
+    c&s =~ s/^\s*\$(\w+)\b/var $1/gm;
+jst: | # test js babbler
     c&s = <<'';
         !G&Time,'rasunify',700,s and return
         G&something
-        $.each(h, &k,v{ delete h.k });
+        $.each(h,&k,v{ delete h.k });
         ~leaves
         G&nothing,is,over
         c&see = c&know;
@@ -47,13 +67,14 @@ jst: |
         ~dothis~fourly: f
             C&attr.title ||= C.t+' '+C.y.cv;
             
-        
+        G&wide:"several ticks";
+        G&$some:4,56-3, (28 / A.5.sc.e)
     #
 
-    Rw ym/jsbabz;
+    Rw JaBabz;
     
     #is(c&s,<<'',"G& and ~");
-     c&s eq <<'' || saybl("Was off:\n\n".c&s."\n\n") && sleep 4;
+    my $good = <<'';
         if (!G.h(A,C,G,T,'Time','rasunify',700,s)) {
             return
         }
@@ -63,10 +84,27 @@ jst: |
         G.h(A,C,G,T,'nothing',is,over)
         C.c.see = C.c.know;
         C.sc.tell = C.sc.B;
-        var s =function(c){ that.it.is };
+        var s = function(c){ that.it.is };
         a.c('rasunify',[re.length]);
         a.dothis(A,C,G,T,'fourly',[f]);
-js: | # compile/collect
+        if (!C.sc.attr.title) {
+            C.sc.attr.title = C.t+' '+C.y.cv;
+        }
+        
+        G.h(A,C,G,T,"wide","several ticks");
+        G.h(A,C,G,T,some,4,56-3, (28 / A.5.sc.e))
+    # 
+    c&s eq $good && return saygr "jst good";
+    my ($l,$r) = map {[split "\n", $_]} c&s, $good;
+    for my $ls (@$l) {
+        my $rs = shift @$r;
+        $ls eq $rs && next;
+        sayre "Line: $ls", "Isnt: $rs";
+    }
+    sayre "Line!", "Isnt: $_" for @$r;
+    #saybl("Was off:\n\n'".c&s."'\n\nvs '$good'")
+    #
+javascript: | # compile/collect for sc.js
     # place toward A.ii.>$s, linked list of embryo
     my $of = C.t;
     my $ark = G.sc.codeark ||= {};
@@ -78,7 +116,7 @@ js: | # compile/collect
     # this way should export osc hooks and another way...
     for my $C ( e&_cz ) {
         c&s || sayre "C.t C.y.cv has no s: ".ki $C;
-        if (!c&code && (s&args || s&acgt)) {
+        if (!c&code && (s&args || s&acgt || 1)) {
             # may already be compiled
             # shades code through the wall
             # the W listened to needs one osc in G, then all can whole it
@@ -89,26 +127,23 @@ js: | # compile/collect
             unless ($coded) {
                 # shade the edges, args, parsables etc.
                 
-                # ym/jscoi: |
-                my $s = C.sc.js || return;
-                if (C.sc.acgt) {
+                if (s&acgt) {
                     die "acgt js: C.t already s&args" if s&args;
                     s&args ||= join',','A,C,G,T',split/\W+/,
                         grep{$_ ne '1'}s&acgt;
                 }
                 die "wonky C.t   of ".ki $C if C.t =~ /\W/;
-                #C.sc.args =~ s/ /,/g;
+                s&args =~ s/ /,/g;
                 delete C.sc.com;
 
                 Rw ym/jsbabz;
 
-                c&s = "function(".s&args.") {\n".c&s."};\n";
-                C.sc.dige = slm 12, dig C.c.s;
-                
+                c&s = "function(".s&args.") {\n".c&s."};\n"
+                    if s&args;
+                s&coded = 1;
             }
             
             G&hoh,C.sc,$scbab if $scbab;
-            $ark.>$of.>C.t.>$digs = [c&s,c&code,$scbab] if $digs;
             
         }
         s&dige = slm 12, dig c&s if exists c&s && !ref c&s;
@@ -117,7 +152,20 @@ js: | # compile/collect
     C.sc.hi = 'lo';
     T.nose = 1;
     T.pos = 0;
-Styleslops: | # minimal page that sockets in more stuff
+j: |
+    u alact
+    n i
+    # ^ follows of encoder until:
+    alarejs 4222: %of:mo
+        s&js = delete s&of;
+    
+jc: | # see C.c.*
+    n j
+    n c
+js: | # see C.sc.*
+    n j
+    n s
+Styleslops: | # minimal page that sucks in more stuff from Stylehut
     # use the js filter, store in ...
     index: %js:html
         <!DOCTYPE html>
@@ -156,7 +204,7 @@ Styleslops: | # minimal page that sockets in more stuff
             A&start = &s{
                 if (s) {
                     var m = s.split("\n");
-                    $.each(m,function(i,v){ eval(v); });
+                    $.each(m,&i,v{ eval(v); });
                 }
                 if (a&start.length) {
                     $.ajax(a&start.shift()).done(A&start);
@@ -168,16 +216,88 @@ Styleslops: | # minimal page that sockets in more stuff
             });
           </script>
           </body></html>
-Stylehut: | # not stylehut
+Stylehut: | # not stylehut, see also Styleslops for the html/mount
     n Stylephone
 Stylephone: |
     # to begin, hang up your desires
-    getnet: %acgt:s,js:i
-        # some weird jsing
-        G&nothing,is,over
-        c&see = c&know;
-        C&tell = C&B;
-        var s = &c{ that.it.is };
-        ~rasunify: re.length
-        ~dothis~fourly: f
+    u j
+    e: %acgt:e
+        var m = 
+        eval(e);
+        return m
+    
+    # throw error wrapped in A clues
+    er: %acgt:e er
+        console.log("xutbang: ", e, er);
+        var ej = {er: {e: e}};
+        er && er.message and ej.er.m = er.message;
+        s.reply(ej); // TODO
+        G&m:"!"+ (ej.er.m || e);
+    
+    # see M, also sand
+    m: %acgt:e
+        var d = e.substr(0,1);
+        d == " " and return G&e,e;
+        d == "[" || d == "{"  and return G&om,{},$.parseJSON(e),a,{};
+        d == "." and e = '<span style="font-size:66%">'+e+'</span>';
+        G&c,e;
+    
+    # #msgs console message
+    c: %acgt:s e
+        e ||= [];
+        var says = [];
+        $.each(e,&i,v{
+            typeof v === 'string' || typeof v === 'number' and says.push(v);
+            else {
+                says.push('%'+typeof v);
+            }
+        });
+        var log = A.5.sc.log ||= [];
+        log.unshift([s,e]);
+        a.lim(a.log,-9);
+        says.length and s = s+': '+says.join(' ');
+        $('#msgs').prepend(s+"\n");
+    
+    # limit list, calling callback for each removal
+    lim: %acgt:s lim cb
+        var len = s.length;
+        lim ||= 9;
+        var rev;
+        lim < 0 and rev = 1; lim *= -1;
+        var rem = [];
+        while (len > lim) {
+            var v;
+            rev and v = s.pop()
+            else {  v = s.shift() }
+            cb and cb(v);
+            rem.push(v);
+            len--;
+        }
+        rem.length and return rem
+    
+    # timed callback, delay in ms?
+    yl: %acgt:delay func
+        setTimeout(func, delay);
+    
+    # hash into ke,ys string
+    ks:
+        var ks = [];
+        for (var k in s) {
+            ks.push(k);
+        }
+        return ks.join(',');
+    
+    # ke:va,ys:lue string into hash
+    peel:
+        var c = {};
+        !s.length and return c
+        $.each(s.split(','), function(i,kv) {
+            kv = kv.split(':');
+            var k = kv[0];
+            var v = kv[1];
+            v.match('^-?\\\d+.\\\d+$') and v = v * 1
+            c[k] = v;
+        });
+        return c
+    
 
