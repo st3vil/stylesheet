@@ -466,7 +466,10 @@ Tube: |
                 my $u = {};
                 G&ip,zs&ip,$C,$u || next;
                 my @u = grep{defined} map{_.s} values %$u;
-                @u > 1 && die "Many picked via ".ki(sc.ip).":\n".ki $u;
+                if (@u > 1) {
+                    sayre "Many picked via ".ki(sc.ip).":\n".ki $u;
+                    @u = $u[0];
+                }
                 @is = @u if @u;
             }
             
