@@ -358,8 +358,22 @@ StartHut: | # dripple
             die "No such etc";
         }
     };
-    
-    $N->[$i];
+    # batches of 30
+    my $M = a&HutM ||= do {
+        my $M = [];
+        my $ii = 0;
+        while ($N->[$ii]) {
+            my $n = [];
+            push @$M, $n;
+            while ($N->[$ii] && @$n < 30) {
+                push @$n, $N->[$ii];
+                $ii++;
+            }
+        }
+        @$M = map { join "\n", @$_ } @$M;
+        $M
+    };
+    $M->[$i];
     
     
 Stylehut: | # org, not stylehut, see also Styleslops for the html/mount
