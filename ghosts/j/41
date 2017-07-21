@@ -1,14 +1,66 @@
+Nonbab: |
+    c&s = <<'';
+        !(c&Wid && c&Mid) and ~die~noWMC: C
+        $W = ww[c&Wid] = {};
+        W.id = c&Wid;
+        W.t = c&Mid;
+        mm[W.t] = W;
+        W.A = {};
+        W.A.W = W;
+        ~newW: W.t, W.id, W
+        return W
+
+    my $poing = qr/\w+(?:\.\w+)?/;
+    my $nlp = qr/[^\n]+/;
+    c&s =~ s{(^|\{|and ) *~(?:(\w+)~)?(\w+(?:$nlp?:)?)(?: ($nlp))?;?$}{
+        my $ope = $1;
+        my $r = $2 ? 'A,C,G,T,' : '';
+        my$c=$2||'c';
+        my$s=$3;
+        my$e=$4;
+        $s=~s/:$//;
+        $ope."G\&$c:$r'$s',[$e];"
+    }segm;
+    
+    saygr "Have: c&s";
+    exit;
+
+
+    n Stylewholes
+    # Ang contains alacgts?
+    my $y = &C{ G&aC };
+    saybl "US: ", G&ind:T.op,$y;
+    my ($die) = map {_.y.tw.Win}
+    T.op.y.tw.i;
+    saygr "And: ".wdump 3, die.c.s;
+    
+    
 JaBabz: |
     my $poing = qr/\w+(?:\.\w+)?/;
     my $nlp = qr/[^\n]+/;
     
     c&s =~ s/\bA&(\w+)\b/A\.c\.$1/g;
     c&s =~ s/\ba&(\w+)\b/A\.sc\.$1/g;
+    c&s =~ s/\b(\d)(s|c)&(\w+)\b/"A[$1].".($2 eq 's' ? 'sc' : $2).".$3"/smeg;
+    
     c&s =~ s/\bs&(\w+)\b/C\.sc\.$1/g;
     c&s =~ s/\bC&(\w+)\b/C\.sc\.$1/g;
     c&s =~ s/\bc&(\w+)\b/C\.c\.$1/g;
     
+    
+    
     c&s =~ s/^t\&([^\s;]+)(;)?/!G\&t,$1 and return;/gm;
+    
+    # com message
+    c&s =~ s{(^|\{|and ) *~(?:(\w+)~)?(\w+(?:$nlp?:)?)(?: ($nlp))?;?$}{
+        my $ope = $1;
+        my $r = $2 ? 'A,C,G,T,' : '';
+        my$c=$2||'c';
+        my$s=$3;
+        my$e=$4;
+        $s=~s/:$//;
+        $ope."G\&$c:$r'$s',[$e];"
+    }segm;
     
     # G&thing:args,"with space";
     c&s =~ s/($poing)\&(\$)?($poing)(:\S+[^\n;]+)(;)?/
@@ -41,16 +93,6 @@ JaBabz: |
     # tiny sub maker, &raw,args{
     c&s =~ s/([^G&])&(\w*(,\w+)*)\{/$1function($2){/gm;
     
-    # com message
-    c&s =~ s{(^|\{) *~(?:(\w+)~)?(\w+(?:$nlp:)?)(?: ($nlp))?;?$}{
-        my $ope = $1;
-        my $r = $2 ? 'A,C,G,T,' : '';
-        my$c=$2||'c';
-        my$s=$3;
-        my$e=$4;
-        $s=~s/:$//;
-        $ope."a\.$c($r'$s',[$e]);"
-    }segm;
     
     c&s =~ s/^\s*\$(\w+)\b/var $1/gm;
 jst: | # test js babbler
@@ -69,6 +111,7 @@ jst: | # test js babbler
             
         G&wide:"several ticks";
         G&$some:4,56-3, (28 / A.5.sc.e)
+        5s&log = [];
     #
 
     Rw JaBabz;
@@ -80,19 +123,20 @@ jst: | # test js babbler
         }
         G.h(A,C,G,T,'something')
         $.each(h,function(k,v){ delete h.k });
-        a.c('leaves',[]);
+        G.h(A,C,G,T,"c",'leaves',[]);
         G.h(A,C,G,T,'nothing',is,over)
         C.c.see = C.c.know;
         C.sc.tell = C.sc.B;
         var s = function(c){ that.it.is };
-        a.c('rasunify',[re.length]);
-        a.dothis(A,C,G,T,'fourly',[f]);
+        G.h(A,C,G,T,"c",'rasunify',[re.length]);
+        G.h(A,C,G,T,"dothis",A,C,G,T,'fourly',[f]);
         if (!C.sc.attr.title) {
             C.sc.attr.title = C.t+' '+C.y.cv;
         }
         
         G.h(A,C,G,T,"wide","several ticks");
         G.h(A,C,G,T,some,4,56-3, (28 / A.5.sc.e))
+        A[5].sc.log = [];
     # 
     c&s eq $good && return saygr "jst good";
     my ($l,$r) = map {[split "\n", $_]} c&s, $good;
@@ -147,7 +191,7 @@ javascript: | # compile/collect for sc.js
 
                 Rw JaBabz;
 
-                c&s = "function(".s&args.") {\n".c&s."};\n"
+                c&s = "function(".s&args.") {\n".c&s."\n};\n"
                     if s&args;
                 
                 s&coded = 1;
@@ -209,9 +253,12 @@ Styleslops: | # minimal page that sucks in more stuff from Stylehut
 
           <script type="text/javascript">
             var A = {c:{},sc:{}};
+            var C = {};
+            var G = {};
+            var T = {};
             a&elvis = Math.random();
             a&start = ['thestart'];
-            A[5] = A;
+            A[5] = A[1] = A;
             A&start = &s{
                 if (s) {
                     eval(s);
@@ -232,7 +279,7 @@ Hutting: | # Jig stylehut into /je/
     $M = [];
     my $t = c&that || 'Stylehut';
     m $t
-    n Jig=>['bay/je'=>-Gdo=>{},{everything=>1,z=>$M}]
+    n Jig=>['bay/je'=>-Gdo=>{},{everything=>0,z=>$M}]
 
     
 StartHut: | # dripple 
@@ -251,12 +298,17 @@ StartHut: | # dripple
     };
     
     my $N = a&HutN ||= do {
-        my $t = 'HutKitchen';
+        my $t = 'Stylehut';
         if (1) {
-            my $pid = fork ||
-            n Hutting=>W=>{that=>$t}
-            waitpid($pid,0);
-            saygr "ok";
+            # child exits, see also Lize for updating paths
+            # 
+            for my $t (reverse qw'Stylehut HutKitchen Stylating') {
+                my $pid = fork || do {
+                    n Hutting=>W=>{that=>$t}
+                };
+                waitpid($pid,0);
+                saygr "ok";
+            }
         }
         local A.6.t = 'je';
         my $f = G&Locate_read,$t;
@@ -271,7 +323,7 @@ StartHut: | # dripple
                 A.I = {};
                 A&loadI = &v{
                     var C = {t:v[0], y:{cv:v[1]}, c:v[2], sc:v[3]};
-                    console.log('loadI'+s&js+'/'+C.t, C);
+                    console.log('loadI: '+s&js+'/'+C.t, C);
                     eval('c&code = '+c&s);
                     // make I
                     A.I[s&js] ||= {t:s&js, y:{cv:0.001,tw:{}}, c:{}, sc:{z:[]}};
@@ -282,6 +334,9 @@ StartHut: | # dripple
                     l[0] and l[0].y.next = C;
                     I.sc.z.push(C);
                     I.y.in ||= C;
+                    if (I.t === 'i' && (C.t === 'h' || C.t === 't')) {
+                        G[C.t] = c&code;
+                    }
                 };
             map{ 
                 map { "A\.s = ".sjson([_.t,_.y.cv,_.c,_.sc])."; A\.c\.loadI(A\.s);" } @{_s&z}
@@ -365,9 +420,14 @@ Stylephone: | # to being there, basics
         A[5].sc.log ||= [];
         var log = A[5].sc.log;
         log.unshift([s,e]);
-        a.lim(a.log,-9);
+        G&lim,log,-9;
         says.length and s = s+': '+says.join(' ');
         $('#msgs').prepend(s+"\n");
+    
+    # used?
+    die: %acgt:s etc
+        ~dead: s, etc, A, C
+        throw s
     
 Stylicks: | # Elvis' tongue
     u j
@@ -378,7 +438,7 @@ Stylicks: | # Elvis' tongue
     # click handler
     # that onclick=A.sc.hands.$sip.click()
     #   callback encloses an ACGT to do this with:
-    # TODO gets keyjam
+    # TODO gets keyjam, ws
     cl: %acgt:ev ws
         keyjam and return;
         keyjam = 1;
@@ -397,11 +457,11 @@ Stylicks: | # Elvis' tongue
         tag.val and d.s = tag.val();
 
         G&entag,d,tag;
-        d.W and a.lastW = d.W;
-        d.p and a.lastp = d.p;
-        G&ethro,d,ws; // TODO
+        d.W and 5s&lastW = d.W;
+        d.p and 5s&lastp = d.p;
+        G&ethro,d,ws;
     
-    # TODO gets keyjam
+    # TODO gets keyjam, ws
     ke: %acgt:ev ws
           keyjam and return;
           setTimeout(function () { keyjam = 0; }, keyjamfor);
@@ -415,15 +475,15 @@ Stylicks: | # Elvis' tongue
           }
 
           d.k = String.fromCharCode(ev.keyCode);
-          if (!d.W && a.lastW && ww[a.lastW]) {
-                $W = ww[a.lastW].W;
+          if (!d.W && 5s&lastW && ww[5s&lastW]) {
+                $W = ww[5s&lastW].W;
               if (W.typeinto) {
-                d.W ||= a.lastW;
-                d.p ||= a.lastp;
+                d.W ||= 5s&lastW;
+                d.p ||= 5s&lastp;
               }
           }
           
-          G&ethro,d,ws; // TODO
+          G&ethro,d,ws;
     
     # trace click up to the G
     # whose tag is ww and id the W address
@@ -489,11 +549,6 @@ Stylesea: | # the C and data
         C.c ||= {};
         C.sc ||= {};
         return C;
-    
-    # used?
-    die: %args:A C G T s etc
-        ~dead: s, etc, A, C
-        throw s
     
     # datasm:
     
@@ -567,22 +622,22 @@ Stylating: | # A ting, h/t/om/throat
     # TODO G.i.* = A.I.i.y.tw.*.c.code
     h: %acgt:s so st sh sf si
         var z = s;
-        typeof s === 'string' and z = G.i.t(A,C,G,T,'i',s);
+        typeof s === 'string' and z = G.t(A,C,G,T,'i',s);
         !z and throw "No way: "+s;
         T.D = z;
-        return z.c.code(A,C,G,T,s);
+        return z.c.code(A,C,G,T,so,st,sh,sf,si);
     
-    # look up A slope for the I/$t (embryo) or the I/$s/$t (part)
+    # look up A slope for the I/$s (embryo) or the I/$s/$t (part)
     t: %acgt:s t
-        !t and t = s; s = 'I';
         var z;
-        $.each([1,2,3,4,5], &i,k{
+        $.each([1,2,3,4,5], &i,v{
             z and return;
-            var Y = A[i];
+            var Y = A[v];
             !Y and return;
-            var I = Y[I];
+            var I = Y.I;
             !I and return;
-            z = I[t];
+            z = I[s];
+            t and z = z.y.tw[t];
         });
         return z;
     
@@ -596,7 +651,9 @@ Stylating: | # A ting, h/t/om/throat
     # toplevel n-tering
     om:
         A = G&A,'om';
+        s and C = s;
         C = G&inC,C;
+        T = {};
         G&throat,2,C;
         T.alk = 'w'+T.d+' '+C.t+' '+ G&ks,C.c +'%'+G&ks,C.sc;
         C.sc ||= {};
@@ -616,16 +673,20 @@ Stylating: | # A ting, h/t/om/throat
         z = t.y.in;
         while (z && A.c.ov >= z.y.cv) {
             T.not and return;
-            A.c.cv > z.y.cv and next;
-            C = A&s;
-            z.sc.nk and !C[z.sc.nk] and next;
-            z.sc.gk and !C[z.sc.nk][z.sc.gk] and next;
-            var es;
-            z.sc.gk and es = C[z.sc.nk][z.sc.gk];
-            z.sc.s and es = z.sc.s;
-            G&h,z,es;
-            A.c.cv = z.y.cv;
+            var D = z;
             z = z.y.next;
+            
+            A.c.cv > D.y.cv and next;
+            C = A&s;
+            if (!D.sc.any) {
+                D.sc.nk and !C[D.sc.nk] and next;
+                D.sc.gk and !C[D.sc.nk][D.sc.gk] and next;
+            }
+            var es;
+            D.sc.gk and es = C[D.sc.nk][D.sc.gk];
+            D.sc.s and es = D.sc.s;
+            G.h(A,C,G,T,D,es);
+            A.c.cv = D.y.cv;
         }
         return !T.not;
     
@@ -760,7 +821,7 @@ Stylemoment: | # sequencing itself
                 var C = v;
                 G&om;
             };
-            c.sc.deal and del += 1000 * c.sc.deal; a.yl(del, ub);
+            c.sc.deal and del += 1000 * c.sc.deal; G&yl,del,ub;
             else { ub() }
         });
         B.bac.length and ~gotm: B.bac
@@ -783,9 +844,7 @@ Stylemoment: | # sequencing itself
         if (s == '2' && c&slow) { 
             $e = $(A.on).find('> [t="'+C.t+'"]');
             $d = (c&slow||1)*1000;
-            a.yl(d, &{ 
-            $(e).remove(); 
-            });
+            G&yl:d,&{ $(e).remove() };
             fad = 8;
         }
         else
@@ -998,7 +1057,7 @@ Stylaplicants: | # gears, talkyboxes
         }
         
         cm.refresh();
-        G&yl:400,&{ cm.refresh(); });
+        G&yl:400,&{ cm.refresh() };
         
         var sav = &{
             G&codsav,cm;
