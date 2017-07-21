@@ -52,7 +52,7 @@ JaBabz: |
     c&s =~ s/^t\&([^\s;]+)(;)?/!G\&t,$1 and return;/gm;
     
     # com message
-    c&s =~ s{(^|\{|and ) *~(?:(\w+)~)?(\w+(?:$nlp?:)?)(?: ($nlp))?;?$}{
+    c&s =~ s{(^|\{|and |return ) *~(?:(\w+)~)?(\w+(?:$nlp?:)?)(?: ($nlp))?;?$}{
         my $ope = $1;
         my $r = $2 ? 'A,C,G,T,' : '';
         my$c=$2||'c';
@@ -225,6 +225,13 @@ Styleslops: | # minimal page that sucks in more stuff from Stylehut
         <!DOCTYPE html>
         <html><head>
           <style type="text/css">
+              @font-face {
+                font-family: DVSM;
+                src: url('DejaVuSansMono.ttf');
+            }
+            body {
+                font-family: DVSM, mono;
+            }
             ww * { pointer-events:none; }
             ww * * { pointer-events:all; }
           </style>
@@ -256,9 +263,9 @@ Styleslops: | # minimal page that sucks in more stuff from Stylehut
             var C = {};
             var G = {};
             var T = {};
+            A[5] = A[1] = A;
             a&elvis = Math.random();
             a&start = ['thestart'];
-            A[5] = A[1] = A;
             A&start = &s{
                 if (s) {
                     eval(s);
@@ -299,10 +306,10 @@ StartHut: | # dripple
     
     my $N = a&HutN ||= do {
         my $t = 'Stylehut';
-        if (1) {
+        if (0) {
             # child exits, see also Lize for updating paths
             # 
-            for my $t (reverse qw'Stylehut HutKitchen Stylating') {
+            for my $t (reverse qw'Stylehut HutCell Stylesocks') {
                 my $pid = fork || do {
                     n Hutting=>W=>{that=>$t}
                 };
@@ -319,6 +326,7 @@ StartHut: | # dripple
             T.op = $d;
             my @W = G&op,'cW:javascript';
             [
+            # send an I grower, puts the subs G.t/h
             "eval(".$enj->($bb->(<<'')).");",
                 A.I = {};
                 A&loadI = &v{
@@ -338,9 +346,12 @@ StartHut: | # dripple
                         G[C.t] = c&code;
                     }
                 };
-            map{ 
-                map { "A\.s = ".sjson([_.t,_.y.cv,_.c,_.sc])."; A\.c\.loadI(A\.s);" } @{_s&z}
-            } @W
+            # then the many I/$s=sc.js/$t
+            (map{ 
+                map { "A\.c\.loadI(".sjson([_.t,_.y.cv,_.c,_.sc]).");" } @{_s&z}
+            } @W),
+            # and connect
+            "G\.h(A,C,G,T,'begin')"
             ]
         }
         else {
@@ -348,12 +359,13 @@ StartHut: | # dripple
         }
     };
     
-    saygr $N->[$i];
+    $N->[$i];
     
     
 Stylehut: | # org, not stylehut, see also Styleslops for the html/mount
     n HutKitchen
     n HutLounge
+    n HutCell
     
     # fresher but dubiously designed
     #n Hand
@@ -376,6 +388,129 @@ HutLounge: | # org enjoyable huttology
     n Stylebridge
     
     n Stylaplicants
+HutCell: | # ways to communicate
+    n Stylesocks
+Stylesocks: | # websockets/begin
+    u j
+    
+    # ww/mm for Stylewhole
+    # keyjam for Stylicks
+    # putontv for Hand
+    # sockneck for Stylesocks
+    
+    # keon etc should have some general way to get
+    #   into A contexts from the onclick="something.global()"
+    begin:
+        5s&ww = {};
+        5s&mm = {};
+        if (location.search.match('^\\\?v='))
+            G&yl:6420,&{ G&putontv,location.search };
+        
+        // click, keys
+        function clon () { $(window).on("click", &ev{ G&cl,ev }) }
+        function clof () { $(window).off("click") }
+        function keon () { $(window).on("keydown", &ev{ G&ke,ev }) }
+        function keof () { $(window).off("keydown") }
+        
+        G&sockneck;
+        
+        clon(); keon();
+    
+    # give A websocket
+    # s may = ws://... or existing WebSocket to resurrect
+    # copying s.fail via lc through resurrections
+    sockneck:
+        var lc;
+        typeof s === 'object' and lc = s; s = s.s;
+        s ||= 'ws://'+location.host+'/s';
+        a&socks ||= {};
+        var socks = a&socks;
+        var c = socks[s];
+        c && c.readyState == 1 and return c;
+        c = new WebSocket(s);
+        c.s = s;
+        c.fail = 0;
+        lc and c.fail = lc.fail;
+        s = socks[s] = c;
+        s.onmessage = &ev{
+            G&m,ev.data;
+        };
+        s.onopen = &{
+            s.fail = 0;
+            a&sock = s;
+            G&sockalive,s;
+        };
+        s.onclose = &{
+            G&sockdead,s;
+            G&sockrecon,s;
+        };
+        
+        return s
+    
+    # send something, socks want to be an I thing...
+    socking:
+        var c = a&sock || 5s&sock || G&sockneck;
+        c.readyState !== 1 and ~sockdrop: c.s, s
+        c.send(JSON.stringify(s));
+    
+    # shade the screen
+    sockdead:
+        s !== a&socks[s.s] and return ~sockdeaddupe: s.s
+        ~closed: s.s
+        $('body').stop().css('-webkit-filter', 'blur(1px) brightness(1.3) contrast(2)');
+    
+    # unshade the screen
+    sockalive:
+        s !== a&socks[s.s] and return ~sockalivedupe: s.s
+        ~connected: s.s
+        $('body').stop().css('-webkit-filter', '');
+    
+    # try sockneck again every .25 seconds
+    # then every 2.5 seconds
+    sockrecon:
+        var t = 25000;
+        s.fail++;
+        s.fail < 100 and t = 250
+        ~sockrecon: s.fail
+        G&yl:t,&{ G&sockneck,s };
+        
+    
+    0 && 
+    bloat:
+        # the ready():
+            var w = {conin: 'ws://'+location.host+'/s'};
+            var fail = 0;
+            var a = {};
+            a.N = {}
+            var q = 1;
+            var elvis = Math.random();
+            var ws;
+            var etc = {};
+            var C = {};
+            var conz = {};
+            var mm = {};
+            var ww = {};
+            var keyjam = 0;
+            var keyjamfor = 10;
+
+            a.togwid = function(m,fr,to) {
+                if ($(m).attr('togwid') == to)
+                    to = fr
+                $(m).attr('togwid', to)
+                $(m).css('width', to);
+            };
+    0 &&
+    websocks:
+        # yer// websockety
+            $(document).ready(function(){
+                a.c("ello");
+                if (location.pathname != '/')
+                    a.codeso = [a.codeso[0]];
+                a.codelo();
+                if (location.search.match('^\\\?v='))
+                    setTimeout(function(){ a.putontv(location.search) }, 6420);
+                a.con(w);
+            });
 Stylephone: | # to being there, basics
     # to begin, hang up your desires
     u j
@@ -435,15 +570,19 @@ Stylicks: | # Elvis' tongue
     E:
         G&cl,s
     
+    # not too fast (0.01s) (used to have a bung keyboard)
+    keyjam:
+        5s&keyjam and return 1;
+        5s&keyjam ||= 1;
+        5s&keyjamfor ||= 10;
+        G&yl:5s&keyjamfor,&{ 5s&keyjam = 0 };
+        return 0;
+    
     # click handler
     # that onclick=A.sc.hands.$sip.click()
     #   callback encloses an ACGT to do this with:
-    # TODO gets keyjam, ws
-    cl: %acgt:ev ws
-        keyjam and return;
-        keyjam = 1;
-        keyjamfor ||= 10;
-        setTimeout(function () { keyjam = 0; }, keyjamfor);
+    cl: %acgt:ev
+        G&keyjam and return;
 
         var d = {};
         G&dscam,d,ev;
@@ -459,31 +598,26 @@ Stylicks: | # Elvis' tongue
         G&entag,d,tag;
         d.W and 5s&lastW = d.W;
         d.p and 5s&lastp = d.p;
-        G&ethro,d,ws;
+        G&socking,d;
     
-    # TODO gets keyjam, ws
-    ke: %acgt:ev ws
-          keyjam and return;
-          setTimeout(function () { keyjam = 0; }, keyjamfor);
-          keyjam = 1;
-
-          var d = {};
-          G&dscam,d,ev;
-          d.which = ev.which;
-          if (d.which == 16 || d.which == 17 || d.which == 18) {
-              return;
-          }
-
-          d.k = String.fromCharCode(ev.keyCode);
-          if (!d.W && 5s&lastW && ww[5s&lastW]) {
-                $W = ww[5s&lastW].W;
-              if (W.typeinto) {
+    ke: %acgt:ev
+        G&keyjam and return;
+        
+        var d = {};
+        G&dscam,d,ev;
+        
+        d.which = ev.which;
+        d.which == 16 || d.which == 17 || d.which == 18 and return
+        
+        d.k = String.fromCharCode(ev.keyCode);
+        if (!d.W && 5s&lastW && 5s&ww[5s&lastW]) {
+            $W = 5s&ww[5s&lastW].W;
+            if (W.typeinto) {
                 d.W ||= 5s&lastW;
                 d.p ||= 5s&lastp;
-              }
-          }
-          
-          G&ethro,d,ws;
+            }
+        }
+        G&socking,d;
     
     # trace click up to the G
     # whose tag is ww and id the W address
@@ -505,19 +639,6 @@ Stylicks: | # Elvis' tongue
               tag = tag.parent();
           }
           d.p = p.reverse();
-    
-    # TODO gets ws/conz
-    ethro: %acgt:d ws
-          if (d.W) {
-              var conin = conz[d.W];
-              if (conin) {
-                  ws = C[conin];
-              }
-          }
-          if (!ws) {
-              ws = w;
-          }
-          ws.reply({event: d});
     
     # type/click typology
     dscam: %acgt:d ev
@@ -672,15 +793,15 @@ Stylating: | # A ting, h/t/om/throat
         
         z = t.y.in;
         while (z && A.c.ov >= z.y.cv) {
-            T.not and return;
+            T.not and break
             var D = z;
             z = z.y.next;
             
-            A.c.cv > D.y.cv and next;
+            A.c.cv > D.y.cv and continue
             C = A&s;
             if (!D.sc.any) {
-                D.sc.nk and !C[D.sc.nk] and next;
-                D.sc.gk and !C[D.sc.nk][D.sc.gk] and next;
+                D.sc.nk and !C[D.sc.nk] and continue;
+                D.sc.gk and !C[D.sc.nk][D.sc.gk] and continue;
             }
             var es;
             D.sc.gk and es = C[D.sc.nk][D.sc.gk];
@@ -730,31 +851,31 @@ Stylewholes: | # Gs clocking on
     Xi:
         !s and s = C.c.W;
         !s and s = C.c.M;
-        $W = ww[s];
-        W ||= mm[s];
+        $W = 5s&ww[s];
+        W ||= 5s&mm[s];
         !(W && W.W && W.W.on) and ~die~nottunedin: s
         return W;
         
     Xin:
-        $W = ww[s];
+        $W = 5s&ww[s];
         W ||= G&Win;
         return W;
     
     Win:
         !(c&Wid && c&Mid) and ~die~noWMC: C
-        $W = ww[c&Wid] = {};
+        $W = 5s&ww[c&Wid] = {};
         W.id = c&Wid;
         W.t = c&Mid;
-        mm[W.t] = W;
+        5s&mm[W.t] = W;
         W.A = {};
         W.A.W = W;
         ~newW: W.t, W.id, W
         return W
         
     Wout:
-        var W = ww[A.W.id];
-        W.t and mm[W.t] = W;
-        delete ww[W.id];
+        var W = 5s&ww[A.W.id];
+        W.t and 5s&mm[W.t] = W;
+        delete 5s&ww[W.id];
         ~leaves W.t, W.id
     
     u jc
