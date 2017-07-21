@@ -96,58 +96,7 @@ WebHost: |
             $tx->send($m)
         }
     };
-StartHut: | # dripple 
-    delete G.way.StartHut;
-    my $i = ar.i || 0;
-    my $bb = &s{
-        my $C = G&Ct,['toStartHut',1,{s=>$s}];
-        Rw JaBabz $C;
-        c&s
-    };
-    # get a json encoded string
-    my $enj = &s{
-        $s = sjson[$s];
-        $s =~ s/^\[|\]$//sg;
-        $s
-    };
-    
-    my $N = a&HutN ||= do {
-        local A.6.t = 'je';
-        my $f = G&Locate_read,'Stylehut';
-        my $d = G&Beach,"$f/1" if $f;
-        if ($d) {
-            sayre "Found C.t W in $f";
-            ($d) = @$d;
-            T.op = $d;
-            my @W = G&op,'cW:javascript';
-            [
-            "var e = ".$enj->($bb->(<<'')).";\nconsole\.log(e);\neval(e);",
-                A.I = {};
-                A&loadI = &v{
-                    var C = {t:v[0], y:{cv:v[1]}, c:v[2], sc:v[3]};
-                    // make I
-                    A.I[s&js] ||= {t:s&js, y:{cv:0.001,tw:{}}, c:{}, sc:{z:[]}};
-                    var I = A.I[s&js];
-                    // grow I
-                    I.y.tw[C.t] = C;
-                    var l = I.sc.z.slice(-1);
-                    l[0] and l[0].y.next = C;
-                    I.sc.z.push(C);
-                    I.y.in ||= C;
-                };
-            map{ 
-                map { "A\.s = ".sjson([_.t,_.y.cv,_.c,_.sc])."; A\.c\.loadI(A\.s);" } @{_s&z}
-            } @W
-            ]
-        }
-        else {
-            die "No such etc";
-        }
-    };
-    
-    saygr $N->[$i];
-    
-    
+
 RemainDing: |
     0 &&
     bloat:

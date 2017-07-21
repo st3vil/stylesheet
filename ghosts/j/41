@@ -129,17 +129,27 @@ javascript: | # compile/collect for sc.js
                 
                 if (s&acgt) {
                     die "acgt js: C.t already s&args" if s&args;
-                    s&args ||= join',','A,C,G,T', split /\W+/,
-                        grep{$_ ne '1'} s&acgt;
+                    s&args ||= join',','A,C,G,T', grep{$_ ne '1'} s&acgt;
                 }
                 die "wonky C.t   of ".ki $C if C.t =~ /\W/;
                 s&args =~ s/ /,/g;
                 delete C.sc.com;
+                
+                my $pasn = sub {
+                    my $v = shift;
+                    my ($nk,$gk,$more) = $v =~ /^([tycs])?(\S*)(?: (.+))?$/;
+                    $nk = 'sc' if $nk eq 's';
+                    $nk ||= 'c';
+                    $nk && $gk || die"strv:$v -> $nk,$gk from ".ki $C;
+                    ($nk,$gk);
+                };
+                (s&nk,s&gk) = $pasn->(s&v) if s&v;
 
                 Rw JaBabz;
 
                 c&s = "function(".s&args.") {\n".c&s."};\n"
                     if s&args;
+                
                 s&coded = 1;
             }
             
@@ -201,6 +211,7 @@ Styleslops: | # minimal page that sucks in more stuff from Stylehut
             var A = {c:{},sc:{}};
             a&elvis = Math.random();
             a&start = ['thestart'];
+            A[5] = A;
             A&start = &s{
                 if (s) {
                     eval(s);
@@ -219,9 +230,71 @@ Styleslops: | # minimal page that sucks in more stuff from Stylehut
           </body></html>
 Hutting: | # Jig stylehut into /je/
     $M = [];
-    m Stylehut
-    n Jig=>['bay/je'=>-Gdo=>{},{z=>$M}]
+    my $t = c&that || 'Stylehut';
+    m $t
+    n Jig=>['bay/je'=>-Gdo=>{},{everything=>1,z=>$M}]
 
+    
+StartHut: | # dripple 
+    delete G.way.StartHut;
+    my $i = ar.i || 0;
+    my $bb = &s{
+        my $C = G&Ct,['toStartHut',1,{s=>$s}];
+        Rw JaBabz $C;
+        c&s
+    };
+    # get a json encoded string
+    my $enj = &s{
+        $s = sjson[$s];
+        $s =~ s/^\[|\]$//sg;
+        $s
+    };
+    
+    my $N = a&HutN ||= do {
+        my $t = 'HutKitchen';
+        if (1) {
+            my $pid = fork ||
+            n Hutting=>W=>{that=>$t}
+            waitpid($pid,0);
+            saygr "ok";
+        }
+        local A.6.t = 'je';
+        my $f = G&Locate_read,$t;
+        my $d = G&Beach,"$f/1" if $f;
+        if ($d) {
+            sayre "Found C.t W in $f";
+            ($d) = @$d;
+            T.op = $d;
+            my @W = G&op,'cW:javascript';
+            [
+            "eval(".$enj->($bb->(<<'')).");",
+                A.I = {};
+                A&loadI = &v{
+                    var C = {t:v[0], y:{cv:v[1]}, c:v[2], sc:v[3]};
+                    console.log('loadI'+s&js+'/'+C.t, C);
+                    eval('c&code = '+c&s);
+                    // make I
+                    A.I[s&js] ||= {t:s&js, y:{cv:0.001,tw:{}}, c:{}, sc:{z:[]}};
+                    var I = A.I[s&js];
+                    // grow I
+                    I.y.tw[C.t] = C;
+                    var l = I.sc.z.slice(-1);
+                    l[0] and l[0].y.next = C;
+                    I.sc.z.push(C);
+                    I.y.in ||= C;
+                };
+            map{ 
+                map { "A\.s = ".sjson([_.t,_.y.cv,_.c,_.sc])."; A\.c\.loadI(A\.s);" } @{_s&z}
+            } @W
+            ]
+        }
+        else {
+            die "No such etc";
+        }
+    };
+    
+    saygr $N->[$i];
+    
     
 Stylehut: | # org, not stylehut, see also Styleslops for the html/mount
     n HutKitchen
@@ -289,7 +362,8 @@ Stylephone: | # to being there, basics
                 says.push('%'+typeof v);
             }
         });
-        var log = A.5.sc.log ||= [];
+        A[5].sc.log ||= [];
+        var log = A[5].sc.log;
         log.unshift([s,e]);
         a.lim(a.log,-9);
         says.length and s = s+': '+says.join(' ');
@@ -475,7 +549,6 @@ Stylating: | # A ting, h/t/om/throat
     # A.1 should mean the J the A is for...
     A:
         var V = $.extend({},A);
-        delete V.C;
         V.up = A;
         var A = V;
         s and A.t = s;
@@ -483,7 +556,7 @@ Stylating: | # A ting, h/t/om/throat
         A.sc = {};
         A.om ||= A;
         A.om == A.up and A.mo = A;
-        A.1 = A;
+        A[1] = A;
         
         T.d ||= 1;
         return A
@@ -491,6 +564,7 @@ Stylating: | # A ting, h/t/om/throat
     # subroutine call
     # TODO many args, up to acgt+5 & clued on D?
     # TODO Gc&B stacking
+    # TODO G.i.* = A.I.i.y.tw.*.c.code
     h: %acgt:s so st sh sf si
         var z = s;
         typeof s === 'string' and z = G.i.t(A,C,G,T,'i',s);
