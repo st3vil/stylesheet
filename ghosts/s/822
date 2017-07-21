@@ -22,12 +22,14 @@ ElvisYou: | # YOUR
     # to fork an output handler (O) and children (U)
     m Opper
     m Udder
+    m $_ for @{ar.m||[]};
     my $O;
     my $opid;
     for my $C (@$M) {
         # opens new land
         if ($opid) {
             # sets our W output
+            # Opper Ilans it and sends lv elvi to WebHost/in
             $O ||= G.c.bay."/p/Opper/in";
         }
         Rw CellOvulation $C $O;
@@ -40,6 +42,11 @@ ElvisYou: | # YOUR
     }
     G.c.bay;
 Opper: | # consolidato
+    # Udder blocks, Opper is free to wander around, give Udders time
+    Gc&clockon = sub {
+        1 && saybl "Starting  G.t     listens: $s";
+        Mojo::IOLoop->is_running || Mojo::IOLoop->start;
+    };
     if (my $l = G.c.lastbay) {
         # Opper must be seen on W destination to stream
         my $dirs = split('/', $l) - 1 + 2;

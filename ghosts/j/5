@@ -142,7 +142,7 @@ Motor: | # be a G
         
     }
     else {
-        Rw BayFishing $bay=peace;
+        Rw BayFishing $bay=peace WebHost;
         # over-pid never returns
         #   should be signalled to reexec stylehouse.pl
         #   have a watch loop?
@@ -158,8 +158,6 @@ Motor: | # be a G
     }
     
     Gc&clockison ||= Gc&clockon->() if Gc&clockon;
-Electrica: | # not
-    n PiMachine
 BayFishing: | # become Op/Ud node, see 822
     my $p = $$;
     $| = 1; # autoflush output channel
@@ -185,10 +183,14 @@ NetPut: | # see what's there, send to js
         my $Y = ec&Y;
         my $z = ec&eat;
         Jc&froe = ec&froe || die "give elvis plumbing";
-        my $C = @$z;
-        1 && saygr "Webbing from: ".G&sn,$Y ."\n  ".ki $C;
+        my ($C) = @$z;
+        1 && saygr "Webbing on G.t from: ".G&sn,$Y ."\n  ".ki $C;
     };
     S
+SomeNetSpot: |
+    saygr "WE are here!";
+    #
+    G.Websen->("hello!");
 Statics: | # Jig for-u, causing static u
     # 
     $M = [];

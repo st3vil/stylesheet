@@ -10,9 +10,11 @@ WebHost: |
     
     #G.c.listen = readlink('listen') if -l 'listen';
     Gc&listen = '127.24.35.46:10433';
-    my $s = G.c.listen || "s:10094";
+    my $s = Gc&listen || "s:10094";
     $s = "http://$s" if $s !~/^http:\/\//;
+    
     S
+    n Baye
     
     my $A = G&A,'requesto';
     A.V = 1;
@@ -89,8 +91,9 @@ WebHost: |
     
     G.Websen = J.Websen ||= sub {
         my $m = shift;
-        $m = decode_utf8($m);
+        # $m = decode_utf8($m); # comes from inside
         @$txm || return sayre "No client, dropping: ".slim 50, $m;
+        1 && saybl "Sending ".slim 50, $m;
         for my $tx (@$txm) {
             $tx->send($m)
         }
