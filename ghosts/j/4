@@ -362,4 +362,133 @@ Babblar: | # unpack deceptions, perl code the code
         push @s, $inend if $indbe && $inend;
         c&s = join "\n", @s;
         $sc
+of: | # compile/collect
+    # container process is traveling bunches of code, see 99 Traweil
+    # place toward A.ii.>$s, linked list of embryo
+    my $of = C.t;
+    my $ark = G.sc.codeark ||= {};
+
+    # rennovating around town
+    # a geodesic self-mover
+    # keeps rebuilding in different locations
+    
+    # this way should export osc hooks and another way...
+    for my $C ( e&_cz ) {
+        c&s || sayre "C.t C.y.cv has no s: ".ki $C;
+        if (!c&code && (s&args || s&acgt)) {
+            # may already be compiled
+            # shades code through the wall
+            # the W listened to needs one osc in G, then all can whole it
+            # coded while the W goes through the wall
+            my $coded = delete(s&coded) || s&args && s&acgt;
+            my $digs;
+            my $scbab;
+            unless ($coded) {
+                # shade the edges, args, parsables etc.
+                Rw CoArgulate $C;
+                # CoB/Code must depend on c&s now and make only c&code
+                # unless a track is cut for adding universals...
+                # like a map of extra lines babbled
+                #   (caused by block quotes, argulation...)
+                $digs = dig c&s;
+                if (my $y = $ark.>$of.>C.t.>$digs) {
+                    (c&s, c&code, $scbab) = @$y;
+                    undef $digs;
+                }
+                else {
+                    # translate into perl
+                    $scbab = Rw CoBabbler $C;
+                }
+            }
+            G&Code,$C,"Of=$of" if !c&code;
+            
+            G&hoh,C.sc,$scbab if $scbab;
+            $ark.>$of.>C.t.>$digs = [c&s,c&code,$scbab] if $digs;
+            
+        }
+        track: # etc
+        s&dige = slm 12, dig c&s if exists c&s && !ref c&s;
+    }
+
+    C.sc.hi = 'lo';
+    T.nose = 1;
+    T.pos = 0;
+    
+conot: | # expand sc.t->ip, compiled throat clause
+    my $ip = C.sc.ip = {};
+    my $or;
+    my @o;
+    my $t = C.sc.t;
+    
+    # convert 3-4 or 3 to >=0.3 <0.4
+    #            or 33 to >=0.33 <0.34
+    #            or 3+ to >=0.3   (with 9er)
+    if ($t =~ /^((\d+)(?:(\-|\+)(\d+))?)/) {
+        my $s = $1;
+        my $n = 0+('0.'.$2);
+        my $se = "ycv:>=$n";
+        if ($3 ne '+') {
+            my $u = $4 ? 0+('0.'.$4)
+                : $n + 1 / 10 ** length($2);
+            $se .= " ycv:<$u";
+        }
+        $t =~ s/^\Q$s\E/$se/s || die "Not replacable $se in $t";
+    }
+    
+    for my $k (split ' ', $t) {
+        $or++, next if $k eq '||';
+        my $ok = $k;
+        my $is;
+        # ^ our C.t
+        $k =~ s/^(\w+):\^$/"$1:".C.t/e;
+        # complication
+        $is = C.sc.>C$k if exists C.sc.>C$k;
+        
+        my $p;
+        # simple key:val ing
+        if ($k =~ /^(\w+):([^:]*)$/) {
+            $k = $1;
+            $is = $2;
+            (p.nk,p.gk) = G&pang,$k;
+            p.gk || delete p.gk;
+        }
+        # pint further
+        elsif ($k =~ /\w+:\w+/) {
+            my @p = split ':', $k;
+            $k = $p[0];
+            $is = ''; # exists
+            $is = $1 if $p[-1] =~ s/([^\w\.-]+.+$)//;
+            p.pint = \@p;
+        }
+        else {
+            die "Unknown sc t bit: $k";
+        }
+        die "merge in? ".ki$is if ref $is;
+        (p.or,$or) = (1,0) if $or;
+        
+        if (defined $is) {
+            my $i;
+            my $neg = $is =~ s/^\!//;
+            $i = 'gt' if $is =~ s/^>//;
+            $i = 'lt' if $is =~ s/^<//;
+            $i.= 'eq' if $is =~ s/^=//;
+            $i = 're' if $is =~ s/^~//;
+            $i ||= 'is';
+            if ($i eq 'is') {
+                if ($is eq "''") {
+                    $is = '';
+                }
+                elsif (!length($is)) {
+                    $i = 'true';
+                    $is = 1;
+                }
+            }
+            p.neg = 1 if $neg;
+            $p.>$i = $is;
+        }
+        $k =~ s/(\d+)?$/$1+1/e while exists $ip.>$k;
+        push @o, $k;
+        $ip.>$k = $p;
+    }
+    ip.order = \@o if @o > 1;
 

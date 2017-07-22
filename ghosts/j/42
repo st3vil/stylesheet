@@ -33,7 +33,7 @@ WebHost: |
         my $next = "/thestart?step=".($i+1);
         my $s = Rw StartHut $i
             || return
-                $c->render(text=>"G\.h(A,C,G,T,'started')");
+                $c->render(text=>"G\.h(A,C,G,T,'c','started')");
         $c->render(text=>"A\.sc\.start\.push('$next');\n$s");
     };
     
@@ -48,8 +48,9 @@ WebHost: |
     };
     
     Gc&clockon = sub {
+        Gc&startedclockalready ++ && return sayre "Trying to start again";
         1 && saybl "Starting  G.t     listens: $s";
-        saygr "Appstart: ". app->start('daemon', '--listen' => "$s");
+        1 && saygr "Appstart: ". app->start('daemon', '--listen' => "$s");
     };
     
     # then later within the timer...
@@ -76,10 +77,14 @@ WebHost: |
             
             
             if (my $W = d.W) {
-                sayre "Want to send $W: ".ki $d;
+                -d $W || die "Not a host: $W";
+                my $in = "$W/in";
+                my $s = G&Ct,[Win=>[jse=>''=>{s=>$d}]];
+                write_file($in,{append=>1},sjson($s)."\n");
+                sayre "sent $W: ".ki $d;
             }
             else {
-            
+                die "freak e: ".ki $d;
             }
         });
         $s->on(finish => sub {
@@ -185,10 +190,10 @@ StartHut: | # dripple
     
     my $N = a&HutN ||= do {
         my $t = 'Stylehut';
-        if (0) {
+        if (1) {
             # child exits, see also Lize for updating paths
             # 
-            for my $t (reverse qw'Stylehut HutLounge HutKitchen Stylemoment Stylating') {
+            for my $t (reverse qw'Stylehut HutKitchen Stylating') {
                 my $pid = fork || do {
                     n Hutting=>W=>{that=>$t}
                 };
@@ -234,7 +239,7 @@ StartHut: | # dripple
             ]
         }
         else {
-            die "No such etc";
+            die "No such $t in Gc&bay je etc";
         }
     };
     # batches of 30
