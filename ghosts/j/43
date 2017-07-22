@@ -1,0 +1,90 @@
+BayFishing: | # become Op/Ud node, see 822
+    my $p = $$;
+    $| = 1; # autoflush output channel
+    town: my $to = Rw ElvisYou;
+    return sayre "< ElvisYou $p vs $$" unless $p eq $$;
+    
+    sleep 1;
+    
+    my $op;
+    my $f = "$to/p/Opper";
+    sayre "... $f ";
+    sleep 1 until -l $f;
+    $op = readlink $f;
+    saygr "Waiting fr $op $f";
+    waitpid($op,0);
+    sayyl "Done! $op on $$";
+    sayre "will restart..?";
+    <STDIN>;
+    goto town;
+NetPut: | # Opper outputs W
+    # 
+    my $sendz = &z{
+        ref $z eq 'ARRAY' || die "Give array to sendz";
+        my $in = "Gc&bay/p/WebHost/in";
+        -f $in || die "No WebHost?";
+        $s = G&Ct,[SomeNetSpot=>[out=>1=>{},{z=>$z}]];
+        write_file($in,{append=>1},sjson($s)."\n");
+    };
+    
+    Js&ein.t.out.sMJ = &sMJje{
+        my $Y = ec&Y;
+        my $z = ec&eat;
+        Jc&froe = ec&froe || die "give elvis plumbing";
+        
+        Js&initGW ||= do {
+            # create a sense of us before what we contain
+            my $g = G&Ct,[GW=>1];
+            # name to address
+            gc&Mid = G.t;
+            gc&Wid = "G.c.bay/p/$$";
+            # makes ephemeral container:
+            gc&el = 2;
+            gc&tag = 'ww';
+            gs&ab = 100;
+            gs&poi = 'none';
+            # this kind of request should establish all of the above
+            $sendz->([$g]);
+            $g
+        };
+        
+        # dripfeed time
+        my $deal = 0.3 if @$z > 1;
+        # convert {C} to [t y c sc]
+        # < make Lines (with json data BQ)
+        my $elv;$elv = sub {
+            my ($C,$d,$la) = @_;
+
+            $C = G&hup,$C;
+            C.y = C.y.cv;
+
+            if ($la && $d == 1) {
+                if (C.sc.pi || 
+                    $la && (C.y =~ /0\.(\d)/)[0]
+                    ne ($la->[1] =~ /0\.(\d)/)[0]) {
+                    c&s = "\n".c&s;
+                }
+            }
+
+            my $la;
+            C.sc.z = [map{my$l=$elv->($_,$d+1,$la);$la=$l;}@{C.sc.z}] if C.sc.z;
+            C.sc.deal ||= $deal if $deal;
+            [C.t,C.y,C.c,C.sc]
+        };
+        my $eat = C.c.eat;
+        my $j = G&Ct,['','',{W=>G.t},{z=>$z}];
+        my $l = $elv->($j);
+        $sendz->([$l]);
+        1 && saygr "Webbing on G.t from: ".G&sn,$Y ."\n  ".ki $C;
+    };
+    S
+SomeNetSpot: |
+    saygr "WE are here! on G.t";
+    Js&ein.t.out.sMJ = &sMJje{
+        for my $l (@{es&z}) {
+            my $s = sjson $l;
+            1 && saygr "Begins ".slim 9, $s;
+            G.Websen->("$s");
+        }
+    };
+    S
