@@ -185,7 +185,7 @@ javascript: | # compile/collect for sc.js
                     $nk = 'sc' if $nk eq 's';
                     $nk ||= 'c';
                     $nk && $gk || die"strv:$v -> $nk,$gk from ".ki $C;
-                    ($nk,$gk);
+                    ((s&nk||$nk),(s&gk||$gk))
                 };
                 (s&nk,s&gk) = $pasn->(s&v) if s&v;
 
@@ -736,12 +736,13 @@ Stylating: | # A ting, h/t/om/throat
     # A.on is the element/thing
     # A.om is a G-level A
     # A.mo is the first A under G-level
-    # A.1 should mean the J the A is for...
+    # A.1 should mean the J the A is for... where things reside
     A:
         var V = $.extend({},A);
         V.up = A;
         var A = V;
         s and A.t = s;
+        A.y = A;
         A.c = {};
         A.sc = {};
         A.om ||= A;
@@ -788,7 +789,11 @@ Stylating: | # A ting, h/t/om/throat
         A = G&A,'om';
         s and C = s;
         C = G&inC,C;
+        var t = T;
         T = {};
+        if (t) {
+            t.d and T.d = t.d + 1;
+        }
         G&throat,2,C;
         T.alk = 'w'+T.d+' '+C.t+' '+ G&ks,C.c +'%'+G&ks,C.sc;
         C.sc ||= {};
@@ -952,9 +957,7 @@ Stylemoment: | # sequencing itself
             B.last and return
             var c = G&inC,v;
             var ub = &{
-                var T = $.extend({d:T.d+1},B);
-                var C = v;
-                G&om;
+                G&om,c;
             };
             c.sc.deal and del += 1000 * c.sc.deal; G&yl,del,ub;
             else { ub() }
