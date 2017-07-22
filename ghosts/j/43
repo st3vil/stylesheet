@@ -1,6 +1,17 @@
 BayFishing: | # become Op/Ud node, see 822
     my $p = $$;
     $| = 1; # autoflush output channel
+    
+    # mkoJ called by Wout, sends lines inc Ilan on Opper
+    # Opper Ilan $f elvised by Ualve on Udders
+    #     Ilan unifies names/routes points by elvising Win
+    G.mkoJ = &Wc{
+        c.holst = $W; # geoplace on desk section
+        my $Y = Gc&B.sc.A;
+        c.Y = $Y; # A coming from
+        n NetPut=>[out=>1=>$c]
+    };
+    
     town: my $to = Rw ElvisYou;
     return sayre "< ElvisYou $p vs $$" unless $p eq $$;
     
@@ -28,21 +39,27 @@ NetPut: | # Opper outputs W
     };
     
     Js&ein.t.out.sMJ = &sMJje{
-        my $Y = ec&Y;
+        my $Y = ec&Y || $A;
         my $z = ec&eat;
-        Jc&froe = ec&froe || die "give elvis plumbing";
+        my $h = ec&holst;
+        
+        1 && saygr "Webbing on G.t into $h, from ".G&sn,$Y ." y ".G&sn,Y.up.up;
+        Jc&froe = ec&froe if ec&froe;
         
         Js&initGW ||= do {
             # create a sense of us before what we contain
             my $g = G&Ct,[GW=>1];
             # name to address
-            gc&Mid = G.t;
+            gc&Mid = G.t || die "no G\.t?";
             gc&Wid = "G.c.bay/p/$$";
             # makes ephemeral container:
             gc&el = 2;
             gc&tag = 'ww';
             gs&ab = 100;
+            gs&ws = 'pre';
+            gs&wb = 1;
             gs&poi = 'none';
+            gs&ml = '5%';
             # this kind of request should establish all of the above
             $sendz->([$g]);
             $g
@@ -56,35 +73,84 @@ NetPut: | # Opper outputs W
             my ($C,$d,$la) = @_;
 
             $C = G&hup,$C;
+            my $aC = G&aC;
             C.y = C.y.cv;
 
-            if ($la && $d == 1) {
+            if ($la && $d == 2) {
                 if (C.sc.pi || 
                     $la && (C.y =~ /0\.(\d)/)[0]
                     ne ($la->[1] =~ /0\.(\d)/)[0]) {
                     c&s = "\n".c&s;
+                    $aC = " * ".$aC;
                 }
             }
+            
+            1 && sayyl join("  ",('')x$d)." - ".$aC;
 
             my $la;
             C.sc.z = [map{my$l=$elv->($_,$d+1,$la);$la=$l;}@{C.sc.z}] if C.sc.z;
             C.sc.deal ||= $deal if $deal;
             [C.t,C.y,C.c,C.sc]
         };
-        my $eat = C.c.eat;
         my $j = G&Ct,['','',{W=>G.t},{z=>$z}];
         my $l = $elv->($j);
         $sendz->([$l]);
-        1 && saygr "Webbing on G.t from: ".G&sn,$Y ."\n  ".ki $C;
     };
     S
 SomeNetSpot: |
-    saygr "WE are here! on G.t";
+    saygr "Netspot! on G.t";
     Js&ein.t.out.sMJ = &sMJje{
         for my $l (@{es&z}) {
             my $s = sjson $l;
             1 && saygr "Begins ".slim 9, $s;
             G.Websen->("$s");
         }
+        T.pos = 0;
     };
     S
+NetJig: | # hop Hut updates without clearing state
+    G.t = 'NetJig';
+    Gc&bay = 'peace';
+    
+    my $bb = &s{
+        my $C = G&Ct,['toStartHut',1,{s=>$s}];
+        Rw JaBabz $C;
+        c&s
+    };
+    
+    my $t = 'Stylemoment';
+    n $t
+    my @W = G&op,'cW:javascript';
+    my $c;
+    c.eat = [
+        map { G&Ct:["reload $t",'',{},{e=>$_}]; }
+            $bb->(<<''),
+                A&reloadI = &v{
+                    var C = {t:v[0], y:{cv:v[1]}, c:v[2], sc:v[3]};
+                    console.log('reloadI: '+s&js+'/'+C.t, C);
+                    eval('c&code = '+c&s);
+                    // get I
+                    var I = A.I[s&js];
+                    var r = I.y.tw[C.t];
+                    // replace bits
+                    if (r) {
+                        r.t = C.t;
+                        r.c = C.c;
+                        r.sc = C.sc;
+                    }
+                    if (I.t === 'i' && (C.t === 'h' || C.t === 't')) {
+                        G[C.t] = c&code;
+                    }
+                };
+            # then the many I/$s=sc.js/$t
+            (map{ 
+                map { "A\.c\.reloadI(".sjson([_.t,_.y.cv,_.c,_.sc]).");" } @{_s&z}
+            } @W),
+            $bb->(<<''),
+                G&c:'++'+C.t;
+    ];
+    
+    n NetPut=>[out=>1=>$c]
+    
+    
+
