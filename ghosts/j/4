@@ -58,6 +58,7 @@ Babblar: | # unpack deceptions, perl code the code
                     split',',$args).',@Me) = @'.$und.";";
                 unshift @$ara, @args;
             }
+            c&s .= "\n" if c&s !~ /\n$/;
             c&s = $sf
                 ."sub {\n"
                 .join("",map{"$_\n"} @$ara)
@@ -400,6 +401,8 @@ of: | # compile/collect
                     $scbab = Rw CoBabbler $C;
                 }
             }
+            c&s =~ s/(#[^\n]+};)$/};/s
+                && sayre "commented closing bracket in C.t C.y.cv, was: $1";
             G&Code,$C,"Of=$of" if !c&code;
             
             G&hoh,C.sc,$scbab if $scbab;
