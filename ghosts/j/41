@@ -264,15 +264,21 @@ Stylesocks: | # websockets/begin
         if (location.search.match('^\\\?v='))
             G&yl:6420,&{ G&putontv,location.search };
         
-        // click, keys
-        function clon () { $(window).on("click", &ev{ G&cl,ev }) }
-        function clof () { $(window).off("click") }
-        function keon () { $(window).on("keydown", &ev{ G&ke,ev }) }
-        function keof () { $(window).off("keydown") }
+        // click, keys - outers
+        G.clon = &{ $(window).on("click", &ev{ G&cl,ev }) }
+        G.clof = &{ $(window).off("click") }
+        G.keon = &{ $(window).on("keydown", &ev{ G&ke,ev }) }
+        G.keof = &{ $(window).off("keydown") }
+        G.togwid = &m,fr,to{
+            if ($(m).attr('togwid') == to)
+                to = fr
+            $(m).attr('togwid', to)
+            $(m).css('width', to);
+        };
         
         G&sockneck;
         
-        clon(); keon();
+        G.clon(); G.keon();
     
     # give A websocket
     # s may = ws://... or existing WebSocket to resurrect
@@ -1015,7 +1021,7 @@ Stylaplicants: | # gears, talkyboxes
         d.dig = $(A.on).attr('dig');
         G&ethro(d, ws);
     
-    cod: %of:om,v:scod
+    cod 4: %of:om,v:ccod
         var cm = A.b.cod;
         .
         if (typeof s === 'string') {
@@ -1047,8 +1053,8 @@ Stylaplicants: | # gears, talkyboxes
             G&codsav,cm;
         };
         cm.setOption('extraKeys', {Esc:sav});
-        cm.on('focus',function(){clof();keof();});
-        cm.on('blur',function(){clon();keon();sav();});
+        cm.on('focus',function(){G.clof();G.keof();});
+        cm.on('blur',function(){G.clon();G.keon();sav();});
     
     #    $('#'+id).css('width','15em','max-height','70%','overflow','scroll');
     #   $('#'+id+' > .CodeMirror');//.css('height','auto');
