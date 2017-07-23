@@ -92,6 +92,7 @@ WebHost: |
             @$txm = grep { $_ ne $tx } @$txm;
             1 && sayre "Gone: $addr $code $reason";
         });
+        G.Websup->() if G.Websup;
     };
     
     G.Websen = J.Websen ||= sub {
@@ -220,9 +221,11 @@ StartHut: | # dripple
                     console.log('loadI: '+s&js+'/'+C.t, C);
                     eval('c&code = '+c&s);
                     // make I
-                    A.I[s&js] ||= {t:s&js, y:{cv:0.001,tw:{}}, c:{}, sc:{z:[]}};
+                    A.I[s&js] ||= {t:s&js, y:{cv:0.001,tw:{},tv:{}}, c:{}, sc:{z:[]}};
                     var I = A.I[s&js];
                     // grow I
+                    I.y.tv[C.t] ||= {};
+                    I.y.tv[C.t][C.y.cv] = C;
                     I.y.tw[C.t] = C;
                     var l = I.sc.z.slice(-1);
                     l[0] and l[0].y.next = C;
@@ -300,4 +303,109 @@ Tism: |
         write_file($f,{binmode=>':raw'},$decoded);
         $m->render(text => 'yup');
     };
+NetJig: | # hop Hut updates without clearing state
+    G.t = 'NetJig';
+    Gc&bay = 'peace';
+    
+    my $bb = &s{
+        my $C = G&Ct,['toNetJig',1,{s=>$s}];
+        Rw JaBabz $C;
+        c&s
+    };
+    
+    my $t = 'Stylemoment';
+    n $t
+    my @W = G&op,'cW:javascript';
+    my @n = map {
+        my @m; my $n = _.y.in;
+        while ($n) {
+            push @m, $n;
+            $n = n.y.next;
+        }
+        @m;
+    } @W;
+    
+    1 && saybl "From ".ki$_ for @W;
+    my $c;
+    c.eat = [
+        map { G&Ct:["reload ".@n." $t",'',{},{e=>$_}]; }
+            $bb->(<<''),
+                5c&reloadI = &v{
+                    var C = {t:v[0], y:{cv:v[1]}, c:v[2], sc:v[3]};
+                    console.log('reloadI: '+s&js+'/'+C.t, C);
+                    eval('c&code = '+c&s);
+                    // get I
+                    var I = A.I[s&js];
+                    var r = I.y.tv[C.t][C.y.cv];
+                    // replace bits
+                    if (r) {
+                        r.t = C.t;
+                        r.c = C.c;
+                        r.sc = C.sc;
+                    }
+                    if (I.t === 'i' && (C.t === 'h' || C.t === 't')) {
+                        G[C.t] = c&code;
+                    }
+                };
+            # then the many I/$s=sc.js/$t
+            (map{
+                "A[5]\.c\.reloadI(".sjson([_.t,_.y.cv,_.c,_.sc]).");"
+            } @n),
+            $bb->(<<''),
+                G&c:'++'+C.t;
+    ];
+    
+    G&elph,NetPut=>[out=>1=>$c]
+    
+    
+NetTe: | # try things out...
+    G.t = 'NetJig';
+    Gc&bay = 'peace';
+    G.Websup = &{
+        sayre "Hi";
+        my $re = &{ G&elph,NetTe=>[does=>''] };
+        G&timer,2,$re
+    };
+    
+    my $jun = <<'';
+            {"c":{"Mid":"Oper","Wid":"planks","el":2,"tag":"ww"},"sc":{"ab":100,"ml":"5%","poi":"none","wb":1,"ws":"pre"},"t":"GW","y":{"cv":0.1}}
+    #
+    
+    Js&N = [ $jun,
+        map { sjson $_ }
+        map { G&Ct,['','',{W=>"Oper"},{z=>[$_]}] }
+        map {
+            _s&z = [map { G&Ct,$_ } @{_s&z}] if _s&z;
+            $_
+        }
+        map { G&Ct,$_ }
+        (map { 
+            [ting=>''=>{el=>($_ eq '1' ? 2 : '3'),s=>"Ting! $_"}]
+        } 1..3),
+        (map { 
+            [ting=>''=>{el=>3},{z=>[
+                [Fivory=>''=>{el=>($_ eq '1' ? 2 : '3'),s=>"Wave $_"}]
+            ]}]
+        } 1..3)
+    ];
+    
+    Js&ein.t.does = &TesC{
+        T.pos = 0;
+        Js&N || return sayyl "ok";
+        my $i = ec&i ||= 0;
+        1 && saygr "NetTe e $i";
+        
+        G.Websen->(Js&N->[$i]);
+        $i++;
+        my $re = &{ G&elph,NetTe=>[does=>'',{i=>$i}] };
+        Js&N->[$i] && G&timer,0.5,$re;
+    };
+    S
+    saygr "NetTe";
+    unless (c&do) {
+        return
+        n WebHost
+    }
+    
+    
 
