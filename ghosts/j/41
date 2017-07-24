@@ -39,19 +39,40 @@ JaBabz: |
     my $poing = qr/\w+(?:\.\w+)?/;
     my $nlp = qr/[^\n]+/;
     
+    # capital A is the more empiricle
     c&s =~ s/\bA&(\w+)\b/A\.c\.$1/g;
     c&s =~ s/\ba&(\w+)\b/A\.sc\.$1/g;
+    
+    # 3s&do -> A.3.sc.do
     c&s =~ s/\b(\d)(s|c)&(\w+)\b/"A[$1].".($2 eq 's' ? 'sc' : $2).".$3"/smeg;
     
+    # vs&do -> v.sc.do, etc
+    c&s =~ s[\b(\w+)(s|c)&(\w+)\b][
+        my $arm = ($2 eq 's' ? 'sc' : $2).".$3";
+        my $on = $1;
+        my $wa = $on;
+        my $s = 'A';
+        if ($on =~ /^(up)+$/) { # ups&do -> A.up.sc.do
+            $s .= '.up' while $on =~ s/^up//;
+        }
+        elsif ($on =~ /^\w\w+$/) { # oms&do -> A.om.sc.do
+            $s .= '.'.$on;
+        }
+        else { # zs&do -> z.sc.do
+            $s = $on;
+        }
+        $s.'.'.$arm
+    ]smeg;
+    
+    # capital C is the more universal (prefer s&do)
     c&s =~ s/\bs&(\w+)\b/C\.sc\.$1/g;
     c&s =~ s/\bC&(\w+)\b/C\.sc\.$1/g;
     c&s =~ s/\bc&(\w+)\b/C\.c\.$1/g;
     
-    
-    
+    # goner?
     c&s =~ s/^t\&([^\s;]+)(;)?/!G\&t,$1 and return;/gm;
     
-    # com message
+    # (~hifnotc)?~com message: list, of, interestings
     c&s =~ s{(^|\{|and |return ) *~(?:(\w+)~)?(\w+(?:$nlp?:)?)(?: ($nlp))?;?$}{
         my $ope = $1;
         my $r = $2 ? 'A,C,G,T,' : '';
@@ -93,7 +114,7 @@ JaBabz: |
     # tiny sub maker, &raw,args{
     c&s =~ s/([^G&])&(\w*(,\w+)*)\{/$1function($2){/gm;
     
-    
+    # TODO make it thing$ -> var thing; perl too
     c&s =~ s/^\s*\$(\w+)\b/var $1/gm;
 jst: | # test js babbler
     c&s = <<'';
@@ -823,7 +844,7 @@ Stylemoment: | # sequencing itself
         B.bac.length and ~gotm: B.bac
     
     
-    # whole time...
+    # whole time... A.on gets (or so) a child element
     # any el-ing sets A.up.sc.choint
     # el=8 means next el should insertAfter that
     # initially:
@@ -839,30 +860,49 @@ Stylemoment: | # sequencing itself
                 s&attr[k] = v;
             });
         }
-        var last;
-        var t = G&tcl;
         
+        // make a safe tagname
+        var t = C.t.replace(/\W/g,'e');
+        t = 'n'+t+'n';
+        
+        // point inserts to after thing before removed thing
+        $choint_hole = &el{
+            A.om === A and return;
+            !$(el).length and return;
+            ups&choint = $(el).prev();
+            !ups&choint.length and delete ups&choint
+        };
+        
+        // el=2 means C.t is the only C.t
         $fad = 0;
-        if (s == '2' && c&slow) { 
+        if (s == '2') {
             $e = $(A.on).find('> [t="'+C.t+'"]');
-            $d = (c&slow||1)*1000;
-            G&yl:d,&{ $(e).remove() };
-            fad = 8;
+            choint_hole(e);
+            if (c&slow) {
+                $d = (c&slow||1)*1000;
+                G&yl:d,&{ $(e).remove() };
+                fad = 8;
+            }
+            else {
+                $(e).remove();
+            }
         }
-        else
-        s == '2' and $(A.on).find('> [t="'+C.t+'"]').remove();
-        
         s == '2' and s = '1';
         
-        var el = G&f,t;
+        var find = '> '+t;
+        C.y.cv and find += "[cv='"+C.y.cv+"']";
+        var el = $(A.on).find(find);
         
-        s !== '1' && !el.length and console.log("no el findy ",A,C);
+        s !== '1' && !el.length and ~el lost: A, C
         
         s == '9' && A.om == A and G&Wout;
         
-        !fad && (s == '1' || s == '9') and $(el).remove();
+        if (!fad && el.length && (s == '1' || s == '9')) {
+            choint_hole(el);
+            $(el).remove();
+        }
         
-        s == '8' and return A.up.sc.elementsT.aft = el; // last on for next v
+        // to create
         if (s == '1') {
             s&attr.cv = C.y.cv;
             s&attr.t = C.t;
@@ -876,8 +916,25 @@ Stylemoment: | # sequencing itself
             con.length and con.unshift('');
             con = con.join(' ');
             var div = $("<"+t+con+">", s&attr);
-            $(div).appendTo(A.on).each( &i,v{ el=v });
+            var at = ups&choint;
+            var mode = 'insertAfter';
+            if (!at) {
+                at = A.on;
+                if ($(at).children().length) {
+                    at = $(at).children()[0];
+                    mode = 'insertBefore';
+                }
+                else {
+                    mode = 'appendTo';
+                }
+            }
+            $(div)[mode](at).each(&i,v{ el=v });
         }
+        
+        A.om !== A and ups&choint = el;
+        
+        s == '8' and return T.not = 1;
+        
         delete s&attr;
         // the before
         A.b = G&nn;
