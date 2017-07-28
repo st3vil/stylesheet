@@ -4,7 +4,9 @@ Wants: |
     to create more t/t/t/t looks
     static same Experience
     
-Doingulate: | # T room versing
+    Gs have a unifier
+    
+Doingulate: | # T room versing, self divising tree science
     Jc&tape = "Dejo";
     Js&ein.bo = 'Doable';
     y.res = 100; # reassign m cv
@@ -42,7 +44,12 @@ pi/looking: | # a piece of intent
     y.at.dis = 3;
     n lum=>o1=>'<'=>'dos:looking'
     n t=>1=>" C.t "=>'hs:788'
+    n sbrack=>199=>"(",'ab:1,fs:18,hs:8454'
     n s=>2=>ki(s.sc)
+    n sbrack=>201=>")",'ab:1,fs:18,hs:8454,ml:0'
+    
+    m $_ for @{c&zail||[]};
+    
     ss&lum > 1 || return;
     n C.t=>-lookat_3;
 looking: | # click at -looking puts update to source -lookins
@@ -60,6 +67,7 @@ looking: | # click at -looking puts update to source -lookins
     my $p = s.y.up;
     my $ps = p.y.s;
     my $v = ps.1;
+    # tell this v to change this datum
     my $c = vs&change ||= G&Ct,[change=>''];
     my $i = c.y.tw.>l.t ||= G&Ct,[l.t=>''];
     is&lum = ss&lum + (ec&us.S ? -1 : 1);
@@ -71,9 +79,74 @@ looking: | # click at -looking puts update to source -lookins
     T.pos = 0;
     
 pi/lookat: | # see bay, G, W and further, from intent
+    # for one (open) -looking, to the many within
+    
+    # the one knows:
+    #   lum - attention/openness level
+    #   type - of thing it basically is
+    #   inter-pretation it wants to appear as
+    # and more as elvising grows it
+    # type ||= -files and watch for patterns
+    
+    # the many:
+    #   is got by pi = (inter || type)
+    #   put its head (<3) here
+    #   wrap its Many in -lookings
+    
+    #   2Ccs&s is our intent/instruction
+    
     # wants to do Lize step 1 to ack the wobble
+    
     y.at.dis = 3;
-    my @l = split"\n",''.`ls -1 C.t`;
-    m $_=>''=>$_=>'dos:looking:four,dis:1' for @l;
+    my $s = 2Cc&s;
+    my $type = ss&inter || ss&type || 'files';
+    
+    n C.t=>1=>{pi=>$type},{not=>1}
+    my @l = G&op;
+    
+    my $ub = &Cd{ G&aC };
+    my @le = G&ind,T.op,$ub;
+    #n things=>2=>join("\n",@le,''),'hs:947,fs:7';
+    
+    my ($t,$j) = map { _.y.D } grep { _.t =~ /^(t|je)$/ } @l;
+    
+    m _.t=>-od=>{s=>_.y.r} for $t,$j;
+    
+    y.n = 3;
+    return;
+    for my $l (@l) {
+        $l = l.y.D if l.y.D;
+        m l.t=>-od=>{s=>$l}
+    }
+    
+pi/files: | # base type of looking
+    y.n = 4;
+    n t=>1=>" C.t ";
+    my $f = C.t; # < every -files type above
+    my $type = &f{
+        -d $f && "d" || -l $f && "l" || -f $f && "f" || "?"
+    };
+    my $ft = $type->($f);
+    n filetype=>2=>$ft=>'%hs:889'
+    
+    if ($ft eq 'd') {
+        my @l = split"\n",''.`ls -1 $f`;
+        for my $l (@l) {
+            my $ft = $type->("$f/$l");
+            # Ss&type suggested from here
+            my $m = [];
+            m $l=>''=>$l=>{type=>"files",z=>$m,dis=>1}
+            my $M = $m;
+            m type=>1=>$ft=>'%hs:889,fs:7'
+        }
+    }
+    elsif ($ft eq 'f') {
+        my $s = (-s $f)." bytes";
+        n size=>3=>$s=>'hs:199,fs:6'
+    }
+    elsif ($ft eq 'l') {
+        my $l = readlink $f;
+        n link=>3=>$l=>'hs:199,fs:7'
+    }
     
 
