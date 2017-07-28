@@ -41,17 +41,30 @@ pi/lookins: | # source of intent, remembers stuff about names
 pi/looking: | # a piece of intent
     # s=M fof things to check out
     #    G/
-    y.at.dis = 3;
+    y.at.dis = 1;
+    s&dis = 3;
+    y.at.ml = 1;
+    # clickable features
     n lum=>o1=>'<'=>'dos:looking'
+    # the node in the tree
     n t=>1=>" C.t "=>'hs:788'
-    n sbrack=>199=>"(",'ab:1,fs:18,hs:8454'
-    n s=>2=>ki(s.sc)
-    n sbrack=>201=>")",'ab:1,fs:18,hs:8454,ml:0'
+    # the stuff we know about it
+    n sbrack=>199=>"(",'ab,fs:18,hs:8454,ml:-0.3,lh:0.5'
+    n s=>2=>ki(s.sc||{}).'  '
+    n sbrack=>201=>")",'ab,fs:18,hs:8454,ml:-1.1,lh:0.5'
     
     y.n = 4;
-    m $_ for @{c&zail||[]};
-    
+    # describe this as one
+    for my $o (@{c&zail||[]}) {
+        $o = G&hup,$o;
+        delete oc&s if oc&s eq C.t;
+        os&dis = 2 if os&dis eq '3'; # table-row -> inline-block
+        saygr "One C.t descriptor: ".ki $o;
+        m $o
+    }
+    # ^v mutex?
     ss&lum > 1 || return;
+    # open this as many
     n C.t=>-lookat_3;
 looking: | # click at -looking puts update to source -lookins
     1 && sayyl "Looking at ".G&sn,$J;
@@ -70,17 +83,23 @@ looking: | # click at -looking puts update to source -lookins
     my $v = ps.1;
     # tell this v to change this datum
     my $c = vs&change ||= G&Ct,[change=>''];
-    my $i = c.y.tw.>l.t ||= G&Ct,[l.t=>''];
+    my $i; # nerve ending
+    for my $l (@l) {
+        my $i = c.y.tw.>l.t ||= G&Ct,[l.t=>''];
+    }
     is&lum = ss&lum + (ec&us.S ? -1 : 1);
     
     Js&lase = [
-        $s, $i
+        s=>$s,
+        p=>$p, ps=>$ps,
+        c=>$c,
     ];
     #G&elph,A.3.t=>[verse=>''=>{us=>$us}];
     T.pos = 0;
     
-pi/lookat: | # see bay, G, W and further, from intent
+pi/lookat: | # from -looking, a multitude of -lookings
     # for one (open) -looking, to the many within
+    # see bay, G, W and further, from intent
     
     # the one knows:
     #   lum - attention/openness level
@@ -97,7 +116,6 @@ pi/lookat: | # see bay, G, W and further, from intent
     #   2Ccs&s is our intent/instruction
     
     # wants to do Lize step 1 to ack the wobble
-    y.at.dis = 3;
     my $s = 2Cc&s;
     my $type = ss&inter || ss&type || 'files';
     
@@ -105,11 +123,12 @@ pi/lookat: | # see bay, G, W and further, from intent
     n C.t=>1=>{pi=>$type},{not=>1}
     my @l = G&op;
     
+    if (0) {
     my $ub = &C{ G&aC };
     my @le = G&ind,$l[4],$ub;
     saybl "With a: ", @le;
-    
     #n things=>2=>join("\n",@le,''),'hs:947,fs:7';
+    }
     
     my ($head,$many) = ([],[]);
     for my $l (@l) {
@@ -127,16 +146,18 @@ pi/lookat: | # see bay, G, W and further, from intent
             rs&z = [$i];
             push @{rs&z}, $i while $i = i.y.next;
         }
-        saygr "The C.t has l.t: ".ki $r;
         push @$to, $r;
     }
     
     push @$head, G&Ct,[nohead=>1=>"<NoHead>"] if !@$head;
     n head=>2=>{}=>{z=>$head}
     
+    @$many || return
+    n nomany=>3=>{s=>"nomany"}=>'%hs:399,fs:6'
+    
     y.n = 4;
     for my $l (@$many) {
-        m l.t=>-looking=>{s=>{},zail=>[$l]},'ml:1'
+        m l.t=>-looking=>{s=>{},zail=>[$l]}
     }
     
 pi/files: | # base type of looking
@@ -155,7 +176,7 @@ pi/files: | # base type of looking
             my $ft = $type->("$f/$l");
             # Ss&type suggested from here
             my $m = [];
-            m $l=>''=>$l=>{type=>"files",z=>$m,dis=>3}
+            m $l=>''=>{s=>$l}=>{type=>"files",z=>$m,dis=>3}
             my $M = $m;
             m type=>1=>$ft=>'%hs:889,fs:7'
         }
