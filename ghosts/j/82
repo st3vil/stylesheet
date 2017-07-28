@@ -6,7 +6,7 @@ Wants: |
     
     Gs have a unifier
     
-Doingulate: | # T room versing, self divising tree science
+Dogu: | # T room versing, self divising tree science
     Jc&tape = "Dejo";
     Js&ein.bo = 'Doable';
     y.res = 100; # reassign m cv
@@ -48,6 +48,7 @@ pi/looking: | # a piece of intent
     n s=>2=>ki(s.sc)
     n sbrack=>201=>")",'ab:1,fs:18,hs:8454,ml:0'
     
+    y.n = 4;
     m $_ for @{c&zail||[]};
     
     ss&lum > 1 || return;
@@ -96,27 +97,46 @@ pi/lookat: | # see bay, G, W and further, from intent
     #   2Ccs&s is our intent/instruction
     
     # wants to do Lize step 1 to ack the wobble
-    
     y.at.dis = 3;
     my $s = 2Cc&s;
     my $type = ss&inter || ss&type || 'files';
     
+    n ty=>1=>"-$type",'fs:6,hs:399'
     n C.t=>1=>{pi=>$type},{not=>1}
     my @l = G&op;
     
-    my $ub = &Cd{ G&aC };
-    my @le = G&ind,T.op,$ub;
+    my $ub = &C{ G&aC };
+    my @le = G&ind,$l[4],$ub;
+    saybl "With a: ", @le;
+    
     #n things=>2=>join("\n",@le,''),'hs:947,fs:7';
     
-    my ($t,$j) = map { _.y.D } grep { _.t =~ /^(t|je)$/ } @l;
-    
-    m _.t=>-od=>{s=>_.y.r} for $t,$j;
-    
-    y.n = 3;
-    return;
+    my ($head,$many) = ([],[]);
     for my $l (@l) {
-        $l = l.y.D if l.y.D;
-        m l.t=>-od=>{s=>$l}
+        $l = l.y.D if l.y.D; # hup from G&op/ind
+        # back through the two o's of osc
+        my $r = l.y.r.c.o.y.D.y.r.c.o.c.s;
+        # y.a on the original C indicates M via A=L/a
+        my $to = r.y.a ? $many : $head;
+        # use origin as Styles will be computed in $l
+        $r = G&hup,$r;
+        if (my $i = l.y.in) {
+            # things inside it will not have Styles computed,
+            # as s doesn't sequence them... but should
+            # also this all wants to be FactorEase
+            rs&z = [$i];
+            push @{rs&z}, $i while $i = i.y.next;
+        }
+        saygr "The C.t has l.t: ".ki $r;
+        push @$to, $r;
+    }
+    
+    push @$head, G&Ct,[nohead=>1=>"<NoHead>"] if !@$head;
+    n head=>2=>{}=>{z=>$head}
+    
+    y.n = 4;
+    for my $l (@$many) {
+        m l.t=>-looking=>{s=>{},zail=>[$l]},'ml:1'
     }
     
 pi/files: | # base type of looking
@@ -135,7 +155,7 @@ pi/files: | # base type of looking
             my $ft = $type->("$f/$l");
             # Ss&type suggested from here
             my $m = [];
-            m $l=>''=>$l=>{type=>"files",z=>$m,dis=>1}
+            m $l=>''=>$l=>{type=>"files",z=>$m,dis=>3}
             my $M = $m;
             m type=>1=>$ft=>'%hs:889,fs:7'
         }
