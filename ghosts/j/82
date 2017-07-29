@@ -25,18 +25,53 @@ pi/lookins: | # source of intent, remembers stuff about names
     y.res = 100; # reassign m cv
     
     my $d = G&Experience;
-    my $c = delete Js&change;
-    for my $s (@$s) {
-        my $d = d.y.tw.>$s || G&Ct,[$s=>''=>{}=>{lum=>1}];
-        if (my $c = c.y.tw.>$s) {
-            # exclude but follow z into d and c
-            # delete somehow
-            saygr G&sn ." Posits change to $s: ".ki $c;
-            G&oh,$d,$c;
-        }
-        m d.t, '', d.c, d.sc
+    my $c = delete 3s&change;
+    
+    1 && sayyl "Lookincha: $J: ".G&sn,$J;
+    if ($c) {
+        my $ub = &C{ G&aC };
+        my @le = G&ind,$c,$ub;
+        1 && sayyl "HAve change: ",@le;
     }
+    my $pos;$pos = &Ddctp{
+        # t path
+        $p = [@{$p||[]}];
+        push @$p, $t;
+        # descent suggested by d or c
+        my $tw = {};
+        my $d = d.y.tw.>$t;
+        if ($d) {
+            # what it was
+            G&oh,D.sc,d.sc;
+            $tw.>$_++ for keys %{d.y.tw||{}};
+        }
+        my $c = c.y.tw.>$t;
+        if ($c) {
+            # how its changing
+            # < delete somehow
+            1 && saygr G&sn ." Posits change to @$p: ".ki $c;
+            G&hoh,D.sc,c.sc;
+            $tw.>$_++ for keys %{c.y.tw||{}};
+        }
+        for my $t (sort keys %$tw) {
+            my $z = G&Ct,[$t=>''=>{}=>{}];
+            $pos->($z,$d,$c,$t,$p);
+            push @{Ds&z||=[]}, $z;
+        }
+    };
+    for my $t (@$s) {
+        my $D = G&Ct,[$t=>''=>{}=>{}];
+        $pos->($D,$d,$c,$t);
+        if (Ds&z) {
+            my $ub = &C{ G&aC };
+            my @le = G&ind,$D,$ub;
+            1 && sayyl "HAve depth: ",@le;
+        }
+        m D.t, '', D.c, D.sc
+    }
+    
     # resurp $d scs into ^
+    
     
 pi/looking: | # a piece of intent
     # s=M fof things to check out
@@ -49,6 +84,7 @@ pi/looking: | # a piece of intent
     # the node in the tree
     n t=>1=>" C.t "=>'hs:788'
     # the stuff we know about it
+    ss&z && delete ss&z;
     n sbrack=>199=>"(",'ab,fs:18,hs:8454,ml:-0.3,lh:0.5'
     n s=>2=>ki(s.sc||{}).'  '
     n sbrack=>201=>")",'ab,fs:18,hs:8454,ml:-1.1,lh:0.5'
@@ -59,7 +95,7 @@ pi/looking: | # a piece of intent
         $o = G&hup,$o;
         delete oc&s if oc&s eq C.t;
         os&dis = 2 if os&dis eq '3'; # table-row -> inline-block
-        saygr "One C.t descriptor: ".ki $o;
+        #saygr "One C.t descriptor: ".ki $o;
         m $o
     }
     # ^v mutex?
@@ -81,7 +117,9 @@ looking: | # click at -looking puts update to source -lookins
     #    change our way out to the new s
     # ^
     $s = s.y.D if s.y.D;
-    my $p = s.y.up;
+    my $S = $l[0];
+    $S = S.y.D if S.y.D;
+    my $p = S.y.up;
     my $ps = p.y.s;
     my $v = ps.1;
     # tell this v to change this datum
@@ -89,16 +127,29 @@ looking: | # click at -looking puts update to source -lookins
     my $i; # nerve ending
     for my $l (@l) {
         $i = c.y.tw.>l.t ||= G&Ct,[l.t=>''];
+        my $la = c.y.in ||= $i;
+        la.y.next = $i if $la ne $i;
+        $c = $i;
     }
+    if (delete ic&new) {
+        is&lum = 1;
+    }
+    # place changes
     is&lum = ss&lum + (ec&us.S ? -1 : 1);
+    
+    my $ub = &C{ G&aC };
+    my @le = G&ind,vs&change,$ub;
+    my $vsn = G&sn,$v;
+    saybl "With a: $v: $vsn", @le;
     
     Js&lase = [
         s=>$s,
         p=>$p, ps=>$ps,
         c=>$c,
+        @le,
     ];
     #G&elph,A.3.t=>[verse=>''=>{us=>$us}];
-    T.pos = 0;
+    #T.pos = 0;
     
 pi/lookat: | # from -looking, a multitude of -lookings
     # for one (open) -looking, to the many within
