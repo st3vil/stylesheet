@@ -173,8 +173,19 @@ pi/lookat: | # from -looking, a multitude of -lookings
     my $s = 2Cc&s;
     my $type = ss&inter || ss&type || 'files';
     
-    n ty=>1=>"-$type",'fs:6,hs:399'
-    n C.t=>1=>{pi=>$type},{not=>1}
+    # FactorEase ^C-lookat C rev { _t } join'/'
+    my $Y = A.1;
+    my @Y;
+    while ($Y) {
+        push @Y, $Y if Y.c.s.sc.pi eq 'lookat';
+        $Y = Y.2 || last;
+        $Y eq Y.3 && last;
+    }
+    my @Cs = map {_c&s} reverse @Y;
+    my $filename = join("/",map{_.t}@Cs);
+    
+    n ty=>1=>"-$type $filename",'fs:6,hs:399'
+    n C.t=>1=>{pi=>$type,filename=>$filename},{not=>1}
     my @l = G&op;
     
     if (0) {
@@ -219,7 +230,7 @@ pi/lookat: | # from -looking, a multitude of -lookings
 pi/files: | # base type of looking
     y.n = 4;
     n t=>1=>" C.t ";
-    my $f = C.t; # < every -files type above
+    my $f = c&filename || C.t; # < every -files type above
     my $type = &f{
         -d $f && "d" || -l $f && "l" || -f $f && "f" || "?"
     };
