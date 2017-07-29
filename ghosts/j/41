@@ -38,6 +38,8 @@ Nonbab: |
 JaBabz: |
     my $poing = qr/\w+(?:\.\w+)?/;
     my $nlp = qr/[^\n]+/;
+    my $nls = qr/[ \t]*/;
+    
     
     # capital A is the more empiricle
     c&s =~ s/\bA&(\w+)\b/A\.c\.$1/g;
@@ -47,6 +49,7 @@ JaBabz: |
     c&s =~ s/\b(\d)(s|c)&(\w+)\b/"A[$1].".($2 eq 's' ? 'sc' : $2).".$3"/smeg;
     
     # vs&do -> v.sc.do, etc
+    # < upCs&pi...
     c&s =~ s[\b(\w+)(s|c)&(\w+)\b][
         my $arm = ($2 eq 's' ? 'sc' : $2).".$3";
         my $on = $1;
@@ -73,14 +76,15 @@ JaBabz: |
     c&s =~ s/^t\&([^\s;]+)(;)?/!G\&t,$1 and return;/gm;
     
     # (~hifnotc)?~com message: list, of, interestings
-    c&s =~ s{(^|\{|and |return ) *~(?:(\w+)~)?(\w+(?:$nlp?:)?)(?: ($nlp))?;?$}{
+    c&s =~ s{(^|\{|and |return ) *~(?:(\w+)~)?(\$?\w+(?:$nlp?:)?)(?: ($nlp))?;?$}{
         my $ope = $1;
         my $r = $2 ? 'A,C,G,T,' : '';
         my$c=$2||'c';
         my$s=$3;
         my$e=$4;
         $s=~s/:$//;
-        $ope."G\&$c:$r'$s',[$e];"
+        $s = "'$s'" unless $s =~ s/^\$//;
+        $ope."G\&$c:$r$s,[$e];"
     }segm;
     
     # G&thing:args,"with space";
@@ -103,19 +107,21 @@ JaBabz: |
     /smge;
     
     # true or assign
-    c&s =~ s/^\s*($nlp) \|\|\= ($nlp)(;)?$/if (!$1) {
-        $1 = $2
-    }/gm;
+    c&s =~ s/^($nls)($nlp) \|\|\= ($nlp)(;)?$/$1if (!$2) {
+    $1    $2 = $3
+    $1}/gm;
     # left-hand if
-    c&s =~ s/^\s*([^\n]+?) and ($nlp)(;)?$/if ($1) {
-        $2
-    }/gm for 1..3;
+    c&s =~ s/^($nls)([^\n]+?) and ($nlp)(;)?$/$1if ($2) {
+    $1    $3
+    $1}/gm for 1..3;
     
     # tiny sub maker, &raw,args{
     c&s =~ s/([^G&])&(\w*(,\w+)*)\{/$1function($2){/gm;
     
     # TODO make it thing$ -> var thing; perl too
     c&s =~ s/^\s*\$(\w+)\b/var $1/gm;
+    c&s =~ s/^\s*(\w+)\$(?:;)?\s*(=|$)/
+        "var $1".($2 eq '=' ? ' =' : ';')/smeg;
 jst: | # test js babbler
     c&s = <<'';
         !G&Time,'rasunify',700,s and return
@@ -133,11 +139,17 @@ jst: | # test js babbler
         G&wide:"several ticks";
         G&$some:4,56-3, (28 / A.5.sc.e)
         5s&log = [];
+        tys$ = &acto{
+            vase and G&bump
+        };
+        thy$
+        knuckles$;
+        ~$knuckles: fav, ours
+        //etc
     #
 
     Rw JaBabz;
     
-    #is(c&s,<<'',"G& and ~");
     my $good = <<'';
         if (!G.h(A,C,G,T,'Time','rasunify',700,s)) {
             return
@@ -151,19 +163,36 @@ jst: | # test js babbler
         var s = function(c){ that.it.is };
         G.h(A,C,G,T,"c",'rasunify',[re.length]);
         G.h(A,C,G,T,"dothis",A,C,G,T,'fourly',[f]);
-        if (!C.sc.attr.title) {
-            C.sc.attr.title = C.t+' '+C.y.cv;
-        }
+            if (!C.sc.attr.title) {
+                C.sc.attr.title = C.t+' '+C.y.cv;
+            }
         
         G.h(A,C,G,T,"wide","several ticks");
         G.h(A,C,G,T,some,4,56-3, (28 / A.5.sc.e))
         A[5].sc.log = [];
+        var tys = function(acto){
+            if (vase) {
+                G.h(A,C,G,T,'bump')
+            }
+        };
+        var thy;
+        var knuckles;
+        G.h(A,C,G,T,"c",knuckles,[fav, ours]);
+        //etc
     # 
     c&s eq $good && return saygr "jst good";
+    saygr "Result: ".length(c&s)." vs ".length($good), c&s;
     my ($l,$r) = map {[split "\n", $_]} c&s, $good;
+    my $miss; # show gaps
     for my $ls (@$l) {
         my $rs = shift @$r;
-        $ls eq $rs && next;
+        $rs = '<undefined>' if !defined $rs;
+        if ($ls eq $rs) {
+            $miss = '...' if defined $miss;
+            next;
+        }
+        sayre $miss if $miss;
+        $miss = '';
         sayre "Line: $ls", "Isnt: $rs";
     }
     sayre "Line!", "Isnt: $_" for @$r;
@@ -879,7 +908,7 @@ Stylemoment: | # sequencing itself
             });
         }
         
-        // make a safe tagname
+        // make a safe, meaningless tagname
         var t = C.t.replace(/\W/g,'e');
         t = 'n'+t+'n';
         
@@ -911,7 +940,16 @@ Stylemoment: | # sequencing itself
         C.y.cv and find += "[cv='"+C.y.cv+"']";
         var el = $(A.on).find(find);
         
-        s !== '1' && !el.length and ~el lost: A, C
+        if (s !== '1' && !el.length) {
+            tys$ = &C{
+                return C.t +' '+ (''+C.y.cv).replace(/^0\./g,'');
+            };
+            tyleg$ = tys(upc&s)+'/'+tys(A&s);
+            nam$ = 'elos'+c&el;
+            ~$nam: tyleg
+            console.log(nam,tyleg,A.on,C);
+            return T.not = 1;
+        }
         
         s == '9' && A.om == A and G&Wout;
         
