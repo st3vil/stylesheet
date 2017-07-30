@@ -123,6 +123,7 @@ Jig: | # initiates W to store somewhere
     # - the Jig invokes Experience/writing into bay
     # supplement that with a linier storage format
     Rw AWriter;
+    my $not = 1;
     
     for my $t (@todo) {
         #next unless $t =~ /^P/;
@@ -135,12 +136,13 @@ Jig: | # initiates W to store somewhere
         my @bunch = G&op;
         @bunch = "massive lot of things" if T.op.sc.massive;
         my @l = ("took: $delta", @bunch );
+        $not ||
         n tr.t=>-od=>{dl=>2,s=>\@l}
     }
     # the -od must overwrite the W so we can web ourselves
     #@$M = reverse @$M;
     undef $l; # untrip
-    exit; # dont hang around with all this memory
+    $not && exit; # dont hang around with all this memory
 Lize: | # watch ghost/wormhole watcher TODO
     Jc&tape = 'Dejo';
     Js&ein.bo = 'Doable';
@@ -170,53 +172,65 @@ Lize: | # watch ghost/wormhole watcher TODO
     ghost editor sync/tie down the fix button
     n Besider
     see latest them
+    
     =cut
     
     Rw AWriter;
     
-    n view=>o2=>\'pi:pit,s:vil sac je via vil'
-    my $g = Js&view || die 'No view';
-    my $add = 'Ang'; # to start tops
+    n view=>o2=>\'pi:pit,s:je sac je via vil'
+    my $g = c&g || Js&view || die 'No view';
+    my $bay = c&bay || Gc&bay || die "No bay";
+    my $add = ''; # put Wt to start tops
     
-    my $gd = "G.c.bay/$g";
-    
-    # our saves land in gou, must be in stay to help sleep
-    n $gd=>-lies=>"*/5",'%qz'
-    # < if ^ steady, skip -jackpole
-    S
-    
+    my $gd = "$bay/$g";
     
     my $eh = hitime();
-    # < get any lies that changed, redome w/W outent
-    # lay out web of dependencies
-    n waved=>-jackpole=>{s=>T.op},'%qz'
-    my $lies = T.op;
     
-    # see updatables
-    n edge=>-respec=>{s=>T.op},'%qz'
-    # < if ^ steady, skip -lenot
+    n $gd=>-lize=>{s=>$gd,add=>$add}
     
-    # pile with desire
-    my $act = [Jig=>[$gd=>-Gdo=>{}]];
-    my $c = {};
-    # to start tops:
-    c.add = $add if $add;
-    n pile=>-lenot=>{s=>T.op,%$c},{runs=>$act}
+    # if c&bay we must be serving this to Dogu or someone...
+    # < each $gd is a page of Lize
+    #   all want to take clicks at any time
+    c&bay && delete Jc&tape;
     
     my $ts = hitime() - $eh;
     my $delta = Rw mass $s:ts;
-    n tripes=>4=>"took: $delta"
+    n tripes=>4=>" $gd - took: $delta"
     
-    # look at everything
-    #m zome=>-beli=>{s=>$lies}
     
-    # next things take some pi sit as input
-    # and continue/restart branches of thinking
-    # until something comes out the other end
+pi/lize: | # for a given s=$gd (GG/G directory for W)
+    my $gd = c&gd || c&s;
+    
+    # 1: the watcher
+    n lies=>-lies=>"$gd/*/5",'%qz'
+    
+    # static 2 if ^ steady
+    
+    # 2: lay out web of dependencies
+    n waved=>-jackpole=>{s=>T.op},'%qz'
+    
+    # 3: see updatables
+    n edge=>-respec=>{s=>T.op},'%qz'
+    
+    # static 4 if ^ steady
+    
+    # 4: pile with desire
+    # the action:
+    my $act = [Jig=>[$gd=>-Gdo=>{}]];
+    my $c = {};
+    # to start tops:
+    c.add = c&add if c&add;
+    
+    n pile=>-lenot=>{s=>T.op,%$c},{runs=>$act}
+    
+    # next things take some pi as input
+    # and continue/redo branches of thinking
+    # until some action comes out the other end
     # to contain phases of Matu
     # some computations are possible to re/unswim parts of and restitch the result
-    # at the very least it will be triggering and calming down 
+    # at the very least it will be triggering and calming down
     
+    # < get only changed, redome parts
     # < know history to W
     # < sets most-W-owning, ordering
     # < more than one parent, 
@@ -344,20 +358,25 @@ pi/lets: | # bitular suggestion
         $C, C.y.next ? $nex->(C.y.next) : ();
     };
     
+    my @sug;
     for my $r ($nex->(R.y.in)) {
         for my $t ($nex->(r.y.in)) {
             my $d = tc&s;
             # the changed object ^
             # we have s&(ha/dige)_was on t
             # depending on thing, chase difference
+            push @sug, "r.t t.t";
             m "r.t t.t"=>''=>" r.t t.t "
         }
     }
+    # so the -lenot has lots of info for others to borrow
+    s&problems = join ", ", @sug if @sug;
     
     
 lenotclick: | # poking around the pile
     Rw letsclick + $not=1;
 pi/lenot: | # make pile of something
+    my $d = G&Experience;
     y.at.dos = 'lenotclick';
     s&fs = 8;
     my $z = [
@@ -415,6 +434,7 @@ pi/lenot: | # make pile of something
         s&hs = '744' if s&another;
     }
 pi/respec: | # compare w/W situations, make pile
+    my $d = G&Experience;
     my $rs = {}; # what is
     my $tr = {}; # what is trouble
     # FactorEase w/* etc (G&ind follows thing's next)
@@ -481,8 +501,10 @@ pi/respec: | # compare w/W situations, make pile
                 my $W = $tw.>t.t || sayre("noWtw prob=p.t W=t.t") && next;
                 # our this kind (w/W) of probs
                 my $k = $atwz->($W,[$k=>1]);
-                # the thing causing is the flame
-                $atwz->($k,[p.t=>2=>{s=>$p},t.sc]);
+                # the thing causing ($p) is the flame
+                # but put it in sc so this can be stored
+                my $y = {cv=>2,cause=>$p};
+                $atwz->($k,[p.t=>$y=>{},t.sc]);
             }
         }
     }
@@ -576,6 +598,7 @@ pi/lies: | # watch wormhole (mtimes)
         my $c;
         c.lim = 4 * $i;
         c.do = 'bash -c "ls -1ct';
+        c.s = $s;
         c.s = "C.t/$s" if $s =~ /^\W/;
         c.s .= ' 2>/dev/null"';
         c.s =~ s/\/\//\//g;
