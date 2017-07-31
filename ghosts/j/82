@@ -89,7 +89,7 @@ pi/looking: | # a piece of intent
     
     
     y.n = 4;
-    unless (ss&lum) { # describe this as one
+    unless (ss&lum > 1) { # describe this as one
         for my $o (@{c&zail||[]}) {
             $o = G&hup,$o;
             delete oc&s if oc&s eq C.t;
@@ -183,8 +183,13 @@ pi/lookat: | # from -looking, a multitude of -lookings
     my @Cs = map {_c&s} reverse @Y;
     my $filename = join("/",map{_.t}@Cs);
     
+    my @types = qw'files';
+    push @types, 'lizes' if @Cs == 1;
+    push @types, '?'; # to talkybox
+    
     # < click instant dropdown/typein
-    n ty=>1=>"-$type",'fs:6,hs:399'
+    n ty=>1=>"-$type",'fs:6,hs:399,sel:'.join('-',@types)
+    
     n C.t=>1=>{pi=>$type,filename=>$filename},{not=>1}
     my @l = G&op;
     
