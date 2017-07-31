@@ -101,7 +101,7 @@ pi/looking: | # a piece of intent
     else { # open this as many
         n C.t=>-lookat_3
     }
-looking: | # click at -looking puts update to source -lookins
+lookinating: | # find relevant objects for click/so
     1 && sayyl "Looking at ".G&sn,$J;
     # FactorEase e&hC -looking -1 cs ^
     # the last -looking's s's origin J we send updates
@@ -133,6 +133,16 @@ looking: | # click at -looking puts update to source -lookins
     if (delete ic&new) {
         is&lum = 1;
     }
+    
+    return (
+        $p, # parent of first looking
+        $v, # lookins J?
+        $i, # changes to copy into $s
+        $s, # last looking's c&s
+    );
+    
+looking: | # click at -looking puts update to source -lookins
+    my ($p,$v,$i,$s) = Rw lookinating;
     # place changes
     is&lum = ss&lum + (ec&us.S ? -1 : 1);
     
@@ -150,6 +160,23 @@ looking: | # click at -looking puts update to source -lookins
     #G&elph,A.3.t=>[verse=>''=>{us=>$us}];
     #T.pos = 0;
     
+lotype: | # click/so at -lookat's type
+    my ($p,$v,$i,$s) = Rw lookinating;
+    
+    saybl "Apply s from ".wdump 2, ec&us;
+    is&type = ec&us.s || die "No type given";
+    
+    Js&lase = [
+        p=>$p,
+        v=>$v,
+        i=>$i,
+        s=>$s,
+    ];
+    
+    
+    
+    
+    #
 pi/lookat: | # from -looking, a multitude of -lookings
     # for one (open) -looking, to the many within
     # see bay, G, W and further, from intent
@@ -188,17 +215,10 @@ pi/lookat: | # from -looking, a multitude of -lookings
     push @types, '?'; # to talkybox
     
     # < click instant dropdown/typein
-    n ty=>1=>"-$type",'fs:6,hs:399,sel:'.join('-',@types)
+    n ty=>1=>"-$type",'fs:6,hs:399,dos:lotype,sel:'.join('-',@types)
     
     n C.t=>1=>{pi=>$type,filename=>$filename},{not=>1}
     my @l = G&op;
-    
-    if (0) {
-    my $ub = &C{ G&aC };
-    my @le = G&ind,$l[4],$ub;
-    saybl "With a: ", @le;
-    #n things=>2=>join("\n",@le,''),'hs:947,fs:7';
-    }
     
     my ($head,$many) = ([],[]);
     for my $l (@l) {
@@ -266,6 +286,39 @@ pi/files: | # base type of looking
     elsif ($ft eq 'l') {
         my $l = readlink $f;
         n link=>3=>$l=>'hs:199,fs:7'
+    }
+    
+pi/lizes: |
+    n t=>1=>"C.t",'ma:0.2';
+    my $f = c&filename || C.t; # < every -files type above
+    -d $f || die "Not a dir: $f";
+    
+    my @l = split"\n",''.`ls -1 $f`;
+    
+    for my $l (@l) {
+        if (!-d "$f/$l") {
+            my $m = [];
+            m $l=>''=>{s=>$l}=>{type=>"weird",z=>$m,dis=>3}
+            my $M = $m;
+            m weird=>1=>"notdir"=>'%hs:889,fs:7'
+        }
+        else {
+            my $m = [];
+            m $l=>''=>{s=>$l}=>{type=>"lize",z=>$m,dis=>3}
+            my $M = $m;
+            # Lize wants to see itself...
+            (my $name = "$f/$l") =~ s/\W/-/g;
+            my $d = Rw LowCat $bay:f $g=gou $t=Lize/$name/pile;
+            my $size;
+            if ($d) {
+                my $ub = &C{ G&aC };
+                my @le = G&ind,$d,$ub;
+                saybl "With Lize's pile of $name: ", @le;
+                $size = @le;
+                #n things=>2=>join("\n",@le,''),'hs:947,fs:7';
+            }
+            m lize=>1=>"lize $size"=>'%hs:889,fs:7'
+        }
     }
     
 
