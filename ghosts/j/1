@@ -600,6 +600,30 @@ Locate: | # A J and its space
     
     return if $read && !$t;
     ($f,$gd)
+LowCat: | # Locate (arbitrarily), read (some 1-5) & Beach
+    my $bay = ar.bay || Gc&bay || die "Nobay";
+    my $g = ar.g || A.6.t || die "Nog";
+    my $t = ar.t || die "Not"; # 'You' or 'You/pi' or ['You','pi']
+    ($t,my@j) = ref $t ? @$t : split /\//, $t;
+    $t = [$t,map{j=>$_}@j];
+    s/\W+/-/gs for @$t;
+    
+    my $f = join "/", $bay, $g, @$t;
+    -d $f || sayre("No file: $f") && return;
+    
+    # Wdir has 1-5, maybe j/, s/ in it
+    my ($n) = ar.n || ar.m && ar.m->[0] || 1;
+    
+    $f = "$f/$n";
+    -f $f || sayre("No file: $f") && return;
+    
+    my $N = Rw Beach $f $s=0;
+    
+    @$N != 1 && die "non-singular Beaching $f: ".wdump 3, $N;
+    
+    $N->[0]
+    
+    
 Read: | # the J you're in remembers itself
     # having created a place for it to land
     my $s = ''; # TODO osc channel, api here too Jeneral
