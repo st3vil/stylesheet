@@ -137,7 +137,7 @@ Bangular: |
     my $lastts;
     $SIG{__DIE__} = $end = &s{
         return if $lastts >  hitime() - 1;
-        sayre "SIGDIE began: ".slim(40,$s);
+        sayre "SIGDIE began: ".slim(200,$s);
         $lastts =  hitime();
         $s && $@ && sayre "stackend with \$@ and arg0";
         $s ||= $@;
@@ -527,6 +527,7 @@ DAy: | # world primitives
         ($s,$t) = ('I',$s) if !$t;
         $t = t.t if ref $t eq 'HASH';
         $C = {t=>$t,y=>{},c=>($c||{})};
+        length C.t || die "t empty string";
         $s = 'ii' if $s eq 'I'; # going
         # everything looks in A.ii
         c&on ||= 'ii';
@@ -544,15 +545,15 @@ DAy: | # world primitives
                 $on = on.y.tw;
             }
             
-            my $t = $on.>C.t;
-            if (my $by = !$t && Ys&tby) {
+            my $the = $on.>C.t;
+            if (my $by = !$the && Ys&tby) {
                 my $A = $Y;
-                $t = G&$by,$s,$t;
+                $the = G&$by,$s,$t;
             }
-            $t || next;
+            $the || next;
             c&from = $Y;
             c&inet = $i;
-            return $t;
+            return $the;
             # t may be just a pointer, to negotiate with c&desire
         }
         return
@@ -568,16 +569,18 @@ DAy: | # world primitives
         elsif ($s eq 'w') {
             # going, hash tied to a directory
             # makes digest when way entered
-            (my $fi = $s) =~ s/\W/-/g;
-            my $w = {t=>$s,y=>{}};
-            wc&s = G.way->{$fi} || die "No way: $fi";
-            ws&dige = G.way.o.dige->{$fi}
-                || die "Not Gway not diges $fi: wayo: ".ki G.way.o;
+            (my $fi = $t) =~ s/\W/-/g;
+            my $f = "wormhole/way/$fi";
+            -f $f || sayre("Not byt $s $t: $f") && return;
+            my $w = {t=>$t,y=>{}};
+            wc&s = read_file($f);
+            ws&dige = slm(12, dig wc&s);
             ws&of = 'w';
             $w
         }
         else {
-            die "Unknown search $s $t";
+            sayre "Unknown search $s $t ";
+            return;
         }
     
     # deprecated
