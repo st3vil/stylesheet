@@ -142,6 +142,7 @@ Jig: | # initiates W to store somewhere
     # the -od must overwrite the W so we can web ourselves
     #@$M = reverse @$M;
     undef $l; # untrip
+    saybl "Done!";
     $not && exit; # dont hang around with all this memory
 Lize: | # watch ghost/wormhole watcher TODO
     Jc&tape = 'Dejo';
@@ -177,10 +178,12 @@ Lize: | # watch ghost/wormhole watcher TODO
     
     Rw AWriter;
     
-    n view=>o2=>\'pi:pit,s:je sac je via vil'
-    my $g = c&g || Js&view || die 'No view';
-    my $bay = c&bay || Gc&bay || die "No bay";
-    my $add = ''; # put Wt to start tops
+    Jc&bay = c&bay if c&bay;
+    my $bay = Jc&bay || Gc&bay || die "No bay";
+    Jc&g = c&g if c&g;
+    my $g = Jc&g || die 'No g';
+    
+    my $add = c&add || ''; # put Wt to start tops
     
     my $gd = "$bay/$g";
     
@@ -191,11 +194,11 @@ Lize: | # watch ghost/wormhole watcher TODO
     # if c&bay we must be serving this to Dogu or someone...
     # < each $gd is a page of Lize
     #   all want to take clicks at any time
-    c&bay && delete Jc&tape;
+    c&quiet && delete Jc&tape;
     
     my $ts = hitime() - $eh;
     my $delta = Rw mass $s:ts;
-    n tripes=>4=>" $gd - took: $delta"
+    n tripes=>o4=>" $gd - took: $delta"
     
     
 pi/lize: | # for a given s=$gd (GG/G directory for W)

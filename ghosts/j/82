@@ -87,6 +87,7 @@ pi/looking: | # a piece of intent
     n s=>2=>ki(s.sc||{}),'ma:0.2'
     n sbrack=>201=>")",'ab,fs:18,hs:8454,ml:-0.3,lh:0.5'
     
+    n gap=>22=>' '
     
     y.n = 4;
     unless (ss&lum > 1) { # describe this as one
@@ -153,8 +154,7 @@ looking: | # click at -looking puts update to source -lookins
     
     Js&lase = [
         s=>$s,
-        p=>$p, ps=>$ps,
-        c=>$c,
+        p=>$p,
         @le,
     ];
     #G&elph,A.3.t=>[verse=>''=>{us=>$us}];
@@ -310,15 +310,31 @@ pi/lizes: |
             (my $name = "$f/$l") =~ s/\W/-/g;
             my $d = Rw LowCat $bay:f $g=gou $t=Lize/$name/pile;
             my $size;
+            my @prob;
             if ($d) {
-                my $ub = &C{ G&aC };
+                my $ub = &C{
+                    push @prob, C.t if s&problems;
+                    G&aC;
+                };
                 my @le = G&ind,$d,$ub;
                 saybl "With Lize's pile of $name: ", @le;
                 $size = @le;
                 #n things=>2=>join("\n",@le,''),'hs:947,fs:7';
             }
-            m lize=>1=>"lize $size"=>'%hs:889,fs:7'
+            m lize=>2=>"x$size"=>'%hs:889,fs:7,dos:lizening'
+            if (@prob) {
+                my $pro = join(' ', uniq @prob);
+                my $wha = @prob;
+                m lize_problems=>3=>" !$wha"
+            }
         }
     }
     
+lizening: | # click towards lize
+    my @l = grep {_s&pi eq 'looking'} e&_hC;
+    @l == 2 || die "More than two steps for lize: ".ki @l;
+    my ($bay,$g) = map { _.t } @l;
+    
+    Rw Wudder $s:_ for [Lize=>W=>{g=>$g,bay=>$bay}];
+    T.pos = 0;
 
