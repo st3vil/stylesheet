@@ -337,4 +337,143 @@ Day: | # world primitives
     
     #
     
+Tube: | # G&A spawns A, G&throat progresses A, which works on C
+    u i
+    # be a A.y = A (means is full of wires)
+    # J are A that inherit from each other
+    # as A wave connection to them
+    A: %acgt:s ov
+        if (ref $s) {
+            $A = $s;
+        }
+        else {
+            my $i = $A;
+            $A = {%$A};
+            A.t = $s;
+            A.y = $A;
+            A.y.cv = 0;
+            A.c = {};
+            A.sc = {};
+            A.up = $i;
+            A.c.ip = [@{A.up.c.ip||[]}, A.up.c.ipi++];
+            A.c.sip = join' ',@{A.c.ip};
+            delete A.V if A.V == 2;
+            delete A.C;
+            delete A.T;
+            trip At/$s
+            saygr "A.c.sip A.t from i.t";
+        }
+        if ($ov) {
+            $ov /= 10 while $ov >= 1;
+            A.c.ov = $ov;
+            if (@Me) {
+                A.c.N = \@Me;
+            }
+            G&throat;
+        }
+        return $A
+
+    # go A - rows a T
+    # .t a We thing to actuate consciousness
+    # net look up to 3
+    throat:
+        $T = A.c.T ||= {};
+        return if T.not;
+        $s ||= A.c.of || A.t;
+        my $f = G&s,$s;
+        fc&max = A&tmax || 5; # distance from A to look
+        my $z = G&t,$f
+            || return sayre "Not found: f.t: ".G&sn;
+        #snooze 500;
+        my $uov = A.c.ov;
+        my $ntug = 0.1;
+        my $keep; # going many same cv
+        while ($z) {
+            next if z.c.W;
+            next if z.y.cv <= A.y.cv && (!$keep || z.y.cv > keep.y.cv);
+            $keep = $z;
+            
+            say "For A.cv - $uov ( z.y.cv z.t (A.t)";
+            
+            last if $uov && z.y.cv > $uov;
+            my $etug = $ntug;
+            if (A.c.tug && $ntug <= z.y.cv) {
+                $ntug += 0.1 until $ntug >= z.y.cv;
+                G&tug,$ntug;
+            }
+            my $C = A.c.s ||= {y=>{A=>$A}};
+            my @is = (A.c.N || $z);
+            
+            # z wants C.?.?
+            if (zs&nk) {
+                exists $C.>zs&nk || next;
+                @is = $C.>zs&nk;
+                if (zs&gk) {
+                    exists $C.>zs&nk.>zs&gk || next;
+                    @is = $C.>zs&nk.>zs&gk;
+                }
+            }
+            # z wants anything more from C, compiles to ip
+            if (zs&t) {
+                ref zs&ip eq 'HASH' || die "Dsct ip not: ".ki$z;
+                # whole z.sc could arg/solute things
+                my $sc = z.sc;
+                my $u = {};
+                G&ip,zs&ip,$C,$u || next;
+                my @u = grep{defined} map{_.s} values %$u;
+                if (@u > 1) {
+                    sayre "Many picked via ".ki(sc.ip).":\n".ki $u;
+                    @u = $u[0];
+                }
+                @is = @u if @u;
+            }
+            
+            # z readies
+            if (z.sc.acgt && !z.c.code) {
+                my $y = eval z.c.s;
+                die "Throcompile z.y.cv: z.t: ".ind('  ',$@)."\n" if $@;
+                z.c.code = $y;
+            }
+            #
+            say "A.c.sip \t Onto A.t A.y.cv ~ C.t ~ z.t z.y.cv";
+            T.D = $z;
+            trip Acv/z.y.cv
+            $z = T.D;
+            #
+            # happens
+            for my $s (@is) {
+                z.sc.acgt eq 's' || die "nonacgts".wdump $z;
+                T.D = $z;
+                my $y = z.c.code;
+                ref $y || die "Compile z.y z.y.cv!";
+                G.i.h->($A,$C,$G,$T,$z,$s);
+                
+                T.ut && G&Tut,$s;
+                T.Z && G&Tz,$z;
+                G.tuberay && G.tuberay->($A,$C,$G,$T);
+                T.whack = T.nocvz = delete T.whock if T.whock;
+                last if T.not || T.whack;
+            }
+            # back
+            delete T.ut;
+            
+            A.y.cv = z.y.cv unless delete T.nocvz;
+            last if delete T.whack || T.not || T.seek;
+        }
+        continue {
+            $z = z.y.in || z.y.next; # or timeout, mass comb via A.m
+        }
+        if (delete T.seek) {
+            return G&throat;
+        }
+        # leaving
+        A.c.tug && G&tug,A.y.cv;
+        delete A.c.ov;
+        T.not && G&Tnot;
+        saybl "A.c.sip \t<--  A.t A.cv";
+        # TODO cycle all A.c.N as C
+        # TODO line with Targety interrupt potential
+        # see 1 KnowTime/Cone
+    
+    
 

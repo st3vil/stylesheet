@@ -4,14 +4,7 @@ Zequines: | # 1 centered self process
     # tube helpers
     n To
     # tubes of self
-    n Tube
-    
-    # getting Wesources
-    n SunBeatle
-    # using Wesources
-    n ThWay
-    # compiling code
-    n Babblar
+    n Tubes
 Atool: | # reliable/old A
     u i
     # snake outwards by A.up
@@ -126,12 +119,12 @@ To: | # party controls
         $s->();
     timer: %acgt:d cb
         Mojo::IOLoop->timer($d,$cb);
-Tube: | # G&A spawns A, G&throat progresses A, which works on C
+Tubes: | # G&A spawns A, G&throat progresses A, working on C
     u i
     # be a A.y = A (means is full of wires)
     # J are A that inherit from each other
     # as A wave connection to them
-    A: %acgt:s ov
+    A: %acgt:s ov c sc
         if (ref $s) {
             $A = $s;
         }
@@ -152,12 +145,12 @@ Tube: | # G&A spawns A, G&throat progresses A, which works on C
             trip At/$s
             saygr "A.c.sip A.t from i.t";
         }
+        %{A.c} = (%{A.c},%$c) if $c;
+        %{A.sc} = (%{A.sc},%$sc) if $sc;
+        @Me && die "No more trailing A Me: ".ki \@Me;
         if ($ov) {
             $ov /= 10 while $ov >= 1;
             A.c.ov = $ov;
-            if (@Me) {
-                A.c.N = \@Me;
-            }
             G&throat;
         }
         return $A
@@ -169,10 +162,8 @@ Tube: | # G&A spawns A, G&throat progresses A, which works on C
         $T = A.c.T ||= {};
         return if T.not;
         $s ||= A.c.of || A.t;
-        my $f = G&s,$s;
-        fc&max = A&tmax || 5; # distance from A to look
-        my $z = G&t,$f
-            || return sayre "Not found: f.t: ".G&sn;
+        my $z = G&t,$s
+            || return sayre "Not found: $s: ".G&sn;
         #snooze 500;
         my $uov = A.c.ov;
         my $ntug = 0.1;
