@@ -210,7 +210,8 @@ my @f = (
     'peace/new/Elvectors/1',
     'peace/new/Placement/1',
     'peace/new/Int/1',
-    'peace/new/Tripical/1'
+    'peace/new/Tripical/1',
+    'peace/new/ThArt/1'
 );
 
 $A->{V} && $G->{h}->($A,$C,$G,$T,'say','saygr','Some more');
