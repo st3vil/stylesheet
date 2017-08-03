@@ -202,13 +202,14 @@ while ($n) {
 };
 
 my @f = (
+    'peace/new/DungBeatles/1',
     'peace/new/Zequines/1',
-    'peace/new/Placement/1',
-    'peace/new/Int/1',
     'peace/new/Jaya/1',
     'peace/new/SenseCertainty/1',
     'peace/new/SelfConsciousness/1',
     'peace/new/Elvectors/1',
+    'peace/new/Placement/1',
+    'peace/new/Int/1',
     'peace/new/Tripical/1'
 );
 
@@ -220,6 +221,7 @@ $G->{h} = $G->{i}->{h} = $A->{i}->{h} || die "No h";
 $G->{w} = $A->{i}->{w} || die "No w";
 $G->{i}->{t} = $A->{i}->{t} || die "No t";
 $G->{ii} = $A->{ii};
+$A->{I} = $A->{ii};
 $A->{c}->{C} = $C = $G->{h}->($A,$C,$G,$T,"Ct",['topCevel'=>1]);
 $A->{c}->{T} = $T = {};
 $G->{h}->($A,$C,$G,$T,"Gee"); # gives $G->{way}, going
