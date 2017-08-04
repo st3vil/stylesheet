@@ -94,7 +94,7 @@ ElvisZpace: | # T u Zpace fast, caching its s 76-
     n Zpace
     t.cs->('sc top', "See");
     
-Zpace: | # hang La space charts off mo
+Space: | # hang La space charts off mo
     u alact
     n \'of:L'
     y.at.coil = 'tldo';
@@ -111,8 +111,9 @@ Zpace: | # hang La space charts off mo
         # stackable A with stitchable others interleaved in time
         # 6 FLIES
     
-    # plumb moment of cM-any
-    # or any that nogy things
+    # create L uC, the space
+    # plumb moment of cM or any of these nogindex'd things
+    # documented just below
     M 15: %of:mo,tldo:nogindex:y:L,vor:cM
         return if C.y.a; # already placed
         return die "MdubL" if C.y.L; # already placing
@@ -120,9 +121,16 @@ Zpace: | # hang La space charts off mo
         my $yknow = Ds&nogindex;
         return unless @{c&M||[]} || grep{C.y.>$_ } keys %$yknow;
         
-        my $L = C.y.L = G&A,L=>1,$C;
-        Lc&yknow = $yknow;
-        G&A,$L,8;
+        C.y.L = G&A,L=>8,{s=>$C,yknow=>$yknow};
+    
+    # an A for each of the many C
+    # the graphspace (L) tugs the atoms (a) along with its computation
+    # so C.y.a means the thing was a many, throw an untugged A on there
+    # we can do everything from L tho...
+    # L tugging slightly on mo would be more interesting
+    0 &&
+    a: %of:a
+        #
     
     0 && # ground descript, floating tool
     J 69: %of:mo,v:sJ
@@ -141,12 +149,7 @@ Zpace: | # hang La space charts off mo
         push @$l, "For J.t";
         saybl @$l;
         
-    # create L uC, the actuating
     # its y may be here if we are an atom within it
-    L 1:
-        (A&s) = @$s;
-    a 1: %of:a
-        (A&s) = @$s;
     
     # any gk of L to pull mo into an L (nogindex)
     M: %v:cM
@@ -170,7 +173,7 @@ Zpace: | # hang La space charts off mo
     out 12: %v:yout,vatis:!ref
         C.y.u = delete C.y.out if !ref C.y.out
     
-    #c a space to fill
+    #c L2 space to fill
     # if !M:
     #   y.in/out give it that much space & make holes in 1s&root's M
     #   y.thi that many C
@@ -346,9 +349,9 @@ Zpace: | # hang La space charts off mo
         ALs&Ly = $y; # u is shared placevolve meta
         my $i;
         for (@$M) {
-            _.y.v = "HERE";
             _.y.i = $i++;
-            _.y.a = G&tugA,a=>2=>$_;
+            # could tugA,a
+            _.y.a = G&A,a=>0=>{s=>$_};
         }
         # L can M the C also in a
     
@@ -537,6 +540,10 @@ Zpace: | # hang La space charts off mo
                 .($inte && ": intyresty: ".ki $inte);
             return
         }
-        G&A,n=>8=>$J,@$M;
+        # all should be C
+        ref $_ eq 'HASH' && _.y && _.y ne $_
+            || die "notC L M: ".ki($_)."\n  Midst: ".ki $M
+            for @$M;
+        G&A,mo=>8=>{s=>$_} for @$M;
     
 
