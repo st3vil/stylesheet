@@ -89,23 +89,57 @@ SirKill: | # crawl datastructure
         };
         # always a C
         # loop limbs$
-        my @L = (map{ _.y = $_ } {t=>'o',c=>{s=>$s},sc=>{}});
+        my @L = (map{ _.y = $_ } {t=>'o',up=>$C,c=>{s=>$s},sc=>{}});
         my @R;
         # builds up from z/in/tw/tv
         while (@L || @R) {
             # give these A/C to T for blowingup locator
-            my $A = shift(@L) || shift(@R);
-            A&ipi = 0; # increment per child
-            # A&cip
+            @L = reverse @R if !@L;
+            my $A = shift(@L);
             my $C = A&s;
-            $isC->($C) || die "notC: ".ki$C;
-            unless (A&insides) {
+            unless (A&last) { #c last reoccurs
+                # but first
+                $isC->($C) || die "notC: ".ki$C;
+                A&ipi ||= 0; # increment per child
+                if (A&comp eq 'tv') {
+                    A&last = ups&tv.>C.t.>C.y.cv || {};
+                }
+                elsif (A&comp) {
+                    die "comp A&comp"
+                }
+                else {
+                    A&ext || die "how to file";
+                    A&last = ups&Tv.>A&ext || {};
+                }
+                # for "attach to the above"
+                a&tv = {}; # t/cv join
+                a&Tv = {}; # nk/gk join
+                # < different namespacing? crunch function?
+            }
+            
+            unless (A&insides) { #c insides
                 my $st = {}; # same inside may appear many places
-                my $wa = {};
                 # Scuttle should tell ways in
                 # < checking that everything is found via each way
                 #   mostly it will be filling up the connection of
                 #   chucked together any way bits
+                # < should know all y/c/sc that look C or [C+]
+                my @at;
+                each nk,gk,v $C {
+                    next if 'y'eq$nk; # distracto or handled
+                    if (ref $v eq 'HASH') {
+                        $isC->($v) || next;
+                        push @at, ["$nk $gk",[$v]];
+                    }
+                    elsif (ref $v eq 'ARRAY') {
+                        next if $nk eq 'sc' && $gk eq 'z'; # handled
+                        next unless @$v == grep {
+                            ref $_ eq 'HASH' && $isC->($_) } @$v;
+                        push @at, ["$nk $gk",$v];
+                    }
+                    else {
+                    }
+                }
                 A&insides = [ # A inner
                     map {
                         _c&ind = A&ind+1;
@@ -124,25 +158,91 @@ SirKill: | # crawl datastructure
                             {t=>'o',up=>$A,c=>{s=>$_},sc=>{}}
                         } @$z
                     }
+                    @at, # attributes we can see
+                    # these all mean "inside", are in tv competition:
+                    map { $_->[2] = {comp=>'tv'} }
                     grep{defined}
                     (C.y.in ? do {
                         @S = my $S = C.y.in;
                         push @S, $S while $S = S.y.next;
-                        ['yinnext', \@S]
-                    } : undef),
-                    (C.sc.z ? do {
-                        ['sz',C.sc.z]
+                        ['y in', \@S]
                     } : undef),
                     (C.y.tw ? do {
-                        ['tw',[values %{C.y.tw}]]
+                        ['y tw',[values %{C.y.tw}]]
                     } : undef),
                     (C.y.tv ? do {
-                        ['tv',[map{values %$_} values %{C.y.tv}]]
+                        ['y tv',[map{values %$_} values %{C.y.tv}]]
+                    } : undef),
+                    (C.sc.z ? do {
+                        ['sc z',C.sc.z]
                     } : undef),
                 ];
-                each nk,gk 
-                # check $st for duplicates
-                # 
+                # check $st for duplicate s
+                each sz $st {
+                    @$z > 1 || next;
+                    my @z = @$z;
+                    @$z = pop @z;
+                    A&Atrm.>$_ ++ for @z;
+                }
+                @{A&insides} = grep { !A&Atrm.>$_ } @{A&insides}
+                    if A&Atrm;
+                
+                # so we know which values are things
+                #   with their own differencing A
+                A&ways_in = {};
+                push @{A&ways_in.>_c&ext ||= []}, $_ for @{insides};
+                
+                # attach to the above, possibly many
+                if (A&comp eq 'tv') {
+                    push @{ups&tv.>C.t.>C.y.cv ||= []}, $A;
+                }
+                elsif (A&comp) {
+                    die "comp A&comp"
+                }
+                else {
+                    A&ext || die "how to file";
+                    push @{ups&Tv.>A&ext ||= []}, $A;
+                }
+                
+                push @L, @{A&insides};
+                push @R, $A;
+                next;
+            }
+            
+            # in reverse, build up any difference
+            unless (A&diff) {
+                my $d = A&last;
+                my $D = A&diff = {};
+                # t will be nexted by Bablar
+                
+                # the values
+                each nk,gk,v $C {
+                    # not things that will change superficially
+                    # < non innext ys to know
+                    next if $nk eq 'y';
+                    next if A&ways_in->{"$nk $gk"};
+                    
+                    D&ng.>$nk.>$gk = $v;
+                    if (d&ng.>$nk.>$gk ne $v) {
+                        my $q = Ds&neg.>$nk.>$gk = {t=>$gk,c=>{s=>$v}};
+                        qc&new = 1 if !exists d&ng.>$nk.>$gk;
+                        qc&was = d&ng.>$nk.>$gk if !qc&new;
+                    }
+                }
+                each nk,gk,v d&ng {
+                    exists $C.>$nk.>$gk && next;
+                    Ds&neg.>$nk.>$gk = {t=>$gk,c=>{was=>$v}};
+                };
+                
+                each ext,v a&tv {
+                }
+                each ext,v a&Tv {
+                }
+                
+                
+                
+                push @R, $A;
+                next;
             }
             
         }
