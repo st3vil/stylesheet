@@ -209,37 +209,83 @@ SirKill: | # crawl datastructure
                 next;
             }
             
-            # in reverse, build up any difference
-            unless (A&diff) {
+            unless (A&diff) { #c difference in reverse
+                # last A, compare a&ng
                 my $d = A&last;
+                # to have Ds&neg - changed values nk/gk = q
+                # and Ds&pos - changed things index/$index = v
                 my $D = A&diff = {};
                 # t will be nexted by Bablar
                 
-                # the values
+                # the values change Ds&neg nk/gk
                 each nk,gk,v $C {
                     # not things that will change superficially
-                    # < non innext ys to know
                     next if $nk eq 'y';
                     next if A&ways_in->{"$nk $gk"};
                     
-                    D&ng.>$nk.>$gk = $v;
-                    if (d&ng.>$nk.>$gk ne $v) {
+                    ds&ng.>$nk.>$gk = $v;
+                    if (ds&ng.>$nk.>$gk ne $v) {
                         my $q = Ds&neg.>$nk.>$gk = {t=>$gk,c=>{s=>$v}};
-                        qc&new = 1 if !exists d&ng.>$nk.>$gk;
-                        qc&was = d&ng.>$nk.>$gk if !qc&new;
+                        qc&new = 1 if !exists ds&ng.>$nk.>$gk;
+                        qc&was = ds&ng.>$nk.>$gk if !qc&new;
                     }
                 }
-                each nk,gk,v d&ng {
+                each nk,gk,v ds&ng {
                     exists $C.>$nk.>$gk && next;
                     Ds&neg.>$nk.>$gk = {t=>$gk,c=>{was=>$v}};
                 };
                 
-                each ext,v a&tv {
+                # the yin change
+                # tv and Tv are indexes to one the many falls against here
+                each t,cv,v a&tv {
+                    push @{a&many.tv.>$t.>$cv ||= []}, shift @$v
+                        while @$v > 1;
+                    $v = shift @$v;
+                    a&tv.>$t.>$cv = $v;
+                    vc&el eq '8' && next;
+                    Ds&pos.tv.>$t.>$cv = $v;
                 }
+                each t,cv,v ds&tv {
+                    a&tv.>$t.>$cv && next;
+                    vc&el eq '9' && next;
+                    vc&el = '9';
+                    a&tv.>$t.>$cv = # remover to sort in?
+                    Ds&pos.tv.>$t.>$cv = $v;
+                }
+                
+                # values that were things
                 each ext,v a&Tv {
+                    push @{a&many.Tv.>$ext ||= []}, shift @$v
+                        while @$v > 1;
+                    $v = shift @$v;
+                    a&Tv.>$ext = $v;
+                    vc&el eq '8' && next;
+                    # sets the value
+                    Ds&neg.>$nk.>$gk = {t=>$gk,c=>{s=>$v}};
+                }
+                each ext,v ds&Tv {
+                    a&Tv.>$ext && next;
+                    my ($nk,$gk,$no) = split ' ', $ext;
+                    $nk && $gk && !$no || die "Much ext: $ext";
+                    # deletes the value
+                    Ds&neg.>$nk.>$gk = {t=>$gk,c=>{was=>$v}};
                 }
                 
-                
+                unless (Ds&neg || Ds&pos) {
+                    # resume/copy
+                    A&el = '8';
+                    c&s = ds&s;
+                }
+                else {
+                    $C = c&s = {t=>C.t,y=>{cv=>C.y.cv}};
+                    # put everything there
+                    each nk,gk,v a&ng {
+                        $C.>$nk.>$gk = $v
+                    }
+                    each nk,gk,v a&Tv {
+                        $C.>$nk.>$gk = $v
+                    }
+                }
                 
                 push @R, $A;
                 next;
