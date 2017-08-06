@@ -5,8 +5,11 @@ SelfConsciousness: | # your fish brain
     n Koul
 FishBrain: | # beginning middle and end superimposed on J's state
     u i
-    s:
+    s: %acgt:c sc
         sayyl "oscillating!";
+        $A = G&A,s=>0=>$c,$sc
+        # s could order a particular ground
+        
         # ground has been completed, pos revamping sleepybits from drain
         my $g = A.ground || die "noground";
              gs&J eq A.1 || die "ground sJ not A1";
@@ -19,48 +22,137 @@ FishBrain: | # beginning middle and end superimposed on J's state
         # brain is ongoing, one per ground
         A&s = $C = 1s&brains.>$ch ||= G&Ct,[$ch=>1=>{}=>{J=>A.1};
         
-        # o in
-        my $o = A&in = G&o,$d,{liveon=>$C,t=>'in'};
-        # Core is everything changed via in/next/z 
-        # transporting but not C'ing attributes that are C
-        # 
-        my @l = map { G&A,O=>2=>_.c,_.sc } @{os&Core};
+        # o in - to map the drain and OC the changes
+        #   climbing in/next/z to produce OC feedable clones,
+        #   C that are attributes it keeps/diffs but doesn't OC
+        # the oinD is origin in drain
+        # the oinC is our copy of it
+        # the OC is another copy, which the oiD gets
         
-        # O
+        # where we'd want to forget $d, the drain itself...
+        my $o = A&in = G&o,$d,{liveon=>$C,t=>'in',yoff=>'OC'};
+        # Core is changes
+        my @O = map { G&A,O=>2=>_.c,_.sc } @{os&Core};
+        
+        # O - only changes and their parents
         # < tug for .1 progress
-        G&A,$_,8 for @l;
+        # < with an A=Os for all
+        G&A,$_,8 for @O;
         
-        # < wormholes
+        # < wOrms, in-wormholes
+        #   where thing is our part of some sharing of truth
+        # is one-ish with:
+        # < waves of language solvents
+        # all basically generating ongoing job lists
+        # usually pumping so-classified things through some filter
+        # everything moving comes classified as some elvis
+        #   so s&of encodings happen now
+        #   and W doings on other hosts emit through Op
+        #   W doing might be updating it on the news...
         
+        # another use for o be the upping/downing of indexes
+        # amongst sources that may not all be awake.
+        
+        # Cora is Core with unchanged stuff too,
+        #   which will have its last awake .y.OC
+        #   slight possibility of zombies if you topy&OCs&qua++
+        #     will news themselves until oinD quashes changes
+        my $r = 1s&root || die "how to hold many";
+        $r = r.y.OC || die "root didn't OC";
         # put this stuff in the idea of itself
-        my ($r)    = grep { _.y.oinD eq 1s&root } map{_c&s} @l;
-        $r ||= s&root; # is the OC from last time
-        $r || die "no root to A.1.t";
-        my @allOC = map{ _.y.OC || die "noOC: ".ki$_ } @{os&Cora}
-        rs&z = [
-            grep { $_ ne $r }
-            map { _.y.OC } @{os&Cora}
+        rs&z = [ grep{ $_ ne $r } map{ _.y.OC } @{os&Cora} ];
         
-        ]; # all OC, there now to not, minus $r
+        # o ou - to finalise ourselves and OK changes
+        $o = A&ut = G&o,$r,{liveon=>$C,t=>'ut'};
+        my @K = map { G&A,K=>2=>_.c,_.sc } @{os&Core};
         
-        # o out
-        $o = A&in = G&o,$r,{liveon=>$C,t=>'out'};
-        # self servers (Dogu/-lookin eg) wants to see out-changes as in-changes
+        # K - only changes and their parents
+        #   <6 becomes things for s&top, s&tv, etc
+        #   >6 comps for writing Lines
+        # < an A=Ks would map out AWritering
+        #     pointing to objects already on the ground
+        G&A,$_,8 for @K;
         
-        # o out
-        # K
+        # pick up on r.y.OK and jump down Wormhole
         # -> W
-        
+    #     watching the K diverge as a way to get input is interesting
+    # self servers (Dogu/-lookin eg) wants to see out-changes as in-changes
 SirKill: | # crawl datastructure
     u i
     o:
         saygr "Do o: ".ki $s;
+        $A = G&A,o=>0=>$c,$sc;
+        my $on = A&liveon || die "live where";
+        $C = $on.>A&t ||= {};
+        my $isC = &C{
+            defined C.t && C.y && C.c && C.sc
+        };
         # always a C
-        # loop limbs
+        # loop limbs$
+        my @L = (map{ _.y = $_ } {t=>'o',c=>{s=>$s},sc=>{}});
+        my @R;
+        # builds up from z/in/tw/tv
+        while (@L || @R) {
+            # give these A/C to T for blowingup locator
+            my $A = shift(@L) || shift(@R);
+            A&ipi = 0; # increment per child
+            # A&cip
+            my $C = A&s;
+            $isC->($C) || die "notC: ".ki$C;
+            unless (A&insides) {
+                my $st = {}; # same inside may appear many places
+                my $wa = {};
+                # Scuttle should tell ways in
+                # < checking that everything is found via each way
+                #   mostly it will be filling up the connection of
+                #   chucked together any way bits
+                A&insides = [ # A inner
+                    map {
+                        _c&ind = A&ind+1;
+                        _.y = $_
+                    }
+                    map {
+                        my ($t,$z) = $_->[0];
+                        map {
+                            _c&ext = $t;
+                            _c&zip = A&ipi++;
+                            _c&ind = A&ind+1;
+                            my $s = "_c&s";
+                            push @{$st.>$s ||= []}, $_;
+                            _.y = $_;
+                        } map {
+                            {t=>'o',up=>$A,c=>{s=>$_},sc=>{}}
+                        } @$z
+                    }
+                    grep{defined}
+                    (C.y.in ? do {
+                        @S = my $S = C.y.in;
+                        push @S, $S while $S = S.y.next;
+                        ['yinnext', \@S]
+                    } : undef),
+                    (C.sc.z ? do {
+                        ['sz',C.sc.z]
+                    } : undef),
+                    (C.y.tw ? do {
+                        ['tw',[values %{C.y.tw}]]
+                    } : undef),
+                    (C.y.tv ? do {
+                        ['tv',[map{values %$_} values %{C.y.tv}]]
+                    } : undef),
+                ];
+                each nk,gk 
+                # check $st for duplicates
+                # 
+            }
+            
+        }
         # going innexz (following y.in/y.next and s&z)
         # leaves sayable data dump,
         # 
         # things cloned and wired as they were
+        
+        @{os&Core} = # everything changed
+        @{os&Cora} = # everything
 Houp: | # live the C, colour art in, make swims
     u a
     # for any zip change (and its parents)
@@ -77,8 +169,6 @@ Houp: | # live the C, colour art in, make swims
         C.y.OC = G&hup,A&s;
         # < using o to do ^ that for us, to preserve all wiring
         
-        C.y.oinC = A&from;
-        A&from.y.OC = $C;
         # so D knows nothing about its being photographed?
         # C here is OC, OC.y.oinD = D, OC.y.oinC = D's copy via o
         # and D's copy is C.y.oiC

@@ -602,7 +602,9 @@ Babblar: | # unpack deceptions, perl code the code
                     my $v = @in > 1 ? 
                         $in[0].'v' : shift(@in);
                     $s .= $v;
-                    $s .= ') = each %{'.$from.' }) {';
+                    $s .= ') = each %{'.$from.' }) {'
+                        .(@in > 1 ?
+                            " ref \$$v eq 'HASH' || next;" : "");
                     $from = '$'.$v;
                     push @open, $s;
                 }
