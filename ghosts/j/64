@@ -289,10 +289,11 @@ SirKill: | # crawl datastructure
                     # deletes the value
                     Ds&neg.>vc&nk.>vc&gk = {t=>vc&gk,c=>{was=>vc&s}};
                 }
-            }
-            unless (a&clones) { #c generate replacable bodies, rev/insidest first
+                
                 # may not need to move
                 A&el = '8' unless Ds&neg || Ds&pos;
+            }
+            unless (a&clones) { #c generate replacable bodies, rev/insidest first
                 
                 # a&ng is nk/gk = $v ground as is
                 #   attributes including Tv things, they skipped diffing initially
@@ -307,9 +308,6 @@ SirKill: | # crawl datastructure
                 #     but needing to sort in the remover with a&tv
                 #     should skip the Yc&el='9' when wiring non-lv
                 #     but pop them out disconnected in Core
-                # Cora is where everything sorts into a flat list
-                # Core is same order with A&el=8 removed
-                # then K makes a .prev if it's not Cora-order
                 
                 # make clones, usu
                 # - one to keep on record to diff
@@ -319,6 +317,7 @@ SirKill: | # crawl datastructure
                 # < knowing all refs on $o, wire Cgen, pointerise lv
                 for my $t (@{oc&clones}) {
                     my $E = {t=>C.t,y=>{cv=>C.y.cv}};
+                    
                     if (A&el eq '8') {
                         $E = a&clones.>$t = ds&clones.>$t
                             || die "el8 had no clone $t";
@@ -335,7 +334,7 @@ SirKill: | # crawl datastructure
                     
                     }
                     if ($t eq 'lv') {
-                        Ec&el = A&el;
+                        Ec&el = A&el if !defined Ec&el;
                     }
                     if (my $ys = oc&ysource) {
                         # oinD = in drain C
@@ -353,6 +352,7 @@ SirKill: | # crawl datastructure
                         #   but could change as this clone
                         $E = $C;
                     }
+                    # the clone can see its A
                     E.y.A = $A;
                     
                     a&clones.>$t = $E;
@@ -494,6 +494,8 @@ SirKill: | # crawl datastructure
                         
                         # moment of life its for
                         Ec&el = A&el;
+                        # the clone can (still) see its A
+                        E.y.A = $A;
                     }
                     
                     # put for wiring to tv
@@ -507,33 +509,70 @@ SirKill: | # crawl datastructure
                 
             }
             
-            unless (a&wiring) { #c link together
+            unless (a&wiring) { #c link together, wants to do in reverse
+                # to hoist the list of everything:
+                #   Cora is where everything sorts into a flat list
+                #   Core is same order with A&el=9 (removals) added
+                #     and A&el=8 removed as far as order of everything is implied
+                # then K makes a .prev if it's not Cora-order?
                 for my $t (@{oc&clones}) {
                     $E = a&clones.>$t;
+                    # share clones their Cor(e|a) hoisty lists
+                    my $net = a&clonet.>$t = {};
                     
                     if (Ec&z) {
                         # wire the tv plane
-                        my $ra = [];
-                        my $re = [];
-                        for my $z (@{Ec&z}) {
+                        my $ra = []; # everything still there
+                        my $re = []; # everything changing
+                        my $la; # what to put before things in lv
+                        for my $i (@{Ec&z}) {
                             my $Y = z.y.A;
-                            push @$ra, $z if Ac&el ne '9';
-                            push @$ra, $z if Ac&el ne '8';
+                            my $wet = Yc&clonet.>$t;
+                            
+                            if (Yc&el ne '9') {
+                                # the non-lv tv plane
+                                push @$ra, $i;
+                                # and load Cora
+                                push @{net.Cora||=[]}, $i, @{wet.Cora||[]};
+                            }
+                            
+                            # only re matters to lv, sparse negating C
+                            # each y could link to tv reals
+                            if (Yc&el ne '8') {
+                                if ($la && $t eq 'lv' && Yc&el ne '3' && Yc&el ne '9') {
+                                    # throw in el=8 for the thing before
+                                    push @$re, $la if $ra->[-1] ne $la;
+                                }
+                                push @$re, $i;
+                                push @{net.Core||=[]}, $i, @{wet.Core||[]};
+                            }
+                            $la = $z;
                         }
+                        # lv wants to wire everything changing togehter
+                        my $wi = $t eq 'lv' ? $re : $ra;
+                        undef $la;
+                        for my $i (@$wi) {
+                            E.y.in ||= $i;
+                            i.y.out = $E;
+                            if ($la) {
+                                la.y.next = $i;
+                                i.y.prev = $la;
+                            }
+                            $la = $i;
+                        }
+                        Ec&z = $wi;
                     }
-                    my $U = upc&clones.>$t || die "no upclone $t";
-                    push @{Us&z||=[]}, $E;
                     
                     # last clone becomes A&s, or C if you steal this A's c/sc
-                    A&s = $C;
+                    A&s = $E;
+                    # assume everything's parent will be active at the last hop
+                    A&Core = [$E,@{net.Core||[]}];
+                    A&Cora = [$E,@{net.Cora||[]}];
                 }
             }
-            
         }
-        # going innexz (following y.in/y.next and s&z)
-        # leaves sayable data dump,
-        # 
-        # things cloned and wired as they were
+        
+        # export some io sc to o
         
         @{os&Core} = # everything changed
         @{os&Cora} = # everything
