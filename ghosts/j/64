@@ -246,6 +246,7 @@ SirKill: | # crawl datastructure
                 # the yin change Ds&pos (tv nk/gk | Tv exp)
                 # tv and Tv are indexes that may flatten the many
                 each t,cv,Y a&tv {
+                    # last one wins
                     push @{a&many.tv.>$t.>$cv ||= []}, shift @$Y
                         while @$Y > 1;
                     $Y = shift @$Y;
@@ -353,35 +354,121 @@ SirKill: | # crawl datastructure
                 push @R, $A if A.up eq $o;
                 next;
             }
-            unless (a&ord) { # c
-                # gathering refs 
-                # gather on the source ref, first A wins pointing to
+            unless (a&ord) { #c ordering, gathering
+                # gathering refs, we already in order
+                # first A's clones win pointing to
+                # < is depth first tho...
                 my $r = os&refs.>$C ||= {};
+                push @{rs&Ys||=[]}, $A;
                 
-                # from first o, sort tv
-                # the first o starts them all
+                # should know if v is:
+                #   referenced somewhere else, for lv pointers
+                #   a cloned C, to point to relevant clone
+                #     dont y.out etc if trying to transport intact C
+                each nk,gk,v a&ng {
+                    ref $v || next;
+                    my $r = os&refs.>$v ||= {};
+                    push @{rs&Ys||=[]}, $A;
+                }
+                
+                # now create more of that ^ order
+                my @l;
+                if (a&Tv) {
+                    # eg Tv C masters yin C, unless Scuttled to hup
+                    push @l, map { a&Tv.>$_ } sort keys %{a&Tv};
+                }
+                if (a&tv) {
+                    # then cv/t
+                    my $yttv;
+                    each t,cv,Y a&tv {
+                        $yttv.>$cv.>$t = $Y;
+                    }
+                    for my $cv (sort keys %$yttv) {
+                        my $tw = $yttv.>$cv;
+                        for my $t (sort keys %$tw) {
+                            my $Y = $tw.>$t;
+                            push @l, $Y;
+                        }
+                    }
+                    # sleepables here? refs compet should still work
+                }
+                a&ord = 'sure';
+                # do these things before our next thing
+                # to keep our order - unshift for @l would reverse it
+                unshift @L, @l;
+                # or our next us
+                push @L, $A;
+                next;
             }
             
             unless (a&ready) {
-            
-                    
-                    # should know if v is:
-                    #   referenced somewhere else, for lv pointers
-                    #   a cloned C, to point to relevant clone
-                    each nk,gk,v a&ng {
-                        ref $v || next;
-                        my $r = ref $v && os&refs.>$v ||= {};
-                        
-                        
-                        push @{rs
-                        $E.>$nk.>$gk = $v;
+                if (A.up eq $o) {
+                    # sort through the single pile of refs
+                    push @nop;
+                    each ref,r os&refs {
+                        @{_s&Ys} > 1 || push(@nop, $ref) && next;
+                        my $Y = rs&Ys->[0];
+                        # becomes the definitive source of that ref
+                        # may be its C for Tv/tv, some Cnkgk for ng
+                        # so lv can be perfect
+                        rs&Y = $Y;
                     }
+                    delete os&refs.>$_ for @nop;
+                }
+                # assign the correct refs
+                # same order as refs won, so they should exist where pointed
+                
+                for my $t (@{oc&clones}) {
+                    $E = a&clones.>$t;
+                    
+                    if (A&el eq '8') {
+                        # leave out of above lv
+                    }
+                    
+                    # 
+                    each nk,gk,v a&ng {
+                        if (my $r = ref $v && os&refs.>$v ) {
+                            my $Y = rs&Y;
+                            if ($A ne $Y) { # other has the one thing
+                                push @{Ys&pointed.Tv.>$nk.>$gk ||= []}, $A;
+                                push @{a&pointing.Tv.>$nk.>$gk ||= []}, $Y;
+                                if ($v eq Yc&s) { # is Tv implanting
+                                    # should transport intact ref
+                                    $v = Ys&clones.>$t;
+                                }
+                                else {
+                                    my $found = 0;
+                                    # yep
+                                    $v = Ys&t;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if ($t eq 'lv') {
+                        if (A&el eq '8') {
+                            # leave out unless chointing
+                        }
+                        # des-c-ribe gone-ness
+                        # from Ds&neg.>vc&nk.>vc&gk = C.c.was only
+                    }
+                    
                     each nk,gk,v a&Tv {
                         $E.>$nk.>$gk = $v;
                     }
                     
+                    # yer upwards
+                    my $U = upc&clones.>$t || die "no upclone $t";
+                    
+                    U.y.in ||= $E;
+                    E.y.out = $U;
+                    my $la = U
+                    
+                    
+                    
                     # A&s/C was in drain C, now is the last clone
                     A&s = $E;
+                }
             }
             
         }
