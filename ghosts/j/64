@@ -259,6 +259,8 @@ SirKill: | # crawl datastructure
                     a&tv.>$t.>$cv && next;
                     Yc&el eq '9' && next;
                     Yc&el = '9';
+                    delete Ys&ord;
+                    delete Ys&ready;
                     a&tv.>$t.>$cv = # remover to sort in?
                     Ds&pos.tv.>$t.>$cv = $Y;
                 }
@@ -325,10 +327,8 @@ SirKill: | # crawl datastructure
                         # never happens:
                         #  - Tv goners are Ds&neg-ations
                         #  - tv goners are a&tv.>$t.>$cv = old $Y
-                        #    will be brought back into play during a&ord
-                        #    but shouldn't emit non-lv objects then
-                        # 
-                        # (has Ds&pos.tv.>$t.>$cv = old $Y)
+                        #    will be brought back into play with a&ord
+                        #    but shouldn't emit non-lv objects
                     }
                     else {
                         A&el = Ds&allnew ? '1' : '3';
@@ -353,6 +353,7 @@ SirKill: | # crawl datastructure
                         #   but could change as this clone
                         $E = $C;
                     }
+                    E.y.A = $A;
                     
                     a&clones.>$t = $E;
                 }
@@ -454,7 +455,9 @@ SirKill: | # crawl datastructure
                             # is Tv implanting
                             #   or something in a ty somewhere
                             # should transport intact ref as clone
-                            $v = Ys&clones.>$t || die "noclone $t"
+                            $v = Ys&clones.>$t || die "noclone $t";
+                            # for an lv to tell of encoded properties
+                            a&haveC.>$nk.>$gk = $v;
                         }
                         else {
                             die "TheresnorefonY ".ki[$v,$Y];
@@ -462,42 +465,41 @@ SirKill: | # crawl datastructure
                     }
                     if ($t eq 'lv') {
                         my $neg = Ds&neg;
-                        # lv: t y el=9, no detail
+                        # lv: t y el=9, no detail (in up z tho)
                         $neg = {} if A&el eq '9';
-                        
-                        
-                        
-                        # in over z tho
-                    }
-                    else { # lv puts negations only
+                        # which are already there
+                        each nk,gks $E {
+                            ref $gks || next;
+                            delete $E.>$nk.>$_ for
+                                grep { !$neg.>$nk.>$_ } keys %$gks;
+                        }
+                        # to drop universals named in Ec&ds, etc
                         my $dn = {};
-                        each nk,gk,q Ds&neg {
+                        each nk,gk,q $neg {
                             if (!exists qc&s) {
                                 $dn.>$nk.>$gk = 1;
                             }
                             else {
-                                $E.>$nk.>$gk = q.c.s
+                                $E.>$nk.>$gk eq q.c.s || die "wasnt neg/ng"
+                                    .ki[[$nk,$gk],$q,$E];
                             }
                         }
-                        # to drop universals named in E.c.ds, etc
-                        #   encoding this may need json
+                        # encoding this may need json
                         each nk,gks $dn {
                             $nk = 's' if $nk eq 'sc';
                             E.c->{"d$nk"} = join ' ', sort keys %$gks;
                         }
+                        # the lv may a&haveC, locating C attr
+                        #   and explaining their encoding
+                        
+                        # moment of life its for
+                        Ec&el = A&el;
                     }
                     
-                    # put for wirers
-                    my $U = upc&clones.>$t || die "no upclone $t";
-                    push @{Us&z||=[]}, $E;
-                    
-                    if ($t eq 'lv') {
-                        # fill c/sc by neg
-                        if (A&el eq '8') {
-                            # leave out unless chointing
-                        }
-                        # des-c-ribe gone-ness
-                        # from Ds&neg.>vc&nk.>vc&gk = C.c.was only
+                    # put for wiring to tv
+                    if (!A&isTv) {
+                        my $U = upc&clones.>$t || die "no upclone $t";
+                        push @{Us&z||=[]}, $E;
                     }
                 }
                 a&ready = 1;
@@ -509,9 +511,16 @@ SirKill: | # crawl datastructure
                 for my $t (@{oc&clones}) {
                     $E = a&clones.>$t;
                     
-                    #
-                    Ds&pos.tv.>$t.>$cv = $Y;
-                    
+                    if (Ec&z) {
+                        # wire the tv plane
+                        my $ra = [];
+                        my $re = [];
+                        for my $z (@{Ec&z}) {
+                            my $Y = z.y.A;
+                            push @$ra, $z if Ac&el ne '9';
+                            push @$ra, $z if Ac&el ne '8';
+                        }
+                    }
                     my $U = upc&clones.>$t || die "no upclone $t";
                     push @{Us&z||=[]}, $E;
                     
