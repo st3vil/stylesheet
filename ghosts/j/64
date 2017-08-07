@@ -83,20 +83,19 @@ SirKill: | # crawl datastructure
         saygr "Do o: ".ki $s;
         $A = G&A,o=>0=>$c,$sc;
         my $on = A&liveon || die "live where";
-        $C = $on.>A&t ||= {};
+        my $o = A&s = $on.>A&t ||= {};
         my $isC = &C{
             defined C.t && C.y && C.c && C.sc
         };
-        # always a C
-        # loop limbs$
-        my @L = (map{ _.y = $_ } {t=>'o',up=>$C,c=>{s=>$s},sc=>{}});
+        # many A=o hold cs=C
+        my @L = map{ _.y = $_ } {t=>'o',up=>$o,c=>{s=>$s},sc=>{}};
         my @R;
         # builds up from z/in/tw/tv
         while (@L || @R) {
-            # give these A/C to T for blowingup locator
             @L = reverse @R if !@L;
             my $A = shift(@L);
             my $C = A&s;
+            # < give these A/C to T for blowingup locator
             unless (A&last) { #c last reoccurs
                 # but first
                 $isC->($C) || die "notC: ".ki$C;
@@ -129,13 +128,13 @@ SirKill: | # crawl datastructure
                     next if 'y'eq$nk; # distracto or handled
                     if (ref $v eq 'HASH') {
                         $isC->($v) || next;
-                        push @at, ["$nk $gk",[$v]];
+                        push @at, ["$nk $gk",[$v],{nk=>$nk,gk=>$gk}];
                     }
                     elsif (ref $v eq 'ARRAY') {
                         next if $nk eq 'sc' && $gk eq 'z'; # handled
                         next unless @$v == grep {
                             ref $_ eq 'HASH' && $isC->($_) } @$v;
-                        push @at, ["$nk $gk",$v];
+                        push @at, ["$nk $gk",$v,{nk=>$nk,gk=>$gk}];
                     }
                     else {
                     }
@@ -209,21 +208,25 @@ SirKill: | # crawl datastructure
                 next;
             }
             
-            unless (A&diff) { #c difference in reverse
+            unless (A&diff) { #c difference, in reverse, insidest first
                 # last A, compare a&ng
                 my $d = A&last;
                 # to have Ds&neg - changed values nk/gk = q
                 # and Ds&pos - changed things index/$index = v
                 my $D = A&diff = {};
-                # t will be nexted by Bablar
+                Ds&allnew = 1 if !dc&el;
                 
-                # the values change Ds&neg nk/gk
+                # the values
+                # maintain Ds&ng nk/gk
+                # change of Ds&neg nk/gk
+                #  - this each Bablar will next on !ref t
+                #  and avoid y, t/cv we write in
                 each nk,gk,v $C {
                     # not things that will change superficially
                     next if $nk eq 'y';
                     next if A&ways_in->{"$nk $gk"};
                     
-                    ds&ng.>$nk.>$gk = $v;
+                    a&ng.>$nk.>$gk = $v;
                     if (ds&ng.>$nk.>$gk ne $v) {
                         my $q = Ds&neg.>$nk.>$gk = {t=>$gk,c=>{s=>$v}};
                         qc&new = 1 if !exists ds&ng.>$nk.>$gk;
@@ -235,14 +238,14 @@ SirKill: | # crawl datastructure
                     Ds&neg.>$nk.>$gk = {t=>$gk,c=>{was=>$v}};
                 };
                 
-                # the yin change
-                # tv and Tv are indexes to one the many falls against here
+                # the yin change Ds&pos (tv nk/gk | Tv exp)
+                # tv and Tv are indexes that may flatten the many
                 each t,cv,v a&tv {
                     push @{a&many.tv.>$t.>$cv ||= []}, shift @$v
                         while @$v > 1;
                     $v = shift @$v;
-                    a&tv.>$t.>$cv = $v;
-                    vc&el eq '8' && next;
+                    a&tv.>$t.>$cv = $v; # count it
+                    vc&el eq '8' && next; # sleep
                     Ds&pos.tv.>$t.>$cv = $v;
                 }
                 each t,cv,v ds&tv {
@@ -258,13 +261,16 @@ SirKill: | # crawl datastructure
                     push @{a&many.Tv.>$ext ||= []}, shift @$v
                         while @$v > 1;
                     $v = shift @$v;
-                    a&Tv.>$ext = $v;
-                    vc&el eq '8' && next;
+                    a&Tv.>$ext = $v; # count it
+                    vc&el eq '8' && next; # sleep
+                    vc&nk && vc&gk || die "No ext nkgk: $ext: ".ki $v;
                     # sets the value
-                    Ds&neg.>$nk.>$gk = {t=>$gk,c=>{s=>$v}};
+                    # < no el=3 possible?
+                    Ds&neg.>vc&nk.>vc&gk = {t=>vc&gk,c=>{s=>$v}};
                 }
                 each ext,v ds&Tv {
                     a&Tv.>$ext && next;
+                    vc&nk && vc&gk || die "No ext nkgk: $ext: ".ki $v;
                     my ($nk,$gk,$no) = split ' ', $ext;
                     $nk && $gk && !$no || die "Much ext: $ext";
                     # deletes the value
@@ -277,14 +283,18 @@ SirKill: | # crawl datastructure
                     c&s = ds&s;
                 }
                 else {
-                    $C = c&s = {t=>C.t,y=>{cv=>C.y.cv}};
+                    # build the ephemura
+                    
+                    $E = {t=>C.t,y=>{cv=>C.y.cv}};
                     # put everything there
                     each nk,gk,v a&ng {
-                        $C.>$nk.>$gk = $v
+                        $E.>$nk.>$gk = $v
                     }
                     each nk,gk,v a&Tv {
-                        $C.>$nk.>$gk = $v
+                        $E.>$nk.>$gk = $v
                     }
+                    E.y.oinD = $C;
+                    A&s = $E;
                 }
                 
                 push @R, $A;
