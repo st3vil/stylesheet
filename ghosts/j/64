@@ -322,7 +322,12 @@ SirKill: | # crawl datastructure
                             || die "el8 had no clone $t";
                     }
                     elsif (A&el eq '9') {
-                        # never happens, see Tv goners
+                        # never happens:
+                        #  - Tv goners are Ds&neg-ations
+                        #  - tv goners are a&tv.>$t.>$cv = old $Y
+                        #    will be brought back into play during a&ord
+                        #    but shouldn't emit non-lv objects then
+                        # 
                         # (has Ds&pos.tv.>$t.>$cv = old $Y)
                     }
                     else {
@@ -342,8 +347,10 @@ SirKill: | # crawl datastructure
                     }
                     
                     if (A&isTv && $t ne 'lv') {
-                        # if we are a Tv, dont? clone
+                        # if we are a Tv, transport intact?
                         # ups&ng will overwrite this anyway?
+                        #   will find it through os&refs, be the same
+                        #   but could change as this clone
                         $E = $C;
                     }
                     
@@ -368,6 +375,7 @@ SirKill: | # crawl datastructure
                 each nk,gk,v a&ng {
                     ref $v || next;
                     my $r = os&refs.>$v ||= {};
+                    a&whererefis.>$v = [$nk,$gk];
                     push @{rs&Ys||=[]}, $A;
                 }
                 
@@ -401,7 +409,7 @@ SirKill: | # crawl datastructure
                 next;
             }
             
-            unless (a&ready) {
+            unless (a&ready) { #c set new values
                 if (A.up eq $o) {
                     # sort through the single pile of refs
                     push @nop;
@@ -415,59 +423,100 @@ SirKill: | # crawl datastructure
                     }
                     delete os&refs.>$_ for @nop;
                 }
+                
                 # assign the correct refs
                 # same order as refs won, so they should exist where pointed
-                
                 for my $t (@{oc&clones}) {
                     $E = a&clones.>$t;
                     
-                    if (A&el eq '8') {
-                        # leave out of above lv
-                    }
-                    
-                    # 
+                    # plot entanglements amidst assigning values
+                    #   unless we're to transport intact
+                    #   the right thing will be in Ys&clones by now
+                    #
                     each nk,gk,v a&ng {
-                        if (my $r = ref $v && os&refs.>$v ) {
-                            my $Y = rs&Y;
-                            if ($A ne $Y) { # other has the one thing
-                                push @{Ys&pointed.Tv.>$nk.>$gk ||= []}, $A;
-                                push @{a&pointing.Tv.>$nk.>$gk ||= []}, $Y;
-                                if ($v eq Yc&s) { # is Tv implanting
-                                    # should transport intact ref
-                                    $v = Ys&clones.>$t;
-                                }
-                                else {
-                                    my $found = 0;
-                                    # yep
-                                    $v = Ys&t;
-                                }
+                        $E.>$nk.>$gk = $v;
+                        my $r = ref $v && os&refs.>$v || next;
+                        my $Y = rs&Y;
+                        next if $A eq $Y;
+                        # other has the one thing
+                        #  < link C that knows where either one is
+                        #    keeping refs on the yonder A will do
+                        if (my $nkgk = Ys&whererefis.>$v ) {
+                            my $V = Yc&s;
+                            my ($nk,$gk) = @$nkgk;
+                            $V.>$nk.>$gk eq $v
+                                || die "Refwasnotat ".ki[$v,$nkgk,$V];
+                            $V = Ys&clones.>$t || die "noclone nkgk $t";
+                            # may differ if Scuttled to...
+                            $v = $V.>$nk.>$gk;
+                        }
+                        elsif ($v eq Yc&s) {
+                            # is Tv implanting
+                            #   or something in a ty somewhere
+                            # should transport intact ref as clone
+                            $v = Ys&clones.>$t || die "noclone $t"
+                        }
+                        else {
+                            die "TheresnorefonY ".ki[$v,$Y];
+                        }
+                    }
+                    if ($t eq 'lv') {
+                        my $neg = Ds&neg;
+                        # lv: t y el=9, no detail
+                        $neg = {} if A&el eq '9';
+                        
+                        
+                        
+                        # in over z tho
+                    }
+                    else { # lv puts negations only
+                        my $dn = {};
+                        each nk,gk,q Ds&neg {
+                            if (!exists qc&s) {
+                                $dn.>$nk.>$gk = 1;
                             }
+                            else {
+                                $E.>$nk.>$gk = q.c.s
+                            }
+                        }
+                        # to drop universals named in E.c.ds, etc
+                        #   encoding this may need json
+                        each nk,gks $dn {
+                            $nk = 's' if $nk eq 'sc';
+                            E.c->{"d$nk"} = join ' ', sort keys %$gks;
                         }
                     }
                     
+                    # put for wirers
+                    my $U = upc&clones.>$t || die "no upclone $t";
+                    push @{Us&z||=[]}, $E;
+                    
                     if ($t eq 'lv') {
+                        # fill c/sc by neg
                         if (A&el eq '8') {
                             # leave out unless chointing
                         }
                         # des-c-ribe gone-ness
                         # from Ds&neg.>vc&nk.>vc&gk = C.c.was only
                     }
+                }
+                a&ready = 1;
+                push @L, $A;
+                
+            }
+            
+            unless (a&wiring) { #c link together
+                for my $t (@{oc&clones}) {
+                    $E = a&clones.>$t;
                     
-                    each nk,gk,v a&Tv {
-                        $E.>$nk.>$gk = $v;
-                    }
+                    #
+                    Ds&pos.tv.>$t.>$cv = $Y;
                     
-                    # yer upwards
                     my $U = upc&clones.>$t || die "no upclone $t";
+                    push @{Us&z||=[]}, $E;
                     
-                    U.y.in ||= $E;
-                    E.y.out = $U;
-                    my $la = U
-                    
-                    
-                    
-                    # A&s/C was in drain C, now is the last clone
-                    A&s = $E;
+                    # last clone becomes A&s, or C if you steal this A's c/sc
+                    A&s = $C;
                 }
             }
             
