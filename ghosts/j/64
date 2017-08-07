@@ -139,7 +139,7 @@ SirKill: | # crawl datastructure
                         next if $nk eq 'sc' && $gk eq 'z'; # handled
                         next unless @$v == grep {
                             ref $_ eq 'HASH' && $isC->($_) } @$v;
-                        push @at, ["$nk $gk",$v,{nk=>$nk,gk=>$gk}];
+                        push @at, ["$nk $gk",$v,{isTv=>1,nk=>$nk,gk=>$gk}];
                     }
                     else {
                     }
@@ -216,10 +216,10 @@ SirKill: | # crawl datastructure
             unless (A&diff) { #c difference, in reverse, insidest first
                 # last A, compare a&ng
                 my $d = A&last;
-                # to have Ds&neg - changed values nk/gk = q
-                # and Ds&pos - changed things index/$index = v
                 my $D = A&diff = {};
                 Ds&allnew = 1 if !dc&el;
+                # Ds&neg - changed values nk/gk = q
+                # Ds&pos - changed things index/$index = Y
                 
                 # the values
                 # maintain Ds&ng nk/gk
@@ -245,47 +245,68 @@ SirKill: | # crawl datastructure
                 
                 # the yin change Ds&pos (tv nk/gk | Tv exp)
                 # tv and Tv are indexes that may flatten the many
-                each t,cv,v a&tv {
-                    push @{a&many.tv.>$t.>$cv ||= []}, shift @$v
-                        while @$v > 1;
-                    $v = shift @$v;
-                    a&tv.>$t.>$cv = $v; # count it
-                    vc&el eq '8' && next; # sleep
-                    Ds&pos.tv.>$t.>$cv = $v;
+                each t,cv,Y a&tv {
+                    push @{a&many.tv.>$t.>$cv ||= []}, shift @$Y
+                        while @$Y > 1;
+                    $Y = shift @$Y;
+                    a&tv.>$t.>$cv = $Y; # count it
+                    
+                    Yc&el eq '8' && next; # sleep
+                    Ds&pos.tv.>$t.>$cv = $Y;
                 }
-                each t,cv,v ds&tv {
+                each t,cv,Y ds&tv {
                     a&tv.>$t.>$cv && next;
-                    vc&el eq '9' && next;
-                    vc&el = '9';
+                    Yc&el eq '9' && next;
+                    Yc&el = '9';
                     a&tv.>$t.>$cv = # remover to sort in?
-                    Ds&pos.tv.>$t.>$cv = $v;
+                    Ds&pos.tv.>$t.>$cv = $Y;
                 }
                 
-                # values that were things transport intact
-                # its A works out its sleeping el=8 
+                # values that were things
+                # - transport intact
+                # its A works out its sleeping el=8
+                # set value in a&ng as handled things skip
                 each ext,v a&Tv {
                     push @{a&many.Tv.>$ext ||= []}, shift @$v
                         while @$v > 1;
                     $v = shift @$v;
                     a&Tv.>$ext = $v; # count it
-                    vc&el eq '8' && next; # sleep
+                    
+                    # set value/transport intact
                     vc&nk && vc&gk || die "No ext nkgk: $ext: ".ki $v;
-                    # sets the value
+                    a&ng.>vc&nk.>vc&gk = vc&s;
+                    
+                    vc&el eq '8' && next; # sleep
                     # < no el=3 possible?
-                    Ds&neg.>vc&nk.>vc&gk = {t=>vc&gk,c=>{s=>$v}};
+                    Ds&neg.>vc&nk.>vc&gk = {t=>vc&gk,c=>{s=>vc&s}};
                 }
                 each ext,v ds&Tv {
                     a&Tv.>$ext && next;
                     vc&nk && vc&gk || die "No ext nkgk: $ext: ".ki $v;
-                    my ($nk,$gk,$no) = split ' ', $ext;
-                    $nk && $gk && !$no || die "Much ext: $ext";
                     # deletes the value
-                    Ds&neg.>$nk.>$gk = {t=>$gk,c=>{was=>$v}};
+                    Ds&neg.>vc&nk.>vc&gk = {t=>vc&gk,c=>{was=>vc&s}};
                 }
             }
             unless (a&clones) { #c generate replacable bodies, rev/insidest first
                 # may not need to move
                 A&el = '8' unless Ds&neg || Ds&pos;
+                
+                # a&ng is nk/gk = $v ground as is
+                #   attributes including Tv things, they skipped diffing initially
+                # Ds&neg is nk/gk = change C:
+                #   c.s = $v if present, c.was if past
+                #   be only trace of attribute/Tv thing if gone
+                #   
+                
+                # a&tv.>$t.>$cv = $Y insides
+                # Ds&pos.tv.>$t.>$cv = $Y also
+                #   would be only trace of thing if gone,
+                #     but needing to sort in the remover with a&tv
+                #     should skip the Yc&el='9' when wiring non-lv
+                #     but pop them out disconnected in Core
+                # Cora is where everything sorts into a flat list
+                # Core is same order with A&el=8 removed
+                # then K makes a .prev if it's not Cora-order
                 
                 # make clones, usu
                 # - one to keep on record to diff
@@ -300,6 +321,8 @@ SirKill: | # crawl datastructure
                             || die "el8 had no clone $t";
                     }
                     elsif (A&el eq '9') {
+                        # never happens, see Tv goners
+                        # (has Ds&pos.tv.>$t.>$cv = old $Y)
                     }
                     else {
                         A&el = Ds&allnew ? '1' : '3';
@@ -313,15 +336,44 @@ SirKill: | # crawl datastructure
                         E.y.>$ys = $C;
                     }
                     if (my $sy = oc&sourcey) {
-                        # in drain C.y.OC = this
+                        # in drain C.y.OC = $OC
                         C.y.>$sy = $E if $sy eq $t;
                     }
                     
+                    if (A&isTv && $t ne 'lv') {
+                        # if we are a Tv, dont? clone
+                        # ups&ng will overwrite this anyway?
+                        $E = $C;
+                    }
+                    
+                    a&clones.>$t = $E;
+                }
+                
+                # then sort in from first
+                push @R, $A if A.up eq $o;
+                next;
+            }
+            unless (a&ord) { # c
+                # gathering refs 
+                # gather on the source ref, first A wins pointing to
+                my $r = os&refs.>$C ||= {};
+                
+                # from first o, sort tv
+                # the first o starts them all
+            }
+            
+            unless (a&ready) {
+            
+                    
                     # should know if v is:
-                    #   reverenced somewhere else
-                    #   a shared reference, for lv encoding pointers
-                    #   a cloned C 
+                    #   referenced somewhere else, for lv pointers
+                    #   a cloned C, to point to relevant clone
                     each nk,gk,v a&ng {
+                        ref $v || next;
+                        my $r = ref $v && os&refs.>$v ||= {};
+                        
+                        
+                        push @{rs
                         $E.>$nk.>$gk = $v;
                     }
                     each nk,gk,v a&Tv {
@@ -330,10 +382,6 @@ SirKill: | # crawl datastructure
                     
                     # A&s/C was in drain C, now is the last clone
                     A&s = $E;
-                }
-                
-                push @R, $A;
-                next;
             }
             
         }
