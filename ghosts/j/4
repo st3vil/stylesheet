@@ -353,6 +353,7 @@ ThWay: | # meaning of calling a word
 Babblar: | # unpack deceptions, perl code the code
     u i
     #c CoArgulate
+    my @Ay =
     CoArgulate:
         s&of || die "No of on ".ki$C;
 
@@ -429,7 +430,7 @@ Babblar: | # unpack deceptions, perl code the code
         p.mwall = qr/(?:= |if |unless |^\s*)/;
         p.sur = qr/ if| unless| for| when|,?\s*$|;\s*/;
         $p
-
+    push @Ay,
     CoBabbler: %right
         my $sc; # C.sc.* to be set from this encoding
         my $p = G.sc.bitsof_babble ||= G&bitsof_babble;
@@ -566,7 +567,8 @@ Babblar: | # unpack deceptions, perl code the code
                 }sgme;
             }
 
-            c&s =~ s/^(\w+:)\s+$/$1/smeg && sayre "Blockquoter whitespace trimmed";
+            c&s =~ s/^(\w+:)\s+$/$1/smeg 
+                && sayre "Blockquoter whitespace trimmed";
 
             # little sub maker
             # G may like to track lamda meta in a coderef => $D like way
@@ -590,6 +592,7 @@ Babblar: | # unpack deceptions, perl code the code
             # while (my ($t,$c) = each %$tv) {
             #   so the value tv is for t-ing into
             # DIY closing brackets
+            # avoids eaching nonref after first
             # could replace with G&chew-ish call if more spec
             # and know indents to close
             my $doi = sub {
@@ -599,11 +602,12 @@ Babblar: | # unpack deceptions, perl code the code
                 my @open;
                 while (@in) {
                     my $s = 'while (my ($'.shift(@in).',$';
-                    my $v = @in > 1 ? 
+                    my $ismore = @in > 1;
+                    my $v = $ismore ? 
                         $in[0].'v' : shift(@in);
                     $s .= $v;
                     $s .= ') = each %{'.$from.' }) {'
-                        .(@in > 1 ?
+                        .($ismore ?
                             " ref \$$v eq 'HASH' || next;" : "");
                     $from = '$'.$v;
                     push @open, $s;
@@ -717,6 +721,17 @@ Babblar: | # unpack deceptions, perl code the code
         push @s, $inend if $indbe && $inend;
         c&s = join "\n", @s;
         $sc
+    
+    #c and re-pretend the going G&won
+    if (@Ay == grep {_.ii && _.la} @Ay) {
+        my @co = map{ _c&s }map{_.la} @Ay;
+        n won=>''=>join("\n\n",map{_c&s}@co)
+        1 && saygr "Made won out of ".join", ",map{_.t}@co;
+        #saygr "Ay: ".wdump 3, [@co];
+    }
+    
+    
+    
 of: | # compile/collect
     # container process is traveling bunches of code, see 99 Traweil
     # place toward A.ii.>$s, linked list of embryo
@@ -741,7 +756,7 @@ of: | # compile/collect
             c&s .= "\n" unless c&s =~ /\n$/s;
             unless ($coded) {
                 # shade the edges, args, parsables etc.
-                Rw CoArgulate $C;
+                G&CoArgulate;
                 # CoB/Code must depend on c&s now and make only c&code
                 # unless a track is cut for adding universals...
                 # like a map of extra lines babbled
@@ -753,7 +768,7 @@ of: | # compile/collect
                 }
                 else {
                     # translate into perl
-                    $scbab = Rw CoBabbler $C;
+                    $scbab = G&CoBabbler;
                 }
             }
             c&s =~ s/(#[^\n]+};)$/};/s
