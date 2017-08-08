@@ -79,7 +79,7 @@ FishBrain: | # beginning middle and end superimposed on J's state
     # self servers (Dogu/-lookin eg) wants to see out-changes as in-changes
 SirKill: | # crawl datastructure
     u i
-    o:
+    o: %acgt:s c sc
         saygr "Do o: ".ki $s;
         $A = G&A,o=>0=>$c,$sc;
         my $on = A&liveon || die "live where";
@@ -120,7 +120,6 @@ SirKill: | # crawl datastructure
                 a&Tv = {}; # nk/gk join
                 # < different namespacing? crunch function?
             }
-            
             unless (A&insides) { #c insides
                 my $st = {}; # same inside may appear many places
                 # Scuttle should tell ways in
@@ -143,7 +142,7 @@ SirKill: | # crawl datastructure
                     }
                     else {
                     }
-                }
+                }}
                 A&insides = [ # A inner
                     map {
                         _c&ind = A&ind+1;
@@ -167,7 +166,7 @@ SirKill: | # crawl datastructure
                     map { $_->[2] = {comp=>'tv'} }
                     grep{defined}
                     (C.y.in ? do {
-                        @S = my $S = C.y.in;
+                        my @S = my $S = C.y.in;
                         push @S, $S while $S = S.y.next;
                         ['y in', \@S]
                     } : undef),
@@ -182,7 +181,7 @@ SirKill: | # crawl datastructure
                     } : undef),
                 ];
                 # check $st for duplicate s
-                each sz $st {
+                each s,z $st {
                     @$z > 1 || next;
                     my @z = @$z;
                     @$z = pop @z;
@@ -194,7 +193,7 @@ SirKill: | # crawl datastructure
                 # so we know which values are things
                 #   with their own differencing A
                 A&ways_in = {};
-                push @{A&ways_in.>_c&ext ||= []}, $_ for @{insides};
+                push @{A&ways_in.>_c&ext ||= []}, $_ for @{A&insides};
                 
                 # attach to the above, possibly many
                 if (A&comp eq 'tv') {
@@ -212,7 +211,6 @@ SirKill: | # crawl datastructure
                 push @R, $A;
                 next;
             }
-            
             unless (A&diff) { #c difference, in reverse, insidest first
                 # last A, compare a&ng
                 my $d = A&last;
@@ -237,11 +235,11 @@ SirKill: | # crawl datastructure
                         qc&new = 1 if !exists ds&ng.>$nk.>$gk;
                         qc&was = ds&ng.>$nk.>$gk if !qc&new;
                     }
-                }
+                }}
                 each nk,gk,v ds&ng {
                     exists $C.>$nk.>$gk && next;
                     Ds&neg.>$nk.>$gk = {t=>$gk,c=>{was=>$v}};
-                };
+                }}
                 
                 # the yin change Ds&pos (tv nk/gk | Tv exp)
                 # tv and Tv are indexes that may flatten the many
@@ -254,7 +252,7 @@ SirKill: | # crawl datastructure
                     
                     Yc&el eq '8' && next; # sleep
                     Ds&pos.tv.>$t.>$cv = $Y;
-                }
+                }}
                 each t,cv,Y ds&tv {
                     a&tv.>$t.>$cv && next;
                     Yc&el eq '9' && next;
@@ -263,7 +261,7 @@ SirKill: | # crawl datastructure
                     delete Ys&ready;
                     a&tv.>$t.>$cv = # remover to sort in?
                     Ds&pos.tv.>$t.>$cv = $Y;
-                }
+                }}
                 
                 # values that were things
                 # - transport intact
@@ -293,8 +291,12 @@ SirKill: | # crawl datastructure
                 # may not need to move
                 A&el = '8' unless Ds&neg || Ds&pos;
             }
+
+
+            
             unless (a&clones) { #c generate replacable bodies, rev/insidest first
-                
+                my $d = A&last;
+                my $D = A&diff;
                 # a&ng is nk/gk = $v ground as is
                 #   attributes including Tv things, they skipped diffing initially
                 # Ds&neg is nk/gk = change C:
@@ -378,7 +380,7 @@ SirKill: | # crawl datastructure
                     my $r = os&refs.>$v ||= {};
                     a&whererefis.>$v = [$nk,$gk];
                     push @{rs&Ys||=[]}, $A;
-                }
+                }}
                 
                 # now create more of that ^ order
                 my @l;
@@ -391,7 +393,7 @@ SirKill: | # crawl datastructure
                     my $yttv;
                     each t,cv,Y a&tv {
                         $yttv.>$cv.>$t = $Y;
-                    }
+                    }}
                     for my $cv (sort keys %$yttv) {
                         my $tw = $yttv.>$cv;
                         for my $t (sort keys %$tw) {
@@ -409,13 +411,12 @@ SirKill: | # crawl datastructure
                 push @L, $A;
                 next;
             }
-            
             unless (a&ready) { #c set new values
                 if (A.up eq $o) {
                     # sort through the single pile of refs
-                    push @nop;
+                    my @nop;
                     each ref,r os&refs {
-                        @{_s&Ys} > 1 || push(@nop, $ref) && next;
+                        @{rs&Ys} > 1 || push(@nop, $ref) && next;
                         my $Y = rs&Ys->[0];
                         # becomes the definitive source of that ref
                         # may be its C for Tv/tv, some Cnkgk for ng
@@ -428,7 +429,7 @@ SirKill: | # crawl datastructure
                 # assign the correct refs
                 # same order as refs won, so they should exist where pointed
                 for my $t (@{oc&clones}) {
-                    $E = a&clones.>$t;
+                    my $E = a&clones.>$t;
                     
                     # plot entanglements amidst assigning values
                     #   unless we're to transport intact
@@ -462,7 +463,7 @@ SirKill: | # crawl datastructure
                         else {
                             die "TheresnorefonY ".ki[$v,$Y];
                         }
-                    }
+                    }}
                     if ($t eq 'lv') {
                         my $neg = Ds&neg;
                         # lv: t y el=9, no detail (in up z tho)
@@ -483,7 +484,7 @@ SirKill: | # crawl datastructure
                                 $E.>$nk.>$gk eq q.c.s || die "wasnt neg/ng"
                                     .ki[[$nk,$gk],$q,$E];
                             }
-                        }
+                        }}
                         # encoding this may need json
                         each nk,gks $dn {
                             $nk = 's' if $nk eq 'sc';
@@ -508,7 +509,6 @@ SirKill: | # crawl datastructure
                 push @L, $A;
                 
             }
-            
             unless (a&wiring) { #c link together, wants to do in reverse
                 # to hoist the list of everything:
                 #   Cora is where everything sorts into a flat list
@@ -516,7 +516,7 @@ SirKill: | # crawl datastructure
                 #     and A&el=8 removed as far as order of everything is implied
                 # then K makes a .prev if it's not Cora-order?
                 for my $t (@{oc&clones}) {
-                    $E = a&clones.>$t;
+                    my $E = a&clones.>$t;
                     # share clones their Cor(e|a) hoisty lists
                     my $net = a&clonet.>$t = {};
                     
@@ -525,8 +525,8 @@ SirKill: | # crawl datastructure
                         my $ra = []; # everything still there
                         my $re = []; # everything changing
                         my $la; # what to put before things in lv
-                        for my $i (@{Ec&z}) {
-                            my $Y = z.y.A;
+                        for my $i (@{Ec&z}) { # this clone's 
+                            my $Y = i.y.A; # their A
                             my $wet = Yc&clonet.>$t;
                             
                             if (Yc&el ne '9') {
@@ -546,7 +546,7 @@ SirKill: | # crawl datastructure
                                 push @$re, $i;
                                 push @{net.Core||=[]}, $i, @{wet.Core||[]};
                             }
-                            $la = $z;
+                            $la = $i;
                         }
                         # lv wants to wire everything changing togehter
                         my $wi = $t eq 'lv' ? $re : $ra;
@@ -563,9 +563,11 @@ SirKill: | # crawl datastructure
                         Ec&z = $wi;
                     }
                     
-                    # last clone becomes A&s, or C if you steal this A's c/sc
+                    # last clone (OC?) becomes A&s, or C if you steal this A's c/sc
                     A&s = $E;
                     # assume everything's parent will be active at the last hop
+                    # so A&Core is everything changed and the top, nested in flat list
+                    # look at C
                     A&Core = [$E,@{net.Core||[]}];
                     A&Cora = [$E,@{net.Cora||[]}];
                 }
@@ -573,9 +575,10 @@ SirKill: | # crawl datastructure
         }
         
         # export some io sc to o
-        
-        @{os&Core} = # everything changed
-        @{os&Cora} = # everything
+        o.sc.>$_ = io.sc.>$_ for qw'Core Cora';
+        #@{os&Core} = # everything changed
+        #@{os&Cora} = # everything
+        $o;
 Houp: | # live the C, colour art in, make swims
     u a
     # for any zip change (and its parents)
