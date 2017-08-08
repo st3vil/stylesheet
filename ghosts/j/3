@@ -221,7 +221,9 @@ Bangilate: |
     
     # here
     my $D = Bs&D;
+    # bangC is code the problem would have come from
     my $d = Bs&bangC || delete(T.bangC) || $D;
+    
     
     # index landmarks
     my $na = {};
@@ -231,6 +233,7 @@ Bangilate: |
     Bs.Dw = D.y.argumented if D.y.argumented;
     each gk,v $Bs {
         next unless $gk =~ /^..?$/;
+        next unless ref $v;
         my $r = "$v";
         $na.>$r = "$gk";
     }
@@ -250,6 +253,7 @@ Bangilate: |
         else {
             $Y = $Y.>$n || next;
         }
+        ref $Y || next;
         my $r = "$Y";
         $na.>$r = $k;
         if (my $C = Y.c && Y.c.s) {
@@ -348,6 +352,35 @@ Bangilate: |
             #$line = vs&line;
         }
     }
+    
+    my @obya;
+    1 && sayre "Obja ba ".wdump 2, B.sc;
+    for my $gk (qw'aA aC') {
+        my $v = B.sc.>$gk;
+        ref $v || next;
+        my $label = "  Bs&".$gk.": ";
+        if (ref $v eq 'HASH' && v.y eq $v) {
+            my @S = $v;
+            unshift @S, $v while $v = v.up;
+            $v = $S[-1];
+            my $max;
+            $max = _c&ind > $max ? _c&ind : $max for @S;
+            # make a reverse ind tree of nodes coming down to here
+            my @L = map {
+                my $ind = $max - _c&ind;
+                $ind += length $label;
+                $ind = join('',(' ') x $ind);
+                my $c = {%{_.c}};
+                "$ind _.t".(ref c.s ? " C=".ki delete c.s : "")
+                ."  ".ki {c=>$c,sc=>_c&sc}
+            } @S;
+            push @obya, @L;
+            
+        }
+        push @obya, $label .ki $v;
+    }
+    my $obya = join"\n","obya:",@obya if @obya;
+    
                 
                 my @tri;
                 if ($line) {
@@ -366,35 +399,6 @@ Bangilate: |
                     @tri = map {join "\n", @$_ } @tri
                 }
                 
-                
-                if(0) {
-                my $la = {};
-                my @Bs;
-                for (@Bs) {
-                    my @s = "_.t _.y.cv _s&D.t";
-                    next if $s[0] eq 'i 0.1 h';
-                    # notice particle hops
-                    my $Y = _s&A;
-                    if (Y.1 ne la.A.1) {
-                        push @s, G&sn,$Y;
-                        la.A = $Y;
-                    }
-                    # fold of=i 0.1 in same A, etc.
-                    if (my $L = @s == 1 && $Bs[-1]) {
-                        my ($Lt,$st) = map { /(\S+ \S+)/ } $L->[0],$s[0];
-                        if ($Lt eq $st) {
-                            $L->[0] .= ", _s&D.t";
-                            next;
-                        }
-                    }
-                    push @Bs,\@s;
-                    # < the one line it came through in D?...
-                }
-                
-                my $ind = '';
-                my $Bs = join "\n", map {$_=$ind.$_;$ind.='  ';$_}
-                    map{join'  ',@$_} @Bs;
-                }
                 my $Bs = join "\n", @$l;
                 my $code = join "\n>>>>>>>>>>\n", map{
                     join "\n", map{"| ".$_} split "\n", $_
@@ -410,12 +414,13 @@ Bangilate: |
                     $ba = join "\n", @st, @ar ? ("...snip ".(@$li)."...", @ar) : ();
                 }
                 
-                $ba = join "\n\n", grep {defined} $Bs, $code, $ba;
+                $ba = join "\n\n", grep {defined} $Bs, $code, $ba, $obya;
                 
                 # die...\n keeps first line number
                 return $ba."\n";
-
 Stylehousing: | # org Karamean new stuff
+    # the Babs
+    n Babblar
     # new t, old G.way
     n Zequines
     # patching old oscing for new Normal/Static
