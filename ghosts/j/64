@@ -118,6 +118,7 @@ SirKill: | # crawl datastructure
         };
         
         saygr "Do o: ".ki $s;
+        my $V = A.V;
         $A = G&A,o=>0=>$c,$sc;
         
         my $on = A&liveon || A.1;
@@ -147,7 +148,7 @@ SirKill: | # crawl datastructure
         while (@L || @R) {
             if (!@L) {
                 @L = reverse @R;
-                1 && saygr "Clunking r: ",
+                $V && saygr "Clunking r: ",
                     map{"  _c&ind, _c&s.t _c&s.y.cv"
                     } @L;
                 @R = ();
@@ -156,16 +157,18 @@ SirKill: | # crawl datastructure
             my $C = A&s;
             # < give these A/C to T for blowingup locator?
             (Gc&B.sc.aA, Gc&B.sc.aC) = ($A,$C) if Gc&B;
-            1 && sayre "V ".join('',('  ') x A&ind)."  C.t  -- C.y.cv  "
+            $V && sayre "V ".join('',('  ') x A&ind)."  C.t  -- C.y.cv  "
                 .ki({c=>C.c,sc=>C.sc});
-            1 && sayyl "Asck: ".join', ', sort keys %{A.sc};
+            #1 && sayyl "Asck: ".join', ', sort keys %{A.sc};
             unless (A&last) { #c last reoccurs
-                1 && saybl "0 last";
+                $V && saybl "0 last";
                 # but first
                 $isC->($C) || die "notC: ".ki$C;
                 A&ipi ||= 0; # increment per child
+                my $l = upc&last || {};
+                
                 if (A&comp eq 'tv') {
-                    A&last = ups&tv.>C.t.>C.y.cv || {};
+                    A&last = ls&tv.>C.t.>C.y.cv || {};
                 }
                 elsif (A&comp) {
                     die "comp A&comp"
@@ -176,15 +179,14 @@ SirKill: | # crawl datastructure
                 }
                 else {
                     A&ext || die "how to file";
-                    A&last = ups&Tv.>A&ext || {};
+                    A&last = ls&Tv.>A&ext || {};
                 }
-                # for "attach to the above"
-                a&tv = {}; # t/cv join
-                a&Tv = {}; # nk/gk join
                 # < different namespacing? crunch function?
+                push @L, $A;
+                next;
             }
             unless (A&insides) { #c insides
-                1 && saybl "1 insides";
+                $V && saybl "1 insides";
                 my $st = {}; # same inside may appear many places
                 # Scuttle should tell ways in
                 # < checking that everything is found via each way
@@ -261,29 +263,38 @@ SirKill: | # crawl datastructure
                 A&ways_in = {};
                 push @{A&ways_in.>_c&ext ||= []}, $_ for @{A&insides};
                 
-                # attach to the above, possibly many
+                $V && saygr " C.t has ".@{A&insides}." insides";
+                unshift @L, @{A&insides};
+                unshift @R, $A;
+                next;
+            }
+            unless (A&hoisting) {
+                $V && saybl "1.5 hoisting";
+                # wipe our tv, write ourselves into up.tv
+                #  - after insides find their A&last
+                # attach to the above
+                # < many
                 if (A&comp eq 'tv') {
                     push @{ups&tv.>C.t.>C.y.cv ||= []}, $A;
                 }
                 elsif (A&comp) {
                     die "comp A&comp"
                 }
-                elsif (A.up eq $o) {
-                    # io has an A
-                    #A&last = os&lastA;
+                elsif ($A eq $io) {
+                    # io
                 }
                 else {
                     A&ext || die "how to file";
                     push @{ups&Tv.>A&ext ||= []}, $A;
                 }
                 
-                1 && saygr " C.t has ".@{A&insides}." insides";
-                push @L, @{A&insides};
+                A&hoisting = 1;
+                # start going backwayds
                 push @R, $A;
                 next;
             }
             unless (A&diff) { #c difference, in reverse, insidest first
-                1 && saybl "2 diff";
+                $V && saybl "2 diff";
                 # last A, compare a&ng
                 my $d = A&last;
                 my $D = A&diff = {};
@@ -367,7 +378,7 @@ SirKill: | # crawl datastructure
 
             
             unless (a&clones) { #c generate replacable bodies, rev/insidest first
-                1 && saybl "3 clones";
+                $V && saybl "3 clones";
                 my $d = A&last;
                 my $D = A&diff;
                 # a&ng is nk/gk = $v ground as is
@@ -393,7 +404,9 @@ SirKill: | # crawl datastructure
                 for my $t (@{oc&clones}) {
                     my $E = {t=>C.t,y=>{cv=>C.y.cv}};
                     
-                    if (A&el eq '8') {
+                    if (0 && A&el eq '8') {
+                        # cloning clones not a good idea
+                        # < until we can sleep a limb
                         $E = a&clones.>$t = ds&clones.>$t
                             || die "el8 had no clone $t";
                     }
@@ -438,8 +451,8 @@ SirKill: | # crawl datastructure
                 next;
             }
             unless (a&ord) { #c ordering, gathering
-                1 && saybl "4 ord";
-                1 && saygr "Is io" if $A eq $io;
+                $V && saybl "4 ord";
+                $V && saygr "Is io" if $A eq $io;
                 # gathering refs, we already in order
                 # first A's clones win pointing to
                 # < is depth first tho...
@@ -489,11 +502,11 @@ SirKill: | # crawl datastructure
                 next;
             }
             unless (a&ready) { #c set new values, forward
-                1 && saybl "5 ready";
-                1 && saygr "Is io" if $A eq $io;
+                $V && saybl "5 ready";
+                $V && saygr "Is io" if $A eq $io;
                 if ($A eq $io || A.up eq $o) {
                     # sort through the single pile of refs
-                    1 && saygr "Looking through refs...";
+                    $V && saygr "Looking through refs...";
                     my $refs = {};
                     each ref,r os&refs {
                         @{rs&Ys} > 1 || next;
@@ -508,7 +521,7 @@ SirKill: | # crawl datastructure
                 }
                 
                 my $d = A&last;
-                my $D = A&diff = {};
+                my $D = A&diff;
                 
                 # assign the correct refs
                 # same order as refs won, so they should exist where pointed
@@ -601,26 +614,31 @@ SirKill: | # crawl datastructure
                 next;
             }
             unless (a&wiring) { #c link together, reverse
-                1 && sayre "6 Wiring A&ind  ".ki $C;
+                $V && saybl "6 wiring";
                 # to hoist the list of everything:
                 #   Cora is where everything sorts into a flat list
                 #   Core is same order with A&el=9 (removals) added
                 #     and A&el=8 removed as far as order of everything is implied
-                # then K makes a .prev if it's not Cora-order?
+                # then K makes a .prev if it's not Cora-order
+                
+                my $D = A&diff;
+                $V && saygr "el=".A&el."  ".wdump 3, $D;
+                
                 for my $t (@{oc&clones}) {
                     my $E = a&clones.>$t;
                     # share clones their Cor(e|a) hoisty lists
-                    my $net = a&clonet.>$t ||= {};
+                    my $net = a&clonet.>$t = {};
                     
-                    if (Ec&z) {
+                    
+                    if (Es&z) {
                         # wire the tv plane
                         my $ra = []; # everything still there
                         my $re = []; # everything changing
                         my $la; # what to put before things in lv
-                        for my $i (@{Ec&z}) { # this clone's 
+                        for my $i (@{Es&z}) { # this clone's 
                             my $Y = i.y.A; # their A
-                            my $wet = Yc&clonet.>$t;
-                            1 && saygr "We're A&ind  C.t C.y.cv through z to i.t i.y.cv: ".ki $wet;
+                            my $wet = Ys&clonet.>$t;
+                            $V && saygr "To the i.t i.y.cv and: ".ki wet.Cora;
                             
                             if (Yc&el ne '9') {
                                 # the non-lv tv plane
@@ -647,13 +665,25 @@ SirKill: | # crawl datastructure
                         for my $i (@$wi) {
                             E.y.in ||= $i;
                             i.y.out = $E;
+                            
+                            my $was = E.y.tw.>i.t;
+                            E.y.tw.>i.t = $i;
+                            # would be easy to wire tw squish
+                            (was.y.fronts,i.y.was) = ($i,$was)
+                                if $was;
+                            # < lv comp fronts to cv of next bit
+                            #   as topics' bits fly at you, to
+                            #   signal when next bit is coming
+                            
+                            E.y.tv.>i.t.>i.y.cv = $i;
+                            
                             if ($la) {
                                 la.y.next = $i;
                                 i.y.prev = $la;
                             }
                             $la = $i;
                         }
-                        Ec&z = $wi;
+                        Es&z = $wi;
                     }
                     
                     # last clone (OC?) becomes A&s, or C if you steal this A's c/sc
@@ -668,12 +698,13 @@ SirKill: | # crawl datastructure
             }
         }
         
-        1 && sayre "Finished ".ki $o;
+        $V && sayre "Finished ".ki $o;
         # export some io sc to o
         o.sc.>$_ = io.sc.>$_ for qw'Core Cora';
         #@{os&Core} = # everything changed
         #@{os&Cora} = # everything
         os&lastA = $io;
+        oc&s = io.c.s;
         
         $o;
 Houp: | # live the C, colour art in, make swims
