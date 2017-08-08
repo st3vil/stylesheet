@@ -96,7 +96,7 @@ FishBrain: | # beginning middle and end superimposed on J's state
         rs&z = [ grep{ $_ ne $r } map{ _.y.OC } @{os&Cora} ];
         
         # o ou - to finalise ourselves and OK changes
-        $o = A&ut = G&o,$r,{liveon=>$C,t=>'ut'};
+        $o = A&ut = G&o,$r,{liveon=>$C,t=>'ut',yoff=>'KC',gen=>'lv'};
         my @K = map { G&A,K=>2=>_.c,_.sc } @{os&Core};
         
         # K - only changes and their parents
@@ -113,30 +113,51 @@ FishBrain: | # beginning middle and end superimposed on J's state
 SirKill: | # crawl datastructure
     u i
     o: %acgt:s c sc
-        saygr "Do o: ".ki $s;
-        $A = G&A,o=>0=>$c,$sc;
-        my $on = A&liveon || die "live where";
-        my $o = A&s = $on.>A&t ||= {t=>A&t};
-        my $name = 'o'.o.t; # eg oin
-        oc&ysource = $name.'D'; # oinD, in drain
-        oc&clones = [$name.'C','lv','OC']; # oinC on record
-        oc&sourcey = 'OC'; # OC thrown into process, drained C links to that
         my $isC = &C{
             defined C.t && C.y && C.c && C.sc
         };
+        
+        saygr "Do o: ".ki $s;
+        $A = G&A,o=>0=>$c,$sc;
+        
+        my $on = A&liveon || A.1;
+        $on = on.sc.o ||= {} if $isC->($on);
+        A&t ||= A.c.ip[-1]; # the number of our A in enclosing A
+        my $o = A&s = $on.>A&t ||= {t=>A&t};
+        
+        my $name = 'o'.o.t; # eg oin
+        oc&ysource = $name.'D'; # oinD, in drain
+        oc&clones = [$name.'C']; # oinC, on record?
+        
+        # eg gen=lv, should maybe []
+        push @{oc&clones}, A&gen if A&gen;
+        
+        # make a clone to throw into next process, eg OC
+        # and link the drained C.y.OC = $OC
+        if (A&yoff) {
+            oc&sourcey = A&yoff;
+            push @{oc&clones}, A&yoff;
+        }
+        
         # many A=o hold cs=C
         my $io = {t=>'o',up=>$o,c=>{s=>$s},sc=>{}};
         my @L = io.y = $io;
         my @R;
         # builds up from z/in/tw/tv
         while (@L || @R) {
-            @L = reverse @R if !@L;
+            if (!@L) {
+                @L = reverse @R;
+                1 && saygr "Clunking r: ",
+                    map{"  _c&ind, _c&s.t _c&s.y.cv"
+                    } @L;
+                @R = ();
+            };
             my $A = shift(@L);
             my $C = A&s;
             # < give these A/C to T for blowingup locator?
             (Gc&B.sc.aA, Gc&B.sc.aC) = ($A,$C) if Gc&B;
-            snooze 1300;
-            1 && sayre "V ".join('',('  ') x A&ind)." ".ki $C;
+            1 && sayre "V ".join('',('  ') x A&ind)."  C.t  -- C.y.cv  "
+                .ki({c=>C.c,sc=>C.sc});
             1 && sayyl "Asck: ".join', ', sort keys %{A.sc};
             unless (A&last) { #c last reoccurs
                 1 && saybl "0 last";
@@ -151,7 +172,7 @@ SirKill: | # crawl datastructure
                 }
                 elsif (A.up eq $o) {
                     # io has an A
-                    A&last = os&lastA;
+                    A&last = os&lastA || {};
                 }
                 else {
                     A&ext || die "how to file";
@@ -174,10 +195,14 @@ SirKill: | # crawl datastructure
                 each nk,gk,v $C {
                     next if 'y'eq$nk; # distracto or handled
                     if (ref $v eq 'HASH') {
+                        # no A for it if not C, may still be deduped
+                        # via os&refs collected from C and ng/gks
+                        v.y ne $v || next;
                         $isC->($v) || next;
                         push @at, ["$nk $gk",[$v],{nk=>$nk,gk=>$gk}];
                     }
                     elsif (ref $v eq 'ARRAY') {
+                        next if $nk eq 'c' && $gk eq 'M'; # dodge
                         next if $nk eq 'sc' && $gk eq 'z'; # handled
                         next unless @$v == grep {
                             ref $_ eq 'HASH' && $isC->($_) } @$v;
@@ -409,15 +434,18 @@ SirKill: | # crawl datastructure
                 }
                 
                 # then sort in from first
-                push @R, $A if A.up eq $o;
+                push @L, $A if A.up eq $o;
                 next;
             }
             unless (a&ord) { #c ordering, gathering
                 1 && saybl "4 ord";
+                1 && saygr "Is io" if $A eq $io;
                 # gathering refs, we already in order
                 # first A's clones win pointing to
                 # < is depth first tho...
                 my $r = os&refs.>$C ||= {};
+                #rc&s ne $C && die "refreplacing ".ki($r)."\n".ki$C;
+                #rc&s = $C;
                 push @{rs&Ys||=[]}, $A;
                 
                 # should know if v is:
@@ -457,24 +485,26 @@ SirKill: | # crawl datastructure
                 # to keep our order - unshift for @l would reverse it
                 unshift @L, @l;
                 # or our next us
-                push @L, $A;
+                unshift @R, $A;
                 next;
             }
-            unless (a&ready) { #c set new values
+            unless (a&ready) { #c set new values, forward
                 1 && saybl "5 ready";
-                if (A.up eq $o) {
+                1 && saygr "Is io" if $A eq $io;
+                if ($A eq $io || A.up eq $o) {
                     # sort through the single pile of refs
-                    my @nop;
+                    1 && saygr "Looking through refs...";
+                    my $refs = {};
                     each ref,r os&refs {
-                        @{rs&Ys} > 1 || push(@nop, $ref) && next;
-                        my $Y = rs&Ys->[0];
+                        @{rs&Ys} > 1 || next;
+                        (rs&Y) = @{rs&Ys};
+                        $refs.>$ref = $r;
                         # becomes the definitive source of that ref
                         # may be its C for Tv/tv, some Cnkgk for ng
                         # so lv can be perfect
-                        rs&Y = $Y;
                     }
                     # leaves only doubled things
-                    delete os&refs.>$_ for @nop;
+                    os&refs = $refs;
                 }
                 
                 my $d = A&last;
@@ -492,7 +522,7 @@ SirKill: | # crawl datastructure
                     each nk,gk,v a&ng {
                         $E.>$nk.>$gk = $v;
                         my $r = ref $v && os&refs.>$v || next;
-                        my $Y = rs&Y;
+                        my $Y = rs&Y || die "Looks aban: $v ".ki $r;
                         next if $A eq $Y;
                         # other has the one thing
                         #  < link C that knows where either one is
@@ -515,7 +545,14 @@ SirKill: | # crawl datastructure
                             a&haveC.>$nk.>$gk = $v;
                         }
                         else {
-                            die "TheresnorefonY ".ki[$v,$Y];
+                            die "TheresnorefonY ".wdump(5,[
+                                "Were C.t A&ind, they are Y.c.s.t Y.c.ind",
+                                "want $v from: ",[sort keys %{Ys&whererefis}],
+                                Ys&whererefis,
+                                $r,
+                            ])
+                            
+                            .ki[$v,$Y];
                         }
                     }}
                     if ($t eq 'lv') {
@@ -560,10 +597,10 @@ SirKill: | # crawl datastructure
                     }
                 }
                 a&ready = 1;
-                push @L, $A;
-                
+                push @R, $A;
+                next;
             }
-            unless (a&wiring) { #c link together, wants to do in reverse
+            unless (a&wiring) { #c link together, reverse
                 1 && sayre "6 Wiring A&ind  ".ki $C;
                 # to hoist the list of everything:
                 #   Cora is where everything sorts into a flat list
@@ -573,7 +610,7 @@ SirKill: | # crawl datastructure
                 for my $t (@{oc&clones}) {
                     my $E = a&clones.>$t;
                     # share clones their Cor(e|a) hoisty lists
-                    my $net = a&clonet.>$t = {};
+                    my $net = a&clonet.>$t ||= {};
                     
                     if (Ec&z) {
                         # wire the tv plane
@@ -583,6 +620,7 @@ SirKill: | # crawl datastructure
                         for my $i (@{Ec&z}) { # this clone's 
                             my $Y = i.y.A; # their A
                             my $wet = Yc&clonet.>$t;
+                            1 && saygr "We're A&ind  C.t C.y.cv through z to i.t i.y.cv: ".ki $wet;
                             
                             if (Yc&el ne '9') {
                                 # the non-lv tv plane
@@ -623,8 +661,8 @@ SirKill: | # crawl datastructure
                     # assume everything's parent will be active at the last hop
                     # so A&Core is everything changed and the top, nested in flat list
                     # look at C
-                    A&Core = [$E,@{net.Core||[]}];
-                    A&Cora = [$E,@{net.Cora||[]}];
+                    a&Core = [$E,@{net.Core||[]}];
+                    a&Cora = [$E,@{net.Cora||[]}];
                 }
                 a&wiring = 1;
             }
