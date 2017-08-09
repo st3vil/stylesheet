@@ -35,14 +35,12 @@ FishBrain: | # beginning middle and end superimposed on J's state
         # where we'd want to forget $d, the drain itself...
         my $o = A&in = G&o,$d,{liveon=>$C,t=>'in',yoff=>'OC'};
         # Core is changes
-        my @O = map { G&A,O=>2=>_.c,_.sc } @{os&Core};
+        A&OCs = [map { G&A,O=>2=>_.c,_.sc } @{os&Core}];
         
         # O - only changes and their parents
         # < tug for .1 progress
         # < with an A=Os for all
-        G&A,$_,8 for @O;
-        
-        Rw PostO $o
+        G&A,$_,8 for @{A&OCs};
         
         # < wOrms, in-wormholes
         #   where thing is our part of some sharing of truth
@@ -64,6 +62,12 @@ FishBrain: | # beginning middle and end superimposed on J's state
         #     will news themselves until oinD quashes changes
         my $r = 1s&root || die "how to hold many";
         $r = r.y.OC || die "root didn't OC";
+        
+        # the I, injected into r.y.tv, so z clobbers it,
+        #   be releasing local modulation not absolute truth
+        Rw PostO $o $r;
+        # we shall make s&I from what looks like it in K
+        
         # put this stuff in the idea of itself
         rs&z = [ grep{ $_ ne $r } map{ _.y.OC } @{os&Cora} ];
         
@@ -78,10 +82,115 @@ FishBrain: | # beginning middle and end superimposed on J's state
         #     pointing to objects already on the ground
         G&A,$_,8 for @K;
         
+        Rw PostK $o;
+        
         # pick up on r.y.OK and jump down Wormhole
         # -> W
     #     watching the K diverge as a way to get input is interesting
     # self servers (Dogu/-lookin eg) wants to see out-changes as in-changes
+Posto: |
+    # all current O, even asleep/A&el=8
+    my @aO = map { _.y.OA || die "NoOC: ".ki$_ } @{os&Cora};
+    
+    # take Os&swom (via J), Os&swim (from C) through concludoors
+    # in usual yt order, may be dupey,
+    # to clobber in o ut
+    # < the elvising (of,javascript) to have more sense
+    #   about whether we should already o things to it,
+    #   depending on weight...
+    # - but code might appreciate having competitors compiled?
+    
+    for my $O (@aO) {
+        my $c = Oc&s;
+        my $swim = Os&swim || next;
+        each W,Wt,Wcv,Dt,Dcv,D $O {
+            if (my $i = a&swim.>$W.>$Wt.>$Wcv.>$Dt.>$Dcv ) {
+                my $d = i.c.s;
+                saygr G&sn ." c.t c.y.cv overs $Wt/$Dt $Dcv from d.t d.y.cv";
+            }
+            a&swim.>$W.>$Wt.>$Wcv.>$Dt.>$Dcv = $O;
+        }}}}}
+    }
+    
+    each W,Wt,Wcv,Dtv a&swim {
+        # sleep based on each set's sources being stable
+        # < stuff hoisted via J is already encoded
+        my $move = 1;
+        if (my $his = s&swim.>$W.>$Wt.>$Wcv ) {
+            $move--;
+            each Dt,Dcv,O $Dtv {
+                Oc&el ne '8' && $move++;
+                my $o = $his.>$Dt.>$Dcv;
+                $o && oc&s.t eq Oc&s.t 
+                && oc&s.y.cv eq Oc&s.y.cv || $move++;
+            }}
+            each Dt,Dcv,o $his {
+                my $O = $Dtv.>$Dt.>$Dcv;
+                $o && oc&s.t eq Oc&s.t 
+                && oc&s.y.cv eq Oc&s.y.cv || $move++;
+            }}
+        }
+        unless ($move) {
+            a&swum.>$Wcv.>$Wt = s&swum.>$Wcv.>$Wt || die "no swum $Wcv $Wt";
+            sayre G&sn ."Seems to be the same... $W $Wt $Wcv";
+            # elvis checks his stuff is still at the hut
+        }
+        else {
+            my $z = [];
+            for my $O (@aO) {
+                my $Dtv = Os&swim && Os&swim.>$W.>$Wt.>$Wcv || next;
+                # random order here, o ut will sort
+                each Dt,Dcv,D $Dtv {
+                    # D pushed thing, clone if C
+                    $D = G&hup,$D if $D eq Oc&s;
+                    push @$z, $D;
+                }}
+            }
+            die "Nothing ordered $W $Wt $Wcv?" if !@$z;
+            # todo elvising
+            my $w = a&We.>$Wcv.>$Wt;
+            my $W = a&We.>$Wcv.>$Wt = G&Ct,[$Wt=>$Wcv,{W=>$W}];
+            Wc&nogro = 1; # ?
+            my $e = Wc&e = G&Ct,[Swim=>3];
+            ec&z = $z;
+            
+            $w && die "We already: ".ki($w)."\nvs: ".ki$c;
+        }
+    }
+    
+    # extra z goes after/over OCs
+    # sort what to do could get smaller if we go by aO
+    for my $Wcv (sort keys %{a&We}) {
+        my $Wts = a&We.>$Wcv;
+        for my $Wt (sort keys %$Wts) {
+            my $W = $Wts.>$Wt;
+            # sends to the particular language workshop
+            # nomem = its J (of,javascript) won't hang around
+            $W = G&elph,\'nomem',$W;
+            # makes a cW=of
+            my $D = G&Ct,[$Wt=>$Wcv,{W=>Ws&W}];
+            # compilations come back
+            Ds&z = Ws&z;
+            Ds&z ||= Wc&e.c.z;
+            Ds&z || sayre "W no z ".ki$W;
+            
+            a&swum.>$Wcv.>$Wt = $D;
+        }
+    }
+    
+    # add them under root 9
+    # z clobber them...
+    each Wcv,Wt,D a&swum {
+        my $w = r.y.tv.>$Wt.>$Wcv;
+        r.y.tv.>$Wt.>$Wcv = $D;
+        1 && saygr G&sn ." D: ".ki($D)."\n\n $Wt $Wcv probably swum over by ".ki$w;
+    }}
+    
+    # live on the live on-er
+    s&swum = a&swum;
+    s&swim = a&swim;
+    # stuff gets noticed in K
+    
 Houp: | # live the C, colour art in, make swims
     u a
     # for any zip change (and its parents)
@@ -182,24 +291,45 @@ Koul: | # clarify changes to string
     # might be doing some C's whole picture (1) and lv diff (7)
     #   as two Cs? make encoding instructions pop in
     K 1:
-        A&from = shift @$s; # us
-        A&s = $C = G&hup,A&from;
-        my $l = a&l = C.y.l || die "No KC yl: ".ki$C;
-        my $x = a&x = l.y.x || die "KCyl no yx: ".ki$l;
-        if (my $J = ls&J) {
+        # is KC
+        if (my $J = s&J) {
             a&J = $J;
             a&ys = Js&s || die "No s on J for K Jo lv: ".ki$J;
         }
-    D 1:
-        A.c.s = shift @$s; # us
+        
+        my $o = C.y.A;
+        o.t eq 'o' || die "No oA: ".ki $o;
+        A&el = oc&el;
+        # keep an unsquished version
+        a&l = C.y.C;
+        # last K
+        A&K = C.y.KA if C.y.KA;
+        # has continual bit of C
+        # < or name g, share with O?
+        a&n = A&K.sc.l || {};
+        # put K
+        C.y.KA = $A;
+        
+        # < making this stick...
+        T.not = 1 if C.sc.not eq '1';
+        
+        
+    
+    # a&n continues as long as C doesn't move
+    # a&l is the original C we are squishing
+    
+    # c&Jo = J version
     K 2:
         my $l = a&l;
-        delete c&Jo if ls&W || ls&qz;
+        my $n = a&n;
+        
+        delete c&Jo if s&W || s&qz;
+        
         if (c&Jo) {
             s&z && die "Jo with z: ".ki$C;
-            my $J = a&J || die "No sJ for Jo K: ".ki$l;
-            my $x = a&x;
-            my $lo = xc&Jo;
+            my $J = s&J || die "No sJ for Jo K: ".ki$l;
+            
+            my $lo = lc&Jo;
             if ($lo ne c&Jo) {
                 my $s = a&ys;
                 my $lv = ss&lv || die "No lv on J s for K Jo lv: ".ki$s;
@@ -207,8 +337,8 @@ Koul: | # clarify changes to string
                 # imp++ means lv restarts
                 # wil++ means lv grows
                 # mat++ means out of band stuff changes, xo
-                my $wil = xc&Jowil || 1;
-                my $conti = sc&imp eq xc&Joimp && $lv eq xc&Jolv;
+                my $wil = lc&Jowil || 1;
+                my $conti = sc&imp eq lc&Joimp && $lv eq lc&Jolv;
                 $wil = 1 if !$conti;
                 
                 my $lets = !$conti || sc&wil > $wil;
@@ -288,7 +418,4 @@ Koul: | # clarify changes to string
         }
         delete C.sc.>$_ for qw'qz';
         
-    D 2:
-        # reverse it
-    
 
