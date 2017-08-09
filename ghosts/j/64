@@ -35,12 +35,12 @@ FishBrain: | # beginning middle and end superimposed on J's state
         # where we'd want to forget $d, the drain itself...
         my $o = A&in = G&o,$d,{liveon=>$C,t=>'in',yoff=>'OC'};
         # Core is changes
-        A&OCs = [map { G&A,O=>2=>_.c,_.sc } @{os&Core}];
+        A&OCs = [map { G&A,O=>0=>_.c,_.sc } @{os&Core}];
         
         # O - only changes and their parents
         # < tug for .1 progress
         # < with an A=Os for all
-        G&A,$_,8 for @{A&OCs};
+        G&A,$_,8,{r=>$r} for @{A&OCs};
         
         # < wOrms, in-wormholes
         #   where thing is our part of some sharing of truth
@@ -73,22 +73,44 @@ FishBrain: | # beginning middle and end superimposed on J's state
         
         # o ou - to finalise ourselves and OK changes
         $o = A&ut = G&o,$r,{liveon=>$C,t=>'ut',yoff=>'KC',gen=>'lv'};
-        my @K = map { G&A,K=>2=>_.c,_.sc } @{os&Core};
+        my @K = map { G&A,K=>0=>_.c,_.sc } @{os&Core};
+        $r = r.y.KC || die "root OC didn't KC";
         
         # K - only changes and their parents
         #   <6 becomes things for s&top, s&tv, etc
         #   >6 comps for writing Lines
         # < an A=Ks would map out AWritering
         #     pointing to objects already on the ground
-        G&A,$_,8 for @K;
+        G&A,$_,8,{r=>$r} for @K;
         
-        Rw PostK $o;
+        Rw PostK $o $r;
         
-        # pick up on r.y.OK and jump down Wormhole
+        # hangs brain up on the J
+        Js&s = $C;
+        
+        J.sc.>$_ = C.sc.$_ || undef for qw'I tv top tw';
+        # top is 9's KC
+        
         # -> W
-    #     watching the K diverge as a way to get input is interesting
+        
+    # watching the K diverge as a way to get input is interesting
     # self servers (Dogu/-lookin eg) wants to see out-changes as in-changes
-Posto: |
+PostK: |
+    my @aK = map { _.y.KA || die "NoOC: ".ki$_ } @{os&Cora};
+    
+    # scoop up I every time
+    # clobber here into the many I cv or different positions on the thing,
+    # even with same cv, from around this vector, someday
+    s&I = {map { _.t=>$_ } grep { _c&W } map { _c&s } @aK};
+    
+    # deletes I unless values I
+    delete s&I unless values %{s&I};
+    
+    s&tv = r.y.tv;
+    s&top = $r;
+    s&tw = r.y.tw;
+    
+PostO: | # make O's a&swim elvises happen, feed into r.y.tv
     # all current O, even asleep/A&el=8
     my @aO = map { _.y.OA || die "NoOC: ".ki$_ } @{os&Cora};
     
@@ -204,9 +226,15 @@ Houp: | # live the C, colour art in, make swims
         
         my $o = C.y.A;
         o.t eq 'o' || die "No oA: ".ki $o;
+        
         A&el = oc&el;
+        # A&r = root.y.OC
+        
         # put O
         C.y.OA = $A;
+        
+        # < more recur?
+        
         
         # < making this stick...
         T.not = 1 if C.sc.not eq '1';
@@ -244,16 +272,19 @@ Houp: | # live the C, colour art in, make swims
         
         # do when el is so
         if (my $sel = 1s&sels) {
-            while (my ($k,$els) = each %$sel) {
+            # limited to those under 9?
+            $sel = {} unless $up && up.y.cv eq 0.9;
+            each k,els $sel {
                 exists C.sc.>$k || next;
-                while (my ($el,$do) = each %$els) {
+                each el,do $els {
                     A&el eq $el || A&el eq '2' && $el eq '1' ||
                     $el eq '5' && A&el < 4 || next;
-                    $do->($A,$C,$G,$T);
+                    G&h,$do;
                 }
             }
         }
     
+    # S leads to Style
     O 5:
         return unless A.I.S;
         local A.cv = 0.4999;
@@ -262,7 +293,8 @@ Houp: | # live the C, colour art in, make swims
     
     # O 6 - hoisting, ElBridge/xo
     
-    # shrinkwarp for our tv, 
+    # shrinkwarp for our tv,
+    # Scuttle
     O 7:
         delete c&Jo if s&W;
         
@@ -299,6 +331,7 @@ Koul: | # clarify changes to string
         
         my $o = C.y.A;
         o.t eq 'o' || die "No oA: ".ki $o;
+        # A&r = root.y.KC
         A&el = oc&el;
         # keep an unsquished version
         a&l = C.y.C;
@@ -328,26 +361,29 @@ Koul: | # clarify changes to string
         if (c&Jo) {
             s&z && die "Jo with z: ".ki$C;
             my $J = s&J || die "No sJ for Jo K: ".ki$l;
-            
-            my $lo = lc&Jo;
+            # < have a whole C for a version label
+            #   c imp,wil,mat etc versioning
+            #   sc forms
+            my $lo = nc&Jo;
             if ($lo ne c&Jo) {
-                my $s = a&ys;
+                # < pick the right page
+                my $s = Js&s;
                 my $lv = ss&lv || die "No lv on J s for K Jo lv: ".ki$s;
                 # J are names on a branch, their content evolves
                 # imp++ means lv restarts
                 # wil++ means lv grows
                 # mat++ means out of band stuff changes, xo
-                my $wil = lc&Jowil || 1;
-                my $conti = sc&imp eq lc&Joimp && $lv eq lc&Jolv;
+                my $wil = nc&Jowil || 1;
+                my $conti = sc&imp eq nc&Joimp && $lv eq nc&Jolv;
                 $wil = 1 if !$conti;
                 
                 my $lets = !$conti || sc&wil > $wil;
                 $wil += 1 if $conti; # slice after already
                 my @new = @{$lv}[($wil-1) .. (sc&wil-1)] if $lets;
                 
-                xc&Jolv = $lv;
-                xc&Joimp = sc&imp;
-                xc&Jowil = sc&wil;
+                nc&Jolv = $lv;
+                nc&Joimp = sc&imp;
+                nc&Jowil = sc&wil;
                 s&z = \@new if @new;
                 delete c&Jo;
             }
@@ -362,7 +398,8 @@ Koul: | # clarify changes to string
             if (s&pi) {
                 # implies s&J, which remains in osc C but not Komp
                 delete s&J;
-                delete c&s if Js&tv; # has inside
+                # quiet for insides, should remain with qs
+                delete c&s if Js&tv;
             }
             else {
                 s&J = Js&name || J.t;
@@ -373,18 +410,16 @@ Koul: | # clarify changes to string
     # set Js&Kels.sending.3 = $s to G&h,$cb for sc.sendings el3ing
     K 3:
         my $l = a&l;
-        my $r = l.y.r || die "no lyr";
-        rc&el || die "no rcel";
+        A&el || die "no rcel";
         if (my $sel = 1s&Kels) {
-            my $up = l.y.up;
-            if ($up && up.y.cv eq 0.9) {
-            while (my ($k,$els) = each %$sel) {
+            # limited to those under 9?
+            $sel = {} unless l.y.up eq A&r;
+            each k,els $sel {
                 exists l.sc.>$k || next;
-                while (my ($el,$do) = each %$els) {
-                    rc&el eq $el || rc&el eq '2' && $el eq '1' || next;
+                each el,do $els {
+                    A&el eq $el || A&el eq '2' && $el eq '1' || next;
                     G&h,$do;
                 }
-            }
             }
         }
     K 4:
@@ -394,6 +429,7 @@ Koul: | # clarify changes to string
         my $ok;
         ok.sc.>$_ = 1 for qw'z ip';
         G&oh,$ok,3s&oks if 3s&oks;
+        
         for my $nk ('c','sc') {
             my $gh = $C.>$nk;
             my $mute;
