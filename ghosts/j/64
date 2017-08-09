@@ -37,6 +37,8 @@ FishBrain: | # beginning middle and end superimposed on J's state
         # Core is changes
         A&OCs = [map { G&A,O=>0=>_.c,_.sc } @{os&Core}];
         
+        my $r = 1s&root || die "how to hold many";
+        $r = r.y.OC || die "root didn't OC";
         # O - only changes and their parents
         # < tug for .1 progress
         # < with an A=Os for all
@@ -60,8 +62,6 @@ FishBrain: | # beginning middle and end superimposed on J's state
         #   which will have its last awake .y.OC
         #   slight possibility of zombies if you topy&OCs&qua++
         #     will news themselves until oinD quashes changes
-        my $r = 1s&root || die "how to hold many";
-        $r = r.y.OC || die "root didn't OC";
         
         # the I, injected into r.y.tv, so z clobbers it,
         #   be releasing local modulation not absolute truth
@@ -86,9 +86,9 @@ FishBrain: | # beginning middle and end superimposed on J's state
         Rw PostK $o $r;
         
         # hangs brain up on the J
-        Js&s = $C;
+        1s&s = $C;
         
-        J.sc.>$_ = C.sc.$_ || undef for qw'I tv top tw';
+        A.1.sc.>$_ = C.sc.$_ || undef for qw'I tv top tw';
         # top is 9's KC
         
         # -> W
@@ -122,10 +122,19 @@ PostO: | # make O's a&swim elvises happen, feed into r.y.tv
     #   depending on weight...
     # - but code might appreciate having competitors compiled?
     
+    # swom things are lower priority than swim things
+    for my $O (@aO) {
+        my $c = Oc&s;
+        my $swom = Os&swom || next;
+        each W,Wt,Wcv,Dt,Dcv,D $swom {
+            Os&swim.>$W.>$Wt.>$Wcv.>$Dt.>$Dcv ||= $D;
+        }}}}}
+    }
+    
     for my $O (@aO) {
         my $c = Oc&s;
         my $swim = Os&swim || next;
-        each W,Wt,Wcv,Dt,Dcv,D $O {
+        each W,Wt,Wcv,Dt,Dcv,D $swim {
             if (my $i = a&swim.>$W.>$Wt.>$Wcv.>$Dt.>$Dcv ) {
                 my $d = i.c.s;
                 saygr G&sn ." c.t c.y.cv overs $Wt/$Dt $Dcv from d.t d.y.cv";
@@ -218,7 +227,6 @@ Houp: | # live the C, colour art in, make swims
     # for any zip change (and its parents)
     O 1:
         # is OC
-        my $x = a&x = C.y.x || die "OC no yx: ".ki$C;
         if (my $J = s&J) {
             a&J = $J;
             a&ys = Js&s || die "No s on J for K Jo lv: ".ki$J;
@@ -261,7 +269,7 @@ Houp: | # live the C, colour art in, make swims
                 while ($D) {
                     my $S = D.y.in || die "A.1.t's J.t's scI D.t no in";
                     while ($S) {
-                        a&swim.>D.c.W.>D.t.>D.y.cv.>S.t.>S.y.cv = $S;
+                        a&swom.>D.c.W.>D.t.>D.y.cv.>S.t.>S.y.cv = $S;
                         saybl "^ A.1.t's J.t's S.t S.y.cv swims to D.t-D.y.cv-D.c.W";
                         $S = S.y.next;
                     }
@@ -273,7 +281,7 @@ Houp: | # live the C, colour art in, make swims
         # do when el is so
         if (my $sel = 1s&sels) {
             # limited to those under 9?
-            $sel = {} unless $up && up.y.cv eq 0.9;
+            $sel = {} unless C.y.up eq A&r;
             each k,els $sel {
                 exists C.sc.>$k || next;
                 each el,do $els {
