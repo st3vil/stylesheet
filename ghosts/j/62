@@ -40,8 +40,14 @@ SirKill: | # crawl datastructure
         my $o = A&s = $on.>A&t ||= {t=>A&t};
         
         my $name = 'o'.o.t; # eg oin
-        oc&ysource = $name.'D'; # oinD, in drain
+        oc&ysource = 'C'; # upstream
+        # or $name.'D'; # oinD, in drain
+        # might be handy to Scuttle these away like hilltops
+        # but so the entire causal bead-chain is
         oc&clones = [$name.'C']; # oinC, on record?
+        
+        # catch nkgk, etc
+        oc&map = A&map if A&map;
         
         # eg gen=lv, should maybe []
         push @{oc&clones}, A&gen if A&gen;
@@ -338,9 +344,10 @@ SirKill: | # crawl datastructure
                     }
                     if ($t eq 'lv') {
                         Ec&el = A&el if !defined Ec&el;
-                    }
+                    } 
                     if (my $ys = oc&ysource) {
                         # oinD = in drain C
+                        # or just C for upstream C
                         E.y.>$ys = $C;
                     }
                     if (my $sy = oc&sourcey) {
@@ -443,12 +450,24 @@ SirKill: | # crawl datastructure
                 for my $t (@{oc&clones}) {
                     my $E = a&clones.>$t;
                     
+                    my $ult = $t eq oc&clones->[-1];
+                    # map - applies to last clone
+                    # we might be looking for s&J to put its state on OC thing
+                    my $m = $ult && (A.map || oc&map);
+                    
                     # plot entanglements amidst assigning values
                     #   unless we're to transport intact
-                    #   the right thing will be in Ys&clones by now
+                    #   will be $E by now, we're reassigning c/sc...
                     #
                     each nk,gk,v a&ng {
                         $E.>$nk.>$gk = $v;
+                        
+                        # map for nkgk
+                        if (my $y = $m && ms&nkgk.>$nk.>$gk ) {
+                            ref $y eq 'CODE' ? $y->($A,$C,$G,$T,$v)
+                            : die "answer map: ".ki($y)."\nat: ".ki$C;
+                        }
+                        
                         my $r = ref $v && os&refs.>$v || next;
                         my $Y = rs&Y || die "Looks aban: $v ".ki $r;
                         next if $A eq $Y;
@@ -637,6 +656,7 @@ t/o_simple: |
         map {_.y.cv = "0.03".$i++;
             _.y.in.t .= "eee";
             _.y.in = G&hup,_.y.in;
+            _s&delic = 3 * $i;
             $_}
         map { G&hup,$et } 1..4
     ];
@@ -649,117 +669,120 @@ t/o_simple: |
     my $C = G&Ct,['o_simple'];
     
     my $da = {map{$_->[0], [split/\n/,$_->[1]] }
-         [Cora_1=><<''],
-            1Entry  (A in othisD tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,je,elab ]
-            1  jeteeeeeeeeeeee  (A next othisD out) s -- s=33  %  
-            1  je 0.030 (A fronts in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteee ]
-            1    jeteee  (A othisD out) s -- s=33  %  
-            1  je 0.031 (A backs fronts in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteeeeee ]
-            1    jeteeeeee  (A othisD out) s -- s=33  %  
-            1  je 0.032 (A backs in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteeeeeeeee ]
-            1    jeteeeeeeeee  (A othisD out) s -- s=33  %  
-            1  elab 0.033 (A in othisD out prev tv tw) s % z -- s=deal  %  z=[ jeteeeeeeeeeeee,built,built,built,built ]
-            1    jeteeeeeeeeeeee  (A next othisD out) s -- s=33  %  
-            1    built 0.1 (A fronts next othisD out prev) s -- s=several  %  
-            1    built 0.2 (A backs fronts next othisD out prev) s -- s=several  %  
-            1    built 0.3 (A backs fronts next othisD out prev) s -- s=several  %  
-            1    built 0.4 (A backs othisD out prev) s -- s=several  %  
-
- 
-      [Core_1=><<''],
-            1Entry  (A in othisD tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,je,elab ]
-            1  jeteeeeeeeeeeee  (A next othisD out) s -- s=33  %  
-            1  je 0.030 (A fronts in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteee ]
-            1    jeteee  (A othisD out) s -- s=33  %  
-            1  je 0.031 (A backs fronts in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteeeeee ]
-            1    jeteeeeee  (A othisD out) s -- s=33  %  
-            1  je 0.032 (A backs in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteeeeeeeee ]
-            1    jeteeeeeeeee  (A othisD out) s -- s=33  %  
-            1  elab 0.033 (A in othisD out prev tv tw) s % z -- s=deal  %  z=[ jeteeeeeeeeeeee,built,built,built,built ]
-            1    jeteeeeeeeeeeee  (A next othisD out) s -- s=33  %  
-            1    built 0.1 (A fronts next othisD out prev) s -- s=several  %  
-            1    built 0.2 (A backs fronts next othisD out prev) s -- s=several  %  
-            1    built 0.3 (A backs fronts next othisD out prev) s -- s=several  %  
-            1    built 0.4 (A backs othisD out prev) s -- s=several  %  
-
-
-
     
-    # nothing changes
-          [Cora_2=><<''],
-            8Entry  (A in othisD tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,je,elab ]
-            8  jeteeeeeeeeeeee  (A next othisD out) s -- s=33  %  
-            8  je 0.030 (A fronts in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteee ]
-            8    jeteee  (A othisD out) s -- s=33  %  
-            8  je 0.031 (A backs fronts in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteeeeee ]
-            8    jeteeeeee  (A othisD out) s -- s=33  %  
-            8  je 0.032 (A backs in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteeeeeeeee ]
-            8    jeteeeeeeeee  (A othisD out) s -- s=33  %  
-            8  elab 0.033 (A in othisD out prev tv tw) s % z -- s=deal  %  z=[ jeteeeeeeeeeeee,built,built,built,built ]
-            8    jeteeeeeeeeeeee  (A next othisD out) s -- s=33  %  
-            8    built 0.1 (A fronts next othisD out prev) s -- s=several  %  
-            8    built 0.2 (A backs fronts next othisD out prev) s -- s=several  %  
-            8    built 0.3 (A backs fronts next othisD out prev) s -- s=several  %  
-            8    built 0.4 (A backs othisD out prev) s -- s=several  %  
+          [Cora_1=><<''],
+            1Entry  (A C in tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,je,elab ]
+            1  jeteeeeeeeeeeee  (A C next out) s -- s=33  %  
+            1  je 0.030 (A C fronts in next out prev tv tw) s % delic z -- s=44  %  delic=3 z=[ jeteee ]
+            1    jeteee  (A C out) s -- s=33  %  
+            1  je 0.031 (A C OA backs fronts in next out prev tv tw) s % delic z -- s=44  %  delic=6 z=[ jeteeeeee ]
+            1    jeteeeeee  (A C out) s -- s=33  %  
+            1  je 0.032 (A C backs in next out prev tv tw) s % delic z -- s=44  %  delic=9 z=[ jeteeeeeeeee ]
+            1    jeteeeeeeeee  (A C out) s -- s=33  %  
+            1  elab 0.033 (A C in out prev tv tw) s % delic z -- s=deal  %  delic=12 z=[ jeteeeeeeeeeeee,built,built,built,built ]
+            1    jeteeeeeeeeeeee  (A C next out) s -- s=33  %  
+            1    built 0.1 (A C fronts next out prev) s -- s=several  %  
+            1    built 0.2 (A C backs fronts next out prev) s -- s=several  %  
+            1    built 0.3 (A C backs fronts next out prev) s -- s=several  %  
+            1    built 0.4 (A C backs out prev) s -- s=several  %  
 
-        [Core_2=><<''],
-            8Entry  (A in othisD tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,je,elab ]
+       [Core_1=><<''],
+            1Entry  (A C in tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,je,elab ]
+            1  jeteeeeeeeeeeee  (A C next out) s -- s=33  %  
+            1  je 0.030 (A C fronts in next out prev tv tw) s % delic z -- s=44  %  delic=3 z=[ jeteee ]
+            1    jeteee  (A C out) s -- s=33  %  
+            1  je 0.031 (A C OA backs fronts in next out prev tv tw) s % delic z -- s=44  %  delic=6 z=[ jeteeeeee ]
+            1    jeteeeeee  (A C out) s -- s=33  %  
+            1  je 0.032 (A C backs in next out prev tv tw) s % delic z -- s=44  %  delic=9 z=[ jeteeeeeeeee ]
+            1    jeteeeeeeeee  (A C out) s -- s=33  %  
+            1  elab 0.033 (A C in out prev tv tw) s % delic z -- s=deal  %  delic=12 z=[ jeteeeeeeeeeeee,built,built,built,built ]
+            1    jeteeeeeeeeeeee  (A C next out) s -- s=33  %  
+            1    built 0.1 (A C fronts next out prev) s -- s=several  %  
+            1    built 0.2 (A C backs fronts next out prev) s -- s=several  %  
+            1    built 0.3 (A C backs fronts next out prev) s -- s=several  %  
+            1    built 0.4 (A C backs out prev) s -- s=several  %  
+
+
+    # nothing changes 
+       [Cora_2=><<''],
+            8Entry  (A C in tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,je,elab ]
+            8  jeteeeeeeeeeeee  (A C next out) s -- s=33  %  
+            8  je 0.030 (A C fronts in next out prev tv tw) s % delic z -- s=44  %  delic=3 z=[ jeteee ]
+            8    jeteee  (A C out) s -- s=33  %  
+            8  je 0.031 (A C OA backs fronts in next out prev tv tw) s % delic z -- s=44  %  delic=6 z=[ jeteeeeee ]
+            8    jeteeeeee  (A C out) s -- s=33  %  
+            8  je 0.032 (A C backs in next out prev tv tw) s % delic z -- s=44  %  delic=9 z=[ jeteeeeeeeee ]
+            8    jeteeeeeeeee  (A C out) s -- s=33  %  
+            8  elab 0.033 (A C in out prev tv tw) s % delic z -- s=deal  %  delic=12 z=[ jeteeeeeeeeeeee,built,built,built,built ]
+            8    jeteeeeeeeeeeee  (A C next out) s -- s=33  %  
+            8    built 0.1 (A C fronts next out prev) s -- s=several  %  
+            8    built 0.2 (A C backs fronts next out prev) s -- s=several  %  
+            8    built 0.3 (A C backs fronts next out prev) s -- s=several  %  
+            8    built 0.4 (A C backs out prev) s -- s=several  %  
+ 
+      [Core_2=><<''],
+            8Entry  (A C in tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,je,elab ]
+
 
     
     # elab changes, je 030 goes
+     
+      [Cora_3=><<''],
+            3Entry  (A C in tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,elab ]
+            8  jeteeeeeeeeeeee  (A C next out) s -- s=33  %  
+            8  je 0.031 (A C OA fronts in next out prev tv tw) s % delic z -- s=44  %  delic=6 z=[ jeteeeeee ]
+            8    jeteeeeee  (A C out) s -- s=33  %  
+            8  je 0.032 (A C backs in next out prev tv tw) s % delic z -- s=44  %  delic=9 z=[ jeteeeeeeeee ]
+            8    jeteeeeeeeee  (A C out) s -- s=33  %  
+            3  elab 0.033 (A C in out prev tv tw) s % delic z -- s=eye  %  delic=12 z=[ jeteeeeeeeeeeee,built,built,built,built ]
+            8    jeteeeeeeeeeeee  (A C next out) s -- s=33  %  
+            8    built 0.1 (A C fronts next out prev) s -- s=several  %  
+            8    built 0.2 (A C backs fronts next out prev) s -- s=several  %  
+            8    built 0.3 (A C backs fronts next out prev) s -- s=several  %  
+            8    built 0.4 (A C backs out prev) s -- s=several  %  
+
+         
+      [Core_3=><<''],
+            3Entry  (A C in tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,elab ]
+            9  je 0.030 (A C fronts in next out prev tv tw) s % delic z -- s=44  %  delic=3 z=[ jeteee ]
+            3  elab 0.033 (A C in out prev tv tw) s % delic z -- s=eye  %  delic=12 z=[ jeteeeeeeeeeeee,built,built,built,built ]
+
     
-          [Cora_3=><<''],
-            3Entry  (A in othisD tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,elab ]
-            8  jeteeeeeeeeeeee  (A next othisD out) s -- s=33  %  
-            8  je 0.031 (A fronts in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteeeeee ]
-            8    jeteeeeee  (A othisD out) s -- s=33  %  
-            8  je 0.032 (A backs in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteeeeeeeee ]
-            8    jeteeeeeeeee  (A othisD out) s -- s=33  %  
-            3  elab 0.033 (A in othisD out prev tv tw) s % z -- s=eye  %  z=[ jeteeeeeeeeeeee,built,built,built,built ]
-            8    jeteeeeeeeeeeee  (A next othisD out) s -- s=33  %  
-            8    built 0.1 (A fronts next othisD out prev) s -- s=several  %  
-            8    built 0.2 (A backs fronts next othisD out prev) s -- s=several  %  
-            8    built 0.3 (A backs fronts next othisD out prev) s -- s=several  %  
-            8    built 0.4 (A backs othisD out prev) s -- s=several  %  
-
-
-        [Core_3=><<''],
-            3Entry  (A in othisD tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,elab ]
-            9  je 0.030 (A fronts in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteee ]
-            3  elab 0.033 (A in othisD out prev tv tw) s % z -- s=eye  %  z=[ jeteeeeeeeeeeee,built,built,built,built ]
-
-    # add some twa to je, the twa in ks&watch should not have y.in, or be in Core/a
-      [Cora_4=><<''],
-            3Entry  (A in othisD tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,elab ]
-            8  jeteeeeeeeeeeee  (A next othisD out) s -- s=33  %  
-            8  je 0.031 (A fronts in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteeeeee ]
-            8    jeteeeeee  (A othisD out) s -- s=33  %  
-            3  je 0.032 (A backs in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteeeeeeeee,twa,twa,twa,twa ]
-            8    jeteeeeeeeee  (A next othisD out) s -- s=33  %  
-            1    twa 0.3 (A fronts next othisD out prev) s % hs -- s=Memb  %  hs=394
-            1    twa 0.31 (A backs fronts next othisD out prev) s % hs -- s={  %  hs=394
-            1    twa 0.32 (A backs fronts in next othisD out prev tv tw) s % hs watch z -- s=Memb  %  hs=294 watch={ t=twa y={ cv=0.33 } c={ s=} } sc={ hs=395 } } z=[ twa ]
-            1      twa 0.33 (A othisD out) s % hs -- s=}  %  hs=395
-            1    twa 0.33 (A backs othisD out prev) s % hs -- s=}  %  hs=395
-            3  elab 0.033 (A in othisD out prev tv tw) s % z -- s=eye  %  z=[ jeteeeeeeeeeeee,built,talk,built ]
-            8    jeteeeeeeeeeeee  (A next othisD out) s -- s=33  %  
-            8    built 0.1 (A fronts next othisD out prev) s -- s=several  %  
-            1    talk 0.29 (A next othisD out prev) gr % sun -- gr=tango  %  sun=4
-            8    built 0.4 (A backs othisD out prev) s -- s=several  %  
-
+    # add some twa to je
+    #   < the twa in ks&watch should not have y.in
+    #     , or be in Core/a
+    # map has made c&ha of s&delic
+    
+        [Cora_4=><<''],
+            3Entry  (A C in tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,elab ]
+            8  jeteeeeeeeeeeee  (A C next out) s -- s=33  %  
+            8  je 0.031 (A C OA fronts in next out prev tv tw) s % delic z -- s=44  %  delic=6 z=[ jeteeeeee ]
+            8    jeteeeeee  (A C out) s -- s=33  %  
+            3  je 0.032 (A C backs in next out prev tv tw) s % delic z -- s=44  %  delic=9 z=[ jeteeeeeeeee,twa,twa,twa,twa ]
+            8    jeteeeeeeeee  (A C next out) s -- s=33  %  
+            1    twa 0.3 (A C fronts next out prev) s % hs -- s=Memb  %  hs=394
+            1    twa 0.31 (A C backs fronts next out prev) s % hs -- s={  %  hs=394
+            1    twa 0.32 (A C backs fronts in next out prev tv tw) s % hs watch z -- s=Memb  %  hs=294 watch={ t=twa y={ cv=0.33 } c={ s=} } sc={ hs=395 } } z=[ twa ]
+            1      twa 0.33 (A C out) s % hs -- s=}  %  hs=395
+            1    twa 0.33 (A C backs out prev) s % hs -- s=}  %  hs=395
+            3  elab 0.033 (A C in out prev tv tw) s % delic z -- s=eye  %  delic=12 z=[ jeteeeeeeeeeeee,built,talk,built ]
+            8    jeteeeeeeeeeeee  (A C next out) s -- s=33  %  
+            8    built 0.1 (A C fronts next out prev) s -- s=several  %  
+            1    talk 0.29 (A C next out prev) gr % sun -- gr=tango  %  sun=4
+            8    built 0.4 (A C backs out prev) s -- s=several  %  
+    
       [Core_4=><<''],
-            3Entry  (A in othisD tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,elab ]
-            3  je 0.032 (A backs in next othisD out prev tv tw) s % z -- s=44  %  z=[ jeteeeeeeeee,twa,twa,twa,twa ]
-            1    twa 0.3 (A fronts next othisD out prev) s % hs -- s=Memb  %  hs=394
-            1    twa 0.31 (A backs fronts next othisD out prev) s % hs -- s={  %  hs=394
-            1    twa 0.32 (A backs fronts in next othisD out prev tv tw) s % hs watch z -- s=Memb  %  hs=294 watch={ t=twa y={ cv=0.33 } c={ s=} } sc={ hs=395 } } z=[ twa ]
-            1      twa 0.33 (A othisD out) s % hs -- s=}  %  hs=395
-            1    twa 0.33 (A backs othisD out prev) s % hs -- s=}  %  hs=395
-            3  elab 0.033 (A in othisD out prev tv tw) s % z -- s=eye  %  z=[ jeteeeeeeeeeeee,built,talk,built ]
-            9    built 0.2 (A backs fronts next othisD out prev) s -- s=several  %  
-            1    talk 0.29 (A next othisD out prev) gr % sun -- gr=tango  %  sun=4
-            9    built 0.3 (A backs fronts next othisD out prev) s -- s=several  %  
-
+            3Entry  (A C in tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,elab ]
+            3  je 0.032 (A C backs in next out prev tv tw) s % delic z -- s=44  %  delic=9 z=[ jeteeeeeeeee,twa,twa,twa,twa ]
+            1    twa 0.3 (A C fronts next out prev) s % hs -- s=Memb  %  hs=394
+            1    twa 0.31 (A C backs fronts next out prev) s % hs -- s={  %  hs=394
+            1    twa 0.32 (A C backs fronts in next out prev tv tw) s % hs watch z -- s=Memb  %  hs=294 watch={ t=twa y={ cv=0.33 } c={ s=} } sc={ hs=395 } } z=[ twa ]
+            1      twa 0.33 (A C out) s % hs -- s=}  %  hs=395
+            1    twa 0.33 (A C backs out prev) s % hs -- s=}  %  hs=395
+            3  elab 0.033 (A C in out prev tv tw) s % delic z -- s=eye  %  delic=12 z=[ jeteeeeeeeeeeee,built,talk,built ]
+            9    built 0.2 (A C backs fronts next out prev) s -- s=several  %  
+            1    talk 0.29 (A C next out prev) gr % sun -- gr=tango  %  sun=4
+            9    built 0.3 (A C backs fronts next out prev) s -- s=several  %  
 
 
 
@@ -804,21 +827,39 @@ t/o_simple: |
         
         #A.V = 1 if $i == 2;
         #exit if $i == 3;
+        my $c = {};
+        if ($i == 4) {
+            my $m = c.map = G&Ct,[TheMap=>''];
+            ms&nkgk.sc.delic = &acgts{
+                C.c.ha = slm 9, dig $s;
+            };
+        }
         
-        my $d = G&o,$et,{liveon=>$C,t=>'this'};
+        my $d = G&o,$et,{liveon=>$C,t=>'this',%$c};
         $s = dc&s;
         
         A.V = 1;
-        my $eg = s.y.in.y.next.y.next;
-        sayyl "eg.y.A.c.el: ". G&aC,$eg;
+        my $g = s.y.tv.je->{0.031};
+        if ($i == 1) {
+            g.y.OA = $one;
+        }
+        if ($i == 3) {
+            my $t = "3.141 - keeps y-ering when sleeping";
+            if (g.y.OA eq $one) {
+                saygr "ok $t";
+            }
+            else {
+                sayre "not ok $t";
+                push @fail, $t;
+            }
+        }
+        #sayyl "g.y.A.c.el: ". G&aC,$g;
+        #saygr "Andyour: ". G&aC,$r;
         
         for (qw'Cora Core') {
             my $t = $_.'_'.$i;
             my @l = @{d.sc.>$_ || []};
             
-            #my ($to,$th) = @l[2,3];
-            #saybl "Have: ".wdump 3, [to.y.in,th.y.in];
-
             my $r = $da.>$t;
             my $l = [map { 
                 _.y.A.c.el. join('',('  ')x _.y.A.c.ind).
@@ -830,25 +871,23 @@ t/o_simple: |
                 $fail++;
             }
             else {
-            
-            my $miss; # show gaps
-            for my $ls (@$l) {
-                my $rs = shift @$r;
-                ($rs) = '<undefined>', $fail++ if !defined $rs;
-                if ($ls eq $rs) {
-                    $miss = '...' if defined $miss;
-                    next;
+                my $miss; # show gaps
+                for my $ls (@$l) {
+                    my $rs = shift @$r;
+                    ($rs) = '<undefined>', $fail++ if !defined $rs;
+                    if ($ls eq $rs) {
+                        $miss = '...' if defined $miss;
+                        next;
+                    }
+                    sayre $miss if $miss;
+                    $miss = '';
+                    sayre "Line: $ls", "Isnt: $rs";
+                    $fail++
                 }
-                sayre $miss if $miss;
-                $miss = '';
-                sayre "Line: $ls", "Isnt: $rs";
-                $fail++
-            }
-            sayre "Line!", "Isnt: $_" for @$r;
-            
+                sayre "Line!", "Isnt: $_" for @$r;
             }
 
-            after: my $i = ++Gc&oki;
+            my $i = ++Gc&oki;
             if ($fail) {
                 sayre "not ok $i - $t";
                 saybl ' ',' ',"      [$t=><"."<"."''],";
@@ -861,6 +900,5 @@ t/o_simple: |
             }
         }
     }
-    exit;
     @fail ? join(", ", @fail) : ();
 
