@@ -4,12 +4,27 @@ SelfConsciousness: | # your fish brain
     n Houp
     n Koul
 
+BuildFish: |
+    my $e = djson <<'';
+        {"c":{"W":"Jig","e":{"c":{"pi":"Gdo","s":"Especially"},"sc":{"everything_under":"SelfConsciousness","z":[{"c":{"W":"SelfConsciousness"},"t":"SelfConsciousness"},{"c":{"W":"Process"},"t":"Process"},{"c":{"W":"HaMachine"},"t":"HaMachine"}]},"t":"peace/new","y":{"cv":""}}},"sc":{},"t":"Jig","y":{"cv":""}}
+    
+    Rw CloningProcess;
+    #
+    Gc&bay = 'peace';
+    n $e
+    
+    sayre "Become thingz!";
+    exit;
+    
 FishBrain: | # beginning middle and end superimposed on J's state
     u i
     s: %acgt:c sc
         sayyl "oscillating!";
         $A = G&A,s=>0=>$c,$sc;
         # s could order a particular ground
+        Rw FishBrains $A;
+FishBrains: |
+    # etc
         
         # ground has been completed, pos revamping sleepybits from drain
         my $g = A.ground || die "noground";
@@ -31,18 +46,23 @@ FishBrain: | # beginning middle and end superimposed on J's state
         # the OC is another copy, which the oiD gets
         # < see enough interior of Js with map function
         #   o being FactorEase's backend, ideally
-        
+        A.V = 0;
         # where we'd want to forget $d, the drain itself...
         my $o = A&in = G&o,$d,{liveon=>$C,t=>'in',yoff=>'OC'};
-        # Core is changes
-        A&OCs = [map { G&A,O=>0=>_.c,_.sc } @{os&Core}];
+        
+        A&Core = [grep {_.y.C ne $d} @{os&Core}];
+        A&Cora = [grep {_.y.C ne $d} @{os&Cora}];
+        
+        # Core is changes, of OC
+        A&OAs = [map { G&A,O=>0=>_.c,_.sc } map { _.y.A } @{A&Core}];
         
         my $r = 1s&root || die "how to hold many";
         $r = r.y.OC || die "root didn't OC";
+        
         # O - only changes and their parents
         # < tug for .1 progress
         # < with an A=Os for all
-        G&A,$_,8,{r=>$r} for @{A&OCs};
+        G&A,$_,8,{r=>$r} for @{A&OAs};
         
         # < wOrms, in-wormholes
         #   where thing is our part of some sharing of truth
@@ -69,12 +89,17 @@ FishBrain: | # beginning middle and end superimposed on J's state
         # we shall make s&I from what looks like it in K
         
         # put this stuff in the idea of itself
-        rs&z = [ grep{ $_ ne $r } map{ _.y.OC } @{os&Cora} ];
+        rs&z = [ grep{ $_ ne $r } @{A&Cora} ];
+        
+        delete rc&M;
         
         # o ou - to finalise ourselves and OK changes
         $o = A&ut = G&o,$r,{liveon=>$C,t=>'ut',yoff=>'KC',gen=>'lv'};
-        my @K = map { G&A,K=>0=>_.c,_.sc } @{os&Core};
+        
+        my @K = map { G&A,K=>0=>_.c,_.sc } map { _.y.A } @{os&Core};
+        
         $r = r.y.KC || die "root OC didn't KC";
+        
         
         # K - only changes and their parents
         #   <6 becomes things for s&top, s&tv, etc
@@ -88,7 +113,7 @@ FishBrain: | # beginning middle and end superimposed on J's state
         # hangs brain up on the J
         1s&s = $C;
         
-        A.1.sc.>$_ = C.sc.$_ || undef for qw'I tv top tw';
+        A.1.sc.>$_ = C.sc.>$_ || undef for qw'I tv top tw';
         # top is 9's KC
         
         # -> W
@@ -112,7 +137,9 @@ PostK: |
     
 PostO: | # make O's a&swim elvises happen, feed into r.y.tv
     # all current O, even asleep/A&el=8
-    my @aO = map { _.y.OA || die "NoOC: ".ki$_ } @{os&Cora};
+    my @aO = map { _.y.OA || die "noOA: ".ki$_ }
+        #map { _.y.OA || die "NoOC: ".ki($_)."\n\ny: ".ki _.y; }
+        @{A&Cora};
     
     # take Os&swom (via J), Os&swim (from C) through concludoors
     # in usual yt order, may be dupey,
@@ -185,9 +212,10 @@ PostO: | # make O's a&swim elvises happen, feed into r.y.tv
             my $e = Wc&e = G&Ct,[Swim=>3];
             ec&z = $z;
             
-            $w && die "We already: ".ki($w)."\nvs: ".ki$c;
+            $w && die "We already: ".ki($w)."\nvs: ".ki$W;
         }
-    }
+    }}}
+    
     
     # extra z goes after/over OCs
     # sort what to do could get smaller if we go by aO
@@ -197,7 +225,7 @@ PostO: | # make O's a&swim elvises happen, feed into r.y.tv
             my $W = $Wts.>$Wt;
             # sends to the particular language workshop
             # nomem = its J (of,javascript) won't hang around
-            $W = G&elph,\'nomem',$W;
+            $W = G&e,\'nomem',$W;
             # makes a cW=of
             my $D = G&Ct,[$Wt=>$Wcv,{W=>Ws&W}];
             # compilations come back
@@ -227,11 +255,7 @@ Houp: | # live the C, colour art in, make swims
     # for any zip change (and its parents)
     O 1:
         # is OC
-        if (my $J = s&J) {
-            a&J = $J;
-            a&ys = Js&s || die "No s on J for K Jo lv: ".ki$J;
-        }
-        
+        # OA=O, A=o
         my $o = C.y.A;
         o.t eq 'o' || die "No oA: ".ki $o;
         
@@ -332,11 +356,6 @@ Koul: | # clarify changes to string
     #   as two Cs? make encoding instructions pop in
     K 1:
         # is KC
-        if (my $J = s&J) {
-            a&J = $J;
-            a&ys = Js&s || die "No s on J for K Jo lv: ".ki$J;
-        }
-        
         my $o = C.y.A;
         o.t eq 'o' || die "No oA: ".ki $o;
         # A&r = root.y.KC
