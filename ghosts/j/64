@@ -33,7 +33,14 @@ FishBrains: |
         
         # ground -> drain
         my $d = 1s&drains.>$ch = G&hup,$g;
-        ds&z = [@{ds&z}];
+        ds&z = [grep { 
+            my $Y = _.y.A;
+            !$Y || !Y.c.T.not || do {
+                sayre "Dropping drained: T=".ki Y.c.T;
+                sayre "   C=".ki $_;
+                0;
+            };
+        } @{ds&z}];
         
         # brain is ongoing, one per ground
         A&s = $C = 1s&brains.>$ch ||= G&Ct,[$ch=>1=>{}=>{J=>A.1}];
@@ -54,6 +61,7 @@ FishBrains: |
         A&Cora = [grep {_.y.C ne $d} @{os&Cora}];
         
         # Core is changes, of OC
+        A.V = 1;
         A&OAs = [map { G&A,O=>0=>_.c,_.sc } map { _.y.A } @{A&Core}];
         
         my $r = 1s&root || die "how to hold many";
@@ -94,8 +102,10 @@ FishBrains: |
         delete rc&M;
         
         # o ou - to finalise ourselves and OK changes
+        A.V = 0;
         $o = A&ut = G&o,$r,{liveon=>$C,t=>'ut',yoff=>'KC',gen=>'lv'};
         
+        A.V = 1;
         my @K = map { G&A,K=>0=>_.c,_.sc } map { _.y.A } @{os&Core};
         
         $r = r.y.KC || die "root OC didn't KC";
@@ -126,7 +136,7 @@ PostK: |
     # scoop up I every time
     # clobber here into the many I cv or different positions on the thing,
     # even with same cv, from around this vector, someday
-    s&I = {map { _.t=>$_ } grep { _c&W } map { _c&s } @aK};
+    s&I = {map { _.t=>$_ } grep { _c&W && !_s&W } map { _c&s } @aK};
     
     # deletes I unless values I
     delete s&I unless values %{s&I};
@@ -242,8 +252,9 @@ PostO: | # make O's a&swim elvises happen, feed into r.y.tv
     each Wcv,Wt,D a&swum {
         my $w = r.y.tv.>$Wt.>$Wcv;
         r.y.tv.>$Wt.>$Wcv = $D;
-        1 && saygr G&sn ." D: ".ki($D)."\n\n $Wt $Wcv probably swum over by ".ki$w;
+        $w && saygr G&sn ." D: ".ki($D)."\n\n $Wt $Wcv probably swum over by ".ki$w;
     }}
+    1 && saygr "Postotv: ".ki r.y.tv;
     
     # live on the live on-er
     s&swum = a&swum;
@@ -288,10 +299,12 @@ Houp: | # live the C, colour art in, make swims
         if (my $J = !s&noii && s&J) {
             # tune to s page? assume simple
             my $tw = J.sc.I; # Water
+            saybl "Plucking from J.t: ".wdump 3,[
+                map { ki $_ } values %{Js&I};
             for my $t (keys %$tw) {
                 my $D = $tw.>$t;
                 while ($D) {
-                    my $S = D.y.in || die "A.1.t's J.t's scI D.t no in";
+                    my $S = D.y.in || die "A.1.t's J.t's scI $t/D.t no in";
                     while ($S) {
                         a&swom.>D.c.W.>D.t.>D.y.cv.>S.t.>S.y.cv = $S;
                         saybl "^ A.1.t's J.t's S.t S.y.cv swims to D.t-D.y.cv-D.c.W";

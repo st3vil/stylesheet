@@ -211,6 +211,7 @@ Jtool: | # contraptions of J
         pop @Me if $Me[-1] eq '';
         G&clusp;
         $C = G&Ct,\@Me;
+        1 && saybl "in: ".G&aC,$C;
         G&A,mo=>8=>{s=>$C};
         $C
     
@@ -218,6 +219,7 @@ Jtool: | # contraptions of J
     u: %acgt
         pop @Me if $Me[-1] eq '';
         my $u = G&sJ,'u';
+        1 && saybl "iu: ".G&aC,$C;
         push @{uc&N||=[]}, \@Me;
         
     # the many accumulate in $M, passed in
@@ -255,11 +257,11 @@ Jtool: | # contraptions of J
     # < lots of I.i things only being on 5 so this has less to chew
     # < knowing I.i never needs to know order/y.next... unless stored
     clusp:
-        return unless 5s&NormalI; # before 5/House sets up
+        return saybl G&aC ." u are early" unless 5s&NormalI; # before 5/House sets up
         A.1.I = A.I = do {
             my $A = G&A,clusping=>0;
             (A.1,A.2) = (G&sJ,'u' , A.1);
-            my $N = 1c&N;
+            my $N = 1c&N || [];
             1c&N = [];
             if (@$N) {
                 local A.trip, A&trip;
@@ -269,15 +271,20 @@ Jtool: | # contraptions of J
                 #   maybe wanting hostnames
                 # the 5 might create some W for each mind it makes
                 my $uname = dig wdump 3, $N;
+                1 && saygr G&aC ." u I adds: ".wdump 3, $N;
                 5s&ucache.>$uname ||= do {
                     1c&is = 'mind'; # static encouraged
                     # enter stuff to form mind
+                    
+                    map { G&A,mo=>1=>{s=>$_} }
+                    map { G&Ct,$_ }
+                        # s&J holding I as usual
+                        (5s&NormalC || die "create NormalC");
+                    
                     map { G&A,mo=>8=>{s=>$_} }
                     map { G&Ct,$_ }
                         # like a J6
                         [$uname=>9=>{root=>1}],
-                        # s&J holding I as usual
-                        (5s&NormalC || die "create NormalC");
                         # entered stuff
                         @$N;
                     # 
@@ -286,6 +293,7 @@ Jtool: | # contraptions of J
                 };
             }
             else {
+                1 && saygr G&aC ." normal I";
                 # the 
                 5s&NormalI
             }
