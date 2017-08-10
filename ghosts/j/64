@@ -28,7 +28,7 @@ FishBrains: |
         
         # ground has been completed, pos revamping sleepybits from drain
         my $g = A.ground || die "noground";
-             gs&J eq A.1 || die "ground sJ not A1";
+             gs&J eq A.1 || die "ground sJ not A1: ".ki(gs&J)."\n\nA1: ".ki A.1;
         my $ch = g.t;
         
         # ground -> drain
@@ -36,7 +36,7 @@ FishBrains: |
         ds&z = [grep { 
             my $Y = _.y.A;
             !$Y || !Y.c.T.not || do {
-                sayre "Dropping drained: T=".ki Y.c.T;
+                sayre "Dropping yATnot from drain:";
                 sayre "   C=".ki $_;
                 0;
             };
@@ -53,7 +53,7 @@ FishBrains: |
         # the OC is another copy, which the oiD gets
         # < see enough interior of Js with map function
         #   o being FactorEase's backend, ideally
-        A.V = 0;
+        local A.V = 0;
         # where we'd want to forget $d, the drain itself...
         my $o = A&in = G&o,$d,{liveon=>$C,t=>'in',yoff=>'OC'};
         
@@ -61,7 +61,6 @@ FishBrains: |
         A&Cora = [grep {_.y.C ne $d} @{os&Cora}];
         
         # Core is changes, of OC
-        A.V = 1;
         A&OAs = [map { G&A,O=>0=>_.c,_.sc } map { _.y.A } @{A&Core}];
         
         my $r = 1s&root || die "how to hold many";
@@ -71,6 +70,7 @@ FishBrains: |
         # < tug for .1 progress
         # < with an A=Os for all
         G&A,$_,8,{r=>$r} for @{A&OAs};
+        
         
         # < wOrms, in-wormholes
         #   where thing is our part of some sharing of truth
@@ -102,11 +102,11 @@ FishBrains: |
         delete rc&M;
         
         # o ou - to finalise ourselves and OK changes
-        A.V = 0;
         $o = A&ut = G&o,$r,{liveon=>$C,t=>'ut',yoff=>'KC',gen=>'lv'};
         
-        A.V = 1;
-        my @K = map { G&A,K=>0=>_.c,_.sc } map { _.y.A } @{os&Core};
+        saybl join('', ('  ') x _.y.A.c.ind) ." - _.t _.y.cv" for @{os&Core};
+        
+        A&KAs = [map { G&A,K=>0=>_.c,_.sc } map { _.y.A } @{os&Core}];
         
         $r = r.y.KC || die "root OC didn't KC";
         
@@ -116,7 +116,7 @@ FishBrains: |
         #   >6 comps for writing Lines
         # < an A=Ks would map out AWritering
         #     pointing to objects already on the ground
-        G&A,$_,8,{r=>$r} for @K;
+        G&A,$_,8,{r=>$r} for @{A&KAs};
         
         Rw PostK $o $r;
         
@@ -128,6 +128,8 @@ FishBrains: |
         
         # -> W
         
+        $C
+        
     # watching the K diverge as a way to get input is interesting
     # self servers (Dogu/-lookin eg) wants to see out-changes as in-changes
 PostK: |
@@ -136,7 +138,21 @@ PostK: |
     # scoop up I every time
     # clobber here into the many I cv or different positions on the thing,
     # even with same cv, from around this vector, someday
-    s&I = {map { _.t=>$_ } grep { _c&W && !_s&W } map { _c&s } @aK};
+    # we hold A.I as most executable, use OC for it
+    s&I = {map { _.t=>$_ }
+        # the shape of being an I thing (yup==9?)
+        # take outC, which is:
+        #   clone of OC
+        #   not the clone KC, which is breaking down code for Lineing
+        map {
+            my $c = _s&clones || die "KAnoclones";
+            c.outC || die "Has no outC"
+        }
+        map { _.y.KA || die "No KCyKA" }
+        grep { _c&W && !_s&W }
+        map { _c&s || die "KC no cs=KC" } 
+        @aK};
+    
     
     # deletes I unless values I
     delete s&I unless values %{s&I};
@@ -254,7 +270,6 @@ PostO: | # make O's a&swim elvises happen, feed into r.y.tv
         r.y.tv.>$Wt.>$Wcv = $D;
         $w && saygr G&sn ." D: ".ki($D)."\n\n $Wt $Wcv probably swum over by ".ki$w;
     }}
-    1 && saygr "Postotv: ".ki r.y.tv;
     
     # live on the live on-er
     s&swum = a&swum;
@@ -291,7 +306,7 @@ Houp: | # live the C, colour art in, make swims
                 my $Wcv = s&Wv || 0.001;
                 $Wcv /= 10 while $Wcv >= 1;
                 a&swim.>$W.>$Wt.>$Wcv.>C.t.>C.y.cv = $C;
-                saybl "A.1.t's C.t C.y.cv swims to $Wt-$Wcv-$W";
+                saybl "A.1.t's C.t C.y.cv swims to $Wt-$Wcv-$W  ".G&aC,$C;
             }
         }
         
@@ -299,15 +314,13 @@ Houp: | # live the C, colour art in, make swims
         if (my $J = !s&noii && s&J) {
             # tune to s page? assume simple
             my $tw = J.sc.I; # Water
-            saybl "Plucking from J.t: ".wdump 3,[
-                map { ki $_ } values %{Js&I};
             for my $t (keys %$tw) {
                 my $D = $tw.>$t;
                 while ($D) {
                     my $S = D.y.in || die "A.1.t's J.t's scI $t/D.t no in";
                     while ($S) {
                         a&swom.>D.c.W.>D.t.>D.y.cv.>S.t.>S.y.cv = $S;
-                        saybl "^ A.1.t's J.t's S.t S.y.cv swims to D.t-D.y.cv-D.c.W";
+                        saybl "^ A.1.t's J.t's S.t S.y.cv swims to D.t-D.y.cv-D.c.W  ".G&aC,$S;
                         $S = S.y.next;
                     }
                     $D = D.y.over; # the next ii?
@@ -462,6 +475,7 @@ Koul: | # clarify changes to string
                 }
             }
         }
+    # like Line
     K 4:
         # mute refs
         # tells you things that are not there, see o 7 apply
