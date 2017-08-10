@@ -12,7 +12,11 @@ WebHost: |
     
     
     #G.c.listen = readlink('listen') if -l 'listen';
-    Gc&listen = '127.24.35.46:10433';
+    my @l = grep /[1-9]/, split '', dig Gc&bay;
+    shift @l while @l > 7;
+    my $x = ($l[0] * $l[1] + $l[2] * $l[3] / ($l[4]/$l[5])) * $l[6];
+    my $port = 10000 + int $x;
+    Gc&listen = '127.24.35.46:'.$port;
     my $s = Gc&listen || "s:10094";
     $s = "http://$s" if $s !~/^http:\/\//;
     
