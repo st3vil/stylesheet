@@ -506,6 +506,7 @@ SirKill: | # crawl datastructure
                         my $neg = Ds&neg;
                         # lv: t y el=9, no detail (in up z tho)
                         $neg = {} if A&el eq '9';
+                        neg.y.cv = {};
                         # which are already there
                         each nk,gks $E {
                             ref $gks || next;
@@ -515,6 +516,7 @@ SirKill: | # crawl datastructure
                         # to drop universals named in Ec&ds, etc
                         my $dn = {};
                         each nk,gk,q $neg {
+                            next if !q.c;
                             if (!exists qc&s) {
                                 $dn.>$nk.>$gk = 1;
                             }
@@ -557,7 +559,6 @@ SirKill: | # crawl datastructure
                 # then K makes a .prev if it's not Cora-order
                 
                 my $D = A&diff;
-                $V && saygr "el=".A&el."  ".wdump 3, $D;
                 
                 for my $t (@{oc&clones}) {
                     my $E = a&clones.>$t;
@@ -585,9 +586,18 @@ SirKill: | # crawl datastructure
                             # only re matters to lv, sparse negating C
                             # each y could link to tv reals
                             if (Yc&el ne '8') {
-                                if ($la && $t eq 'lv' && Yc&el ne '3' && Yc&el ne '9') {
+                                if ($t eq 'lv') {
                                     # throw in el=8 for the thing before
-                                    push @$re, $la if $ra->[-1] ne $la;
+                                    # < working...?
+                                    my $p = Yc&s; # climb back on C
+                                    my $d;
+                                    if ($p = $d = p.y.prev) {
+                                        $p = p.y.A;
+                                        $p = ps&clones.lv;
+                                    }
+                                    if ($p && Yc&el < 3 && (!@$re || $re->[-1] ne $p)) {
+                                        push @$re, $p;
+                                    }
                                 }
                                 push @$re, $i;
                                 push @{net.Core||=[]}, $i, @{wet.Core||[]};
@@ -600,6 +610,7 @@ SirKill: | # crawl datastructure
                         # cloned clones a possibility, why clonet.>$t = {} above
                         # would have these already
                         delete E.y.>$_ for qw'in out tw tv next prev fronts backs';
+                        $t eq 'lv' && sayre "In E.t: ".ki $wi;
                         for my $i (@$wi) {
                             E.y.in ||= $i;
                             i.y.up = $E;
