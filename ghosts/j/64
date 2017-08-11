@@ -158,25 +158,38 @@ PostK: |
     
     my $la;
     # KC find lv
+    my @lvre;
     for my $C (@{os&Core}) {
+        next if A.1.t ne 'Tvin';
         my $Y = C.y.A;
         my $ind = join('',('  ')x Y.c.ind);
         # C KC fully, _ lv
-        $_ = Ys&clones.lv;
+        my $v = Ys&clones.lv;
+        # what changed
+        my $d = Yc&diff;
+        # previous (amongst everything now) lv should clue gap/ordering
         my $p = C.y.prev;
         my $l = p.y.A.sc.clones.lv if $p;
+        # insert it in the over lv sz
+        my $i = C.y.up;
+        my $L = i.y.A.sc.clones.lv if $i;
         
-        1 && say "Yc&el $ind - ".G&aC,$_ ."  ( "
-            .ki(_.c)."    %  ".ki _.sc;
-            
-        my $d = Yc&diff;
-        
-        1 && saybl "  $ind     ". ki $l
-            if $p && $p ne $la && Yc&el < 3;
+        if ($p && $p ne $la && Yc&el < 3) {
+            push @lvre, $l;
+            $L && Ls&z || die "Noup need prevl: ".ki $C;
+            @{Ls&z} = map { $_ eq $v ? ($l,$v) : $_ } @{Ls&z};
+            1 && saybl "  $ind     ". ki $l
+        }
+        push @lvre, $v;
         
         $la = $C;
     }
-    
+    for my $v (@lvre) {
+        my $Y = v.y.A;
+        my $ind = join('',('  ')x Y.c.ind);
+        1 && say "Yc&el $ind - ".G&aC,$v ."  ( "
+            .ki(v.c)."    %  ".ki v.sc;
+    }
     
     # deletes I unless values I
     delete s&I unless values %{s&I};
