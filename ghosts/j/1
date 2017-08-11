@@ -41,12 +41,351 @@ Erupts: | # wiring standards
     #n Storage
     
 Zequines: | # 1 centered self process
+    # how to form a C
+    n TheSea
+    
     # how A
     n Atool
+    
     # tube helpers
     n To
+    
     # tubes of self
     n Tubes
+
+TheSea: | # folds of the day
+    u i
+    # is it C
+    isC:
+        ref $s eq 'HASH' && defined s.t && s.y && s.y ne $s && (s.c || s.sc)
+    isA:
+        ref $s eq 'HASH' && defined s.t && s.y && s.y eq $s && (s.c || s.sc)
+    # start C by t,c/s
+    # making c s if !hash or s.y
+    tcs: %acgt:t c
+        return $t if ref $t eq 'HASH' && ref t.y && t.y ne $t;
+        $C = {};
+        C.t = $t;
+        C.y = {};
+        C.c = ref $c eq 'HASH' && !c.y ? $c : {s=>$c};
+        $C
+    # start C
+    Ct:
+        my $C = {};
+        G&Cs,$s;
+        $C
+    # parse [This=>3=>{etc}] into your C
+    Cs:
+        $s = [$s] if ref $s eq 'HASH';
+        my ($t,@e) = @$s;
+        my $cs;
+        if (ref $t eq 'SCALAR') {
+            C.c = G&peel,$$t;
+            $cs++;
+        }
+        elsif (ref $t eq 'ARRAY') {
+            die "Aray: ".wdump 3, $s;
+        }
+        elsif (ref $t eq 'HASH') {
+            G&xot,$C,$t;
+            t.y.moC = $C;
+            return;
+        }
+        elsif (ref $t) {
+            die "reft: ".wdump 3, $s;
+        }
+        else {
+            C.t = $t;
+        }
+        if (!@e && !$cs) {
+            C.c.W = C.t;
+        }
+        else {
+            my ($y,$c,$sc,@ex) = @e;
+            if (ref $y eq 'SCALAR' && @e == 1) {
+                $c = G&peel,$$y;
+                $y = {};
+                y.cv = delete c.cv if c.cv;
+            }
+            
+            if (ref $c eq 'HASH') { # the c itself
+                C.c = $c;
+            }
+            elsif (ref $c eq 'SCALAR') { # c as stringed hash
+                C.c = G&peel,$$c;
+            }
+            elsif (@e > 1) { # string or ref to ref
+                C.c.s = $c;
+            }
+            
+            $sc = G&peel,$$sc if $sc eq 'SCALAR';
+            $sc = {} if $sc eq '';
+            $sc = G&peel,$sc if !ref $sc;
+            C.sc = $sc if $sc;
+            
+            if (ref $y eq 'ARRAY') {
+                if (@$y == 1) {
+                    ($y) = @$y;
+                    C.c.e = ref $y ? $y : # [$e]
+                        G&s,$y; # [t]
+                }
+                else {
+                    C.c.e = @$y <3 ? G&tcs,@$y : # [t=>s] or [$C]
+                        G&Ct,$y; # C
+                }
+                $y = 'W';
+            }
+            if (ref $y eq 'HASH') {
+                if (y.y) {
+                    c&e = $y;
+                    $y = 'W';
+                }
+                else {
+                    C.y = $y;
+                }
+            }
+            if (!ref $y) {
+                if ($y =~ s/^-(\w+?)(?:_(o?\d+))?$//) {
+                    c&pi = $1;
+                    $y = $2 if $2;
+                    c&s = C.t if !exists c&s;
+                }
+                # oo2 = 0.002
+                $y = '0.'.join('',('0') x length($1)).$2
+                    if $y =~ /^([o0]+)(\d+)$/;
+                if ($y =~ /^\d+(\.\d+)?$/ || !length $y) {
+                    C.y.cv = $y
+                }
+                elsif ($y =~ /^(\d+)?(?:\.\.(\d+))?(?:x(\d+))$/) {
+                    C.y.in = $1;
+                    C.y.out = $2 if defined $2;
+                    C.y.thi = $3 if defined $3;
+                }
+                elsif ($y =~ s/^(\w+)$//) {
+                    C.c.>$1 = C.t;
+                    C.y.cv = $y; # ''
+                }
+                else {
+                    die "Cs y not: '$y'\n".ki $C
+                }
+            }
+            C.y.cv /= 10 until !C.y.cv || C.y.cv < 1;
+            die "Extra: ".wdump 3,$s if @ex;
+        }
+
+    # for C seeing (C.c.s) another C, same t/y
+    # new C knows y.A
+    # like a piece of consc falling
+    Chs: %acgt:s hs
+        my $C = {};
+        C.t = s.t;
+        C.y.cv = s.y.cv;
+        C.y.A = $A;
+        C.c.s = $s;
+        return $C;
+    
+    #c ways at C, see 2/Sea for C chewing/itself
+    peels: %subpeel
+        qr/^[\{\%]\w+/;
+    
+    peel:
+        return $s if ref $s;
+        $s =~ s/^%//;
+        my $c = {};
+        for (split ',', $s) {
+            my ($k, $v) = split ':', $_, 2;
+            $v = 1 if !defined $v;
+            $c->{$k} = $v;
+        }
+        $c
+    
+    # k into hash path    also T/ip
+    pint:
+        my $o = ref $Me[-1] eq 'HASH' ? pop @Me : {};
+        my @p;
+        for (@Me) {
+            if ($_ eq '*' && ref $s eq 'HASH' && 1 == keys %$s) {
+                ($_) = keys %$s;
+            }
+            unless (ref $s eq 'HASH' && exists $s.>$_
+                || ref $s eq 'ARRAY' && exists $s->[$_]) {
+                o.fail = $_;
+                o.mong = [ref $s eq 'HASH' ? sort keys %$s
+                    : ref $s eq 'ARRAY' ? "0..".(@$s-1) : slim("?was: $s") ];
+                o.have = \@p;
+                return
+            }
+            push @p, $_;
+            $s = ref $s eq 'HASH' ? $s.>$_ : $s->[$_];
+        }
+        $s
+    
+    # put hash k+ = v
+    punt:
+        my $v = pop @Me;
+        my $la = pop @Me;
+        $s = $s.>$_ ||= {} for @Me;
+        $s.>$la = $v;
+    
+    # guess sJ means sc J, etc
+    pang: %acgt:s def
+        my ($nk,$gk) = $s =~ /^([tycs])?(.+)$/;
+        $nk || $gk eq 't' && return $gk;
+        $nk = 'sc' if $nk eq 's';
+        $nk = $def || 'sc' if !$nk;
+        $nk && $gk || die"strv:$s";
+        ($nk,$gk);
+    
+    # hash ordering
+    hord: %acgt:s head tail
+        my ($he,$ta) = ([],[]);
+        $head ||= [qw't cv y c sc'];
+        $tail ||= [qw's z'];
+        my $tw;
+        for ([$he=>$head],[$ta=>$tail]) {
+            my ($to,$k) = @$_;
+            for my $t (@$k) {
+                $s.>$t || next;
+                $tw.>$t ++;
+                push @$to, $t;
+            }
+        }
+        my @mi = sort grep { !$tw.>$_ } keys %$s;
+        [ map { [ $_ => $s.>$_ ] } @$he, @mi, @$ta ];
+    
+    #c flexible data tester
+    # \$whereclause
+    ip: %acgt:s c u
+        my $z;
+        $s = G&peel,$$s if ref $s eq 'SCALAR';
+        my $n;
+        if (ref $s eq 'REF') {
+            # do s.do
+            $s = $$s;
+            $n = $s;
+            s.ip || die "sip no ref";
+            $s = {%{s.ip}};
+            my $ord = delete s.order;
+            $s = {map{$_=> \$s.>$_ }keys %$s};
+            s.order = $ord if $ord;
+        }
+        # n.all keeps going after a pass--
+        my $pass = 1;
+        # the many named checks must pass
+        # their name is probably the k in $c.>$k
+        my $o = ref s.order eq 'ARRAY' && s.order || [keys %$s];
+        EE: for my $k (@$o) {
+            my $y = $s.>$k; # intel
+            my $x = $c.>$k; # carb
+            my $u = $u.>$k ||= {}; # return
+            $pass == 1 || n.all || y.or || return 0;
+            
+            return 1 if y.or && $pass == 1;
+            $pass = 1 if y.or;
+            
+                my $exi;
+                if (exists y.nk) {
+                    $x = $c;
+                    for my $k (grep{defined}y.nk,y.gk,y.tk) {
+                        $pass--, next EE unless
+                            ref $x eq 'HASH' && exists $x.>$k;
+                        $exi = exists $x.>$k;
+                        $x = $x.>$k;
+                    }
+                }
+                my $wa = $pass;
+                if (y.pint) {
+                    my $o = {};
+                    $x = G&pint,$c,@{y.pint},$o;
+                    $exi = !o.fail;
+                    u.pint = $o;
+                    u.s = $x;
+                }
+                !defined $x || $pass-- if y.ndef;
+                defined $x || $pass-- if y.def;
+                !$exi || $pass-- if y.nexi;
+                $exi || $pass-- if y.exi;
+                $x || $pass-- if exists y.true;
+                y.is eq $x || $pass-- if exists y.is;
+                y.eq eq $x || $pass-- if exists y.eq;
+                y.not ne $x || $pass-- if exists y.not;
+                y.in->{$x} || $pass-- if y.in;
+                !y.nin->{$x} || $pass-- if y.nin;
+                $x > y.gt || $pass-- if exists y.gt;
+                $x < y.lt || $pass-- if exists y.lt;
+                $x >= y.gteq || $pass-- if exists y.gteq;
+                $x <= y.lteq || $pass-- if exists y.lteq;
+                $x =~ y.re || $pass-- if exists y.re;
+                $x =~ /y.re/i || $pass-- if exists y.rei;
+                if (my $h = y.hasany) {
+                    my $is = grep {
+                        my $s = $x.>$_;
+                        my $u = $h.>$_;
+                        $s && (!$u || do {
+                            $u eq '!ref' ? !ref $s
+                            : 1
+                        });
+                    } keys %$h;
+                    $pass-- unless $is;
+                }
+                $pass = $pass < $wa ? $wa : $pass-1
+                    if y.neg;
+        }
+        $pass == 1
+    #c data
+    # oh -  copy c over s, 2 hashes deep, like C
+    oh:
+        G&xot,$s,@Me;
+    xot: %acgt:s c
+        ref $c eq 'HASH' && ref $s eq 'HASH'
+            || die "Hash up".wdump 3, [$s,$c];
+        while (my($k,$v) = each %$c) {
+            $s->{$k} = ref $v eq 'HASH' ?
+                        {%{$s->{$k}||{}}, %$v}
+            : $v;
+        }
+        return $s
+    
+    # ho - copy c over s (half oh)
+    #ho:
+    #    G&xo,$s,@Me;
+    hoh:
+        G&xo,$s,@Me;
+    xo: %acgt:s c
+        ref $c eq 'HASH' && ref $s eq 'HASH'
+            || die "Hash up".wdump 3, [$s,$c];
+        while (my($k,$v) = each %$c) {
+            $s->{$k} = $v;
+        }
+        return $s
+    
+    # hup - clone s, 2 hashes deep
+    hup:
+        my $CC = {%$s};
+        $CC->{$_} = {%{$CC->{$_}}} for
+            grep {ref $CC->{$_} eq 'HASH'} keys %$CC;
+        return $CC;
+    
+    # assign to a hash, pass unless it was already something else
+    always: %acgt:s k v
+        my $pass = !exists $s.>$k || $s.>$k eq $v;
+        $s.>$k = $v;
+        $pass;
+    
+    # round number
+    rou:
+        0.0001 * int(10000*$s)
+    roun:
+        0.000001 * int(1000000*$s)
+    # 33 -> 0.33
+    sca:
+        $s /= 10 while $s > 1 || $s < -1;
+        $s
+    
+    # check for rounded datastructure, non sprawl into A
+    oleak: %acgt:s n
+        length(wdump $n,$s) < length(wdump $n+1,$s);
+
 Atool: | # reliable/old A
     u i
     # snake outwards by A.up
