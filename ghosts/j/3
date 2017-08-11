@@ -193,6 +193,145 @@ Jaying: | # how to sequence a J
     
     # < do til 9?
     
+Jtool: | # contraptions of J
+    u i
+    
+    # J, they inherit like a stretchier A
+    J:
+        my ($J,$s) = ref $s ? ($s,shift@Me) : (A.1,$s);
+        $A = $J;
+        $J = G&A,$s;
+        J.1 = $J;
+        J.2 = $A;
+        $J
+    
+    # J's support crew
+    # who keep normal
+    # may be n'd and s'd
+    sJ:
+        my ($J,$s) = ref $s ? ($s,shift@Me) : (A.1,$s);
+        J.sc.>$s ||= do {
+            my $j = G&J,$J,$s;
+            j.I = 5s&NormalI if 5s&NormalI;
+            $j
+        };
+    
+    # adds to ground
+    # < sometimes given [C,C,C]?
+    #   @$s = ([@$s]) unless ref $s->[0] eq 'ARRAY' 
+    #     || ref $s->[0] eq 'HASH';
+    n: %acgt
+        pop @Me if $Me[-1] eq '';
+        G&clusp;
+        $C = G&Ct,\@Me;
+        #saybl "in: ".G&aC,$C;
+        G&A,mo=>8=>{s=>$C};
+        #saybl "out: ".G&aC,$C .(s&of && "    of=s&of");
+        $C
+    
+    # the many accumulate in $M, passed in
+    # usually given and mo'd by J6
+    m: %acgt:M
+        pop @Me if $Me[-1] eq '';
+        G&clusp;
+        push @$M, G&Ct,\@Me;
+    
+    # ephemeral n without:
+    # - clusping the mind, or
+    # - attaching to this ground (usu for c.e)
+    # < e could be reliabilitied by grounding and osc work
+    # usually n \'of:mo' -> C.c.of=mo
+    # but for e it A.c.of=mo, for eg nomem
+    elph: %acgt
+        G&e,@Me;
+    e: %acgt
+        return G&E,@Me if @Me == 1 && !ref $Me[0];
+        pop @Me if $Me[-1] eq '';
+        my $c;
+        $c = shift @Me if ref $Me[0] eq 'SCALAR';
+        $c = $c ? G&peel,$$c : {};
+        c.nogro = 1;
+        
+        $C = G&Ct,\@Me;
+        saybl "e: ".ki $C;
+        saybl "c: ".ki $c;
+        G&A,mo=>8=>{s=>$C,%$c};
+        $C
+    
+    # adds to mind, G&clusp causes it to be made
+    u: %acgt
+        pop @Me if $Me[-1] eq '';
+        my $u = G&sJ,'u';
+        saybl "iu: ".G&aC,$C;
+        push @{uc&N||=[]}, \@Me;
+        
+    # clasp u
+    # 5s&NormalI is default if no u
+    # 5s&NormalC is base, it's s&J holding I as usual
+    #   O ii hoists faster than entering everything from the start
+    # < only elvising altering We things
+    # < lots of I.i things only being on 5 so this has less to chew
+    # < knowing I.i never needs to know order/y.next... unless stored
+    clusp:
+        # before 5/House sets up
+        return saybl G&aC ." u are early"
+            unless 5s&NormalI;
+        
+        # u unchanged
+        if (my $u = 1s&u) {
+            return if uc&N && !@{uc&N};
+        }
+        my $u = G&sJ,'u';
+        my $J = A.1;
+        
+        J.I = A.I = do {
+            my $A = G&A,clusping=>0;
+            A.1 = $u;
+            A.2 = $J;
+            my $N = 1c&N || [];
+            1c&N = [];
+            if (@$N) {
+                local A.trip, A&trip;
+                # this may be an alias for speed rather than canonical
+                # name should include versions: Normal#3893a73, c#489bc58
+                #   being ha, or c#1.42.492 for incremental version
+                #   maybe wanting hostnames
+                # the 5 might create some W for each mind it makes
+                my $uname = slm 15, dig wdump 3, $N;
+                1 && saygr G&sn ." u: ".ki $N;
+                5s&ucache.>$uname ||= do {
+                    1c&is = 'mind'; # static encouraged
+                    # enter stuff to form mind
+                    
+                    my $ch = $uname;
+                    1s&grounds.>$ch = A.ground = G&Ct,[$ch=>1=>{},{J=>A.1}];
+                    
+                    1s&root = G&Ct,[$uname=>9=>{root=>1}];
+                    map { G&A,mo=>1=>{s=>$_} }
+                    map { G&Ct,$_ }
+                        # s&J holding I as usual
+                        (5s&NormalC || die "create NormalC");
+                    
+                    map { G&A,mo=>8=>{s=>$_} }
+                        # like a J6
+                        1s&root, # must be findable in drain
+                    map { G&Ct,$_ }
+                        # entered stuff
+                        @$N;
+                    # 
+                    my $s = G&s;
+                    ss&I || die "clusp no I, $uname: ".ki $s;
+                };
+            }
+            else {
+                1 && saygr G&aC ." normal I";
+                # the 
+                5s&NormalI
+            }
+        };
+        # get this J's mo throat to reopen its mind
+        T.seek = 1;
+       
 Sleap: | # desire, S, T, 
     u i
     
@@ -414,143 +553,4 @@ Sleap: | # desire, S, T,
             ||
             saygr "Waker $eq   $des";
         }
-Jtool: | # contraptions of J
-    u i
-    
-    # J, they inherit like a stretchier A
-    J:
-        my ($J,$s) = ref $s ? ($s,shift@Me) : (A.1,$s);
-        $A = $J;
-        $J = G&A,$s;
-        J.1 = $J;
-        J.2 = $A;
-        $J
-    
-    # J's support crew
-    # who keep normal
-    # may be n'd and s'd
-    sJ:
-        my ($J,$s) = ref $s ? ($s,shift@Me) : (A.1,$s);
-        J.sc.>$s ||= do {
-            my $j = G&J,$J,$s;
-            j.I = 5s&NormalI if 5s&NormalI;
-            $j
-        };
-    
-    # adds to ground
-    # < sometimes given [C,C,C]?
-    #   @$s = ([@$s]) unless ref $s->[0] eq 'ARRAY' 
-    #     || ref $s->[0] eq 'HASH';
-    n: %acgt
-        pop @Me if $Me[-1] eq '';
-        G&clusp;
-        $C = G&Ct,\@Me;
-        #saybl "in: ".G&aC,$C;
-        G&A,mo=>8=>{s=>$C};
-        #saybl "out: ".G&aC,$C .(s&of && "    of=s&of");
-        $C
-    
-    # the many accumulate in $M, passed in
-    # usually given and mo'd by J6
-    m: %acgt:M
-        pop @Me if $Me[-1] eq '';
-        G&clusp;
-        push @$M, G&Ct,\@Me;
-    
-    # ephemeral n without:
-    # - clusping the mind, or
-    # - attaching to this ground (usu for c.e)
-    # < e could be reliabilitied by grounding and osc work
-    # usually n \'of:mo' -> C.c.of=mo
-    # but for e it A.c.of=mo, for eg nomem
-    elph: %acgt
-        G&e,@Me;
-    e: %acgt
-        return G&E,@Me if @Me == 1 && !ref $Me[0];
-        pop @Me if $Me[-1] eq '';
-        my $c;
-        $c = shift @Me if ref $Me[0] eq 'SCALAR';
-        $c = $c ? G&peel,$$c : {};
-        c.nogro = 1;
-        
-        $C = G&Ct,\@Me;
-        saybl "e: ".ki $C;
-        saybl "c: ".ki $c;
-        G&A,mo=>8=>{s=>$C,%$c};
-        $C
-    
-    # adds to mind, G&clusp causes it to be made
-    u: %acgt
-        pop @Me if $Me[-1] eq '';
-        my $u = G&sJ,'u';
-        saybl "iu: ".G&aC,$C;
-        push @{uc&N||=[]}, \@Me;
-        
-    # clasp u
-    # 5s&NormalI is default if no u
-    # 5s&NormalC is base, it's s&J holding I as usual
-    #   O ii hoists faster than entering everything from the start
-    # < only elvising altering We things
-    # < lots of I.i things only being on 5 so this has less to chew
-    # < knowing I.i never needs to know order/y.next... unless stored
-    clusp:
-        # before 5/House sets up
-        return saybl G&aC ." u are early"
-            unless 5s&NormalI;
-        
-        # u unchanged
-        if (my $u = 1s&u) {
-            return if uc&N && !@{uc&N};
-        }
-        my $u = G&sJ,'u';
-        my $J = A.1;
-        
-        J.I = A.I = do {
-            my $A = G&A,clusping=>0;
-            A.1 = $u;
-            A.2 = $J;
-            my $N = 1c&N || [];
-            1c&N = [];
-            if (@$N) {
-                local A.trip, A&trip;
-                # this may be an alias for speed rather than canonical
-                # name should include versions: Normal#3893a73, c#489bc58
-                #   being ha, or c#1.42.492 for incremental version
-                #   maybe wanting hostnames
-                # the 5 might create some W for each mind it makes
-                my $uname = slm 15, dig wdump 3, $N;
-                1 && saygr G&sn ." u: ".ki $N;
-                5s&ucache.>$uname ||= do {
-                    1c&is = 'mind'; # static encouraged
-                    # enter stuff to form mind
-                    
-                    my $ch = $uname;
-                    1s&grounds.>$ch = A.ground = G&Ct,[$ch=>1=>{},{J=>A.1}];
-                    
-                    1s&root = G&Ct,[$uname=>9=>{root=>1}];
-                    map { G&A,mo=>1=>{s=>$_} }
-                    map { G&Ct,$_ }
-                        # s&J holding I as usual
-                        (5s&NormalC || die "create NormalC");
-                    
-                    map { G&A,mo=>8=>{s=>$_} }
-                        # like a J6
-                        1s&root, # must be findable in drain
-                    map { G&Ct,$_ }
-                        # entered stuff
-                        @$N;
-                    # 
-                    my $s = G&s;
-                    ss&I || die "clusp no I, $uname: ".ki $s;
-                };
-            }
-            else {
-                1 && saygr G&aC ." normal I";
-                # the 
-                5s&NormalI
-            }
-        };
-        # get this J's mo throat to reopen its mind
-        T.seek = 1;
-       
 
