@@ -1,0 +1,791 @@
+LeMachine: | # drip feeding PiMachine
+    # wants to have pointers to W
+    # with the suggestion that you Believe them together
+    # the stowexp fails gracefully enough since it's last thing to do
+    # the believers of LeMachine (Jigdoer/stylehouse.pl) put it together from its /W 
+    y.at.massive = 1;
+    
+    n Atool
+    n Sequencing
+    n Placement
+    n Intel
+    n ForJ
+    n Tangle
+    n Stuff
+    
+    
+    #n Stylehousing
+    
+    n Art
+    
+    n Storage
+    n Elvising
+    n Tripical
+
+Jigdoer: | # 0 bootstrap a G from W
+    Jc&tape = 'Dejo';
+    Js&ein.bo = 'Doable';
+    A.6.t = 'vil';
+    A.5.t = 'via';
+    G.c.bay || die "will need G";
+    # < get traceably these things its adding...
+    
+    my $eh = hitime();
+    
+    # slurp these stored W for composing normal
+    my @W = grep {$_} map { /^n (\w+) */ }
+        split "\n", G.way.LeMachine;
+    my @set = map {
+        my $f = G&Locate_read,$_;
+        $f .= "/1";
+        -f $f || die "NO such $_ ($f ?)";
+        $f
+    } @W;
+    
+    # make $Believe->($N) able
+    my @suub = map {
+        my ($t,$args) = @$_;
+        my $s = G.way.>$t || die "No $t";
+        my $C = G&Ct,[$t=>1=>{s=>$s},{args=>$args,of=>'w'}];
+        G&perlcode,$C;
+        'my $'.$t.' = '.c&s;
+    } [Beach=>'s,f'],[Believe=>'N'];
+    
+    my $bab = &s{
+        my $C = G&Ct,["someba"=>1=>{s=>$s}];
+        G&CoBabbler;
+        C.c.s
+    };
+    
+    my @inc = ('G');
+    my $perl = join "\n\n",
+        G.way.strictwarn,
+        'use FindBin qw($Bin);',
+        'use lib "$Bin/othlia";',
+        'use lib "$Bin/slib";',
+        (map{"use $_;"}@inc),
+        'my ($A,$C,$G,$T);',
+        'my $begin = "Beginning";',
+        @suub,
+        'my @f = ('.join(",",map{"\n    '$_'"}@set)."\n);",
+        $bab->(G.way.Begin);
+    
+    my $f = "stylehouse\.pl";
+    write_file $f, $perl;
+    `chmod +x $f`;
+    sayre "Done";
+    exit;
+Begin: | # 0 stylehouse.pl starts Aing somehow, by Jigdoer
+    saygr 'Some more';
+    my $N = [map{ @{ $Beach->('',$_) } }@f];
+    my $A = $Believe->($N);
+    A.t = 'toplevel';
+    G.h = G.i.h = A.i.h || die "No h";
+    G.w = A.i.w || die "No w";
+    G.i.t = A.i.t || die "No t";
+    G.ii = A.ii;
+    A.I = A.ii;
+    A&C = $C = G&Ct,['topCevel'=>1];
+    A&T = $T = {};
+    G&Gee; # gives G.way, going
+    
+    1 && sayre "Ontop";
+    $A = G&A,'begin';
+    
+    my $ar = {};
+    Rw $begin;
+    
+    1 && saybl "ende.";
+Bangular: |
+    my $end;
+    $SIG{__WARN__} = &{
+        my ($s) = @_;
+        return if $s =~ /Deep recursion on (anonymous )?subroutine/
+            || $s =~ /masks earlier declaration in same/;
+        $end->($s);
+        warn "Warndg: $s";
+    };
+    my $lastts;
+    $SIG{__DIE__} = $end = &s{
+        return if $lastts >  hitime() - 1;
+        sayre "SIGDIE began: ".slim(200,$s);
+        $lastts =  hitime();
+        $s && $@ && sayre "stackend with \$@ and arg0";
+        $s ||= $@;
+        $s ||= do { saygr "\$@ was blank"; $_[0] };
+        local $@;
+        eval { G::confess( 'yab' ) };
+        my @stack = split m/\n/, $@;
+        
+        shift @stack for 1,2; # this sub and that eval ^
+        if (0 || $stack[-1] =~ /^\s+Mojo::IOLoop::start/) {
+            pop @stack until $stack[-1] !~ /Mojo|eval/;
+        }
+        
+        my @stock;
+        my $stacking;
+        # suckup string spilling out of a line
+        for my $l (@stack) {
+            if ($stacking) {
+                if ($l =~ /^\t\S/) {
+                    $stacking = 0;
+                    push @stock, $l;
+                }
+                else {
+                    push @{$stock[-1]}, $l
+                }
+            }
+            elsif ($l =~ /^\teval '/) {
+                $stacking = 1;
+                push @stock, [$l];
+            }
+            else {
+                push @stock, $l;
+            }
+        }
+        @stack = map { ref $_ ? join "\n", @$_ : $_ } @stock;
+        
+        @stack = map{
+            my $l = {y=>{}};
+            ls&dataline = $1 if s/, <DATA> line (\d+)\.\n?$//s;
+            
+            if (/^\s*(?:eval \{\.\.\.\} |([^\(\s]+)::([^\s\(]+?)\((.+)\) )called at (\S+|\(eval \S+\)) line (\d+)$/) {
+                ls&pack = $1 if $1; # usu main, undef for eval{}
+                ls&sub = $2 if $2; # usu __ANON__, "
+                ls&Mes = $3 if $3; # stringified @_
+                ls&file = $4 if $4; # usu (eval \d+) or stylehouse.pl
+                ls&line = $5 if $5; # in the code above this call
+            }
+            elsif ($_ =~ /^\teval '(.+)' called .+?$/sgm) {
+                ls&file = 'eval $s';
+                ls&string = $1;
+                lc&s = $_
+            }
+            else {
+                lc&s = $_
+            }
+            $l
+        } @stack;
+        my $B = Gc&B;
+        Bs&stack = \@stack;
+        
+        Bs&callers = [map{ [caller($_)] }0..4];
+    };
+    sayre "Bangular loaded";
+Bangilate: |
+    # T.h figured it safe from below
+    Bs&hand && return;
+    
+    # bang polished, pass out
+    # on each enclosing h
+    # < look at caller() eval nums for more stack sync
+    #   be good to have lines calling from last Jpin, w, and h
+    Bs&foot && return $ba;
+    
+    Bc&h && die "< Have the handler to $ba things.";
+    
+    # Bc&s is the first argument to h, may be a D
+    my $deB = &B{
+        sprintf(" B %-4s %4s %8s", B.t,
+            (B.y.cv ne '0.1' && B.y.cv),
+            (ref Bc&s ? Bc&s.t : Bc&s),
+        );
+    };
+    my $destack =&t{
+        t.t ?
+            sprintf(" - %-18s %4s: %s", t.t, ts&line, ts&Mes)
+        :   sprintf(" ? %s", G&aC,$t )
+    };
+    
+    # here
+    my $D = Bs&D;
+    # bangC is code the problem would have come from
+    my $d = Bs&bangC || delete(T.bangC) || $D;
+    
+    
+    # index landmarks
+    my $na = {};
+    my $Bs = {%{B.sc},%{B.c}};
+    Bs.G = $G;
+    Bs.T = $T;
+    Bs.Dw = D.y.argumented if D.y.argumented;
+    each gk,v $Bs {
+        next unless $gk =~ /^..?$/;
+        next unless ref $v;
+        my $r = "$v";
+        $na.>$r = "$gk";
+    }
+    my $i = 1;
+    for my $v (@{Bs&Me||[]}) {
+        my $r = "$v";
+        $na.>$r = "arg".$i++;
+    }
+    for my $n (2..5,'up','up.up','up.up.up') {
+        my $k = "A$n";
+        my $Y = $A;
+        if ($n =~ /\./) {
+            my @ks = split /\./, $n;
+            $Y = $Y.>$n || next for @ks;
+            $Y || next;
+        }
+        else {
+            $Y = $Y.>$n || next;
+        }
+        ref $Y || next;
+        my $r = "$Y";
+        $na.>$r = $k;
+        if (my $C = Y.c && Y.c.s) {
+            my $k = $n."C";
+            my $r = "$C";
+            $na.>$r = $k;
+        }
+        if (my $T = Y.c && Y.c.T) {
+            my $k = $n."T";
+            my $r = "$T";
+            $na.>$r = $k;
+        }
+    }
+    
+    # find landmarks in callstack
+    # stack syncy to know G&h's eval number:
+    my $hs_file = (caller(0))[1];
+    my $st = Bs&stack;
+    for my $t (@$st) {
+        t.t = delete ts&file;
+        t.t = 'h' if t.t eq $hs_file;
+        ts&Mes =~ s/\Q$_\E/$na.>$_/
+            && do { ts&matches->{ $na.>$_ }++ }
+            for keys %$na;
+    }
+    
+    # split callstack around B stack
+    # near the beginning of it should be our h call
+    # < deduce every h, just to first and from last
+    my ($lit) = my ($for,$aft) = ([],[]);
+    for my $t (@$st) {
+        $lit = $aft if t.t eq 'h';
+            #&& 5 == grep{ ts&matches.>$_ } qw'A C G T D';
+        push @$lit, $t;
+    }
+    
+    # beyond h/B stack
+    if (!@$for) {
+        my ($t) = @$for = shift @$aft if !@$for;
+        if (t.t eq 'h') {
+            eval {
+            $d = G&t,i=>'h';
+            };
+            sayre "Tried to show you h" if $@;
+            # dying in G&h, you probably want to know where it came from tho
+        }
+    }
+    my $l = [map{ $destack->($_) }@$for];
+    
+    # 
+    my @Bs;
+    my $BB = $B;
+    while ($BB) {
+        push @Bs, $BB;
+        $BB = BB.y.out;
+    }
+    $BB = $B;
+    for my $B (@Bs) {
+        # tell aboves we did this
+        Bs&foot = $BB;
+    
+        push @$l, $deB->($B);
+        
+        next unless $B eq $BB;
+        my $i = 1;
+        for my $r (@{Bs&Me||[]}) {
+            my $s = ki $r;
+            my @also;
+            if ($r eq $d) {
+                $s = G&aC,$r;
+                my $sc = ki r.sc;
+                $s =~ s/%.+$/%: $sc/;
+                @also = "      * described below";
+            }
+            
+            push @$l, sprintf("    arg%d %5s",$i++,$s), @also;
+        }
+    }
+    
+    my @fin;
+    for my $t (reverse @$aft) {
+        last if t.t eq 'h';
+        push @fin, $destack->($t);
+    }
+    if (@fin) {
+        push @$l, reverse @fin;
+    }
+    
+    #c codesplatter
+    
+    (my $clear = $ba) =~ s/, <\w+> line \d+\.//;
+    my ($line) = $clear =~ /.+ line (\d+)/g;
+    if (my $v = @$for == 1 && $for->[0]) {
+        if (v.t =~ /^\(eval \d+\)$/) {
+            1 && saygr "line $line really vs&line? from ".ki v.t;
+            #$line = vs&line;
+        }
+    }
+    
+    my @obya;
+    for my $gk (qw'aA aC') {
+        my $v = B.sc.>$gk;
+        ref $v || next;
+        my $label = "  Bs&".$gk.": ";
+        if (ref $v eq 'HASH' && v.y eq $v) {
+            my @S = $v;
+            unshift @S, $v while $v = v.up;
+            $v = $S[-1];
+            my $max;
+            $max = _c&ind > $max ? _c&ind : $max for @S;
+            # make a reverse ind tree of nodes coming down to here
+            my @L = map {
+                my $ind = $max - _c&ind;
+                $ind += length $label;
+                $ind = join('',(' ') x $ind);
+                my $c = {%{_.c}};
+                "$ind _.t".(ref c.s ? " C=".ki delete c.s : "")
+                ."  ".ki {c=>$c,sc=>_c&sc}
+            } @S;
+            push @obya, @L;
+            
+        }
+        push @obya, $label .ki $v;
+    }
+    my $obya = join"\n","obya:",@obya if @obya;
+    
+                
+                my @tri;
+                if ($line) {
+                    1 && sayyl "Line is $line";
+                    my @s = split "\n", dc&s;
+                    my ($for,$aft) = (5,3);
+                    @tri = ([]); # split into three
+                    my $i = 1;
+                    for (@s) {
+                        $i eq $line && push @tri, [];
+                        $i > $line - $for && $i < $line + $aft
+                            && push @{$tri[-1]}, $_;
+                        $i eq $line && push @tri, [];
+                        $i++;
+                    }
+                    @tri = map {join "\n", @$_ } @tri
+                }
+                
+                my $Bs = join "\n", @$l;
+                my $code = join "\n>>>>>>>>>>\n", map{
+                    join "\n", map{"| ".$_} split "\n", $_
+                } @tri if @tri;
+                
+                my $li = [split "\n", $ba];
+                if (@$li > 30) {
+                    my (@st,@ar);
+                    push @st, shift @$li while @$li && @st < 30;
+                    while (@$li && @ar < 5) {
+                        push @ar, shift @$li;
+                    }
+                    $ba = join "\n", @st, @ar ? ("...snip ".(@$li)."...", @ar) : ();
+                }
+                
+                $ba = join "\n\n", grep {defined} $Bs, $code, $ba, $obya;
+                
+                # die...\n keeps first line number
+                return $ba."\n";
+Stylehousing: | # org Karamean new stuff
+    # new t, old G.way
+    n Zequines
+    # patching old oscing for new Normal/Static
+    n Zunnel
+    # StripesEdge and Zpace
+    n ThArt
+    # osc bits?
+    n Hoop
+    # sleeping from AWriter's saves
+    n ImStatic
+    # the Babs
+    n Babblar
+Zunnel: | # ground action patchup for LeMachine only
+    u a
+    #c n2 ground assembles mind
+    n 2:
+        my $u = A&u;
+        return if A.1.t eq 'os' || A&nomind;
+        if (!uc&o) {
+            u.c.base = 'Normal'; # the PiMachine
+            # base if grind (ground, needs root), whole if just theu
+            my $rev = ".u.sc.ch" if u.sc.ch;
+            my $V = A.1.t =~ /^[A-Z]/;
+            my $gr = G&grind,$u;
+            if ($gr) {
+                G&A,n=>8=>$u=>[uuu=>9=>{root=>1}];
+                # slowly opening & closing a J of the u better than ^
+                # but also want to hold u n at 3 til cachable known
+                # the relevant page of s (man sesh) then ^ getting whole=?
+                # those u s pages get cached somewhere in 4stw.ucache
+                #   if simple enough
+            }
+            saybl "resolves mind$rev: A.1.t".($gr && " (u)");
+            # resolve our mind
+            # < having the M of u to do now, cache with
+            local A.trip;
+            local A&trip;
+            my $so = G&A,s=>8=>$u;
+            # merge its i/ii thing ideas into our 1
+            if (u.sc.ii) {
+                # A.mo = the 6er this n is mindupping
+                # A = this A, already fell off A.mo
+                # A.1 = an fyi for the J, may want only the most something mind
+                for (A.mo, $A, A.1) {
+                    _.ii = u.sc.ii;
+                    _.i = u.sc.i || die "No i on A.1.t u";
+                }
+                # the mo of A.2 minds from above til here
+                # a J's mind has how to get into a J and do its mind
+                # see Elvising for inside-outside cooperation
+            }
+            else {
+                sayre "No ii on A.1.t u (o Whole TODO?)";
+                1 && saygr "u looks: ".ki $u;
+                1 && saygr "uss looks: ".ki u.sc.s;
+                for (A.mo, $A, A.1) {
+                    _.ii = A.4.ii;
+                    _.i = A.4.i || die "No i on A.1.t u ish A.4.t not-whole";
+                }
+            }
+            T.seek = 1;
+        }
+    #c o2 input protocols read bunches of C
+    o 2:
+        # resolving to stuff
+        if (c&m eq 'A') {
+            my $s = c&f = c&s;
+            if (sc&s && ref sc&s eq 'HASH' && sc&s.t eq s.t && !s.y.in && !ss&top) {
+                saybl G&aC,$s ."   becoming s: ".G&aC,sc&s ."   on ".G&sn;
+                $s = c&f = sc&s;
+                # from becmoes the real 9
+            }
+            my $top = ss&top || s.y.in
+                || die "o A from no sc top or yin: ".ki$s;
+            for my $k ('i','ii') {
+                c&finds.>$k =
+                    s.sc.>$k ? 1 :
+                    s.y.s && s.y.s.sc.>$k ? 'ys' :
+                    next;
+            }
+            c&s = $top;
+            c&m = 'C';
+        }
+        
+        # eating stuff
+        # < space-for (C) < t < y [many o with .c.s = $e, o.y.etc = etc]
+        my $oo = A.c.oo = {};
+        my $oat = &o{
+            push @{ oo.C.>o.t.>o.y.cv ||=[]}, $o;
+        };
+        
+        # per other itself in 3, way in is noise-ish
+        if (c&m eq 'zip') {
+            for my $k (keys %{c&s}) {
+                my $v = c&s ->{$k};
+                v.y && v.y eq $v || die "zip yon not A ".wdump 2, c&s;
+                next if $v eq $A;
+                next if vc&T && vc&T.not;
+                # light cones holding C or doing another o bunch
+                my $D = v.c.s;
+                if (v.t eq 'o') {
+                    # D is inner o's C - index windups
+                    D.c.i eq c&i || die "o oth i C.c.i.t <-> D.c.i.t";
+                    D.c.j && die "o D.c.t already got j";
+                    D.c.jC && die "o D.c.t already got jC";
+                    D.c.jC = $C;
+                    my $ii = v.c.oo || die "Too early to oo: D.t";
+                    my $i = 0;
+                    for my $t (keys %{ii.C}) {
+                        my $vs = ii.C->{$t};
+                        for my $cv (keys %$vs) {
+                            my $os = $vs->{$cv};
+                            $oat->( G&hup,$_ ) for @$os;
+                            $i++ for @$os;
+                        }
+                    }
+                    say "A.t A.c.sip C.t claims $i from: v.t v.c.sip D.t";
+                }
+                else {
+                    # D is J moment C material to shade
+                    my $e = G&hup,$D;
+                    my $o = G&Chs,$e;
+                    o.y.D = $D;
+                    o.y.R = $v;
+                    o.y.k = $k;
+                    $oat->($o);
+                }
+            }
+        }
+        elsif (c&m eq 'i') {
+            for my $k (keys %{c&s}) {
+                my $v = c&s ->{$k};
+                # inflated t -> s
+                my $e;
+                e.t = $k;
+                e.y.cv = 0.1;
+                e.c.s = $v;
+                my $o = G&Chs,$e;
+                o.y.k = $k;
+                $oat->($o);
+            }
+        }
+        elsif (c&m eq 'ii') {
+            for my $k (keys %{c&s}) {
+                my $v = c&s ->{$k};
+                # t -> C
+                my $e = G&hup,$v;
+                my $o = G&Chs,$e;
+                o.y.k = $k;
+                o.y.D = $v;
+                $oat->($o);
+            }
+        }
+        elsif (c&m eq 'C') {
+            # C
+            my $S = c&s;
+            my $p;
+            while ($S) {
+                ref $S eq 'HASH' || die "NothashC: C.t: ".ki(c&s).":\n  ".ki $S;
+                !defined S.t && die "Dodge o m=C: ".wdump 3,
+                    ["ot: C.t",S=>$S,after=>$p];
+                my $e = G&hup,$S;
+                my $o = G&Chs,$e;
+                o.y.D = $S;
+                if ($p) {
+                    os&oz.yprev = $p;
+                    ps&oz.ynext = $o;
+                }
+                $oat->($o);
+                $p = $o;
+                $S = S.y.next;
+                undef $S if c&nonext;
+            }
+        }
+        elsif (c&m eq 'z') {
+            # whole [ C... ], not rl
+            for my $S (@{ c&s }) {
+                ref $S eq 'HASH' || die "Nothashzin: C.t:\n ".ki(c&s).":\n  ".ki $S;
+                !defined S.t && die "Dodge o m=z: ".wdump 3, [$S];
+                my $e = G&hup,$S;
+                my $o = G&Chs,$e;
+                o.y.D = $S;
+                $oat->($o);
+            }
+        }
+        elsif (c&m eq 'rl') {
+            # rl same array growing more el=3 updatey dives
+            # make A.c.r from el=3
+            die "code rl";
+            T.Z.599 = 1;
+        }
+        else {
+            die "How to read ".ki $C;
+        }
+        
+    #c s2 peel ground moments
+    s 2:
+        # parameters plugged in to s.sc from Jc
+        my $pl;
+        pl.gripo = delete 1c&gripo;
+        pl.base = 1c&base;
+        pl.parts = delete upCc&parts;
+        pl.whole = 1c&whole;
+        while (my ($k,$v) = each %$pl) {
+            delete(C.c.>$k), next if !defined $v;
+            C.c.>$k = $v;
+        }
+        my $whole = c&whole;
+        
+        if (!c&parts && c&imparted) {
+            # contains another imping s to resume branching from
+            G&imparted;
+        }
+        
+        if (delete 1c&imping) {
+            # zipover/zopul/etc reoccur through
+            delete C.sc.>$_ for qw'jo swim';
+        }
+        
+        # TODO make C.t for the page of ground this s (C) is for
+        # J.t can wander
+        my ($zip,$ch) = G&grind,A.1;
+        G&always,C.sc,ch=>$ch || die "Chinout: s&ch $ch";
+        
+        
+        # complexity hider, T may want to tho
+        $whole = delete c&base if c&base && !$zip;
+        A&V = A.1 eq A.3 && A.2.t ne 'u' && A.1.t =~ /^[A-Z]/;
+        
+        if (my $W = $whole) {
+            my $s = ref $W && $W || G&Wup,$W || G&t,$W || die "no $W on ".G&sn;
+            # s is a top not an s, but has s.y.s for s
+            sayre "WHole! s: A.1.t: s.t" if A&V;
+            # m=A makes meta looks
+            A&who = G&A,o=>8,$C,$s,'whole',{m=>'A'};
+            # s C or J, s&top and/or y.in etc to copy
+            # if s.sc.ii/s.y.s.sc.ii (etc) then copy too
+            # repoint as tv to this side, to C.sc.ii
+            # which is our top.y.s.sc.ii (etc)
+            # 
+            # gives us s&top, tv, i/ii like osc
+            #   can make our own lv for our slice of it
+            # letting us export it to the J in 8
+            # place on us, eg u.sc.ii, you must 
+            return T.Z.8 = $A;
+        }
+        
+        # shade .c down to s (whole/imparted doesn't)
+        my $oc = {shade=>1};
+        my $tug;
+        if (my $d = c&parts) {
+            G&imparts;
+            return T.Z.76 = $A if c&imparted;
+            return T.Z.8 = $A if delete c&sameparts;
+            $d = G&hup,$d;
+            # have frozen stuff's top
+            # make flat z that c&root elects top
+            # so o histories (j) work for full J/zip
+            my $z = [$d, @{ delete ds&z || []}];
+            d.c.root = 1;
+            # also, had ground before, now just parts
+            undef $zip;
+            # parts o are hoisted to zip o
+            # things
+            oc.nonext = oc.noyin = 1;
+            tug.parts = G&A,o=>2,$C,$z,'parts';
+        }
+        if (my $W = c&base) {
+            my $s = ref $W && $W || G&Wup,$W || G&t,$W || die "no $W on ".G&sn;
+            sayyl "Base ! ".ki $s;
+            my $z = ss&z || s.y.in;
+            if (!$z && ref sc&s eq 'HASH' && sc&s.y.in) {
+                saybl G&aC,$s ."   basecoming s: ".G&aC,sc&s ."   on ".G&sn;
+                $z = sc&s.y.in;
+            }
+            # TODO know top C with settling clues
+            # see s&top above
+            tug.base = G&A,o=>2,$C,$z,'base';
+        }
+        if ($zip) {
+            tug.ground = G&A,o=>2,$C,$zip,'zip';
+        }
+        $tug || die "No ground to A.1.t";
+        
+        
+        c&zip = G&A,o=>6,$C,$tug,'zipover',$oc;
+        G&A,c&zip=>6;
+
+ImStatic: | # static W if */sac/$W
+    u s
+    # W in the sac stay themselves
+    W 32: %of:mo
+        return if c&e;
+        return saygr "ImStatic void: TH = T.H for C.t C.c.W at ".G&sn
+            if defined T.H && T.H ne '8';
+        
+        my $safe = 'sac';
+        local A.6.t = $safe;
+        my $f = G&Locate_read,C.t;
+        return unless $f && $f =~ /\/$safe\//;
+        
+        $f = "$f/1";
+        my $ha = readlink $f;
+        $ha || die "Not a hash link? $f";
+        if ($ha eq 1s&static_ha) {
+            # we've been here before, it should be the same
+            # -8 should skip s/7
+            A&want.samestatic = -8;
+            return;
+        }
+        1s&static_ha = $ha;
+        
+        my $d = G&Beach,$f;
+        $d || die "Beached $f returned nothing";
+        
+        sayre "Found C.t W in $f";
+        ($d) = @$d;
+        c&pretend = $d;
+        # get Hosthing's thawJ to do the c&parts, T.Z.7ing
+        # doesn't seem to work directly from here (early?)
+        T.H = 1;
+
+    # 2/Sleep are we in or out
+    #  - modified from s/2:Sleep to not worry about re-exporting
+    #    C.sc (via G&grist) on sleeping rounds
+    #    since statics will have no Js&Z
+    J 45: %of:mo
+        my $de;
+        de.mo = A&want if A&want;
+        de.C = c&want if c&want;
+        de.J = 1c&want if 1c&want;
+        $de || return; # continues without thinking
+        local A.V = 2;
+        my $des = "C.t C.y.cv ".G&sn,3 ." -> ".ki $de;
+        
+        # want.* is weight if numeric, explanation if ref
+        my $eq;
+        my @got;
+        each ftc $de {
+            next if ref $c;
+            push @got, $t;
+            $eq += $c;
+        }}
+        my $only = $got[0] if @got == 1;
+        
+        # want to add counterpoints
+        # everything eventually sleeps way/u/W stuff
+        
+        if ($eq < 0) {
+            $only eq 'once' ||
+                saybl "Sleep $eq   $des";
+            # we can skip 6, our mo C should re-sc from before
+            
+            if (1s&Z) {
+                # if ground has Zistory, retoss past C.sc
+                # s will blow up too if you dont TZ8 ($eq < -6)
+                my $ou = G&grist,A.2;
+                my ($t) = grep {_s&J eq s&J} map {_c&s} values %$ou;
+                die "MIssing ground for C.t C.y.cv: ".ki $t if ts&J ne s&J;
+                C.sc = {%{t.sc}};
+            }
+            
+            my $to = $eq < -6 ? '8' : '7';
+            T.Z.>$to = $A;
+        }
+        else {
+            # FactorEase 
+            keys %$de == 1 && de.mo && keys %{de.mo} == 1 && de.mo.elvis eq '6'
+            ||
+            saygr "Waker $eq   $des";
+        }
+Statics: | # Jig for-u, causing static u
+    # 
+    $M = [];
+    m TheStatics
+    
+    n Jig=>['bay/sac'=>-Gdo=>{},{z=>$M}]
+    
+TheStatics: | # for /sac/ which suggests thaw
+    n i
+    n alacgts
+    n a
+    n alact
+    n s
+    n als
+    n c
+    n alc
+    n Ang
+    n j
+    n jc
+    n js
+    
+
