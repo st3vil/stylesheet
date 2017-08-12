@@ -126,7 +126,8 @@ FishBrains: |
     # watching the K diverge as a way to get input is interesting
     # self servers (Dogu/-lookin eg) wants to see out-changes as in-changes
 PostK: |
-    my @aK = map { _.y.KA || die "NoOC: ".ki$_ } @{os&Cora};
+    # KA version of everything
+    my @aK = map { _.y.KA || die "NoKA: ".ki$_ } @{os&Cora};
     
     # scoop up I every time
     # clobber here into the many I cv 
@@ -170,7 +171,12 @@ PostK: |
     
 PostTV: | # make 1-5, whole C
     my ($f,$gd) = G&Locate_write;
-    my $N = [@{os&Cora}];
+    # from KA c&s (aka KC), for el=8 they replace last KC and sleep
+    # this would dodge out the wiring..? safe-ish for flatlist
+    #   should probably clone c/sc from sleeping KC
+    my $N = [map{ _c&s || die "noC: ".ki$_ }
+         map { _.y.KA || die "NoKA: ".ki$_ } @{os&Cora}];
+    
     $C = $N->[0];
     
     1 && saygr "saving ".G&sn ." to $f";
@@ -205,7 +211,7 @@ PostLV: | # make 7
         
         $la = $C;
     }
-    
+    1 && saygr "In LV for ".G&sn;
     # further K for lv
     # holding the lv clone
     A&VAs = [map {
@@ -215,21 +221,23 @@ PostLV: | # make 7
     
     # V is K 1, 5-8
     # K usually 1-59
-    _.y.cv = 49 for @{A&VAs};
+    _.y.cv = 0.49 for @{A&VAs};
+    _.V = 1 for @{A&VAs};
+    A.V = 1;
     G&A,$_,8,{r=>$r} for @{A&VAs};
     
     
     for my $Y (@{A&VAs}) {
         my $v = Yc&s;
-        my $ind = join('',('  ')x Y.c.ind);
+        my $ind = join('',('  ')x Yc&ind);
         1 && say "Yc&el $ind - ".G&aC,$v ."  ( "
             .ki(v.c)."    %  ".ki v.sc;
     }
     
     my ($f,$gd) = G&Locate_write;
-    my $N = \@lvre;
+    my $N = [map { _c&s } @{A&VAs} ];
     $C = $N->[0];
-    1 && saygr "Would note ".G&sn ." to $f: ".wdump 4, $C;
+    1 && saygr "Would note ".G&sn ." to $f";
 
     Rw Writer + $gd $f $C $N 7;
     
@@ -243,7 +251,7 @@ Tveing: |
     n Tvin
 Tvin: |
     Jc&tape = 'W';
-    #Jc&save = 'W';
+    Jc&save = 'W';
     
     Js&bowls ||
     n first=>4=>'first',{doge=>{ela=>3}}
@@ -291,8 +299,14 @@ Koul: | # clarify changes to string
     K 2:
         # are we being aware of nothing or disappearing
         A&el || die "No el K";
-        A&el eq '8'
-            && return T.Z.8 = $A;
+        if (A&el eq '8') {
+            1 && sayyl "Same sleeps! ".G&aC,$C;
+            # use the encoded one (for wholeness)
+            $C = A&s = A&K.c.s;
+            C.y.A = $A;
+            1 && saybl "Same sleeps! ".G&aC,$C;
+            return T.Z.8 = $A;
+        }
         A&el  eq '9' # is last KC
              && return T.Z.9 = $A;
             
@@ -366,9 +380,7 @@ Koul: | # clarify changes to string
                 C.c.>$k = "@gks";
             }
         }
-        1 && sayyl "Kompingu: ".G&aC,$C;
         delete C.sc.>$_ for qw'qz';
-
     #c K6 lv/from within
     # c&Jo = J version
     K 6:
@@ -426,7 +438,7 @@ Writer: | # to make 12345, 7
     ar.m || die "send m=list,of,types";
     $gd # the bay/G, where to find sibling W
     && $f || die "Sendbits";
-    1 && saygr "W A.1.t ($f)";
+    1 && saygr "W A.1.t ($f) @{ar.m}";
     
     # types wanted: lines pooled
     my $w = {map{$_=>[]}@{ar.m}};
@@ -435,7 +447,7 @@ Writer: | # to make 12345, 7
     my $h = ar.h || {};
         
     # not s but the top/9
-    my $s = G&hup,$C;
+    $C = G&hup,$C;
         
     # storage the bits: h/$hash = content
     my $st = &st{
@@ -454,8 +466,11 @@ Writer: | # to make 12345, 7
     # for G&ind'ing Cthing to flat lists like $N
         my $ub = &Cd{
             delete s&z;
+            my $y = C.y;
+            my $Y = y.A;
+            my $el = $Y && Yc&el;
             local C.y = {cv=>C.y.cv};
-            1 && saybl "For ".G&aC,$C;
+            1 && saybl "For $el ".G&aC,$C;
             G&Line,$C;
         };
         
