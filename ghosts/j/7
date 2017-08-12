@@ -177,11 +177,9 @@ PostTV: | # make 1-5, whole C
     my $N = [map{ _c&s || die "noC: ".ki$_ }
          map { _.y.KA || die "NoKA: ".ki$_ } @{os&Cora}];
     
-    $C = $N->[0];
-    
     1 && saygr "saving ".G&sn ." to $f";
     
-    Rw Writer $gd $f $C $N 1 2 3 4 5;
+    Rw Writer $gd $f $N 1 2 3 4 5;
     
 PostLV: | # make 7
     my $la;
@@ -236,10 +234,9 @@ PostLV: | # make 7
     
     my ($f,$gd) = G&Locate_write;
     my $N = [map { _c&s } @{A&VAs} ];
-    $C = $N->[0];
     1 && saygr "Would note ".G&sn ." to $f";
 
-    Rw Writer + $gd $f $C $N 7;
+    Rw Writer + $gd $f $N 7;
     
 Tveing: |
     A.7.t = 'glang';
@@ -446,8 +443,10 @@ Writer: | # to make 12345, 7
     #  eg 2 can't know about 3 because 3 has to know about 2
     my $h = ar.h || {};
         
-    # not s but the top/9
+    # writes on the written top/9
+    $C = $N->[0];
     $C = G&hup,$C;
+    $N->[0] = $C;
         
     # storage the bits: h/$hash = content
     my $st = &st{
