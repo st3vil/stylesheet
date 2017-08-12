@@ -24,20 +24,25 @@ FishBrains: |
         local A.V = 0;
         # o in - to map the drain and OC the changes
         #   climbing in/next/z to produce OC feedable clones,
-        # < C that are attributes it keeps/diffs but doesn't OC
-        # the oinD is origin in drain
-        # the oinC is our copy of it
+        # <? C that are attributes it keeps/diffs but doesn't OC
+        # OC.y.C = origin C, C.y.OC = OC
+        # 
         # the OC is another copy, which the oiD gets
         # < see enough interior of Js with map function
         #   o being FactorEase's backend, ideally
         
-        # where we'd want to forget $d, the drain itself...
         my $o = A&in = G&o,$d,{liveon=>$C,t=>'in',yoff=>'OC'};
         
+        # where we'd want to forget $d, the drain itself...
+        # < d.y.in.y.up too
         A&Core = [grep {_.y.C ne $d} @{os&Core}];
         A&Cora = [grep {_.y.C ne $d} @{os&Cora}];
         
-        # Core is changes, of OC
+        
+        # Cora is full state
+        #   which will have its last awake .y.OC
+        # Core is changing state, of OC
+        #   may include the last OC, with 
         A&OAs = [map { G&A,O=>0=>_.c,_.sc } map { _.y.A } @{A&Core}];
         
         my $r = 1s&root || die "how to hold many";
@@ -49,8 +54,6 @@ FishBrains: |
         G&A,$_,8,{r=>$r} for @{A&OAs};
         
         
-        # Cora is full state
-        #   which will have its last awake .y.OC
         # Core is changing state
         
         #   slight possibility of zombies if you topy&OCs&qua++
@@ -71,7 +74,7 @@ FishBrains: |
         
         #saybl join('', ('  ') x _.y.A.c.ind) ." - _.t _.y.cv" for @{os&Core};
         
-        # some vectors may want raw KC on top
+        # some vectors may want KC on top, no KAing
         # default
         # K<6 some may want KC tidied, shaded c
         #     the shade bits of c may cache somewhere for S
@@ -84,6 +87,7 @@ FishBrains: |
         #   awake by lv-ish difference-only, but
         #   using and setting (r.y.KC) wholes
         # mostly shades C.c for reinput through reversaliser
+        
         A&KAs = [map { G&A,K=>0=>_.c,_.sc } map { _.y.A } @{os&Core}];
         
         # K>5 fills out (with parts of K) changes only, to log
@@ -138,13 +142,14 @@ PostK: |
     
     # Cora CK, fully
     #   needs KA-ing to squish whole picture
+    my $h =
     3c&save &&
         Rw PostTV;
     
     # lvre, difference
-    #   needs KA-V-ing to 
+    #   needs KA-ing to squish and hoist other lv
     3c&tape &&
-        Rw PostLV;
+        Rw PostLV + $h;
     
     # if neither we can 
     
@@ -155,17 +160,16 @@ PostK: |
     s&top = $r;
     s&tw = r.y.tw;
     
-PostTV: | #
-    # make 1-5, whole C
-    
+PostTV: | # make 1-5, whole C
     my ($f,$gd) = G&Locate_write;
     my $N = [@{os&Cora}];
     $C = $N->[0];
     
+    1 && saygr "saving ".G&sn ." to $f";
+    
     Rw Writer $gd $f $C $N 1 2 3 4 5;
     
-    1 && saygr "saved ".G&sn ." to $f";
-PostLV: | #
+PostLV: | # make 7
     my $la;
     
     # get KC lv clone, fill in unimplied placement order
@@ -215,25 +219,23 @@ PostLV: | #
     }
     
     my ($f,$gd) = G&Locate_write;
+    my $N = \@lvre;
+    $C = $N->[0];
     1 && saygr "Would note ".G&sn ." to $f: ".wdump 4, $C;
 
-    return;
-    
-    # make 7
-    my $N = \@lvre;
-    $C = $lvre[0];
-    
-    Rw Writer $gd $f $C $N 7;
+    Rw Writer + $gd $f $C $N 7;
     
 Tveing: |
     A.7.t = 'glang';
+    saybl map {G&aC,$_ } @{ A.I.K.sc.z };
+    #exit;
     #A.V = 1;
     n Tvin
     #A.V = 0;
     n Tvin
 Tvin: |
     Jc&tape = 'W';
-    Jc&save = 'W';
+    #Jc&save = 'W';
     
     Js&bowls ||
     n first=>4=>'first',{doge=>{ela=>3}}
@@ -243,6 +245,11 @@ Tvin: |
     sayyl "Pinned";
     
     
+    n table=>-tabul=>{vl=>Js&bowls}
+    
+pi/tabul: |
+    n t=>''=>C.t
+    m random=>''=>"virtual" for 1..c&vl;
 Koul: | # clarify changes to string
     u a
     # might be making Lines in here?
@@ -274,8 +281,6 @@ Koul: | # clarify changes to string
     # a&l is the original C we are squishing
     
     K 2:
-        my $l = a&l;
-        
         # are we being aware of nothing or disappearing
         A&el || die "No el K";
         A&el eq '8'
@@ -284,21 +289,6 @@ Koul: | # clarify changes to string
              && return T.Z.9 = $A;
             
         
-        if (my $J = s&J) {
-            # scJ could describe it, versions at head/remote
-            # place it, in a net, can talk to with the address
-            if (s&pi) {
-                # implies s&J, which remains in osc C but not Komp
-                delete s&J;
-                # quiet for insides, should remain with qs
-                delete c&s if Js&tv;
-            }
-            else {
-                s&J = Js&name || J.t;
-            }
-            # W implies J in mo:W:12, they can look it up
-            delete s&J if ls&W eq s&J;
-        }
     
     # hook Js&Kels.sending.3 = $s to G&h,$cb for sc.sendings el3ing
     K 3:
@@ -319,9 +309,26 @@ Koul: | # clarify changes to string
     #   whole pictures + change want derefing here
     #   
     K 55:
+        my $l = a&l;
         # mute refs
         # tells you things that are not there, see o 7 apply
         s&z = delete s&zout if s&zout;
+        
+        if (my $J = s&J) {
+            # scJ could describe it, versions at head/remote
+            # place it, in a net, can talk to with the address
+            if (s&pi) {
+                # implies s&J, which remains in osc C but not Komp
+                delete s&J;
+                # quiet for insides, should remain with qs
+                delete c&s if Js&tv;
+            }
+            else {
+                s&J = Js&name || J.t;
+            }
+            # W implies J in mo:W:12, they can look it up
+            delete s&J if ls&W eq s&J;
+        }
         
         s&Kseen++;
         
@@ -411,24 +418,36 @@ Writer: | # to make 12345, 7
     $gd # the bay/G, where to find sibling W
     && $f || die "Sendbits";
     1 && saygr "W A.1.t ($f)";
-    # to do that type
-    my $w = {map{$_=>1}@{ar.m}};
+    
+    # types wanted: lines pooled
+    my $w = {map{$_=>[]}@{ar.m}};
+    # ha pooled (once lines written)
+    #  eg 2 can't know about 3 because 3 has to know about 2
+    my $h = ar.h || {};
         
-        # not s but the top/9
-        my $s = G&hup,$C;
+    # not s but the top/9
+    my $s = G&hup,$C;
         
-        # storage the bits: h/$hash = content
-        my $st = &st{
-            $s = join "\n", @$s,'' if ref $s eq 'ARRAY';
-            my $ha = slm 9, dig $s;
-            `mkdir -p $f/h` if !-d "$f/h";
-            my $hf = "h/$ha";
-            write_file("$f/$hf", $s);
-            if ($t) {
-                `unlink $f/$t` if -e "$f/$t";
-                `ln -s h/$ha $f/$t`;
-            }
-            $ha
+    # storage the bits: h/$hash = content
+    my $st = &st{
+        $s = join "\n", @$s,'' if ref $s eq 'ARRAY';
+        my $ha = slm 9, dig $s;
+        `mkdir -p $f/h` if !-d "$f/h";
+        my $hf = "h/$ha";
+        write_file("$f/$hf", $s);
+        if ($t) {
+            `unlink $f/$t` if -e "$f/$t";
+            `ln -s h/$ha $f/$t`;
+        }
+        $ha
+    };
+    
+    # for G&ind'ing Cthing to flat lists like $N
+        my $ub = &Cd{
+            delete s&z;
+            local C.y = {cv=>C.y.cv};
+            1 && saybl "For ".G&aC,$C;
+            G&Line,$C;
         };
         
         # append C's Line s to list, indented
@@ -439,7 +458,7 @@ Writer: | # to make 12345, 7
             push @$N, join "\n", map{"$ind$_"} @$s;
         };
         
-        # take meta off the 9, put ha on W
+    # take meta off the 9, put ha on any W
         # < meta?
         my $meta;
         for my $C (@$N) {
@@ -449,7 +468,9 @@ Writer: | # to make 12345, 7
                 $meta && die "doublemeta";
                 $meta = $m;
             }
-            # assume W is in G
+            # assume W is in G as well
+            # < have another kind of link
+            #   bridgy, for Ang, sort-of inclusion, etc...
             if (my $t = s&W) {
                 $t =~ s/\W+/-/gs;
                 my $d = "$gd/$t";
@@ -460,7 +481,7 @@ Writer: | # to make 12345, 7
             }
         }
     
-    my @four;
+    #c writ frequencies
     my $W;
     if (w.4) {
         # the 4: has 9, gist of first t/y
@@ -500,53 +521,45 @@ Writer: | # to make 12345, 7
             if (!Yc&ind && C.y.cv == 0.9) {
                 Ds&ha = 'HAHAR';
             }
-            $in->(\@four,$C, G&Line,$D );
+            $in->(w.4,$C, G&Line,$D );
         }
     }
-    my @all;
     if (w.1) {
         # 1/everything
         for my $C (@$N) {
-            my $Y = C.y.A;
             my $S = $C;
             my @p;
             push @p, "_.t-_.y.cv" while $S = S.y.up;
             my $p = join "/", @p;
             
-            my $l = eval {
-            
-            #s&z && die "Hadz";
-            delete s&z;
-            delete C.y.>$_ for qw'next prev in more up tv tw';
-            G&Line,$C;
-            
-            };
+            my $l = eval { $ub->($C) };
             $@ && die "For $p:\n  C: ".ki($C)."\n$@";
             
-            $in->(\@all,$C, $l);
+            $in->(w.1,$C, $l);
         }
     }
-        #c pointpile
-        
-        my $h = {};
-        if (w.1) {
+    #c pointpile
+    
+    if (w.1) {
         # point to object: 1 -> h/$hash
-        h.1 = $st->(\@all,'1') if w.1;
-        }
-        my $ha = h.1;
-        
+        h.1 = $st->(w.1,'1');
+    }
+    # meta/5cience behind it: 5
+    my $i = G&Ct,[C.t,C.y.cv] if w.5;
+    if (w.4) {
+        h.1 || die "4 without 1";
         # lum feeling: 4 ~= content, 
-        $four[0] =~ s/HAHAR/$ha/;
-        my $foha = $st->(\@four,'4');
+        w.4->[0] =~ s/HAHAR/h.1/;
+        h.4 = $st->(w.4,'4');
         
-        # meta/5cience behind it: 5
-        my $fi = G&Ct,[C.t,C.y.cv];
         # < Scuttle copy various light things from 9
-        fi.sc.ha = $ha;
-        my $z = [];
-        
+        is&ha = h.1;
+    }
+    if (w.5) {
         # 5's belief structure dependagey
+        # < modernise
         my $xo = meta.A.xo;
+        my $z = [];
         if (my $way = xo.way) {
             my $w = G&Ct,[w=>1];
             my $wz = ws&z = [];
@@ -575,21 +588,18 @@ Writer: | # to make 12345, 7
         # other W and their ha
         push @$z, $W if @{Ws&z||[]};
         
-        fi.sc.z = $z if @$z;
-        my $ub = &Cd{
-            delete s&z;
-            G&Line,$C;
-        };
-        my @five = G&ind,$fi,$ub;
-        my $fiha = $st->(\@five,'5');
-        
-        # status check point: 2 versions 1,4,5
+        is&z = $z if @$z;
+        @{w.5} = G&ind,$i,$ub;
+        h.5 = $st->(w.5,'5');
+    }
+    if (w.2) {
+        # small status check point: 2 versions 1,4,5
         my $t = G&Ct,[C.t,C.y.cv];
-        ts&1 = $ha;
-        ts&4 = $foha;
-        ts&5 = $fiha;
-        my @two = G&ind,$t,$ub;
-        my $twha = $st->(\@two,'2');
+        ts&1 = h.1;
+        ts&4 = h.4;
+        ts&5 = h.5;
+        @{w.2} = G&ind,$t,$ub;
+        h.2 = $st->(w.2,'2');
         
         # changelog/tree: 3 -> 2, last 3...
         my $r = G&Ct,[C.t,C.y.cv];
@@ -597,7 +607,30 @@ Writer: | # to make 12345, 7
             if -s "$f/3";
         # < was's 2 may eq twha, when no change, no commit?
         rs&parent = $was if $was;
-        rs&2 = $twha;
-        my @three = G&ind,$r,$ub;
-        my $rwha = $st->(\@three,'3');
+        rs&2 = h.2;
+        @{w.3} = G&ind,$r,$ub;
+        h.3 = $st->(w.3,'3');
+    }
+    if (w.7) {
+        # 7/changes
+        # < log rotating along
+        (my $was = readlink "$f/7") =~ s/^h\///
+            if -s "$f/7";
+        s&parent = $was if $was;
+        s&3 = h.3 if h.3; # corresp. histree of wholeness
+        s&1 = h.1 if h.1; # chistree of wholeness
+        for my $C (@$N) {
+            my $S = $C;
+            my @p;
+            push @p, "_.t-_.y.cv" while $S = S.y.up;
+            my $p = join "/", @p;
+            
+            my $l = eval { $ub->($C) };
+            $@ && die "For $p:\n  C: ".ki($C)."\n$@";
+            
+            $in->(w.7,$C, $l);
+        }
+        h.7 = $st->(w.7,'7');
+    }
+    $h
 
