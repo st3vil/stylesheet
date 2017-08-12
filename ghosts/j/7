@@ -1,3 +1,118 @@
+FishBrains: |
+    # etc
+        
+        # ground has been completed, pos revamping sleepybits from drain
+        my $g = A.ground || die "noground";
+             gs&J eq A.1 || die "ground sJ not A1: ".ki(gs&J)."\n\nA1: ".ki A.1;
+        my $ch = g.t;
+        
+        # ground -> drain
+        my $d = 1s&drains.>$ch = G&hup,$g;
+        ds&z = [grep { 
+            my $Y = _.y.A;
+            !$Y || !Y.c.T.not || do {
+                sayre "Dropping yATnot from drain:";
+                sayre "   C=".ki $_;
+                0;
+            };
+        } @{ds&z}];
+        
+        # brain is ongoing, one per ground
+        A&s = $C = 1s&brains.>$ch ||= G&Ct,[$ch=>1=>{}=>{J=>A.1}];
+        
+        
+        local A.V = 0;
+        # o in - to map the drain and OC the changes
+        #   climbing in/next/z to produce OC feedable clones,
+        # < C that are attributes it keeps/diffs but doesn't OC
+        # the oinD is origin in drain
+        # the oinC is our copy of it
+        # the OC is another copy, which the oiD gets
+        # < see enough interior of Js with map function
+        #   o being FactorEase's backend, ideally
+        
+        # where we'd want to forget $d, the drain itself...
+        my $o = A&in = G&o,$d,{liveon=>$C,t=>'in',yoff=>'OC'};
+        
+        A&Core = [grep {_.y.C ne $d} @{os&Core}];
+        A&Cora = [grep {_.y.C ne $d} @{os&Cora}];
+        
+        # Core is changes, of OC
+        A&OAs = [map { G&A,O=>0=>_.c,_.sc } map { _.y.A } @{A&Core}];
+        
+        my $r = 1s&root || die "how to hold many";
+        $r = r.y.OC || die "root didn't OC";
+        
+        # O - only changes and their parents
+        # < tug for .1 progress
+        # < with an A=Os for all
+        G&A,$_,8,{r=>$r} for @{A&OAs};
+        
+        
+        # Cora is full state
+        #   which will have its last awake .y.OC
+        # Core is changing state
+        
+        #   slight possibility of zombies if you topy&OCs&qua++
+        #     will news themselves until oinD quashes changes
+        
+        # the I, injected into r.y.tv, so z clobbers it,
+        #   be releasing local modulation not absolute truth
+        Rw PostO $o $r;
+        # we shall make s&I from what looks like it in K
+        
+        # put this stuff in the idea of itself
+        rs&z = [ grep{ $_ ne $r } @{A&Cora} ];
+        
+        delete rc&M;
+        
+        # o ou - to finalise ourselves and OK changes
+        $o = A&ut = G&o,$r,{liveon=>$C,t=>'ut',yoff=>'KC',gen=>'lv'};
+        
+        #saybl join('', ('  ') x _.y.A.c.ind) ." - _.t _.y.cv" for @{os&Core};
+        
+        # some vectors may want raw KC on top
+        # default
+        # K<6 some may want KC tidied, shaded c
+        #     the shade bits of c may cache somewhere for S
+        # K>5 some want the above as incremental changes
+        
+        # < shading C like A.map, but for keeping things from a&ng
+        
+        # K<6 compresses/tidies changed to save whole
+        #   putting tidy s&top = 9, the output
+        #   awake by lv-ish difference-only, but
+        #   using and setting (r.y.KC) wholes
+        # mostly shades C.c for reinput through reversaliser
+        A&KAs = [map { G&A,K=>0=>_.c,_.sc } map { _.y.A } @{os&Core}];
+        
+        # K>5 fills out (with parts of K) changes only, to log
+        #   putting more stringifying
+        
+        $r = r.y.KC || die "root OC didn't KC";
+        
+        
+        # K - only changes and their parents
+        #   <6 becomes things for s&top, s&tv, etc
+        #   >5 comps for writing Lines
+        # < an A=Ks would map out AWritering
+        #     pointing to objects already on the ground
+        G&A,$_,59,{r=>$r} for @{A&KAs};
+        
+        Rw PostK $o $r;
+        
+        # hangs brain up on the J
+        1s&s = $C;
+        
+        A.1.sc.>$_ = C.sc.>$_ || undef for qw'I tv top tw';
+        # top is 9's KC
+        
+        # -> W
+        
+        $C
+        
+    # watching the K diverge as a way to get input is interesting
+    # self servers (Dogu/-lookin eg) wants to see out-changes as in-changes
 PostK: |
     my @aK = map { _.y.KA || die "NoOC: ".ki$_ } @{os&Cora};
     
@@ -20,11 +135,42 @@ PostK: |
         map { _c&s || die "KC no cs=KC" } 
         @aK};
     
+    
+    # Cora CK, fully
+    #   needs KA-ing to squish whole picture
+    3c&save &&
+        Rw PostTV;
+    
+    # lvre, difference
+    #   needs KA-V-ing to 
+    3c&tape &&
+        Rw PostLV;
+    
+    # if neither we can 
+    
+    # deletes I unless values I
+    delete s&I unless values %{s&I};
+    
+    s&tv = r.y.tv;
+    s&top = $r;
+    s&tw = r.y.tw;
+    
+PostTV: | #
+    # make 1-5, whole C
+    
+    my ($f,$gd) = G&Locate_write;
+    my $N = [@{os&Cora}];
+    $C = $N->[0];
+    
+    Rw Writer $gd $f $C $N 1 2 3 4 5;
+    
+    1 && saygr "saved ".G&sn ." to $f";
+PostLV: | #
     my $la;
-    # KC find lv
+    
+    # get KC lv clone, fill in unimplied placement order
     my @lvre;
     for my $C (@{os&Core}) {
-        next if A.1.t ne 'Tvin';
         my $Y = C.y.A;
         my $ind = join('',('  ')x Y.c.ind);
         # C KC fully, _ lv
@@ -47,34 +193,54 @@ PostK: |
         
         $la = $C;
     }
-    for my $v (@lvre) {
-        my $Y = v.y.A;
+    
+    # further K for lv
+    # holding the lv clone
+    A&VAs = [map {
+        my $Y = _.y.A;
+        G&A,K=>1=>{%{Y.c},s=>$_},Y.sc;
+    } @lvre];
+    
+    # V is K 1, 5-8
+    # K usually 1-59
+    _.y.cv = 49 for @{A&VAs};
+    G&A,$_,8,{r=>$r} for @{A&VAs};
+    
+    
+    for my $Y (@{A&VAs}) {
+        my $v = Yc&s;
         my $ind = join('',('  ')x Y.c.ind);
         1 && say "Yc&el $ind - ".G&aC,$v ."  ( "
             .ki(v.c)."    %  ".ki v.sc;
     }
     
-    # deletes I unless values I
-    delete s&I unless values %{s&I};
-    
-    s&tv = r.y.tv;
-    s&top = $r;
-    s&tw = r.y.tw;
-    
+    my ($f,$gd) = G&Locate_write;
+    1 && saygr "Would note ".G&sn ." to $f: ".wdump 4, $C;
 
+    return;
+    
+    # make 7
+    my $N = \@lvre;
+    $C = $lvre[0];
+    
+    Rw Writer $gd $f $C $N 7;
+    
 Tveing: |
+    A.7.t = 'glang';
     #A.V = 1;
     n Tvin
     #A.V = 0;
     n Tvin
-
 Tvin: |
+    Jc&tape = 'W';
+    Jc&save = 'W';
+    
     Js&bowls ||
-    n first=>4=>'first'
+    n first=>4=>'first',{doge=>{ela=>3}}
     Js&bowls &&
     n first=>3=>'non'
     m $_=>''=>($_ > 8 && Js&bowls++).' o','%oth:er,st:uff' for 1..14;
-    
+    sayyl "Pinned";
     
     
 Koul: | # clarify changes to string
@@ -100,17 +266,100 @@ Koul: | # clarify changes to string
         
         # < making this stick...
         T.not = 1 if C.sc.not eq '1';
+        sayyl "Komp A&el: ".ki $C;
         
         
     
     # a&n continues as long as C doesn't move
     # a&l is the original C we are squishing
     
-    # c&Jo = J version
     K 2:
+        my $l = a&l;
+        
+        # are we being aware of nothing or disappearing
+        A&el || die "No el K";
+        A&el eq '8'
+            && return T.Z.8 = $A;
+        A&el  eq '9' # is last KC
+             && return T.Z.9 = $A;
+            
+        
+        if (my $J = s&J) {
+            # scJ could describe it, versions at head/remote
+            # place it, in a net, can talk to with the address
+            if (s&pi) {
+                # implies s&J, which remains in osc C but not Komp
+                delete s&J;
+                # quiet for insides, should remain with qs
+                delete c&s if Js&tv;
+            }
+            else {
+                s&J = Js&name || J.t;
+            }
+            # W implies J in mo:W:12, they can look it up
+            delete s&J if ls&W eq s&J;
+        }
+    
+    # hook Js&Kels.sending.3 = $s to G&h,$cb for sc.sendings el3ing
+    K 3:
+        my $l = a&l;
+        A&el || die "no rcel";
+        if (my $sel = 1s&Kels) {
+            # limited to those under 9?
+            $sel = {} unless l.y.up eq A&r;
+            each k,els $sel {
+                exists l.sc.>$k || next;
+                each el,do $els {
+                    A&el eq $el || A&el eq '2' && $el eq '1' || next;
+                    G&h,$do;
+                }
+            }
+        }
+    # figure Line encoding
+    #   whole pictures + change want derefing here
+    #   
+    K 55:
+        # mute refs
+        # tells you things that are not there, see o 7 apply
+        s&z = delete s&zout if s&zout;
+        
+        s&Kseen++;
+        
+        my $ok;
+        ok.sc.>$_ = 1 for qw'z ip';
+        G&oh,$ok,3s&oks if 3s&oks;
+        
+        for my $nk ('c','sc') {
+            my $gh = $C.>$nk;
+            my $mute;
+            for my $gk (keys %$gh) {
+                my $ref = ref $gh.>$gk || next;
+                # eg nogindex 
+                next if $ok.>$nk && $ok.>$nk.>$gk
+                    || $nk eq 'sc' && $gk =~ /ex$/;
+                next if $ref eq 'CODE' && $nk ne 'sc';
+                # and if in some known universal
+                # We stirred index piling into here
+                # eg Stripes...
+                delete $gh.>$gk;
+                $mute.>$gk ++;
+            }
+            if ($mute) {
+                my @gks = sort keys %$mute;
+                my $k = 'm'.substr($nk,0,1);
+                exists C.c.>$k && die "Komp already c $k: ".ki$C;
+                C.c.>$k = "@gks";
+            }
+        }
+        delete C.sc.>$_ for qw'qz';
+
+    # lv/from within
+    # c&Jo = J version
+    K 6:
         my $l = a&l;
         my $n = a&n;
         
+        # they can look it up
         delete c&Jo if s&W || s&qz;
         
         if (c&Jo) {
@@ -147,66 +396,208 @@ Koul: | # clarify changes to string
             }
             # other hoistings in O 6/s -8, eg xo
         }
-        if (my $J = s&J) {
-            # scJ could describe it, versions at head/remote
-            # place it, in a net, can talk to with the address
-            if (s&pi) {
-                # implies s&J, which remains in osc C but not Komp
-                delete s&J;
-                # quiet for insides, should remain with qs
-                delete c&s if Js&tv;
+Writer: | # to make 12345, 7
+    # types <= 5 show whole instant
+    #   good for still code, absolute data
+    #   shows would be an extending ladder of what is and when
+    # 7 shows lv progressing change
+    #   good for streaming tiny code changes to remotes
+    #   shows are a pool of what is that evolves
+    #     which could still have timing
+    #     
+    # 6 forks
+    # 7 entanglements/joins
+    ar.m || die "send m=list,of,types";
+    $gd # the bay/G, where to find sibling W
+    && $f || die "Sendbits";
+    1 && saygr "W A.1.t ($f)";
+    # to do that type
+    my $w = {map{$_=>1}@{ar.m}};
+        
+        # not s but the top/9
+        my $s = G&hup,$C;
+        
+        # storage the bits: h/$hash = content
+        my $st = &st{
+            $s = join "\n", @$s,'' if ref $s eq 'ARRAY';
+            my $ha = slm 9, dig $s;
+            `mkdir -p $f/h` if !-d "$f/h";
+            my $hf = "h/$ha";
+            write_file("$f/$hf", $s);
+            if ($t) {
+                `unlink $f/$t` if -e "$f/$t";
+                `ln -s h/$ha $f/$t`;
             }
-            else {
-                s&J = Js&name || J.t;
+            $ha
+        };
+        
+        # append C's Line s to list, indented
+        my $in = &NCs{
+            my $Y = C.y.A;
+            my $ind = join('',('  ')x Y.c.ind);
+            $s = [split "\n", $s];
+            push @$N, join "\n", map{"$ind$_"} @$s;
+        };
+        
+        # take meta off the 9, put ha on W
+        # < meta?
+        my $meta;
+        for my $C (@$N) {
+            # the 9 has this old meta bunch
+            # helped impart itself to s
+            if (my $m = delete s&meta) {
+                $meta && die "doublemeta";
+                $meta = $m;
             }
-            # W implies J in mo:W:12, they can look it up
-            delete s&J if ls&W eq s&J;
+            # assume W is in G
+            if (my $t = s&W) {
+                $t =~ s/\W+/-/gs;
+                my $d = "$gd/$t";
+                -d $d || die "unstored W in $f: $d";
+                my $ha = readlink "$d/1";
+                $ha =~ s/^h\///;
+                s&ha = $ha;
+            }
         }
-    # set Js&Kels.sending.3 = $s to G&h,$cb for sc.sendings el3ing
-    K 3:
-        my $l = a&l;
-        A&el || die "no rcel";
-        if (my $sel = 1s&Kels) {
-            # limited to those under 9?
-            $sel = {} unless l.y.up eq A&r;
-            each k,els $sel {
-                exists l.sc.>$k || next;
-                each el,do $els {
-                    A&el eq $el || A&el eq '2' && $el eq '1' || next;
-                    G&h,$do;
+    
+    my @four;
+    my $W;
+    if (w.4) {
+        # the 4: has 9, gist of first t/y
+        # add some sc{shape,stringth,c,sc,etc}
+        # < histogram and group like things
+        # < compress styles
+        # and collect W joins for 5
+        $W = G&Ct,['W',1];
+        for my $C (@$N) {
+            my $Y = C.y.A;
+            return undef if Yc&ind > 1;
+            if (s&W) {
+                my $D = G&Ct,[C.t,C.y.cv];
+                Ds&W = s&W;
+                Ds&ha = s&ha || die "W without ha: ".ki $C;
+                push @{Ws&z||=[]}, $D;
+            }
+            my $D = G&Ct,[C.t,C.y.cv];
+            # assuming gk is safe to join with -
+            # < imply the style's encoding for FactorEase
+            # like we can do for Line's
+            for my $k (qw'c sc') {
+                my $v = $C.>$k || {};
+                keys %$v || next;
+                D.sc.>$k = join'-',sort keys %$v;
+            }
+            # seem to prefer ytv than z connection
+            # < both
+            Ds&zs = @{s&z||[]} if s&z;
+            Ds&zs = map{values %$_} values %{C.y.tv} if C.y.tv;
+            # < more shape, classify language
+            Ds&slines = split "\n", c&s if c&s;
+            
+            Ds&W = s&W if s&W && s&W ne C.t;
+            Ds&ha = s&ha if s&ha;
+            
+            if (!Yc&ind && C.y.cv == 0.9) {
+                Ds&ha = 'HAHAR';
+            }
+            $in->(\@four,$C, G&Line,$D );
+        }
+    }
+    my @all;
+    if (w.1) {
+        # 1/everything
+        for my $C (@$N) {
+            my $Y = C.y.A;
+            my $S = $C;
+            my @p;
+            push @p, "_.t-_.y.cv" while $S = S.y.up;
+            my $p = join "/", @p;
+            
+            my $l = eval {
+            
+            #s&z && die "Hadz";
+            delete s&z;
+            delete C.y.>$_ for qw'next prev in more up tv tw';
+            G&Line,$C;
+            
+            };
+            $@ && die "For $p:\n  C: ".ki($C)."\n$@";
+            
+            $in->(\@all,$C, $l);
+        }
+    }
+        #c pointpile
+        
+        my $h = {};
+        if (w.1) {
+        # point to object: 1 -> h/$hash
+        h.1 = $st->(\@all,'1') if w.1;
+        }
+        my $ha = h.1;
+        
+        # lum feeling: 4 ~= content, 
+        $four[0] =~ s/HAHAR/$ha/;
+        my $foha = $st->(\@four,'4');
+        
+        # meta/5cience behind it: 5
+        my $fi = G&Ct,[C.t,C.y.cv];
+        # < Scuttle copy various light things from 9
+        fi.sc.ha = $ha;
+        my $z = [];
+        
+        # 5's belief structure dependagey
+        my $xo = meta.A.xo;
+        if (my $way = xo.way) {
+            my $w = G&Ct,[w=>1];
+            my $wz = ws&z = [];
+            for my $pin (sort keys %$way) {
+                my $p = G&Ct,[$pin,1];
+                push @$wz, $p;
+                my $v = $way.>$pin;
+                if (keys %$v > 1) {
+                    pc&s = $v;
+                    ps&way_variants = keys %$v;
+                    next;
                 }
+                (ps&dige,ps&used) = %$v;
+                # could be a map to where/who it was used from?
+                delete ps&used if ps&used eq 1;
             }
+            push @$z, $w if @$wz;
         }
-    # like Line
-    K 4:
-        # mute refs
-        # tells you things that are not there, see o 7 apply
-        s&z = delete s&zout if s&zout;
-        my $ok;
-        ok.sc.>$_ = 1 for qw'z ip';
-        G&oh,$ok,3s&oks if 3s&oks;
         
-        for my $nk ('c','sc') {
-            my $gh = $C.>$nk;
-            my $mute;
-            for my $gk (keys %$gh) {
-                my $ref = ref $gh.>$gk || next;
-                # eg nogindex 
-                next if $ok.>$nk && $ok.>$nk.>$gk
-                    || $nk eq 'sc' && $gk =~ /ex$/;
-                next if $ref eq 'CODE' && $nk ne 'sc';
-                # and if in some known universal
-                # We stirred index piling into here
-                # eg Stripes...
-                delete $gh.>$gk;
-                $mute.>$gk ++;
-            }
-            if ($mute) {
-                my @gks = sort keys %$mute;
-                my $k = 'm'.substr($nk,0,1);
-                exists C.c.>$k && die "Komp already c $k: ".ki$C;
-                C.c.>$k = "@gks";
-            }
+        # other meta stuff
+        delete $xo.>$_ for qw'way o sWo';
+        if (keys %$xo) {
+            push @$z, G&Ct,[xo=>1=>{s=>$xo}]
         }
-        delete C.sc.>$_ for qw'qz';
         
+        # other W and their ha
+        push @$z, $W if @{Ws&z||[]};
+        
+        fi.sc.z = $z if @$z;
+        my $ub = &Cd{
+            delete s&z;
+            G&Line,$C;
+        };
+        my @five = G&ind,$fi,$ub;
+        my $fiha = $st->(\@five,'5');
+        
+        # status check point: 2 versions 1,4,5
+        my $t = G&Ct,[C.t,C.y.cv];
+        ts&1 = $ha;
+        ts&4 = $foha;
+        ts&5 = $fiha;
+        my @two = G&ind,$t,$ub;
+        my $twha = $st->(\@two,'2');
+        
+        # changelog/tree: 3 -> 2, last 3...
+        my $r = G&Ct,[C.t,C.y.cv];
+        (my $was = readlink "$f/3") =~ s/^h\///
+            if -s "$f/3";
+        # < was's 2 may eq twha, when no change, no commit?
+        rs&parent = $was if $was;
+        rs&2 = $twha;
+        my @three = G&ind,$r,$ub;
+        my $rwha = $st->(\@three,'3');
+
