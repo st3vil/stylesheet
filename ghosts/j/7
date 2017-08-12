@@ -116,7 +116,7 @@ FishBrains: |
         # hangs brain up on the J
         1s&s = $C;
         
-        A.1.sc.>$_ = C.sc.>$_ || undef for qw'I tv top tw';
+        A.1.sc.>$_ = C.sc.>$_ || undef for qw'tw top Jo I tv';
         # top is 9's KC
         
         # -> W
@@ -127,7 +127,7 @@ FishBrains: |
     # self servers (Dogu/-lookin eg) wants to see out-changes as in-changes
 PostK: |
     # KA version of everything
-    my @aK = map { _.y.KA || die "NoKA: ".ki$_ } @{os&Cora};
+    my @aK = 
     
     # scoop up I every time
     # clobber here into the many I cv 
@@ -146,7 +146,11 @@ PostK: |
         map { _.y.KA || die "No KCyKA" }
         grep { _c&W && !_s&W }
         map { _c&s || die "KC no cs=KC" } 
-        @aK};
+        map { _.y.KA || die "NoKA: ".ki$_ } @{os&Cora}
+    };
+    
+    # deletes I unless values I
+    delete s&I unless values %{s&I};
     
     
     # Cora CK, fully
@@ -160,10 +164,20 @@ PostK: |
     3c&tape &&
         Rw PostLV + $h;
     
-    # if neither we can 
     
-    # deletes I unless values I
-    delete s&I unless values %{s&I};
+    # version s
+    # major & minor
+    if (r.y.A.c.el eq '1') {
+        s&imp++;
+        s&wil = 1;
+    }
+    else {
+        s&imp = s&imp || 1;
+        s&wil++;
+    }
+    # called Jo?
+    s&Jo = s&imp.".".s&wil;
+    
     
     s&tv = r.y.tv;
     s&top = $r;
@@ -235,8 +249,14 @@ PostLV: | # make 7
     my ($f,$gd) = G&Locate_write;
     my $N = [map { _c&s } @{A&VAs} ];
     1 && saygr "Would note ".G&sn ." to $f";
-
+    
     Rw Writer + $gd $f $N 7;
+    
+    if (r.y.A.c.el eq '1') {
+        s&lv = [];
+    }
+    # may contain s&z and y{} madness
+    push @{s&lv}, $N;
     
 Tveing: |
     A.7.t = 'glang';
@@ -388,8 +408,14 @@ Koul: | # clarify changes to string
         delete c&Jo if s&W || s&qz;
         
         if (c&Jo) {
+            Rw LVism $l $n;
+        }
+LVism: | # hoist lv between Js
+    #
+    $l = a&l ||= C.y.A.c.s.y.C; # TODO
+    
             s&z && die "Jo with z: ".ki$C;
-            my $J = s&J || die "No sJ for Jo K: ".ki$l;
+            my $J = ls&J || die "No sJ for Jo K: ".ki$l;
             # < have a whole C for a version label
             #   c imp,wil,mat etc versioning
             #   sc forms
@@ -420,7 +446,8 @@ Koul: | # clarify changes to string
                 1 && saygr "Same Jo: C.t C.y.cv @ $lo";
             }
             # other hoistings in O 6/s -8, eg xo
-        }
+
+    
 Writer: | # to make 12345, 7
     # types <= 5 show whole instant
     #   good for still code, absolute data
