@@ -19,6 +19,8 @@ FishBrains: |
         
         # brain is ongoing, one per ground
         A&s = $C = 1s&brains.>$ch ||= G&Ct,[$ch=>1=>{}=>{J=>A.1}];
+        # squished bits to give the 9
+        s&label = {c=>{}};
         
         
         local A.V = 0;
@@ -164,7 +166,10 @@ PostK: |
     # called Jo?
     s&Jo = s&imp.".".s&wil;
     
-    r.c.Jo = s&Jo;
+    s&label.c.Jo = s&Jo;
+    each nk,gk,v s&label {
+        $r.>$nk.>$gk = $v;
+    }}
     
     
     # make a bunch of writings
@@ -230,7 +235,17 @@ PostLV: | # make 7
     # holding the lv clone
     A&VAs = [map {
         my $Y = _.y.A;
-        G&A,K=>1=>{%{Y.c},s=>$_},Y.sc;
+        if (my $KC = 0 && Ys&clones.KC) {
+            # < takeup KAs if possible
+            #   changing C and winding back
+            # breaks A&n continuity?
+            my $Y = KC.y.KA;
+            Yc&s = $_;
+            $Y
+        }
+        else {
+            G&A,K=>1=>{%{Y.c},s=>$_},Y.sc;
+        }
     } @lvre];
     
     # V is K 1, 5-8
@@ -254,7 +269,8 @@ PostLV: | # make 7
     Rw Writer + $gd $f $N 7;
     
     if (r.y.A.c.el eq '1') {
-        sayre "Reset lv ".G&sn;
+        # < forget ns&jo
+        #sayre "Reset lv ".G&sn;
         s&lv = [];
     }
     # may contain s&z and y{} madness
@@ -296,18 +312,20 @@ Komone: |
         a&l = C.y.C || die "cant see origin yC: ".ki$C;
         
         if (my $o = C.y.A) {
-            # bring memorandum
-            my $n = os&n = A&n ||= os&n || oc&last && oc&last.sc.n || {};
-            n.t || sayre "doesnt have past ".G&aC;
-            n.t .= 'ste';
+            # bring memorandum, hops along o
+            my $n = os&n = A&n ||= 
+                    os&n
+                 || oc&last && oc&last.sc.n
+                 || {};
             # many K may use this continuing n for this C
             #   due to TV/LV separation
+            #   would be 1 sip away, K from last s more
             A&K = ns&K;
             ns&K = $A;
         }
         # last K could be on C.y.KA 
         # if clones could copy their later wirings when remade
-        C.y.KA = $A
+        C.y.KA = $A;
         
         
         # < making this stick...
@@ -435,6 +453,7 @@ LVism: | # hoist lv between Js in K 7
             
             my $J = ls&J || die "No sJ for Jo K: ".ki$l;
             my $o = ns&Jo ||= {};
+            
             # < have a whole C for a version label
             #   c imp,wil,mat etc versioning
             #   sc forms
@@ -449,10 +468,10 @@ LVism: | # hoist lv between Js in K 7
                 # wil++ means lv grows
                 # mat++ means out of band stuff changes, xo
                 if (o.imp ne ss&imp) {
-                    1 && saygr "lv imp reset";
+                    saygr "lv imp reset";
                     o.z = [];
                 }
-                if (o.lv ne $lv) {
+                if (o.lv && o.lv ne $lv) {
                     1 && sayre "lv ref different";
                     o.z = [];
                 }
@@ -464,21 +483,24 @@ LVism: | # hoist lv between Js in K 7
                     push @new, $v;
                 }
                 
-                1 && sayyl "Have s: ".G&aC , " o.Jo ne c&Jo\n o.imp = ss&imp,   o.wil = ss&wil";
+                sayyl "Have s: ".G&aC , " o.Jo ne c&Jo,   o.imp = ss&imp,   o.wil = ss&wil";
                 
                 o.lv = $lv;
                 o.imp = ss&imp;
                 o.wil = ss&wil;
                 o.Jo = ss&Jo;
                 
-                s&z = \@new if @new;
-                C.y.lvz = 1;
+                if (@new) {
+                    # lv is [[966],[96],...]
+                    s&z = [map { @$_ } @new];
+                    C.y.lvz = 1;
+                }
                 
-                1 && saygr "Found: ".G&aC,$C ." can see: ",map{ki$_}@new;
+                saygr "Found: ".G&aC,$C ." can see: ",map{ki$_}@new;
                 #delete c&Jo;
             }
             else {
-                1 && saygr "Same Jo: C.t C.y.cv @ o.Jo";
+                saygr "Same Jo: C.t C.y.cv @ o.Jo";
             }
             # other hoistings in O 6/s -8, eg xo
 
@@ -506,9 +528,7 @@ Writer: | # to make 12345, 7
     my $h = ar.h || {};
         
     # writes on the written top/9
-    $C = $N->[0];
-    $C = G&hup,$C;
-    $N->[0] = $C;
+    $C = $N->[0] = G&hup,$N->[0];
         
     # storage the bits: h/$hash = content
     my $st = &st{
@@ -526,19 +546,21 @@ Writer: | # to make 12345, 7
     
     # for G&ind'ing Cthing to flat lists like $N
         my $ub = &Cd{
-            delete s&z;
             my $y = C.y;
             my $Y = y.A;
             # see Tv, or Line know again
             my $el = $Y && Yc&el;
             saybl "For $el ".G&aC,$C;
-            G&Line,$C;
+            my $z = delete s&z;
+            my $l = G&Line,$C;
+            s&z = $z if $z;
+            $l
         };
         
         # append C's Line s to list, indented
-        my $in = &NCs{
+        my $in = &NCsi{
             my $Y = C.y.A;
-            my $ind = join('',('  ')x Y.c.ind);
+            my $ind = join('',('  ')x (Y.c.ind + $i));
             $s = [split "\n", $s];
             push @$N, join "\n", map{"$ind$_"} @$s;
         };
@@ -705,20 +727,26 @@ Writer: | # to make 12345, 7
         s&3 = h.3 if h.3; # corresp. histree of wholeness
         s&1 = h.1 if h.1; # chistree of wholeness
         for my $C (@$N) {
+            my $Y = C.y.A || die "noA: ".ki$C;
             my $S = $C;
             my @p;
             push @p, "_.t-_.y.cv" while $S = S.y.up;
             my $p = join "/", @p;
             
-            my $z = delete s&z;
             my $l = eval { $ub->($C) };
             $@ && die "For $p:\n  C: ".ki($C)."\n$@";
-            
-            if ($z) {
-                1 && saybl "Hadlines: ".G&aC , ki$z;
-            }
+            C.y.Line = $l;
             
             $in->(w.7,$C, $l);
+            
+            if (C.y.lvz) {
+                my $z = s&z || die "noz for lvz: ".ki$C;
+                for my $C (@$z) {
+                    eval { C.y.Line = $ub->($C) };
+                    $@ && die "For $p:\n  C: ".ki($C)."\n$@";
+                    $in->(w.7,$C,C.y.Line,Yc&ind+1);
+                }
+            }
         }
         h.7 = $st->(w.7,'7');
     }
