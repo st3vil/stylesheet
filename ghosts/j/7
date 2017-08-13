@@ -22,8 +22,12 @@ FishBrains: |
         # squished bits to give the 9
         s&label = {c=>{}};
         
+        if (A&imp) { # reset or seek?
+            # o will see anew
+            # lv will reset when r.y.A.c.el == 1
+            delete s&o.>$_ for qw'in ut';
+        }
         
-        local A.V = 0;
         # o in - to map the drain and OC the changes
         #   climbing in/next/z to produce OC feedable clones,
         # <? C that are attributes it keeps/diffs but doesn't OC
@@ -44,9 +48,13 @@ FishBrains: |
         my $o = A&in = G&o,$d,{liveon=>$C,t=>'in',yoff=>'OC',map=>$m};
         
         # where we'd want to forget $d, the drain itself...
-        # < d.y.in.y.up too
+        # < d.y.in.y.up is?
+        my $da;
         A&Core = [grep {_.y.C ne $d} @{os&Core}];
         A&Cora = [grep {_.y.C ne $d} @{os&Cora}];
+        # change the ground/drain - top link
+        my $t = A&Cora->[0];
+        t.y.out = delete t.y.up;
         
         
         # Cora is full state
@@ -198,8 +206,6 @@ PostTV: | # make 1-5, whole C
     my $N = [map{ _c&s || die "noC: ".ki$_ }
          map { _.y.KA || die "NoKA: ".ki$_ } @{os&Cora}];
     
-    1 && saygr "saving ".G&sn ." to $f";
-    
     Rw Writer $gd $f $N 1 2 3 4 5;
     
 PostLV: | # make 7
@@ -230,7 +236,6 @@ PostLV: | # make 7
         
         $la = $C;
     }
-    1 && saygr "In LV for ".G&sn;
     # further K for lv
     # holding the lv clone
     A&VAs = [map {
@@ -248,10 +253,19 @@ PostLV: | # make 7
         }
     } @lvre];
     
+    # give LV K A&r = lv clone of root/9
+    my $f = $lvre[0];
+    f.y.C eq r.y.C || die "notroot: ".ki($f)."\nvs: ".ki$r;
+    $r = $f;
     # V is K 1, 5-8
     # K usually 1-59
     _.y.cv = 0.49 for @{A&VAs};
     G&A,$_,8,{r=>$r} for @{A&VAs};
+    
+    # and assign it a label (Jo)
+    each nk,gk,v s&label {
+        $r.>$nk.>$gk = $v;
+    }}
     
     if (0) {
     for my $Y (@{A&VAs}) {
@@ -264,7 +278,6 @@ PostLV: | # make 7
     
     my ($f,$gd) = G&Locate_write;
     my $N = [map { _c&s } @{A&VAs} ];
-    1 && saygr "Would note ".G&sn ." to $f";
     
     Rw Writer + $gd $f $N 7;
     
@@ -301,11 +314,14 @@ Tvin: |
 pi/tabul: |
     n t=>''=>C.t
     m random=>''=>"virtual" for 1..c&vl;
-Komone: |
+
+Koul: | # clarify changes to string
+    u a
+    K 1:
+        # is KC
         my $o = C.y.A;
         o.t eq 'o' || die "No oA: ".ki $o;
         
-        # A&r = root.y.KC
         A&el = oc&el;
         
         # keep an unsquished version
@@ -331,16 +347,6 @@ Komone: |
         # < making this stick...
         T.not = 1 if C.sc.not eq '1';
         sayyl "Komp A&el: ".ki $C;
-Koul: | # clarify changes to string
-    u a
-    # might be making Lines in here?
-    # might be doing some C's whole picture (1) and lv diff (7)
-    #   as two Cs? make encoding instructions pop in
-    K 1:
-        # is KC
-        Rw Komone $C;
-        
-        
     
     # a&n continues as long as C doesn't move
     # a&l is the original C we are squishing
@@ -603,7 +609,9 @@ Writer: | # to make 12345, 7
             if (s&W) {
                 my $D = G&Ct,[C.t,C.y.cv];
                 Ds&W = s&W;
+                # Scuttle 9->4
                 Ds&ha = s&ha || die "W without ha: ".ki $C;
+                Dc&Jo = c&Jo if c&Jo;
                 push @{Ws&z||=[]}, $D;
             }
             my $D = G&Ct,[C.t,C.y.cv];
@@ -627,6 +635,7 @@ Writer: | # to make 12345, 7
             
             if (!Yc&ind && C.y.cv == 0.9) {
                 Ds&ha = 'HAHAR';
+                Dc&Jo = c&Jo if c&Jo;
             }
             $in->(w.4,$C, G&Line,$D );
         }
@@ -718,14 +727,16 @@ Writer: | # to make 12345, 7
         @{w.3} = G&ind,$r,$ub;
         h.3 = $st->(w.3,'3');
     }
+    
+    #c lv
     if (w.7) {
         # 7/changes
         # < log rotating along
         (my $was = readlink "$f/7") =~ s/^h\///
             if -s "$f/7";
         s&parent = $was if $was;
-        s&3 = h.3 if h.3; # corresp. histree of wholeness
-        s&1 = h.1 if h.1; # chistree of wholeness
+        s&3 = h.3 if h.3; # commit about
+        s&1 = h.1 if h.1; # the whole thing
         for my $C (@$N) {
             my $Y = C.y.A || die "noA: ".ki$C;
             my $S = $C;
