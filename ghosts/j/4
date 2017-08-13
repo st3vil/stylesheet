@@ -460,10 +460,10 @@ SirKill: | # crawl datastructure
                     #   unless we're to transport intact
                     #   will be $E by now, we're reassigning c/sc...
                     #
-                    each nk,gk,v a&ng {
                         # avoid rewriting cloned clones
                         # or K's deletions would undo themselves
-                        next if A&el eq '8';
+                    if (A&el ne '8') {
+                    each nk,gk,v a&ng {
                         $E.>$nk.>$gk = $v;
                         
                         my $r = ref $v && os&refs.>$v || next;
@@ -500,6 +500,7 @@ SirKill: | # crawl datastructure
                             .ki[$v,$Y];
                         }
                     }}
+                    }
                     
                     if (my $y = $m && ms&any) {
                         ref $y eq 'CODE' ? $y->($A,$E,$G,$T,$t)
@@ -523,6 +524,7 @@ SirKill: | # crawl datastructure
                         # which are already there
                         each nk,gks $E {
                             ref $gks || next;
+                            next if $nk eq 'y';
                             delete $E.>$nk.>$_ for
                                 grep { !$neg.>$nk.>$_ } keys %$gks;
                         }

@@ -126,9 +126,6 @@ FishBrains: |
     # watching the K diverge as a way to get input is interesting
     # self servers (Dogu/-lookin eg) wants to see out-changes as in-changes
 PostK: |
-    # KA version of everything
-    my @aK = 
-    
     # scoop up I every time
     # clobber here into the many I cv 
     #  or different positions on the thing,
@@ -153,17 +150,6 @@ PostK: |
     delete s&I unless values %{s&I};
     
     
-    # Cora CK, fully
-    #   needs KA-ing to squish whole picture
-    my $h =
-    3c&save &&
-        Rw PostTV;
-    
-    # lvre, difference
-    #   needs KA-ing to squish and hoist other lv
-    3c&tape &&
-        Rw PostLV + $h;
-    
     
     # version s
     # major & minor
@@ -177,6 +163,22 @@ PostK: |
     }
     # called Jo?
     s&Jo = s&imp.".".s&wil;
+    
+    r.c.Jo = s&Jo;
+    
+    
+    # make a bunch of writings
+    # Cora KC, fully
+    #   needs KA-ing to squish whole picture
+    my $h =
+    3c&save &&
+        Rw PostTV;
+    
+    # lvre, difference
+    #   needs KA-ing to squish and hoist other lv
+    3c&tape &&
+        Rw PostLV + $h;
+    
     
     
     s&tv = r.y.tv;
@@ -234,16 +236,15 @@ PostLV: | # make 7
     # V is K 1, 5-8
     # K usually 1-59
     _.y.cv = 0.49 for @{A&VAs};
-    _.V = 1 for @{A&VAs};
-    A.V = 1;
     G&A,$_,8,{r=>$r} for @{A&VAs};
     
-    
+    if (0) {
     for my $Y (@{A&VAs}) {
         my $v = Yc&s;
         my $ind = join('',('  ')x Yc&ind);
         1 && say "Yc&el $ind - ".G&aC,$v ."  ( "
             .ki(v.c)."    %  ".ki v.sc;
+    }
     }
     
     my ($f,$gd) = G&Locate_write;
@@ -253,6 +254,7 @@ PostLV: | # make 7
     Rw Writer + $gd $f $N 7;
     
     if (r.y.A.c.el eq '1') {
+        sayre "Reset lv ".G&sn;
         s&lv = [];
     }
     # may contain s&z and y{} madness
@@ -283,6 +285,34 @@ Tvin: |
 pi/tabul: |
     n t=>''=>C.t
     m random=>''=>"virtual" for 1..c&vl;
+Komone: |
+        my $o = C.y.A;
+        o.t eq 'o' || die "No oA: ".ki $o;
+        
+        # A&r = root.y.KC
+        A&el = oc&el;
+        
+        # keep an unsquished version
+        a&l = C.y.C || die "cant see origin yC: ".ki$C;
+        
+        if (my $o = C.y.A) {
+            # bring memorandum
+            my $n = os&n = A&n ||= os&n || oc&last && oc&last.sc.n || {};
+            n.t || sayre "doesnt have past ".G&aC;
+            n.t .= 'ste';
+            # many K may use this continuing n for this C
+            #   due to TV/LV separation
+            A&K = ns&K;
+            ns&K = $A;
+        }
+        # last K could be on C.y.KA 
+        # if clones could copy their later wirings when remade
+        C.y.KA = $A
+        
+        
+        # < making this stick...
+        T.not = 1 if C.sc.not eq '1';
+        sayyl "Komp A&el: ".ki $C;
 Koul: | # clarify changes to string
     u a
     # might be making Lines in here?
@@ -290,23 +320,7 @@ Koul: | # clarify changes to string
     #   as two Cs? make encoding instructions pop in
     K 1:
         # is KC
-        my $o = C.y.A;
-        o.t eq 'o' || die "No oA: ".ki $o;
-        # A&r = root.y.KC
-        A&el = oc&el;
-        # keep an unsquished version
-        a&l = C.y.C;
-        # last K
-        A&K = C.y.KA if C.y.KA;
-        # has continual bit of C
-        # < or name g, share with O?
-        a&n = A&K.sc.l || {};
-        # put K
-        C.y.KA = $A;
-        
-        # < making this stick...
-        T.not = 1 if C.sc.not eq '1';
-        sayyl "Komp A&el: ".ki $C;
+        Rw Komone $C;
         
         
     
@@ -410,40 +424,61 @@ Koul: | # clarify changes to string
         if (c&Jo) {
             Rw LVism $l $n;
         }
-LVism: | # hoist lv between Js
+LVism: | # hoist lv between Js in K 7
     #
-    $l = a&l ||= C.y.A.c.s.y.C; # TODO
+    $l = a&l || die "Didnt have al (CyC): ".ki $C;
+    
+    # all about how much to include or link
+    # the other could have awaiting room
     
             s&z && die "Jo with z: ".ki$C;
+            
             my $J = ls&J || die "No sJ for Jo K: ".ki$l;
+            my $o = ns&Jo ||= {};
             # < have a whole C for a version label
             #   c imp,wil,mat etc versioning
             #   sc forms
-            my $lo = nc&Jo;
-            if ($lo ne c&Jo) {
+            # Jo is c to C and sc to A/s
+            if (o.Jo ne c&Jo) {
                 # < pick the right page
                 my $s = Js&s;
+                
                 my $lv = ss&lv || die "No lv on J s for K Jo lv: ".ki$s;
                 # J are names on a branch, their content evolves
                 # imp++ means lv restarts
                 # wil++ means lv grows
                 # mat++ means out of band stuff changes, xo
-                my $wil = nc&Jowil || 1;
-                my $conti = sc&imp eq nc&Joimp && $lv eq nc&Jolv;
-                $wil = 1 if !$conti;
+                if (o.imp ne ss&imp) {
+                    1 && saygr "lv imp reset";
+                    o.z = [];
+                }
+                if (o.lv ne $lv) {
+                    1 && sayre "lv ref different";
+                    o.z = [];
+                }
+                my @new;
+                while (@{o.z} < @$lv) {
+                    my $i = @{o.z};
+                    my $v = $lv->[$i] || die "nolv? $i: ".ki $lv;
+                    push @{o.z}, $v;
+                    push @new, $v;
+                }
                 
-                my $lets = !$conti || sc&wil > $wil;
-                $wil += 1 if $conti; # slice after already
-                my @new = @{$lv}[($wil-1) .. (sc&wil-1)] if $lets;
+                1 && sayyl "Have s: ".G&aC , " o.Jo ne c&Jo\n o.imp = ss&imp,   o.wil = ss&wil";
                 
-                nc&Jolv = $lv;
-                nc&Joimp = sc&imp;
-                nc&Jowil = sc&wil;
+                o.lv = $lv;
+                o.imp = ss&imp;
+                o.wil = ss&wil;
+                o.Jo = ss&Jo;
+                
                 s&z = \@new if @new;
-                delete c&Jo;
+                C.y.lvz = 1;
+                
+                1 && saygr "Found: ".G&aC,$C ." can see: ",map{ki$_}@new;
+                #delete c&Jo;
             }
             else {
-                1 && saygr "Same Jo: C.t C.y.cv @ $lo";
+                1 && saygr "Same Jo: C.t C.y.cv @ o.Jo";
             }
             # other hoistings in O 6/s -8, eg xo
 
@@ -494,9 +529,9 @@ Writer: | # to make 12345, 7
             delete s&z;
             my $y = C.y;
             my $Y = y.A;
+            # see Tv, or Line know again
             my $el = $Y && Yc&el;
-            local C.y = {cv=>C.y.cv};
-            1 && saybl "For $el ".G&aC,$C;
+            saybl "For $el ".G&aC,$C;
             G&Line,$C;
         };
         
@@ -675,8 +710,13 @@ Writer: | # to make 12345, 7
             push @p, "_.t-_.y.cv" while $S = S.y.up;
             my $p = join "/", @p;
             
+            my $z = delete s&z;
             my $l = eval { $ub->($C) };
             $@ && die "For $p:\n  C: ".ki($C)."\n$@";
+            
+            if ($z) {
+                1 && saybl "Hadlines: ".G&aC , ki$z;
+            }
             
             $in->(w.7,$C, $l);
         }
