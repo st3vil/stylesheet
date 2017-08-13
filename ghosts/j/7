@@ -17,6 +17,8 @@ FishBrains: |
             };
         } @{ds&z}];
         
+        local A.V = 0;
+        
         # brain is ongoing, one per ground
         A&s = $C = 1s&brains.>$ch ||= G&Ct,[$ch=>1=>{}=>{J=>A.1}];
         # squished bits to give the 9
@@ -45,7 +47,7 @@ FishBrains: |
             c&Jo = ss&Jo;
         };
         
-        my $o = A&in = G&o,$d,{liveon=>$C,t=>'in',yoff=>'OC',map=>$m};
+        my $o = A&in = G&o,$d,{liveon=>$C,t=>'in',yoff=>'OC',map=>$m,V=>0};
         
         # where we'd want to forget $d, the drain itself...
         # < d.y.in.y.up is?
@@ -88,7 +90,7 @@ FishBrains: |
         delete rc&M;
         
         # o ou - to finalise ourselves and OK changes
-        $o = A&ut = G&o,$r,{liveon=>$C,t=>'ut',yoff=>'KC',gen=>'lv'};
+        $o = A&ut = G&o,$r,{liveon=>$C,t=>'ut',yoff=>'KC',gen=>'lv',V=>0};
         
         #saybl join('', ('  ') x _.y.A.c.ind) ." - _.t _.y.cv" for @{os&Core};
         
@@ -249,7 +251,7 @@ PostLV: | # make 7
             $Y
         }
         else {
-            G&A,K=>1=>{%{Y.c},s=>$_},Y.sc;
+            G&A,V=>1=>{%{Y.c},of=>'K',s=>$_},Y.sc;
         }
     } @lvre];
     
@@ -297,6 +299,7 @@ Tveing: |
     n Tvin
     #A.V = 0;
     n Tvin
+    n Tvin
 Tvin: |
     Jc&tape = 'W';
     Jc&save = 'W';
@@ -305,7 +308,9 @@ Tvin: |
     n first=>4=>'first',{doge=>{ela=>3}}
     Js&bowls &&
     n first=>3=>'non'
-    m $_=>''=>($_ > 8 && Js&bowls++).' o','%oth:er,st:uff' for 1..14;
+    if (Js&bowls < 10) {
+        m $_=>''=>($_ > 8 && Js&bowls++).' o','%oth:er,st:uff' for 1..14;
+    }
     sayyl "Pinned";
     
     
@@ -333,20 +338,21 @@ Koul: | # clarify changes to string
                     os&n
                  || oc&last && oc&last.sc.n
                  || {};
-            # many K may use this continuing n for this C
+            # many K-ish may use this continuing n for this C
             #   due to TV/LV separation
             #   would be 1 sip away, K from last s more
-            A&K = ns&K;
-            ns&K = $A;
+            A&last = n.sc.>A.t;
+            
+            n.sc.>A.t = $A;
         }
         # last K could be on C.y.KA 
         # if clones could copy their later wirings when remade
-        C.y.KA = $A;
+        C.y->{A.t."A"} = $A;
         
         
         # < making this stick...
         T.not = 1 if C.sc.not eq '1';
-        sayyl "Komp A&el: ".ki $C;
+        sayyl A.t."omp A&el: ".ki $C;
     
     # a&n continues as long as C doesn't move
     # a&l is the original C we are squishing
@@ -355,11 +361,10 @@ Koul: | # clarify changes to string
         # are we being aware of nothing or disappearing
         A&el || die "No el K";
         if (A&el eq '8') {
-            1 && sayyl "Same sleeps! ".G&aC,$C;
             # use the encoded one (for wholeness)
-            $C = A&s = A&K.c.s;
-            C.y.A = $A;
-            1 && saybl "Same sleeps! ".G&aC,$C;
+            my $z  = A&last.c.s;
+            C.c = z.c;
+            C.sc = z.sc;
             return T.Z.8 = $A;
         }
         A&el  eq '9' # is last KC
