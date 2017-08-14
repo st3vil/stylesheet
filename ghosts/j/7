@@ -36,7 +36,8 @@ FishBrains: |
         # OC.y.C = origin C, C.y.OC = OC
         # 
         # the OC is another copy, which the oiD gets
-        # < see enough interior of Js with map function
+        
+        # see enough interior of Js with map function
         #   o being FactorEase's backend, ideally
         my $m = G&Ct,[J_Shade=>''];
         ms&any = &acgt{
@@ -54,9 +55,12 @@ FishBrains: |
         my $da;
         A&Core = [grep {_.y.C ne $d} @{os&Core}];
         A&Cora = [grep {_.y.C ne $d} @{os&Cora}];
-        # change the ground/drain - top link
-        my $t = A&Cora->[0];
-        t.y.out = delete t.y.up;
+        
+        # sleep: before 9 takes all under, no Core means still
+        if (!@{A&Core}) {
+            sayre "Sleeps in: ".G&sn;
+            return;
+        }
         
         
         # Cora is full state
@@ -67,6 +71,11 @@ FishBrains: |
         
         my $r = 1s&root || die "how to hold many";
         $r = r.y.OC || die "root didn't OC";
+        
+        # change the ground/drain - top link
+        my $t = $r;
+       #t.y.out = delete t.y.up;
+        my $Y = t.y.A;
         
         # O - only changes and their parents
         # < tug for .1 progress
@@ -84,36 +93,37 @@ FishBrains: |
         Rw PostO $o $r;
         # we shall make s&I from what looks like it in K
         
-        # put this stuff in the idea of itself
-        rs&z = [ grep{ $_ ne $r } @{A&Cora} ];
+        # put tips of this stuff in the idea of itself
+        rs&z = [ grep{ $_ ne $r && _.y.A.c.ind == 1 } @{A&Cora} ];
         
         delete rc&M;
         
-        # o ou - to finalise ourselves and OK changes
+        #c o ou - to finalise ourselves and OK changes
         $o = A&ut = G&o,$r,{liveon=>$C,t=>'ut',yoff=>'KC',gen=>'lv',V=>0};
         
-        #saybl join('', ('  ') x _.y.A.c.ind) ." - _.t _.y.cv" for @{os&Core};
-        
         # some vectors may want KC on top, no KAing
-        # default
-        # K<6 some may want KC tidied, shaded c
-        #     the shade bits of c may cache somewhere for S
-        # K>5 some want the above as incremental changes
         
-        # < shading C like A.map, but for keeping things from a&ng
-        
-        # K<6 compresses/tidies changed to save whole
-        #   putting tidy s&top = 9, the output
-        #   awake by lv-ish difference-only, but
-        #   using and setting (r.y.KC) wholes
-        # mostly shades C.c for reinput through reversaliser
-        
+        # K<6 compresses/tidies 
+        # - only changed C
+        # - to save whole picture
+        #   for s&top = 9, the output
         A&KAs = [map { G&A,K=>0=>_.c,_.sc } map { _.y.A } @{os&Core}];
         
-        # K>5 fills out (with parts of K) changes only, to log
-        #   putting more stringifying
+        # K>5 "
+        # - "
+        # - to log change
+        #   for lv, if PostK/PostLV is followed
         
         $r = r.y.KC || die "root OC didn't KC";
+        my $Y = r.y.A;
+        # 9 would be 3 if anything changed
+        if (Yc&el eq '8' || !@{A&KAs}) {
+            @{A&KAs} > 1 && sayre "Had KAs tho";
+            Yc&el ne '8' && sayre "Not rel8 tho: Yc&el";
+            sayre "Sleeps in: ".G&sn;
+            return;
+        }
+        
         
         
         # K - only changes and their parents
@@ -202,10 +212,55 @@ PostK: |
     
     }
     
+    # should hoist + enclose j/
+    if (my $Wa = a&Wall) {
+        # write-on-wall-able set of objects
+        # like a necklace for the universal
+        Wa.sc.Jo = s&Jo;
+        die "Walling self" if A.1.t eq 'Wall';
+        G&e,Wall=>[put=>$Wa];
+        s&Wall = $Wa;
+    }
+    
+    s&Cora = [@{os&Cora}];
+    
     s&tv = r.y.tv;
     s&top = $r;
     s&tw = r.y.tw;
     
+Wall: | # your publisher
+    Jc&tape = 'W';
+    Jc&save = 'W';
+    # also the furthest provider
+    # A.5 gives some requests for things/way to it
+    # you need local Wall way to use Wall to get more way
+    
+    # mostly takes what is from this process and externalises it
+    Js&ein.t.get.sMJ = &sMJjeTCA{ 
+        G&give:Budge=>["wants to get for ".G&sn => $e];
+    };
+    Js&ein.t.put.sMJ = &sMJjeTCA{
+        # should know about appending queues by its name
+        #G&give:Budge=>["wants to put for ".G&sn => $e];
+        local A.V = 1;
+        if (my $z = 1s&have.>s.t ) {
+            sayyl "Updating s.t ss&Jo";
+            %$z = %$s;
+        }
+        else {
+            sayyl "Setting s.t ss&Jo";
+            1s&have.>s.t =
+            m $s
+        }
+        saybl "Nowat: ".G&aC,$_ for @$M;
+        
+    };
+    S
+    #m _.t=>''=>{s=>wdump 3, $_} for @{Js&M||[]};
+    sayyl "Walling: ".G&sn;
+    m "Further"=>''=>{}=>{z=>[$_]} for @{Js&M||[]};
+    #_c&s = slm 9, _c&s for @$M;
+    #_c&s =~ s/\W//g for @$M;
 PostTV: | # make 1-5, whole C
     my ($f,$gd) = G&Locate_write;
     # from KA c&s (aka KC), for el=8 they replace last KC and sleep
@@ -310,6 +365,7 @@ Tveing: |
     A.7.t = 'glang';
     saybl map {G&aC,$_ } @{ A.I.O.sc.z };
     #exit;
+    my $C;
     if (0) {
     #A.V = 1;
     n Tvin
@@ -318,10 +374,26 @@ Tveing: |
     n Tvin
     }
     else {
+    $C =
     n Wayitis
     n Wayitis
     n Wayitis
     }
+    sayyl "Alriught!";
+    #my $C =
+    #n Wall=>V
+    my $J = s&J;
+    my $s = Js&s;
+    if (1) {
+    for my $v (@{ss&Cora}) {
+        my $Y = v.y.A;
+        my $ind = join('',('  ')x Yc&ind);
+        1 && saygr "Yc&el $ind - ".G&aC,$v ."  ( "
+          .($ind eq '' && ki(v.c)."    %  ".ki v.sc);
+    }
+    }
+    saybl ki ss&Wall;
+    
 Wayitis: |
     u i
     Jc&tape = 'W';
@@ -330,6 +402,11 @@ Wayitis: |
         # voux
     liquor:
         A.parch++;
+    Js&jump++ > 1 && sayre(":Doing it") &&
+    more:
+        # iof them
+    seeeveral:
+        # more
 Tvin: |
     Jc&tape = 'W';
     Jc&save = 'W';
@@ -568,6 +645,14 @@ Writer: | # to make 12345, 7
     #  eg 2 can't know about 3 because 3 has to know about 2
     my $h = ar.h || {};
     
+    # our past should be got through some all-flexi way
+    # this holds the bunch of writings, to give to Wall
+    my $W;
+    if (A.1.t ne 'Wall') {
+        $W = a&Wall ||= G&Ct:[G&sn=>''=>{f=>$f}];
+        Wc&f ne $f && die G&sn ." wants to move from Wc&f   to  $f";
+    }
+    
     # writes on the written top/9
     $C = $N->[0] = G&hup,$N->[0];
     
@@ -611,10 +696,14 @@ Writer: | # to make 12345, 7
     my $st = &st{
         $s = join "\n", @$s,'' if ref $s eq 'ARRAY';
         my $ha = slm 9, dig $s;
-        `mkdir -p $f/h` if !-d "$f/h";
         my $hf = "h/$ha";
         sayyl "Is is $f / $t -> $hf";
+        if ($W) {
+            W.y.tw.>$t = G&Ct,[$t=>''=>{s=>$s},{ha=>$ha}];
+            return $ha;
+        }
         
+        `mkdir -p $f/h` if !-d "$f/h";
         write_file("$f/$hf", $s);
         if ($t) {
             `unlink $f/$t` if -e "$f/$t";
