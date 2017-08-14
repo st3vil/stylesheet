@@ -245,6 +245,10 @@ ThWay: | # meaning of calling a word
             my $s = Rw Bangilate $ba $B;
             die $s if $s;
         }
+        elsif (my $ba = Bs&warning) {
+            1 && sayre "Warning:",
+                Rw Bangilate $ba $B;
+        }
         wantarray ? @r : $r[0];
     
     #c way gets source from outside, compiles for given args
@@ -882,6 +886,7 @@ Bangular: |
         return if $lastts >  hitime() - 1;
         sayre "SIGDIE began: ".slim(200,$s);
         $lastts =  hitime();
+        my $notabang = !$@;
         $s && $@ && sayre "stackend with \$@ and arg0";
         $s ||= $@;
         $s ||= do { saygr "\$@ was blank"; $_[0] };
@@ -940,6 +945,7 @@ Bangular: |
         } @stack;
         my $B = Gc&B;
         Bs&stack = \@stack;
+        Bs&warning = $s if $notabang;
         
         Bs&callers = [map{ [caller($_)] }0..4];
     };
@@ -1167,3 +1173,4 @@ Bangilate: |
                 
                 # die...\n keeps first line number
                 return $ba."\n";
+
