@@ -1150,15 +1150,37 @@ StackShuf: | # shove B stack over the illuminated middle of caller() stack
         $BB = BB.y.out;
     }
     $BB = $B;
+    my @Ds; # picture of B
     for my $B (@Bs) {
         # tell aboves we did this
         Bs&foot = $BB;
         
-        my @l = $deB->($B);
+        my $D = G&Ct,[B.t,'',{s=>$deB->($B)},{B=>$B}];
         
         if ($B eq $BB) { # extra sense for last B
             my $i = 1;
+            my $o;
+            my $or;
+            if (B.t eq 'w' && Bs&Me) {
+                my $ar = Bs&Me->[0];
+                ref $ar eq 'HASH' || die "Yul";
+                $ar = {%$ar};
+                each k,v $ar {
+                    my $i;
+                    my $is;
+                    for (@{Bs&Me||[]}) {
+                        $i++;
+                        $is = $i if $v eq $_;
+                    }
+                    if ($is) {
+                        $ar.>$k = "<arg$is>";
+                        $or.>$is = "$k";
+                    }
+                }
+                o.1 = $ar;
+            }
             for my $r (@{Bs&Me||[]}) {
+                $r = $o.>$i if $o.>$i;
                 my $s = ki $r;
                 my @also;
                 if ($r eq $d) {
@@ -1167,13 +1189,27 @@ StackShuf: | # shove B stack over the illuminated middle of caller() stack
                     $s =~ s/%.+$/%: $sc/;
                     @also = "      * described below";
                 }
-
-                push @l, sprintf("    arg%d %5s",$i++,$s), @also;
+                my $or = $or.>$i;
+                $or = "/$or" if $or;
+                push @{Ds&zs||=[]}, sprintf("    arg%d$or %5s",$i++,$s), @also;
             }
+            Dc&s .= " args:ds&args";
         }
-        push @$l, join "\n", @l;
+        push @Ds, $D
     }
-    1 && saybl "Have: ".wdump 2, $l;
+    
+    my $o;
+    for my $D (reverse @Ds) {
+        my $B = Ds&B;
+        for (qw'A C') {
+            my $v = B.sc.>$_ || next;
+            $v eq $o.>$_ && next;
+            $o.>$_ = $v;
+            (my $cv = v.y.cv) =~ s/^0\.//;
+            Dc&s .= "  $_:v.t $cv";
+        }
+    }
+    push @$l, join "\n", _c&s, @{_s&zs||[]} for @Ds;
     
     my @fin;
     for my $t (reverse @$aft) {
