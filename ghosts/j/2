@@ -1159,12 +1159,14 @@ StackShuf: | # shove B stack over the illuminated middle of caller() stack
         
         if ($B eq $BB) { # extra sense for last B
             my $i = 1;
-            my $o;
-            my $or;
+            my $o; # grap arg1 to ar
+            my $or; # arg$n that are ar bits
+            my $ra; # ar bits not covered by an arg$n
             if (B.t eq 'w' && Bs&Me) {
                 my $ar = Bs&Me->[0];
                 ref $ar eq 'HASH' || die "Yul";
                 $ar = {%$ar};
+                $ra = {%$ar};
                 each k,v $ar {
                     my $i;
                     my $is;
@@ -1173,25 +1175,37 @@ StackShuf: | # shove B stack over the illuminated middle of caller() stack
                         $is = $i if $v eq $_;
                     }
                     if ($is) {
+                        delete $ra.>$k;
                         $ar.>$k = "<arg$is>";
                         $or.>$is = "$k";
                     }
                 }
-                o.1 = $ar;
+                # was $ar for whittled oneline $ar
+                o.1 = $ra;
             }
             for my $r (@{Bs&Me||[]}) {
-                $r = $o.>$i if $o.>$i;
-                my $s = ki $r;
-                my @also;
-                if ($r eq $d) {
-                    $s = G&aC,$r;
-                    my $sc = ki r.sc;
-                    $s =~ s/%.+$/%: $sc/;
-                    @also = "      * described below";
+                my @l;
+                if (my $ar = $o.>$i ) {
+                    for my $k (sort keys %$ar) {
+                        my $v = $ar.>$k;
+                        push @l, sprintf("%12s  %s",$k,ki $v );
+                    }
                 }
-                my $or = $or.>$i;
-                $or = "/$or" if $or;
-                push @{Ds&zs||=[]}, sprintf("    arg%d$or %5s",$i++,$s), @also;
+                else {
+                    my $s = ki $r;
+                    my @also;
+                    if ($r eq $d) {
+                        $s = G&aC,$r;
+                        my $sc = ki r.sc;
+                        $s =~ s/%.+$/%: $sc/;
+                        @also = "      * described below";
+                    }
+                    my $or = $or.>$i;
+                    $or = "/$or" if $or;
+                    push @l, sprintf("%12s  %s","arg$i$or",$s), @also;
+                }
+                $i++;
+                push @{Ds&zs||=[]}, @l;
             }
             Dc&s .= " args:ds&args";
         }
