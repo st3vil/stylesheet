@@ -951,10 +951,10 @@ Bangular: |
     };
     sayre "Bangular loaded";
 Bangilate: |
-    # T.h figured it safe from below
+    # handler figured it safe from below
     Bs&hand && return;
     
-    # bang polished, pass out
+    # Bangilated already, pass out
     # on each enclosing h
     # < look at caller() eval nums for more stack sync
     #   be good to have lines calling from last Jpin, w, and h
@@ -962,141 +962,18 @@ Bangilate: |
     
     Bc&h && die "< Have the handler to $ba things.";
     
-    # Bc&s is the first argument to h, may be a D
-    my $deB = &B{
-        sprintf(" B %-4s %4s %8s", B.t,
-            (B.y.cv ne '0.1' && B.y.cv),
-            (ref Bc&s ? Bc&s.t : Bc&s),
-        );
-    };
-    my $destack =&t{
-        t.t ?
-            sprintf(" - %-18s %4s: %s", t.t, ts&line, ts&Mes)
-        :   sprintf(" ? %s", G&aC,$t )
-    };
     
     # here
     my $D = Bs&D;
     # bangC is code the problem would have come from
     my $d = Bs&bangC || delete(T.bangC) || $D;
     
-    
-    # index landmarks
-    my $na = {};
-    my $Bs = {%{B.sc},%{B.c}};
-    Bs.G = $G;
-    Bs.T = $T;
-    Bs.Dw = D.y.argumented if D.y.argumented;
-    each gk,v $Bs {
-        next unless $gk =~ /^..?$/;
-        next unless ref $v;
-        my $r = "$v";
-        $na.>$r = "$gk";
-    }
-    my $i = 1;
-    for my $v (@{Bs&Me||[]}) {
-        my $r = "$v";
-        $na.>$r = "arg".$i++;
-    }
-    for my $n (2..5,'up','up.up','up.up.up') {
-        my $k = "A$n";
-        my $Y = $A;
-        if ($n =~ /\./) {
-            my @ks = split /\./, $n;
-            $Y = $Y.>$n || next for @ks;
-            $Y || next;
-        }
-        else {
-            $Y = $Y.>$n || next;
-        }
-        ref $Y || next;
-        my $r = "$Y";
-        $na.>$r = $k;
-        if (my $C = Y.c && Y.c.s) {
-            my $k = $n."C";
-            my $r = "$C";
-            $na.>$r = $k;
-        }
-        if (my $T = Y.c && Y.c.T) {
-            my $k = $n."T";
-            my $r = "$T";
-            $na.>$r = $k;
-        }
-    }
-    
-    # find landmarks in callstack
     # stack syncy to know G&h's eval number:
     my $hs_file = (caller(0))[1];
-    my $st = Bs&stack;
-    for my $t (@$st) {
-        t.t = delete ts&file;
-        t.t = 'h' if t.t eq $hs_file;
-        ts&Mes =~ s/\Q$_\E/$na.>$_/
-            && do { ts&matches->{ $na.>$_ }++ }
-            for keys %$na;
-    }
     
-    # split callstack around B stack
-    # near the beginning of it should be our h call
-    # < deduce every h, just to first and from last
-    my ($lit) = my ($for,$aft) = ([],[]);
-    for my $t (@$st) {
-        $lit = $aft if t.t eq 'h';
-            #&& 5 == grep{ ts&matches.>$_ } qw'A C G T D';
-        push @$lit, $t;
-    }
+    my $st = Rw StackSyncy + $D $d $hs_file;
+    my ($l,$for) = Rw StackShuf + $D $d $st;
     
-    # beyond h/B stack
-    if (!@$for) {
-        my ($t) = @$for = shift @$aft if !@$for;
-        if (t.t eq 'h') {
-            eval {
-            $d = G&t,i=>'h';
-            };
-            sayre "Tried to show you h" if $@;
-            # dying in G&h, you probably want to know where it came from tho
-        }
-    }
-    my $l = [map{ $destack->($_) }@$for];
-    
-    # 
-    my @Bs;
-    my $BB = $B;
-    while ($BB) {
-        push @Bs, $BB;
-        $BB = BB.y.out;
-    }
-    $BB = $B;
-    for my $B (@Bs) {
-        # tell aboves we did this
-        Bs&foot = $BB;
-    
-        push @$l, $deB->($B);
-        
-        next unless $B eq $BB;
-        my $i = 1;
-        for my $r (@{Bs&Me||[]}) {
-            my $s = ki $r;
-            my @also;
-            if ($r eq $d) {
-                $s = G&aC,$r;
-                my $sc = ki r.sc;
-                $s =~ s/%.+$/%: $sc/;
-                @also = "      * described below";
-            }
-            
-            push @$l, sprintf("    arg%d %5s",$i++,$s), @also;
-        }
-    }
-    
-    my @fin;
-    for my $t (reverse @$aft) {
-        last if t.t eq 'h';
-        push @fin, $destack->($t);
-    }
-    if (@fin) {
-        push @$l, reverse @fin;
-    }
     
     #c codesplatter
     
@@ -1173,4 +1050,140 @@ Bangilate: |
                 
                 # die...\n keeps first line number
                 return $ba."\n";
+StackSyncy: | # identifies bits of the caller() (smaller) stack and returns it
+    # index landmarks
+    my $na = {};
+    my $Bs = {%{B.sc},%{B.c}};
+    Bs.G = $G;
+    Bs.T = $T;
+    Bs.Dw = D.y.argumented if D.y.argumented;
+    each gk,v $Bs {
+        next unless $gk =~ /^..?$/;
+        next unless ref $v;
+        my $r = "$v";
+        $na.>$r = "$gk";
+    }
+    my $i = 1;
+    
+    for my $v (@{Bs&Me||[]}) {
+        my $r = "$v";
+        $na.>$r = "arg".$i++;
+    }
+    for my $n (2..5,'up','up.up','up.up.up') {
+        my $k = "A$n";
+        my $Y = $A;
+        if ($n =~ /\./) {
+            my @ks = split /\./, $n;
+            $Y = $Y.>$n || next for @ks;
+            $Y || next;
+        }
+        else {
+            $Y = $Y.>$n || next;
+        }
+        ref $Y || next;
+        my $r = "$Y";
+        $na.>$r = $k;
+        if (my $C = Y.c && Y.c.s) {
+            my $k = $n."C";
+            my $r = "$C";
+            $na.>$r = $k;
+        }
+        if (my $T = Y.c && Y.c.T) {
+            my $k = $n."T";
+            my $r = "$T";
+            $na.>$r = $k;
+        }
+    }
+    
+    # find landmarks in callstack
+    my $st = Bs&stack;
+    for my $t (@$st) {
+        t.t = delete ts&file;
+        t.t = 'h' if t.t eq $hs_file;
+        ts&Mes =~ s/\Q$_\E/$na.>$_/
+            && do { ts&matches->{ $na.>$_ }++ }
+            for keys %$na;
+    }
+    $st;
+StackShuf: | # shove B stack over the illuminated middle of caller() stack
+    # split callstack around B stack
+    # near the beginning of it should be our h call
+    # < deduce every h, just to first and from last
+    my ($lit) = my ($for,$aft) = ([],[]);
+    for my $t (@$st) {
+        $lit = $aft if t.t eq 'h';
+        push @$lit, $t;
+    }
+    
+    # beyond h/B stack
+    if (!@$for) {
+        my ($t) = @$for = shift @$aft if !@$for;
+        if (t.t eq 'h') {
+            eval {
+            $d = G&t,i=>'h';
+            };
+            sayre "Tried to show you h" if $@;
+            # dying in G&h, you probably want to know where it came from tho
+        }
+    }
+    
+    my $destack =&t{
+        t.t ?
+            sprintf(" - %-18s %4s: %s", t.t, ts&line, ts&Mes)
+        :   sprintf(" ? %s", G&aC,$t )
+    };
+    my $l = [map{ $destack->($_) }@$for];
+    
+    # climb Byout
+    # < rename Byup?
+    # Bc&s is the first argument to h, may be a D
+    my $deB = &B{
+        sprintf(" B %-4s %4s %8s", B.t,
+            (B.y.cv ne '0.1' && B.y.cv),
+            (ref Bc&s ? Bc&s.t : Bc&s),
+        );
+    };
+    my @Bs;
+    my $BB = $B;
+    while ($BB) {
+        push @Bs, $BB;
+        $BB = BB.y.out;
+    }
+    $BB = $B;
+    for my $B (@Bs) {
+        # tell aboves we did this
+        Bs&foot = $BB;
+        
+        my @l = $deB->($B);
+        
+        if ($B eq $BB) { # extra sense for last B
+            my $i = 1;
+            for my $r (@{Bs&Me||[]}) {
+                my $s = ki $r;
+                my @also;
+                if ($r eq $d) {
+                    $s = G&aC,$r;
+                    my $sc = ki r.sc;
+                    $s =~ s/%.+$/%: $sc/;
+                    @also = "      * described below";
+                }
+
+                push @l, sprintf("    arg%d %5s",$i++,$s), @also;
+            }
+        }
+        push @$l, join "\n", @l;
+    }
+    1 && saybl "Have: ".wdump 2, $l;
+    
+    my @fin;
+    for my $t (reverse @$aft) {
+        last if t.t eq 'h';
+        push @fin, $destack->($t);
+    }
+    if (@fin) {
+        push @$l, reverse @fin;
+    }
+    
+    @$l = reverse @$l;
+    ($l,$for)
 
