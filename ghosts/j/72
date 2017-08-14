@@ -248,11 +248,14 @@ Line: | # C as a tabby line
         }
     }
     
-    # remove quoted things from the line
+    # remove quoted things and their need of json from the line
     each nk,gk,v $q {
         delete $h.>$nk.>$gk;
         delete $n.>$nk.>$gk;
     }}
+    each nk,gks $n {
+        delete $n.>$nk if !$gks; # all freaks got quoted
+    }
     
     # get a json encoded string
     my $enj = &s{
