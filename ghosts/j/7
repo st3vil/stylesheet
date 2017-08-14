@@ -198,18 +198,30 @@ PostK: |
     }
     else {
     
-    # make a bunch of writings to give to W
-    # Cora KC, fully
-    #   needs KA-ing to squish whole picture
-    my $h =
-    3c&save &&
-        Rw PostTV;
-    
-    # lvre, difference
-    #   needs KA-ing to squish and hoist other lv
-    3c&tape &&
-        Rw PostLV + $h;
-    
+    # make a bunch of writings to give to Wall
+    if (3c&save || 3c&tape) {
+        # our past should be got through some all-flexi way
+        # this holds the bunch of writings, to give to Wall
+        # kind of know where to write things if !$W
+        # < needs $f/$gd to locate already written things
+        my ($f,$gd) = G&Locate_write;
+        my $W;
+        if (A.1.t ne 'Wall') {
+            $W = a&Wall ||= G&Ct:[G&sn=>''=>{},{f=>$f}];
+            Ws&f ne $f && die G&sn ." moves f: Ws&f   to  $f";
+        }
+        # Cora KC, fully
+        #   needs KA-ing to squish whole picture
+        my $h =
+        3c&save &&
+            Rw PostTV + $f $gd $W;
+
+        # lvre, difference
+        #   needs KA-ing to squish and hoist other lv
+        3c&tape &&
+            Rw PostLV + $f $gd $W $h;
+
+        }
     }
     
     # should hoist + enclose j/
@@ -256,13 +268,37 @@ Wall: | # your publisher
         
     };
     S
+    my $l = Js&Keld = {};
+    l.ha.9 = &acgts{
+        my $W = C.y.up;
+        my $f = Ws&f || die "No fileer! ".ki $W;
+        my $t = C.t;
+        sayre "Want rm: ".G&aC;
+        sayre "  rm $f/$t";
+        
+    };
+    l.ha.5 = &acgts{
+        my $W = C.y.up;
+        my $f = Ws&f || die "No fileer! ".ki $W;
+        
+        my $s = c&s;
+        my $ha = s&ha;
+        my $hf = "h/".$ha;
+        my $t = C.t;
+        
+        `mkdir -p $f/h` if !-d "$f/h";
+        write_file("$f/$hf", $s) unless -e "$f/$hf";
+        if ($t) {
+            `unlink $f/$t` if -e "$f/$t";
+            `ln -s h/$ha $f/$t`;
+        }
+        sayre "Want put: $f/$t: ".G&aC;
+    };
     #m _.t=>''=>{s=>wdump 3, $_} for @{Js&M||[]};
-    sayyl "Walling: ".G&sn;
-    m "Further"=>''=>{}=>{z=>[$_]} for @{Js&M||[]};
+    m $_ for @{Js&M||[]};
     #_c&s = slm 9, _c&s for @$M;
     #_c&s =~ s/\W//g for @$M;
 PostTV: | # make 1-5, whole C
-    my ($f,$gd) = G&Locate_write;
     # from KA c&s (aka KC), for el=8 they replace last KC and sleep
     # this would dodge out the wiring..? safe-ish for flatlist
     #   should probably clone c/sc from sleeping KC
@@ -277,7 +313,7 @@ PostTV: | # make 1-5, whole C
             .ki(v.c)."    %  ".ki v.sc;
     }
     }
-    Rw Writer $gd $f $N 1 2 3 4 5;
+    Rw Writer + $N 1 2 3 4 5;
     
 PostLV: | # make 7
     my $la;
@@ -348,10 +384,9 @@ PostLV: | # make 7
     }
     }
     
-    my ($f,$gd) = G&Locate_write;
     my $N = [map { _c&s } @{A&VAs} ];
     
-    Rw Writer + $gd $f $N 7;
+    Rw Writer + $N 7;
     
     if (r.y.A.c.el eq '1') {
         # < forget ns&jo
@@ -384,7 +419,7 @@ Tveing: |
     #n Wall=>V
     my $J = s&J;
     my $s = Js&s;
-    if (1) {
+    if (0) {
     for my $v (@{ss&Cora}) {
         my $Y = v.y.A;
         my $ind = join('',('  ')x Yc&ind);
@@ -424,6 +459,7 @@ Tvin: |
 pi/tabul: |
     n t=>''=>C.t
     m random=>''=>"virtual" for 1..c&vl;
+
 Koul: | # clarify changes to string
     u a
     K 1:
@@ -471,26 +507,30 @@ Koul: | # clarify changes to string
             C.sc = z.sc;
             return T.Z.8 = $A;
         }
-        A&el  eq '9' # is last KC
-             && return T.Z.9 = $A;
             
-        
-    
-    # hook Js&Kels.sending.3 = $s to G&h,$cb for sc.sendings el3ing
-    K 3:
+        # hook Js&Kels.sending.3 = $cb to G&h,$cb
+        # when something s&sending changes
+        # Js&Keld not limited to the top level
+        # 5 means <= 5
         my $l = a&l;
         A&el || die "no rcel";
-        if (my $sel = 1s&Kels) {
+        if (my $sel = 1s&Kels || 1s&Keld) {
             # limited to those under 9?
-            $sel = {} unless l.y.up eq A&r;
+            #sayre "Some Kel: ".ki $sel;
+            #sayre "For: A&el  ".G&aC,$l;
+            $sel = {} unless 1s&Keld || l.y.up eq A&r;
             each k,els $sel {
                 exists l.sc.>$k || next;
                 each el,do $els {
-                    A&el eq $el || A&el eq '2' && $el eq '1' || next;
+                    A&el eq $el || A&el eq '2' && $el eq '1' || 
+                    $el eq '5' && A&el <= 5 || next;
                     G&h,$do;
                 }
             }
         }
+        
+        A&el  eq '9' # is last KC
+             && return T.Z.9 = $A;
     #c K55 figure Line encoding
     #   whole pictures + change want derefing here
     #   
@@ -635,8 +675,11 @@ Writer: | # to make 12345, 7
     # 6 forks, a dir?
     # 8 entanglements/joins, a dir?
     ar.m || die "send m = list,of,types";
+    
     $gd # the bay/G, where to find sibling W
     && $f || die "Sendbits";
+    # possible object for our writings to live on
+    my $W = ar.W;
     1 && saygr "W A.1.t ($f) @{ar.m}   x".@$N;
     
     # types wanted: lines pooled
@@ -644,14 +687,6 @@ Writer: | # to make 12345, 7
     # ha pooled (once lines written)
     #  eg 2 can't know about 3 because 3 has to know about 2
     my $h = ar.h || {};
-    
-    # our past should be got through some all-flexi way
-    # this holds the bunch of writings, to give to Wall
-    my $W;
-    if (A.1.t ne 'Wall') {
-        $W = a&Wall ||= G&Ct:[G&sn=>''=>{f=>$f}];
-        Wc&f ne $f && die G&sn ." wants to move from Wc&f   to  $f";
-    }
     
     # writes on the written top/9
     $C = $N->[0] = G&hup,$N->[0];
