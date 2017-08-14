@@ -214,6 +214,14 @@ PostTV: | # make 1-5, whole C
     my $N = [map{ _c&s || die "noC: ".ki$_ }
          map { _.y.KA || die "NoKA: ".ki$_ } @{os&Cora}];
     
+    if (0) {
+    for my $v (@$N) {
+        my $Y = v.y.A;
+        my $ind = join('',('  ')x Yc&ind);
+        1 && say "Yc&el $ind - ".G&aC,$v ."  ( "
+            .ki(v.c)."    %  ".ki v.sc;
+    }
+    }
     Rw Writer $gd $f $N 1 2 3 4 5;
     
 PostLV: | # make 7
@@ -299,13 +307,28 @@ PostLV: | # make 7
     
 Tveing: |
     A.7.t = 'glang';
-    saybl map {G&aC,$_ } @{ A.I.K.sc.z };
+    saybl map {G&aC,$_ } @{ A.I.O.sc.z };
     #exit;
+    if (0) {
     #A.V = 1;
     n Tvin
     #A.V = 0;
     n Tvin
     n Tvin
+    }
+    else {
+    n Wayitis
+    n Wayitis
+    n Wayitis
+    }
+Wayitis: |
+    u i
+    Jc&tape = 'W';
+    Jc&save = 'W';
+    dami:
+        # voux
+    liquor:
+        A.parch++;
 Tvin: |
     Jc&tape = 'W';
     Jc&save = 'W';
@@ -415,7 +438,9 @@ Koul: | # clarify changes to string
             delete s&J if ls&W eq s&J;
         }
         
-        s&Kseen++;
+        # < mute code... but this C ends up in I
+        #  maybe it could instruct what to do for encoding to string...
+        # see Writer/for-write K5ish for s&coded c&code
         
         my $ok;
         ok.sc.>$_ = 1 for qw'z ip';
@@ -520,6 +545,7 @@ LVism: | # hoist lv between Js in K 7
 
     
 Writer: | # to make 12345, 7
+    # aspecty
     # types <= 5 show whole instant
     #   good for still code, absolute data
     #   shows would be an extending ladder of what is and when
@@ -528,35 +554,29 @@ Writer: | # to make 12345, 7
     #   shows are a pool of what is that evolves
     #     which could still have timing
     #     
-    # 6 forks
-    # 7 entanglements/joins
-    ar.m || die "send m=list,of,types";
+    # 6 forks, a dir?
+    # 8 entanglements/joins, a dir?
+    ar.m || die "send m = list,of,types";
     $gd # the bay/G, where to find sibling W
     && $f || die "Sendbits";
-    1 && saygr "W A.1.t ($f) @{ar.m}";
+    1 && saygr "W A.1.t ($f) @{ar.m}   x".@$N;
     
     # types wanted: lines pooled
     my $w = {map{$_=>[]}@{ar.m}};
     # ha pooled (once lines written)
     #  eg 2 can't know about 3 because 3 has to know about 2
     my $h = ar.h || {};
-        
+    
     # writes on the written top/9
     $C = $N->[0] = G&hup,$N->[0];
-        
-    # storage the bits: h/$hash = content
-    my $st = &st{
-        $s = join "\n", @$s,'' if ref $s eq 'ARRAY';
-        my $ha = slm 9, dig $s;
-        `mkdir -p $f/h` if !-d "$f/h";
-        my $hf = "h/$ha";
-        write_file("$f/$hf", $s);
-        if ($t) {
-            `unlink $f/$t` if -e "$f/$t";
-            `ln -s h/$ha $f/$t`;
-        }
-        $ha
-    };
+    
+    # ignoring the particular $n, we go:
+    #  ub - per C
+    #      makes $l with G&Line
+    #  in - per C+l
+    #    indents (.y.A.c.ind) and pushes to a w.$n [l+]
+    #  st - per w.$n [l+]
+    #    publishing job
     
     # for G&ind'ing Cthing to flat lists like $N
         my $ub = &Cd{
@@ -565,6 +585,13 @@ Writer: | # to make 12345, 7
             # see Tv, or Line know again
             my $el = $Y && Yc&el;
             saybl "For $el ".G&aC,$C;
+            # for-write K5ish stuff:
+            if (c&code) {
+                $C = G&hup,$C;
+                # they (Believe) can re-eval/re-of it
+                delete c&code;
+                s&coded = 1;
+            }
             my $z = delete s&z;
             my $l = G&Line,$C;
             s&z = $z if $z;
@@ -578,6 +605,22 @@ Writer: | # to make 12345, 7
             $s = [split "\n", $s];
             push @$N, join "\n", map{"$ind$_"} @$s;
         };
+    
+    # storage the bits: h/$hash = content
+    my $st = &st{
+        $s = join "\n", @$s,'' if ref $s eq 'ARRAY';
+        my $ha = slm 9, dig $s;
+        `mkdir -p $f/h` if !-d "$f/h";
+        my $hf = "h/$ha";
+        sayyl "Is is $f / $t -> $hf";
+        
+        write_file("$f/$hf", $s);
+        if ($t) {
+            `unlink $f/$t` if -e "$f/$t";
+            `ln -s h/$ha $f/$t`;
+        }
+        $ha
+    };
         
     # take meta off the 9, put ha on any W
         # < meta?
@@ -613,7 +656,7 @@ Writer: | # to make 12345, 7
         $W = G&Ct,['W',1];
         for my $C (@$N) {
             my $Y = C.y.A;
-            return undef if Yc&ind > 1;
+            next if Yc&ind > 1;
             if (s&W) {
                 my $D = G&Ct,[C.t,C.y.cv];
                 Ds&W = s&W;
