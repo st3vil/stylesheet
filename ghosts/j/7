@@ -199,39 +199,43 @@ PostK: |
     else {
     
     # make a bunch of writings to give to Wall
-    if (3c&save || 3c&tape) {
+    if (1c&save || 1c&tape || 3c&tape) {
         # our past should be got through some all-flexi way
         # this holds the bunch of writings, to give to Wall
         # kind of know where to write things if !$W
         # < needs $f/$gd to locate already written things
-        my ($f,$gd) = G&Locate_write;
-        my $W;
-        if (A.1.t ne 'Wall') {
-            $W = a&Wall ||= G&Ct:[G&sn=>''=>{},{f=>$f}];
-            Ws&f ne $f && die G&sn ." moves f: Ws&f   to  $f";
+        if (1c&save || 1c&tape) {
+            (a&f,a&gd) = G&Locate_write;
+            if (A.1.t ne 'Wall') {
+                my $W = a&W ||= G&Ct:[G&sn=>''=>{},{f=>a&f,gd=>a&gd}];
+                Ws&f ne a&f && die G&sn ." moves f: Ws&f   to  a&f";
+            }
         }
         # Cora KC, fully
         #   needs KA-ing to squish whole picture
         my $h =
-        3c&save &&
-            Rw PostTV + $f $gd $W;
+        1c&save &&
+            Rw PostTV;
 
         # lvre, difference
         #   needs KA-ing to squish and hoist other lv
-        3c&tape &&
-            Rw PostLV + $f $gd $W $h;
-
-        }
+        # < we could use Cora KC the first time?
+        # if your 3c&tapes you should make lv to give to it
+        
+        (3c&tape || 1c&tape) &&
+            Rw PostLV + $h;
+    }
+    
     }
     
     # should hoist + enclose j/
-    if (my $Wa = a&Wall) {
+    if (my $Wa = a&W) {
         # write-on-wall-able set of objects
         # like a necklace for the universal
         Wa.sc.Jo = s&Jo;
         die "Walling self" if A.1.t eq 'Wall';
         G&e,Wall=>[put=>$Wa];
-        s&Wall = $Wa;
+        s&W = $Wa;
     }
     
     s&Cora = [@{os&Cora}];
@@ -314,6 +318,8 @@ PostTV: | # make 1-5, whole C
             .ki(v.c)."    %  ".ki v.sc;
     }
     }
+    a&f || die "Wants to postTV for non f?";
+    a&f &&
     Rw Writer + $N 1 2 3 4 5;
     
 PostLV: | # make 7
@@ -398,7 +404,34 @@ PostLV: | # make 7
     push @{s&lv}, $N;
     
 Tveing: |
+    Rw CloningProcess;
+    my $C =
+    n VabngaL
+    Rw Veing $C;
+    exit;
+Veing: |
+    my $J = s&J;
+    my $s = Js&s;
+    my $t = ss&tw.te;
+    $s = t.y.C.sc.J.sc.s;
+    $t = ss&tw.has;
+    #saybl wdump 3, 
+    my $l = #t.y.C.sc.J.sc.
+    s.sc.lv;
+    @$l == 1 || die "many";
+    $l = $l->[0];
+    if (1) {
+    for my $v (@$l) {
+        my $Y = v.y.A;
+        my $ind = join('',('  ')x Yc&ind);
+        1 && saygr "Yc&el $ind - ".G&aC,$v ."  ( "
+          .($ind eq '' && ki(v.c)."    %  ".ki v.sc);
+    }
+    }
+    exit;
+VabngaL: |
     A.7.t = 'glang';
+    1c&tape = 'W';
     saybl map {G&aC,$_ } @{ A.I.O.sc.z };
     #exit;
     my $C;
@@ -412,23 +445,16 @@ Tveing: |
     else {
     $C =
     n Wayitis
-    n Wayitis
-    n Wayitis
+    #n Wayitis
+    #n Wayitis
     }
     sayyl "Alriught!";
     #my $C =
     #n Wall=>V
-    my $J = s&J;
-    my $s = Js&s;
-    if (0) {
-    for my $v (@{ss&Cora}) {
-        my $Y = v.y.A;
-        my $ind = join('',('  ')x Yc&ind);
-        1 && saygr "Yc&el $ind - ".G&aC,$v ."  ( "
-          .($ind eq '' && ki(v.c)."    %  ".ki v.sc);
-    }
-    }
-    saybl ki ss&Wall;
+    my $Y = C.y.A;
+    my $t = Yc&T;
+    n te=>-od=>{s=>$t}
+    #saybl ki $t
     
 Wayitis: |
     u i
@@ -677,11 +703,12 @@ Writer: | # to make 12345, 7
     # 8 entanglements/joins, a dir?
     ar.m || die "send m = list,of,types";
     
-    $gd # the bay/G, where to find sibling W
-    && $f || die "Sendbits";
-    # possible object for our writings to live on
-    my $W = ar.W;
-    1 && saygr "W A.1.t ($f) @{ar.m}   x".@$N;
+    my $gd = a&gd; # the bay/B where to find sibling W
+    my $f = a&f; # the J's directory
+    # and/or
+    my $W = a&W; # object for our writings to live on
+    
+    A.1 eq A.3 && saygr "W A.1.t ($f) @{ar.m}   x".@$N;
     
     # types wanted: lines pooled
     my $w = {map{$_=>[]}@{ar.m}};
@@ -725,7 +752,9 @@ Writer: | # to make 12345, 7
             my $Y = C.y.A;
             my $ind = join('',('  ')x (Y.c.ind + $i));
             $s = [split "\n", $s];
-            push @$N, join "\n", map{"$ind$_"} @$s;
+            $s = join "\n", map{"$ind$_"} @$s;
+            push @$N, $s;
+            $s
         };
     
     # storage the bits: h/$hash = content
@@ -737,6 +766,12 @@ Writer: | # to make 12345, 7
         if ($W) {
             W.y.tw.>$t = G&Ct,[$t=>''=>{s=>$s},{ha=>$ha}];
             return $ha;
+        }
+        elsif (!$f) {
+            # packing (ub/in) but not storing
+            # our works are on s&lv = [[CCCCCC]+]
+            # they C.y.Line = string
+            return;
         }
         
         `mkdir -p $f/h` if !-d "$f/h";
@@ -763,11 +798,15 @@ Writer: | # to make 12345, 7
             #   bridgy, for Ang, sort-of inclusion, etc...
             if (my $t = s&W) {
                 $t =~ s/\W+/-/gs;
-                my $d = "$gd/$t";
-                -d $d || die "unstored W in $f: $d";
-                my $ha = readlink "$d/1";
-                $ha =~ s/^h\///;
-                s&ha = $ha;
+                my $ha;
+                # < get version from ...
+                if ($f) {
+                    my $d = "$gd/$t";
+                    -d $d || die "unstored W in $f: $d";
+                    my $ha = readlink "$d/1";
+                    $ha =~ s/^h\///;
+                }
+                s&ha = $ha if $ha;
             }
         }
     
@@ -897,7 +936,7 @@ Writer: | # to make 12345, 7
         # changelog/tree: 3 -> 2, last 3...
         my $r = G&Ct,[C.t,C.y.cv];
         (my $was = readlink "$f/3") =~ s/^h\///
-            if -s "$f/3";
+            if $f && -s "$f/3";
         # < was's 2 may eq twha, when no change, no commit?
         rs&parent = $was if $was;
         rs&2 = h.2;
@@ -910,7 +949,7 @@ Writer: | # to make 12345, 7
         # 7/changes
         # < log rotating along
         (my $was = readlink "$f/7") =~ s/^h\///
-            if -s "$f/7";
+            if $f && -s "$f/7";
         s&parent = $was if $was && c&el > 2;
         s&3 = h.3 if h.3; # commit about
         s&1 = h.1 if h.1; # the whole thing
@@ -929,11 +968,20 @@ Writer: | # to make 12345, 7
             
             if (C.y.lvz) {
                 my $z = s&z || die "noz for lvz: ".ki$C;
+                my @Lines;
                 for my $C (@$z) {
                     eval { C.y.Line = $ub->($C) };
                     $@ && die "For $p:\n  C: ".ki($C)."\n$@";
-                    $in->(w.7,$C,C.y.Line,Yc&ind+1);
+                    my $s = $in->(w.7,$C,C.y.Line,Yc&ind+1);
+                    # our indenting of it splits off into Linez
+                    # for aboves to grab the lot and indent again
+                    push @Lines, $s;
+                    for my $s (@{C.y.Linez||[]}) {
+                        $s = $in->(w.7,{},$s,Yc&ind+1);
+                        push @Lines, $s
+                    }
                 }
+                C.y.Linez = \@Lines;
             }
         }
         h.7 = $st->(w.7,'7');
