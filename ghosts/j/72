@@ -199,8 +199,8 @@ Line: | # C as a tabby line
     #    but their t should json or not look like BQ
     
     my $h; # hath
-    h.c = {%{C.c}} || {};
-    h.sc = %{{C.sc}} || {};
+    h.c  = { %{C.c ||{}} };
+    h.sc = { %{C.sc||{}} };
     my $n = {}; # needs json
     my $q = {}; # needs blockquote
     
@@ -254,7 +254,7 @@ Line: | # C as a tabby line
         delete $n.>$nk.>$gk;
     }}
     each nk,gks $n {
-        delete $n.>$nk if !$gks; # all freaks got quoted
+        delete $n.>$nk if !%$gks; # all freaks got quoted
     }
     
     # get a json encoded string
