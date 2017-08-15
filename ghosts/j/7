@@ -204,6 +204,8 @@ PostK: |
         # this holds the bunch of writings, to give to Wall
         # kind of know where to write things if !$W
         # < needs $f/$gd to locate already written things
+        
+        
         if (1c&save || 1c&tape) {
             (a&f,a&gd) = G&Locate_write;
             if (A.1.t ne 'Wall') {
@@ -244,65 +246,30 @@ PostK: |
     s&top = $r;
     s&tw = r.y.tw;
     
-Wall: | # your publisher
-    Jc&tape = 'W';
-    Jc&save = 'W';
-    # < put Writings, with journaling
-    # also the furthest provider
-    # A.5 gives some requests for things/way to it
-    # you need local Wall way to use Wall to get more way
+NamePosition: | # determine s&
     
-    Js&ein.t.get.sMJ = &sMJjeTCA{ 
-        G&give:Budge=>["wants to get for ".G&sn => $e];
-    };
-    # mostly takes what is from this process and externalises it
-    Js&ein.t.put.sMJ = &sMJjeTCA{
-        # should know about appending queues by its name, eg p/$$/in
-        #G&give:Budge=>["wants to put for ".G&sn => $e];
-        local A.V = 1;
-        if (my $z = 1s&have.>s.t ) {
-            sayyl "Updating s.t ss&Jo";
-            %$z = %$s;
+    my @J = $t || A.1.t;
+    
+    # right: our osc page by /s/$s, if not ''
+    # layers/partitions upon a piece of the tree
+    push @J, s=>$s if $s;
+    
+    # left up to A.3, Word to the overmind, amongst A.4/G
+    # inners join by W(/j/j.t)+
+    m
+    unless ($t || A.1 eq A.3) {
+        my $j = A.1;
+        while (j.2) {
+            $j = j.2;
+            unshift @J, j.t=>'j';
+            last if $j eq j.3;
         }
-        else {
-            sayyl "Setting s.t ss&Jo";
-            1s&have.>s.t =
-            m $s
-        }
-        saybl "Nowat: ".G&aC,$_ for @$M;
-        
-    };
-    S
-    my $l = Js&Keld = {};
-    l.ha.9 = &acgts{
-        my $W = C.y.up;
-        my $f = Ws&f || die "No fileer! ".ki $W;
-        my $t = C.t;
-        sayre "Want rm: ".G&aC;
-        sayre "  rm $f/$t";
-        
-    };
-    l.ha.5 = &acgts{
-        my $W = C.y.up;
-        my $f = Ws&f || die "No fileer! ".ki $W;
-        
-        my $s = c&s;
-        my $ha = s&ha;
-        my $hf = "h/".$ha;
-        my $t = C.t;
-        
-        `mkdir -p $f/h` if !-d "$f/h";
-        write_file("$f/$hf", $s) unless -e "$f/$hf";
-        if ($t) {
-            `unlink $f/$t` if -e "$f/$t";
-            `ln -s h/$ha $f/$t`;
-        }
-        sayre "Want put: $f/$t: ".G&aC;
-    };
-    #m _.t=>''=>{s=>wdump 3, $_} for @{Js&M||[]};
-    m $_ for @{Js&M||[]};
-    #_c&s = slm 9, _c&s for @$M;
-    #_c&s =~ s/\W//g for @$M;
+    }
+    
+    # make safe
+    s/\W+/-/gs for @J;
+    
+    
 PostTV: | # make 1-5, whole C
     # from KA c&s (aka KC), for el=8 they replace last KC and sleep
     # this would dodge out the wiring..? safe-ish for flatlist
@@ -861,7 +828,7 @@ Writer: | # to make 12345, 7
         for my $C (@$N) {
             my $S = $C;
             my @p;
-            push @p, "_.t-_.y.cv" while $S = S.y.up;
+            push @p, "S.t-S.y.cv" while $S = S.y.up;
             my $p = join "/", @p;
             
             my $l = eval { $ub->($C) };
@@ -957,7 +924,7 @@ Writer: | # to make 12345, 7
             my $Y = C.y.A || die "noA: ".ki$C;
             my $S = $C;
             my @p;
-            push @p, "_.t-_.y.cv" while $S = S.y.up;
+            push @p, "S.t-S.y.cv" while $S = S.y.up;
             my $p = join "/", @p;
             
             my $l = eval { $ub->($C) };
