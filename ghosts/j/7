@@ -214,6 +214,11 @@ PostK: |
                 sc.sn = G&sn;
                 sc.f = a&f;
                 sc.gd = a&gd;
+                if (Gc&so) { # cluster
+                    sc.so = Gc&so;
+                    sc.pid = $$;
+                    sc.G = G.t;
+                }
                 my $t = delete(sc.name) || sc.sn;
                 my $W = a&W ||= G&Ct:[$t=>''=>{},$sc];
                 Ws&f ne a&f && die G&sn ." moves f: Ws&f   to  a&f";
@@ -247,6 +252,10 @@ PostK: |
     }
     
     s&Cora = [@{os&Cora}];
+    
+    # < top that has sJs
+    #1 && saygr "Having: ".G&aC,$r;
+    #1 && saybl "Having: ".G&aC,r.y.A.sc.clones.outC;
     
     s&tv = r.y.tv;
     s&top = $r;
@@ -610,21 +619,26 @@ Koul: | # clarify changes to string
         my $n = a&n;
         
         # they can look it up
-        delete c&Jo if s&W || s&qz;
+        delete c&Jo if ls&W || ls&qz;
         
+        # 9 knows but does nothing
         if (c&Jo) {
             Rw LVism $l $n;
         }
 LVism: | # hoist lv between Js in K 7
     #
     $l = a&l || die "Didnt have al (CyC): ".ki $C;
+    #return unless l.y.A.c.ind;
+    # < should be able to state z empties?
+    delete s&z if s&z && !@{s&z};
     
+    return sayre "qz in LVism" if ls&qz;
     # all about how much to include or link
     # the other could have awaiting room
     
-            s&z && die "Jo with z: ".ki$C;
+            s&z && return sayre "Jo with z: C.t C.y.cv ".ki($l)."\n\n".ki s&z;
             
-            my $J = ls&J || die "No sJ for Jo K: ".ki$l;
+            my $J = ls&J || return sayre "No sJ for Jo K: ".G&aC,$l;
             my $o = ns&Jo ||= {};
             
             # < have a whole C for a version label

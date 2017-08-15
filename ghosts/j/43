@@ -76,11 +76,14 @@ Wall: | # your publisher
         }
         
         return if Jc&only && Jc&only ne $t;
-        
+        # < set by the T for the Opper...
+        #return unless Jc&route;
         # want to elvis with net sense
         my $to = "Opper";
         my $w = Jc&route || "Elan";
-        Rw Wudder $to $s:_ for [$w=>[W=>''=>{f=>$f,t=>$t,ha=>$ha},{Jo=>Ws&Jo}]];
+        my $sc;
+        $sc.>$_ = W.sc.>$_ for grep{!ref W.sc.>$_ } keys %{W.sc};
+        Rw Wudder $to $s:_ for [$w=>[W=>''=>{f=>$f,t=>$t,ha=>$ha},$sc]];
 
         
         sayre "Want put: $f/$t: ".G&aC;
@@ -207,7 +210,7 @@ BayFishing: | # become Op/Ud node, see 822
     # else it y.imp++, replays everything per change
     Gc&tapescontinue = 1;
     
-    # mkoJ called by Wout, sends lines inc Ilan on Opper
+    # mkoJ called by Wout, sends lines with Ilan on Opper
     # Opper Ilan $f elvised by Ualve on Udders
     #     Ilan unifies names/routes points by elvising Win
     G.mkoJ = &Wc{
@@ -216,6 +219,8 @@ BayFishing: | # become Op/Ud node, see 822
         c.Y = $Y; # A coming from
         G&elph,NetPut=>[out=>1=>$c]
     };
+    
+    A.7.t ||= 'neu';
     
     # $bay passed through
     town: my $to = Rw ElvisYou;

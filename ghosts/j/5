@@ -17,6 +17,7 @@ Beginning: | # 0 stylehouse.pl's first way
     
     # should base all G gk here-ish
     G.c.bay = 'bay';
+    G.c.tentbay = 1;
     # these are really J, the particle, an A put somewhere
     my $i = $A = G&A,'House';
     my $o = $A = G&A,'Motor';
@@ -217,7 +218,10 @@ TheU: | # posit our 4.ii as normal (theu), share as W
     }
     n Normal=>1=>{s=>$u},'%of:W'
 Motor: | # be a G
-    sayyl "Motor:";
+    delete Gc&bay if G.c.tentbay;
+    Gc&bay ||= 'peace';
+    
+    sayyl "Motor: of Gc&bay";
     
     4s&toy ||= &c,sc{
         G&elph,Motor=>W=>$c,$sc;
@@ -230,40 +234,38 @@ Motor: | # be a G
         Rw c&main
     }
     
-    Gc&bay = 'peace';
-    @ARGV = grep {  !(/^(\w+)\/$/ && do{Gc&bay=$1}) } @ARGV;
-    
     if (c&to) {
         n $_ for @{c&to||[]};
     }
-    elsif (@ARGV) {
-        my $t = shift @ARGV;
-        argve: saybl "Read ARGV: $t";
-        if (my $pid = fork()) {
-            saygr "Waiting fr $pid";
-            waitpid($pid,0);
-            sayyl "Done! $pid on $$";
-            sayre "will restart..?";
-            <STDIN>;
-            goto argve;
-        }
-        else {
-            n $t
-        }
-        
-    }
-    elsif (!Gs&fishing) {
-        Gs&fishing = 1;
-        Rw BayFishing $bay:Gc&bay WebHost;
-        # over-pid never returns
-        #   should be signalled to reexec stylehouse.pl
-        #   have a watch loop?
-        # forked workers return from work through here:
-        
-        # have Domes of stuff to osc separato
-    }
     else {
-        sayre "Nothing to do? ".G&sn;
+        @ARGV = grep {  !(/^(\w+)\/$/ && do{Gc&bay=$1}) } @ARGV;
+        if (@ARGV) {
+            my $t = shift @ARGV;
+            argve: saybl "Read ARGV: $t";
+            if (my $pid = fork()) {
+                saygr "Waiting fr $pid";
+                waitpid($pid,0);
+                sayyl "Done! $pid on $$";
+                sayre "will restart..?";
+                <STDIN>;
+                goto argve;
+            }
+            else {
+                n $t
+            }
+
+        }
+        elsif (!Gs&fishing) {
+            Gs&fishing = 1;
+            my $bay = Gc&bay;
+            Rw BayFishing $bay WebHost;
+            # over-pid never returns
+            #   should be signalled to reexec stylehouse.pl
+            #   have a watch loop?
+            # forked workers return from work through here:
+
+            # have Domes of stuff to osc separato
+        }
     }
     
     saygr "/Motor";
