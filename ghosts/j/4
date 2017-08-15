@@ -27,7 +27,8 @@ SirKill: | # crawl datastructure
     u i
     o: %acgt:s c sc
         my $isC = &C{
-            defined C.t && C.y && C.c && C.sc
+            ref $C eq 'HASH' &&
+            defined C.t && C.y && (C.c || C.sc)
         };
         
         saygr "Do o: ".ki $s;
@@ -74,6 +75,7 @@ SirKill: | # crawl datastructure
                 @R = ();
             };
             my $A = shift(@L);
+            A.c.ot = o.t;
             my $C = A&s;
             # < give these A/C to T for blowingup locator?
             (Gc&B.sc.aA, Gc&B.sc.aC) = ($A,$C) if Gc&B;
@@ -84,6 +86,8 @@ SirKill: | # crawl datastructure
                 $V && saybl "0 last";
                 # but first
                 $isC->($C) || die "notC: ".ki$C;
+                C.c ||= {};
+                C.sc ||= {};
                 A&ipi ||= 0; # increment per child
                 my $l = upc&last || {};
                 
@@ -121,7 +125,7 @@ SirKill: | # crawl datastructure
                         # via os&refs collected from C and ng/gks
                         v.y ne $v || next;
                         $isC->($v) || next;
-                        push @at, ["$nk $gk",[$v],{nk=>$nk,gk=>$gk}];
+                        push @at, ["$nk $gk",[$v],{isTv=>1,nk=>$nk,gk=>$gk}];
                     }
                     elsif (ref $v eq 'ARRAY') {
                         next if $nk eq 'c' && $gk eq 'M'; # dodge
@@ -559,7 +563,7 @@ SirKill: | # crawl datastructure
                     }
                     
                     # put for wiring to tv
-                    if (!A&isTv && A.up ne $o) {
+                    unless (A&isTv || A.up eq $o) {
                         my $U = ups&clones.>$t || die "no upclone $t";
                         push @{Us&z||=[]}, $E;
                     }
@@ -793,7 +797,7 @@ t/o_simple: |
     #     , or be in Core/a
     # map has made c&ha of s&delic
     
-       [Cora_4=><<''],
+      [Cora_4=><<''],
             3Entry  (A C in tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,elab ]
             8  jeteeeeeeeeeeee  (A C next up) s -- s=33  %  
             8  je 0.031 (A C OA fronts in next prev tv tw up) ha s % delic z -- ha=c1dfd96ee s=44  %  delic=6 z=[ jeteeeeee ]
@@ -802,47 +806,60 @@ t/o_simple: |
             8    jeteeeeeeeee  (A C next up) s -- s=33  %  
             1    twa 0.3 (A C fronts next prev up) s % hs -- s=Memb  %  hs=394
             1    twa 0.31 (A C backs fronts next prev up) s % hs -- s={  %  hs=394
-            1    twa 0.32 (A C backs fronts in next prev tv tw up) s % hs watch z -- s=Memb  %  hs=294 watch={ t=twa y={ cv=0.33 } c={ s=} } sc={ hs=395 } } z=[ twa ]
-            1      twa 0.33 (A C up) s % hs -- s=}  %  hs=395
+            1    twa 0.32 (A C backs fronts next prev up) s % hs watch -- s=Memb  %  hs=294 watch={ t=twa y={ A=HASH(il31) cv=0.33 } c={ s=} } sc={ hs=395 } }
             1    twa 0.33 (A C backs prev up) s % hs -- s=}  %  hs=395
             3  elab 0.033 (A C in prev tv tw up) ha s % delic z -- ha=7b52009b6 s=eye  %  delic=12 z=[ jeteeeeeeeeeeee,built,talk,built ]
             8    jeteeeeeeeeeeee  (A C next up) s -- s=33  %  
             8    built 0.1 (A C fronts next prev up) s -- s=several  %  
             1    talk 0.29 (A C next prev up) gr % sun -- gr=tango  %  sun=4
             8    built 0.4 (A C backs prev up) s -- s=several  %  
-
+ 
       [Core_4=><<''],
             3Entry  (A C in tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,elab ]
             3  je 0.032 (A C backs in next prev tv tw up) ha s % delic z -- ha=0ade7c2cf s=44  %  delic=9 z=[ jeteeeeeeeee,twa,twa,twa,twa ]
             1    twa 0.3 (A C fronts next prev up) s % hs -- s=Memb  %  hs=394
             1    twa 0.31 (A C backs fronts next prev up) s % hs -- s={  %  hs=394
-            1    twa 0.32 (A C backs fronts in next prev tv tw up) s % hs watch z -- s=Memb  %  hs=294 watch={ t=twa y={ cv=0.33 } c={ s=} } sc={ hs=395 } } z=[ twa ]
-            1      twa 0.33 (A C up) s % hs -- s=}  %  hs=395
+            1    twa 0.32 (A C backs fronts next prev up) s % hs watch -- s=Memb  %  hs=294 watch={ t=twa y={ A=HASH(il31) cv=0.33 } c={ s=} } sc={ hs=395 } }
             1    twa 0.33 (A C backs prev up) s % hs -- s=}  %  hs=395
             3  elab 0.033 (A C in prev tv tw up) ha s % delic z -- ha=7b52009b6 s=eye  %  delic=12 z=[ jeteeeeeeeeeeee,built,talk,built ]
             9    built 0.2 (A C backs fronts next prev up) s -- s=several  %  
             1    talk 0.29 (A C next prev up) gr % sun -- gr=tango  %  sun=4
             9    built 0.3 (A C backs fronts next prev up) s -- s=several  %  
 
-        
-    
 
-    
-    
-
-    # 
-    
-    
-    
-    
-    
-    
-    
-    
     
     
 
     };
+    # refs -> numbers
+    my $muteNews = &s{
+        my $ids = {};
+        my $here = 3;
+        my $idi = 1;
+        my $idstu = &id,k{
+            my $sid = $ids;
+            $sid = $sid->{$k} ||= {} if $k;
+            my $il = $sid->{$id} ||= $idi++;
+            "il$here$il";
+        };
+        for (ref $s ? @$s : $s) {
+            s/(id=)(\S+)/$1.$idstu->($2)/eg;
+            s/((HASH|ARRAY|CODE)\()(\w+)/$1.$idstu->($3,$2)/eg;
+            s/("(?:W|id)":")(\w+)(")/$1.$idstu->($2).$3/eg;
+            s/("ids":\[")((?:\w+|",")+)("\])/$1.join('","',map{$idstu->($_)}split'","', $2).$3/eg;
+            s/(\=\w+\/\w\/)(\w+)(\.\w)/$1.$idstu->($2).$3/eg;
+            s/(life\/W\/)(\w+)(\.\w)/$1.$idstu->($2).$3/eg;
+            while (1) {
+                s/(opel=.+?)(")(\w{6,})("])/$1.$2.$idstu->($3).$4/eg
+                && (s/($3)/$idstu->($1)/eg || 1) || last
+            };
+            s/(mtime=)(\d{2})(\d+)/$1.$2.join'', (('?') x length $3)/eg;
+        }
+        $s
+    };
+    
+    
+
     local A.V = 0;
     my $s;
     my @fail;
@@ -905,7 +922,7 @@ t/o_simple: |
             my @l = @{d.sc.>$_ || []};
             
             my $r = $da.>$t;
-            my $l = [map { 
+            my $l = [map{ $muteNews->($_) } map { 
                 _.y.A.c.el. join('',('  ')x _.y.A.c.ind).
                 G&aC,$_  ." -- ".ki(_.c)."  %  ".ki(_.sc)
             } @l];
