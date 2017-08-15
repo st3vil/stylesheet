@@ -205,11 +205,17 @@ PostK: |
         # kind of know where to write things if !$W
         # < needs $f/$gd to locate already written things
         
-        
         if (1c&save || 1c&tape) {
             (a&f,a&gd) = G&Locate_write;
+            my $n = Rw NamePosition;
             if (A.1.t ne 'Wall') {
-                my $W = a&W ||= G&Ct:[G&sn=>''=>{},{f=>a&f,gd=>a&gd}];
+                my $sc;
+                $sc.>$_ = $n.>$_ for grep{!ref$n.>$_ } keys %$n;
+                sc.sn = G&sn;
+                sc.f = a&f;
+                sc.gd = a&gd;
+                my $t = delete(sc.name) || sc.sn;
+                my $W = a&W ||= G&Ct:[$t=>''=>{},$sc];
                 Ws&f ne a&f && die G&sn ." moves f: Ws&f   to  a&f";
             }
         }
@@ -246,29 +252,44 @@ PostK: |
     s&top = $r;
     s&tw = r.y.tw;
     
-NamePosition: | # determine s&
+NamePosition: | # determine s&naming
+    my $n = s&naming = {};
     
-    my @J = $t || A.1.t;
-    
-    # right: our osc page by /s/$s, if not ''
-    # layers/partitions upon a piece of the tree
-    push @J, s=>$s if $s;
-    
-    # left up to A.3, Word to the overmind, amongst A.4/G
-    # inners join by W(/j/j.t)+
-    m
-    unless ($t || A.1 eq A.3) {
-        my $j = A.1;
-        while (j.2) {
+    # should get all naming in this pile
+    # 
+        my @js = my $j = A.1;
+        while (j.2 && $j ne j.3) {
             $j = j.2;
-            unshift @J, j.t=>'j';
-            last if $j eq j.3;
+            unshift @js, $j;
         }
+        # J.t usually enough to find them
+        # Jc&s = last mo C, may have ch for chunk
+        my $f = $js[0];
+        f.3 eq $f || die "first not W";
+        n.W = f.t;
+        n.js = [map{
+            my $C = _c&s;
+            my $l = [C.t, C.y.cv];
+            push @$l, c&ch if c&ch;
+            $l
+        }@js];
+    
+    # C.t = $ch, is also section, page, partition, timeframe
+    
+    n.Jo = s&Jo || die "noJo";
+    
+    my @f;
+    for (@{n.js}) {
+        push @f,'j' if @f; # for tw of J
+        # to be 'J' for tv of J
+        my ($t,$cv,$ch) = @$_;
+        push @f, $t;
+        push @f,'s',$ch if $ch;
     }
     
-    # make safe
-    s/\W+/-/gs for @J;
-    
+    n.name = join "/", grep {s/\W/-/g;1} @f;
+    # nonrefs are namey
+    $n
     
 PostTV: | # make 1-5, whole C
     # from KA c&s (aka KC), for el=8 they replace last KC and sleep
@@ -371,24 +392,25 @@ PostLV: | # make 7
     push @{s&lv}, $N;
     
 Tveing: |
-    Rw CloningProcess;
-    my $C =
     n VabngaL
+    my $C =
+    n Wall=>V
+    Rw CloningProcess;
     Rw Veing $C;
     exit;
 Veing: |
     my $J = s&J;
     my $s = Js&s;
-    my $t = ss&tw.te;
-    $s = t.y.C.sc.J.sc.s;
-    $t = ss&tw.has;
-    #saybl wdump 3, 
-    my $l = #t.y.C.sc.J.sc.
-    s.sc.lv;
-    @$l == 1 || die "many";
-    $l = $l->[0];
+    #my $t = ss&tw.Wayitis;
+    #$s = t.y.C.sc.J.sc.s;
+    #$t = ss&tw.has;
+    #saybl wdump 3, $s;
+    #my $l = #t.y.C.sc.J.sc.
+    #s.sc.lv;
+    #@$l == 1 || die "many";
+    #$l = $l->[0];
     if (1) {
-    for my $v (@$l) {
+    for my $v (@{ss&Cora}) {
         my $Y = v.y.A;
         my $ind = join('',('  ')x Yc&ind);
         1 && saygr "Yc&el $ind - ".G&aC,$v ."  ( "
@@ -420,7 +442,7 @@ VabngaL: |
     #n Wall=>V
     my $Y = C.y.A;
     my $t = Yc&T;
-    n te=>-od=>{s=>$t}
+    n te=>-od=>{s=>[the=>odd=>'ness']}
     #saybl ki $t
     
 Wayitis: |
@@ -702,8 +724,8 @@ Writer: | # to make 12345, 7
             my $el = $Y && Yc&el;
             saybl "For $el ".G&aC,$C;
             # for-write K5ish stuff:
-            if (c&code) {
                 $C = G&hup,$C;
+            if (c&code) {
                 # they (Believe) can re-eval/re-of it
                 delete c&code;
                 s&coded = 1;
@@ -732,7 +754,7 @@ Writer: | # to make 12345, 7
         sayyl "Is is $f / $t -> $hf";
         if ($W) {
             W.y.tw.>$t = G&Ct,[$t=>''=>{s=>$s},{ha=>$ha}];
-            return $ha;
+            #return $ha;
         }
         elsif (!$f) {
             # packing (ub/in) but not storing
@@ -793,7 +815,7 @@ Writer: | # to make 12345, 7
                 my $D = G&Ct,[C.t,C.y.cv];
                 Ds&W = s&W;
                 # Scuttle 9->4
-                Ds&ha = s&ha || die "W without ha: ".ki $C;
+                Ds&ha = s&ha if s&ha;
                 Dc&Jo = c&Jo if c&Jo;
                 push @{Ws&z||=[]}, $D;
             }
@@ -949,6 +971,7 @@ Writer: | # to make 12345, 7
                     }
                 }
                 C.y.Linez = \@Lines;
+                # < !Yc&ind/at the top, C.y.Linez could be pointed for others
             }
         }
         h.7 = $st->(w.7,'7');
