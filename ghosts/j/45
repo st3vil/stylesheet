@@ -3,7 +3,7 @@ LandSty: | # js jigup
     n NetJig=>W=>{the_W=>$t}
     #n NetJig=>W=>{the_W=>'Stylewholes'}
     #n NetJig=>W=>{the_W=>'Stylephone'}
-    return
+    #return
     my $bb = &s{
         my $C = G&Ct,['toNetJig',1,{s=>$s}];
         Rw JaBabz $C;
@@ -16,7 +16,7 @@ LandSty: | # js jigup
             $bb->(<<''),
                 G&c:'::'+C.t;
             $bb->(<<''),
-                c$ = ["","",{"W":"Opper"},{"z":[["Fish","",{"el":"1","lv":"blank/neu/Fish"},{}]]}];
+                c$ = ["","",{"W":"LandSty"},{"z":[["Fish","",{"el":"1","lv":"blank/neu/Fish"},{}]]}];
                 A = A[5];
                 G&om,c;
     ];
@@ -27,9 +27,10 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
     u jc
     n \'of:om'
     
-    lv 34:
-        A.b.copy ||= {};
-        c$ = A.b.copy;
+    
+    lv 17:
+        A&copul ||= {};
+        c$ = A&copul ;
         if (!c&seeks) {
             t$ = s+'/7';
             delete c[t];
@@ -45,20 +46,19 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
                 $l = c[t] = G&readLines,L;
                 l = l.reverse()[0];
                 ls&parent and c&seeks.push(s+'/h/'+ls&parent);
-                G&throat,7
+                G&yl:3000,&{ G&throat,7 };
             });
             return T.not = '2';
         }
-        $.each(c&seeks.reverse(), &i,v{
-            $N = c[v];
-            $.each(N.reverse(), &i,v{
-            
+        $.each(c&seeks.reverse(), &i,t{
+            $N = c[t];
+            $.each(N, &i,v{
+                G&om,v
             });
         });
         
-        
         ~wlv: s, C
-        console.log('gotlv::',C,c);
+        return T.not = 1;
         
         
     
@@ -72,10 +72,12 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
         $N = [];
         $stack = [];
         
-        try{
+        //try{
         while (L.length) {
         
         $l = L.shift();
+        !l.length and continue
+        //console.log("Lam: "+l);
         $lin = l.match(/^(\s*)(.*)$/);
         $ind = lin[1];
         $d = ind.length / 2;
@@ -85,20 +87,21 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
         $y = li[1];
         $c = li[2];
         $sc = li[3];
+        $s = li[4];
         
         t.match(/^\W/) and t = $.parseJSON(t);
         
-        !y.length and y = 1
+        y ||= 1
         y = 1*('0.'+y);
         
-        if (s.match(/^\W/)) {
+        if (s && s.match(/^\W/)) {
             s = $.parseJSON(s);
         }
-        if (c.match(/^"/)) {//"
+        if (c && c.match('^"')) {
             s = $.parseJSON(c);
             c = {};
         }
-        else if (c.match(/^\W/)) {
+        else if (c && c.match(/^\W/)) {
             c = $.parseJSON(c)
         }
         else if (c) {
@@ -108,10 +111,10 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
         
         s and c.s = s;
         
-        if (sc.match(/^\W/)) {
+        if (sc && sc.match(/^\W/)) {
             sc = $.parseJSON(sc)
         }
-        elsif (sc) {
+        else if (sc) {
             sc = G&peel,sc
         }
         else { sc = {} }
@@ -121,8 +124,9 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
         $k
         $v
         $indenting = &{
-            $m = L[0].match("^"+ind+"  (\w[\S ]+):( (\||.+))?$");
-            !m && return;
+            !L.length and return;
+            $m = L[0].match("^"+ind+"  (\\w[\\w ]+):(?: (\\||.+))?$");
+            !m and return;
             k = m[1];
             v = m[3];
             return 1;
@@ -133,7 +137,7 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
                 string++;
                 v = undefined;
             }
-            L.shift;
+            L.shift();
             k = k.split(' ');
             $nk = k.shift();
             $gk = k.join(' ');
@@ -141,8 +145,9 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
                 $s = [];
                 $one;
                 $blockquoting = &{
+                    !L.length and return;
                     $m = L[0].match("^"+ind+"    (.*)$");
-                    !m && return;
+                    !m and return;
                     one = m[1];
                     return 1;
                 }
@@ -151,8 +156,9 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
                     L.shift();
                 }
                 v = s.join("\n");
+                //console.log("Loaded "+nk+gk+": "+v+'  Next: '+L[0]);
             }
-            unless ($string) {
+            if (!string) {
                 v = jsyaml.load(v);
             }
             else {
@@ -173,10 +179,10 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
         }
         
         }
-        }
-        catch (e) {
-            throw ["On line "+(tot - L.length)+": "+l, e];
-        }
+        //}
+        //catch (e) {
+        //    throw ["On line "+(tot - L.length)+": "+l, e];
+        //}
         return N
         
 ach: | # inhale Lines
