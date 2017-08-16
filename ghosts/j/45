@@ -1,0 +1,108 @@
+Stylands: | # reading bay/el/Figures/1,2 and etc
+    u jc
+    n \'of:om'
+    lv:
+        ~wlv: s
+    
+    # should Wunify remote file seeings
+    
+    u j
+    readLines:
+        // copy Line, use for Load:
+        jsyaml.load(s);
+ach: | # inhale Lines
+    my @l = ref $s ? @$s : split "\n", ($s || ''.`cat $f`);
+    my $tot = @l;
+    my $N = [];
+    local A.V = 0;
+    my @in;
+    my $l;
+    my $lastC;
+    my $peel = &s{
+        return {map { split':',$_ } split ',', $s}
+    };
+    eval{
+    while (@l) {
+        $l = shift @l;
+        my ($in) = $1 if $l =~ s/^(\s+)//;
+        my $d = length($in) / 2;
+        my ($t,$y,$c,$sc,$s) = split "\t", $l;
+        
+        sayyl "$in $l";
+            
+        $t = djson $t if $t =~ /^\W/;
+        
+        $y = 1 if !length$y;
+        $y = 0+('0.'.$y);
+        
+        if ($s =~ /^\W/) {
+            # fifth thing would be c.s
+            $s = djson $s;
+        }
+        if ($c =~ /^"/) {
+            $s = djson $c;
+            $c = {};
+        }
+        elsif ($c =~ /^\W/) {
+            $c = djson $c
+        }
+        elsif ($c) {
+            $c = $peel->($c);
+        }
+        else { $c = {} }
+        c.s = $s if $s;
+        
+        if ($sc =~ /^\W/) {
+            $sc = djson $sc
+        }
+        elsif ($sc) {
+            $sc = $peel->($sc)
+        }
+        else { $sc = {} }
+        
+        my $C = {t=>$t,y=>{cv=>$y},c=>$c,sc=>$sc};
+        
+        # add blockquoted c/sc
+        while ($l[0] =~ /^$in  (\w[\S ]+):( (\||.+))?$/) {
+            my ($k,$v) = ($1,$3);
+            my $string;
+            if ($v eq '|') {
+                $string++;
+                undef $v;
+            }
+            shift @l;
+            my ($nk,$gk) = split ' ', $k, 2;
+            sayyl "$in C.t C.y.cv - $nk $gk ($string) $v";
+            unless ($v) {
+                saybl $in."Beaming in";
+                my @s;
+                while ($l[0] =~ /^$in    (.*)$/) {
+                    push @s, $1;
+                    shift @l;
+                }
+                $v = join "\n", @s;
+                sayyl "Loaded til $l[0]\n with $nk $gk - ".slim(30,$v);
+            }
+            unless ($string) {
+                $v = Load $v
+            }
+            else {
+                $v .= "\n" unless $v =~ /\n$/s;
+            }
+            
+            $C.>$nk.>$gk = $v;
+        }
+        
+        saygr "Popped $in".ki$C;
+        $in[$d] = $C;
+        if ($d) {
+            my $p = $in[$d-1];
+            push @{ps&z||=[]}, $C;
+        }
+        else {
+            push @$N, $C;
+        }
+    }
+    };
+    $@ && die "On line ".($tot - @l).": $l\n\n$@";
+    $N
