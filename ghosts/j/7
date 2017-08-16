@@ -185,8 +185,8 @@ PostK: |
     }
     # called Jo?
     s&Jo = s&imp.".".s&wil;
-    
     s&label.c.Jo = s&Jo;
+    
     each nk,gk,v s&label {
         $r.>$nk.>$gk = $v;
     }}
@@ -211,9 +211,14 @@ PostK: |
             if (A.1.t ne 'Wall') {
                 my $sc;
                 $sc.>$_ = $n.>$_ for grep{!ref$n.>$_ } keys %$n;
+                # use s&label?
                 sc.sn = G&sn;
                 sc.f = a&f;
                 sc.gd = a&gd;
+                
+                sc.imp = s&imp;
+                sc.wil = s&wil;
+                
                 if (Gc&so) { # cluster
                     sc.so = Gc&so;
                     sc.pid = $$;
@@ -294,6 +299,13 @@ NamePosition: | # determine s&naming
         my ($t,$cv,$ch) = @$_;
         push @f, $t;
         push @f,'s',$ch if $ch;
+    }
+    my @la = @f;
+    shift @la;
+    if (@la) {
+        # if J is not A.3, they may be buried in C...
+        # hoisting figures that C path
+        n.jay = join "/", grep {s/\W/-/g;1} @la;
     }
     
     n.name = join "/", grep {s/\W/-/g;1} @f;
