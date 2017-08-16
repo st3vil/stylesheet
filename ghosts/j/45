@@ -70,16 +70,15 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
         $L = s.split("\n");
         $tot = L.length;
         $N = [];
-        $in = [];
-        $.parseJSON(e)
+        $stack = [];
         
         try{
         while (L.length) {
         
         $l = L.shift();
         $lin = l.match(/^(\s*)(.*)$/);
-        $in = lin[1];
-        $d = in.length / 2;
+        $ind = lin[1];
+        $d = ind.length / 2;
         l = lin[2];
         $li = l.split("\t");
         $t = li[0];
@@ -87,21 +86,20 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
         $c = li[2];
         $sc = li[3];
         
-        t = djson t if t.match(/^\W/);
+        t.match(/^\W/) and t = $.parseJSON(t);
         
-        !y.length && y = 1
+        !y.length and y = 1
         y = 1*('0.'+y);
         
         if (s.match(/^\W/)) {
-            # fifth thing would be c.s
-            s = djson s;
+            s = $.parseJSON(s);
         }
         if (c.match(/^"/)) {//"
-            s = djson c;
+            s = $.parseJSON(c);
             c = {};
         }
         else if (c.match(/^\W/)) {
-            c = djson c
+            c = $.parseJSON(c)
         }
         else if (c) {
             c = G&peel,c
@@ -111,7 +109,7 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
         s and c.s = s;
         
         if (sc.match(/^\W/)) {
-            sc = djson sc
+            sc = $.parseJSON(sc)
         }
         elsif (sc) {
             sc = G&peel,sc
@@ -120,11 +118,10 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
         
         $C = {t:t,y:{cv:y},c:c,sc:sc};
         
-        # add blockquoted c/sc
         $k
         $v
         $indenting = &{
-            $m = L[0].match("^"+in+"  (\w[\S ]+):( (\||.+))?$");
+            $m = L[0].match("^"+ind+"  (\w[\S ]+):( (\||.+))?$");
             !m && return;
             k = m[1];
             v = m[3];
@@ -134,7 +131,7 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
             $string
             if (v === '|') {
                 string++;
-                undef $v;
+                v = undefined;
             }
             L.shift;
             k = k.split(' ');
@@ -144,7 +141,7 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
                 $s = [];
                 $one;
                 $blockquoting = &{
-                    $m = L[0].match("^"+in+"    (.*)$");
+                    $m = L[0].match("^"+ind+"    (.*)$");
                     !m && return;
                     one = m[1];
                     return 1;
@@ -153,22 +150,21 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
                     s.push(one);
                     L.shift();
                 }
-                $v = join "\n", @s;
-                sayyl "Loaded til $l[0]\n with $nk $gk - ".slim(30,$v);
+                v = s.join("\n");
             }
             unless ($string) {
-                $v = Load jsyaml.load(s);
+                v = jsyaml.load(v);
             }
             else {
-                $v .= "\n" unless $v =~ /\n$/s;
+                !v.match(/\n$/) and v = v+"\t"
             }
             
-            $C.>$nk.>$gk = $v;
+            C[nk][gk] = v;
         }
         
-        in[d] = C;
+        stack[d] = C;
         if (d) {
-            $p = in[d-1];
+            $p = stack[d-1];
             ps&z ||= [];
             ps&z.push(C);
         }
@@ -183,8 +179,6 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
         }
         return N
         
-        // copy Line, use for Load:
-        return jsyaml.load(s);
 ach: | # inhale Lines
     my @l = ref $s ? @$s : split "\n", ($s || ''.`cat $f`);
     my $tot = @l;
