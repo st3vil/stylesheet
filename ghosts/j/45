@@ -62,11 +62,106 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
         
         
     
-    # should Wunify remote file seeings
+    #c Lines - should Wunify remote file seeings
     
     n \'of:i'
     u j
     readLines:
+        $L = s.split("\n");
+        $tot = L.length;
+        $N = [];
+        $.parseJSON(e)
+        
+        try{
+        while (L.length) {
+        
+        $l = L.shift();
+        my ($in) = $1 if $l =~ s/^(\s+)//;
+        my $d = length($in) / 2;
+        my ($t,$y,$c,$sc,$s) = split "\t", $l;
+        
+        sayyl "$in $l";
+            
+        $t = djson $t if $t =~ /^\W/;
+        
+        $y = 1 if !length$y;
+        $y = 0+('0.'.$y);
+        
+        if ($s =~ /^\W/) {
+            # fifth thing would be c.s
+            $s = djson $s;
+        }
+        if ($c =~ /^"/) {
+            $s = djson $c;
+            $c = {};
+        }
+        elsif (c =~ /^\W/) {
+            c = djson c
+        }
+        elsif ($c) {
+            $c = $peel->(c);
+        }
+        else { $c = {} }
+        c.s = $s if $s;
+        
+        if (sc.match(/^\W/)) {
+            $sc = djson $sc
+        }
+        elsif (sc) {
+            sc = G&peel,sc
+        }
+        else { sc = {} }
+        
+        $C = {t=>$t,y=>{cv=>$y},c=>$c,sc=>$sc};
+        
+        # add blockquoted c/sc
+        while ($l[0] =~ /^$in  (\w[\S ]+):( (\||.+))?$/) {
+            my ($k,$v) = ($1,$3);
+            my $string;
+            if ($v eq '|') {
+                $string++;
+                undef $v;
+            }
+            shift @l;
+            my ($nk,$gk) = split ' ', $k, 2;
+            sayyl "$in C.t C.y.cv - $nk $gk ($string) $v";
+            unless ($v) {
+                saybl $in."Beaming in";
+                my @s;
+                while ($l[0] =~ /^$in    (.*)$/) {
+                    push @s, $1;
+                    shift @l;
+                }
+                $v = join "\n", @s;
+                sayyl "Loaded til $l[0]\n with $nk $gk - ".slim(30,$v);
+            }
+            unless ($string) {
+                $v = Load jsyaml.load(s);
+            }
+            else {
+                $v .= "\n" unless $v =~ /\n$/s;
+            }
+            
+            $C.>$nk.>$gk = $v;
+        }
+        
+        in[d] = C;
+        if (d) {
+            $p = in[d-1];
+            ps&z ||= [];
+            ps&z.push(C);
+        }
+        else {
+            N.push(C);
+        }
+        
+        }
+        }
+        catch (e) {
+            throw ["On line "+(tot - L.length)+": "+l, e];
+        }
+        return N
+        
         // copy Line, use for Load:
         return jsyaml.load(s);
 ach: | # inhale Lines
@@ -76,7 +171,6 @@ ach: | # inhale Lines
     local A.V = 0;
     my @in;
     my $l;
-    my $lastC;
     my $peel = &s{
         return {map { split':',$_ } split ',', $s}
     };
