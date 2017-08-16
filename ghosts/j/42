@@ -325,7 +325,7 @@ Tism: |
     };
 NetJig: | # hop Hut updates without clearing state
     G.t = 'NetJig';
-    Gc&bay = 'peace';
+    Gc&bay ||= 'peace';
     
     my $bb = &s{
         my $C = G&Ct,['toNetJig',1,{s=>$s}];
@@ -333,9 +333,9 @@ NetJig: | # hop Hut updates without clearing state
         c&s
     };
     
-    my $t = 'Stylaplicants';
+    my $t = c&the_W || 'Stylaplicants';
     n $t
-    my @W = G&op,'cW:javascript';
+    my @W = uniq map{_.y.C} G&op,'cW:javascript';
     my @n = map {
         my @m; my $n = _.y.in;
         while ($n) {
@@ -345,7 +345,8 @@ NetJig: | # hop Hut updates without clearing state
         @m;
     } @W;
     
-    1 && saybl "From ".ki$_ for @W;
+    1 && saybl "From ".G&aC,$_ for @W;
+    sayre "We ".join(',',sort map{_.t}@n);
     my $c;
     c.eat = [
         map { G&Ct:["reload ".@n." $t",'',{},{e=>$_}]; }
