@@ -93,12 +93,16 @@ Wall: | # your publisher - sends to Wlan (local) or Elan (remotes)
         my $w = Jc&route || "Elan";
         my $sc;
         $sc.>$_ = W.sc.>$_ for grep{!ref W.sc.>$_ } keys %{W.sc};
+        if ($t eq '7') {
+            sc.lv = "$f/h/$ha";
+        }
         if (sc.G eq $to) {
             # originated from us, send it out
             $w = Jc&direct || "Wlan";
         }
         my $s = [$w=>[W=>''=>{f=>$f,t=>$t,ha=>$ha},$sc]];
         sayre "Giving $w: $f/$t: sc.Jo";
+        
         Rw Wudder $to $s;
     };
     _.y.cv = 1 for @{Js&M||[]};
@@ -163,7 +167,9 @@ Elan: | # gets them, W switchup
     Js&Pause && return 
         n Paused=>''=>"Paused"
     
-    m _.t=>{C=>$_}=>{},{pid=>_s&pid,lv=>_s&f,dos=>'ElviRo'} for @{Js&M||[]};
+    1 && saybl "Elan: ".G&aC,$_ for @{Js&M||[]};
+    
+    m _.t=>{C=>$_}=>{},{pid=>_s&pid,f=>_s&f,lv=>_c&ha,dos=>'ElviRo'} for @{Js&M||[]};
     
     #n Episto=>W=>''=>'qz'
 ElviRo: | # routing to remote from W mount
@@ -228,7 +234,8 @@ Wlan: | # gets you, W
         1s&have.>$t = 1;
         1 && saygr "J.t $el: sc&t: $t = ss&gd = ss&Jo";
         if (sc&t eq '7') {
-            my $l = G&Ct,[$t=>''=>{el=>$el,lv=>sc&f}];
+            # c&lv nots this C, s&lv els it then oms a c&lv/their om inside itself
+            my $l = G&Ct,[$t=>''=>{el=>$el,lv=>sc&ha},{f=>ss&f}];
             G&e,NetPut=>[out=>''=>{holst=>"yer",eat=>[$l]}]
         }
         else {

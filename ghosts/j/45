@@ -29,18 +29,24 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
     
     # s&lv spawns a c&lv within itself
     lv 66: %nk:sc
-        ~passinglv: s
-        $D = [C.t,'',{lv:s}];
+        $D = [C.t,'',{lv:s},C.sc];
         G&om,D;
     
     # c&lv doesn't el C, oms the lv at the same A.on
+    #  ^ should be gd/W/h/9378493 so unique
+    # using A.b to remember the f, undoes A.b for om
     lv 17:
+        $b = A.b;
+        G&nn;
+        $f = s&f;
+        f ||= A.b.lv_f;
+        A.b.lv_f = f;
+        !f and ~die~LVnof: C
         A&copul ||= {};
         c$ = A&copul ;
+        A.b = b;
         if (!c&seeks) {
-            t$ = s+'/7';
-            delete c[t];
-            c&seeks = [t];
+            c&seeks = [s];
         }
         t$
         $.each(c&seeks, &i,v{
@@ -48,24 +54,32 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
             t ||= v
         });
         if (t) {
-            $.ajax('shed/'+t).done(&L{
+            $.ajax('shed/'+f+'/h/'+t).done(&L{
                 $l = c[t] = G&readLines,L;
                 !l.length and ~nolinesin: t
                 l = l[l.length-1];
-                ls&parent and c&seeks.push(s+'/h/'+ls&parent);
+                $h = ''
+                ls&parent and h = 'v '+ls&parent;
+                ~lvread: C.t, t, h
+                ls&parent and c&seeks.push(ls&parent);
                 G&yl:30,&{ G&throat,7 };
             });
             return T.not = '2';
         }
         c&seeks.reverse();
+        $ii = 0;
+        $wi = 0;
         $.each(c&seeks, &i,t{
+            ii++;
             $N = c[t];
             $.each(N, &i,v{
+                wi++;
                 G&om,v
             });
         });
         
-        ~wlv: s, C
+        $bumps = ii+'x'+wi;
+        ~wlv: C.t, s, bumps
         return T.not = 1;
         
         
