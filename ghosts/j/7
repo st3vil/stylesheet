@@ -40,6 +40,7 @@ FishBrains: |
         # see enough interior of Js with map function
         #   o being FactorEase's backend, ideally
         my $m = G&Ct,[J_Shade=>''];
+        # doesn't do Tv (C that are attr), unless ms&evenTv
         ms&any = &acgt{
             $_ eq 's' || delete C.c.>$_ for keys %{C.c}
         };
@@ -266,8 +267,7 @@ PostK: |
     my $Y = r.y.A;
     my $t = Ys&clones.outC;
     $t || die "No outC?".ki Ys&clones;
-    1 && sayyl "Would be top: ".G&aC,$t;
-    $t = $r;
+    #$t = $r;
     ts&J = A.1;
     s&top = $t;
     s&tw = t.y.tw;
@@ -838,9 +838,13 @@ Writer: | # to make 12345, 7
                 # < get version from ...
                 if ($f) {
                     my $d = "$gd/$t";
-                    -d $d || die "unstored W in $f: $d";
-                    my $ha = readlink "$d/1";
-                    $ha =~ s/^h\///;
+                    if (-d $d) {
+                        my $ha = readlink "$d/1";
+                        $ha =~ s/^h\///;
+                    }
+                    else {
+                        sayre "unstored W in $f: $d";
+                    }
                 }
                 s&ha = $ha if $ha;
             }

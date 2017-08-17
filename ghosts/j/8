@@ -30,6 +30,52 @@ FactorEase: | # arty maps
         };
         my @ma = G&ind,$Wr,$ub,{noind=>1};
         @ma
+Jold: | # for J universal handling FactorEase
+    u i
+    dedu:
+        my $x = A.1.sc.>$s ||= {};
+        G&pint,$x,@Me && return T.pos = 0;
+        G&punt,$x,@Me,1;
+        1
+    # andor sanity/scheme checks
+    musb:
+        for (@Me) {
+            if ($s eq 'W') {
+                _.3 eq $_ || die "Wants W not: ".ki$_
+            }
+            else {
+                die "how else? $s"
+            }
+        }
+TruPic: | # descript
+    u i
+    # describe a C's surface
+    # < make accentuatable
+    aC: %acgt:s dt
+        $s ||= $C;
+        my $yk = join ' ',sort grep{$_ ne 'cv'} keys %{s.y};
+        my $ck = join ' ',sort keys %{s.c};
+        my $sk = join ' ',sort keys %{s.sc};
+        return [s.t,s.y.cv,$yk,$ck,$sk] if $dt eq 'Ck5';
+        "s.t s.y.cv ".($yk ? "($yk)" : " - ")
+            ." $ck".($sk && " % $sk");
+    
+    # stringify M, talking about scs
+    sscC: %acgt:M
+        join "\n", map {
+            my $in = _c&inds;
+            my $sc = _.sc;
+            my $ha = (keys %$sc && "\n").join "\n", map {
+                my $v = $sc.>$_;
+                $v = ki $v if ref $v;
+                "$in  $_:".($v !~ /\n/ ? " $v"
+                    : "\n".join "\n", map { "$in    $_" }
+                    split /\n/, $v);
+            } grep { $_ ne 'z' && $_ ne 'strung'
+                && !(sc.strung && sc.strung.>$_ ) } sort keys %$sc;
+
+            sprintf "%-20s %-30s", $in . _c&s , $ha
+        } @$M;
 Knowing: | # T overalls leak freaks
     # yaya
     # at Matuio for art mixation, for joining, suggesting pinables

@@ -33,6 +33,19 @@ Tipz: | # test trip applicator
         #n OscNotter=>V
         n Toter
     }
+Episto: |
+    0 &&
+    G&Ti,Trips=>[Catchelism=>''=>\'W:Opera,At:mo,Acv:3'],$_
+            for  &acgtlr{
+                1 && sayyl "Intro upped: ".G&sn;
+                1 && sayyl "Intro C: ".G&aC,$C;
+                1 && sayyl "Intro 1top: ".G&aC,1s&top;
+            };
+        
+    G&elph,Trips=>[tripany=>$_] for &acgt{
+        1 && sayyl "Doing ".G&sn;
+        1 && saygr "And abut to: s&W: ".G&aC;
+    };
 Nowish: |
     u TripDrop
     Jc&tape = 'Dejo';
@@ -91,7 +104,7 @@ Tripin: | # trip applicator
             }
             # otherwise install the next trip in
             A&trip.>$k.>$v = $t;
-            #saygr "Has to find: $k $v (l.t)";
+            1 && saygr "Has to find: $k $v (l.t)   after @Me";
             return
         }
         
@@ -99,35 +112,6 @@ Tripin: | # trip applicator
         my $r = ts&r;
         rc&code || die "what r: ".ki$r;
         rc&code ->($A,$C,$G,$T,$l,$r,@Me);
-TruPic: | # descript
-    u i
-    # describe a C's surface
-    # < make accentuatable
-    aC: %acgt:s dt
-        $s ||= $C;
-        my $yk = join ' ',sort grep{$_ ne 'cv'} keys %{s.y};
-        my $ck = join ' ',sort keys %{s.c};
-        my $sk = join ' ',sort keys %{s.sc};
-        return [s.t,s.y.cv,$yk,$ck,$sk] if $dt eq 'Ck5';
-        "s.t s.y.cv ".($yk ? "($yk)" : " - ")
-            ." $ck".($sk && " % $sk");
-    
-    # stringify M, talking about scs
-    sscC: %acgt:M
-        join "\n", map {
-            my $in = _c&inds;
-            my $sc = _.sc;
-            my $ha = (keys %$sc && "\n").join "\n", map {
-                my $v = $sc.>$_;
-                $v = ki $v if ref $v;
-                "$in  $_:".($v !~ /\n/ ? " $v"
-                    : "\n".join "\n", map { "$in    $_" }
-                    split /\n/, $v);
-            } grep { $_ ne 'z' && $_ ne 'strung'
-                && !(sc.strung && sc.strung.>$_ ) } sort keys %$sc;
-
-            sprintf "%-20s %-30s", $in . _c&s , $ha
-        } @$M;
 TripDrop: | # bind Trips at moment of W
     u s
     # tripper supplies trips for name
@@ -157,23 +141,6 @@ TripDrop: | # bind Trips at moment of W
             }
         }
         trip At/mo
-Jold: | # for J universal handling FactorEase
-    u i
-    dedu:
-        my $x = A.1.sc.>$s ||= {};
-        G&pint,$x,@Me && return T.pos = 0;
-        G&punt,$x,@Me,1;
-        1
-    # andor sanity/scheme checks
-    musb:
-        for (@Me) {
-            if ($s eq 'W') {
-                _.3 eq $_ || die "Wants W not: ".ki$_
-            }
-            else {
-                die "how else? $s"
-            }
-        }
 Trips: | # to be distributed to W
     # host instructures
     # elvis garden of stuff for others
@@ -192,7 +159,9 @@ Trips: | # to be distributed to W
         G&dedu,tri=>$s || return;
             
         my $forW = l.c.W || die "l not cW";
+        my $c = 
         m $forW=>''=>{l=>$l,r=>$r}
+        1 && sayre "was looking: ".ki $c;
     };
     Js&ein.t.not.sMJ = &sMJj{
         $s ||= e&l ->{t};
@@ -203,14 +172,17 @@ Trips: | # to be distributed to W
         Js&tripany = $s;
     };
     S
+    
     # make Troom for the Words
     my $WT = {};
     for (@{Js&M||[]}) {
         push @{$WT.>_c&l.c.W ||= []}, $_;
     }
+    
     each Wz $WT {
-        n $W=>-trip=>$z
+        n $W=>-trip=>{s=>$z}
     }
+    
     4s&tripper = $J;
 pi/trip: | # bag of tricks to pass to a W
     n t=>1=>C.t."\n"
@@ -221,7 +193,8 @@ pi/trip: | # bag of tricks to pass to a W
     # some r could group clutter
     my $i = 1;
     for my $t (@$s) {
-        my ($l,$r) = (tc&l, tc&r);
+        1 && saybl "HJave ".G&aC,$t;
+        my ($l,$r) = (G&hup,tc&l , G&hup,tc&r );
         
         # braid for action
         r.y.t = $t;
