@@ -8,7 +8,11 @@ Wormhall: | # over sight
     anyway
     
     show all the fork/listen/addressing action in this file...
-Wall: | # your publisher
+    
+    "this one"
+    
+    < clients GET lv unless small,
+Wall: | # your publisher - sends to Wlan (local) or Elan (remotes)
     # write them
     Jc&write = 1;
     c&route = "Elan";
@@ -119,12 +123,6 @@ Elan: | # gets them, W switchup
         m $s
     };
     
-    # this one
-    # < we give a W with c&lv to Net...
-    # < clients GET lv unless small,
-    # < Beach them
-    # < winding back s&parent
-    # 
     
     Js&ein.t.W.sMJ = &sMJje{
         # from Wall, crunch to W
@@ -137,36 +135,30 @@ Elan: | # gets them, W switchup
             T.pos = 0;
             return sayre "Only ss&G - ss&gd's ss&jay ing" 
         }
-        1 && saygr "Input lv? ".G&aC,$s;
         s.t = delete ss&W;
         local A.V = 1;
         if (my $z = 1s&have.>s.t ) {
-            sayyl "Updating J.t's s.t: ss&f ss&Jo";
+            #sayyl "Updating J.t's s.t: ss&f ss&Jo";
             my $w = G&hup,$z;
             %$z = %$s;
             
         }
         else {
-            sayyl "Setting J.t's s.t: ss&f ss&Jo";
+            #sayyl "Setting J.t's s.t: ss&f ss&Jo";
             $s = 1s&have.>s.t =
             m $s
         }
         
-        1 && saygr "Output lv? from A.2.t or A.2.2.t:".ki,$s;
-        
-        1 && saybl "Elan now: ".ki $M;
-        1 && saybl "Elan updated: ".ki $s;
+        1 && saygr "J.t: sc&t: s.t = ss&gd = ss&Jo";
+        #1 && saybl "Elan now: ".ki $M;
     };
     S
     
+    # < moves elements, disables noise & A timers so they can go back in...
     Js&Pause && return 
         n Paused=>''=>"Paused"
     
-    my $m = Js&M||[];
-    @$m = map { @{delete(_c&forum)||[]}, $_ } @$m;
-    #sayyl "A.1.t! ".wdump 3, Js&M;
-    
-    m _.t=>''=>{},{lv=>_s&f} for @$m
+    m _.t=>''=>{},{lv=>_s&f} for @{Js&M||[]}
     
 Wlan: | # gets you, W
     Rw Tiot;
@@ -184,14 +176,16 @@ Wlan: | # gets you, W
     Js&ein.t.W.sMJ = &sMJje{
         # from Wall, crunch to W
         $s = G&hup,$e;
-        if (ss&W eq J.t) {
+        my $t = ss&W;
+        if ($t eq J.t) {
             T.pos = 0;
             return sayre "Self J.t ing" 
         }
+        my $el = 1s&have.>$t ? '1' : '3';
+        1s&have.>$t = 1;
+        1 && saygr "J.t: sc&t: $t = ss&gd = ss&Jo";
         if (sc&t eq '7') {
-            1 && saygr "Output lv? from A.2.t or A.2.2.t:".ki,$s;
-            my $el = ss&imp == '1' ? '1' : '3';
-            my $l = G&Ct,[ss&W=>''=>{el=>$el,lv=>sc&f}];
+            my $l = G&Ct,[$t=>''=>{el=>$el,lv=>sc&f}];
             G&e,NetPut=>[out=>''=>{holst=>"yer",eat=>[$l]}]
         }
         else {
@@ -200,14 +194,6 @@ Wlan: | # gets you, W
     };
     S
     
-    Js&Pause && return 
-        n Paused=>''=>"Paused"
-    
-    my $m = Js&M||[];
-    @$m = map { @{delete(_c&forum)||[]}, $_ } @$m;
-    #sayyl "A.1.t! ".wdump 3, Js&M;
-    # come out as they go in, here is just a log
-    m $_ for @$m;
 BayFishing: | # become Op/Ud node, see 822
     my $p = $$;
     $| = 1; # autoflush output channel
