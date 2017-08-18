@@ -206,10 +206,10 @@ Line: | # C as a tabby line
     
     # check out how sayable the values on the line are
     my $simp = &s{
-        $s =~ /^[\w\.\-]+$/s && $s !~ /\n$/ && length $s < 24
+        $s =~ /^\w[\w\.\-\/]*$/s && $s !~ /\n$/ && length $s < 24
     };
     each nk,gk,v $h {
-        if (!$simp->($gk)) {
+        unless ($simp->($gk)) {
             $n.>$nk.>$gk = $v;
             next;
         }
@@ -243,6 +243,7 @@ Line: | # C as a tabby line
     each nk,g $n { 
         my $v = $h.>$nk;
         next if !keys%$v;
+        next if grep{!$simp->($_)}keys %$g;
         if (keys(%$g) / keys(%$v) < 0.3) {
             $q.>$nk.>$_ = $h.>$nk.>$_ for keys %$g;
         }
