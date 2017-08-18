@@ -1,9 +1,9 @@
 LandSty: | # js jigup
     my $t = 'Stylands';
     n NetJig=>W=>{the_W=>$t}
-    #n NetJig=>W=>{the_W=>'Stylewholes'}
-    #n NetJig=>W=>{the_W=>'Stylephone'}
-    return
+    n NetJig=>W=>{the_W=>'Stylemoment'}
+    n NetJig=>W=>{the_W=>'Stylewholes'}
+    return;
     my $bb = &s{
         my $C = G&Ct,['toNetJig',1,{s=>$s}];
         Rw JaBabz $C;
@@ -38,24 +38,22 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
     lv 17:
         $b = A.b;
         G&nn;
-        $f = s&f;
-        f ||= A.b.lv_f;
-        A.b.lv_f = f;
-        !f and ~die~LVnof: C
-        A&copul ||= {};
-        c$ = A&copul ;
+        A.b.lv ||= {};
+        $lv = A.b.lv;
+        s&f and lv.f = s&f;
+        !lv.f and ~die~LVnof: C, lv
+        lv.haN ||= {};
         A.b = b;
-        if (!c&seeks) {
-            c&seeks = [s];
-        }
+        !c&seeks and c&seeks = [s];
         t$
         $.each(c&seeks, &i,v{
-            c[v] and return
+            lv.haN[v] and return
             t ||= v
         });
         if (t) {
-            $.ajax('shed/'+f+'/h/'+t).done(&L{
-                $l = c[t] = G&readLines,L;
+            $.ajax('shed/'+lv.f+'/h/'+t).done(&L{
+                !L.length and ~noL: lv.f, t
+                $l = lv.haN[t] = G&readLines,L;
                 !l.length and ~nolinesin: t
                 l = l[l.length-1];
                 $h = ''
@@ -66,20 +64,37 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
             });
             return T.not = '2';
         }
+        // now from oldest to newest
         c&seeks.reverse();
+        if (lv.ha) {
+            $is
+            $.each(c&seeks, &i,v{
+                lv.ha === v and is = 1;
+            });
+            while (is && c&seeks.length) {
+                while (c&seeks[0] === lv.ha) {
+                    c&seeks.shift();
+                    is = 0;
+                }
+                is and c&seeks.shift();
+            }
+        }
         $ii = 0;
         $wi = 0;
+        $ha;
         $.each(c&seeks, &i,t{
             ii++;
-            $N = c[t];
+            $N = lv.haN[t];
             $.each(N, &i,v{
                 wi++;
-                G&om,v
+                G&om,v;
             });
+            ha = t;
         });
         
         $bumps = ii+'x'+wi;
-        ~wlv: C.t, s, bumps
+        ~wlv: C.t, s, lv.ha, bumps
+        ha and lv.ha = ha;
         return T.not = 1;
         
         

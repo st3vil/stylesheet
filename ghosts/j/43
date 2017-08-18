@@ -1,19 +1,20 @@
 Wormhall: | # over sight
-    nodes always send stuff outwards:
+    Wall:
+      nodes always send stuff outwards:
         stuff is string, may know the data it came from
         send may be give but prefer linkage
         outwards may be a host, bay/$G/$W, bay/p/G.t/$W
         $W to and $W is sameish...
     
-    anyway
-    
-    show all the fork/listen/addressing action in this file...
-    
-    "this one"
-    
-    < clients GET lv unless small,
-    
-    Ghostrepel spazzes out, sends lots of Wlanings?
+    anyway:
+      show all the cluster fork/listen/addressing action in this file...
+      "this one"
+      < clients GET lv unless small,
+      Ghostrepel spazzes out, sends lots of Wlanings?
+
+    onward:
+        
+        
 Wall: | # your publisher - sends to Wlan (local) or Elan (remotes)
     # write them
     Jc&write = 1;
@@ -47,11 +48,11 @@ Wall: | # your publisher - sends to Wlan (local) or Elan (remotes)
         #G&give:Budge=>["wants to put for ".G&sn => $e];
         local A.V = 1;
         if (my $z = 1s&have.>s.t ) {
-            sayyl "Updating J.t's s.t: ss&Jo";
+            #sayyl "Updating J.t's s.t: ss&Jo";
             %$z = %$s;
         }
         else {
-            sayyl "Setting J.t's s.t: ss&Jo";
+            #sayyl "Setting J.t's s.t: ss&Jo";
             1s&have.>s.t =
             m $s
         }
@@ -83,9 +84,13 @@ Wall: | # your publisher - sends to Wlan (local) or Elan (remotes)
             `unlink $f/$t` if -e "$f/$t";
             `ln -s h/$ha $f/$t`;
         }
-        
+        # filter to things we want to send the client
         return if Jc&only && Jc&only ne $t;
         return saybl "ignore inner: ".G&aC,$s if Jc&Wonly && s&jay;
+        # make a -pi protocol'd $s that is W to give Wlan/Elan
+        #   or further possibilities of the W-ish C
+        #   it may have ch, version, lv
+        
         # < set by the T for the Opper...
         #return unless Jc&route;
         # want to elvis with net sense
@@ -101,7 +106,7 @@ Wall: | # your publisher - sends to Wlan (local) or Elan (remotes)
             $w = Jc&direct || "Wlan";
         }
         my $s = [$w=>[W=>''=>{f=>$f,t=>$t,ha=>$ha},$sc]];
-        sayre "Giving $w: $f/$t: sc.Jo";
+        #sayre "Giving $w: $f/$t: sc.Jo";
         
         Rw Wudder $to $s;
     };
@@ -155,8 +160,7 @@ Elan: | # gets them, W switchup
             m $s
         }
         
-        1 && saygr "J.t: sc&t: s.t = ss&gd = ss&Jo";
-        1 && saybl "Elan now: ".ki $M;
+        1 && saygr "J.t: sc&t: s.t = ss&gd = ss&Jo".(!$z && " new");
     };
     S
     my $i = 
@@ -166,8 +170,6 @@ Elan: | # gets them, W switchup
     #   so they can go back in...
     Js&Pause && return 
         n Paused=>''=>"Paused"
-    
-    1 && saybl "Elan: ".G&aC,$_ for @{Js&M||[]};
     
     m _.t=>{C=>$_}=>{},{pid=>_s&pid,f=>_s&f,lv=>_c&ha,dos=>'ElviRo'} for @{Js&M||[]};
     
@@ -232,7 +234,7 @@ Wlan: | # gets you, W
         }
         my $el = 1s&have.>$t ? '3' : '1';
         1s&have.>$t = 1;
-        1 && saygr "J.t $el: sc&t: $t = ss&gd = ss&Jo";
+        1 && saygr "J.t: sc&t: $t = ss&gd = ss&Jo".($el eq '1' && " new");
         if (sc&t eq '7') {
             # c&lv nots this C, s&lv els it then oms a c&lv/their om inside itself
             my $l = G&Ct,[$t=>''=>{el=>$el,lv=>sc&ha},{f=>ss&f}];
@@ -300,7 +302,8 @@ NetPut: | # Opper outputs W
         my $z = ec&eat;
         my $h = ec&holst;
         
-        1 && saygr "Webbing on G.t into $h, from ".G&sn,$Y ." y ".G&sn,Y.up.up;
+        my $see = @$z == 1 ? $z->[0] : $z;
+        1 && saygr "J.t: ".ki $see;
         Jc&froe = ec&froe if ec&froe;
         
         Js&initGW ||= do {
@@ -352,7 +355,7 @@ NetPut: | # Opper outputs W
             C.sc.deal ||= $deal if $deal;
             [C.t,C.y,C.c,C.sc]
         };
-        my $j = G&Ct,['','',{W=>G.t},{z=>$z}];
+        my $j = G&Ct,[G.t,'',{W=>G.t},{z=>$z}];
         my $l = $elv->($j);
         $sendz->([$l]);
     };
