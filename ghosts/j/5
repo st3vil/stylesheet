@@ -116,8 +116,9 @@ NewBeginning: | # 0 HaMachine.pl's first way
     Rw Bangular;
     
     # should base all G gk here-ish
-    G.c.bay = 'bay';
-    G.c.tentbay = 1;
+    @ARGV = grep {  !(/^(\w+)\/$/ && do{Gc&bay=$1}) } @ARGV;
+    G.c.bay ||= 'blank';
+    #G.c.tentbay = 1;
     # G.i is A.I.i.y.tw.* directly to their .c.code
     # for calling subs inside the sub that calls subs
     G.i || die "Wants the G\.i codestash";
@@ -234,7 +235,6 @@ Motor: | # be a G
         n $_ for @{c&to||[]};
     }
     else {
-        @ARGV = grep {  !(/^(\w+)\/$/ && do{Gc&bay=$1}) } @ARGV;
         if (@ARGV) {
             my $t = shift @ARGV;
             G.t ||= $t;
