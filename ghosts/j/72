@@ -184,9 +184,34 @@ Liney: | # read/write/ lines
     n Beach=>''=>G.way.Beach,'%acgt:f s'
     # $N=[C] with s&z becomes {i,ii} with y.in/next for many
     n Believe=>''=>G.way.Believe,'%acgt:N'
+LineTest: |
+    
+    my $s = G&Ct,[te=>3=>''=>'%hs:34,fs:40%,f:file/land/of/1'];
+    sc&nort = 4;
+    sc&noot = 4;
+    sc&nooot = 4;
+    sc&s = "Four\nMiles";
+    
+    ss&z = [
+        G&Ct,[more=>5=>"sevreal\nbitsof\ncode?\n",'%of:i']
+    ];
+    
+    saygr "Origin: ".Dump [$s];
+    
+    my $z = delete(ss&z)->[0];
+    my $l = Rw Line $s;
+    $l .= "\n".ind("  ",
+        Rw Line $s:z
+    );
+    
+    saybl "Out: $l";
+    my $N = Rw Beach $s:l $f=1;
+    saybl "In: ".Dump 5, $N;
+    exit;
+    
 Line: | # C as a tabby line
     # for Beach
-    $C = $s;
+    $C = $s if $s;
     my $t = C.t;
     my $y = C.y.cv;
     $y =~ s/^0\.//;
@@ -294,7 +319,7 @@ Line: | # C as a tabby line
     }
     
     my @l;
-    # add quoted things at the z indent
+    #c add quoted things at the z indent
     # < quoting with Line other N/C looking vals
     each nk,gk,v $q {
         my $k = "  $nk $gk:";
@@ -305,10 +330,14 @@ Line: | # C as a tabby line
             $v = join "\n", map{"    $_"}split"\n",$v;
             $k .= "\n".$v;
         }
-        elsif ($v =~ /^\w([\w ,]*\w)?$/) {
+        elsif ($simp->($v)) {
             # simple strings
             # not confusible into 'Thing 2'
             $k .= " $v";
+        }
+        elsif ($v !~ /\n$/) {
+            # BQ implies trailing \n
+            $k .= " ".$enj->($v);
         }
         else {
             # BQ string
@@ -388,6 +417,7 @@ Beach: | # inhale Lines
                 $string++;
                 undef $v;
             }
+            $v = djson($v) if $v =~ /^\W/;
             shift @l;
             my ($nk,$gk) = split ' ', $k, 2;
             sayyl "$in C.t C.y.cv - $nk $gk ($string) $v";
@@ -400,12 +430,12 @@ Beach: | # inhale Lines
                 }
                 $v = join "\n", @s;
                 sayyl "Loaded til $l[0]\n with $nk $gk - ".slim(30,$v);
-            }
-            unless ($string) {
-                $v = Load $v
-            }
-            else {
-                $v .= "\n" unless $v =~ /\n$/s;
+                unless ($string) {
+                    $v = Load $v
+                }
+                else {
+                    $v .= "\n" unless $v =~ /\n$/s;
+                }
             }
             
             $C.>$nk.>$gk = $v;

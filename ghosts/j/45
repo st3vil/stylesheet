@@ -29,9 +29,7 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
     
     # s&lv spawns a c&lv within itself
     lv 66: %nk:sc
-        $D = G&Cs,[C.t,'',{lv:s},C.sc];
-        delete Ds&lv;
-        G&om,D;
+        G&om,[C.t,'',{lv:s},C.sc]
     
     # c&lv haps before/without el creating an element 
     # G&nn manually to A.b self
@@ -166,15 +164,16 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
             $m = L[0].match("^"+ind+"  (\\w[\\w ]+):(?: (\\||.+))?$");
             !m and return;
             k = m[1];
-            v = m[3];
+            v = m[2];
             return 1;
         };
         while (indenting()) {
             $string
             if (v === '|') {
-                string++;
+                string = 1;
                 v = undefined;
             }
+            v && v.match(/^\W/) and v = $.parseJSON(v)
             L.shift();
             k = k.split(' ');
             $nk = k.shift();
@@ -195,14 +194,13 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
                 }
                 v = s.join("\n");
                 //console.log("Loaded "+nk+gk+": "+v+'  Next: '+L[0]);
+                if (!string) {
+                    v = jsyaml.load(v);
+                }
+                else {
+                    !v.match(/\n$/) and v = v+"\n"
+                }
             }
-            if (!string) {
-                v = jsyaml.load(v);
-            }
-            else {
-                !v.match(/\n$/) and v = v+"\t"
-            }
-            
             C[nk][gk] = v;
         }
         
