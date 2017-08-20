@@ -42,19 +42,15 @@ ElvisYou: | # YOUR
     }
     G.c.bay;
 Opper: | # consolidato
-    # Udder blocks, Opper is free to wander around, give Udders time
-    Gc&clockon = sub {
-        1 && saybl "Starting  G.t     listens: $s";
-        Mojo::IOLoop->is_running || Mojo::IOLoop->start;
-    };
+    # Udder blocks, Opper is free to wander around and give Udders time
+    Rw GiveTime;
+    
     if (my $l = G.c.lastbay) {
         # Opper must be seen on W destination to stream
         my $dirs = split('/', $l) - 1 + 2;
         my $ting = join'',('../') x $dirs;
         `ln -s ${ting}G.c.bay/p/$$ $l/p/$$`;
     }
-    # receive W and switch through same telephone wire
-    n Baye
     #return;
     snooze 222;
     n Fish
@@ -79,7 +75,8 @@ CellOvulation: | # sets Op/Ud sort apart
     }
     Rw Washup;
     saybl "CellOvulation: $0";
-    n $C
+    
+    4s&toy->({to=>[$C]});
     saybl "Wandering Ovv";
 Udder: | # go waiter
     # to resume
@@ -97,7 +94,7 @@ Udder: | # go waiter
         Rw CellOvulation
             || next;
         saybl "Done Udder";
-        if (T.Uddoff) {
+        if (T.Uddoff || Gc&freetime) {
             T.not = 1;
             return saybl "Uddoff";
         }
