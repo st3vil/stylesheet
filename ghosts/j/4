@@ -7,9 +7,7 @@ SenseCertainty: | # clamorous industrial junkseeing
     
     # travelling somethingers
     # < use G&o instead
-    n Walks
-    # dead ends of A.t=o
-    n Stashi
+    n Walkit
 BuildSir: |
     my $e = djson <<'';
         {"c":{"W":"Jig","e":{"c":{"pi":"Gdo","s":"An Update"},"sc":{"z":[{"c":{"W":"SirKill"},"t":"SirKill"},{"c":{"W":"SenseCertainty"},"t":"SenseCertainty"},{"c":{"W":"Process"},"t":"Process"},{"c":{"W":"HaMachine"},"t":"HaMachine"}]},"t":"peace/new","y":{"cv":""}}},"sc":{},"t":"Jig","y":{"cv":""}}
@@ -963,4 +961,116 @@ t/o_simple: |
         }
     }
     @fail ? join(", ", @fail) : ();
+Walkit: | # crawl tv
+    u i
+    
+    # climb in/next/z of $s with a sub $y
+    # returns big flat (Cora) list of the sub's returns
+    # $y ||= &Cd{ $C }
+    ind: %acgt:s y d
+        my $D = $s;
+        
+        # dedupe for things via z and in, etc.
+        my $ref = "$s";
+        my $r = d.refs ||= {};
+        $r.>$ref && return;
+        $r.>$ref = $s;
+        
+        unless (d.nohup) {
+            $s = G&hup,$s;
+            s.y.D = $D;
+        }
+        $y ||= sub { shift };
+        my $d = {%{$d||{}}};
+        d.path = [@{d.path||[]}, "s.t s.y.cv"];
+        d.ind = '  ' if !defined d.ind;
+        # ^ accumulates on every depth's return
+        d.d++;
+        my @out;
+        
+        # the two ways to go deep, should both?
+        if (my $z = ss&z) {
+            @$z = grep{defined} @$z;
+            d.zort && d.zort->($z,$s,$d);
+            push @out, map{ G&ind,$_,$y,$d } @$z;
+        }
+        if (my $in = s.y.in) {
+            push @out, G&ind,$in,$y,$d;
+        }
+        my $my = [];
+        @out = map {
+            ! ref$_ ? join "\n", map {d.ind."$_"} split "\n", $_ :
+            ref $_ eq 'HASH' ? do{
+                if (!d.noind) {
+                    if (!_.c.ind) {
+                        _.c.ind = d.d;
+                        _.c.inds = join'', (d.ind) x d.d;
+                        push @$my, $_;
+                    };
+                    unshift @{_.c.inside||=[]},s.t;
+                }
+                $_
+            } :
+            $_
+        } grep {defined} @out;
+        
+        if (my $next = s.y.next) {
+            my $d = {%$d};
+            d.path = [@{d.path||[]}];
+            pop @{d.path};
+            push @out, G&ind,$next,$y,{%$d,d=>d.d-1};
+        }
+        
+        unshift @out, $s = $y->($s,$d);
+        
+        @out = grep{$_} @out;
+        return () if !@out;
+        
+        if (d.d == 1 && !grep{ref}@out) {
+            @out = grep{defined} @out;
+            wantarray ? @out : join "\n", @out;
+        }
+        else { # an $N?
+            s.sc.z = $my if @$my && ref $s eq 'HASH';
+            return grep{$_} @out;
+        }
+        
+    # from s/84 Ghostig outdate-thinker
+    # map reals with an acgt
+    M:
+        my $M = A&M || die "No M";
+        my $su = A&suM; # superstructure
+        my $go = {}; # leaving
+        @$M = grep {!$go.>$_ } map {
+            my $C = $_;
+            if ($su.>$C ) {
+                $C
+            }
+            else {
+                my $new = $s->($A,$C,$G,$T);
+                # as &h, have T checki
+                # counts its keys around the call
+                # that passes waved to throat
+                # as W=Usual knows T.C, .Z/not/etc is throaty
+                if (!$new || delete T.not) {
+                    $new = $go.>$_ = $_ for {};
+                }
+                $new
+            }
+        } @$M;
+        
+    # GOING (s/6:nogindex)
+    # tiny little git, hash stabiliser
+    # reuses refs if they look the same
+    superindex: %acgt
+        my $had = {map { $_=>C.sc.>$_ } @Me};
+        (sub {
+            my $now = {map { $_=>C.sc.>$_ } @Me};
+            
+            ddump($had) eq ddump($now) || return;
+            
+            C.sc.>$_ = $had.>$_ for @Me;
+            
+        }, map { C.sc.>$_ = {} } @Me);
+    
 
