@@ -188,7 +188,7 @@ Lize: | # watch ghost/wormhole watcher TODO
     Jc&bay = c&bay if c&bay;
     my $bay = Jc&bay || Gc&bay || die "No bay";
     Jc&g = c&g if c&g;
-    my $g = Jc&g || 'je' || die 'No g';
+    my $g = Jc&g || 'new' || die 'No g';
     
     my $add = c&add || ''; # put Wt to start tops
     
@@ -652,58 +652,7 @@ pi/lies: | # watch wormhole (mtimes)
     # since there is no hashing the reverse of travel yet
     
  
-Modulate: | # loadup M news
-    # stop when old news found
-    my $done;
-    my $list_done;
-    my $seen;
-    my @l;
-    my $page = 1;
-    my $M = [];
-    my $keen; # whether to read into the rest of the page
-              # once something same has been found
-    until ($done && (!$keen || !@l)) {
-        if (!@l && !$done) {
-            last if $list_done;
-            my $C = $list->($page++);
-            $list_done = 1 if s&done;
-            @l = grep { !$seen.>$_ } @{s&sz};
-            @l || last;
-        }
-        my $s = shift @l;
-        $seen.>$s = 1;
-        
-        my @C = $forms->($s);
-        my $C = G&Ct,\@C;
-        my $c = d.y.tw.>C.t;
-        
-        my $cha;
-        
-        # could use the thing beneath o
-        my $l = G&Ct,[c.t=>''=>{s=>$c}];
-        my $o = G&Ct,[C.t=>''=>{s=>$C}];
-        
-        # or just
-        $cha = ki(c.sc) ne ki C.sc;
-        
-        if ($cha) {
-            $done = 0;
-            saybl "Cha: C.t:  ".ki(c.sc)." ne ".ki C.sc;
-        }
-        else {
-            sayyl "Done upon C.t";
-            $done = 1;
-        }
-        push @$M, $C;
-    }
-    
-    each t,C d.y.tw {
-        next if $seen.>$t;
-        next if !-e $t;
-        saybl "Cached C.t";
-        push @$M, $C;
-    }
-    @$M
+
 pi/beli: | # wormhoe
     T.op = $s;
     my $ub = &Cd{ G&aC };

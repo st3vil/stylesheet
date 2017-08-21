@@ -1,5 +1,7 @@
 not: | # do everything! (run as Spec)
     Jc&tape = 1;
+    Jc&save = 1;
+    A.6.t = A.7.t;
     
     Rw Tiot;
     # the sprawldy
@@ -33,6 +35,7 @@ not: | # do everything! (run as Spec)
     # sprout clusters (bay) (GG), gusts (bay/wil) (G) and wormholes (W)
     #   bind wormhole with travel, ghost
 Lst: | # gives your $M files from ls -1ct, sleeps using your past
+    # return bigger and bigger potential changes
     my $list = &i{
         my $c;
         c.lim = 4 * $i;
@@ -55,7 +58,6 @@ Lst: | # gives your $M files from ls -1ct, sleeps using your past
     my $forms = &t{
         my $sc = {};
         my $f = "$s/$t";
-        saygr "Fed $t or $f";
         (sc.size,sc.mtime) = (stat $f)[7,9];
         sc.link = readlink $f if -l $f;
         $t=>1=>{},$sc
@@ -66,13 +68,13 @@ Lst: | # gives your $M files from ls -1ct, sleeps using your past
     
     
     # osc changing atom loads contents
-    @$M = Rw Modulate $d $list $forms;
+    @$M = Rw Modulate $s $d $list $forms;
     
 ReadMe: | # the J you're in remembers itself
     # having created a place for it to land
     my $s = ''; # TODO osc channel, api here too Jeneral
-    my $f = G&Locate_read
-        || saybl("Nothing to read A.1.t") && return;
+    my $f = Rw Locate $read=1 $t=0 $s=0;
+    $f || saybl("Nothing to read A.1.t from A.6.t / A.7.t") && return;
     1c&read_from = $f;
     #saybl "Read located: $f";
     my $head = "$f/1";
@@ -83,12 +85,64 @@ ReadMe: | # the J you're in remembers itself
     }
     else {
         -f $head || die "Read no $head";
-        $d = LoadFile($head);
+        $d = Rw Beach $s=0 $f:head;
+        ($d) = @$d;
         ds&meta.mtime = $m;
         1s&Read.>$f = $d;
     }
-    
     return $d
+Modulate: | # loadup M news
+    # stop when old news found
+    my $done;
+    my $list_done;
+    my $seen;
+    my @l;
+    my $page = 1;
+    my $M = [];
+    my $keen; # whether to read into the rest of the page
+              # once something same has been found
+    until ($done && (!$keen || !@l)) {
+        if (!@l && !$done) {
+            last if $list_done;
+            my $C = $list->($page++);
+            $list_done = 1 if s&done;
+            @l = grep { !$seen.>$_ } @{s&sz};
+            @l || last;
+        }
+        my $s = shift @l;
+        $seen.>$s = 1;
+        
+        my @C = $forms->($s);
+        my $C = G&Ct,\@C;
+        my $c = d.y.tw.>C.t;
+        
+        my $cha;
+        
+        # could use the thing beneath o
+        my $l = G&Ct,[c.t=>''=>{s=>$c}];
+        my $o = G&Ct,[C.t=>''=>{s=>$C}];
+        
+        # or just
+        $cha = ki(c.sc) ne ki C.sc;
+        
+        if ($cha) {
+            $done = 0;
+            saybl "Cha: C.t:  ".ki(c.sc)." ne ".ki C.sc;
+        }
+        else {
+            sayyl "Done upon C.t";
+            $done = 1;
+        }
+        push @$M, $C;
+    }
+    saybl "Seen: ".ki $seen;
+    for my $C (@{ds&z}) {
+        next if $seen.>C.t;
+        next if !-e "$s/C.t";
+        saybl "Cached C.t";
+        push @$M, $C;
+    }
+    @$M
 GiveTime: | # release from reading input
     Gc&clockon = sub {
         1 && saybl "GiveTime: G.t";
@@ -98,6 +152,7 @@ GiveTime: | # release from reading input
         Mojo::IOLoop->is_running || Mojo::IOLoop->start;
     };
 pi/Trooms: |
+    Jc&save = 'W';
     # C Trooms, instead of single items everywhere:
     n blank=>-clust=>'blank'
     
@@ -106,10 +161,12 @@ pi/clust: |
     -d "$s/p" || die "No $s/p";
     
     Rw Lst + $s=$s/p;
+    n ind=>o3=>"Yo have ".join(",",map{_.t}@$M)
+    my $m = [@$M];
+    #@$M = ();
+    m "dis _.t"=>''=>G&aC,$_ =>'dis' for @$m;
     
-    n seeing=>-od=>wdump 3,$M
-    
-    @$M = ();
+    #@$M = ();
     
     
 pi/gust: | # see G

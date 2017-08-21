@@ -368,9 +368,11 @@ Beach: | # inhale Lines
     my $peel = &s{
         return {map { split':',$_ } split ',', $s}
     };
+    my @oL;
     eval{
     while (@l) {
         $l = shift @l;
+        push @oL, $l;
         my ($in) = $1 if $l =~ s/^(\s+)//;
         my $d = length($in) / 2;
         my ($t,$y,$c,$sc,$s) = split "\t", $l;
@@ -408,6 +410,7 @@ Beach: | # inhale Lines
         else { $sc = {} }
         
         my $C = {t=>$t,y=>{cv=>$y},c=>$c,sc=>$sc};
+        my @il;
         
         # add blockquoted c/sc
         while ($l[0] =~ /^$in  (\w[\S ]+):( (\||.+))?$/) {
@@ -418,7 +421,7 @@ Beach: | # inhale Lines
                 undef $v;
             }
             $v = djson($v) if $v =~ /^\W/;
-            shift @l;
+            push @il, shift @l;
             my ($nk,$gk) = split ' ', $k, 2;
             sayyl "$in C.t C.y.cv - $nk $gk ($string) $v";
             unless ($v) {
@@ -426,7 +429,7 @@ Beach: | # inhale Lines
                 my @s;
                 while ($l[0] =~ /^$in    (.*)$/) {
                     push @s, $1;
-                    shift @l;
+                    push @il, shift @l;
                 }
                 $v = join "\n", @s;
                 sayyl "Loaded til $l[0]\n with $nk $gk - ".slim(30,$v);
@@ -445,6 +448,10 @@ Beach: | # inhale Lines
         $in[$d] = $C;
         if ($d) {
             my $p = $in[$d-1];
+            $p || die "No parent, indent madness? (d=$d) "
+                .wdump 4,{line=>$l,blockquotes=>\@il,prev_line=>$oL[-2]};
+            p.y.tw.>C.t = $C;
+            p.y.tv.>C.t.>C.y.cv = $C;
             push @{ps&z||=[]}, $C;
         }
         else {
