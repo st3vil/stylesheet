@@ -17,6 +17,8 @@ not: | # do everything! (run as Spec)
     
     n roms=>4=>Js&bowls++=>'%dis,fs:44'
     
+    
+    
     # watch own saves for open/close/plot T
     #   and the latest fork... shouldn't fork?
     
@@ -30,6 +32,63 @@ not: | # do everything! (run as Spec)
      
     # sprout clusters (bay) (GG), gusts (bay/wil) (G) and wormholes (W)
     #   bind wormhole with travel, ghost
+Lst: | # gives your $M files from ls -1ct, sleeps using your past
+    my $list = &i{
+        my $c;
+        c.lim = 4 * $i;
+        c.do = 'bash -c "ls -1ct';
+        c.s = $s;
+        c.s = "C.t/$s" if $s =~ /^\W/; # s=/thing -> t/thing
+        c.s .= ' 2>/dev/null"';
+        c.s =~ s/\/\//\//g;
+        my $C = G&Ct,[C.t=>''=>$c];
+        # or: $C = C C.t $lim $s:at % $universal=3
+        my @im = Rw Exe;
+        saybl "Im c.s: ".wdump 3, \@im;
+        # make
+        s&sz = \@im;
+        s&done = 1 if @im < c&lim;
+        $C
+    };
+    
+    # en-2 each file
+    my $forms = &t{
+        my $sc = {};
+        my $f = "$s/$t";
+        saygr "Fed $t or $f";
+        (sc.size,sc.mtime) = (stat $f)[7,9];
+        sc.link = readlink $f if -l $f;
+        $t=>1=>{},$sc
+    };
+    
+    # retrieves our last save, doesn't impart/resume it
+    my $d = Rw ReadMe;
+    
+    
+    # osc changing atom loads contents
+    @$M = Rw Modulate $d $list $forms;
+    
+ReadMe: | # the J you're in remembers itself
+    # having created a place for it to land
+    my $s = ''; # TODO osc channel, api here too Jeneral
+    my $f = G&Locate_read
+        || saybl("Nothing to read A.1.t") && return;
+    1c&read_from = $f;
+    #saybl "Read located: $f";
+    my $head = "$f/1";
+    my $d = 1s&Read.>$head ||= {};
+    my $m = (stat $head)[9];
+    if (ds&meta.mtime eq $m) {
+        # sleep J?
+    }
+    else {
+        -f $head || die "Read no $head";
+        $d = LoadFile($head);
+        ds&meta.mtime = $m;
+        1s&Read.>$f = $d;
+    }
+    
+    return $d
 GiveTime: | # release from reading input
     Gc&clockon = sub {
         1 && saybl "GiveTime: G.t";
@@ -43,17 +102,14 @@ pi/Trooms: |
     n blank=>-clust=>'blank'
     
 pi/clust: |
+    Jc&save = 'W';
     -d "$s/p" || die "No $s/p";
     
-    my $l = [
-        map { my $C = G&Ct,$_; [
-            Rw Exe
-        ]}
-        [proc=>''=>"$s/p"],
-        [vall=>''=>"$s"],
-    ];
+    Rw Lst + $s=$s/p;
     
-    n seeing=>-od=>wdump 3,$l
+    n seeing=>-od=>wdump 3,$M
+    
+    @$M = ();
     
     
 pi/gust: | # see G
