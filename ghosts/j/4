@@ -234,6 +234,34 @@ SirKill: | # crawl datastructure
                     next if A&ways_in->{"$nk $gk"};
                     
                     a&ng.>$nk.>$gk = $v;
+                }}
+                if (my $m = (A.map || oc&map)) {
+                    # hooks receive a&ng as C
+                    #   before we clone it to many E
+                    #   or difference it - so your input matters
+                    # it will be missing any A&ways_in and !cv y
+                    my $E = a&ng;
+                    E.t = C.t;
+                    E.y.cv = C.y.cv;
+                    if (my $y = $m && ms&any) {
+                        if (!A&isTv || ms&evenTv) {
+                            ref $y eq 'CODE' ? $y->($A,$E,$G,$T)
+                            : die "answer map: ".ki($y)."\nat: ".ki$C;
+                        }
+                    }
+                    if (my $nkgk = $m && ms&nkgk) {
+                        each nk,gk,v $E {
+                            next if $nk eq 'y';
+                            my $y = $nkgk.>$nk.>$gk || next;
+                            $v = $E.>$nk.>$gk;
+                            ref $y eq 'CODE' ? $y->($A,$E,$G,$T,$v)
+                            : die "answer map: ".ki($y)."\nat: ".ki$C;
+                        }}
+                    }
+                    delete E.y.cv;
+                    delete E.t;
+                }
+                each nk,gk,v a&ng {
                     if (!exists ds&ng.>$nk.>$gk
                          ||     ds&ng.>$nk.>$gk ne $v) {
                         my $q = Ds&neg.>$nk.>$gk = {t=>$gk,c=>{s=>$v}};
@@ -454,12 +482,6 @@ SirKill: | # crawl datastructure
                 for my $t (@{oc&clones}) {
                     my $E = a&clones.>$t;
                     
-                    my $ult = $t eq oc&clones->[-1];
-                    # map - applies to last clone
-                    # we might be looking for s&J to put its state on OC thing
-                    my $m = $ult && (A.map || oc&map);
-                    # ms&any after copying everything to E:
-                    
                     # plot entanglements amidst assigning values
                     #   unless we're to transport intact
                     #   will be $E by now, we're reassigning c/sc...
@@ -504,22 +526,6 @@ SirKill: | # crawl datastructure
                             .ki[$v,$Y];
                         }
                     }}
-                    }
-                    
-                    if (my $y = $m && ms&any) {
-                        if (!A&isTv || ms&evenTv) {
-                            ref $y eq 'CODE' ? $y->($A,$E,$G,$T,$t)
-                            : die "answer map: ".ki($y)."\nat: ".ki$C;
-                        }
-                    }
-                    if (my $nkgk = $m && ms&nkgk) {
-                        each nk,gk,v $E {
-                            next if $nk eq 'y';
-                            my $y = $nkgk.>$nk.>$gk || next;
-                            $v = $E.>$nk.>$gk;
-                            ref $y eq 'CODE' ? $y->($A,$E,$G,$T,$v,$t)
-                            : die "answer map: ".ki($y)."\nat: ".ki$C;
-                        }}
                     }
                     
                     if ($t eq 'lv') {
@@ -796,10 +802,12 @@ t/o_simple: |
     #     , or be in Core/a
     # map has made c&ha of s&delic
     
-      [Cora_4=><<''],
+    
+     
+       [Cora_4=><<''],
             3Entry  (A C in tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,elab ]
             8  jeteeeeeeeeeeee  (A C next up) s -- s=33  %  
-            8  je 0.031 (A C OA fronts in next prev tv tw up) ha s % delic z -- ha=c1dfd96ee s=44  %  delic=6 z=[ jeteeeeee ]
+            3  je 0.031 (A C fronts in next prev tv tw up) ha s % delic z -- ha=c1dfd96ee s=44  %  delic=6 z=[ jeteeeeee ]
             8    jeteeeeee  (A C up) s -- s=33  %  
             3  je 0.032 (A C backs in next prev tv tw up) ha s % delic z -- ha=0ade7c2cf s=44  %  delic=9 z=[ jeteeeeeeeee,twa,twa,twa,twa ]
             8    jeteeeeeeeee  (A C next up) s -- s=33  %  
@@ -812,9 +820,10 @@ t/o_simple: |
             8    built 0.1 (A C fronts next prev up) s -- s=several  %  
             1    talk 0.29 (A C next prev up) gr % sun -- gr=tango  %  sun=4
             8    built 0.4 (A C backs prev up) s -- s=several  %  
- 
-      [Core_4=><<''],
+
+       [Core_4=><<''],
             3Entry  (A C in tv tw) s % z -- s=44  %  z=[ jeteeeeeeeeeeee,je,je,elab ]
+            3  je 0.031 (A C fronts in next prev tv tw up) ha s % delic z -- ha=c1dfd96ee s=44  %  delic=6 z=[ jeteeeeee ]
             3  je 0.032 (A C backs in next prev tv tw up) ha s % delic z -- ha=0ade7c2cf s=44  %  delic=9 z=[ jeteeeeeeeee,twa,twa,twa,twa ]
             1    twa 0.3 (A C fronts next prev up) s % hs -- s=Memb  %  hs=394
             1    twa 0.31 (A C backs fronts next prev up) s % hs -- s={  %  hs=394
