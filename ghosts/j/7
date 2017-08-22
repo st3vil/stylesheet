@@ -528,9 +528,11 @@ Koul: | # clarify changes to string
         
         if (my $o = C.y.A) {
             # bring memorandum, hops along o
+            # < why there's an extra layer of last?
             my $n = os&n = A&n ||= 
                     os&n
                  || oc&last && oc&last.sc.n
+                 || oc&last.c.last && oc&last.c.last.sc.n
                  || {};
             # many K-ish may use this continuing n for this C
             #   due to TV/LV separation
@@ -1002,22 +1004,34 @@ Writer: | # to make 12345, 7
             $in->(w.7,$C, $l);
             
             # 8ers come back with yers
+            # now fold their z down with any yLinez they have
+            # to become our yLinez
+            # < mysteriously feeding back indentation
+            #   when 2 imps and 1 doesn't, reading 1's older lv again
+            #   fuxed by not indenting the non-last waves of lv
             if (C.y.lvz && c&el ne '8' && c&el ne '9') {
                 my $z = s&z || die "noz for lvz: ".ki$C;
                 my @Lines;
+                my $o = $C;
                 for my $C (@$z) {
+                    my $lastwave = $C eq $z->[-1];
+                    my $y = C.y.A;
                     eval { C.y.Line = $ub->($C) };
                     $@ && die "For $p:\n  C: ".ki($C)."\n$@";
+                     
                     my $s = $in->(w.7,$C,C.y.Line,Yc&ind+1);
+                    #1 && saygr "Adding up $p: C.y.Line\n to: $s";
                     # our indenting of it splits off into Linez
                     # for aboves to grab the lot and indent again
                     push @Lines, $s;
                     for my $s (@{C.y.Linez||[]}) {
-                        $s = $in->(w.7,{},$s,Yc&ind+1);
-                        push @Lines, $s
+                        #1 && sayyl " o.t o.y.cv Yc&ind/$ult has C.t C.y.cv has: $s";
+                        push @Lines, $s;
+                        my $ind = $lastwave ? Yc&ind+1 : 0;
+                        $s = $in->(w.7,{},$s,$ind);
                     }
                 }
-                C.y.Linez = \@Lines;
+                o.y.Linez = \@Lines;
                 # < !Yc&ind/at the top, C.y.Linez could be pointed for others
             }
         }
