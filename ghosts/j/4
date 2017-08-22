@@ -289,6 +289,10 @@ SirKill: | # crawl datastructure
                 each t,cv,Y ds&tv {
                     a&tv.>$t.>$cv && next;
                     Yc&el eq '9' && next;
+                    # copy goers A so backlv C remain as they were
+                    # does similar to each clone in ready
+                    $Y = {%$Y,c=>{%{Y.c}},sc=>{%{Y.sc}}};
+                    Yc&s.y.A = $Y;
                     Yc&el = '9';
                     delete Ys&ord;
                     delete Ys&ready;
@@ -359,8 +363,12 @@ SirKill: | # crawl datastructure
                     if (1 && A&el eq '8') {
                         # cloning clones a semi-good idea
                         # < until we can sleep a limb
-                        $E = a&clones.>$t = ds&clones.>$t
+                        $E = ds&clones.>$t
                             || die "el8 had no clone $t";
+                        # keep y.*
+                        a&clones.>$t = $E = {%$E};
+                        $E.>$_ = {%{$E.>$_ || {} }} for qw'y c sc';
+                        E.y.A = $A;
                         Es&z = [] if Es&z;
                     }
                     elsif (A&el eq '9') {
@@ -482,6 +490,11 @@ SirKill: | # crawl datastructure
                 for my $t (@{oc&clones}) {
                     my $E = a&clones.>$t;
                     
+                    if (A&el eq '9') {
+                        a&clones.>$t = $E = {%$E};
+                        $E.>$_ = {%{$E.>$_ || {}}} for qw'y c sc';
+                        E.y.A = $A;
+                    }
                     # plot entanglements amidst assigning values
                     #   unless we're to transport intact
                     #   will be $E by now, we're reassigning c/sc...
@@ -970,6 +983,24 @@ t/o_simple: |
         }
     }
     @fail ? join(", ", @fail) : ();
+Blan: |
+    Jc&tape = 1;
+    u 'pi/blad'=>''=><<'','of:w'
+        Jc&save = Jc&tape = 1;
+        if ($s > 1) {
+            n seem=>-blad=>($s-1),'dis';
+        }
+        else {
+            my $i = Js&bowls++ > 1 && 4;
+            n Sem=>$i=>"Seol",'dis'
+            n Semiot=>3=>"Bar",'dis'
+        }
+    n blador=>-blad=>2
+    
+Blad: |
+    n Blan
+    n Blan
+    n Blan
 Walkit: | # crawl tv
     u i
     
