@@ -43,44 +43,32 @@ not: | # do everything! (run as Spec)
     # sprout clusters (bay) (GG), gusts (bay/wil) (G) and wormholes (W)
     #   bind wormhole with travel, ghost
 Lst: | # gives your $M files from ls -1ct, sleeps using your past
-    # return bigger and bigger potential changes
+    # return bigger and bigger looks at the list
+    my $laC;
     my $list = &i{
-        my $c;
-        c.lim = 4 * $i;
-        c.do = 'bash -c "ls -1ct';
-        c.s = $s;
-        c.s = "C.t/$s" if $s =~ /^\W/; # s=/thing -> t/thing
-        c.s .= ' 2>/dev/null"';
-        c.s =~ s/\/\//\//g;
-        my $C = G&Ct,[C.t=>''=>$c];
-        # or: $C = C C.t $lim $s:at % $universal=3
-        my @im = Rw Exe;
-        saybl "Im c.s: ".wdump 3, \@im;
-        # make
-        s&sz = \@im;
-        s&done = 1 if @im < c&lim;
+        my $C = G&Ct,[C.t=>''=>{s=>$s}];
+        s&iterat = $i;
+        c&lim = 4 * $i;
+        my $N = Rw Exer;
+        $laC = $C;
         $C
     };
     
-    
-    
     # en-2 each file
-    my $forms = &t{
-        my $sc = {};
-        my $f = "$s/$t";
-        (sc.size,sc.mtime) = (stat $f)[7,9];
-        sc.link = readlink $f if -l $f;
-        sc.dir = 1 if -d $f;
-        $t=>1=>{},$sc
+    my $form = &C{
+        (s&size,s&mtime) = (stat c&s)[7,9];
+        s&link = readlink c&s if -l c&s;
+        s&dir = 1 if -d c&s;
     };
     
     # retrieves our last save, doesn't impart/resume it
     my $d = Rw ReadMe;
     
-    
     # osc changing atom loads contents
-    @$M = Rw Modulate $s $d $list $forms;
+    push @$M,
+        Rw Modulim $s $d $list $form;
     
+    $laC
 ReadMe: | # the J you're in remembers itself
     # having created a place for it to land
     my $s = ''; # TODO osc channel, api here too Jeneral
@@ -102,8 +90,9 @@ ReadMe: | # the J you're in remembers itself
         1s&Read.>$f = $d;
     }
     return $d
-Modulate: | # loadup M news
+Modulim: | # loadup M news from an ls or so
     # stop when old news found
+    my $piit = 'fils';
     my $done;
     my $list_done;
     my $seen;
@@ -117,24 +106,25 @@ Modulate: | # loadup M news
             last if $list_done;
             my $C = $list->($page++);
             $list_done = 1 if s&done;
-            @l = grep { !$seen.>$_ } @{s&sz};
+            @l = grep { !$seen.>_c&s } @{s&z};
             @l || last;
         }
         my $s = shift @l;
-        $seen.>$s = 1;
+        $seen.>sc&s = 1;
+        my $C;
+        if (ar.form) {
+            $C = $s;
+            ar.form->($C);
+        }
+        elsif (ar.forms) {
+            my @C = ar.forms->(sc&s);
+            $C = G&Ct,\@C;
+        }
         
-        my @C = $forms->($s);
-        my $C = G&Ct,\@C;
+        s&pi = $piit if $piit;
         my $c = d.y.tw.>C.t;
         
-        my $cha;
-        
-        # could use the thing beneath o
-        my $l = G&Ct,[c.t=>''=>{s=>$c}];
-        my $o = G&Ct,[C.t=>''=>{s=>$C}];
-        
-        # or just
-        $cha = ki(c.sc) ne ki C.sc;
+        my $cha = ki(c.sc) ne ki C.sc;
         
         if ($cha) {
             $done = 0;
@@ -146,10 +136,10 @@ Modulate: | # loadup M news
         }
         push @$M, $C;
     }
-    saybl "Seen: ".ki $seen;
     for my $C (@{ds&z}) {
+        next unless !$piit || s&pi eq 'fils';
         next if $seen.>C.t;
-        next if !-e "$s/C.t";
+        next if !-e c&s;
         saybl "Cached C.t";
         push @$M, $C;
     }
@@ -171,38 +161,106 @@ pi/clust: |
     Jc&save = 'W';
     -d "$s/p" || die "No $s/p";
     
-    Rw Lst + $s=$s/p;
-    n ind=>o3=>"Yo have ".join(",",map{_.t}@$M)
+    my $s = "$s/p/*";
+    my $l = Rw Lst + $s;
+    n ind=>o3=>"Yon ls&dir have ls&iterat to ".@$M
     my $m = [@$M];
     #@$M = ();
     m "dis _.t"=>''=>G&aC,$_ =>'dis' for @$m;
+    
+     # dedupe
     
     #@$M = ();
     
     
 pi/gust: | # see G
     # 
-Exe: | # find bits for the show
+Exer: | # find bits for the show
     c&s =~ s/\/$//;
+    c&s =~ s/\/\//\//g;
     c&do ||= 'l'; # or find
-    c&do = 'ls -1' if c&do eq 'l';
-    c&lsins = 1 if c&do =~ /^ls -1/ && c&s !~ /\*/;
-    c&cmd ||= "c&do".(defined c&s && ' '.c&s);
+    if (c&do eq 'l') {
+        c&do = 'ls -1ct';
+        c&nostderr = 1;
+    }
+    c&cmd = c&nostderr ? qq[bash -c "c&do c&s 2>/dev/null"]
+        : "c&do c&s";
+    
+    # search for string
     c&cmd .= "| grep c&grep" if c&grep;
-    J.mo.J.sizeup = split"\n",''.`c&cmd` if c&sizeup;
-    c&lim = 20 if !defined c&unl && !defined c&lim;
+    
+    # maybe, with timer to kill?
+    #J.mo.J.sizeup = split"\n",''.`c&cmd` if c&sizeup;
+    
+    c&lim ||= 20 unless c&unl;
+    # skip in
     c&cmd .= "| tail --lines=+".(c&se) if c&se ;
-    c&cmd .= "| head -n ".(2*c&lim) if c&lim;
+    # skip out
+    #   further to tell if theres more,
+    #    have enough after image filtering?
+    c&cmd .= "| head -n ".(c&lim + 4) if c&lim;
+    
+    # do it
     my @img = split"\n",''.`c&cmd`;
     1 && say "EXE: c&cmd: ".@img;
-    @img = grep {/^[\/\w\[\]\{\}\(\)!@%-]+\.jpe?g$/i} @img if c&only eq 'images';
-    # reunlimit until lim is full of satis ^
-    @img = @img[0..c&lim] if c&lim && c&lim < @img;
-    my $i;
-    @img = grep { !$i || $i++ >= c&skov ? do{$i=1} : 0 } @img
-        if c&skov;
-    c&simg = [@img] if c&lsins;
-    @img = map {c&s.'/'.$_} @img if c&lsins;
-    @img
     
+    my $N = [map { {c=>{s=>$_}} } @img];
+    # the directory all are within,
+    #   would be the c&s up to {,} or *
+    my ($know) = $1 if c&s =~ /^([^\{\*]+)\//;
+    $know ||= c&s;
+    my $l; # last titled directory bunch, for ls -1ct
+    # upgrade all to full path c&s
+    for my $C (@$N) {
+        if (!length c&s) {
+            C.sc.not = 1;
+            undef $l;
+            next;
+        }
+        if (c&s =~ /^($know.+)\/?:$/ && -d $1) {
+            $l = $C;
+            c&s = $1;
+        }
+        else {
+            next if c&s =~ /^\Q$know\E/; # is full path
+            if ($l) {
+                -e "lc&s/c&s" || die "($know) expected c&s to be in lc&s!";
+                c&s = "lc&s/c&s";
+            }
+            else {
+                -e "$know/c&s" || die "expected c&s to be in $know!";
+                c&s = "$know/c&s";
+            }
+        }
+    }
+    # split $know off c&s to get C.t
+    @$N = grep {
+        _.t = $1 if _c&s =~ /^\Q$know\E\/(.+)$/;
+        _.t || die "Not in $know: ".ki $_;
+    } grep {
+        !_.sc.not
+    } @$N;
+    
+    
+    
+    
+    if (c&only eq 'images') {
+        @$N = grep {
+            _.t =~ /^[\/\w\[\]\{\}\(\)!@%-]+\.jpe?g$/i
+        } @$N
+    }
+    
+    # reunlimit until lim is full of satis ^
+    if (c&lim) {
+        if (c&lim < @$N) {
+            #@$N = @{$N}[0..(c&lim-1)]
+        }
+        else {
+            s&done = 1
+        }
+    }
+    _.y.cv ||= 9 for @$N;
+    s&dir = $know;
+    1 && saybl " c&s ::: $know: ", map{_c&s} @$N;
+    s&z = $N
 
