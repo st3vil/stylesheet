@@ -28,7 +28,7 @@ SirKill: | # crawl datastructure
             defined C.t && C.y && (C.c || C.sc)
         };
         
-        saygr "Do o: ".ki $s;
+        1s&sayo && saygr "Do o: c.t ".ki $s;
         $A = G&A,o=>0=>$c,$sc;
         my $V = A.V;
         
@@ -59,7 +59,7 @@ SirKill: | # crawl datastructure
         }
         
         # many A=o hold cs=C
-        my $io = {t=>'o',up=>$o,c=>{s=>$s},sc=>{}};
+        my $io = {%$A, t=>'o',up=>$o,c=>{s=>$s},sc=>{}};
         my @L = io.y = $io;
         my @R;
         # builds up from z/in/tw/tv
@@ -147,7 +147,7 @@ SirKill: | # crawl datastructure
                             push @{$st.>$s ||= []}, $Y;
                             _.y = $Y;
                         } map {
-                            {t=>'o',up=>$A,c=>{s=>$_},sc=>{}}
+                            {%$A, t=>'o',up=>$A,c=>{s=>$_},sc=>{}}
                         } @$z
                     }
                     @at, # attributes we can see
@@ -511,14 +511,29 @@ SirKill: | # crawl datastructure
                         # other has the one thing
                         #  < link C that knows where either one is
                         #    keeping refs on the yonder A will do
+                        
+                        # < more testing, having pointers in lv
+                        # < doesn't change the thing, should if Yc&s?
                         if (my $nkgk = Ys&whererefis.>$v ) {
-                            my $V = Yc&s;
+                            my $V = Ys&clones.>$t || die "noclone nkgk $t";
                             my ($nk,$gk) = @$nkgk;
-                            $V.>$nk.>$gk eq $v
-                                || die "Refwasnotat ".ki[$v,$nkgk,$V];
-                            $V = Ys&clones.>$t || die "noclone nkgk $t";
+                            if (!exists $V.>$nk.>$gk) {
+                                # lv clone dropped it?
+                                # KC clone muted & sleeping?
+                                # we will probably drop it too...
+                                $V = V.y.C;
+                            }
+                            my $vf = $V.>$nk.>$gk;
+                            $vf eq $v
+                                || sayre G&sn ."\nRefwasnotat (clone=$t) "
+                                .ki([$v,$nkgk,$V])
+                                ."\nversion from: ".G&aC,$V ."\n"
+                                ."version source: ".G&aC,Yc&s ."\n"
+                                ."  is: ".ki($vf)."\n"
+                                ."  vs: ".ki($v)."\n"
+                                ."at $nk $gk on: ".G&aC,$E;
                             # may differ if Scuttled to...
-                            $v = $V.>$nk.>$gk;
+                            $v = $vf;
                         }
                         elsif ($v eq Yc&s) {
                             # is Tv implanting
@@ -561,8 +576,24 @@ SirKill: | # crawl datastructure
                                 $dn.>$nk.>$gk = 1;
                             }
                             else {
-                                $E.>$nk.>$gk eq q.c.s || die "wasnt neg/ng"
-                                    .ki[[$nk,$gk],$q,$E];
+                                my $v = $E.>$nk.>$gk;
+                                my $s = q.c.s;
+                                $v eq $s && next;
+                                if ($isC->($s)) {
+                                    my $Y = s.y.A;
+                                    $v eq $s || sayre "wasnt neg/ng"
+                                        .ki([[$nk,$gk],$q,$E])."\n"
+                                        ."Ours: ".ki($v)."\n"
+                                        ."Theirs: ".ki($s)."\n"
+                                        ."TheirA: Yc&sip somewhere\n"
+                                        ;
+                                }
+                                else {
+                                    die "wasnt neg/ng"
+                                    .ki([[$nk,$gk],$q,$E])."\n"
+                                    ."Ours: ".ki($v)."\n"
+                                    ."Theirs: ".ki($s)
+                                }
                             }
                         }}
                         # encoding this may need json
