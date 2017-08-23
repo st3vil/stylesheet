@@ -42,133 +42,8 @@ not: | # do everything! (run as Spec)
      
     # sprout clusters (bay) (GG), gusts (bay/wil) (G) and wormholes (W)
     #   bind wormhole with travel, ghost
-Lst: | # gives your $M files from ls -1ct, sleeps using your past
-    # return bigger and bigger looks at the list
-    my $laC;
-    my $list = &i{
-        my $C = G&Ct,[C.t=>''=>{s=>$s}];
-        s&iterat = $i;
-        c&lim = 8 * $i;
-        my $N = Rw Exer;
-        $laC = $C;
-        $C
-    };
-    
-    # en-2 each file
-    my $form = &C{
-        (s&size,s&mtime) = (stat c&s)[7,9];
-        s&link = readlink c&s if -l c&s;
-        s&dir = 1 if -d c&s;
-    };
-    
-    # retrieves our last save, doesn't impart/resume it
-    my $d = Rw ReadMe;
-    
-    # osc changing atom loads contents
-    push @$M,
-        Rw Modulim $s $d $list $form;
-    
-    $laC
-ReadMe: | # the J you're in remembers itself
-    # having created a place for it to land
-    my $s = ''; # TODO osc channel, api here too Jeneral
-    my $f = Rw Locate $read=1 $t=0 $s=0;
-    $f || saybl("Nothing to read A.1.t from A.6.t / A.7.t") && return;
-    1c&read_from = $f;
-    #saybl "Read located: $f";
-    my $head = "$f/1";
-    my $d = 1s&Read.>$head ||= {};
-    my $m = (stat $head)[9];
-    if (ds&meta.mtime eq $m) {
-        # sleep J?
-    }
-    else {
-        -f $head || die "Read no $head";
-        $d = Rw Beach $s=0 $f:head;
-        ($d) = @$d;
-        ds&meta.mtime = $m;
-        1s&Read.>$f = $d;
-    }
-    return $d
 
-Modulim: | # loadup M news from an ls or so
-    # stop when old news found
-    my $piit = 'fils';
-    my $done;
-    my $list_done;
-    my $seen; # C.t
-    my $seens; # c&s
-    my @l;
-    my $page = 1;
-    my $M = [];
-    # whether to read into the rest of the page
-    # once something same has been found
-    my $keen; 
-    # if the lines go directory:\nfile\nfile\nfile
-    # must see a whole directory of unchanged
-    # - changes bump the directory but may then 
-    #     have unchanged stuff before more changes
-    # < keep going a page or so after stillness
-    #   $done > 10 helps too
-    my $con;
-    until (($done > 10) && (!$keen || !@l)) {
-        if (!@l && !($done > 10)) {
-            last if $list_done;
-            my $C = $list->($page++);
-            $list_done = 1 if s&done;
-            1 && saygr "Ess: ", map {G&aC,$_ } @{s&z};
-            @l = grep { !$seen.>_.t } @{s&z};
-            @l || last;
-        }
-        my $s = shift @l;
-        length sc&s || die "Isnt ".ki $s;
-        
-        # form this one line
-        my $C;
-        if (ar.form) {
-            $C = $s;
-            ar.form->($C);
-        }
-        elsif (ar.forms) {
-            my @C = ar.forms->(sc&s);
-            $C = G&Ct,\@C;
-        }
-        
-        $con = [] if s&container;
-        
-        s&pi = $piit if $piit;
-        my $c = d.y.tw.>C.t;
-        
-        my $cha = ki(c.sc) ne ki C.sc;
-        
-        if ($cha) {
-            $done = 0;
-            $con && push @$con, $C;
-            saybl "Cha: C.t:  ".ki(c.sc)." ne ".ki C.sc;
-        }
-        elsif (!$con || !@$con) {
-            sayyl "Done upon C.t";
-            $done++;
-        }
-        $seen.>C.t = 1;
-        push @$M, $C;
-    }
-    for my $C (@{ds&z}) {
-        next if $piit && $piit ne C.sc.pi;
-        next if $seen.>C.t;
-        next if !-e c&s;
-        saybl "Cached C.t";
-        push @$M, $C;
-    }
-    @$M
-GiveTime: | # release from reading input
-    Gc&clockon = sub {
-        1 && saybl "GiveTime: G.t";
-        # turns Udder read loop into Baye read loop
-        Gc&freetime = 1;
-        n Baye
-        Mojo::IOLoop->is_running || Mojo::IOLoop->start;
-    };
+
 pi/Trooms: |
     Jc&save = 'W';
     # C Trooms, instead of single items everywhere:
@@ -192,6 +67,33 @@ pi/clust: |
     
 pi/gust: | # see G
     # 
+Lst: | # gives your $M files from ls -1ct, sleeps using your past
+    # return bigger and bigger looks at the list
+    my $laC;
+    my $list = &i{
+        my $C = G&Ct,[C.t=>''=>{s=>$s}];
+        s&iterat = $i;
+        c&lim = 16 * $i;
+        my $N = Rw Exer;
+        $laC = $C;
+        $C
+    };
+    
+    # en-2 each file
+    my $form = &C{
+        (s&size,s&mtime) = (stat c&s)[7,9];
+        s&link = readlink c&s if -l c&s;
+        s&dir = 1 if -d c&s;
+    };
+    
+    # retrieves our last save, doesn't impart/resume it
+    my $d = Rw ReadMe;
+    
+    # osc changing atom loads contents
+    push @$M,
+        Rw Modulim $s $d $list $form;
+    
+    $laC
 Exer: | # find bits for the show
     c&s =~ s/\/$//;
     c&s =~ s/\/\//\//g;
@@ -291,4 +193,74 @@ Exer: | # find bits for the show
     #_.y.cv ||= 9 for @$N;
     s&dir = $know;
     s&z = $N
+Modulim: | # loadup M news from an ls or so
+    # stop when old news found
+    my $piit = 'fils';
+    my $done;
+    my $list_done;
+    my $seen; # C.t
+    my $seens; # c&s
+    my @l;
+    my $page = 1;
+    my $M = [];
+    # whether to read into the rest of the page
+    # once something same has been found
+    my $keen; 
+    # if the lines go directory:\nfile\nfile\nfile
+    # must see a whole directory of unchanged
+    # - changes bump the directory but may then 
+    #     have unchanged stuff before more changes
+    # < keep going a page or so after stillness
+    #   $done > 10 helps too
+    my $con;
+    until (($done > 10) && (!$keen || !@l)) {
+        if (!@l && !($done > 10)) {
+            last if $list_done;
+            my $C = $list->($page++);
+            $list_done = 1 if s&done;
+            1 && saygr "Ess: ", map {G&aC,$_ } @{s&z};
+            @l = grep { !$seen.>_.t } @{s&z};
+            @l || last;
+        }
+        my $s = shift @l;
+        length sc&s || die "Isnt ".ki $s;
+        
+        # form this one line
+        my $C;
+        if (ar.form) {
+            $C = $s;
+            ar.form->($C);
+        }
+        elsif (ar.forms) {
+            my @C = ar.forms->(sc&s);
+            $C = G&Ct,\@C;
+        }
+        
+        $con = [] if s&container;
+        
+        s&pi = $piit if $piit;
+        my $c = d.y.tw.>C.t;
+        
+        my $cha = ki(c.sc) ne ki C.sc;
+        
+        if ($cha) {
+            $done = 0;
+            $con && push @$con, $C;
+            saybl "Cha: C.t:  ".ki(c.sc)." ne ".ki C.sc;
+        }
+        elsif (!$con || !@$con) {
+            sayyl "Done upon C.t";
+            $done++;
+        }
+        $seen.>C.t = 1;
+        push @$M, $C;
+    }
+    for my $C (@{ds&z}) {
+        next if $piit && $piit ne C.sc.pi;
+        next if $seen.>C.t;
+        next if !-e c&s;
+        saybl "Cached C.t";
+        push @$M, $C;
+    }
+    @$M
 
