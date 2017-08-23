@@ -48,7 +48,7 @@ Lst: | # gives your $M files from ls -1ct, sleeps using your past
     my $list = &i{
         my $C = G&Ct,[C.t=>''=>{s=>$s}];
         s&iterat = $i;
-        c&lim = 4 * $i;
+        c&lim = 8 * $i;
         my $N = Rw Exer;
         $laC = $C;
         $C
@@ -90,27 +90,40 @@ ReadMe: | # the J you're in remembers itself
         1s&Read.>$f = $d;
     }
     return $d
+
 Modulim: | # loadup M news from an ls or so
     # stop when old news found
     my $piit = 'fils';
     my $done;
     my $list_done;
-    my $seen;
+    my $seen; # C.t
+    my $seens; # c&s
     my @l;
     my $page = 1;
     my $M = [];
-    my $keen; # whether to read into the rest of the page
-              # once something same has been found
-    until ($done && (!$keen || !@l)) {
-        if (!@l && !$done) {
+    # whether to read into the rest of the page
+    # once something same has been found
+    my $keen; 
+    # if the lines go directory:\nfile\nfile\nfile
+    # must see a whole directory of unchanged
+    # - changes bump the directory but may then 
+    #     have unchanged stuff before more changes
+    # < keep going a page or so after stillness
+    #   $done > 10 helps too
+    my $con;
+    until (($done > 10) && (!$keen || !@l)) {
+        if (!@l && !($done > 10)) {
             last if $list_done;
             my $C = $list->($page++);
             $list_done = 1 if s&done;
-            @l = grep { !$seen.>_c&s } @{s&z};
+            1 && saygr "Ess: ", map {G&aC,$_ } @{s&z};
+            @l = grep { !$seen.>_.t } @{s&z};
             @l || last;
         }
         my $s = shift @l;
-        $seen.>sc&s = 1;
+        length sc&s || die "Isnt ".ki $s;
+        
+        # form this one line
         my $C;
         if (ar.form) {
             $C = $s;
@@ -121,6 +134,8 @@ Modulim: | # loadup M news from an ls or so
             $C = G&Ct,\@C;
         }
         
+        $con = [] if s&container;
+        
         s&pi = $piit if $piit;
         my $c = d.y.tw.>C.t;
         
@@ -128,16 +143,18 @@ Modulim: | # loadup M news from an ls or so
         
         if ($cha) {
             $done = 0;
+            $con && push @$con, $C;
             saybl "Cha: C.t:  ".ki(c.sc)." ne ".ki C.sc;
         }
-        else {
+        elsif (!$con || !@$con) {
             sayyl "Done upon C.t";
-            $done = 1;
+            $done++;
         }
+        $seen.>C.t = 1;
         push @$M, $C;
     }
     for my $C (@{ds&z}) {
-        next unless !$piit || s&pi eq 'fils';
+        next if $piit && $piit ne C.sc.pi;
         next if $seen.>C.t;
         next if !-e c&s;
         saybl "Cached C.t";
@@ -161,16 +178,16 @@ pi/clust: |
     Jc&save = 'W';
     -d "$s/p" || die "No $s/p";
     
-    my $s = "$s/p/*";
+    my $s = "$s/p{,/*}";
     my $l = Rw Lst + $s;
     n ind=>o3=>"Yon ls&dir have ls&iterat to ".@$M
     my $m = [@$M];
     #@$M = ();
-    m "dis _.t"=>''=>G&aC,$_ =>'dis' for @$m;
+    my $s = join("\n", map {G&aC,$_ }@$M);
+    #saygr "Ess: $s";
+    n disop=>''=>$s,'fs:7,dis'
+    y.n = 3;
     
-     # dedupe
-    
-    #@$M = ();
     
     
 pi/gust: | # see G
@@ -202,24 +219,27 @@ Exer: | # find bits for the show
     
     # do it
     my @img = split"\n",''.`c&cmd`;
-    1 && say "EXE: c&cmd: ".@img;
+    1 && say "EXE: c&cmd: ".@img." Last: $img[-1]";
     
     my $N = [map { {c=>{s=>$_}} } @img];
     # the directory all are within,
     #   would be the c&s up to {,} or *
-    my ($know) = $1 if c&s =~ /^([^\{\*]+)\//;
+    my ($know) = $1 if c&s =~ /^([^\{\*]+)(\/.*?|$|.+?)/;
     $know ||= c&s;
     my $l; # last titled directory bunch, for ls -1ct
     # upgrade all to full path c&s
+    my $blanks;
     for my $C (@$N) {
         if (!length c&s) {
             C.sc.not = 1;
+            $blanks++;
             undef $l;
             next;
         }
-        if (c&s =~ /^($know.+)\/?:$/ && -d $1) {
+        if (c&s =~ /^($know.*)\/?:$/ && -d $1) {
             $l = $C;
             c&s = $1;
+            s&container = 1;
         }
         else {
             next if c&s =~ /^\Q$know\E/; # is full path
@@ -235,8 +255,17 @@ Exer: | # find bits for the show
     }
     # split $know off c&s to get C.t
     @$N = grep {
-        _.t = $1 if _c&s =~ /^\Q$know\E\/(.+)$/;
-        _.t || die "Not in $know: ".ki $_;
+        _.t = $1 if _c&s =~ /^\Q$know\E\/?(.+)$/;
+        unless (defined _.t) {
+            if (_c&s eq $know && _s&container) {
+                _.t = ''; # hmm
+                sayyl "Gets blank from $know: ".ki $_
+            }
+            else {
+                die "Not in $know: ".ki $_;
+            }
+        }
+        1
     } grep {
         !_.sc.not
     } @$N;
@@ -251,16 +280,15 @@ Exer: | # find bits for the show
     }
     
     # reunlimit until lim is full of satis ^
-    if (c&lim) {
-        if (c&lim < @$N) {
-            #@$N = @{$N}[0..(c&lim-1)]
-        }
-        else {
-            s&done = 1
-        }
+    if (c&lim && c&lim < @$N) {
+        sayre "Returned c&lim < ".($blanks + @$N)." rows, keep reading...";
+        #@$N = @{$N}[0..(c&lim-1)]
     }
-    _.y.cv ||= 9 for @$N;
+    elsif (c&lim > @$N + $blanks) {
+        sayre "Done! c&s since c&lim vs ".($blanks + @$N);
+        s&done = 1
+    }
+    #_.y.cv ||= 9 for @$N;
     s&dir = $know;
-    1 && saybl " c&s ::: $know: ", map{_c&s} @$N;
     s&z = $N
 

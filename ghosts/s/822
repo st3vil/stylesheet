@@ -17,6 +17,7 @@ ElvisYou: | # YOUR
     my $M = [];
     G.c.lastbay = G.c.bay;
     G.c.bay = c&bay || ar.bay || 'bAy';
+    delete G.c.lastbay if G.c.lastbay eq G.c.bay;
     `rm -rf G.c.bay/p/*`;
     `mkdir -p G.c.bay/p`;
     # to fork an output handler (O) and children (U)
@@ -47,7 +48,7 @@ Opper: | # consolidato
     
     if (my $l = G.c.lastbay) {
         # Opper must be seen on W destination to stream
-        my $dirs = split('/', $l) - 1 + 2;
+        my $dirs = split('/', $l) + 2;
         my $ting = join'',('../') x $dirs;
         `ln -s ${ting}G.c.bay/p/$$ $l/p/$$`;
     }
