@@ -51,17 +51,38 @@ pi/clust: |
     Jc&save = 'W';
     -d "$s/p" || die "No $s/p";
     
-    my $l =
-    n "s/p"=>-listle=>"$s/p{,/*}",'qz'
+    n "s/p"=>-listle_1=>"$s/p{,/*}",'qz'
+    my $dir = T.op.sc.dir;
+    my $N = [ G&op,'pi:fils' ];
     
-    n "linked"=>-linkle=>{s=>$l},'qz'
+    my $eh = hitime();
+    
+    # to pi chewing list edge-blur:
+    # basically receive $N or previous $M stuff
+    # and chew, output $M stuff
+    #   cv = 1 for sort of $M
+    #   cv = '' to keep as $M is
+    #   cv = cv to keep cvs
+    
+    #Rw pi/linkle $N;
+    n linked=>-linkle_2=>{},'qz'
+    
+    #Rw pi/groule $N;
+    n grouped=>-groule_3=>{},'qz'
+    
+    n piled=>-pilele_4
+    
+    my $ts = hitime() - $eh;
+    my $delta = Rw mass $s:ts;
+
     
     my @l = G&op,'pi:fils' ;
+    my $s = $l[5];
+    n fromi=>3=>"From $dir, $delta",'dis'
     
-    n fromi=>3=>"From T.op.sc.dir",'dis'
     
     #n tho=>''=>{s=>ki $s },dis
-    n thing=>-od=>{s=>\@l},dis
+    n thing=>-od=>{s=>$s},dis
     
     ($s) = grep {_.t eq 'Spec/out'} @l;
     my $z = s.y.A;
@@ -69,15 +90,108 @@ pi/clust: |
     n thingee=>-od_8=>{s=>zs&neg },dis
     
     
+pi/pilele: | # pile filenames
+    # FactorEase top
+    # and list chewing pi that know how to be Rw
+    my $N = ar.N || c&N || do {
+        my $t = T.op = ref $s ? ss&J.sc.top || die "Notop" : T.oT.op;
+        [ G&op,'pi:fils' ];
+    };
+    # assuming they're in order
+    for my $C (@$N) {
+        C.t = s&unit if s&unit;
+        delete c&s;
+        my $etc;
+        if (C.y.C) { # follow back to -listle o
+            my $S = $C;
+            my @e;
+            while (S.y.C) {
+                $S = S.y.C;
+                push @e, $S;
+            }
+            # the one in o after the first mo
+            my $i = $e[-1];
+            $S = $e[-2];
+            $S = S.y.A;
+            S.t eq 'o' || die join"\n", "Didn't find last o along: ",
+              map { "--- _.t: ".G&aC,_.y.A } @e;
+            my $d = Sc&diff;
+            
+            my @o = $S;
+            while (Sc&last) {
+                $S = Sc&last;
+                push @o, $S;
+            }
+            
+            my $ei = join"\n", map { G&aC,_c&diff } @o;
+            #my $ei = join ",  ", map{ G&sn,_.1 } grep {_.1} map {_.y.A} @e;
+            # make 
+            $etc = "\n$ei\n :::: ".G&aC,$d;
+        }
+        c&s = "C.t".($etc && ": $etc");
+        s&ml = s&ind * 2 if s&ind;
+        s&dis = 1;
+    }
+    
+    my $M = ar.M || [];
+    ar.N || do {
+        @$M = @$N;
+        delete _.y.cv for @$M;
+    }
+    
+    
+pi/groule: | # pile filenames
+    # FactorEase top
+    # and list chewing pi that know how to be Rw
+    my $N = ar.N || do {
+        my $t = T.op = ref $s ? ss&J.sc.top || die "Notop" : T.oT.op;
+        [ G&op,'pi:fils' ];
+    };
+    my @p = ();
+    for my $C (@$N) {
+        my @b = split '/', C.t;
+        my $i = 0;
+        for my $et (@b) {
+            my $c = $p[$i]; # last insider
+            if (c.t && C.t =~ /^c.t\/(.+)$/) {
+                s&inside = $c;
+                s&ind = $i+1;
+                s&unit = $1;
+                #saygr "c.t has C.t";
+            }
+            else {
+                pop @p while @p > $i;
+                $p[$i] = $C;
+            }
+            $i++;
+        }
+    }
+    
+    
+    
+    my $M = ar.M || [];
+    ar.N || do {
+        @$M = @$N;
+        _.y.cv = 1 for @$M;
+    }
+    
 pi/linkle: | # dedupe linked names
     # FactorEase top
-    my $t = T.op = ss&J.sc.top || die "Notop";
-    my $N = [ G&op,'pi:fils' ];
+    # and list chewing pi that know how to be Rw
+    my $tw;
+    my $N = ar.N || do {
+        my $t = T.op = ref $s ? ss&J.sc.top || die "Notop" : T.oT.op;
+        $tw = t.y.tw;
+        [ G&op,'pi:fils' ];
+    };
+    $tw ||= {map{_.t=>$_}@$N};
+    
     my $linked_tw = {};
     for my $l (grep {_s&link} @$N) {
         my $to = ls&link;
         next if $to =~ /\.\./;
-        my $o = t.y.tw.>$to;
+        my $o = $tw.>$to;
+        # get everything inside either place
         my ($ls,$os) = map {my$t=$_; [ grep {_.t =~ /^\Q$t\E/} @$N] } l.t, o.t;
         @$ls == @$os || die "confusing linkage";
         my @dodge;
@@ -98,9 +212,7 @@ pi/linkle: | # dedupe linked names
             my ($li,$oi) = map{ (stat _c&s)[1] } $l,$o;
             $li eq $oi || die "Differing inodes even: ".ki($l)."\nvs: ".ki$o;
         }
-        my $s = saygr "Should quiv: l.t -> o.t: ".ki$l;
         $linked_tw.>l.t = o.t;
-        m blab=>''=>$s,dis
     }
     each l,o $linked_tw {
         @$N = grep {
@@ -108,8 +220,11 @@ pi/linkle: | # dedupe linked names
         } @$N;
     }
     
-    @$M = @$N;
-    _.y.cv = 1 for @$M;
+    my $M = ar.M || [];
+    ar.N || do {
+        @$M = @$N;
+        _.y.cv = 1 for @$M;
+    }
 pi/listle: |
     Jc&save = 'W';
     my $l = Rw Lst + $s;
@@ -117,7 +232,7 @@ pi/listle: |
     n ind=>o3=>"Yon ls&dir have ls&iterat to ".@$M
     my $s = join("\n", map {G&aC,$_ }@$M);
     n disop=>''=>$s,'fs:7,dis'
-    y.n = 3;
+    _.y.cv = 6 for @$M;
     
     
     
