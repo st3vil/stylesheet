@@ -20,7 +20,7 @@ not: | # do everything! (run as Spec)
     Rw GiveTime;
     my $ti;
     $ti = Js&ti = &{ $ti eq Js&ti && 4s&toy ->({to=>[[C.t]]}) };
-    G&timer:3,$ti;
+    G&timer:13,$ti;
     
     
     #n roms=>4=>Js&bowls++=>'%dis,fs:44'
@@ -42,8 +42,6 @@ not: | # do everything! (run as Spec)
      
     # sprout clusters (bay) (GG), gusts (bay/wil) (G) and wormholes (W)
     #   bind wormhole with travel, ghost
-
-
 pi/Trooms: |
     Jc&save = 'W';
     # C Trooms, instead of single items everywhere:
@@ -55,26 +53,67 @@ pi/clust: |
     
     my $l =
     n "s/p"=>-listle=>"$s/p{,/*}",'qz'
-    my @l = G&op,'pi:fils';
-    $s = [
-    map {
-        $_
-    }
-    grep {_s&link} @l];
+    
+    n "linked"=>-linkle=>{s=>$l},'qz'
+    
+    my @l = G&op,'pi:fils' ;
+    
+    n fromi=>3=>"From T.op.sc.dir",'dis'
     
     #n tho=>''=>{s=>ki $s },dis
-    n thing=>-od=>{s=>$s},dis
+    n thing=>-od=>{s=>\@l},dis
     
     ($s) = grep {_.t eq 'Spec/out'} @l;
     my $z = s.y.A;
     $z = zc&diff;
-    
     n thingee=>-od_8=>{s=>zs&neg },dis
     
     
+pi/linkle: | # dedupe linked names
+    # FactorEase top
+    my $t = T.op = ss&J.sc.top || die "Notop";
+    my $N = [ G&op,'pi:fils' ];
+    my $linked_tw = {};
+    for my $l (grep {_s&link} @$N) {
+        my $to = ls&link;
+        next if $to =~ /\.\./;
+        my $o = t.y.tw.>$to;
+        my ($ls,$os) = map {my$t=$_; [ grep {_.t =~ /^\Q$t\E/} @$N] } l.t, o.t;
+        @$ls == @$os || die "confusing linkage";
+        my @dodge;
+        # are they the same except for the name in linkage, and the s&link itself
+        for (0..(@$ls-1)) {
+            my $l = $ls->[$_];
+            my $o = $os->[$_];
+            (local oc&s = oc&s) =~ s/o.t/l.t/;
+            local os&link = ls&link if ls&link;
+            unless (ki(l.c) eq ki(o.c) &&
+                   ki(l.sc) eq ki(o.sc)) {
+                push @dodge, [$l,$o];
+            }
+        }
+        # if the inode is the same, it grew between each way we looked at it
+        for (@dodge) {
+            my ($l,$o) = @$_;
+            my ($li,$oi) = map{ (stat _c&s)[1] } $l,$o;
+            $li eq $oi || die "Differing inodes even: ".ki($l)."\nvs: ".ki$o;
+        }
+        my $s = saygr "Should quiv: l.t -> o.t: ".ki$l;
+        $linked_tw.>l.t = o.t;
+        m blab=>''=>$s,dis
+    }
+    each l,o $linked_tw {
+        @$N = grep {
+            _.t !~ /^$o/
+        } @$N;
+    }
+    
+    @$M = @$N;
+    _.y.cv = 1 for @$M;
 pi/listle: |
     Jc&save = 'W';
     my $l = Rw Lst + $s;
+    y.at.dir = ls&dir;
     n ind=>o3=>"Yon ls&dir have ls&iterat to ".@$M
     my $s = join("\n", map {G&aC,$_ }@$M);
     n disop=>''=>$s,'fs:7,dis'
