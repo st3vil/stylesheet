@@ -71,8 +71,49 @@ Clustouting: | # chase output
     
     n t=>1=>Jc&pd,'%hs:347,fs:14'
     
-    n out=>-has_2,{},'fs:6'
-    n err=>-has_3,\'bgh:942','fs:7'
+    n out=>-hasl_2,{},'fs:6'
+    n err=>-hasl_3,\'bgh:942','fs:7'
+pi/hasl: | # log tail
+    #y.at.over = 'scroll';
+    y.at.dis = 1;
+    y.at.bgh = c&bgh if c&bgh;
+    #y.at.mh = '36';
+    #y.at.mw = '48';
+    Js&len ||= 30;
+    my $f = 2c&pd || die "2 by c pd.";
+    $f .= "/C.t";
+    my @l = `tail -n Js&len $f`;
+    
+    chomp for @l;
+    n t=>1=>C.t=>'%hs:349,fs:14'
+    
+    y.n = 12;
+    my (@c,$lc);
+    @l = map {
+        # group by line colour
+        
+        1 while s/^\x1b\[(\d+)m//;
+        if ($1 ne $lc || !@c) {
+            $lc = $1;
+            push @c, {t=>$1,y=>{}};
+        }
+        my $c = $c[-1];
+        push @{cs&z||=[]}, $_;
+        $_
+    } @l;
+    #m l=>''=>join("\n",_s&z)$_,'%dis:3' for @c;
+    for (@c) {
+        my $hs = _.t eq '31' ? '066' # red
+            : _.t eq '93' ? '276' # yellow
+            : _.t eq '94' ? '676' # blue
+            : _.t eq '37' ? '224' # non
+            : "109";
+        my $l = join "\n", @{_s&z};
+        m bit=>''=>$l,"%hs:$hs,dis:3"
+    }
+    #n C.t=>-pud=>{dl=>6,s=>\@c};
+    say "C.t is ".@l;
+    #G&give,Toter=>o=>\;
     
 pi/pilele: | # pile filenames
     Jc&save = 'W';
