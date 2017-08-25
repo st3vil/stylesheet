@@ -8,10 +8,12 @@ Wants: | # W-transcending magmatics
     
 Dogu: | # T room versing, self divising tree science
     Jc&tape = "Dejo";
+    Jc&save = 1;
+    Rw Tiot;
     Js&ein.bo = 'Doable';
+    A.6.t = A.7.t;
     y.res = 100; # reassign m cv
-    # sees
-    Rw AWriter;
+    
     S
     #G&Experience;
     
@@ -23,9 +25,14 @@ Dogu: | # T room versing, self divising tree science
     m lase=>-od=>{s=>delete Js&lase}
 pi/lookins: | # source of intent, remembers stuff about names
     y.res = 100; # reassign m cv
+    Jc&save = 1;
     
-    my $d = G&Experience;
+    # uses last save
+    my $d = Rw ReadMe;
+    # and applies change to it
     my $c = delete 3s&change;
+    
+    sayyl "3 to ".G&sn ." Ist: ".G&sn,A.3;
     
     if ($c) {
         my $ub = &C{ G&aC };
@@ -102,15 +109,13 @@ pi/looking: | # a piece of intent
     else { # open this as many
         n C.t=>-lookat_3
     }
-lookinating: | # find relevant objects for click/so
+lookinating: | # find relevant objects for dos:looking lick/so
     1 && sayyl "Looking at ".G&sn,$J;
-    # FactorEase e&hC -looking -1 cs ^
-    # the last -looking's s's origin J we send updates
-    # e&hC -looking
+    # FactorEase e&hC -looking -1 cs
+    # last -looking has c&s = self
+    # < finding the origin J to send updates
     my @l = grep {_s&pi eq 'looking'} e&_hC;
-    # -1
     my $l = $l[-1];
-    # cs
     my $s = lc&s || die "looking not an s";
     #    may be madeup... need to look up through -lookings
     #    to find a real s from -lookin
@@ -121,9 +126,10 @@ lookinating: | # find relevant objects for click/so
     $S = S.y.D if S.y.D;
     my $p = S.y.up;
     my $ps = p.y.s;
-    my $v = ps.1;
+    #my $v = ps.1;
     # tell this v to change this datum
-    my $c = vs&change ||= G&Ct,[change=>''];
+    # < should be for the -lookin not A.3 (J)
+    my $c = Js&change ||= G&Ct,[change=>''];
     my $i; # nerve ending
     for my $l (@l) {
         $i = c.y.tw.>l.t ||= G&Ct,[l.t=>''];
@@ -131,26 +137,25 @@ lookinating: | # find relevant objects for click/so
         la.y.next = $i if $la ne $i;
         $c = $i;
     }
-    if (delete ic&new) {
-        is&lum = 1;
-    }
     
     return (
         $p, # parent of first looking
-        $v, # lookins J?
+        $J, # lookins J? now A.3
         $i, # changes to copy into $s
         $s, # last looking's c&s
     );
     
 looking: | # click at -looking puts update to source -lookins
     my ($p,$v,$i,$s) = Rw lookinating;
+    
     # place changes
-    is&lum = ss&lum + (ec&us.S ? -1 : 1);
+    is&lum = (ss&lum||1) + (ec&us.S ? -1 : 1);
     
     my $ub = &C{ G&aC };
     my @le = G&ind,vs&change,$ub;
     my $vsn = G&sn,$v;
-    saybl "With a: $v: $vsn", @le;
+    saybl "With a: $v: $vsn", ki($v), @le;
+    sayyl "3 to ".G&sn ." Ist: ".G&sn,A.3;
     
     Js&lase = [
         s=>$s,
@@ -222,20 +227,13 @@ pi/lookat: | # from -looking, a multitude of -lookings
     
     my ($head,$many) = ([],[]);
     for my $l (@l) {
-        $l = l.y.D if l.y.D; # hup from G&op/ind
         # back through the two o's of osc
-        my $r = l.y.r.c.o.y.D.y.r.c.o.c.s;
+        my $r = $l;
+        $r = r.y.C while r.y.C;
         # y.a on the original C indicates M via A=L/a
         my $to = r.y.a ? $many : $head;
         # use origin as Styles will be computed in $l
         $r = G&hup,$r;
-        if (my $i = l.y.in) {
-            # things inside it will not have Styles computed,
-            # as s doesn't sequence them... but should
-            # also this all wants to be FactorEase
-            rs&z = [$i];
-            push @{rs&z}, $i while $i = i.y.next;
-        }
         push @$to, $r;
     }
     
