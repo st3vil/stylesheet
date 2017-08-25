@@ -1,6 +1,6 @@
 LandSty: | # js jigup
     my $t = 'Stylands';
-    #n NetJig=>W=>{the_W=>$t}
+    n NetJig=>W=>{the_W=>$t}
     n NetJig=>W=>{the_W=>'Stylemoment'}
     #n NetJig=>W=>{the_W=>'Stylewholes'}
     return;
@@ -52,6 +52,7 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
         if (t) {
             $.ajax('shed/'+lv.f+'/h/'+t).done(&L{
                 !L.length and ~noL: lv.f, t
+                T.readinglv = lv.f+'/h/'+t;
                 $l = lv.haN[t] = G&readLines,L;
                 !l.length and ~nolinesin: t
                 l = l[l.length-1];
@@ -104,16 +105,17 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
     u j
     readLines:
         $L = s.split("\n");
+        $oL = [];
         $tot = L.length;
         $N = [];
         $stack = [];
+        $paniconce = 0;
         
-        //try{
         while (L.length) {
         
         $l = L.shift();
+        oL.push(l);
         !l.length and continue
-        //console.log("Lam: "+l);
         $lin = l.match(/^(\s*)(.*)$/);
         $ind = lin[1];
         $d = ind.length / 2;
@@ -204,22 +206,34 @@ Stylands: | # reading bay/el/Figures/1,2 and etc
             C[nk][gk] = v;
         }
         
-        stack[d] = C;
-        if (d) {
-            $p = stack[d-1];
-            !p and console.log('plos',d-1,stack,C);
+        d.toFixed() != d and ~fractionalind: d, C, T.readinglv
+        d = 1 * d.toFixed();
+        if (d > 0) {
+            $p
+            $dl = d;
+            while (dl--) {
+                p = stack[dl];
+                p and break
+            }
+            if (dl < d - 1) {
+                $few = oL.slice(-3);
+                if (! paniconce++)
+                    ~toomuchind: d, dl, T.readinglv, few
+                d = dl+1;
+            }
             ps&z ||= [];
             ps&z.push(C);
+            // tv/tw/in/next?
+            // a mass inCing
         }
         else {
             N.push(C);
         }
+        stack[d] = C;
+        while (stack[d+1])
+            stack.pop();
         
         }
-        //}
-        //catch (e) {
-        //    throw ["On line "+(tot - L.length)+": "+l, e];
-        //}
         return N
         
 ach: | # inhale Lines
