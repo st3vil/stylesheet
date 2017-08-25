@@ -1016,7 +1016,7 @@ Writer: | # to make 12345, 7
             # 8ers come back with yers
             # now fold their z down with any yLinez they have
             # to become our yLinez
-            # < mysteriously feeding back indentation
+            # < mysteriously feeding back indentation ($seems_indented)
             #   when 2 imps and 1 doesn't, reading 1's older lv again
             #   fuxed by not indenting the non-last waves of lv
             if (C.y.lvz && c&el ne '8' && c&el ne '9') {
@@ -1030,15 +1030,20 @@ Writer: | # to make 12345, 7
                     $@ && die "For $p:\n  C: ".ki($C)."\n$@";
                      
                     my $s = $in->(w.7,$C,C.y.Line,Yc&ind+1);
+                    
+                    #1 && saybl "o.t's C.t: $s";
                     #1 && saygr "Adding up $p: C.y.Line\n to: $s";
                     # our indenting of it splits off into Linez
                     # for aboves to grab the lot and indent again
                     push @Lines, $s;
-                    for my $s (@{C.y.Linez||[]}) {
-                        #1 && sayyl " o.t o.y.cv Yc&ind/$ult has C.t C.y.cv has: $s";
-                        push @Lines, $s;
-                        my $ind = $lastwave ? Yc&ind+1 : 0;
+                    my @l = @{C.y.Linez||[]};
+                    # < figure why
+                    my $seems_indented = 1 if $l[0] =~ /^      /;
+                    for my $s (@l) {
+                        my $ind = $seems_indented ? 0 : Yc&ind+1;
                         $s = $in->(w.7,{},$s,$ind);
+                        #1 && sayyl " o.t o.y.cv (ind=Yc&ind) has C.t has: $s";
+                        push @Lines, $s;
                     }
                 }
                 o.y.Linez = \@Lines;
