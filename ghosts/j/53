@@ -86,8 +86,14 @@ Wall: | # your publisher - sends to Wlan (local) or Elan (remotes)
             `unlink $f/$t` if -e "$f/$t";
             `ln -s h/$ha $f/$t`;
             if ($t eq '7' && Ws&imp && Ws&wil) {
-                my $t = $t.'.'.Ws&imp.'.'.Ws&wil;
-                `ln -s h/$ha $f/$t`;
+                my $v = $t.'.'.Ws&imp.'.'.Ws&wil;
+                if (-l "$f/$v") {
+                    my $ca = sayre "Resetting lv linkbunch at $f/$v";
+                    Ws&imp == 1 && Ws&wil == 1
+                        || die "$ca, nonstart restart";
+                    unlink $_ for glob "$f/$t.*.*";
+                }
+                `ln -s h/$ha $f/$v`;
             }
         }
         # filter to things we want to send the client
