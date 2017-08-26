@@ -148,19 +148,11 @@ pi/lookat: | # from -looking, a multitude of -lookings
     my $s = 2Cc&s;
     my $type = ss&inter || ss&type || 'files';
     
-    # FactorEase ^C-lookat C rev { _t } join'/'
-    my $Y = A.1;
-    my @Y;
-    while ($Y) {
-        push @Y, $Y if Y.c.s.sc.pi eq 'lookat';
-        $Y = Y.2 || last;
-        $Y eq Y.3 && last;
-    }
-    my @Cs = map {_c&s} reverse @Y;
-    my $filename = join("/",map{_.t}@Cs);
+    my $filename = Rw GetFilename;
+    
     
     my @types = qw'files';
-    push @types, 'lizes' if @Cs == 1;
+    #push @types, 'lizes' if @Cs == 1;
     push @types, '?'; # to talkybox
     
     # < click instant dropdown/typein
@@ -200,6 +192,20 @@ pi/lookat: | # from -looking, a multitude of -lookings
         m l.t=>-looking=>{s=>$s,zail=>[$l]}
     }
     
+GetFilename: | # for a J with -lookat's t and is=directory's c&s above it
+    # FactorEase ^C-lookat C rev { _t } join'/'
+    my $Y = A.1;
+    my @Y; # whose Ct are filename bits
+    my @dir; # leading in
+    while ($Y) {
+        my $C = Yc&s;
+        push @Y, $Y if s&pi eq 'lookat';
+        unshift @dir, c&s if s&is eq 'directory';
+        $Y = Y.2 || last;
+        $Y eq Y.3 && last;
+    }
+    my @Cs = map {_c&s} reverse @Y;
+    my $filename = join("/",@dir,map{_.t}@Cs);
 pi/files: | # base type of looking
     y.n = 4;
     n t=>1=>"C.t",'ma:0.2';

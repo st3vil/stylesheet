@@ -250,7 +250,11 @@ SirKill: | # crawl datastructure
                         }
                     }
                     if (my $nkgk = $m && ms&nkgk) {
-                        each nk,gk,v $E {
+                        # avoid warn for iterating a changing structure
+                        my $oE = {%$E};
+                        $oE.>$_ = {%{ $oE.>$_ }} for
+                            grep {ref $oE.>$_ eq 'HASH'} keys %$oE;
+                        each nk,gk,v $oE {
                             next if $nk eq 'y';
                             my $y = $nkgk.>$nk.>$gk || next;
                             $v = $E.>$nk.>$gk;
