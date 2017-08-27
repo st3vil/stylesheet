@@ -136,7 +136,6 @@ NewBeginning: | # 0 HaMachine.pl's first way
     4s&Jtv.>_.t.>$one = $_ for $i,$o;
     
     
-    
     Rw CloningProcess;
     sayre "Become thingz!";
     
@@ -144,42 +143,53 @@ NewBeginning: | # 0 HaMachine.pl's first way
     Rw t/o_simple;
     
     n Howz
+    #delete G.way;
     
     # has moments
     n Motor
     
-Howz: | # another House, sheets of mind you want handy, resource gateway
+Howz: | # another House, sheets of mind you want handy
+    # be a resource gateway
     Js&loose = 1;
-    Js&tby = 'byt'; # h for further lookups, eg of=w
+    # h for further lookups, eg of=w
+    Js&tby = 'byt';
     
     # add u, eg WayHeave for w over/update
     Js&ein.t.w = &TesC{
         my $W = e.c.s;
         $W =~ /^(\w+)$/ || die "Give ecs way name";
-        Jc&addu.>$W ++;
+        5c&alsu.>$W ++;
         T.oke = 1;
     };
     
-    # Normal is the implied mind of the valleys
+    # 5c&plus [t+] mutates Normal
+    # 5c&alsu {t=>1+} puts things in 5's mind
+    #  < i should mostly be on 5, speeding u comps
+    
+    # Normal is the implied mind of all valleys
     # see Jtool
-    # - waves of 'u thing' add to it for your valley
+    # - waves of 'u thing' add to it for your J
+    # < and everything below it?
     
-    # < TheU changes it everywhere, on 5
-    #   puts it as of:W, seen as W=Normal
-    #   having mixed 5c&plus = [W,W...] into it
-    #   < remixes it if needed (versioning)
-    
-    #u TheU
-    
-    # also available as:
-    # 5s&NormalI - tw of things, A.I
-    # 5s&NormalC - C.c.W=Normal, sc.J.sc.I == NormalI
-    #   for placing before additions in u, I swoms via J
-    
-    5s&NormalI = A.I;
-    my $j = G&Ct,[Normal=>1];
-    j.y = $j;
-    j.sc.I = A.I;
+    # 5c&NormalI - tw of things, A.I
+    # 5c&NormalJ - s&I == 5c&NormalI
+    # keeps the beginning's I
+    # 5c&NormalC - s&J = 5c&NormalJ or ReNormal
+    # ReNormal includes 5c&plus to NormalJ
+    # to mutate everywhere
+    5s&NormalI ||= A.I;
+    my $j =
+    5s&NormalJ ||= do {
+        my $j = G&Ct,[Normal=>1];
+        j.y = $j;
+        j.sc.I = A.I;
+        $j
+    };
+    if (5c&plus) {
+        my $R =
+        n ReNormal
+        $j = Rs&J;
+    }
     5s&NormalC = G&Ct,[Normal=>1=>{}=>{J=>$j}];
     
     # we switched Mo to mo with PiMachine
@@ -198,11 +208,17 @@ Howz: | # another House, sheets of mind you want handy, resource gateway
     #u TheU
     u Ang
     
-    u $_ for sort keys %{Jc&addu||{}};
+    u $_ for sort keys %{5c&alsu||{}};
     S
     
     1 && saygr "/House";
     
+ReNormal: |
+    my $j = 5s&NormalJ || die "no5NormalJ";
+    my $plus = 5c&plus || die "no5cplus";
+    n Normal=>1=>{}=>{J=>$j}
+    y.n = 2;
+    m $_ for @$plus
 TheU: | # posit our 4.ii as normal (theu), share as W
     # host
     my $u = 5c&normal;
@@ -266,6 +282,8 @@ Motor: | # be a G
     }
     
     Gc&clockison ||= Gc&clockon->() || 1 if Gc&clockon;
+    4c&todo &&
+    Rw MotorTime;
     saygr "/Motor";
     # store J, no osc
     T.nose = '2';
