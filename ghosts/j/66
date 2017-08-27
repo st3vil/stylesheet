@@ -110,12 +110,29 @@ Turns: | # send instance into running
     #sayre "Giving $w: $f/$t: sc.Jo";
     Rw Wudder $s;
 Turning: | # set up on the running instance
-    5c&plus = ['StarTime'];
-    # Udder, to Turning, brackets whole Run inc timers, Sucks Wall
-    n Howz
-    sayyl "Excs: ".e&cs  ;
-    n Taste
-    G&give,Suck=>[s=>'',{s=>A.4}];
+    # brackets whole Run inc timers, Sucks Wall
+    Js&ein.t.W.sMJ = &sMJjeTCA{
+        # prepare node for testrun:
+        push @{Gc&when_done||=[]},
+            [Turning=>[done=>'']];
+        # mutation
+        5c&plus = ['StarTime'];
+        n Howz
+        # muting
+        n Wall=>W=>{mute=>1}
+        
+        # being
+        n Taste
+    };
+    Js&ein.t.done.sMJ = &sMJjeTCA{
+        # Tee and comp to test data
+        my $W =
+        n Wall=>W=>{mute=>0}
+        G&give,Suck=>[s=>'',{s=>Ws&J.sc.tw.Taste}];
+    };
+    S
+    Rw GiveTime;
+    
 Taste: | # waylay self
     my $i = Js&bowls++ + 1;
     Jc&tape = 'W';
@@ -124,10 +141,12 @@ Taste: | # waylay self
     
     my $cb = &{ 4s&toy->({to=>[C.t]}); };
     $i < 3 &&
-    G&timer,3,$cb;
+    G&time,1,$cb;
 StarTime: | # explicit Motor-served timers
     u i
-    timer: %acgt:s cb
+    # todo compute desire
+    time: %acgt:s cb
+        1 && saygr "Eating time";
         push @{4c&todo||=[]}, [$A,$s,$cb];
 MotorTime: | # serve time
     sayre "Plan future: ".ki $_ for @{4c&todo};
@@ -149,9 +168,11 @@ MotorTime: | # serve time
         push @int, $s;
         my $v = $tz.>$s;
         Mojo::IOLoop->timer($s,&{
+            1 && sayyl "Here again!";
             for my $y (@$v) {
                 my ($Y,$cb) = @$y;
-                saybl "Comeback $s: ".G&sn,$Y;
+                1 && saybl "Comeback $s: ".G&sn,$Y;
+                $cb->();
             }
         });
     }
