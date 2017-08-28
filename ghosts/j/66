@@ -140,7 +140,7 @@ Turning: | # set up on the running instance
     S
     Rw GiveTime;
     
-LiveResult: |
+LiveResult: | # hold/check results
     Rw Tiot;
     Js&ein.t.Wentz.sMJ = &sMJjeTCA{
         # every item sent to Wall
@@ -153,12 +153,42 @@ LiveResult: |
     };
     S
     #_.y.cv = 1 for @{Js&M||[]};
+    
+    y.n = 2;
     m $_ for @{Js&M||[]};
+    # sort of could use lookins to deliver self
+    # bit all-or-nothing tho...
     n Gc&testbeing=>-lookins
+    
+    # TODO:
+    # n Gc&testbeing=>-thistest=>{s=>Js&M}
+    # which tacs via Jc&save, on -thistest and -results
+    # much simpler...
+    
+    my $trouble;
+    for my $C (@$M) {
+        my $f = C.y.self;
+        my $s = c&s;
+        # quick map of inner things
+        s&zsha = [map {"_.t _s&ha"}@{ss&z}];
+        if (my $z = fs&zsha) {
+            if (sjson($z) eq sjson(s&zsha)) {
+                delete c&pi ;
+                c&s = "C.t: pass";
+            }
+        }
+        $trouble ++;
+        # the ha there being enough to confirm the state
+        # exploding lined out guts if different...
+        # and fold it up to PASS, or lie lum=2 if problems
+    }
+    $trouble &&
+    n tacall=>12=>"tac-all"=>'dis,fs:8,dos:tacall';
     
 pi/result: |
     y.at.dis = 1;
     n tee=>1=>C.t
+    # with a self that
     #n W=>2=>{s=>G&aC,$s },'fs:7,hs:647,dis'
     if (my $f = C.y.self) {
         n self_had=>2=>" us: ".G&aC,$f  ,'dis,fs:7'
@@ -176,6 +206,11 @@ pi/result: |
         my $M = ws&z = [];
         m s=>''=>{s=>Dc&s},'fs:7,hs:247,dis'
     }
+tacall: | # accept many -results
+    T.op = Js&top;
+    my @res = G&op,'pi:result';
+    G&give,Suck=>[tacall=>''=>{s=>\@res}];
+    
 looksult: | # accept -result
     my ($i,$s) = Rw lookinating;
     
