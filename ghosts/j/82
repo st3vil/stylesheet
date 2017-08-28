@@ -71,10 +71,11 @@ pi/lookins: | # source of intent, remembers stuff about names
         my $N = uc&M || die "no upM";
         my $tw = {};
         # makes selves of all others
+        my @so = grep { _s&dos eq 'looking' } @$N;
+        @so = @$N if !@so;
         m _.t=>{MC=>$_} for
             grep { $tw.>_.t = 1 }
-            grep { _s&dos eq 'looking' }
-            @$N;
+            @so;
         # goners maintain selves
         m _.t=>'' for
             grep { !$tw.>_.t }
@@ -86,19 +87,21 @@ pi/lookins: | # source of intent, remembers stuff about names
                 if (!defined s&lum) {
                     # new
                     ms&sep = 0.8;
-                    mc&s .= "!";
+                    mc&s .= "!" if !ref mc&s;
+                    ms&unknown = 1;
                 }
             }
             else {
                 # add vague other for goner
                 my $M = $N;
                 C.y.MC =
-                m C.t=>''=>{s=>"C.t?"},'dos:looking,fs:7,hs:844'
+                m C.t=>''=>{s=>"C.t?"},'fs:7,hs:844'
             }
             if (my $m = C.y.MC) {
                 # first one will dos:looking but not -looking,
                 #   the self will not be in c&s
                 m.y.self = $C;
+                ms&dos ||= 'looking';
                 # once those dos:lookings attract light,
                 # append their -looking to up's $M
                 if (s&lum > 1) {
