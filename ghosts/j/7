@@ -99,7 +99,7 @@ FishBrains: |
         
         delete rc&M;
         
-        #c o ou - to finalise ourselves and OK changes
+        #c o ou - to finalise ourselves and KA changes
         $o = A&ut = G&o,$r,{liveon=>$C,t=>'ut',yoff=>'KC',gen=>'lv',V=>0};
         
         # some vectors may want KC on top, no KAing
@@ -416,7 +416,22 @@ PostLV: | # make 7
     }
     }
     
-    my $N = [map { _c&s } @{A&VAs} ];
+    # drop Vc&T.not and children from the flat list
+    my @vas;
+    my $notind;
+    for my $V (@{A&VAs}) {
+        if (Vc&T.not) {
+            $notind = Vc&ind || die "noind for VA Tnot: ".ki $V;
+        }
+        elsif ($notind && Vc&ind > $notind) {
+            
+        }
+        else {
+            $notind = 0;
+            push @vas, $V;
+        }
+    }
+    my $N = [map { _c&s } @vas];
     
     Rw Writer + $N 7;
     
@@ -661,10 +676,25 @@ Koul: | # clarify changes to string
         # they can look it up
         delete c&Jo if ls&W || ls&qz;
         
+        if (ls&qz && s&z) {
+            # will be in 1, not in 7
+            # because all are flat list now,
+            # not the tops and filter with ind
+            for my $VC (@{s&z}) {
+                my $V = VC.y.VA;
+                V.t eq 'V' && Vc&of eq 'K' || die "weird VA, VC: ".ki$VC;
+                Vc&T.not = 1;
+            }
+            # < may interfere with something somewhere? test
+            sayre "qz ".G&sn .": ".G&aC ."  z=".ki s&z;
+            delete s&z;
+        }
+        
         # 9 knows but does nothing
         if (c&Jo) {
             Rw LVism $l $n;
         }
+
 LVism: | # hoist lv between Js in K 7
     #
     $l = a&l || die "Didnt have al (CyC): ".ki $C;
