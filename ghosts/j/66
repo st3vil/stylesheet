@@ -166,42 +166,27 @@ LiveResult: | # hold/check results
     @$M = ();
     3s&trouble &&
     n tacall=>12=>"tac-all"=>'dis,fs:8,dos:tacall';
-    return;
     # which tacs via Jc&save, on -thistest and -results
     # much simpler...
-    
-    my $trouble;
-    for my $C (@$M) {
-        my $f = C.y.self;
-        my $s = c&s;
-        # quick map of inner things
-        s&zsha = [map {"_.t _s&ha"}@{ss&z}];
-        if (my $z = fs&zsha) {
-            if (sjson($z) eq sjson(s&zsha)) {
-                delete c&pi ;
-                c&s = "C.t: pass";
-            }
-        }
-        $trouble ++;
-        # the ha there being enough to confirm the state
-        # exploding lined out guts if different...
-        # and fold it up to PASS, or lie lum=2 if problems
-    }
     
 pi/thistest: | # named
     Jc&save = 'W'; # when accepting
     my $d = Rw ReadMe;
+    y.at.dis = 1;
+    n tee=>1=>C.t
+    y.n = 3;
+    
     my $g = d.y.tw.glance;
     # things from -result.sc to speed by
-    Jc&glancey = [qw'zsha'];
+    Jc&glancey = [qw'zshaex'];
     for my $C (@$s) { # up's $M of -results
         my $s = c&s; # W in Wall
         my $f = g.y.tw.>C.t;
         # quick map of inner things
         die "Not all sha: ".ki $s if @{ss&z} != grep{_s&ha}@{ss&z};
-        s&zsha = [map {"_.t _s&ha"}@{ss&z}];
+        s&zshaex = [map {"_.t _s&ha"}@{ss&z}];
         if ($f) {
-            if (sjson(fs&zsha) eq sjson(s&zsha)) {
+            if (sjson(fs&zshaex) eq sjson(s&zshaex)) {
                 delete c&pi ;
                 c&s = "C.t: pass";
             }
@@ -217,6 +202,8 @@ pi/result: |
     my $d = Rw ReadMe;
     y.at.dis = 1;
     n tee=>1=>C.t
+    y.n = 3;
+    
     my $c = d.y.tw.expected;
     if ($c) {
         # mutes z in lv/7, 1 gets it
@@ -224,10 +211,6 @@ pi/result: |
         # send it around again
         n $c
     }
-    if (s&unknown) {
-        n unknown=>11=>"?",'dos:looksult,ma:0.2,hs:895';
-    }
-    y.n = 3;
     # $s is a W in Wall
     for my $D (@{ss&z||[]}) {
         !ref Dc&s && length Dc&s || die "Dodge D: ".ki $D;
@@ -247,17 +230,30 @@ pi/result: |
             }
         }
         elsif (1 || !s&unknown) { # the whole -result may be unknown
+            fs&fail = 1;
             fs&hs = '895';
             3s&trouble++;
+            s&fails++;
         }
     }
+    if (s&unknown || s&fails) {
+        n accept=>11=>"?",'dos:taccept,ma:0.2,hs:895';
+    }
 tacall: | # accept many -results
-    T.op = Js&top;
-    my @res = G&op,'pi:result';
+    my ($j) = reverse e&_hJ;
+    T.op = js&top;
+    my @res = G&op,'fail:1';
     G&give,Suck=>[tacall=>''=>{s=>\@res}];
     
-looksult: | # accept -result
-    my ($i,$s) = Rw lookinating;
+taccept: | # accept -result
+    my ($j) = reverse e&_hJ;
+    T.op = js&top;
+    my @res = G&op,'fail:1';
+    G&give,Suck=>[tacall=>''=>{s=>[$j,\@res]}];
+    return;
+    
+    =pod
+    #my ($i,$s) = Rw lookinating;
     
     # place changes
     
@@ -270,6 +266,7 @@ looksult: | # accept -result
     my $vsn = G&sn,$J;
     1 && saybl "With a: $vsn", G&ind,Js&change,'aC';
     1 && sayyl "3 to ".G&sn ." Ist: ".G&sn,A.3;
+    =cut
     
 Taste: | # waylay self
     my $i = Js&bowls++ + 1;
