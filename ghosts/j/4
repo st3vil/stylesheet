@@ -114,14 +114,17 @@ SirKill: | # crawl datastructure
                 #   mostly it will be filling up the connection of
                 #   chucked together any way bits
                 # < should know all y/c/sc that look C or [C+]
+                # < and not push duplciatively into Tv things
                 my @at;
                 each nk,gk,v $C {
                     next if 'y'eq$nk; # distracto or handled
                     if (ref $v eq 'HASH') {
                         # no A for it if not C, may still be deduped
                         # via os&refs collected from C and ng/gks
-                        v.y ne $v || next;
-                        $isC->($v) || next;
+                        next unless v.y ne $v; # not A
+                        # not s (see push duplicatively^)
+                        next if $nk eq 'c' && $gk eq 's';
+                        next unless $isC->($v);
                         push @at, ["$nk $gk",[$v],{isTv=>1,nk=>$nk,gk=>$gk}];
                     }
                     elsif (ref $v eq 'ARRAY') {

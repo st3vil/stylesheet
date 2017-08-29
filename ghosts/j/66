@@ -158,10 +158,15 @@ LiveResult: | # hold/check results
     m $_ for @{Js&M||[]};
     # sort of could use lookins to deliver self
     # bit all-or-nothing tho...
-    n Gc&testbeing=>-lookins
+    #n Gc&testbeing=>-lookins
     
     # TODO:
-    # n Gc&testbeing=>-thistest=>{s=>Js&M}
+    3s&trouble = 0;
+    n Gc&testbeing=>-thistest=>{s=>[@$M]}
+    @$M = ();
+    3s&trouble &&
+    n tacall=>12=>"tac-all"=>'dis,fs:8,dos:tacall';
+    return;
     # which tacs via Jc&save, on -thistest and -results
     # much simpler...
     
@@ -182,29 +187,69 @@ LiveResult: | # hold/check results
         # exploding lined out guts if different...
         # and fold it up to PASS, or lie lum=2 if problems
     }
-    $trouble &&
-    n tacall=>12=>"tac-all"=>'dis,fs:8,dos:tacall';
     
+pi/thistest: | # named
+    Jc&save = 'W'; # when accepting
+    my $d = Rw ReadMe;
+    my $g = d.y.tw.glance;
+    # things from -result.sc to speed by
+    Jc&glancey = [qw'zsha'];
+    for my $C (@$s) { # up's $M of -results
+        my $s = c&s; # W in Wall
+        my $f = g.y.tw.>C.t;
+        # quick map of inner things
+        die "Not all sha: ".ki $s if @{ss&z} != grep{_s&ha}@{ss&z};
+        s&zsha = [map {"_.t _s&ha"}@{ss&z}];
+        if ($f) {
+            if (sjson(fs&zsha) eq sjson(s&zsha)) {
+                delete c&pi ;
+                c&s = "C.t: pass";
+            }
+        }
+        else {
+            s&unknown = 1;
+        }
+        m $C
+    }
+    #
 pi/result: |
+    Jc&save = 'W'; # when accepting
+    my $d = Rw ReadMe;
     y.at.dis = 1;
     n tee=>1=>C.t
-    # with a self that
-    #n W=>2=>{s=>G&aC,$s },'fs:7,hs:647,dis'
-    if (my $f = C.y.self) {
-        n self_had=>2=>" us: ".G&aC,$f  ,'dis,fs:7'
+    my $c = d.y.tw.expected;
+    if ($c) {
+        # mutes z in lv/7, 1 gets it
+        cs&qz = 1;
+        # send it around again
+        n $c
     }
     if (s&unknown) {
-        n unknown=>32=>"unknown",'dos:looksult,ma:0.2,hs:895';
+        n unknown=>11=>"?",'dos:looksult,ma:0.2,hs:895';
     }
     y.n = 3;
-    #n seein=>-od=>{s=>$s};
-    #return;
+    # $s is a W in Wall
     for my $D (@{ss&z||[]}) {
-        my $desc = G&aC,$D ."   ha=Ds&ha";
-        my $w =
-        m "writes D.t"=>''=>{s=>$desc},'fs:7,hs:347,dis'
-        my $M = ws&z = [];
-        m s=>''=>{s=>Dc&s},'fs:7,hs:247,dis'
+        !ref Dc&s && length Dc&s || die "Dodge D: ".ki $D;
+        my $f =
+        m "writes D.t"=>''=>{s=>Dc&s},'fs:7,hs:247,dis'
+        # put further diags inside it
+        my $M = fs&z = [];
+        if (my $e = c.y.tw.>f.t ) {
+            if (ec&s eq Dc&s) {
+                fs&pass = 1;
+            }
+            else {
+                fs&fail = 1;
+                fs&hs = '348';
+                m expected=>1=>ec&s=>'hs:967,dis'
+                3s&trouble++;
+            }
+        }
+        elsif (1 || !s&unknown) { # the whole -result may be unknown
+            fs&hs = '895';
+            3s&trouble++;
+        }
     }
 tacall: | # accept many -results
     T.op = Js&top;
