@@ -141,6 +141,8 @@ Turning: | # set up on the running instance
     Rw GiveTime;
     
 LiveResult: | # hold/check results
+    # < could happen in a fork?
+    #   and refork as you look around fallouts
     Rw Tiot;
     A.6.t = A.7.t;
     Js&ein.t.Wentz.sMJ = &sMJjeTCA{
@@ -169,24 +171,16 @@ LiveResult: | # hold/check results
     # much simpler...
     
 pi/thistest: | # named
-    Jc&save = 'W'; # when accepting
-    my $d = Rw ReadMe;
     y.at.dis = 1;
     my $t =
     n tee=>1=>C.t
     y.n = 3;
     
-    my $g = d.y.tw.glance;
-    $g = delete Jc&glance if Jc&glance;
-    if ($g) {
-        # mutes z in lv/7, 1 gets it
-        gs&qz = 1;
-        # send it around again
-        n $g
-    }
+    my $g = Rw Acceptor glance;
     
     # things from -result.sc to speed by
     Jc&glancey = [qw'zshaex'];
+    
     for my $C (@$s) { # up's $M of -results
         my $s = c&s; # W in Wall
         my $f = g.y.tw.>C.t;
@@ -211,11 +205,25 @@ pi/thistest: | # named
     
     if (grep { _s&unknown || _s&fails } @$M) {
         ts&z = $M = [];
-        m tacall=>12=>"tac-all"=>'ma:0.4,fs:8,dos:tacall';
+        m accept_all=>12=>"?"=>'dos:tacall,ma:0.2,fs:8,hs:895';
     }
     
     
-Acceptor: | # give and return
+Acceptor: | # give, take and return expected C
+    my $t = ar.t || ar.m->[0];
+    my $d = Rw ReadMe;
+    my $g = d.y.tw.>$t;
+    if (J.c.>$t ) { # accepting
+        $g = delete J.c.>$t;
+        Jc&save = 'W';
+    }
+    if ($g) {
+        # mutes z in lv/7, 1 gets it
+        gs&qz = 1;
+        # send it around again
+        n $g
+    }
+    $g
 pi/result: |
     Jc&save = 'W'; # when accepting
     my $d = Rw ReadMe;
@@ -223,14 +231,7 @@ pi/result: |
     n tee=>1=>C.t
     y.n = 3;
     
-    my $c = d.y.tw.expected;
-    $c = delete Jc&expected if Jc&expected;
-    if ($c) {
-        # mutes z in lv/7, 1 gets it
-        cs&qz = 1;
-        # send it around again
-        n $c
-    }
+    my $c = Rw Acceptor expected;
     
     # $s is a W in Wall
     for my $D (@{ss&z||[]}) {
@@ -256,6 +257,7 @@ pi/result: |
             s&fails++;
         }
     }
+    
     if (s&unknown || s&fails) {
         n accept=>11=>"?",'dos:taccept,ma:0.2,hs:895';
     }
