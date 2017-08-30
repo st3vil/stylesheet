@@ -165,8 +165,6 @@ LiveResult: | # hold/check results
     3s&trouble = 0;
     n Gc&testbeing=>-thistest=>{s=>[@$M]}
     @$M = ();
-    3s&trouble &&
-    n tacall=>12=>"tac-all"=>'dis,fs:8,dos:tacall';
     # which tacs via Jc&save, on -thistest and -results
     # much simpler...
     
@@ -174,6 +172,7 @@ pi/thistest: | # named
     Jc&save = 'W'; # when accepting
     my $d = Rw ReadMe;
     y.at.dis = 1;
+    my $t =
     n tee=>1=>C.t
     y.n = 3;
     
@@ -206,7 +205,17 @@ pi/thistest: | # named
         }
         m $C
     }
-    #
+    
+    # mo's the $M
+    G&A,$_,8 for 1s&root.y.A || die "no 1srootyA";
+    
+    if (grep { _s&unknown || _s&fails } @$M) {
+        ts&z = $M = [];
+        m tacall=>12=>"tac-all"=>'ma:0.4,fs:8,dos:tacall';
+    }
+    
+    
+Acceptor: | # give and return
 pi/result: |
     Jc&save = 'W'; # when accepting
     my $d = Rw ReadMe;
@@ -238,13 +247,12 @@ pi/result: |
                 fs&fail = 'different';
                 fs&hs = '348';
                 m expected=>1=>ec&s=>'hs:967,dis'
-                3s&trouble++;
+                s&fails++;
             }
         }
         else { # the whole -result may be unknown
             fs&fail = 'unknown';
             fs&hs = '895';
-            3s&trouble++;
             s&fails++;
         }
     }
@@ -254,9 +262,14 @@ pi/result: |
 tacall: | # accept many -results
     my ($j) = reverse e&_hJ;
     T.op = js&top;
-    my @res = G&op,'testss';
-    G&give,Suck=>[tacall=>''=>{s=>\@res}];
-    
+    #G&give,Suck=>[tacall=>''=>{s=>e.c}];
+    my @res = G&op,'pi:result';
+    for my $D (@res) {
+        my $J = Ds&J;
+        push @{e.c.hJ}, $J;
+        Rw taccept $J;
+        pop @{e.c.hJ};
+    }
 taccept: | # accept -result
     my ($j) = reverse e&_hJ;
     T.op = js&top;
@@ -273,13 +286,12 @@ taccept: | # accept -result
     # also put the glance
     my $t = j.2;
     _s&pi eq 'thistest' || die "Not -thistest: ".ki$_ for tc&s;
-    my $g = ts&tw.glance || G&Ct,[glance=>''];
+    my $g = tc&glance ||= ts&tw.glance || G&Ct,[glance=>''];
     # this -result puts checksum in glance
     my $l = g.y.tw.>r.t = G&Ct,[r.t=>''];
     for my $k (@{tc&glancey}) {
         l.sc.>$k = r.sc.>$k || die "-result has no sc $k: ".ki$r;
     }
-    tc&glance = $g;
     
     saygr "Accepted j.t's ".ki[map {_.t} @res];
     
