@@ -181,6 +181,7 @@ pi/thistest: | # named
     # things from -result.sc to speed by
     Jc&glancey = [qw'zshaex'];
     
+    my $tw = {};
     for my $C (@$s) { # up's $M of -results
         my $s = c&s; # W in Wall
         my $f = g.y.tw.>C.t;
@@ -189,7 +190,8 @@ pi/thistest: | # named
         s&zshaex = [map {"_.t _s&ha"}@{ss&z}];
         if ($f) {
             if (sjson(fs&zshaex) eq sjson(s&zshaex)) {
-                delete c&pi ;
+                # make super -result, no J
+                s&pi = delete c&pi ;
                 c&s = "C.t: pass";
                 s&dis = 1;
             }
@@ -197,15 +199,23 @@ pi/thistest: | # named
         else {
             s&unknown = 1;
         }
+        $tw.>C.t =
         m $C
+    }
+    each t,C g.y.tw {
+        $tw.>C.t && next;
+        m C.t=>''=>"C.t: missing"=>'missing,ma:0.2,fs:8,hs:895'
     }
     
     # mo's the $M
     G&A,$_,8 for 1s&root.y.A || die "no 1srootyA";
     
-    if (grep { _s&unknown || _s&fails } @$M) {
+    if (grep { _s&missing || _s&unknown || _s&fails } @$M) {
         ts&z = $M = [];
         m accept_all=>12=>"?"=>'dos:tacall,ma:0.2,fs:8,hs:895';
+    }
+    else {
+        s&pass = 1;
     }
     
     
@@ -234,6 +244,7 @@ pi/result: |
     my $c = Rw Acceptor expected;
     
     # $s is a W in Wall
+    my $tw = {};
     for my $D (@{ss&z||[]}) {
         !ref Dc&s && length Dc&s || die "Dodge D: ".ki $D;
         my $f =
@@ -256,37 +267,63 @@ pi/result: |
             fs&hs = '895';
             s&fails++;
         }
+        $tw.>f.t = $f;
+    }
+    each t,C c.y.tw {
+        $tw.>C.t && next;
+        s&fails++;
+        m C.t=>''=>"C.t - missing"=>'missing,ma:0.2,fs:8,hs:895'
     }
     
     if (s&unknown || s&fails) {
         n accept=>11=>"?",'dos:taccept,ma:0.2,hs:895';
     }
 tacall: | # accept many -results
-    my ($j) = reverse e&_hJ;
-    T.op = js&top;
+    my ($t) = reverse e&_hJ;
+    _s&pi eq 'thistest' || die "Not -thistest: ".ki$_ for tc&s;
+    # drops whole glance, so goners get gone
+    # < suppose -result's $t/j/$r should leave too,
+    #   LiveResult keeps many -thistests that may not be there
+    #   shifting house should shake out dead Js
+    tc&glance = G&Ct,[glance=>''];
     #G&give,Suck=>[tacall=>''=>{s=>e.c}];
+    T.op = ts&top;
     my @res = G&op,'pi:result';
-    for my $D (@res) {
-        my $J = Ds&J;
-        push @{e.c.hJ}, $J;
-        Rw taccept $J;
-        pop @{e.c.hJ};
+    for my $r (@res) {
+        if (my $J = rs&J) {
+            push @{e.c.hJ}, $J;
+            Rw taccept $J;
+            pop @{e.c.hJ};
+        }
+        else {
+            Rw taccept $t $r;
+        }
     }
 taccept: | # accept -result
-    my ($j) = reverse e&_hJ;
-    T.op = js&top;
-    my $r = jc&s;
-    rs&pi eq 'result' || die "Not -result: ".ki$r;
-    
-    # the testss's s are lines of stuff
-    my @res = G&op,'pi:testss';
-    @res || die "No pi=testss found";
-    # entire -result commits a new expected
-    my $e = jc&expected = G&Ct,[expected=>''];
-    e.y.tw.>_.t = G&Ct,[_.t=>''=>{s=>_c&s}] for @res;
-    
+    # -thistest J, -result C
+    my ($t,$r);
+    my $what = [];
+    if (ar.t) {
+        # when tacall-ing, some things may super -result,
+        # only needing their glance collected
+        $t = ar.t;
+        $r = ar.r || die "ar_t also needs ar_r";
+    }
+    else {
+        my ($j) = reverse e&_hJ;
+        $t = j.2;
+        $r = jc&s;
+        rs&pi eq 'result' || die "Not -result: ".ki$r;
+        # the super -testss's c&s are lines of stuff
+        T.op = js&top;
+        my @res = G&op,'pi:testss';
+        @res || die "No pi=testss found";
+        # entire -result commits a new expected
+        my $e = jc&expected = G&Ct,[expected=>''];
+        e.y.tw.>_.t = G&Ct,[_.t=>''=>{s=>_c&s}] for @res;
+        $what = [map {_.t} @res];
+    }
     # also put the glance
-    my $t = j.2;
     _s&pi eq 'thistest' || die "Not -thistest: ".ki$_ for tc&s;
     my $g = tc&glance ||= ts&tw.glance || G&Ct,[glance=>''];
     # this -result puts checksum in glance
@@ -294,13 +331,13 @@ taccept: | # accept -result
     for my $k (@{tc&glancey}) {
         l.sc.>$k = r.sc.>$k || die "-result has no sc $k: ".ki$r;
     }
-    
-    saygr "Accepted j.t's ".ki[map {_.t} @res];
+    saygr "Accepted r.t's ".ki$what;
     
 Taste: | # waylay self
     my $i = Js&bowls++ + 1;
     Jc&tape = 'W';
     S
+    $i += 0.2 if $i == 2;
     n Figuration=>1=>"Luxe Elan",{fs=>4*$i}
     
     my $cb = &{ 4s&toy->({to=>[C.t]}); };
