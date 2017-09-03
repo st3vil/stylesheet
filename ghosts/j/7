@@ -280,52 +280,6 @@ PostK: |
     s&tw = t.y.tw;
     s&tv = t.y.tv;
     
-NamePosition: | # determine s&naming
-    my $n = s&naming = {};
-    
-    # should get all naming in this pile
-    # 
-        my @js = my $j = A.1;
-        while (j.2 && $j ne j.3) {
-            $j = j.2;
-            unshift @js, $j;
-        }
-        # J.t usually enough to find them
-        # Jc&s = last mo C, may have ch for chunk
-        my $f = $js[0];
-        f.3 eq $f || die "first not W";
-        n.W = f.t;
-        n.js = [map{
-            my $C = _c&s;
-            my $l = [C.t, C.y.cv];
-            push @$l, c&ch if c&ch;
-            $l
-        }@js];
-    
-    # C.t = $ch, is also section, page, partition, timeframe
-    
-    n.Jo = s&Jo || die "noJo";
-    
-    my @f;
-    for (@{n.js}) {
-        push @f,'j' if @f; # for tw of J
-        # to be 'J' for tv of J
-        my ($t,$cv,$ch) = @$_;
-        push @f, $t;
-        push @f,'s',$ch if $ch;
-    }
-    my @la = @f;
-    shift @la;
-    if (@la) {
-        # if J is not A.3, they may be buried in C...
-        # hoisting figures that C path
-        n.jay = join "/", grep {s/\W/-/g;1} @la;
-    }
-    
-    n.name = join "/", grep {s/\W/-/g;1} @f;
-    # nonrefs are namey
-    $n
-    
 PostTV: | # make 1-5, whole C
     # from KA c&s (aka KC), for el=8 they replace last KC and sleep
     # this would dodge out the wiring..? safe-ish for flatlist
