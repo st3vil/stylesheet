@@ -135,11 +135,13 @@ Turning: | # set up on the running instance
         
         # being
         Gc&testbeing = 'Taste';
+        Gc&asap = 1;
         n Gc&testbeing
     };
     Js&ein.t.done.sMJ = &sMJjeTCA{
         # cancel test Ting
         @{Gc&when_done} = grep{ $_ ne Jc&done_hook } @{Gc&when_done};
+        
         # Tee and comp to test data
         my $W =
         n Wall=>W=>{mute=>0,entire=>0}
@@ -234,21 +236,7 @@ pi/thistest: | # named
     }
     
     
-Acceptor: | # give, take and return expected C
-    my $t = ar.t || ar.m->[0];
-    my $d = Rw ReadMe;
-    my $g = d.y.tw.>$t;
-    if (J.c.>$t ) { # accepting
-        $g = delete J.c.>$t;
-        Jc&save = 'W';
-    }
-    if ($g) {
-        # mutes z in lv/7, 1 gets it
-        gs&qz = 1;
-        # send it around again
-        n $g
-    }
-    $g
+
 pi/result: |
     Jc&save = 'W'; # when accepting
     my $d = Rw ReadMe;
@@ -293,6 +281,21 @@ pi/result: |
     if (s&unknown || s&fails) {
         n accept=>11=>"?",'dos:taccept,ma:0.2,hs:895';
     }
+Acceptor: | # give, take and return expected C
+    my $t = ar.t || ar.m->[0];
+    my $d = Rw ReadMe;
+    my $g = d.y.tw.>$t;
+    if (J.c.>$t ) { # accepting
+        $g = delete J.c.>$t;
+        Jc&save = 'W';
+    }
+    if ($g) {
+        # mutes z in lv/7, 1 gets it
+        gs&qz = 1;
+        # send it around again
+        n $g
+    }
+    $g
 tacall: | # accept many -results
     my ($t) = reverse e&_hJ;
     _s&pi eq 'thistest' || die "Not -thistest: ".ki$_ for tc&s;
@@ -349,16 +352,7 @@ taccept: | # accept -result
     }
     saygr "Accepted r.t's ".ki$what;
     
-Taste: | # waylay self
-    my $i = Js&bowls++ + 1;
-    Jc&tape = 'W';
-    S
-    $i += 0.2 if $i == 2;
-    n Figuration=>1=>"Luxe Elan",{fs=>4*$i}
-    
-    my $cb = &{ 4s&toy->({to=>[C.t]}); };
-    $i < 3 &&
-    G&time,1,$cb;
+
 StarTime: | # explicit Motor-served timers
     u i
     # todo compute desire
@@ -381,9 +375,20 @@ MotorTime: | # serve time
         return;
     }
     my @int;
-    for my $s (sort keys %$tz) {
+    my $tiny_bits = 0.05;
+    # < using Motor for each G&time callback,
+    #   so the list can be advanced one time at a time
+    #   and fetime can be adjusted
+    #   which makes everything look like it happens instantly
+    for my $s (sort map {0+$_} keys %$tz) {
         push @int, $s;
         my $v = $tz.>$s;
+        if (Gc&asap) {
+            # lie about fetime
+            # so shows/tests render fast
+            #   with what looks like real time within
+            $s = $tiny_bits * @int;
+        }
         Mojo::IOLoop->timer($s,&{
             1 && sayyl "Here again!";
             for my $y (@$v) {
