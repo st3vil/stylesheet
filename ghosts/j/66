@@ -6,6 +6,8 @@ not: | # do everything! (run as Spec)
     Rw Tiot;
     # the sprawldy
     
+    3s&upsetters = [];
+    
     
     my $d = Rw ReadMe;
     !ds&pid || ds&pid eq $$ || sayre("Giving over to ds&pid") && exit;
@@ -19,8 +21,17 @@ not: | # do everything! (run as Spec)
     
     Rw GiveTime;
     my $ti;
-    $ti = Js&ti = &{ $ti eq Js&ti && 4s&toy ->({to=>[[C.t]]}) };
-    G&timer:3.2,$ti;
+    $ti = Js&ti = &{
+        $ti eq Js&ti || return;
+        my $u = 3s&upsetters;
+        if (grep {$_->()} @$u) {
+            4s&toy ->({to=>[[C.t]]})
+        }
+        else {
+            G&timer:1.2,$ti;
+        }
+    };
+    G&timer:1.2,$ti;
     
     
     #n roms=>4=>Js&bowls++=>'%dis,fs:44'
@@ -135,7 +146,10 @@ Turning: | # set up on the running instance
         my $Wallz = Ws&J.sc.top.sc.z;
         my $Wentz = Jc&entire;
         G&e,LiveResult=>[Wentz=>''=>{s=>$Wentz}];
-        
+        # notify handler of pass/fail?
+        # page LiveResult per G.t/Gc&testbeing
+        #  wants a G per test run, an LR-thistest per test case
+        #  to be merged after accepting changes
     };
     S
     Rw GiveTime;
