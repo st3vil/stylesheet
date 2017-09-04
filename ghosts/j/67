@@ -1,4 +1,4 @@
-Taste: | # waylay self
+Taste: | # waylay self TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
     my $i = Js&bowls++ + 1;
     Jc&tape = 'W';
     S
@@ -8,4 +8,53 @@ Taste: | # waylay self
     my $cb = &{ 4s&toy->({to=>[C.t]}); };
     $i < 3 &&
     G&time,1,$cb;
+Thaste: | # several selves TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+    my $i = Js&bowls++ + 1;
+    Jc&tape = 'W';
+    S
+    my $e = &{
+        my $t = shift;
+        push @_, '' if @_ < 2; # not W
+        G&e:ThasteYe=>[$t=>''=>{s=>G&Ct,[@_] }];
+    };
+    if ($i == 1) {
+        $e->(folk=>"Sandy Bull");
+        $e->(folk=>"Swamp Doctor"=>''=>{}=>{xu=>6});
+        $e->(folk=>"Plocato");
+        $e->(folk=>"Synter"=>''=>{}=>{xu=>7});
+        $e->(folk=>"Steve"=>''=>{}=>{xu=>8});
+    }
+    if ($i == 2) {
+        $e->(folk=>"Telaviv"=>{}=>{xu=>6});
+        $e->(defolk=>"Plocato");
+    }
+    if ($i == 3) {
+        $e->(folk=>"Masslve"=>{}=>{xu=>7});
+    }
+    n ThasteYe=>V
+    my @res = G&op,'pi:thaste';
+    y.n = 3;
+    m _.t=>''=>_.t=>'fs:'.int(9+_s&xu) for @res;
+    
+    
+    my $cb = &{ 4s&toy->({to=>[C.t]}); };
+    $i < 4 &&
+    G&time,1,$cb;
+ThasteYe: |
+    Jc&tape = 'W';
+    Js&ein.t.folk.sMJ = &sMJ{
+        ss&order = Js&order++;
+        m $s
+    };
+    Js&ein.t.defolk.sMJ = &sMJ{
+        @$M = grep {_.t ne s.t} @$M;
+    };
+    S
+    y.res = 100;
+    m _.t=>-thaste for sort { as&xu <=> bs&xu || (-1 * as&order <=> bs&order) } @{Js&M};
+pi/thaste: |
+    my $huh = sum map {ord $_} split '', C.t;
+    $huh /= 10 until $huh < 9;
+    $huh = int $huh;
+    n t=>1=>C.t=>"hs:${huh}76"
 

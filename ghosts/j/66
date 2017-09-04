@@ -113,13 +113,18 @@ pi/Trooms: |
     # put forward
     #n travels=>-T
     n Taste=>-Turn_5
+    n Thaste=>-Turn_51
+    n Nofing=>-Turn_52
 pi/Turn: | # button to run thing and sort through ashes
     y.at.dos = 'Turns';
     n t=>1=>C.t
 Turns: | # send instance into running
-    my $s = [Turning=>[W=>''=>{s=>cc&s}]];
+    my $s = [Turning=>[W=>''=>{s=>c.t}]];
     #sayre "Giving $w: $f/$t: sc.Jo";
     Rw Wudder $s;
+    T.pos = 0;
+Nofing: |
+    sayyl "Ya";
 Turning: | # set up on the running instance
     # brackets whole Run inc timers, Sucks Wall
     Jc&entire = [];
@@ -134,7 +139,8 @@ Turning: | # set up on the running instance
         n Wall=>W=>{mute=>1,entire=>Jc&entire}
         
         # being
-        Gc&testbeing = 'Taste';
+        1 && saygr "Being $s from ".ki $e;
+        Gc&testbeing = $s;
         Gc&asap = 1;
         n Gc&testbeing
     };
@@ -190,13 +196,15 @@ LiveResult: | # hold/check results
 pi/thistest: | # named
     y.at.dis = 1;
     my $t =
-    n tee=>o1=>C.t
+    n tee=>o1=>C.t=>'dos:fullercheck';
     y.n = 3;
     
     my $g = Rw Acceptor glance;
     
     # things from -result.sc to speed by
     Jc&glancey = [qw'zshaex'];
+    # named parents
+    Js&ha_tw = {};
     
     my $tw = {};
     for my $C (@$s) { # up's $M of -results
@@ -206,7 +214,7 @@ pi/thistest: | # named
         die "Not all sha: ".ki $s if @{ss&z} != grep{_s&ha}@{ss&z};
         s&zshaex = [map {"_.t _s&ha"}@{ss&z}];
         if ($f) {
-            if (sjson(fs&zshaex) eq sjson(s&zshaex)) {
+            if (!Jc&full_check && sjson(fs&zshaex) eq sjson(s&zshaex)) {
                 # make super -result, no J
                 s&pi = delete c&pi ;
                 c&s = "C.t: pass";
@@ -236,9 +244,11 @@ pi/thistest: | # named
     }
     
     
-
+fullercheck: |
+    my $j = e&hJ ->[-1];
+    1 && saygr "For ".G&sn,$j;
+    jc&full_check = 1;
 pi/result: |
-    Jc&save = 'W'; # when accepting
     my $d = Rw ReadMe;
     y.at.dis = 1;
     n tee=>o1=>C.t
@@ -246,10 +256,14 @@ pi/result: |
     
     my $c = Rw Acceptor expected;
     
+    
     # $s is a W in Wall
     my $tw = {};
     for my $D (@{ss&z||[]}) {
         !ref Dc&s && length Dc&s || die "Dodge D: ".ki $D;
+        
+        Dc&s =~ s/(parent:)(\w+)/"$1(".2s&ha_tw.>$2 .")"/e;
+        2s&ha_tw.>Ds&ha = C.t if Ds&ha; # name parent
         my $f =
         m "writes D.t"=>''=>{s=>Dc&s},'pi:testss,fs:7,hs:247,dis'
         # put further diags inside it
@@ -326,6 +340,7 @@ taccept: | # accept -result
         # only needing their glance collected
         $t = ar.t;
         $r = ar.r || die "ar_t also needs ar_r";
+        1 && sayyl "Non-fully accepting r.t";
     }
     else {
         my ($j) = reverse e&_hJ;
@@ -352,7 +367,6 @@ taccept: | # accept -result
     }
     saygr "Accepted r.t's ".ki$what;
     
-
 StarTime: | # explicit Motor-served timers
     u i
     # todo compute desire
