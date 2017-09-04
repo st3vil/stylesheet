@@ -244,7 +244,13 @@ ThWay: | # meaning of calling a word
         # sum h
         if ($@) {
             (my$ba,$@) = ($@,'');
-            my $s = Rw Bangilate $ba $B;
+            my $s; eval {
+            $s = Rw Bangilate $ba $B;
+            };
+            if ($@ || Gc&avoid_Bangilate) {
+                sayre "Error doing Bangilate, exiting: $@";
+                exit
+            }
             die $s if $s;
         }
         elsif (my $ba = Bs&warning) {
@@ -964,6 +970,7 @@ Bangilate: |
     
     Bc&h && die "< Have the handler to $ba things.";
     
+    Gc&avoid_Bangilate && sayre("Errors Bangilating, will exit: $ba") && exit;
     
     # here
     my $D = Bs&D;
@@ -972,9 +979,18 @@ Bangilate: |
     
     # stack syncy to know G&h's eval number:
     my $hs_file = (caller(0))[1];
-    
-    my $st = Rw StackSyncy + $D $d $hs_file;
-    my ($l,$for) = Rw StackShuf + $D $d $st;
+    my ($st,$l,$for);
+    eval{
+    $st = Rw StackSyncy + $D $d $hs_file;
+    ($l,$for) = Rw StackShuf + $D $d $st;
+    };
+    if ($@) {
+        sayre "Error doing Bangilate/Stack*: $@";
+        $l = ["<<<Error doing Bangilate/Stack*: $@>>>"];
+        Gc&avoid_Bangilate = 1;
+        $@ = "";
+    }
+    1 && sayre "Stack,";
     
     
     #c codesplatter
@@ -989,6 +1005,7 @@ Bangilate: |
     }
     
     my @obya;
+    eval{
     for my $gk (qw'aA aC') {
         my $v = B.sc.>$gk;
         ref $v || next;
@@ -1012,6 +1029,12 @@ Bangilate: |
             
         }
         push @obya, $label .ki $v;
+    }
+    };
+    if ($@) {
+        sayre "Error doing Bangilate/obya: $@";
+        Gc&avoid_Bangilate = 1;
+        $@ = "";
     }
     my $obya = join"\n","obya:",@obya if @obya;
     
@@ -1136,15 +1159,18 @@ StackShuf: | # shove B stack over the illuminated middle of caller() stack
     };
     my $l = [map{ $destack->($_) }@$for];
     
+    my @Ds; # picture of B
+    
     # climb Byout
     # < rename Byup?
     # Bc&s is the first argument to h, may be a D
     my $deB = &B{
         sprintf(" B %-4s %4s %8s", B.t,
             (B.y.cv ne '0.1' && B.y.cv),
-            (ref Bc&s ? Bc&s.t : Bc&s),
+            (ref Bc&s eq 'HASH' ? Bc&s.t : Bc&s),
         );
     };
+    
     my @Bs;
     my $BB = $B;
     while ($BB) {
@@ -1152,7 +1178,6 @@ StackShuf: | # shove B stack over the illuminated middle of caller() stack
         $BB = BB.y.out;
     }
     $BB = $B;
-    my @Ds; # picture of B
     for my $B (@Bs) {
         # tell aboves we did this
         Bs&foot = $BB;
