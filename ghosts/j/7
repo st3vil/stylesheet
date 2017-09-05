@@ -58,7 +58,8 @@ FishBrains: |
         # doesn't do Tv (C that are attr), unless ms&evenTv
         my $sn = G&sn;
         ms&any = &acgt{
-            $_ eq 's' || delete C.c.>$_ for keys %{C.c}
+            $_ eq 's' ||
+            delete C.c.>$_ for keys %{C.c}
         };
         ms&nkgk.sc.J = &acgts{
             ref $s eq 'HASH' && s.y || return sayre "NotJ:".ki$s;
@@ -169,6 +170,9 @@ FishBrains: |
         # < an A=Ks would map out AWritering
         #     pointing to objects already on the ground
         G&A,$_,59,{r=>$r} for @{A&KAs};
+        
+        1c&GenMeta &&
+            Rw GenMeta $o $r;
         
         Rw PostK $o $r;
         
@@ -773,7 +777,11 @@ Writer: | # to make 12345, 7
     #  eg 2 can't know about 3 because 3 has to know about 2
     my $h = ar.h || {};
     
-    # writes on the written top/9
+    # from C the s
+    my $meta;
+    $meta = s&meta if s&meta;
+        
+    # writes on the written front/9
     $C = $N->[0] = G&hup,$N->[0];
     
     # ignoring the particular $n, we go:
@@ -841,11 +849,11 @@ Writer: | # to make 12345, 7
         
     # take meta off the 9, put ha on any W
         # < meta?
-        my $meta;
         for my $C (@$N) {
             # the 9 has this old meta bunch
             # helped impart itself to s
             if (my $m = delete s&meta) {
+                die "Meta from C: ".ki$m;
                 $meta && die "doublemeta";
                 $meta = $m;
             }
@@ -950,9 +958,9 @@ Writer: | # to make 12345, 7
     if (w.5) {
         # 5's belief structure dependagey
         # < modernise
-        my $xo = meta.A.xo;
         my $z = [];
-        if (my $way = xo.way) {
+        my $meta = {%{$meta||{}}};
+        if (my $way = delete meta.way) {
             my $w = G&Ct,[w=>1];
             my $wz = ws&z = [];
             for my $pin (sort keys %$way) {
@@ -972,9 +980,8 @@ Writer: | # to make 12345, 7
         }
         
         # other meta stuff
-        delete $xo.>$_ for qw'way o sWo';
-        if (keys %$xo) {
-            push @$z, G&Ct,[xo=>1=>{s=>$xo}]
+        if (keys %$meta) {
+            push @$z, G&Ct,[moremeta=>1=>{s=>$meta}]
         }
         
         # other W and their ha
