@@ -92,7 +92,7 @@ TofingUlar: |
         join "-",@m;
     
     
-TookPersonel: |
+TookPersonel: | # TTTTTTTTTTTTTTTTTTTTTTTTTT
     1c&GenMeta = 1;
     1c&save = 1;
     #Rw Tiot;
@@ -106,8 +106,6 @@ TookPersonel: |
     n TookPre
     lang:
         # planing
-    sayre "Blankning you!";
-    G.ydrop = 1;
     u ''
     my $i =
     n somehi=>4=>'hi'
@@ -194,6 +192,10 @@ GenMeta: | # explicit grouping of universals we wanty to sum together from child
         my $N = [grep{ exists _.sc.>$type } @$M];
         for my $v (@$N) {
             my $ox = v.sc.>$type;
+            if (!$ox) {
+                sayre "Undef meta type: $type on vc&path --- ".G&sn;
+                next;
+            }
             # Scuttle
             if ($type eq 'way') {
                 each pin,dige,freq $ox {
@@ -201,13 +203,14 @@ GenMeta: | # explicit grouping of universals we wanty to sum together from child
                 }}
             }
             else {
-                die "Has othhas $type: ".ki $xo;
+                die "Has othhas vc&path $type: ".ki($xo)."  +  ".ki$ox;
             }
             push @oth, saybl "A.1.t: vc&path adds $type: ".ki($xo)."  +  ".ki$ox;
         }
         s&meta.>$type = $xo;
     }
     
-    G&e:Volup=>["Root of ".G&sn =>-see=>{s=>$C}];
+    1 && saygr "Ha5ing 1: A.1.t: ".wdump 3, s&meta;
+    #G&e:Volup=>["Root of ".G&sn =>-see=>{s=>s&metur}];
     
 
