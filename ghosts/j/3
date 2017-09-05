@@ -275,6 +275,10 @@ Jtool: | # contraptions of J
         pop @Me if $Me[-1] eq '';
         my $u = G&sJ,'u';
         push @{uc&N||=[]}, \@Me;
+        if (@Me == 1 && $Me[0] eq '') { 
+            # u '' # resets to normal
+            return G&clusp;
+        }
         
     # clasp u
     # 5s&NormalI is default if no u
@@ -301,6 +305,8 @@ Jtool: | # contraptions of J
             A.1 = $u;
             A.2 = $J;
             my $N = 1c&N || [];
+            # u '' # resets to normal
+            $N = [] if @$N == 1 && @{$N->[0]} == 1 && $N->[0]->[0] eq '';
             1c&N = [];
             if (@$N) {
                 local A.trip, A&trip;
