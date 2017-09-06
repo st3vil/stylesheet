@@ -116,8 +116,10 @@ pi/Trooms: |
     n Thaste=>-Turn_51
     n Tofing=>-Turn_52
     n TookPersonel=>-Turn_53
+    n Tveing=>-Turn_54
 pi/Turn: | # button to run thing and sort through ashes
     y.at.dos = 'Turns';
+    y.at.ma = 0.1;
     n t=>1=>C.t
 Turns: | # send instance into running
     my $s = [Turning=>[W=>''=>{s=>c.t}]];
@@ -205,7 +207,10 @@ pi/thistest: | # named
     # named parents
     Js&ha_tw = {};
     
+    # to catch missing
     my $tw = {};
+    # avoid super when the inner is updating its Jc&expected
+    my $ftw = delete Jc&fulltw;
     for my $C (@$s) { # up's $M of -results
         my $s = c&s; # W in Wall
         my $f = g.y.tw.>C.t;
@@ -213,7 +218,7 @@ pi/thistest: | # named
         die "Not all sha: ".ki $s if @{ss&z} != grep{_s&ha}@{ss&z};
         s&zshaex = [map {"_.t _s&ha"}@{ss&z}];
         if ($f) {
-            if (!Jc&full_check && sjson(fs&zshaex) eq sjson(s&zshaex)) {
+            if (!$ftw.>C.t && !Jc&full_check && sjson(fs&zshaex) eq sjson(s&zshaex)) {
                 # make super -result, no J
                 s&pi = delete c&pi ;
                 c&s = "C.t: pass";
@@ -322,6 +327,7 @@ tacall: | # accept many -results
     my @res = G&op,'pi:result';
     for my $r (@res) {
         if (my $J = rs&J) {
+            tc&fulltw.>J.t = 1;
             push @{e.c.hJ}, $J;
             Rw taccept $J;
             pop @{e.c.hJ};
@@ -366,7 +372,6 @@ taccept: | # accept -result
     }
     saygr "Accepted r.t's ".ki$what;
     
-
 MotorTime: | # serve time
     4c&todo ||= []; # may be immediately done
     sayre "Plan future: ".ki $_ for @{4c&todo};
