@@ -141,18 +141,18 @@ Volup: |
     
     n seeing=>-od_3=>{dl=>4,s=>Js&M}
 GenMeta: | # explicit grouping of universals we wanty to sum together from children
-    # meta: $type (bunch/of/qualia)* = sum-able value
+    # meta.sc.$type(/qualia)* = sum-able value, hoist from visible J
+    # meta.c doesn't hoist
     
-    # 
-    
-    my $mt = {}; # types
-    # meta self
-    my $meta = {};
+    my $mt = {}; # m.sc types present 
+    # $me = m.sc for self, from T.has
+    my $me = {};
     T.has ||= {};
     each type,qua T.has {
         $mt.>$type = 1;
+        # Scuttle
         if ($type eq 'way') {
-            meta.way = $qua
+            me.way = $qua
         }
         else {
             # Tsuck for live Scuttle addition of any other T.has
@@ -176,19 +176,21 @@ GenMeta: | # explicit grouping of universals we wanty to sum together from child
         
         # Jpage
         my $s = Js&s;
-        my $meta = ss&meta || next;
-        for my $type (keys %$meta) {
-            $mt.>$type = 1;
+        my $m = ss&meta || next;
+        if (mc&ha) {
+            # W versioning beyond Jo
+            # was attached as Writer 5s
+            Ks&ha = mc&ha;
         }
+        $mt.>$_ = 1 for keys %{m.sc||{}};
 
-        m v.t=>''=>{path=>$p},$meta
+        m v.t=>''=>{path=>$p},m.sc
     }
     
-    # s&meta = meta self + others
-    my @oth;
-    s&meta = {};
+    # s&meta.sc = me  + others
+    my $m = {t=>r.t,y=>{},c=>{},sc=>{}};
     each type,v $mt {
-        my $xo = $meta.>$type;
+        my $xo = $me.>$type;
         my $N = [grep{ exists _.sc.>$type } @$M];
         for my $v (@$N) {
             my $ox = v.sc.>$type;
@@ -205,12 +207,19 @@ GenMeta: | # explicit grouping of universals we wanty to sum together from child
             else {
                 die "Has othhas vc&path $type: ".ki($xo)."  +  ".ki$ox;
             }
-            push @oth, saybl "A.1.t: vc&path adds $type: ".ki($xo)."  +  ".ki$ox;
         }
-        s&meta.>$type = $xo;
+        m.sc.>$type = $xo;
     }
+    if (ms&way) {
+        # hide osc guts hanging out
+        # < not staying deleted?
+        delete ms&way.>$_ for qw'FishBrains GenMeta NamePosition
+            PostK PostO PostTV Writer';
+        sayre("None left") && delete(ms&way) if !keys %{ms&way};
+    }
+    s&meta = $m;
     
-    1 && saygr "Ha5ing 1: A.1.t: ".wdump 3, s&meta;
-    #G&e:Volup=>["Root of ".G&sn =>-see=>{s=>s&metur}];
+    #1 && saygr "Ha5ing 1: A.1.t: ".wdump 3, s&meta;
+    #G&e:Volup=>["Root of ".G&sn =>-see=>{s=>s&meta}];
     
 

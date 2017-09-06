@@ -778,8 +778,7 @@ Writer: | # to make 12345, 7
     my $h = ar.h || {};
     
     # from C the s
-    my $meta;
-    $meta = s&meta if s&meta;
+    my $m = s&meta || {};
         
     # writes on the written front/9
     $C = $N->[0] = G&hup,$N->[0];
@@ -846,38 +845,6 @@ Writer: | # to make 12345, 7
         }
         $ha
     };
-        
-    # take meta off the 9, put ha on any W
-        # < meta?
-        for my $C (@$N) {
-            # the 9 has this old meta bunch
-            # helped impart itself to s
-            if (my $m = delete s&meta) {
-                die "Meta from C: ".ki$m;
-                $meta && die "doublemeta";
-                $meta = $m;
-            }
-            # assume W is in G as well
-            # < have another kind of link
-            #   bridgy, for Ang, sort-of inclusion, etc...
-            if (my $t = s&W) {
-                $t =~ s/\W+/-/gs;
-                my $ha;
-                # < get version from ...
-                if ($f) {
-                    my $d = "$gd/$t";
-                    if (-d $d) {
-                        my $ha = readlink "$d/1";
-                        $ha =~ s/^h\///;
-                    }
-                    else {
-                        sayre "unstored W in $f: $d";
-                    }
-                }
-                s&ha = $ha if $ha;
-            }
-        }
-    
     #c writ frequencies
     my $W;
     if (w.4) {
@@ -889,7 +856,6 @@ Writer: | # to make 12345, 7
         $W = G&Ct,['W',1];
         for my $C (@$N) {
             my $Y = C.y.A;
-            next if Yc&ind > 1;
             if (s&W) {
                 my $D = G&Ct,[C.t,C.y.cv];
                 Ds&W = s&W;
@@ -898,6 +864,9 @@ Writer: | # to make 12345, 7
                 Dc&Jo = c&Jo if c&Jo;
                 push @{Ws&z||=[]}, $D;
             }
+            # know only W ^ at depth:
+            next if Yc&ind > 1;
+            
             my $D = G&Ct,[C.t,C.y.cv];
             # assuming gk is safe to join with -
             # < imply the style's encoding for FactorEase
@@ -959,8 +928,14 @@ Writer: | # to make 12345, 7
         # 5's belief structure dependagey
         # < modernise
         my $z = [];
-        my $meta = {%{$meta||{}}};
-        if (my $way = delete meta.way) {
+        my $me = {%{m.sc||{}}};
+        if (me.way) {
+            # < won't stay deleted from GenMeta
+            delete me.way.>$_ for qw'FishBrains GenMeta NamePosition
+                PostK PostO PostTV Writer';
+            delete me.way if !keys %{me.way};
+        }
+        if (my $way = delete me.way) {
             my $w = G&Ct,[w=>1];
             my $wz = ws&z = [];
             for my $pin (sort keys %$way) {
@@ -977,11 +952,13 @@ Writer: | # to make 12345, 7
                 delete ps&used if ps&used eq 1;
             }
             push @$z, $w if @$wz;
+            
+            A.1.t =~ /^Took/ && saygr "Haw5ing 1: A.1.t: ".wdump 3, $way;
         }
         
         # other meta stuff
-        if (keys %$meta) {
-            push @$z, G&Ct,[moremeta=>1=>{s=>$meta}]
+        if (keys %$me) {
+            push @$z, G&Ct,[moremeta=>1=>{s=>$me}]
         }
         
         # other W and their ha
@@ -990,6 +967,7 @@ Writer: | # to make 12345, 7
         is&z = $z if @$z;
         @{w.5} = G&ind,$i,$ub;
         h.5 = $st->(w.5,'5');
+        mc&ha = h.1;
     }
     if (w.2) {
         # small status check point: 2 versions 1,4,5
