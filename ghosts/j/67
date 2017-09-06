@@ -184,7 +184,7 @@ GenMeta: | # explicit grouping of universals we wanty to sum together from child
         }
         $mt.>$_ = 1 for keys %{m.sc||{}};
 
-        m v.t=>''=>{path=>$p},m.sc
+        m v.t=>''=>{path=>$p,s=>$v},m.sc
     }
     
     # s&meta.sc = me  + others
@@ -194,12 +194,15 @@ GenMeta: | # explicit grouping of universals we wanty to sum together from child
         my $N = [grep{ exists _.sc.>$type } @$M];
         for my $v (@$N) {
             my $ox = v.sc.>$type;
+            my $s = vc&s;
             if (!$ox) {
                 sayre "Undef meta type: $type on vc&path --- ".G&sn;
                 next;
             }
             # Scuttle
             if ($type eq 'way') {
+                # hangup ways on wormholes
+                next if ss&W;
                 each pin,dige,freq $ox {
                     $xo.>$pin.>$dige += $freq
                 }}
