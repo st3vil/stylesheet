@@ -46,13 +46,30 @@ Door: |
     
 pi/adoc: | # remote severalism
     Rw HaveDepth;
-    y.at.ml = (c&depth-1) / 2;
+    y.at.ml = 0.4;
+    y.at.dis = 1;
     if (ref $s eq 'HASH' && G&isC,$s) {
         my $s = G&hup,$s;
         if (my $z = delete ss&z) {
             m _.t=>-adoc=>{s=>$_} for @$z;
         }
-        n t=>-od=>{dl=>1,s=>$s}=>'dis'
+        my $t = s.t;
+        my $cv = s.y.cv;
+        $cv =~ s/^0\.//;
+        
+        n t=>o1=>{s=>$t}  ,'dos:Crank'
+        n cv=>o2=>{s=>$cv}  ,'hs:384,fs:7'
+        
+        exists sc&s &&
+        n s=>o3=>{s=>"sc&s"},'hs:483,fs:11,ma:0.2'
+        
+        my $sc = {%{s.sc}};
+        delete sc.pi if sc.pi eq 'coda';
+        keys %$sc &&
+        n sc=>o4=>'% '.ki($sc),'hs:685,fs:7'
+        
+        Js&boost &&
+        n t=>-od_6=>{dl=>1,s=>$s}
     }
     else {
         n _.t=>-od=>{s=>$s}
@@ -72,7 +89,7 @@ Intrup: |
     S
     
     my $i =
-    n inter=>-coda=>{s=>Js&samples}
+    n inter=>-coda=>{tape=>1,s=>Js&samples}
     my $j = is&J;
     my $f = js&output_file || die "Nofile: ".G&sn,$j;
     
@@ -85,15 +102,52 @@ Intrup: |
     
     
 pi/coda: | # convey data
-    n osme=>oo1=>"Vey"
     Rw HaveDepth;
     Rw MayC;
+    c&path = join'/',grep{defined}2Cc&path,C.t;
+    3c&refs.>$s = $C;
+    c&left = c&dl - c&depth;
+    
+    if (!Js&boost) {
+        if (c&isA && c&left < 2) {
+            n sn=>''=>G&sn,$s  
+            return
+        }
+    }
+    
+    Rw Fromany;
+Fromany: |
+    return s&toomany = 'overall' if 
+        3Cc&intl++ > 3Cc&intlim;
+    
     if (ref $s eq 'ARRAY') {
         c&isarray = 1;
         c&vs = [@$s];
         c&ks = [0..(@$s-1)];
     }
-    Rw Froth;
+    
+    my ($hash,@ks) = Rw HashKs;
+    my $limit = 30;
+    my $lim = @ks > $limit;
+    my $was = @ks;
+    @ks = @ks[0..($limit-1)] if $lim;
+    
+    my $pi = c&pi || 'od';
+    for (@ks) {
+        my $S = $hash.>$_;
+        if (my $O = $S eq $s && '.' || 3c&refs.>$S ) {
+            m $_=>''=>{}=>{sameas=>ref $O ? Oc&path : $O}
+        }
+        elsif (my $block = $_ eq 'I' && 'I' || c&depth > c&dl && "deep") {
+            m $_=>''=>{}=>{block=>$block}
+        }
+        else {
+            m $_=>''=>{pi=>$pi,s=>$S}
+        }
+    }
+    
+    $lim && 
+    m limited=>''=>"limit: $limit < $was",'hs:888'
 Doory: |
     #Rw Tiot;
     Js&ein.pi.eval.sMJ = &sMJje{
