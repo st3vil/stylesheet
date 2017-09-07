@@ -2,35 +2,115 @@ Door: |
     # interrogate process remotely
     Rw Tiot;
     Rw GiveTime;
-    Js&ein.t.result.sMJ = &sMJje{
-        1 && saybl "Returned: ".wdump 4, $s;
-        #$s = 'sample';
-        m res=>''=>$s
+    my $to = 'Door';
+    # returns result
+    Js&ein.pi.res.sMJ = &sMJje{
+        my $t = e.t || 'res';
+        ($t,$s) = ('error',ec&error) if ec&error;
+        $s = ec&data if ec&data;
+        my $pi = 'od';
+        if (my $f = ec&tape) {
+            $s = G&Beach,$f;
+            $s = $s->[0] if @$s == 1;
+            $pi = 'adoc'
+        }
+        m $t=>"-$pi"=>{s=>$s}
     };
     S
     if (!@{Js&M||[]}) {
-        my $code = q/wdump 3, 4s&Jtv;/;
-        my $re = [eval=>{}=>{s=>$code,returnto=>'Door'}];
+        if (-d "Gc&bay/p/Text") {
+        my $code = q/
+            my @Js;
+            each t,cv,J 4s&Jtv {
+                my @yp;
+                each m,soJ,oJ Js&typed {
+                    push @yp, $m ." by ". G&sn,$oJ;
+                }}
+                push @Js, join "\n", "$t $cv is:",map{" - $_"}@yp;
+            }}
+            \@Js;
+        /;
+        my $re = [get_types=>-eval=>{s=>$code,returnto=>'Door'}];
         Rw Wudder $to=Text $s:_ for [Doory=>$re];
+        }
+        else {
+            Rw Wudder $s=Intrup;
+        }
     }
     else {
         n result=>2=>result=>dis
+        y.n = 3;
         m $_ for @{Js&M};
     }
     
     
+pi/adoc: | # remote severalism
+    Rw HaveDepth;
+    y.at.ml = (c&depth-1) / 2;
+    if (ref $s eq 'HASH' && G&isC,$s) {
+        my $s = G&hup,$s;
+        if (my $z = delete ss&z) {
+            m _.t=>-adoc=>{s=>$_} for @$z;
+        }
+        n t=>-od=>{dl=>1,s=>$s}=>'dis'
+    }
+    else {
+        n _.t=>-od=>{s=>$s}
+    }
+Intrup: |
+    Jc&save = Jc&tape = Jc&quiet = '7';
+    Jc&imping = 1; # tape always in one wave
+    unless (Js&bowls) {
+        G&elph,Trips=>[tripany=>$_] for &acgt{
+            return if Js&bowls;
+            push @{Js&samples}, $A;
+        };
+        n Stylands
+    }
+    Js&bowls++;
     
+    S
+    
+    my $i =
+    n inter=>-coda=>{s=>Js&samples}
+    my $j = is&J;
+    my $f = js&output_file || die "Nofile: ".G&sn,$j;
+    
+    my $to = 'Door';
+    my $s = [$to=>[Intrup=>-res=>{tape=>$f}]];
+    Rw Wudder $to $s;
+    
+    saygr "Yeup";
+    exit;
+    
+    
+pi/coda: | # convey data
+    n osme=>oo1=>"Vey"
+    Rw HaveDepth;
+    Rw MayC;
+    if (ref $s eq 'ARRAY') {
+        c&isarray = 1;
+        c&vs = [@$s];
+        c&ks = [0..(@$s-1)];
+    }
+    Rw Froth;
 Doory: |
     #Rw Tiot;
-    Js&ein.t.eval.sMJ = &sMJje{
+    Js&ein.pi.eval.sMJ = &sMJje{
         my $s = eval $s;
-        return if $@;
-        my $r =
+        my $err = $@ if $@;
         m Jtv=>''=>{s=>$s}
         if (my $to = ec&returnto) {
-            my $s = [$to=>[result=>{}=>{s=>"Data: $s"}]];
+            my $c = {};
+            if ($err) {
+                c.error = $err;
+            }
+            else {
+                c.data = $s
+            }
+            my $s = [$to=>[e.t=>-res=>$c]];
             Rw Wudder $to $s;
-            exit;
+            exit; # if we forked for this input
         }
     };
     S

@@ -392,7 +392,7 @@ Atool: | # reliable/old A
     # < move other ways
     # verging on FactorEaseity
     Aup:
-        my $ay = $A;
+        my $ay = $s || $A;
         my @A = $ay;
         push @A, ($ay = ay.up) while ay.up && ay.up ne $ay;
         wantarray ? @A : join' ',reverse map{_.t} @A;
@@ -428,6 +428,7 @@ Atool: | # reliable/old A
         pop @net if $s < 4;
         
         my ($s,$h,$la);
+        return G&aC,$A if !A.1;
         for my $i (@net) {
             my $Y = $A->{$i} || die "Npo $i on ".ki $A;
             ref $Y eq 'HASH' || die "Got $i from A.t: ".ki $Y;
@@ -438,6 +439,7 @@ Atool: | # reliable/old A
             if (my $ii = $h.>$Y ) {
                 # number position if seen before
                 $th = ','.$ii;
+                $th = '' if $th eq 'y';
                 $sep = '';
             }
             $h.>$Y ||= $i;
