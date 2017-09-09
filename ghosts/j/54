@@ -14,7 +14,7 @@ Door: |
             $s = $s->[0] if @$s == 1;
             $pi = 'adoc'
         }
-        m $t=>"-$pi"=>{s=>$s}
+        m $t=>"-$pi"=>{dl=>5,s=>$s}
     };
     S
     if (!@{Js&M||[]}) {
@@ -52,8 +52,16 @@ pi/adoc: | # remote severalism
     if (ref $s eq 'HASH' && G&isC,$s) {
         my $s = G&hup,$s;
         if (my $z = delete ss&z) {
+            # skip into the 9 if simple
+            # FactorEase
+            my $f = $z->[0] if @$z == 1;
+            $f && delete(fc&el) && delete fc&Jo;
+            $z = fs&z if $f && f.t eq C.t && f.y.cv == 0.9
+                && !%{f.c} && keys %{f.sc} == 1 && fs&z;
+            
             m _.t=>-adoc=>{s=>$_} for @$z;
         }
+        
         my $t = s.t;
         my $cv = s.y.cv;
         $cv =~ s/^0\.//;
@@ -79,22 +87,35 @@ reCrank: | # remote Crank
     $c = c.y.C;
     $s = cc&s;
     1 && saybl wdump 3, $s
-Intrup: |
+Intrup: | # 
     Jc&save = Jc&tape = Jc&quiet = '7';
     Jc&imping = 1; # tape always in one wave
+    # also take samples once
     unless (Js&bowls) {
         G&elph,Trips=>[tripany=>$_] for &acgt{
             return if Js&bowls;
-            push @{Js&samples}, $A;
+            if (my $i = A.isinu) {
+                push @{is&children||=[]}, A.t;
+                return;
+            }
+            my $sn = G&sn,$A;
+            my $c = G&Ct,[$sn=>''=>{}=>{}];
+            if (A.2 eq 'u' && 2c&is eq 'mind') {
+                # collect the J hierarchy as flatlist on this record
+                A.isinu = $c;
+                cs&is = 'mind';
+            }
+            cs&sip = Ac&sip;
+            push @{Js&samples}, $c;
         };
-        n Stylands
+        n TMinding
     }
     Js&bowls++;
     
     S
     
     my $i =
-    n inter=>-coda=>{tape=>1,s=>Js&samples}
+    n inter=>-coda=>{dl=>4,tape=>1,s=>Js&samples}
     my $j = is&J;
     my $f = js&output_file || die "Nofile: ".G&sn,$j;
     
@@ -103,19 +124,48 @@ Intrup: |
     Rw Wudder $to $s;
     
     saygr "Yeup";
-    exit;
+    #exit;
     
     
+    
+TMinding: |
+    Rw Tiot;
+    u Minding
+    S
+    n douk=>-od=>{s=>A.I.mo}
+Minding: |
+    u c
+    W 2: %of:mo
+        # look for W in 5/permitted places...
+        1 && sayyl "Leka ".ki $C;
 pi/coda: | # convey data
     Rw HaveDepth;
     Rw MayC;
     c&path = join'/',grep{defined}2Cc&path,C.t;
-    3c&refs.>$s = $C;
+    3c&refs.>$s = $C if ref $s;
     c&left = c&dl - c&depth;
     
     if (!Js&boost) {
         if (c&isA && c&left < 2) {
             n sn=>''=>G&sn,$s  
+            n sip=>''=>sc&sip
+            return
+        }
+        if (c&isC && c&left < 4) {
+            n t=>''=>{s=>s.t}
+            s.y.cv && s.y.cv != 0.1 &&
+            n y_cv=>''=>{s=>s.y.cv}
+            for my $k ('c','sc') {
+                my $v = $s.>$k;
+                if (!keys %$v) {
+                }
+                elsif (grep{ref}values%$v) {
+                    m $k=>-coda=>{s=>$v}
+                }
+                else {
+                    n $k=>4=>{s=>ki $v}
+                }
+            }
             return
         }
     }
