@@ -1,5 +1,10 @@
 Door: |
     # interrogate process remotely
+    
+    # want to checklist/stepthrough the commersion
+    # expect response in time or error
+    # make a central error receiver ay T
+    
     Rw Tiot;
     Rw GiveTime;
     my $to = 'Door';
@@ -18,22 +23,25 @@ Door: |
     };
     S
     if (!@{Js&M||[]}) {
+        # if no result yet
         if (-d "Gc&bay/p/Text") {
-        my $code = q/
-            my @Js;
-            each t,cv,J 4s&Jtv {
-                my @yp;
-                each m,soJ,oJ Js&typed {
-                    push @yp, $m ." by ". G&sn,$oJ;
+            # ask G:Text for its W
+            my $code = q/
+                my @Js;
+                each t,cv,J 4s&Jtv {
+                    my @yp;
+                    each m,soJ,oJ Js&typed {
+                        push @yp, $m ." by ". G&sn,$oJ;
+                    }}
+                    push @Js, join "\n", "$t $cv is:",map{" - $_"}@yp;
                 }}
-                push @Js, join "\n", "$t $cv is:",map{" - $_"}@yp;
-            }}
-            \@Js;
-        /;
-        my $re = [get_types=>-eval=>{s=>$code,returnto=>'Door'}];
-        Rw Wudder $to=Text $s:_ for [Doory=>$re];
+                \@Js;
+            /;
+            my $re = [get_types=>-eval=>{s=>$code,returnto=>'Door'}];
+            Rw Wudder $to=Text $s:_ for [Doory=>$re];
         }
         else {
+            # use G:Intrup to do something, it returns data...
             Rw Wudder $s=Intrup;
         }
     }
@@ -106,6 +114,7 @@ Intrup: | #
                 cs&is = 'mind';
             }
             cs&sip = Ac&sip;
+            cs&upsn = G&sn,A.up;
             push @{Js&samples}, $c;
         };
         n TMinding
