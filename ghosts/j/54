@@ -23,8 +23,12 @@ Door: |
         m $t=>"-$pi"=>{dl=>5,s=>$s}
     };
     S
-    Rw Intre;
+    if (0) {
+    my $N = Rw Beach $f=blank/sac_sc/c/1 $s=0 $V=1;
+    n the=>-od=>{s=>$N}
     return;
+    }
+    
     if (!@{Js&M||[]}) {
         # if no result yet
         if (-d "Gc&bay/p/Text") {
@@ -61,7 +65,7 @@ pi/siphier: | # piley log of things going mo 3
     # de-coda into C again
     my @s = map {
         my ($t,$s) = @{_s&z||[]};
-        s.t eq 'sc' && t.t eq 't' || die "decoda not: ".ki[$t,$s];
+        s.t eq 'sc' && t.t eq 't' || die "decoda not: _.t _.y.cv: ".ki[@{_s&z||[]}];
         my $sc = {};
         my $h = sc&s;
         $sc.>$1 = $2 while $h =~ s/^ ?(\S+)=(.+?)( (\S+)=|$)/$3/;
@@ -209,10 +213,10 @@ Intre: | # what T sets up for I res
     # is now (5 readying) mapped for names to resolve there
     5s&z =  [
         # place to thaw u from
-        G&e,sac=>-mine=>{}=>'implies:thaw,if:upt:clusping' ,
+        G&e,sac=>-mine=>{}=>'implies:thaw,if:A-clusping' ,
         
         # posit for sac all other u things?
-        G&e,sac_sc=>-mine=>{}=>'otherwise:write,if:upt:clusping' ,
+        G&e,sac_sc=>-mine=>{}=>'otherwise:use,if:A-clusping' ,
         
         # to continue
         G&e,gou=>-mine=>{}=>'implies:resume' ,
@@ -224,13 +228,14 @@ Intre: | # what T sets up for I res
     # most taped things will flop into neu, being last
     # most gou
     # and should give path up to toplevel? HaMachine
+    return;
     my @tvs = [map{
         "_.t = ".ki _s&J.sc.top.sc.z;
     }@{5s&z}];
     n glop=>-od=>{s=>\@tvs}
     
 pi/mine: | # worded place
-    my $f = y.at.filename = "Gc&bay/$s";
+    my $f = "Gc&bay/$s";
     -d $f || return s&empty = 1;
     
     m $_=>''=>{} for split "\n", ''.`ls -1 $f`;
@@ -327,13 +332,16 @@ FourSleep: | # J entry/sleep decision
         cs&sip = Ac&sip;
             
 
-        # < not happens if Js&ein known
+        # < should happen if Js&ein known too
         A&want.elvis ||= 6 if A&E;
     
         my $isu = A.up.t eq 'clusping';
+        A.clusping = A.up if $isu;
+        $isu = 1 if A.clusping;
         if ($isu) {
             cs&isin = 'u';
-            cs&Clookslike = G&aC,$C;
+            # first W layer below u-ing/clusping
+            cs&Clookslike = G&aC,$C if A.up.t eq 'clusping';
         }
         if (A.up.t eq 's') {
             cs&isin = 's';
@@ -341,55 +349,36 @@ FourSleep: | # J entry/sleep decision
         }
         push @{4s&foursleepy}, $c;
         
+        # not for osc positing content of hyper-W (Swim/We)
+        return if cs&isin eq 's';
         
+        # the A.3 figures some storage relationship
+        A.1 eq A.3 &&
+            Rw FourStorage;
         
-        # collect thing from the ground
-        my $l;
-        my $mode;
-        my @search = @{5s&z||[]};
-        while (@search) {
-            my $D = shift @search;
-            # FactorEase 
-            $D = Ds&J.sc.top if Ds&J;
-            # is the name pool
-            if (Ds&if) {
-                if (Ds&if =~ /^upt:(.+)$/) {
-                    A.up.t eq $1 || next;
+        saygr " must_save_in = A&must_save_in" if A&must_save_in;
+        saygr " may_save_in = A&may_save_in" if A&may_save_in;
+        saygr " thaw = ".G&aC,A&thaw if A&thaw;
+        
+        # point in mo to skip to
+        my $cv;
+        
+        if (my $r = A&thaw) {
+            my $f = r.y.five;
+            if (my $R = 1c&thaw) {
+                my $F = R.y.five;
+                if (fs&ha eq Fs&ha) {
+                    A&want.thaw_same = -6;
                 }
                 else {
-                    die "Unko if: ".ki $D;
+                    A&want.thaw_diff = 6;
                 }
             }
-            # is the name
-            my $o = D.y.tw.>C.t;
-            if (Ds&otherwise) {
-                # begin planting u there
-                $mode = $o ? 'read' : 'write';
-            }
-            elsif (
-            $l = Ds&filename;
         }
-        
-        # mode:
-        # thaw - skip 6 and replant osc
-        # resume - replant osc and do 6
-        # read - 
-        G&e,sac=>-mine=>{}=>'implies:thaw,if:upt:clusping' ,
-        
-        # posit for sac all other u things?
-        G&e,sac_sc=>-mine=>{}=>'otherwise:write,if:upt:clusping' ,
-        
-        # to continue
-        G&e,gou=>-mine=>{}=>'implies:resume' ,
-        
-        # default write location
-        G&e,neu=>-mine=>{}=>'implies:write' ,
-        
-        
         
         
         # desire to wake comes from many places
-        my $de;
+        desire_to_wake: my $de;
         de.mo = A&want if A&want;
         de.C = c&want if c&want;
         de.J = 1c&want if 1c&want;
@@ -412,15 +401,21 @@ FourSleep: | # J entry/sleep decision
         
         # want to add counterpoints
         # everything eventually sleeps way/u/W stuff
-        sayyl G&sn ."   HAving decided: $eq from @got";
         cs&dec = "$eq from @got";
+        sayyl "HAving decided:  ".G&sn ."    cs&dec";
+        @got > 1 && die "Getting complicated: cs&dec";
+        
+        A&thaw &&
+            Rw FourThaw;
         
         if ($eq < 0) {
             $only eq 'once' ||
                 saybl "Sleep $eq   $des";
-            
             # we can skip 6, keep ground
             # our mo C should be re-put from before
+            
+            # do 7/osc/s if thaw-ing new
+            die "Sleeping thaw" if A&thaw;
             
             my $to = $eq < -6 ? '8' : '7';
             T.Z.>$to = $A;
@@ -431,4 +426,137 @@ FourSleep: | # J entry/sleep decision
             ||
             saygr "Waker $eq   $des";
         }
+        
+        
+FourThaw: |
+    my $r = A&thaw;
+    sayyl "Want to thaw: ".G&aC,A&thaw;
+            # takeover ground/page ?
+            my $ch = '';
+            1s&grounds.>$ch = A.ground = G&Ct,[$ch=>1=>{},{J=>s&J}];
+FourStorage: | # collaborate thing with the Wall
+        my $g;
+        my $mode;
+        my $o;
+        my @search = @{5s&z||[]};
+        while (@search) {
+            my $D = shift @search;
+            # FactorEase 
+            # also Scuttle modey sc (implies,etc) moC (D) -> 9 (d)
+            my $d = Ds&J.sc.top if Ds&J;
+            # is the name pool
+            if (Ds&if) {
+                if (Ds&if =~ /^A-(.+)$/) {
+                    $A.>$1 || next;
+                }
+                else {
+                    die "Unko if: ".ki $D;
+                }
+            }
+            # is the name
+            $o = d.y.tw.>C.t;
+            if ($mode = Ds&otherwise) {
+                # combined with if for default in that condition
+                # begin planting u in sac_sc
+            }
+            elsif (!$o && @search) {
+                next;
+            }
+            else {
+                $mode = Ds&implies
+            }
+            $g = D.t;
+            last;
+        }
+        
+        # mode:
+        # thaw - skip 6 and replant osc
+        #   thing's updates are managed by another
+        # use - thaw with w/W dependance checking
+        #   thing is random cachement not yet managed by other
+        #   as in sac_sc's random u things heading to sac's our u things
+        # resume - replant osc and do 6, continuing the log
+        #   as if in running sequence
+        # write - do 6 with a fresh osc, restarting the log
+        my $r;
+        if ($mode eq 'thaw' || $mode eq 'use' || $mode eq 'resume') {
+            $r = Rw LowCat $g $t:C.t;
+        }
+        my $K = {}; # tw 5 cache
+        r.y.five = $K.>C.t ||= Rw LowCat $g $t:C.t 5 if $r;
+        
+        if ($mode eq 'thaw') {
+            # read file, trust its state
+            # skip 6, replant osc
+            A&want.thaw = -6;
+            Ac&thaw = $r;
+        }
+        elsif ($mode eq 'use') {
+            # check its state/5 w/W 
+            # < W refs leaving the g or further
+            my @check = C.t if $r;
+            my $do = {}; # tw need update
+            $do.>C.t = 1 if !@check;
+            while (@check) {
+                my $t = shift @check;
+                my $f = $K.>$t ||= Rw LowCat $g $t 5;
+                if (!$f) {
+                    $do.>$t = 1;
+                    next;
+                }
+                saybl "HAving f: ". G&ind,$f,'aC';
+                if (my $w = f.y.tw.w) {
+                    for my $w (@{ws&z}) {
+                        my $y = G&wops,w.t;
+                        if (ws&dige ne ys&dige) {
+                            saybl "Way diff $t's w.t";
+                            $do.>$t = 1;
+                        }
+                    }
+                }
+                if (my $W = f.y.tw.W) {
+                    for my $W (@{Ws&z}) {
+                        my $y = $K.>$t ||= Rw LowCat $g $t:W.t 5;
+                        if (Ws&ha ne ys&ha) {
+                            saybl "Wormhole diff $t's W.t";
+                            $do.>$t = 1;
+                        }
+                        push @check, W.t; # Wecursively
+                    }
+                }
+            }
+            
+            if (!keys %$do) {
+                A&want.use = -6;
+                A&thaw = $r;
+            }
+            else {
+                my $tr = join', ',sort keys %$do;
+                saybl "Continuing C.t because of $tr" if $tr ne C.t;
+                A&want.use = 5;
+                A&must_save_in = $g;
+            }
+            # read file, 
+            #   plant T to refresh bits if changes
+            #   skip 6, replant osc
+        }
+        elsif ($mode eq 'resume') {
+            # replant osc, do 6
+            A&want.resume = 5;
+            Ac&thaw = $r;
+        }
+        elsif ($mode eq 'write') {
+            if ($o) {
+                # save required
+                # Scuttle some T from last save 8
+                # alternate-history linkage
+                A&must_save_in = $g;
+            }
+            else {
+                A&may_save_in = $g;
+            }
+        }
+        
+        saygr "We could $mode the $g C.t";
+        
 

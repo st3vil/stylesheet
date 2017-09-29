@@ -225,6 +225,8 @@ PostK: |
     s&Jo = s&imp.".".s&wil;
     s&label.c.Jo = s&Jo;
     
+    my $m = A.mo;
+    
     each nk,gk,v s&label {
         $r.>$nk.>$gk = $v;
     }}
@@ -237,6 +239,10 @@ PostK: |
     else {
     
     # make a bunch of writings to give to Wall
+    if (mc&must_save_in) {
+        1c&save ||= 1;
+    }
+    
     if (1c&save || 1c&tape || 3c&tape) {
         # our past should be got through some all-flexi way
         # this holds the bunch of writings, to give to Wall
@@ -244,7 +250,14 @@ PostK: |
         # < needs $f/$gd to locate already written things
         
         if (1c&save || 1c&tape || 1Cc&tape) {
-            (a&f,a&gd) = G&Locate_write;
+            my $g;
+            if ($g = mc&must_save_in || mc&may_save_in) {
+                1 && saybl "Must save A.1.t'C.t in $g";
+            }
+            (a&f,a&gd) = Rw Locate $read=0 $t=0 $s=0 $g;
+            if ($g = mc&must_save_in || mc&may_save_in) {
+                1 && saybl "Must save A.1.t'C.t in $g as a&f,a&gd";
+            }
             my $n = Rw NamePosition;
             if (A.1.t ne 'Wall') {
                 my $sc;

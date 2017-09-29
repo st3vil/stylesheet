@@ -181,7 +181,7 @@ Liney: | # read/write/ lines
     # $f file/$s string/array of Lines becomes N=[C] with s&z for the many
     Beas:
         G&Beach,'',$s
-    n Beach=>''=>G.way.Beach,'%acgt:f s'
+    n Beach=>''=>G.way.Beach,'%acgt:f s V'
     # $N=[C] with s&z becomes {i,ii} with y.in/next for many
     n Believe=>''=>G.way.Believe,'%acgt:N'
 LineTest: |
@@ -377,7 +377,7 @@ Beach: | # inhale Lines
         my $d = length($in) / 2;
         my ($t,$y,$c,$sc,$s) = split "\t", $l;
         
-        sayyl "$in $l";
+        sayyl ":$in $l";
             
         $t = djson $t if $t =~ /^\W/;
         
@@ -413,17 +413,17 @@ Beach: | # inhale Lines
         my @il;
         
         # add blockquoted c/sc
-        while ($l[0] =~ /^$in  (\w[\S ]+):( (\||.+))?$/) {
+        while ($l[0] =~ /^$in  (\w[\S ]+?):( (\||[^\n]+))?$/) {
             my ($k,$v) = ($1,$3);
             my $string;
             if ($v eq '|') {
                 $string++;
                 undef $v;
             }
-            $v = djson($v) if $v =~ /^\W/;
             push @il, shift @l;
             my ($nk,$gk) = split ' ', $k, 2;
             sayyl "$in C.t C.y.cv - $nk $gk ($string) $v";
+            $v = djson($v) if $v =~ /^\W/;
             unless ($v) {
                 saybl $in."Beaming in";
                 my @s;
@@ -600,7 +600,7 @@ Locate: | # A J and its space
     s/\W+/-/gs for @J;
     
     # most left, beyond all sense
-    my $star = G.c.bay || die "no community of G";
+    Gc&bay || die "no community of G";
     
     # second most left, edge of sense
     my $t; # G having W
@@ -611,7 +611,7 @@ Locate: | # A J and its space
     # place of work, the worker and the Gallery
     # travelling process sense and wormhole sense                              
     # probably all: A.4.t, same name as worker
-    my @search = $read ?
+    my @masks = $read ?
         # 6 for travel instructor
         #     can wire readonly chunks
         # 5 mind factory/stable but not ours to write to
@@ -624,18 +624,23 @@ Locate: | # A J and its space
       : (7,4);
     # < any of them implementing a more complicated search/resolver
     
+    # another search path of bay/(g)
+    my @g = ar.g if ar.g;
+    
     my $f; # path to dir full of head/xo/c/etc files and s/j/etc dirs
-    my $gd; # the G dir its in, before Jing
-    for my $num (@search) {
-        my $j = $A.>$num;
-        next if !$j;
-        my $jt = j.t;
-        $jt =~ s/\W+/-/gs;
-        $gd = join '/', $star, $jt;
+    my $gd; # the bay/g with names in, before Jing
+    while (@g || @masks) {
+        my $g = shift(@g) || do {
+            my $num = shift @masks;
+            my $j = $A.>$num;
+            $j && j.t;
+        } || next;
+        $g =~ s/\W+/-/gs;
+        $gd = join '/', Gc&bay, $g;
         $f = join '/', $gd, @J;
         my $e = -e $f;
         $read && !$e && next;
-        $t = j.t;
+        $t = $g;
         last;
     }
     
