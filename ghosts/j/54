@@ -66,8 +66,14 @@ pi/siphier: | # piley log of things going mo 3
         my ($t,$s) = @{_s&z||[]};
         s.t eq 'sc' && t.t eq 't' || die "decoda not: _.t _.y.cv: ".ki[@{_s&z||[]}];
         my $sc = {};
-        my $h = sc&s;
-        $sc.>$1 = $2 while $h =~ s/^ ?(\S+)=(.+?)( (\S+)=|$)/$3/;
+        if (sc&s) {
+            my $h = sc&s;
+            $sc.>$1 = $2 while $h =~ s/^ ?(\S+)=(.+?)( (\S+)=|$)/$3/;
+        }
+        else {
+            my @le = grep { defined } map { @{_s&z} } ss&z ->[0];
+            saybl "Got now: ".ki \@le;
+        }
         G&Ct,[tc&s=>''=>{}=>$sc]
     } @l;
     
@@ -112,6 +118,57 @@ pi/siphier: | # piley log of things going mo 3
             m _.t=>''=>{s=>ki $x},$sc
         }
     }
+    
+decoda: | # recode data from -coda C
+    # some
+    my $top;
+    top.y.val = ss&sym eq '[' ? [] : {};
+    my @s = ([$top,$s]);
+    while (@s) {
+        my ($u,$C) = map{@$_} shift @s; # C = -coda 9
+        my $uv = u.y.val;
+        # C implies cv=1 and two hemispheres
+        (uv.y.cv, uv.c, uv.sc) = (0.1, {}, {}) if s&sym eq 'C';
+        (uv.y, uv.c, uv.sc) = ($uv, {}, {}) if s&sym eq 'A' || s&sym eq 'J';
+        for my $n (@{s&z||[]}) {
+            my $k = n.t;
+            my $v;
+            if (ns&pi eq 'coda') {
+                my $s = ns&z ->[0];
+                $v = s.y.val = ss&sym eq '[' ? [] : {};
+                push @s, [$C,$s];
+            }
+            elsif (ns&pi || ns&W) {
+                die "Want to decoda C.t's ".ki $n;
+            }
+            else {
+                join('-',sort keys %{n.c}) =~ /^(el )?s$/
+                && join('-',sort keys %{n.sc}) eq ''
+                || die "More to C.t's ".ki$n;
+                $v = nc&s;
+            }
+            $uv.>$k = $v;
+        }
+    }
+    
+    my @l = grep { defined } map { _s&z ->[0] } @{ss&z};
+    my @s = map {
+        saybl "For ".G&aC,$_;
+        my ($t,$s) = @{_s&z||[]};
+        s.t eq 'sc' && t.t eq 't' || die "decoda not: _.t _.y.cv: ".ki[@{_s&z||[]}];
+        my $sc = {};
+        if (sc&s) {
+            my $h = sc&s;
+            $sc.>$1 = $2 while $h =~ s/^ ?(\S+)=(.+?)( (\S+)=|$)/$3/;
+        }
+        else {
+            my @le = grep { defined } map { @{_s&z} } ss&z ->[0];
+            saybl "Got now: ".ki \@le;
+        }
+        G&Ct,[tc&s=>''=>{}=>$sc]
+    # loop
+    $x = $s.>$k ||= s&sym eq '[' ? [] : s&sym ? die"Newsym: s&sym" : {};
+    
     
 pi/adoc: | # remote severalism
     Rw HaveDepth;
@@ -255,6 +312,8 @@ Minding: |
     vangal:
         "Placed $s"
 pi/coda: | # convey data
+    # default hash
+    y.at.sym = '[' if ref $s eq 'ARRAY';
     Rw HaveDepth;
     Rw MayC;
     c&path = join'/',grep{defined}2Cc&path,C.t;
@@ -263,11 +322,13 @@ pi/coda: | # convey data
     
     if (!Js&boost) {
         if (c&isA && c&left < 2) {
+            y.at.sym = s.1 eq $s ? 'J' : 'A';
             n sn=>''=>G&sn,$s  
             n sip=>''=>sc&sip
             return
         }
         if (c&isC && c&left < 4) {
+            y.at.sym = 'C';
             n t=>''=>{s=>s.t}
             s.y.cv && s.y.cv != 0.1 &&
             n y_cv=>''=>{s=>s.y.cv}
@@ -327,10 +388,11 @@ FourSleep: | # J entry/sleep decision
     # restart osc once this piece adds to mo J 45
     1s&fourslept++ || 1c&imping++;
     
-        # A node
-        my $sn = G&sn,$A;
-        my $c = G&Ct,[$sn=>''=>{}=>{}];
+        # A mo sensors, sticks on the J
+        my $sn = G&sn;
+        my $c = G&Ct,[$sn=>''];
         cs&sip = Ac&sip;
+        1s&mosen = $c;
             
 
         # < should happen if Js&ein known too
@@ -416,9 +478,9 @@ FourSleep: | # J entry/sleep decision
             # our mo C should be re-put from before
             
             # do 7/osc/s if thaw-ing new
-            die "Sleeping thaw" if A&thaw;
+            sayre "Sleeping thaw" if A&thaw;
             
-            my $to = $eq < -6 ? '8' : '7';
+            my $to = 8; #$eq < -6 ? '8' : '7';
             T.Z.>$to = $A;
         }
         else {
