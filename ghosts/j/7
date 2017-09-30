@@ -239,9 +239,8 @@ PostK: |
     else {
     
     # make a bunch of writings to give to Wall
-    if (mc&must_save_in) {
-        1c&save ||= 1;
-    }
+    # J 45 things' T/storage specs demanding writes
+    1c&save ||= 1 if mc&must_save_in;
     
     if (1c&save || 1c&tape || 3c&tape) {
         # our past should be got through some all-flexi way
@@ -250,14 +249,8 @@ PostK: |
         # < needs $f/$gd to locate already written things
         
         if (1c&save || 1c&tape || 1Cc&tape) {
-            my $g;
-            if ($g = mc&must_save_in || mc&may_save_in) {
-                1 && saybl "Must save A.1.t'C.t in $g";
-            }
+            my $g = mc&must_save_in || mc&may_save_in;
             (a&f,a&gd) = Rw Locate $read=0 $t=0 $s=0 $g;
-            if ($g = mc&must_save_in || mc&may_save_in) {
-                1 && saybl "Must save A.1.t'C.t in $g as a&f,a&gd";
-            }
             my $n = Rw NamePosition;
             if (A.1.t ne 'Wall') {
                 my $sc;
@@ -863,6 +856,7 @@ Writer: | # to make 12345, 7
                 my $D = G&Ct,[C.t,C.y.cv];
                 Ds&W = s&W;
                 # Scuttle 9->4
+                1 && sayyl "A wormhole: A.1.t's ".G&aC,$C;
                 Ds&ha = s&ha if s&ha;
                 Dc&Jo = c&Jo if c&Jo;
                 push @{Ws&z||=[]}, $D;
