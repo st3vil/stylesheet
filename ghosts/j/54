@@ -62,13 +62,11 @@ pi/siphier: | # piley log of things going mo 3
     # de-coda into C again
     my $top = Rw decoda $s;
     my $z = top.y.val;
-    n odeppl=>-od=>{s=>$z};
-    return;
     my @s = @$z;
     
     my $lev = {}; # masklen/[C]
     for (@s) {
-        _s&sip || die "Somenotsip: ".ki$_;
+        _s&sip || warn "Somenotsip: ".ki$_;
         my $len = _c&len = split ' ', _s&sip;
         push @{ $lev.>$len ||= []}, $_;
     }
@@ -106,70 +104,16 @@ pi/siphier: | # piley log of things going mo 3
             my $sc = "dis,fs:8,hs:486";#,ml:". $lenind.>_c&len ;
             m _.t=>''=>{s=>ki $x},$sc
         }
-    }
-    
-decoda: | # recode data from -coda C
-    # some
-    my $top;
-    top.y.rw = {}; # refs -> $n/-coda non-9s
-    top.y.mw = {}; # paths -> $n where meta 
-    top.y.val = ss&sym eq '[' ? [] : {};
-    my @s = ([$top,$s]);
-    while (@s) {
-        my ($u,$C) = map{@$_} shift @s; # C = -coda 9
-        my $uv = u.y.val;
-        # C implies cv=1 and two hemispheres
-        (uv.y.cv, uv.c, uv.sc) = (0.1, {}, {}) if s&sym eq 'C';
-        (uv.y, uv.c, uv.sc) = ($uv, {}, {}) if s&sym eq 'A' || s&sym eq 'J';
-        for my $n (@{s&z||[]}) {
-            my $k = n.t;
-            my $v;
-            if (ns&pi eq 'coda') {
-                my $s = ns&z ->[0];
-                $v = s.y.val = ss&sym eq '[' ? [] : {};
-                s.y.path = (C.y.path || C.t).' '.n.t;
-                push @s, [$C,$s];
-            }
-            elsif (ns&pi || ns&W) {
-                die "Want to decoda C.t's ".ki $n;
-            }
-            else {
-                if (ns&hs) {
-                    my $path = C.y.path .':'. n.t;
-                    top.y.mw.>$path = $n;
-                    ns&gets = n.t;
-                    next;
-                }
-                join('-',sort keys %{n.c}) =~ /^(el-)?s$/
-                && join('-',sort keys %{n.sc}) eq ''
-                || die "More to C.t's ".ki($n)."\n\n"
-                  .join('-',sort keys %{n.c})
-                  .' % '. join('-',sort keys %{n.sc});
-                if (ns&sym eq 'ki') {
-                    my $h = nc&s;
-                    my $ha;
-                    $ha.>$1 = $2 while $h =~ s/^ ?(\S+)=(.+?)( (\S+)=|$)/$3/;
-                    ns&gets = 'vague' unless $ha && ki($ha) eq sc&s;
-                    $v = $ha || $h;
-                }
-                elsif (ns&sym) {
-                    die "Newsym: ns&sym  ".ki$n;
-                }
-                else {
-                    $v = nc&s;
-                }
-            }
-            1 && saybl "Putting u.t's(u.sc.sym) C.t's(s&sym) n.t's(ns&sym) ".ki $v;
-            if (ref $uv eq 'ARRAY') {
-                $uv->[$k] = $v;
-            }
-            else {
-                $uv.>$k = $v;
-            }
-            top.y.rw.>$v = $n if ref $v;
+        if (!_s&sip) {
+            my $s = top.y.rw.>_.sc;
+            m sup=>-od=>{s=>wdump 3, $s}
+            m stern=>-od=>{s=>$s};
+        }
+        if (my $gw = _.y.gets_pw) {
+            # edges of perception, where any -gets s&gets vague/limited
+            m gets_pw=>-od=>{s=>$gw}
         }
     }
-    $top
     
 pi/adoc: | # remote severalism
     Rw HaveDepth;
@@ -312,78 +256,8 @@ Minding: |
     u i
     vangal:
         "Placed $s"
-pi/coda: | # convey data
-    # default hash
-    y.at.sym = '[' if ref $s eq 'ARRAY';
-    Rw HaveDepth;
-    Rw MayC;
-    c&path = join'/',grep{defined}2Cc&path,C.t;
-    3c&refs.>$s = $C if ref $s;
-    c&left = c&dl - c&depth;
-    
-    if (!Js&boost) {
-        if (c&isA && c&left < 2) {
-            y.at.sym = s.1 eq $s ? 'J' : 'A';
-            n sn=>''=>G&sn,$s  
-            n sip=>''=>sc&sip
-            return
-        }
-        if (c&isC && c&left < 4) {
-            y.at.sym = 'C';
-            n t=>''=>{s=>s.t}
-            s.y.cv && s.y.cv != 0.1 &&
-            n y_cv=>''=>{s=>s.y.cv}
-            for my $k ('c','sc') {
-                my $v = $s.>$k;
-                if (!keys %$v) {
-                }
-                elsif (grep{ref}values%$v) {
-                    m $k=>-coda=>{s=>$v}
-                }
-                else {
-                    n $k=>4=>{s=>ki $v},{sym=>'ki',elabo=>5}
-                }
-            }
-            return
-        }
-    }
-    
-    Rw Fromany;
-Fromany: |
-    return s&toomany = 'overall' if 
-        3Cc&intl++ > 3Cc&intlim;
-    
-    if (ref $s eq 'ARRAY') {
-        c&isarray = 1;
-        c&vs = [@$s];
-        c&ks = [0..(@$s-1)];
-    }
-    
-    my ($hash,@ks) = Rw HashKs;
-    my $limit = 60;
-    my $lim = @ks > $limit;
-    my $was = @ks;
-    @ks = @ks[0..($limit-1)] if $lim;
-    
-    my $pi = c&pi || 'od';
-    for (@ks) {
-        my $S = $hash.>$_;
-        if (!ref $S) {
-            m $_=>''=>{s=>$S}
-        }
-        elsif (my $O = $S eq $s && '.' || 3c&refs.>$S ) {
-            m $_=>''=>{}=>{sameas=>ref $O ? Oc&path : $O}
-        }
-        elsif (my $block = $_ eq 'I' && 'I' || c&depth > c&dl && "deep") {
-            m $_=>''=>{}=>{block=>$block}
-        }
-        else {
-            m $_=>''=>{pi=>$pi,s=>$S};
-        }
-    }
-    
-    $lim && 
-    m limited=>''=>"limit: $limit < $was",'hs:888'
+
+
 FourSleep: | # J entry/sleep decision
     # all sorts of policy...
     # restart osc once this piece adds to mo J 45

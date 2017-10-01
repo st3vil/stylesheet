@@ -149,4 +149,28 @@ Tal: | # displayings
         $s eq 'say' ? say(@Me) :
         die "New kinda talk: $s\n".wdump 2, \@Me;
         
+Quant: | # FactorEase
+    u i
+    # matches a C for having only t and cs (etc)
+    q: %acgt:s q
+        my ($mode) = $q =~ s/^(o)//;
+        my ($t) = $q =~ s/^(\?)//;
+        my ($y) = $q =~ s/^(\.)//;
+        my ($c) = $q =~ s/^c((?:\w+\,?)+)//;
+        my ($sc) = $q =~ s/^ s((?:\w+\,?)+)//;
+        ($c,$sc) = map { [split ',',$_] } ($c,$sc);
+        if ($mode eq 'o') {
+            if ($t eq '?') {
+                exists s.t || return;
+                set.t = s.t;
+            }
+            !keys %{s.y} || return if $y eq '.';
+            !keys %{s.c} || return if !@$c;
+            if (@$c) {
+                keys %{s.c} == @$c || return;
+                exists s.c.>$_ || return for @$c;
+            }
+            !keys %{s.sc} || return if !@$sc;
+        }
+        1
 

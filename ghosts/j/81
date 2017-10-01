@@ -1,5 +1,5 @@
 
-pi/od: | # pud clo
+pi/od: | # data splayer
     # recursion
     Rw HaveDepth;
     Rw MayC;
@@ -258,28 +258,163 @@ Froth: | # the smaller bits set out
     
     $lim && 
     m limited=>''=>{s=>"Limited from $was to $limit"},{hs=>"888",ws=>1}
-Quant: | # FactorEase
-    u i
-    # matches a C for having only t and cs (etc)
-    q: %acgt:s q
-        my ($mode) = $q =~ s/^(o)//;
-        my ($t) = $q =~ s/^(\?)//;
-        my ($y) = $q =~ s/^(\.)//;
-        my ($c) = $q =~ s/^c((?:\w+\,?)+)//;
-        my ($sc) = $q =~ s/^ s((?:\w+\,?)+)//;
-        ($c,$sc) = map { [split ',',$_] } ($c,$sc);
-        if ($mode eq 'o') {
-            if ($t eq '?') {
-                exists s.t || return;
-                set.t = s.t;
-            }
-            !keys %{s.y} || return if $y eq '.';
-            !keys %{s.c} || return if !@$c;
-            if (@$c) {
-                keys %{s.c} == @$c || return;
-                exists s.c.>$_ || return for @$c;
-            }
-            !keys %{s.sc} || return if !@$sc;
+pi/coda: | # convey data
+    # default hash
+    y.at.sym = '[' if ref $s eq 'ARRAY';
+    Rw HaveDepth;
+    Rw MayC;
+    c&path = join'/',grep{defined}2Cc&path,C.t;
+    3c&refs.>$s = $C if ref $s;
+    c&left = c&dl - c&depth;
+    
+    if (!Js&boost) {
+        if (c&isA && c&left < 2) {
+            y.at.sym = s.1 eq $s ? 'J' : 'A';
+            n sn=>''=>G&sn,$s  
+            n sip=>''=>sc&sip
+            return
         }
-        1
+        if (c&isC && c&left < 4) {
+            y.at.sym = 'C';
+            n t=>''=>{s=>s.t}
+            s.y.cv && s.y.cv != 0.1 &&
+            n y_cv=>''=>{s=>s.y.cv}
+            for my $k ('c','sc') {
+                my $v = $s.>$k;
+                if (!keys %$v) {
+                }
+                elsif (grep{ref}values%$v) {
+                    m $k=>-coda=>{s=>$v}
+                }
+                else {
+                    n $k=>4=>{s=>ki $v},{sym=>'ki'}
+                }
+            }
+            return
+        }
+    }
+    
+    Rw Fromany;
+decoda: | # recode data from -coda C
+    # some
+    my $top;
+    top.y.rw = {}; # refs -> $n/-coda non-9s
+    top.y.meta_pw = {}; # paths -> $n where meta 
+    top.y.val =
+    s.y.val = ss&sym eq '[' ? [] : {};
+    my @s = ([$top,$s]);
+    while (@s) {
+        my ($u,$C) = map{@$_} shift @s; # C = -coda 9
+        my $uv = C.y.val;
+        # C implies cv=1 and two hemispheres
+        (uv.y.cv, uv.c, uv.sc) = (0.1, {}, {}) if s&sym eq 'C';
+        (uv.y, uv.c, uv.sc) = ($uv, {}, {}) if s&sym eq 'A' || s&sym eq 'J';
+        for my $n (@{s&z||[]}) {
+            n.y.up ||= $C;
+            my $k = n.t;
+            my $v;
+            if (ns&pi eq 'coda') {
+                my $s = ns&z ->[0];
+                $v = s.y.val = ss&sym eq '[' ? [] : {};
+                s.y.path = (C.y.path || C.t).' '.n.t;
+                push @s, [$C,$s];
+            }
+            elsif (ns&pi || ns&W) {
+                die "Want to decoda C.t's ".ki $n;
+            }
+            else {
+                if (ns&hs) {
+                    my $path = C.y.path .':'. n.t;
+                    top.y.mw.>$path = $n;
+                    ns&gets = n.t;
+                    next;
+                }
+                
+                join('-',sort keys %{n.c}) =~ /^(el-)?s$/
+                && join('-',sort keys %{n.sc}) =~ /^(gets)?-?(sym)?$/
+                || die "More to C.t's ".ki($n)."\n\n"
+                  .join('-',sort keys %{n.c})
+                  .' % '. join('-',sort keys %{n.sc});
+                
+                if (ns&sym eq 'ki') {
+                    my $h = nc&s;
+                    my $ha;
+                    $ha.>$1 = $2 while $h =~ s/^ ?(\S+)=(.+?)( (\S+)=|$)/$3/;
+                    ns&gets = 'vague' unless $ha && ki($ha) eq sc&s;
+                    if (ns&gets eq 'vague') {
+                        sayre "vague because: ".ki($ha)."\n eq sc&s";
+                    }
+                    $v = $ha || $h;
+                }
+                elsif (ns&sym) {
+                    die "Newsym: ns&sym  ".ki$n;
+                }
+                else {
+                    $v = nc&s;
+                }
+            }
+            if (ns&gets) { # note about representation sureity
+                my @p;
+                my $S = $n;
+                my $done;
+                while (S.y.up) {
+                    $done = Ss&sym eq 'C';
+                    push @p, S.t;
+                    $S = S.y.up;
+                    last if $done;
+                }
+                # could be array toplevel
+                !$done && sayre "No C above: @p -- ".ki $n;
+                my $p = join' ',@p;
+                saybl "Seeing S.y.path --- $p get ns&gets at n.t";
+                S.y.gets_pw.>$p = $n;
+            }
+            #1 && saybl "Putting u.t's(u.sc.sym) C.t's(s&sym) n.t's(ns&sym) ".ki $v;
+            #C.t . n.t =~ /22/ && sayre "HAve uval: ".ki $uv;
+            if (ref $uv eq 'ARRAY') {
+                $uv->[$k] = $v;
+            }
+            else {
+                $uv.>$k = $v;
+            }
+            top.y.rw.>$v = $n if ref $v;
+        }
+    }
+    $top
+   
+Fromany: |
+    return s&gets = 'floody' if 
+        3Cc&intl++ > 3Cc&intlim;
+    
+    if (ref $s eq 'ARRAY') {
+        c&isarray = 1;
+        c&vs = [@$s];
+        c&ks = [0..(@$s-1)];
+    }
+    
+    my ($hash,@ks) = Rw HashKs;
+    my $limit = 60;
+    my $lim = @ks > $limit;
+    my $was = @ks;
+    @ks = @ks[0..($limit-1)] if $lim;
+    
+    my $pi = c&pi || 'od';
+    for (@ks) {
+        my $S = $hash.>$_;
+        if (!ref $S) {
+            m $_=>''=>{s=>$S}
+        }
+        elsif (my $O = $S eq $s && '.' || 3c&refs.>$S ) {
+            m $_=>''=>{}=>{sameas=>ref $O ? Oc&path : $O}
+        }
+        elsif (my $block = $_ eq 'I' && 'I' || c&depth > c&dl && "deep") {
+            m $_=>''=>{}=>{block=>$block}
+        }
+        else {
+            m $_=>''=>{pi=>$pi,s=>$S};
+        }
+    }
+    
+    $lim && 
+    m limited=>''=>"limit: $limit < $was",'hs:888'
 
