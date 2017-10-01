@@ -218,7 +218,8 @@ Sees: |
                 }
             }
             
-            sayyl "Zago: $z or $s" if C.t eq 'ago';
+            # js loses it, element created?
+            $z = "'$z'" if $z =~ /^\d+(\.\d+)?$/;
             n no=>2=>$z,"%fs:$fs,hs:398,lh:0.9,mh:5$bg,dis:2"
             s&return++;
             return
@@ -297,7 +298,7 @@ Doorin: | # see de/-coda work
         my $r = l.y.val;
         my $z = $r;
         #$z = wdump 3, $r;
-        m ud => -od => {s=>$z}
+        m ud => -od => {dl=>5,s=>$z}
         m metaci => -od => {s=>l.y.gets_pw}
     }
 pi/coda: | # convey data
@@ -383,6 +384,8 @@ decoda: | # recode data from -coda C
                   .join('-',sort keys %{n.c})
                   .' % '. join('-',sort keys %{n.sc});
                 
+                # something to describe yers?
+                # to know whats around
                 if (ns&sym eq 'ki') {
                     my $h = nc&s;
                     my $ha;
@@ -415,6 +418,10 @@ decoda: | # recode data from -coda C
                 my $p = join' ',@p;
                 saybl "Seeing S.y.path --- $p get ns&gets at n.t";
                 S.y.gets_pw.>$p = $n;
+            }
+            if (n.t eq 'y_cv' && s&sym eq 'C') {
+                uv.y.cv = nc&s;
+                next;
             }
             #1 && saybl "Putting u.t's(u.sc.sym) C.t's(s&sym) n.t's(ns&sym) ".ki $v;
             #C.t . n.t =~ /22/ && sayre "HAve uval: ".ki $uv;
