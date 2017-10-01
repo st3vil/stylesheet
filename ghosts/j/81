@@ -53,15 +53,22 @@ HaveDepth: |
     
     y.n = 21;
 MayC: |
-    return if ref $s ne 'HASH' || grep{!/^(t|y|c|sc)$/} keys %$s;
-    if (defined s.t && (s.y || ref s.c eq 'HASH' || ref s.sc eq 'HASH')) {
+    # C is hash with one or more of t y c sc
+    return if ref $s ne 'HASH'
+        || !exists s.t && !exists s.y && !exists s.c && !exists s.sc;
+    
+    if (s.y eq $s && exists s.t && exists s.c && exists s.sc) {
         c&istycsc = 1;
-        if (s.y ne $s) {
-            c&isC = 1;
+        if (s.1 eq $s) {
+            c&isJ = 1
         }
         else {
-            c&isA = 1;
+            c&isA = 1
         }
+    }
+    elsif (defined s.t && (s.y || ref s.c eq 'HASH' || ref s.sc eq 'HASH')) {
+        c&istycsc = 1;
+        c&isC = 1;
     }
 Indentity: | # bit of basket "$ind<" and name of bit there (C.t)
     y.at.qs=1;
@@ -258,8 +265,44 @@ Froth: | # the smaller bits set out
     
     $lim && 
     m limited=>''=>{s=>"Limited from $was to $limit"},{hs=>"888",ws=>1}
+Doorin: | # see de/-coda work
+    my $t;
+    t.do.eo.ep.fpl.el.f++;
+    t.do.r.ep.w.el.f++;
+    t.do.eo.e.w.el.f++;
+    t.rdo++;
+    t.rdoe.r.t++;
+    t.rdoe.o = [1,2,3];
+    my @x = map { G&Ct,[gluarism=>$_=>{}=>{seo=>eoul=>fi=>3}] } 3..6;
+    $t = G&Ct,[glua=>3=>{}=>{z=>[@x],gla=>$t}];
+    
+    my $i =
+    n pud=>-coda=>{s=>$t,tape=>1},'qz'
+    my $j = is&J;
+    my $f = js&output_file || die "Nofile: ".G&sn,$j;
+    $s = G&Beach,$f;
+    $s = $s->[0] if @$s == 1;
+    
+    
+    # somie 
+    my $mode;
+    $mode = 'decod';
+    
+    $mode eq 'od' &&
+    n ud => -od => {s=>$s}
+    $mode eq 'lod' &&
+    n ud => -od => {s=>[ G&ind,$s,'aC' ]}
+    if ($mode eq 'decod') {
+        my $l = Rw decoda $s;
+        my $r = l.y.val;
+        my $z = $r;
+        #$z = wdump 3, $r;
+        m ud => -od => {s=>$z}
+        m metaci => -od => {s=>l.y.gets_pw}
+    }
 pi/coda: | # convey data
     # default hash
+    1c&imping++;
     y.at.sym = '[' if ref $s eq 'ARRAY';
     Rw HaveDepth;
     Rw MayC;
@@ -300,6 +343,7 @@ decoda: | # recode data from -coda C
     my $top;
     top.y.rw = {}; # refs -> $n/-coda non-9s
     top.y.meta_pw = {}; # paths -> $n where meta 
+    # top.y.gets_pw   paths -> $n where s&gets
     top.y.val =
     s.y.val = ss&sym eq '[' ? [] : {};
     my @s = ([$top,$s]);
@@ -309,14 +353,17 @@ decoda: | # recode data from -coda C
         # C implies cv=1 and two hemispheres
         (uv.y.cv, uv.c, uv.sc) = (0.1, {}, {}) if s&sym eq 'C';
         (uv.y, uv.c, uv.sc) = ($uv, {}, {}) if s&sym eq 'A' || s&sym eq 'J';
+        # mo C become the hops, 9 C gives over some attr (Scuttle)
+        u.sc.sym = s&sym if s&sym;
         for my $n (@{s&z||[]}) {
-            n.y.up ||= $C;
+            n.y.up ||= $u;
             my $k = n.t;
             my $v;
             if (ns&pi eq 'coda') {
                 my $s = ns&z ->[0];
                 $v = s.y.val = ss&sym eq '[' ? [] : {};
                 s.y.path = (C.y.path || C.t).' '.n.t;
+                s.y.up = $n;
                 push @s, [$C,$s];
             }
             elsif (ns&pi || ns&W) {
@@ -330,7 +377,7 @@ decoda: | # recode data from -coda C
                     next;
                 }
                 
-                join('-',sort keys %{n.c}) =~ /^(el-)?s$/
+                join('-',sort keys %{n.c}) =~ /^(el)?-?s?$/
                 && join('-',sort keys %{n.sc}) =~ /^(gets)?-?(sym)?$/
                 || die "More to C.t's ".ki($n)."\n\n"
                   .join('-',sort keys %{n.c})
@@ -340,9 +387,9 @@ decoda: | # recode data from -coda C
                     my $h = nc&s;
                     my $ha;
                     $ha.>$1 = $2 while $h =~ s/^ ?(\S+)=(.+?)( (\S+)=|$)/$3/;
-                    ns&gets = 'vague' unless $ha && ki($ha) eq sc&s;
+                    ns&gets = 'vague' unless $ha && ki($ha) eq nc&s;
                     if (ns&gets eq 'vague') {
-                        sayre "vague because: ".ki($ha)."\n eq sc&s";
+                        sayre "vague because: ".ki($ha)."\n eq nc&s";
                     }
                     $v = $ha || $h;
                 }
@@ -364,7 +411,7 @@ decoda: | # recode data from -coda C
                     last if $done;
                 }
                 # could be array toplevel
-                !$done && sayre "No C above: @p -- ".ki $n;
+                !$done && sayre "No C above: @p -> S.t -- ".ki $n;
                 my $p = join' ',@p;
                 saybl "Seeing S.y.path --- $p get ns&gets at n.t";
                 S.y.gets_pw.>$p = $n;
@@ -408,7 +455,9 @@ Fromany: |
             m $_=>''=>{}=>{sameas=>ref $O ? Oc&path : $O}
         }
         elsif (my $block = $_ eq 'I' && 'I' || c&depth > c&dl && "deep") {
-            m $_=>''=>{}=>{block=>$block}
+            my $c = {};
+            c.s = ki $S if $block eq 'deep';
+            m $_=>''=>$c=>{gets=>$block}
         }
         else {
             m $_=>''=>{pi=>$pi,s=>$S};
