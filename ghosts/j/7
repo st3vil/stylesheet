@@ -1,45 +1,49 @@
 FourThaw: | # set up osc to continue, given A&thaw = 1
     my $r = A&thaw;
     sayyl "Want to thaw: ".G&aC,$r;
-    1c&osc_thaw = $r;
+    1s&FishBrainDump = 1;
+    G&s,{thaw=>$r};
     A&to_cv = 7;
+    T.nose = 3; # stores Jtv, doesn't osc
+    saybl "Having eventual JsssI: ".wdump 2, 1s&s.sc.I;
 FishBrains: |
     # etc
-    
-        my ($r,$in_top);
-        
-        if (1c&osc_thaw) {
-        
+        my $r; # what goes in to it
+        my $ch; # its partition/page
+        if ($r = A&thaw) {
+            # etc
+            1 && sayyl "Thawing osc!";
+            1c&thaw = $r;
+            A&imp = 1;
         }
+        else {
+            # ground has been completed
+            # < revamping sleepybits from drain
+            my $g = A.ground || die "noground";
+                 gs&J eq A.1 || die "ground sJ not A1: ".ki(gs&J)."\n\nA1: ".ki A.1;
+            $ch = g.t;
+
+            # ground -> drain, so it can be resupposed
+            # < keeping stuff on 9... replace 1s&root with the drained one?
+            my $d = 1s&drains.>$ch = G&hup,$g;
+            ds&z = [grep { 
+                my $Y = _.y.A;
+                !$Y || !(Yc&T.not || _.sc.not ) || do {
+                    sayre "Dropping yATnot from drain: ".G&aC,$_;
+                    0;
+                };
+            } @{ds&z}];
         
-        # ground has been completed, pos revamping sleepybits from drain
-        my $g = A.ground || die "noground";
-             gs&J eq A.1 || die "ground sJ not A1: ".ki(gs&J)."\n\nA1: ".ki A.1;
-        my $ch = g.t;
-        
-        # ground -> drain, so it can be resupposed
-        # < keeping stuff on 9... replace 1s&root with the drained one?
-        my $d = 1s&drains.>$ch = G&hup,$g;
-        ds&z = [grep { 
-            my $Y = _.y.A;
-            !$Y || !(Yc&T.not || _.sc.not ) || do {
-                sayre "Dropping yATnot from drain: ".G&aC,$_;
-                0;
-            };
-        } @{ds&z}];
-        
-        my $in_top = $d;
-        my $r = 1s&root || die "how to hold many";
-        # < clean away use of the drain as the top C
-        # < dome system composing them onto the root C directly...
-        #   would expose useful tools for playing data...
-        if (1) {
+            $r = 1s&root || die "how to hold many";
+            
+            # < clean away use of the drain as the top C
+            # < dome system composing them onto the root C directly...
+            #   would expose useful tools for playing data...
             r.y.OA &&
                 return warn G&sn ." root already osc'd, sleeping";
             rs&z && die "Root9 r.t has scz: ".ki rs&z;
             rs&z = [grep {$_ ne $r} @{ds&z}];
             @{ds&z} == @{rs&z}+1 || die "Root9 r.t wasn't grounded?";
-            $in_top = $r
         }
         
         local A.V = 0;
@@ -65,8 +69,9 @@ FishBrains: |
         my $m = G&Ct,[J_Shade=>''];
         # doesn't do Tv (C that are attr), unless ms&evenTv
         my $sn = G&sn;
+        my $Y = $A;
         ms&any = &acgt{
-            $_ eq 's' ||
+            $_ eq 's' || Yc&thaw ||
             delete C.c.>$_ for keys %{C.c}
         };
         ms&nkgk.sc.J = &acgts{
@@ -85,8 +90,8 @@ FishBrains: |
         @{A&Core} ||
             return sayre "Sleeps in: ".G&sn;
         
-        0 && 
-            Rw FishBrainDump $r;
+        #1s&FishBrainDump && 
+        #    Rw FishBrainDump $r;
         
         # Cora is full state
         #   which will have its last awake .y.OC
@@ -213,6 +218,17 @@ PostK: |
         map { _.y.KA || die "NoKA: ".ki$_ } @{os&Cora}
     };
     
+    if (1s&FishBrainDump) {
+        1 && sayre "ou Cora";
+        for my $v (@{os&Cora}) {
+            my $Y = v.y.A;
+            my $ind = join('',('  ')x Yc&ind);
+            1 && sayre "Yc&el $ind - ".G&aC,$v ."  ( "
+                .ki(v.c)."    %  ".ki v.sc;
+        }
+    
+    }
+    
     # deletes I unless values I
     delete s&I unless values %{s&I};
     
@@ -228,12 +244,29 @@ PostK: |
         s&imp = s&imp || 1;
         s&wil++;
     }
+    if (my $r = A&thaw) {
+        if (rc&Jo) {
+            if (rc&Jo =~ /^(\d+)\.(\d+)$/) {
+                s&imp = $1;
+                s&wil = $2;
+            }
+            else {
+                die "No rc&Jo";
+            }
+        }
+    }
     # called Jo?
     s&Jo = s&imp.".".s&wil;
     s&label.c.Jo = s&Jo;
     
+                if (my $c = 1s&mosen) {
+                    # J 45 sensor
+                    cs&Jo = s&Jo;
+                }
+                
     my $m = A.mo;
     
+    # ho/2-hash overwriting onto root C
     each nk,gk,v s&label {
         $r.>$nk.>$gk = $v;
     }}
@@ -939,7 +972,7 @@ Writer: | # to make 12345, 7
         if (me.way) {
             # < won't stay deleted from GenMeta
             delete me.way.>$_ for qw'FishBrains GenMeta NamePosition
-                PostK PostO PostTV Writer';
+                PostK PostO PostTV Writer Locate';
             delete me.way if !keys %{me.way};
         }
         if (my $way = delete me.way) {
