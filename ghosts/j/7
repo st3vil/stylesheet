@@ -11,8 +11,6 @@ FishBrains: |
         my $r; # what goes in to it
         my $ch; # its partition/page
         if ($r = A&thaw) {
-            # etc
-            1 && sayyl "Thawing osc!";
             1c&thaw = $r;
             A&imp = 1;
         }
@@ -184,6 +182,17 @@ FishBrains: |
     # watching the K diverge as a way to get input is interesting
     # self servers (Dogu/-lookin eg) wants to see out-changes as in-changes
 FishBrainDump: | # < make statusline sized osc change notes
+    
+    if (0 && 1s&FishBrainDump) {
+        1 && sayre "ou Cora";
+        for my $v (@{os&Cora}) {
+            my $Y = v.y.A;
+            my $ind = join('',('  ')x Yc&ind);
+            1 && sayre "Yc&el $ind - ".G&aC,$v ."  ( "
+                .ki(v.c)."    %  ".ki v.sc;
+        }
+    
+    }
         sayre G&sn ."osc-postin root: ".G&aC,$r;
         for my $v (@{A&Cora}) {
             my $Y = v.y.A;
@@ -198,16 +207,9 @@ FishBrainDump: | # < make statusline sized osc change notes
                 .ki(v.c)."    %  ".ki v.sc;
         }
 PostK: |
-    # scoop up I every time
-    # clobber here into the many I cv 
-    #  or different positions on the thing,
-    #  even with same cv, from around this vector, someday
-    # we hold A.I as most executable, use OC for it
+    # we hold A.I as most executable, use OC clone for it
+    # not the clone KC, which is breaking down code for Lineing
     s&I = {map { _.t=>$_ }
-        # the shape of being an I thing (yup==9?)
-        # take outC, which is:
-        #   clone of OC
-        #   not the clone KC, which is breaking down code for Lineing
         map {
             my $c = _s&clones || die "KAnoclones";
             c.outC || die "Has no outC"
@@ -217,25 +219,9 @@ PostK: |
         map { _c&s || die "KC no cs=KC" } 
         map { _.y.KA || die "NoKA: ".ki$_ } @{os&Cora}
     };
+    delete s&I if !%{s&I};
     
-    if (1s&FishBrainDump) {
-        1 && sayre "ou Cora";
-        for my $v (@{os&Cora}) {
-            my $Y = v.y.A;
-            my $ind = join('',('  ')x Yc&ind);
-            1 && sayre "Yc&el $ind - ".G&aC,$v ."  ( "
-                .ki(v.c)."    %  ".ki v.sc;
-        }
-    
-    }
-    
-    # deletes I unless values I
-    delete s&I unless values %{s&I};
-    
-    
-    
-    # version s
-    # major & minor
+    # version s: imp=major & wil=minor
     if (r.y.A.c.el eq '1') {
         s&imp++;
         s&wil = 1;
@@ -245,6 +231,9 @@ PostK: |
         s&wil++;
     }
     if (my $r = A&thaw) {
+        if (my $f = r.y.five) {
+            s&meta.c.ha = fs&ha;
+        }
         if (rc&Jo) {
             if (rc&Jo =~ /^(\d+)\.(\d+)$/) {
                 s&imp = $1;
@@ -259,8 +248,7 @@ PostK: |
     s&Jo = s&imp.".".s&wil;
     s&label.c.Jo = s&Jo;
     
-                if (my $c = 1s&mosen) {
-                    # J 45 sensor
+                if (my $c = 1s&mosen) { # J 45 sensor
                     cs&Jo = s&Jo;
                 }
                 
@@ -960,9 +948,6 @@ Writer: | # to make 12345, 7
         # lum feeling: 4 ~= content, 
         w.4->[0] =~ s/HAHAR/h.1/;
         h.4 = $st->(w.4,'4');
-        
-        # < Scuttle copy various light things from 9
-        is&ha = h.1;
     }
     if (w.5) {
         # 5's belief structure dependagey
@@ -1005,8 +990,13 @@ Writer: | # to make 12345, 7
         push @$z, $W if @{Ws&z||[]};
         
         is&z = $z if @$z;
+        
+        # < Scuttle copy various light things from 9
+        is&ha = h.1;
+        
         @{w.5} = G&ind,$i,$ub;
         h.5 = $st->(w.5,'5');
+        # meta non-mergey attributes c
         mc&ha = h.1;
     }
     if (w.2) {
