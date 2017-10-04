@@ -1,5 +1,16 @@
+FourThaw: | # set up osc to continue, given A&thaw = 1
+    my $r = A&thaw;
+    sayyl "Want to thaw: ".G&aC,$r;
+    1c&osc_thaw = $r;
+    A&to_cv = 7;
 FishBrains: |
     # etc
+    
+        my ($r,$in_top);
+        
+        if (1c&osc_thaw) {
+        
+        }
         
         # ground has been completed, pos revamping sleepybits from drain
         my $g = A.ground || die "noground";
@@ -20,12 +31,11 @@ FishBrains: |
         my $in_top = $d;
         my $r = 1s&root || die "how to hold many";
         # < clean away use of the drain as the top C
+        # < dome system composing them onto the root C directly...
+        #   would expose useful tools for playing data...
         if (1) {
-            r.t eq 'Elan' && sayre "Elan osc root: ".G&aC,$r;
-            if (r.y.OA) {
-                warn G&sn ." root already osc'd, sleeping";
-                return;
-            }
+            r.y.OA &&
+                return warn G&sn ." root already osc'd, sleeping";
             rs&z && die "Root9 r.t has scz: ".ki rs&z;
             rs&z = [grep {$_ ne $r} @{ds&z}];
             @{ds&z} == @{rs&z}+1 || die "Root9 r.t wasn't grounded?";
@@ -49,8 +59,6 @@ FishBrains: |
         #   climbing in/next/z to produce OC feedable clones,
         # <? C that are attributes it keeps/diffs but doesn't OC
         # OC.y.C = origin C, C.y.OC = OC
-        # 
-        # the OC is another copy, which the oiD gets
         
         # see enough interior of Js with map function
         #   o being FactorEase's backend, ideally
@@ -66,34 +74,19 @@ FishBrains: |
             c&Jo = ss&Jo;
         };
         
-        my $o = A&in = G&o,$in_top,{liveon=>$C,t=>'in',yoff=>'OC',map=>$m,V=>0};
+        my $o = A&in = G&o,$r,{liveon=>$C,t=>'in',yoff=>'OC',map=>$m,V=>0};
         
         # where we'd want to forget $d, the drain itself...
         # < d.y.in.y.up is?
-        my $da;
-        A&Core = [grep {_.y.C ne $d} @{os&Core}];
-        A&Cora = [grep {_.y.C ne $d} @{os&Cora}];
-        if (r.t eq 'Elan') {
-            r.t eq 'Elan' && sayre "Elan osc-postin root: ".G&aC,$r;
-        for my $v (@{A&Cora}) {
-            my $Y = v.y.A;
-            my $ind = join('',('  ')x Yc&ind);
-            1 && say "Yc&el $ind - ".G&aC,$v ."  ( "
-                .ki(v.c)."    %  ".ki v.sc;
-        }
-        for my $v (@{A&Core}) {
-            my $Y = v.y.A;
-            my $ind = join('',('  ')x Yc&ind);
-            1 && sayre "Yc&el $ind - ".G&aC,$v ."  ( "
-                .ki(v.c)."    %  ".ki v.sc;
-        }
-        }
+        A&Core = [@{os&Core}];
+        A&Cora = [@{os&Cora}];
         
         # sleep: before 9 takes all under, no Core means still
-        if (!@{A&Core}) {
-            sayre "Sleeps in: ".G&sn;
-            return;
-        }
+        @{A&Core} ||
+            return sayre "Sleeps in: ".G&sn;
+        
+        0 && 
+            Rw FishBrainDump $r;
         
         # Cora is full state
         #   which will have its last awake .y.OC
@@ -185,6 +178,20 @@ FishBrains: |
         
     # watching the K diverge as a way to get input is interesting
     # self servers (Dogu/-lookin eg) wants to see out-changes as in-changes
+FishBrainDump: | # < make statusline sized osc change notes
+        sayre G&sn ."osc-postin root: ".G&aC,$r;
+        for my $v (@{A&Cora}) {
+            my $Y = v.y.A;
+            my $ind = join('',('  ')x Yc&ind);
+            1 && say "Yc&el $ind - ".G&aC,$v ."  ( "
+                .ki(v.c)."    %  ".ki v.sc;
+        }
+        for my $v (@{A&Core}) {
+            my $Y = v.y.A;
+            my $ind = join('',('  ')x Yc&ind);
+            1 && sayre "Yc&el $ind - ".G&aC,$v ."  ( "
+                .ki(v.c)."    %  ".ki v.sc;
+        }
 PostK: |
     # scoop up I every time
     # clobber here into the many I cv 
@@ -855,9 +862,10 @@ Writer: | # to make 12345, 7
             if (s&W) {
                 my $D = G&Ct,[C.t,C.y.cv];
                 Ds&W = s&W;
-                # J 45 sensor
-                my $c = 1s&mosen;
-                cs&Wto.>D.t = [Ds&W, G&aC,$C ];
+                if (my $c = 1s&mosen) {
+                    # J 45 sensor
+                    cs&Wto.>D.t = s&ha;
+                }
                 # Scuttle 9->4
                 Ds&ha = s&ha if s&ha;
                 Dc&Jo = c&Jo if c&Jo;

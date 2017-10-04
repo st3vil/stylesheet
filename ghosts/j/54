@@ -24,9 +24,9 @@ Door: |
     };
     S
     
-    Rw Doorin;
-    return;
-    Js&boels++ ||
+    #Rw Doorin;
+    #return;
+    Js&boels++ || 1 ||
     `rm -rf blank/sac_sc`;
     
     if (!@{Js&M||[]}) {
@@ -59,7 +59,7 @@ Door: |
     }
     
     
-pi/siphier: | # piley log of things going mo 3
+pi/siphier: | # (non)piley log of things going mo 3
     s&fs = 8;
     
     # de-coda into C again
@@ -282,7 +282,7 @@ FourSleep: | # J entry/sleep decision
         if ($isu) {
             cs&isin = 'u';
             # first W layer below u-ing/clusping
-            cs&Clookslike = G&aC,$C if A.up.t eq 'clusping';
+            cs&clusping = A.up.2.t if A.up.t eq 'clusping';
         }
         if (A.up.t eq 's') {
             cs&isin = 's';
@@ -304,18 +304,6 @@ FourSleep: | # J entry/sleep decision
         # point in mo to skip to
         my $cv;
         
-        if (my $r = A&thaw) {
-            my $f = r.y.five;
-            if (my $R = 1c&thaw) {
-                my $F = R.y.five;
-                if (fs&ha eq Fs&ha) {
-                    A&want.thaw_same = -6;
-                }
-                else {
-                    A&want.thaw_diff = 6;
-                }
-            }
-        }
         
         
         # desire to wake comes from many places
@@ -346,9 +334,6 @@ FourSleep: | # J entry/sleep decision
         sayyl "HAving decided:  ".G&sn ."    cs&dec";
         @got > 1 && die "Getting complicated: cs&dec";
         
-        A&thaw &&
-            Rw FourThaw;
-        
         if ($eq < 0) {
             $only eq 'once' ||
                 saybl "Sleep $eq   $des";
@@ -369,16 +354,11 @@ FourSleep: | # J entry/sleep decision
         }
         
         
-FourThaw: |
-    my $r = A&thaw;
-    sayyl "Want to thaw: ".G&aC,A&thaw;
-            # takeover ground/page ?
-            my $ch = '';
-            1s&grounds.>$ch = A.ground = G&Ct,[$ch=>1=>{},{J=>s&J}];
 FourStorage: | # collaborate thing with the Wall
         my $g;
         my $mode;
         my $o;
+        # look for somewhere to fit in
         my @search = @{5s&z||[]};
         while (@search) {
             my $D = shift @search;
@@ -410,7 +390,24 @@ FourStorage: | # collaborate thing with the Wall
             last;
         }
         
-        # mode:
+        # write - do 6 with a fresh osc, restarting the log
+        #   normal thing that happens, the G J taking over
+        #   resume syncs the osc to the W J, continuing it
+        
+        if ($mode eq 'write') {
+            if ($o) {
+                # save required
+                # Scuttle some T from last save 8
+                # alternate-history linkage
+                A&must_save_in = $g;
+            }
+            else {
+                A&may_save_in = $g;
+            }
+        }
+        
+        
+        # osc-syncing modes:
         # thaw - skip 6 and replant osc
         #   thing's updates are managed by another
         # use - thaw with w/W dependance checking
@@ -418,26 +415,30 @@ FourStorage: | # collaborate thing with the Wall
         #   as in sac_sc's random u things heading to sac's our u things
         # resume - replant osc and do 6, continuing the log
         #   as if in running sequence
-        # write - do 6 with a fresh osc, restarting the log
-        my $r;
-        if ($mode eq 'thaw' || $mode eq 'use' || $mode eq 'resume') {
-            $r = Rw LowCat $g $t:C.t;
-        }
-        my $K = {}; # tw 5 cache
-        r.y.five = $K.>C.t ||= Rw LowCat $g $t:C.t 5 if $r;
+        #   
         
-        if ($mode eq 'thaw') {
-            # read file, trust its state
-            # skip 6, replant osc
-            A&want.thaw = -6;
-            Ac&thaw = $r;
+        my $K = {}; # tw of 5s cache
+        if ($mode eq 'thaw' || $mode eq 'use' || $mode eq 'resume') {
+            # A&thaw == 1c&thaw when still
+            if (my $R = 1c&thaw) {
+                my $F = R.y.five || die "Thaw no y5";
+                # small 2 links group of objects making the commit
+                my $t = Rw LowCat $g $t:C.t 2;
+                if (ts&1 eq Fs&ha) {
+                    A&thaw = $R;
+                }
+            }
+            my $r = A&thaw ||= Rw LowCat $g $t:C.t;
+            r.y.five ||= $K.>C.t ||= Rw LowCat $g $t:C.t 5;
         }
-        elsif ($mode eq 'use') {
-            # check its state/5 w/W 
+        
+        if ($mode eq 'use' && A&thaw) {
+            # check this unmanaged island of stuff's 5 w/W
+            # could get very thrashy
+            # < per 5/Wall cachement?
             # < W refs leaving the g or further
-            my @check = C.t if $r;
+            my @check = C.t;
             my $do = {}; # tw need update
-            $do.>C.t = 1 if !@check;
             while (@check) {
                 my $t = shift @check;
                 my $f = $K.>$t ||= Rw LowCat $g $t 5;
@@ -467,35 +468,36 @@ FourStorage: | # collaborate thing with the Wall
                 }
             }
             
-            if (!keys %$do) {
-                A&want.use = -6;
-                A&thaw = $r;
-            }
-            else {
+            if (keys %$do) {
+                # do 6, yonder use's will repeat this
+                # < plant T to refresh bits if changes
+                #   like -od/Crank js&boosts, but centrally
+                delete A&thaw;
                 my $tr = join', ',sort keys %$do;
                 saybl "Continuing C.t because of $tr" if $tr ne C.t;
                 A&want.use = 5;
                 A&must_save_in = $g;
             }
-            # read file, 
-            #   plant T to refresh bits if changes
-            #   skip 6, replant osc
         }
-        elsif ($mode eq 'resume') {
-            # replant osc, do 6
-            A&want.resume = 5;
-            Ac&thaw = $r;
-        }
-        elsif ($mode eq 'write') {
-            if ($o) {
-                # save required
-                # Scuttle some T from last save 8
-                # alternate-history linkage
-                A&must_save_in = $g;
+        
+        if (A&thaw) {
+            my $note; # motion about mode
+            my $val = -6; # to avoid 6/trust its state
+            if (1c&thaw) {
+                $note = A&thaw eq 1c&thaw ? "still" : "diff";
             }
-            else {
-                A&may_save_in = $g;
+            if ($note eq "still") {
+                A&thawed = delete A&thaw;
             }
+            
+            A&thaw && # osc sync
+                Rw FourThaw;
+            
+            my $reason = join'_',grep{defined}$mode,$note;
+            if ($mode eq "resume") {
+                $val = 5; # to do 6
+            }
+            A&want.>$reason = $val;
         }
         
 
