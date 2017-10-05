@@ -177,7 +177,8 @@ pi/tabul: |
     m random=>''=>"virtual" for 1..c&vl;
 Tleep: | # TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
     # creates sac_sc, etc surroundings
-    `rm -rf Gc&bay/sac_sc` if -d "Gc&bay/sac_sc";
+    my $g = "Gc&bay/sac_sc";
+    `rm -rf $g` if -d $g;
     for my $g (qw'sac_sc') {
         my $gd = "Gc&bay/$g";
         next unless -d $gd;
@@ -196,14 +197,35 @@ Tleep: | # TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
     n Tlembola
     n Tleepsamples=>W=>'init'
     
-    
     5s&ucache = {};
     
     # u Tlembidu sleeps
     n Tlembola
     n Tleepsamples=>W=>'again'
     
-    `rm -rf Gc&bay/sac_sc`;
+    5s&ucache = {};
+    
+    # u Tlembidu sleeps
+    n Tlembola
+    n Tleepsamples=>W=>'and_again'
+    
+    5s&ucache = {};
+    
+    -f $g."/Tleinding/1" || die "Didn't Tleinding get made?";
+    # change the code in the thing in the thing in u
+    my $o = read_file($g."/Tleinding/1");
+    $o =~ s/Viritibi/Viritool/sg;
+    write_file($g."/Tleinding/1", $o);
+    # and its link
+    $o = read_file($g."/Tleinding/5");
+    $o =~ s/ha:./ha:/s;
+    write_file($g."/Tleinding/5", $o);
+    
+    # u Tlembidu notices file change
+    n Tlembola
+    n Tleepsamples=>W=>'with_hack'
+    
+    #`rm -rf Gc&bay/sac_sc`;
     
 Tleepsamples: |
     Rw Tiot;
