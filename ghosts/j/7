@@ -8,7 +8,7 @@ FourThaw: | # set up osc to continue, given A&thaw = 1
     saybl "Having eventual JsssI: ".wdump 2, 1s&s.sc.I;
 FishBrains: |
     # etc
-        my $r; # what goes in to it
+        my $r; # top C, what goes in to it
         my $ch; # its partition/page
         if ($r = A&thaw) {
             1c&thaw = $r;
@@ -37,8 +37,10 @@ FishBrains: |
             # < clean away use of the drain as the top C
             # < dome system composing them onto the root C directly...
             #   would expose useful tools for playing data...
-            r.y.OA &&
-                return warn G&sn ." root already osc'd, sleeping";
+            if (r.y.OA) {
+                warn G&sn ." root already osc'd, sleeping";
+                return $C
+            }
             rs&z && die "Root9 r.t has scz: ".ki rs&z;
             rs&z = [grep {$_ ne $r} @{ds&z}];
             @{ds&z} == @{rs&z}+1 || die "Root9 r.t wasn't grounded?";
@@ -53,7 +55,7 @@ FishBrains: |
         
         if (A&imp || delete 1c&imping) { # reset or seek?
             # o will see anew
-            # lv will reset when r.y.A.c.el == 1
+            # lv etc will reset when r.y.A.c.el == 1
             delete s&o.>$_ for qw'in ut';
         }
         
@@ -85,8 +87,10 @@ FishBrains: |
         A&Cora = [@{os&Cora}];
         
         # sleep: before 9 takes all under, no Core means still
-        @{A&Core} ||
-            return sayre "Sleeps in: ".G&sn;
+        unless (@{A&Core}) {
+            sayre "Sleeps in: ".G&sn;
+            return $C
+        }
         
         #1s&FishBrainDump && 
         #    Rw FishBrainDump $r;
@@ -155,7 +159,7 @@ FishBrains: |
             @{A&KAs} > 1 && sayre "Had KAs tho";
             Yc&el ne '8' && sayre "Not rel8 tho: Yc&el";
             sayre "Sleeps ou: ".G&sn;
-            return;
+            return $C
         }
         
         
