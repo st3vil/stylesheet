@@ -82,7 +82,22 @@ Wall: | # your publisher - sends to Wlan (local) or Elan (remotes)
     l.ha.5 = &acgts{
         my $W = C.y.up;
         my $f = Ws&f || die "No fileer! ".ki $W;
-        return if Jc&mute;
+        if (Jc&mute) {
+            local A.V = 1;
+            if (5s&unmutes) {
+                if (5s&unmutes.>Ws&W ) {
+                    saygr "W.t allowed: ".ki $C;
+                }
+                else {
+                    saygr "W.t's Ws&W not in ".ki 5s&unmutes;
+                    saygr "  is   ".ki $W;
+                    return;
+                }
+            }
+            else {
+                return;
+            }
+        }
         
         my $s = c&s;
         my $ha = s&ha;
@@ -115,7 +130,7 @@ Wall: | # your publisher - sends to Wlan (local) or Elan (remotes)
             }
         }
         
-        #1 && saygr "Writung: ".G&aC,$W;
+        Jc&mute && saygr "Writung: ".G&aC,$W;
         # 
         if (my $J = Ws&J) {
             my $j = J.3;
@@ -132,7 +147,7 @@ Wall: | # your publisher - sends to Wlan (local) or Elan (remotes)
         }
         
         # filter to things we want to send the client
-        return if Jc&only && Jc&only ne $t;
+        return if Jc&mute || Jc&only && Jc&only ne $t;
         return saybl "ignore inner: ".G&aC,$s if Jc&Wonly && s&jay;
         # make a -pi protocol'd $s that is W to give Wlan/Elan
         #   or further possibilities of the W-ish C
