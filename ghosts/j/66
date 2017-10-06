@@ -86,7 +86,7 @@ Suck: | # diag,
     Rw Elationist;
     S
     n from=>o1=>"From: ".G&sn,Jc&from ,'dis,hs:874'
-    n suction=>-od=>{s=>Jc&es||"blank"};
+    n suction=>-od=>{dl=>5,s=>Jc&es||"blank"};
     # and turn back into line-per-time host
     G&timer:0.1,&{ 4s&toy->({to=>['Udder']}) }
 Bal: | # G up in a GG
@@ -286,7 +286,7 @@ pi/result: |
             else {
                 fs&fail = 'different';
                 fs&hs = '348';
-                m expected=>1=>ec&s=>'hs:967,dis'
+                m expected=>1=>ec&s=>'hs:967,dis,dos:Diffrance'
                 s&fails++;
             }
         }
@@ -306,6 +306,37 @@ pi/result: |
     if (s&unknown || s&fails) {
         n accept=>11=>"?",'dos:taccept,ma:0.2,hs:895';
     }
+Diffrance: |
+    sayre "Diffrance!";
+    my $l;
+    c.t eq 'expected' || die "Click expectation";
+    l.exp = [split "\n", cc&s];
+    l.got = [split "\n", c.y.up.c.s];
+    
+    my @r;
+    my $good;
+    while (@{l.exp} || @{l.got}) {
+        my $g = shift @{l.got};
+        my $e = shift @{l.exp};
+        
+        if ($g ne $e) {
+            $good && push @r, "$good then";
+            $good = 0;
+            push @r, "got: $g\nexp: $e";
+        }
+        else {
+            $good++;
+            $good <= 5 && push @r, "ok:  $g";
+            if ($good == 5) {
+                pop @r for 1..5;
+            }
+        }
+    }
+    $good && $good > 5 && push @r, "then $good ";
+
+    
+    G&give,Suck=>''=>{s=>\@r};
+    T.pos = 0;
 Acceptor: | # give, take and return expected C
     my $t = ar.t || ar.m->[0];
     my $d = Rw ReadMe;
