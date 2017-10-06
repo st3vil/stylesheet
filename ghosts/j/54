@@ -174,9 +174,9 @@ Intrup: | # do experiments with sensors
     # also take samples once
     unless (Js&bowls) {
         # the T setup
-        Rw Intre;
+        #Rw Intre;
         # used by the J45 sleepwaker
-        4c&way_foursleep = 'FourSleep';
+        #4c&way_foursleep = 'FourSleep';
         # also captures what happens
         4s&foursleepy = Js&samples ||= [];
         0 &&
@@ -220,7 +220,7 @@ Intrup: | # do experiments with sensors
     
 Intre: | # what T sets up for I res
     # the 5 has in and out trays
-    5s&stores && die "Double z";
+    #5s&stores && die "Double z";
     # is now (5 readying) mapped for names to resolve there
     5s&stores =  [
         # place to thaw u from
@@ -239,11 +239,12 @@ Intre: | # what T sets up for I res
     # most taped things will flop into neu, being last
     # most gou
     # and should give path up to toplevel? HaMachine
-    return;
+    #return;
     my @tvs = [map{
         "_.t = ".ki _s&J.sc.top.sc.z;
-    }@{5s&z}];
-    n glop=>-od=>{s=>\@tvs}
+    }@{5s&stores}];
+    saybl wdump 3, \@tvs;
+    #n glop=>-od=>{s=>\@tvs}
     
 pi/mine: | # worded place
     my $f = "Gc&bay/$s";
@@ -272,19 +273,20 @@ Winding: |
 FourSleep: | # J entry/sleep decision
     # all sorts of policy...
     # restart osc once this piece adds to mo J 45
-    1s&fourslept++ || 1c&imping++;
+    #1s&fourslept++ || 1c&imping++;
     local A.V = 1;
 
         # < should happen if Js&ein known too
         A&want.elvis ||= 6 if A&E;
     
+        A.clusping = A.up if A.up.t eq 'clusping';
+        
         # A mo sensors, sticks on the J
         my $c;
         if (4s&foursleepy) {
             $c = 1s&mosen = G&Ct:[G&sn =>'',{},{sip=>Ac&sip}];
 
             my $isu = A.up.t eq 'clusping';
-            A.clusping = A.up if $isu;
             $isu = 1 if A.clusping;
             if ($isu) {
                 cs&isin = 'u';
@@ -331,11 +333,15 @@ FourSleep: | # J entry/sleep decision
         }}
         my $only = $got[0] if @got == 1;
         
+        my $iselvis = keys %$de == 1 && keys %{de.mo||{}} == 1 && de.mo.elvis eq '6';
+        
         # want to add counterpoints
         # everything eventually sleeps way/u/W stuff
+        my $et = A&may_save_in ? "    may>A&may_save_in" :
+            A&must_save_in ? "    must>A&must_save_in" : '';
         cs&dec = "$eq from @got";
-        1 && sayyl "HAving decided:  ".G&sn ."    cs&dec";
-        @got > 1 && die "Getting complicated: cs&dec";
+        !$iselvis && sayyl "HAving decided:  ".G&sn ."    cs&dec$et";
+        @got > 1 && die "Getting complicated: cs&dec  $et";
         
         if ($eq < 0) {
             
@@ -353,7 +359,7 @@ FourSleep: | # J entry/sleep decision
             # no thaw unless resume
             A&if_waking ->() if A&if_waking;
             # FactorEase/qua?
-            keys %$de == 1 && keys %{de.mo||{}} == 1 && de.mo.elvis eq '6' ||
+            $iselvis ||
             saygr "Waker $eq   $des";
         }
         
@@ -403,7 +409,7 @@ FourStorage: | # collaborate thing with the Wall
                 # save required
                 # Scuttle some T from last save 8
                 # alternate-history linkage
-                A&must_save_in = $g;
+                A&may_save_in = $g;
             }
             else {
                 A&may_save_in = $g;
