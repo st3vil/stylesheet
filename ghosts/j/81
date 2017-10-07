@@ -60,7 +60,7 @@ pi/od: | # data splayer
 
     
 HaveDepth: |
-    c&depth = 2Cc&depth + 1;
+    c&depth ||= 2Cc&depth + 1;
     
     # how many M inners before 'more' (depth first)
     3Cc&intlim ||= 15;
@@ -122,6 +122,8 @@ Indentity: | # bit of basket "$ind<" and name of bit there (C.t)
     
     n ind=>o7=>A&ind
     n sli=>o8=>"<  ",'%hs:784,dos:Crank'
+    
+    c&quiet_t && a&space < 2 ||
     n t=>1=>"C.t ",'%dos:Crank'
     
 Trunks: | # adj depth for shape/truncation of too-hyperlinkage
@@ -136,8 +138,12 @@ Trunks: | # adj depth for shape/truncation of too-hyperlinkage
     }
     
     # above or part of a C/A/s?
-    c&block = 'same' if a&inself && defined $s && defined 2Cc&s && $s eq 2Cc&s;
+    c&block = 'same' if a&inself
+        && defined $s && defined 2Cc&s
+        && $s eq 2Cc&s;
+    
     c&block = 'b' if C.t eq 'ip' && A.2.C.t eq 'c';
+    
     # mute bits of the slide that go other fast
     if (!c&block && ref $s eq 'HASH') {
         T hashi
@@ -155,6 +161,34 @@ Trunks: | # adj depth for shape/truncation of too-hyperlinkage
             }
         }
     }
+    # see many C via z/y.in 
+    if (c&isC && !a&inself) {
+        # first C sees if this is a nice little place...
+        if (s.y.in && G&isC,$s) {
+            # < suggest we SeeC so these are...
+            a&key_hash = {c=>s.c,sc=>s.sc};
+            a&keys = [];
+            my $cb = &Dd{
+                # minimise pathiness
+                my @path = @{d.path};
+                shift @path; # us
+                s/ 0\.(\d+)$/ $1/ for @path;
+                my $key = join ' ', @path;
+                a&key_hash.>$key = D.y.D;
+                push @{a&keys}, $key;
+                # set ind + containing its t
+                my $c = a&key_oh.>$key ||= {};
+                cc&depth = c&depth + @path;
+                cc&quiet_t = 1;
+            };
+            my @n = G&ind,$s,$cb; 
+            @{a&keys} = reverse @{a&keys};
+            shift @{a&keys}; # us
+            unshift @{a&keys}, qw'c sc';
+            n zeing=>201=>'z','hs:795,fs:34,lh:0.3,blr:4'
+        }
+    }
+    
 SeeC: |
     s&sy = 'C';
     s&return ||= Rw Cpud;
@@ -179,6 +213,83 @@ SeeC: |
         s&return ||=
             Rw Cpud;
     }
+Cpud: |
+    my $spc = c&block ? 1 : a&space;
+    # scale t fontsize
+    my $fss = &s{
+        my $over = length($s) / 14;
+        my $fs = int(12 / ($over < 1 ? 1 : $over * 0.89));
+        $fs = 3 if $fs < 3;
+        $fs
+    };
+    if ($spc < 1) {
+        my $ac = G&aC,$s,'Ck5';
+        
+        $ac->[1] =~ s/^0\.//;
+        my $fs = $fss->($ac->[0]);
+        #
+        n t=>2=>{s=>shift @$ac},"%hs:356,fs:$fs,mw:14"
+        n ycv=>2=>{s=>shift @$ac},'%fs:12,ma:0.3'
+        my $y = shift @$ac;
+        ($y) = Rw Deyer $y;
+        n y=>201=>{s=>$y},'%hs:856,fs:7'
+        
+        my $c = ki s.c;
+        my $cac = shift @$ac;
+        $c = $cac if length $c > 40;
+        my $cfs = $fss->($c);
+        n c=>21=>{s=>$c},"%hs:656,fs:$cfs"
+        
+        # < spot s&J
+        my $sc = ki s.sc;
+        my $scac = shift @$ac;
+        $sc = $scac if length $sc > 80;
+        my $scfs = $fss->($sc);
+        n sc=>22=>{s=>$sc},"%hs:456,fs:$scfs"
+    }
+    elsif ($spc < 2) {
+        my $ac = G&aC,$s,'Ck5';
+        
+        $ac->[1] =~ s/^0\./$2/;
+        my $fs = $fss->($ac->[0]);
+        $fs += 2;
+        
+        n t=>2=>{s=>shift @$ac},"%hs:356,fs:$fs,mw:14"
+        n ycv=>2=>{s=>shift @$ac},'%hs758,fs:12,ma:0.3'
+        my $y = shift @$ac;
+        $y =~ s/\bcv\b//;
+        ($y) = Rw Deyer $y;
+        
+        n y=>201=>$y,'%hs:856,fs:7'
+        
+        my $c = {%{s.c}};
+        if (exists c.s && 0) {
+            my $s = delete c.s;
+            my $fs = $fss->($s);
+            n s=>23=>$s,"%hs:356,fs:$fs,mw:14,ab:1,mt:2"
+        }
+        my $dw = {map{$_=>1}qw't y'};
+        A&kg = &k{ $dw.>$k };
+        return 0;
+    }
+    else {
+        # dive into
+        return 0;
+    }
+    1
+Deyer: | # fold y familiar
+    my $ig = ar.ig || {};
+        my @yt = qw'D r x up|next|prev:+';
+        my $m;
+        for my $k (@yt) {
+            ($k,my$la) = split ':', $k;
+            $la ||= $k;
+            $m .= "$la " if grep { $y =~ s/\b$_\b//g && ++$ig.>$_ }
+                split /\|/, $k;
+        }
+        my $ys = join " ", grep{$_} split /\s+/, $y;
+        $y = join " ", grep{$_} $m, $ys;
+        ($y,$m,$ys)
 SeeA: |
     if (s.1 && s.1 eq $s || s.sc && s.sc.n) {
         s&sy = "J";
@@ -195,6 +306,42 @@ SeeA: |
     # osc pool meaning a vortex of self, changes moving upward, 
     # just copying changed hashes - replace {} from changed up to root
     # and copy it in at the other J
+Jpud: |
+    if (a&space < 5) {
+        n Jt=>15=>"s.t",'%hs:588,fs:13'
+        n sn=>167=>" $_ ",'%hs:897,fs:7' for G&sn,$s;
+        n co=>168=>(sc&o||"?")=>'%hs:374'
+    }
+    #
+    n inj=>189=>" J*a&space"
+    T there
+    if (a&space < 5) {
+        my $dw = {map{$_=>1}qw'y 1 2 3 4 5 i ii I cv t'};
+        A&kg = &k{ $dw.>$k };
+    }
+    # return if
+    a&space <= 5;
+Apud: |
+    my $spc = c&dl - c&depth;
+    if ($spc < 1) {
+        n Jt=>15=>"s.t",'%hs:588,fs:13'
+        if (!s.1) {
+            n sn=>167=>" <nonet> ",'%hs:897,fs:7'
+        }
+        else {
+            n sn=>167=>" $_ ",'%hs:897,fs:7' for G&sn,$s;
+        }
+        n co=>168=>(sc&o||"?")=>'%hs:374'
+    }
+    #
+    n inj=>189=>" A*a&space"
+    T there
+    if ($spc < 1) {
+        my $dw = {map{$_=>1}qw'y 1 2 3 4 5 i ii'};
+        A&kg = &k{ $dw.>$k };
+    }
+    # return if
+    $spc <= 0;
 Sees: |
     if (ref $s eq 'ARRAY') {
         n is=>11=>'[','%hs:457'
@@ -272,9 +419,74 @@ Sees: |
         }
     }
     
+yki: | # ki() again
+    my $ig = ar.ig || {};
+    my @ks = sort keys %$s;
+    my $ks = &v{
+        join' ',sort keys %$v
+    };
+    my $m;
+    if ($we && C.t eq 'y') {
+        my $y = join ' ', @ks;
+        ($y,$m) = Rw Deyer $y $ig;
+    }
+    my @l = map {
+        my $v = $s.>$_;
+        ar.ig && ar.ig.>$_ ? '' :
+        "$_:".(ref $v eq 'HASH' ? (
+            v.y eq $v ? "A:v.t" :
+            v.t && v.y && (v.c||v.sc) ? do {
+                my $title = ar.we && ar.we.t eq v.t && ar.we.y.cv ? "^"
+                    : "v.t v.y.cv";
+                "C:$title (".$ks->(v.c).")".$ks->(v.sc)
+            } :
+            "?:".ki $v
+        )
+        : ref $v || $v
+        );
+    } @ks;
+    join ' ', grep {$_} $m, @l;
+HashKs: | # order children, returns $hash,@ks
+    # order children
+    # use Walks/hord
+    my $hord = sub {
+        my ($s,$head,$tail) = @_;
+        my ($he,$ta) = ([],[]);
+        $head ||= [qw't cv y c sc'];
+        $tail ||= [qw's z'];
+        my $tw;
+        for ([$he=>$head],[$ta=>$tail]) {
+            my ($to,$k) = @$_;
+            for my $t (@$k) {
+                $s.>$t || next;
+                $tw.>$t ++;
+                push @$to, $t;
+            }
+        }
+        my $num = qr/^\-?\d+(\.\d+)?$/;
+        my @mi = sort { $a =~ $num && $b =~ $num ? $a <=> $b : $a cmp $b }
+            grep { !$tw.>$_ } keys %$s;
+        [ map { [ $_ => $s.>$_ ] } @$he, @mi, @$ta ];
+    };
+    my (@he,@ta);
+    push @he, qw't cv y' if c&istycsc || C.sc.istycsc;
+    push @ta, qw'c sc' if c&istycsc || C.sc.istycsc;
+    push @ta, qw'ip sip ipi T' if (2Cc&istycsc || A.2.C.sc.istycsc) && C.t eq 'c';
+    ar.ks = c&ks if c&ks;
+    ar.vs = c&vs if c&vs;
+    
+    my $se = ar.ks ? {map{$_=>shift@{ar.vs}}@{ar.ks}} : $s;
+    my @ks = map{$_->[0]}map{@$_} $hord->($se,\@he,\@ta) if ref $se eq 'HASH';
+    ($se,@ks)
+    
 Froth: | # the smaller bits set out 
-    my ($hash,@ks) = Rw HashKs;
-    n siz=>12=>" x ".@ks,'%hs:283,fs:6';
+    my @ks;
+    if (!a&keys) {
+        (a&key_hash,@ks) = Rw HashKs;
+        a&keys = \@ks;
+    }
+    @ks = @{a&keys};
+    n siz=>12=>" x ".@{a&keys},'%hs:283,fs:6';
     if (my $kg = delete A&kg) {
         my @sh;
         @ks = grep {
@@ -284,8 +496,10 @@ Froth: | # the smaller bits set out
             } 
             else { $_ }
         } @ks;
-        @sh &&
-        n sh=>189=>"sh x".@sh=>'%hs:483,fs:6';
+        if (@sh) {
+            a&keys_ig = \@sh;
+            n sh=>189=>"sh x".@sh=>'%hs:483,fs:6'
+        }
     }
     3Cc&intl++ > 3Cc&intlim && return 
         n more=>4=>"more",'%hs:544'
@@ -303,8 +517,14 @@ Froth: | # the smaller bits set out
     @ks = @ks[0..($limit-1)] if $lim;
     
     my $pi = c&pi || 'od';
-    m $_=>''=>{pi=>$pi,s=>$hash->{$_}},'%ma:1' for @ks;
-    #m "looking: ".$_=>''=>{s=>ki $hash->{$_}} for @ks;
+    m $_=>''=>{pi=>$pi,s=>a&key_hash ->{$_}},'%ma:1' for @ks;
+    
+    if (my $h = a&key_oh) {
+        for (@$M) {
+            my $d = $h.>_.t || next;
+            G&oh,$_,$d;
+        }
+    }
     
     $lim && 
     m limited=>''=>{s=>"Limited from $was to $limit"},{hs=>"888",ws=>1}
