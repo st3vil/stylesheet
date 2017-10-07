@@ -33,7 +33,7 @@ pi/od: | # data splayer
         Rw SeeA;
     }
     elsif (c&isJ) {
-        Rw SeeA;
+        Rw SeeJ;
     }
     else {
         Rw Sees;
@@ -71,7 +71,7 @@ HaveDepth: |
     # travel boosts/cons depth
     c&dl += Js&boost * 2 if Js&boost;
     
-    a&space = c&dl - c&depth;
+    a&space = c&dl - c&depth;# - 2Cs&inded * 2;
     
     a&inself = 1 if 2Cs&pi eq s&pi ;
     
@@ -165,6 +165,7 @@ Trunks: | # adj depth for shape/truncation of too-hyperlinkage
     if (c&isC && !a&inself) {
         # first C sees if this is a nice little place...
         if (s.y.in && G&isC,$s) {
+            s&inded = 1;
             # < suggest we SeeC so these are...
             a&key_hash = {c=>s.c,sc=>s.sc};
             a&keys = [];
@@ -184,14 +185,83 @@ Trunks: | # adj depth for shape/truncation of too-hyperlinkage
             my @n = G&ind,$s,$cb; 
             @{a&keys} = reverse @{a&keys};
             shift @{a&keys}; # us
-            unshift @{a&keys}, qw'c sc';
-            n zeing=>201=>'z','hs:795,fs:34,lh:0.3,blr:4'
+            A&asone = 1;
+            #unshift @{a&keys}, qw'c sc';
+            n zeing=>2033=>'z','hs:795,fs:25,lh:0.3,blr:3'
         }
     }
     
 SeeC: |
     s&sy = 'C';
-    s&return ||= Rw Cpud;
+    
+    my $spc = c&block ? 1 : a&space;
+    # scale t fontsize
+    my $fss = &s{
+        my $over = length($s) / 14;
+        my $fs = int(12 / ($over < 1 ? 1 : $over * 0.89));
+        $fs = 3 if $fs < 3;
+        $fs
+    };
+    s&return ||= do {
+    if ($spc < 1 || A&asone) { # one line C:t y c sc
+        my $ac = G&aC,$s,'Ck5';
+        
+        $ac->[1] =~ s/^0\.//;
+        my $fs = $fss->($ac->[0]);
+        #
+        n t=>2=>{s=>shift @$ac},"%hs:356,fs:$fs,mw:14"
+        n ycv=>2=>{s=>shift @$ac},'%fs:12,ma:0.3'
+        my $y = shift @$ac;
+        ($y) = Rw Deyer $y;
+        n y=>201=>{s=>$y},'%hs:856,fs:7'
+        
+        my $c = ki s.c;
+        my $cac = shift @$ac;
+        $c = $cac if length $c > 40;
+        my $cfs = $fss->($c);
+        n c=>2012=>{s=>$c},"%hs:656,fs:$cfs"
+        
+        # < spot s&J
+        my $sc = ki s.sc;
+        my $scac = shift @$ac;
+        $sc = $scac if length $sc > 80;
+        my $scfs = $fss->($sc);
+        n sc=>2021=>{s=>$sc},"%hs:456,fs:$scfs"
+        n spac=>2040=>{s=>"Space: $spc | A&asone"}
+        
+        $spc < 1 
+    }
+    elsif ($spc < 2) { # one line C:ty, c, sc
+        my $ac = G&aC,$s,'Ck5';
+        
+        $ac->[1] =~ s/^0\./$2/;
+        my $fs = $fss->($ac->[0]);
+        $fs += 2;
+        
+        n t=>2=>{s=>shift @$ac},"%hs:356,fs:$fs,mw:14"
+        n ycv=>2=>{s=>shift @$ac},'%hs758,fs:12,ma:0.3'
+        my $y = shift @$ac;
+        $y =~ s/\bcv\b//;
+        ($y) = Rw Deyer $y;
+        
+        n y=>201=>$y,'%hs:856,fs:7'
+        
+        my $c = {%{s.c}};
+        if (exists c.s && 0) {
+            my $s = delete c.s;
+            my $fs = $fss->($s);
+            n s=>2021=>$s,"%hs:356,fs:$fs,mw:14,ab:1,mt:2"
+        }
+        my $dw = {map{$_=>1}qw't y'};
+        A&kg = &k{ $dw.>$k };
+        
+        0;
+    }
+    else {
+        # dive into
+        0;
+    }
+    };
     
     # see the C, calcify it...
     return;
@@ -213,70 +283,6 @@ SeeC: |
         s&return ||=
             Rw Cpud;
     }
-Cpud: |
-    my $spc = c&block ? 1 : a&space;
-    # scale t fontsize
-    my $fss = &s{
-        my $over = length($s) / 14;
-        my $fs = int(12 / ($over < 1 ? 1 : $over * 0.89));
-        $fs = 3 if $fs < 3;
-        $fs
-    };
-    if ($spc < 1) {
-        my $ac = G&aC,$s,'Ck5';
-        
-        $ac->[1] =~ s/^0\.//;
-        my $fs = $fss->($ac->[0]);
-        #
-        n t=>2=>{s=>shift @$ac},"%hs:356,fs:$fs,mw:14"
-        n ycv=>2=>{s=>shift @$ac},'%fs:12,ma:0.3'
-        my $y = shift @$ac;
-        ($y) = Rw Deyer $y;
-        n y=>201=>{s=>$y},'%hs:856,fs:7'
-        
-        my $c = ki s.c;
-        my $cac = shift @$ac;
-        $c = $cac if length $c > 40;
-        my $cfs = $fss->($c);
-        n c=>21=>{s=>$c},"%hs:656,fs:$cfs"
-        
-        # < spot s&J
-        my $sc = ki s.sc;
-        my $scac = shift @$ac;
-        $sc = $scac if length $sc > 80;
-        my $scfs = $fss->($sc);
-        n sc=>22=>{s=>$sc},"%hs:456,fs:$scfs"
-    }
-    elsif ($spc < 2) {
-        my $ac = G&aC,$s,'Ck5';
-        
-        $ac->[1] =~ s/^0\./$2/;
-        my $fs = $fss->($ac->[0]);
-        $fs += 2;
-        
-        n t=>2=>{s=>shift @$ac},"%hs:356,fs:$fs,mw:14"
-        n ycv=>2=>{s=>shift @$ac},'%hs758,fs:12,ma:0.3'
-        my $y = shift @$ac;
-        $y =~ s/\bcv\b//;
-        ($y) = Rw Deyer $y;
-        
-        n y=>201=>$y,'%hs:856,fs:7'
-        
-        my $c = {%{s.c}};
-        if (exists c.s && 0) {
-            my $s = delete c.s;
-            my $fs = $fss->($s);
-            n s=>23=>$s,"%hs:356,fs:$fs,mw:14,ab:1,mt:2"
-        }
-        my $dw = {map{$_=>1}qw't y'};
-        A&kg = &k{ $dw.>$k };
-        return 0;
-    }
-    else {
-        # dive into
-        return 0;
-    }
-    1
 Deyer: | # fold y familiar
     my $ig = ar.ig || {};
         my @yt = qw'D r x up|next|prev:+';
@@ -291,22 +297,30 @@ Deyer: | # fold y familiar
         $y = join " ", grep{$_} $m, $ys;
         ($y,$m,$ys)
 SeeA: |
-    if (s.1 && s.1 eq $s || s.sc && s.sc.n) {
-        s&sy = "J";
-        s&return ||=
-            Rw Jpud;
+    s&sy = 'A';
+
+    if (a&space < 1) {
+        n Jt=>15=>"s.t",'%hs:588,fs:13'
+        if (!s.1) {
+            n sn=>167=>" <nonet> ",'%hs:897,fs:7'
+        }
+        else {
+            n sn=>167=>" $_ ",'%hs:897,fs:7' for G&sn,$s;
+        }
+        n co=>168=>(sc&o||"?")=>'%hs:374'
     }
-    else {
-        s&sy = 'A';
-        s&return ||=
-            Rw Apud;
+    #
+    n inj=>189=>" A*a&space"
+    T there
+    if (a&space < 1) {
+        my $dw = {map{$_=>1}qw'y 1 2 3 4 5 i ii'};
+        A&kg = &k{ $dw.>$k };
     }
-    # T # seen to/from ghost, they osc pool up to direct change in
-    # chasing up all the J that hit it
-    # osc pool meaning a vortex of self, changes moving upward, 
-    # just copying changed hashes - replace {} from changed up to root
-    # and copy it in at the other J
-Jpud: |
+    # return if
+    a&space <= 0;
+SeeJ: |
+    s&sy = "J";
+    
     if (a&space < 5) {
         n Jt=>15=>"s.t",'%hs:588,fs:13'
         n sn=>167=>" $_ ",'%hs:897,fs:7' for G&sn,$s;
@@ -321,27 +335,6 @@ Jpud: |
     }
     # return if
     a&space <= 5;
-Apud: |
-    my $spc = c&dl - c&depth;
-    if ($spc < 1) {
-        n Jt=>15=>"s.t",'%hs:588,fs:13'
-        if (!s.1) {
-            n sn=>167=>" <nonet> ",'%hs:897,fs:7'
-        }
-        else {
-            n sn=>167=>" $_ ",'%hs:897,fs:7' for G&sn,$s;
-        }
-        n co=>168=>(sc&o||"?")=>'%hs:374'
-    }
-    #
-    n inj=>189=>" A*a&space"
-    T there
-    if ($spc < 1) {
-        my $dw = {map{$_=>1}qw'y 1 2 3 4 5 i ii'};
-        A&kg = &k{ $dw.>$k };
-    }
-    # return if
-    $spc <= 0;
 Sees: |
     if (ref $s eq 'ARRAY') {
         n is=>11=>'[','%hs:457'
