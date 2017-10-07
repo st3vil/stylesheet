@@ -1,17 +1,25 @@
 Text: | # search through text
     # < wanting to pick abilities onto what you're holding
-    Js&ein.bo = 'Doable';
-    Jc&tape = 'Dejo';
-    Jc&save = 'Dejo';
+    Rw Tiot;
     S
     
     m sayin=>-tin
     
     Js&sayin ||= 'Continues';
     
-    m f=>'',"For Js&sayin:", 'dis:1'
+    my ($match,$file) = split "\t", Js&sayin, 2;
+    $file = join ' ', map { 
+        /^(\d+)$/ ? "g/j/$1" :
+        /\/[a-z]/i ? $_ :
+        "g/$_"
+    } split /\s+/, $file if $file;
+    my $say = "For $match".(!$file ? ":" : " in $file:");
+    $file ||= "g/s g/j";
+    m f=>'',$say, 'dis:1'
     
-    my @l = `ack "Js&sayin" g/s g/j`;
+    my $cmd = "ack \"$match\" $file g/nowhere";
+    my @l = `$cmd`;
+    
     my ($files,$ftw);
     my @z;
     for (@l) {
@@ -37,7 +45,35 @@ Text: | # search through text
     
     #n so=>3=>join('',@l)
     m files=>-ftw=>{s=>$ftw}
-
+pi/ftw: | # file/pin z lines map
+    Jc&save = 'W';
+    y.at.dis = 2;
+    y.imp = 1;
+    for my $f (sort keys %$s) {
+        my $tw = $s.>$f;
+        m file=>''=>$f,'%fs:7,dis:3'
+        for my $t (sort keys %$tw) {
+            my $z = $tw.>$t;
+            my @l = @{zs&z};
+            my $nl = "\n" if @l > 1;
+            my $spc = " " if @l == 1;
+            m pin=>''=>z.t.$nl,'%fs:14,hs:185'
+            for my $l (@l) {
+                # l.t = line number
+                ls&cs && # number of # c folds
+                m "c l.t"=>''=>join('',('c')x ls&cs),"%fs:7"
+                m "n l.t"=>''=>$spc."l.t:",'%hs:499'
+                m "W l.t"=>''=>lc&s
+            }
+        }
+    }
+    0 &&
+    G&styl,<<'';
+        file  %fs:6,dis:3
+          pin %fs:14,hs:788
+          
+    #G&give,Toter=>s=>$M
+    
 pi/tin: | # code boxen, re C.t to alter? check js, hold something?
     #C&fs = 19;
     #s&ab = 1;
@@ -67,18 +103,16 @@ pi/tin: | # code boxen, re C.t to alter? check js, hold something?
     n "z fo" =>1 =>{s=>$s},$sc
     
     y.at.cssdel = 'transform';
-
-
 tinput: | # handly talky box
     # should be of autocomplete, lost-focus and escape
     
     my $s = us&code || die "Nocode to tinput";
     my $j = e&_hJ;
     1 && saybl "tinput: ".G&es , " (J.t's j.t) says: $s";
+    J.3 eq $J || die "J not J3: ".G&sn,$J;
     
     my $was = J.sc.>j.t;
     J.sc.>j.t = $s;
     T.pos = $was ne j.t;
     #J.vid = us&code;
-
 
