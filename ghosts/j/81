@@ -193,6 +193,7 @@ Trunks: | # adj depth for shape/truncation of too-hyperlinkage
     a&keys = [];
     
     # extra expansion
+    # comes from intoJ in SeeC
     if (my $exp = 1s&expands) {
         for my $t (sort keys %$exp) {
             my $x = $exp.>$t;
@@ -250,14 +251,43 @@ Trunks: | # adj depth for shape/truncation of too-hyperlinkage
 SeeC: |
     s&sy = 'C';
     
+    # the underlying ki
+    # wants to expand
+    # aC is specifically C formed
+    # ki chaosey, sorts tycsc if present
+    #   sometimes [C,C] -> [C.t,C.t], which is nice...
+    # goo tensioner
+    
     my $spc = c&block ? 1 : a&space;
     # scale t fontsize
     my $fss = &s{
         my $over = length($s) / 14;
         my $fs = int(12 / ($over < 1 ? 1 : $over * 0.89));
-        $fs = 3 if $fs < 3;
+        $fs = 5 if $fs < 5;
         $fs
     };
+    my $deyer = &y{
+        # $y is 'cv in tv', is deleted from then split
+        # these get deleted, all replaced with one character, joined with no spaces
+        my @yt = qw'D r x up|next|prev|in|fronts|backs:+ A C s tw|tv:^';
+        my @m;
+        for my $k (@yt) {
+            ($k,my$la) = split ':', $k;
+            $la ||= $k;
+            push @m, $la if
+                grep { $y =~ s/\b$_\b//g } split /\|/, $k;
+        }
+        my $ys = join " ", grep{$_} split /\s+/, $y;
+        join "", grep{$_} @m, $ys && " $ys";
+    };
+    my $kiorso = &sdl{
+        $l ||= 40;
+        my $c = ki $s;
+        $c = slim($l-10,$c) if length $c > $l && $c =~ s/\n//g;
+        $c = $d if length $c > $l;
+        $c
+    };
+    
     s&return ||= do {
     if ($spc < 1 || A&asone) { # one line C:t y c sc
         my $ac = G&aC,$s,'Ck5';
@@ -268,21 +298,15 @@ SeeC: |
         n t=>2=>{s=>shift @$ac},"%hs:356,fs:$fs,mw:14"
         n ycv=>2=>{s=>shift @$ac},'%fs:12,ma:0.3'
         my $y = shift @$ac;
-        ($y) = Rw Deyer $y;
+        $y = $deyer->($y);
         n y=>201=>{s=>$y},'%hs:856,fs:7'
         
-        my $c = ki s.c;
-        my $cac = shift @$ac;
-        $c = $cac if length $c > 40;
-        my $cfs = $fss->($c);
-        n c=>2012=>{s=>$c},"%hs:656,fs:$cfs"
+        my $c = $kiorso->(s.c,shift(@$ac));
+        n c=>2012=>{s=>$c},"%hs:656,fs:".$fss->($c)
         
         # < spot s&J
-        my $sc = ki s.sc;
-        my $scac = shift @$ac;
-        $sc = $scac if length $sc > 80;
-        my $scfs = $fss->($sc);
-        n sc=>2021=>{s=>$sc},"%hs:456,fs:$scfs"
+        my $sc = $kiorso->(s.sc,shift(@$ac),80);
+        n sc=>2021=>{s=>$sc},"%hs:456,fs:".$fss->($sc)
         
         $spc < 1 
     }
@@ -297,7 +321,7 @@ SeeC: |
         n ycv=>2=>{s=>shift @$ac},'%hs758,fs:12,ma:0.3'
         my $y = shift @$ac;
         $y =~ s/\bcv\b//;
-        ($y) = Rw Deyer $y;
+        $y = $deyer->($y);
         
         n y=>201=>$y,'%hs:856,fs:7'
         
@@ -318,12 +342,17 @@ SeeC: |
     }
     };
     
+    
     if (my $j = ss&J) {
-        js&top &&
+        js&top && s.y.cv ne '0.9' &&
         n intoJ=>2035=>"top",'dos:Jut'
     }
-    # see the C, calcify it...
+    
+    
     return;
+    # see the type of C, calcify experience ongoingly..?
+    # with seeing dev paths to cull weirdness
+    # show how to gather training data
     
     # Quant: if C is t-cs- only, it's an empty-ish layer
     if (G&q,$s,'o?.cs') {
@@ -342,19 +371,6 @@ SeeC: |
         s&return ||=
             Rw Cpud;
     }
-Deyer: | # fold y familiar
-    my $ig = ar.ig || {};
-        my @yt = qw'D r x up|next|prev:+';
-        my $m;
-        for my $k (@yt) {
-            ($k,my$la) = split ':', $k;
-            $la ||= $k;
-            $m .= "$la " if grep { $y =~ s/\b$_\b//g && ++$ig.>$_ }
-                split /\|/, $k;
-        }
-        my $ys = join " ", grep{$_} split /\s+/, $y;
-        $y = join " ", grep{$_} $m, $ys;
-        ($y,$m,$ys)
 SeeA: |
     s&sy = 'A';
 
@@ -478,7 +494,7 @@ yki: | # ki() again
         join' ',sort keys %$v
     };
     my $m;
-    if ($we && C.t eq 'y') {
+    if (0 && $we && C.t eq 'y') {
         my $y = join ' ', @ks;
         ($y,$m) = Rw Deyer $y $ig;
     }
