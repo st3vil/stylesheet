@@ -161,91 +161,89 @@ Gig: | # do Gig - initiates W to store somewhere
         # e.t = 'bay/via'
         # ec&s = 'commit message'
         # es&z = [W items]
-        # do them, T.H/impart the non-itemic
+        # do them, thaw/sleep the non-itemic
         m $e
     };
     S
     # flush the queue of -Gdo
-    my @t = @{Js&M||[]};
+    my @t = @{Js&M||=[]};
     @{Js&M} = ();
-    @t || return
-        n no=>1=>"Nothing doing (send -Gdo from Lize)"
-    die "many Gdo" if @t > 1;
-    
-    my @todo; # W steps
-    my $tw; # which W to sleep
-    my $aw; # which W to awake everything under
-    
-    
-    my $W = $t[0];
-    
-        my ($bay,$g) = split '/', W.t, 2;
-        $bay eq Gc&bay || die "bay not our bay? Gc&bay / W.t";
+    if (@t) {
+        my $M = Js&results = [];
         
-    # set in-G branch (g)
-    local 5s&stores = [
-        G&e,$g=>-mine=>{}=>'otherwise:thaw,if:A-gigging,nif:A-clusping' ,
-        @{5s&stores},
-    ];
-        
-        for my $t (@{Ws&z}) {
-            push @todo, $t;
-            $tw.>t.t = $t;
-            # to regenerate already J, Ang
-            delete 4s&Jtv.>t.t;
-        }
-        undef $tw if Ws&everything;
-        $aw.>$_ ++ for grep{$_} split ',', Ws&everything_under;
-    
-    sayyl "=","= La $bay $g gets ".ki(Ws&z),"=";
-    
-    # - put wrapper on any W
-    my $l = [];
-    my @wake;
-    
-    local 4c&foursleep_W_cb = &acgt{
-        return if A.clusping;
-        my $ay = $A;
-        my @A = $ay;
-        push @A, ($ay = ay.up) while ay.up && ay.up ne $ay;
-        my $Ats = join' ',reverse map{_.t}@A;
-        push @$l, G&aC,$C . "\t" . $Ats;
-    
-        if ($aw.>C.t) {
-            1 && sayyl "Gigeverything under C.t";
-            A.gigeverything = 1;
-        }
-        
-        if ($tw.>C.t || A.gigeverything) {
-            A&want.wake = 6;
-        }
-    };
-    
-    # - the Jig invokes Experience/writing into bay
-    # supplement that with a linier storage format
-    my $not = 1;
-    
-    for my $t (@todo) {
-        #next unless $t =~ /^P/;
-        my $eh = hitime();
-        {
-        local A.gigging = $A;
-        n $t
-        }
-        my $tr = T.op;
+        for my $W (@t) {
+            my ($bay,$g) = split '/', W.t, 2;
+            $bay eq Gc&bay || die "bay not our bay? Gc&bay / W.t";
 
-        my $ts = hitime() - $eh;
-        my $delta = Rw mass $s:ts;
-        my @bunch = G&op;
-        @bunch = "massive lot of things" if T.op.sc.massive;
-        my @l = ("took: $delta", @bunch );
-        $not ||
-        n tr.t=>-od=>{dl=>2,s=>\@l}
+            # set in-G branch (g)
+            local 5s&stores = [
+                G&e,$g=>-mine=>{}=>'otherwise:thaw,if:A-gigging,nif:A-clusping' ,
+                @{5s&stores},
+            ];
+            
+            # the many
+            my @todo; # W steps
+            my $tw; # which W to sleep
+            my $aw; # which W to awake everything under
+            for my $t (@{Ws&z}) {
+                push @todo, $t;
+                $tw.>t.t = $t;
+                # to regenerate already J, Ang
+                delete 4s&Jtv.>t.t;
+            }
+            undef $tw if Ws&everything;
+            $aw.>$_ ++ for grep{$_} split ',', Ws&everything_under;
+            
+            my $l = [];
+            sayyl "=","= La $bay $g gets ".ki(Ws&z),"=";
+            
+            # - put wrapper on any W
+            local 4c&foursleep_W_cb = &acgt{
+                return if A.clusping;
+                my $ay = $A;
+                my @A = $ay;
+                push @A, ($ay = ay.up) while ay.up && ay.up ne $ay;
+                my $Ats = join' ',reverse map{_.t}@A;
+                push @$l, G&aC,$C . "\t" . $Ats;
+
+                if ($aw.>C.t) {
+                    1 && sayyl "Gigeverything under C.t";
+                    A.gigeverything = 1;
+                }
+
+                if (!$tw || $tw.>C.t || A.gigeverything) {
+                    A&want.wake = 6;
+                }
+            };
+    
+            for my $t (@todo) {
+                #next unless $t =~ /^P/;
+                my $eh = hitime();
+                {
+                local A.gigging = $A;
+                my $c =
+                n $t
+                # so we can web ourselves, will cancel Jing if too early
+                # do in a dome marked "other"
+                c.sc.not = 1;
+                }
+                my $tr = T.op;
+
+                my $ts = hitime() - $eh;
+                my $delta = Rw mass $s:ts;
+                my @bunch = G&op;
+                @bunch = "massive lot of things" if T.op.sc.massive;
+                my @l = (@bunch,"took: $delta");
+
+                m tr.t=>-od=>{dl=>2,s=>\@l}
+            }
+        }
     }
-    # the -od must overwrite the W so we can web ourselves
-    #@$M = reverse @$M;
+    
+    m $_ for @{Js&results||[]};
+    
     undef $l; # untrip
-    saybl "Done!";
+    saybl "J.t Done!";
     #$not && exit; # dont hang around with all this memory
 Jig: | # initiates W to store somewhere
     Jc&tape = 'Dejo';
