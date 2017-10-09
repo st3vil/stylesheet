@@ -342,6 +342,15 @@ Diffrance: |
         my $e = shift @{l.exp};
         
         if ($g ne $e) {
+            if ($g =~ /^[^\t]+\t(\d+)\t/) {
+                my $was = $1;
+                (my $ee = $e) =~ s/^([^\t]+)\t(\d+)\t/$1\t$was\t/;
+                if ($ee eq $g) {
+                    $good++;
+                    push @r, "cv diff: $1: $was -> $2";
+                    next;
+                }
+            }
             $good && push @r, "$good then";
             $good = 0;
             push @r, "got: $g\nexp: $e";
