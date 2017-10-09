@@ -55,7 +55,7 @@ Lis: | # speculate on Gigs
     my $gds = `ls -1ct $bay`;
     n g=>o6=>":$g",'fs:8,hs:396,ma:0.1,dos:listype,Jc,sel:'.join('-',split("\n",$gds),'?')
     
-    my @types = qw"HaMachine StyleHut"; # T
+    my @types = qw"HaMachine Stylehut TheStatics"; # T
     n add=>o7=>":start",'fs:6,hs:399,dos:listype,Jc,sel:'.join('-',@types,'?')
     
 listype: | # type commands to Lis
@@ -169,7 +169,7 @@ Gig: | # do Gig - initiates W to store somewhere
     my @t = @{Js&M||=[]};
     @{Js&M} = ();
     if (@t) {
-        my $M = Js&results = [];
+        Js&results = [];
         
         for my $W (@t) {
             my ($bay,$g) = split '/', W.t, 2;
@@ -233,14 +233,16 @@ Gig: | # do Gig - initiates W to store somewhere
                 my $delta = Rw mass $s:ts;
                 my @bunch = G&op;
                 @bunch = "massive lot of things" if T.op.sc.massive;
-                my @l = (@bunch,"took: $delta");
-
+                my @l = (T.op,"took: $delta");
+                
+                my $M = [];
                 m tr.t=>-od=>{dl=>2,s=>\@l}
+                push @{Js&results}, @$M;
             }
         }
     }
     
-    m $_ for @{Js&results||[]};
+    m $_ for reverse @{Js&results||[]};
     
     undef $l; # untrip
     saybl "J.t Done!";
