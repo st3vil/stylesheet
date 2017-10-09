@@ -23,7 +23,7 @@ Wormhall: | # over sight
 Wall: | # your publisher - sends to Wlan (local) or Elan (remotes)
     # write them
     Jc&write = 1;
-    c&route = "Elan";
+    c&route = Gc&Glan || "Elan";
     if (c&route) {
         # send links to Ilan
         Jc&only = '7';
@@ -186,7 +186,7 @@ Elan: | # gets them, W switchup into a Wlan on the consolidating G (Opper)
     Jc&tape = 'Dejo' if J.t eq 'Ilan';
     Jc&save = 'W';
     y.res = 100;
-    y.at.left = '60%';
+    y.at.left = '40%';
     y.at.top = '70%';
     y.at.ab = 1;
     Js&Simp = 'Sweeptapes';
@@ -303,6 +303,67 @@ Wlan: | # gets you, W
     
     S
     
+Glan: | # gets them, W switchup into a Wlan on the consolidating G (Opper)
+    # & tractor e into a new Udder
+    Rw Tiot;
+    Jc&tape = 'Dejo' if J.t eq 'Ilan';
+    Jc&save = 'W';
+    y.res = 100;
+    y.at.left = '80%';
+    y.at.top = '70%';
+    y.at.ab = 1;
+    Js&Simp = 'Sweeptapes';
+    Js&Cimp = 'Pause';
+    Jc&refit_t = &C{
+        "s&so C.t"
+    };
+    Js&ein.t.plaz.sMJ = &sM{
+        # from another self, sends a plaz
+        sayre "Sendplaz";
+        m $s
+    };
+    
+    
+    
+    Js&ein.t.W.sMJ = &sMJje{
+        # from Wall, crunch to W
+        $s = G&hup,$e;
+        if (ss&W eq J.t) {
+            T.pos = 0;
+            return sayre "Self J.t ing" 
+        }
+        if (ss&jay) {
+            T.pos = 0;
+            return sayre "Only ss&G - ss&gd's ss&jay ing" 
+        }
+        s.t = delete ss&W;
+        local A.V = 1;
+        my ($z) = grep {_.t eq s.t} @$M;
+        if ($z) {
+            #sayyl "Updating J.t's s.t: ss&f ss&Jo";
+            %$z = %$s;
+        }
+        else {
+            #sayyl "Setting J.t's s.t: ss&f ss&Jo";
+            $s =
+            m $s
+        }
+        
+        1 && saygr "J.t: sc&t: s.t = ss&gd = ss&Jo".(!$z && " new");
+    };
+    S
+    #my $i = 
+    #n there=>-isness=>{}=>"dis:1"
+    
+    # < moves elements, disables noise & A timers
+    #   so they can go back in...
+    Js&Pause && return 
+        n Paused=>''=>"Paused"
+    
+    m _.t=>{C=>$_}=>{},{pid=>_s&pid,f=>_s&f,lv=>_c&ha,dos=>'ElviRo'} for @{Js&M||[]};
+    
+    n say=>01=>"The Gc&bay",'dis'
+    #n Episto=>W=>''=>'qz'
 NetPut: | # Opper outputs W to G:WebHost
     # 
     my $sendz = &z{

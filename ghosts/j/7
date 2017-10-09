@@ -133,7 +133,12 @@ FishBrains: |
         #   for s&top = 9, the output
         A&KAs = [map { G&A,K=>0=>_.c,_.sc }
             grep {
-                map { _.y.s = $C } values %{_s&clones};
+                for (values %{_s&clones}) {
+                    _.y.s = $C;
+                    if (my $did = delete(_c&mc)) {
+                        sayyl "delete mc=$did  in ".G&sn ."   on ".G&aC,$_ 
+                    }
+                }
                 1
             }
             map { _.y.A }
@@ -671,7 +676,7 @@ Koul: | # clarify changes to string
             if ($mute) {
                 my @gks = sort keys %$mute;
                 my $k = 'm'.substr($nk,0,1);
-                exists C.c.>$k && die "Komp already c $k: ".ki$C;
+                exists C.c.>$k && die "Komp already c $k (now @gks): ".ki$C;
                 C.c.>$k = "@gks";
             }
         }
@@ -954,7 +959,8 @@ Writer: | # to make 12345, 7
         if (me.way) {
             # < won't stay deleted from GenMeta
             delete me.way.>$_ for qw'FishBrains GenMeta NamePosition
-                PostK PostO PostTV Writer Locate Beach LowCat FourSleep FourStorage';
+                PostK PostO PostLV PostTV Writer Locate Beach LowCat 
+                FourSleep FourStorage ReadMe';
             delete me.way if !keys %{me.way};
         }
         if (my $way = delete me.way) {

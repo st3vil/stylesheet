@@ -78,6 +78,23 @@ Intre: | # what T sets up for I res
         # default write location
         G&e,neu=>-mine=>{}=>'implies:write' ,
     ];
+        # osc-syncing modes:
+        # thaw - skip 6 and replant osc
+        #   thing's updates are managed by another
+        #   update happens if awake
+        # use - thaw with w/W dependance checking
+        #   thing is random cachement not yet managed by other
+        #   as in sac_sc's random u things heading to sac's our u things
+        
+        # resume - replant osc and do 6, continuing the log
+        #   as if in running sequence
+        
+        # write - fresh osc, do 6 and may_save_in any Jc&save
+        #   normal thing that happens, restarting the names with new version
+        #    - maybe must_save_in if file already there?
+        #      to suck W out of invisibleness... some Trick
+    
+    
     # name in gou/neu causes resuming/writing where it needn't
     # most taped things will flop into neu, being last
     # most gou
@@ -89,6 +106,12 @@ Intre: | # what T sets up for I res
     saybl wdump 3, \@tvs;
     #n glop=>-od=>{s=>\@tvs}
     
+pi/mine: | # worded place
+    my $f = "Gc&bay/$s";
+    -d $f || return s&empty = 1;
+    
+    m $_=>''=>{} for split "\n", ''.`ls -1 $f`;
+    #Rw pi/listle;
 FourSleep: | # J entry/sleep decision
     # all sorts of policy...
     # restart osc once this piece adds to mo J 45
@@ -129,9 +152,12 @@ FourSleep: | # J entry/sleep decision
         
         # the A.3 figures some storage relationship
         # may suggest A&to_cv to T.Z us to if sleep
-        A.1 eq A.3 &&
+        if (A.1 eq A.3) {
+            if (my $cb = 4c&foursleep_W_cb) {
+                $cb->($A,$C,$G,$T);
+            }
             Rw FourStorage;
-        
+        }
         # desire to wake comes from many places
         my $de;
         de.mo = A&want if A&want;
@@ -160,12 +186,9 @@ FourSleep: | # J entry/sleep decision
             A&must_save_in ? "    must>A&must_save_in" : '';
         cs&dec = "$eq from @got";
         !$iselvis && sayyl "HAving decided:  ".G&sn ."    cs&dec$et";
-        @got > 1 && die "Getting complicated: cs&dec  $et";
+        @got > 2 && die "Getting complicated: cs&dec  $et";
         
         if ($eq < 0) {
-            
-            $only eq 'once' ||
-                saybl "Sleep $eq   $des";
             # we can skip 6, keep ground
             # our mo C should be re-put from before
             
@@ -189,15 +212,25 @@ FourStorage: | # collaborate thing with the Wall
         my $o;
         # look for somewhere to fit in
         my @search = @{5s&stores||[]};
+            A.1.t eq 'Ang' && sayre "And cnosiders: ".G&aC,$A;
         while (@search) {
             my $D = shift @search;
             # FactorEase 
             # also Scuttle modey sc (implies,etc) moC (D) -> 9 (d)
             my $d = Ds&J.sc.top if Ds&J;
             # is the name pool
+            A.1.t eq 'Ang' && sayre "And cnosiders: ".ki D.sc;
             if (Ds&if) {
                 if (Ds&if =~ /^A-(.+)$/) {
                     $A.>$1 || next;
+                }
+                else {
+                    die "Unko if: ".ki $D;
+                }
+            }
+            if (Ds&nif) {
+                if (Ds&nif =~ /^A-(.+)$/) {
+                    $A.>$1 && next;
                 }
                 else {
                     die "Unko if: ".ki $D;
@@ -219,14 +252,9 @@ FourStorage: | # collaborate thing with the Wall
             last;
         }
         
-        # write - do 6 with a fresh osc, restarting the log
-        #   normal thing that happens, the G J taking over
-        #   resume syncs the osc to the W J, continuing it
-        
         if ($mode eq 'write') {
             if ($o) {
-                # save required
-                # Scuttle some T from last save 8
+                # Scuttle some T from last save 8 ?
                 # alternate-history linkage
                 A&may_save_in = $g;
             }
@@ -234,17 +262,6 @@ FourStorage: | # collaborate thing with the Wall
                 A&may_save_in = $g;
             }
         }
-        
-        
-        # osc-syncing modes:
-        # thaw - skip 6 and replant osc
-        #   thing's updates are managed by another
-        # use - thaw with w/W dependance checking
-        #   thing is random cachement not yet managed by other
-        #   as in sac_sc's random u things heading to sac's our u things
-        # resume - replant osc and do 6, continuing the log
-        #   as if in running sequence
-        #   
         
         my $K = {}; # tw of 5s cache
         if ($mode eq 'thaw' || $mode eq 'use' || $mode eq 'resume') {
@@ -269,6 +286,8 @@ FourStorage: | # collaborate thing with the Wall
                     }
                 }
             }
+            
+            A&must_save_in = $g;
         }
         
         if ($mode eq 'use' && A&thaw) {
@@ -325,7 +344,6 @@ FourStorage: | # collaborate thing with the Wall
         }
         if ($mode eq 'use' && !A&thaw) {
             A&want.use = 5;
-            A&must_save_in = $g;
         }
         
         if (A&thaw) {
