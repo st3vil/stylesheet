@@ -305,7 +305,7 @@ pi/listle: | # find filenames, ^^^^^^^^
 Lst: | # gives your $M files from ls -1ct, sleeps using your past
     if (ar.upsetter) {
         my $see = &{
-            dig `bash -c "ls --full-time -1ct $s 2>/dev/null"`
+            dig ''.`bash -c "ls --full-time -1ct $s 2>/dev/null"`
         };
         my $before = $see->();
         my $watch = &{
@@ -333,13 +333,99 @@ Lst: | # gives your $M files from ls -1ct, sleeps using your past
     
     # retrieves our last save, doesn't impart/resume it
     my $d = Rw ReadMe;
-    
     # osc changing atom loads contents
-    local A.V = 0;
+    local A.V = 1;
     push @$M,
         Rw Modulim $s $d $list $form;
     
     $laC
+Modulim: | # loadup M news from an ls or so
+    # stop when old news found
+    my $piit = 'fils';
+    my $done;
+    my $list_done;
+    my $seen; # C.t
+    my $seens; # c&s
+    my @l;
+    my $page = 1;
+    my $M = [];
+    # whether to read into the rest of the page
+    # once something same has been found
+    my $keen; 
+    # if the lines go directory:\nfile\nfile\nfile
+    # must see a whole directory of unchanged
+    # - changes bump the directory but may then 
+    #     have unchanged stuff before more changes
+    # < keep going a page or so after stillness
+    #   $done > 10 helps too
+    my $con;
+    until (($done > 10) && (!$keen || !@l)) {
+        if (!@l && !($done > 10)) {
+            last if $list_done;
+            my $C = $list->($page++);
+            
+            $list_done = 1 if s&done;
+            @l = grep {
+                if (my $c = $seen.>_.t ) {
+                    # containers may dupe if {,/*}
+                    #   but then goes mad when sleeping
+                    if (0 && _s&container && !cs&container) {
+                        sayyl "Swapping c.t For _.t";
+                        @$M = grep {$_ ne $c} @$M;
+                        1
+                    }
+                    else {
+                        0
+                    }
+                }
+                else {
+                    1
+                }
+            } @{s&z};
+            @l || last;
+        }
+        my $s = shift @l;
+        $seen.>s.t && next; # container and not in-@l
+        length sc&s || die "Isnt ".ki $s;
+        
+        # form this one line
+        my $C;
+        if (ar.form) {
+            $C = $s;
+            ar.form->($C);
+        }
+        elsif (ar.forms) {
+            my @C = ar.forms->(sc&s);
+            $C = G&Ct,\@C;
+        }
+        
+        $con = [] if s&container;
+        
+        s&pi = $piit if $piit;
+        my $c = d.y.tw.>C.t;
+        
+        my $cha = ki(c.sc) ne ki C.sc;
+        
+        if ($cha) {
+            $done = 0;
+            $con && push @$con, $C;
+            saybl "Cha: C.t:  ".ki(c.sc)." ne ".ki C.sc;
+        }
+        elsif (!$con || !@$con) {
+            sayyl "Done upon C.t";
+            $done++;
+        }
+        $seen.>C.t = $C;
+        push @$M, $C;
+    }
+    for my $C (@{ds&z}) {
+        next if $piit && $piit ne C.sc.pi;
+        next if $seen.>C.t;
+        next if !-e c&s;
+        saybl "Cached C.t";
+        push @$M, $C;
+    }
+    @$M
 Exer: | # find bits for the show
     c&s =~ s/\/$//;
     c&s =~ s/\/\//\//g;
@@ -367,7 +453,7 @@ Exer: | # find bits for the show
     
     # do it
     my @img = split"\n",''.`c&cmd`;
-    1 && say "EXE: c&cmd: ".@img." Last: $img[-1]";
+    1 && say "EXE: c&cmd: ".@img;
     
     my $N = [map { {c=>{s=>$_}} } @img];
     # the directory all are within,
@@ -439,90 +525,4 @@ Exer: | # find bits for the show
     #_.y.cv ||= 9 for @$N;
     s&dir = $know;
     s&z = $N
-Modulim: | # loadup M news from an ls or so
-    # stop when old news found
-    my $piit = 'fils';
-    my $done;
-    my $list_done;
-    my $seen; # C.t
-    my $seens; # c&s
-    my @l;
-    my $page = 1;
-    my $M = [];
-    # whether to read into the rest of the page
-    # once something same has been found
-    my $keen; 
-    # if the lines go directory:\nfile\nfile\nfile
-    # must see a whole directory of unchanged
-    # - changes bump the directory but may then 
-    #     have unchanged stuff before more changes
-    # < keep going a page or so after stillness
-    #   $done > 10 helps too
-    my $con;
-    until (($done > 10) && (!$keen || !@l)) {
-        if (!@l && !($done > 10)) {
-            last if $list_done;
-            my $C = $list->($page++);
-            $list_done = 1 if s&done;
-            @l = grep {
-                if (my $c = $seen.>_.t ) {
-                    # containers may dupe if {,/*}
-                    #   but then goes mad when sleeping
-                    if (0 && _s&container && !cs&container) {
-                        sayyl "Swapping c.t For _.t";
-                        @$M = grep {$_ ne $c} @$M;
-                        1
-                    }
-                    else {
-                        0
-                    }
-                }
-                else {
-                    1
-                }
-            } @{s&z};
-            @l || last;
-        }
-        my $s = shift @l;
-        $seen.>s.t && next; # container and not in-@l
-        length sc&s || die "Isnt ".ki $s;
-        
-        # form this one line
-        my $C;
-        if (ar.form) {
-            $C = $s;
-            ar.form->($C);
-        }
-        elsif (ar.forms) {
-            my @C = ar.forms->(sc&s);
-            $C = G&Ct,\@C;
-        }
-        
-        $con = [] if s&container;
-        
-        s&pi = $piit if $piit;
-        my $c = d.y.tw.>C.t;
-        
-        my $cha = ki(c.sc) ne ki C.sc;
-        
-        if ($cha) {
-            $done = 0;
-            $con && push @$con, $C;
-            saybl "Cha: C.t:  ".ki(c.sc)." ne ".ki C.sc;
-        }
-        elsif (!$con || !@$con) {
-            sayyl "Done upon C.t";
-            $done++;
-        }
-        $seen.>C.t = $C;
-        push @$M, $C;
-    }
-    for my $C (@{ds&z}) {
-        next if $piit && $piit ne C.sc.pi;
-        next if $seen.>C.t;
-        next if !-e c&s;
-        saybl "Cached C.t";
-        push @$M, $C;
-    }
-    @$M
 
