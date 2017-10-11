@@ -29,12 +29,13 @@ Co: | # see */Co/* bay/Cluster operandis / Troom, tell G what/how
     # it may also multiply out to lots of same-ish things
     #   things - the fittings of experience
     # 
-Ge: |
+Ge: | # Ge Co, 1 finds itself and moves in, or plugs into the society...
     # selves
     saybl "selves! G.t on Gc&bay";
     
-    local A.inG = 0;
+    saybl "Alreadies: ". wdump 3, Js&top.sc.z;
     
+    n "thught"=>1=>"tho"
     
     Gs&fishing++ || 
         Rw GoFishing - WebHost;
@@ -45,6 +46,7 @@ GoFishing: | # become Gc&bay/G.t of G1 ideally, possibly G0
     $| = 1; # autoflush output channel
     
     
+    # goner?
     # mkoJ called by Wout, sends lines with Ilan on Opper
     # Opper Ilan $f elvised by Ualve on Udders
     #     Ilan unifies names/routes points by elvising Win
@@ -58,65 +60,133 @@ GoFishing: | # become Gc&bay/G.t of G1 ideally, possibly G0
     # assume already 5s&stores
     Gc&bay || die "Nobay";
     
-    
-    my $M = [];
-    
     # cluster init/takeover/join?
-    `rm -rf G.c.bay/p/*`;
-    `mkdir -p G.c.bay/p`;
+    G.d = "Gc&bay/G/G.t";
+    # to contain 1-5 for this W,
+    # ip/$ip - process'
+    # G/$t - G names
+    # W/$t - W names
+    for my $Ggt (qw'ip G W p') {
+        `rm -rf G.d/$Ggt`;
+        `mkdir -p G.d/$Ggt`;
+    }
+    # become 0 first, the terminal wait/refork with G underneath it
+    # 1 then takes up Ge-minding & the c
+    # 2 takes up a self consciousness & the sc
+    # by splitting further
+    
     
     # to fork an output handler (O) and children (U)
-    m Doeplr
-    m Doperl
-    #m Opper
+    my $M = [];
+    # always creates an ipdir G.d/ip/$ip for us,
+    #  usually putting in/out/err there and starting anew,
+    # but first:
+    # noop: don't fork and go Motoring, just aquire ipdir
+    # io: make only those channels
+    #   together makes Gc&inch.in handle Gc&ipd/in and leaves stdin
+    my $g =
+    m G.t=>{}=>{noop=>1,io=>['in']}
+    # all are W to go and do
+    #   esp with e later
+    m Up
+    m Down
     m $_ for @{ar.m||[]};
-    #m Udder
-    my $O;
-    my $opid;
+    
+    # 
+    
     for my $C (@$M) {
-        # opens new land
-        if ($opid) {
-            # sets our W output
-            # Opper Ilans it and sends lv elvi to WebHost/in
-            $O ||= G.c.bay."/p/Opper/in";
-        }
-        Rw CellOvulation $C $O;
+        # opens new land as C
+        Rw CeLovulation $C;
+        
         s&pid || return
             saygr "Flies in as: C.t $$";
         saygr "Stands as:  C.t $$";
-        # first handles output
-        if (!$opid) {
-            $opid = s&pid;
-        }
     }
-    G.c.bay;
-Dopler: |
+    # always us now, wait for Up or so...
+    # multiple inwardses
+    Gc&inch.std = \*STDIN;
+    
+    sleep 1;
+    
+    my $op;
+    my $f = "G.d/G/Up";
+    sayre "... $f ";
+    sleep 1 until -l $f;
+    $op = readlink "$f/pid";
+    saygr "Waiting fr $op $f";
+    waitpid($op,0);
+    sayyl "Done!";
+    sleep 1;
+    goto town;
+CeLovulation: | # the C is causing a fork
+    # or adopting the identity of:
+    c&ip ||= [@{Gc&ip||[]},Gc&ipi++];
+    unless (c&noop) {
+        my $pa = $$;
+        (s&pid = fork()) && return;
+        Gc&parent_pid = $pa;
+    }
+    else {
+        s&pid = $$;
+    }
+    Gc&ip = c&ip;
+    
+    # process' own space by ip
+    Gc&ipd = "G.d/ip/".join('.',@{Gc&ip});
+    `mkdir Gc&ipd`;
+    
+    # reopen io into ipd
+    c&io ||= [qw'in out err'];
+    my $te = {
+        out => \*STDOUT,
+        err => \*STDERR,
+        in => \*STDIN,
+    };
+    Gc&inch = {};
+    # close everything/restart t
+    for my $ch (@{c&io}) {
+        my $ha = $te.>$ch;
+        my $f = "Gc&ipd/$ch";
+        -e $f && die "Had $f!";
+        `touch $f`;
+        undef $ha if c&noop; # doesn't take over stdin
+            #0;# close $ha; # < maybe dont close it?
+        # emits spot/p/10813/out open noise: Inappropriate ioctl for device
+        # around here
+        my $mode = $ch eq 'in' ? '<' : '>';
+        open($ha, $mode, $f)
+             || die "$f open fail: $!";
+        $! && sayre "$f open noise: $!";
+        undef $!;
+        Gc&inch.>$ch = $ha if $mode eq '<';
+    }
+    
+    # G names, become the latest source of W
+    #   to group/stage e to
+    unless (c&noGt) {
+        my $t = c&Gt || G.t;
+        my $Gt = "G.d/G/$t";
+        unlink $Gt if -l $Gt;
+        symlink "../ip/@{Gc&ip}", $Gt;
+        symlink $Gt, "Gc&ipd/Gt"
+    }
+    
+    # p pids
+    my $pt = "G.d/p/$$";
+    unlink $pt if -l $pt;
+    symlink "../ip/@{Gc&ip}", $pt;
+    symlink $$, "Gc&ipd/pid";
+    
+    return if c&noop;
+    
+    saybl "CellOvulation: $0";
+    
+    4s&toy->({to=>[$C]});
+    saybl "Wandering Ovv";
+Doeplr: |
     Rw Tiot;
     sayre "J.t: Hihi: A.inG";
 Doperl: |
     Rw Tiot;
     sayre "J.t: Hihi: A.inG";
-CeLovulation: | # Ge Co, 1 finds itself
-    my $i = G.c.oipi++;
-    my $pa = $$;
-    (s&pid = fork()) && return;
-    if (ar.O) {
-        # get Dejo to send new chunks of tape (z) to:
-        G.c.tapeze = 'Ualve';
-        # which stores and sends that address to O-ward:
-        G.c.Oin = ar.O;
-    }
-    G.c.oparent = $pa;
-    G.c.oipi = 0;
-    $0 .= " $i";
-    if ($C && ref $C eq 'HASH') {
-        my $Gt = delete(c&Gt) || C.t;
-        $0 .= ":$Gt";
-        ar.take = G.t = $Gt;
-    }
-    Rw Washup;
-    saybl "CellOvulation: $0";
-    
-    4s&toy->({to=>[$C]});
-    saybl "Wandering Ovv";
 
