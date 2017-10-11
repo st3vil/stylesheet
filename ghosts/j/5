@@ -234,6 +234,10 @@ NewBeginning: | # 0 HaMachine.pl's first way
     Rw Bangular;
     
     # should base all G gk here-ish
+    # blank/ = bay
+    # Ge: = G.t=Ge
+    # Ge:Lop = G.t=Lop, pin=Ge
+    #   until Beginnings imply Ge all the time
     @ARGV = grep {  !(/^(\w+)\/$/ && do{Gc&bay=$1}) } @ARGV;
     G.c.bay ||= 'blank';
     #G.c.tentbay = 1;
@@ -380,8 +384,10 @@ Motor: | # be a G
     else {
         if (@ARGV) {
             my $t = shift @ARGV;
+            my $pin = $1 || "Ge" if $t =~ s/:(\w+)?$//;
             G.t ||= $t;
-            argve: saybl "Read ARGV: $t";
+            my $ext = " pin=$pin";
+            argve: saybl "Read ARGV: $t$ext";
             if (my $pid = fork()) {
                 saygr "Waiting fr $pid";
                 waitpid($pid,0);
@@ -391,7 +397,9 @@ Motor: | # be a G
                 goto argve;
             }
             else {
-                n $t
+                # to make your G J see bay/G/Itself
+                local A.inG = 1; # do someotherhow, must delete before doing others 
+                n $pin ? ($t=>W=>{pin=>$pin}) : $t
             }
 
         }

@@ -1,4 +1,4 @@
-Text: | # search through text
+Text: | # search through text, We beyond
     # < wanting to pick abilities onto what you're holding
     Rw Tiot;
     S
@@ -115,4 +115,91 @@ tinput: | # handly talky box
     J.sc.>j.t = $s;
     T.pos = $was ne j.t;
     #J.vid = us&code;
+Clank: | # see/wire knowledge piles, surveying
+    # git clone ../blank/est
+Glo: | # build a bay and .pl, earthworks
+    #Rw Tiot;
+    Js&ein.bo = 'Doable';
+    Jc&tape = 1;
+    y.at.dis = 3;
+    n t=>o1=>"C.t"=>'%fs:15,hs:488,dos:Reimp,dis:2'
+    
+    # 
+    my $p = 'blank'; # copy code from
+    my $t = 'spot'; # the bay
+    n clust=>o12=>"bay of "
+    n t=>o2=>$t=>'fs:15,hs:385'
+    n btw=>o21=>ki(C.c),'fs:7,dis'
+    
+    
+    
+    if (-d $t && !Jc&do_recreate) {
+        n do_recreate=>4=>"Recreate?",'dis,dos:ejc'
+    }
+    else {
+        `rm -rf $t` if delete Jc&do_recreate;
+        
+        `mkdir $t`;
+        for (
+            [glosac=>'sac'], # u/Ang cache
+            [glojs=>'je'], # WebHost's
+            [glow=>'new'], # stylehouse
+        ) {
+            my ($r,$rt) = @$_;
+            `ln -s ../$p/$r $t/$rt`;
+        }
+        n andnow=>-od=>{s=>''.`ls -lt $t`}
+    }
+    
+    n do_script=>4=>"Script?",'dis,dos:ejc'
+    if (delete Jc&do_script) {
+        
+        my $eh = hitime();
+        my $getway = &w{
+            my $w = G&t,w=>$w || die "Noway: $w";
+            wc&s
+        };
+
+        my @set = map {
+            my $f = "$t/new/$_/1";
+            -f $f || die "You need $f";
+            $f
+        }
+        # put back to W mixing once resourcer knows it
+        'HaMachine';
+        
+        # make $Believe->($N) able
+        my @suub = map {
+            my ($t,$args) = @$_;
+            my $s = $getway->($t);
+            my $C = G&Ct,[$t=>1=>{s=>$s},{args=>$args,of=>'w'}];
+            G&perlcode,$C;
+            'my $'.$t.' = '.c&s;
+        } [Beach=>'s,f'],[Believe=>'N'];
+
+        my $bab = &s{
+            my $C = G&Ct,["someba"=>1=>{s=>$s}];
+            G&CoBabbler;
+            C.c.s
+        };
+
+        my @inc = ('G');
+        my $perl = join "\n\n",
+            $getway->('strictwarn'),
+            'use FindBin qw($Bin);',
+            'use lib "$Bin/othlia";',
+            'use lib "$Bin/slib";',
+            (map{"use $_;"}@inc),
+            'my ($A,$C,$G,$T);',
+            'my $begin = "NewBeginning";',
+            @suub,
+            'my @f = ('.join(",",map{"\n    '$_'"}@set)."\n);",
+            $bab->($getway->('Begin'));
+
+        my $f = $t.".pl";
+        write_file $f, $perl;
+        `chmod +x $f`;
+        
+        n run_script=>5=>"Scripted $f",'dis,dos:ejc'
+    }
 
