@@ -14,7 +14,7 @@ Intre: | # what T sets up for I res
         G&e,gou=>-mine=>{}=>'implies:resume' ,
         
         # becoming a process
-        G&e,G=>-mine=>{}=>'otherwise:resume,if:A-inG' ,
+        G&e,G=>-mine=>{}=>'otherwise:resume,if:CcWea=G' ,
         
         # default write location
         G&e,neu=>-mine=>{}=>'implies:write' ,
@@ -40,7 +40,7 @@ Intre: | # what T sets up for I res
     # most taped things will flop into neu, being last
     # most gou
     # and should give path up to toplevel? HaMachine
-    #return;
+    return;
     my @tvs = [map{
         "_.t = ".ki _s&J.sc.top.sc.z;
     }@{5s&stores}];
@@ -72,6 +72,12 @@ FourSearch: | # search 5s&stores for C.t
             if (Ds&if) {
                 if (Ds&if =~ /^A-(.+)$/) {
                     $A.>$1 || next;
+                }
+                elsif (Ds&if =~ /^Cc(\w+)(?:(=)(\w+))?$/) {
+                    my ($gk,$v) = ($1,$3);
+                    $2 && $2 ne '=' && die "Other Cc eq";
+                    !length $v && (exists C.c.>$gk || next)
+                    || C.c.>$gk eq $v || next;
                 }
                 else {
                     die "Unko if: ".ki $D;
