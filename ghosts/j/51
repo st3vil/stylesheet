@@ -10,11 +10,35 @@ Interesting: | # running a cluster
         the $gd is "$bay/$g"
     
     G.t the thing, as it has its own process start
-     = Ge - be generally
-         reuse/lock by thaw, become G0ling under the master if extra
-        many processes join, the G1, mastering a list of G*
+    
+    =head Ge J    be generally, a cluster
+    
+     Ge as a J should only complete/save on G/Ge
+       no Ge J if in the very first process
+         which remains unclustery,
+         jammed forever in GoFishing,
+         to waitpid for G/Ge and refork it if p/Up/will=restart
+       no Ge J if any other process...
+       
+       they all jam into other things forever, nobody completes Ge J
+       could make overmind
+    
+    =head1 G/Ge, etc.
+       
+       Ge - be still, be parent, exits if in < ['Exit']
+          WebHost - receive Wlan
+        Up - receive Elan
+        Si - watching process
+        Down - being from
+         much branching under Down
+    
+    =head2 other
+      < reuse/lock by the Ge J, become Down or so under the master if extra
+    
+    many processes join, the G1, mastering a list of G*
         including G2 (5 templates), 3 (6 proc follower), 4 (tv set)
-        G8s elvising, times
+        
+      < G8s elvising, times
     
     fork - from?
     name - at depth of takeover
@@ -34,11 +58,19 @@ Ge: | # Ge Co, 1 finds itself and moves in, or plugs into the society...
     saybl "selves! G.t on Gc&bay";
     
     saybl "Alreadies: ". wdump 3, Js&top.sc.z;
+    if (my $t = Js&top) {
+        if (my $i = t.y.tw.Gcipi) {
+            Gc&ipi = ic&s;
+            saybl "Adopting Gcipi = Gc&ipi";
+        }
+    }
     
     n "thught"=>1=>"tho"
     
     Gs&fishing++ || 
         Rw GoFishing - WebHost;
+    
+    n Gcipi=>1=>Gc&ipi
     saybl "IDnis!";
     # pids in bay/G
 GoFishing: | # become Gc&bay/G.t of G1 ideally, possibly G0
@@ -98,7 +130,10 @@ GoFishing: | # become Gc&bay/G.t of G1 ideally, possibly G0
     # io: make only those channels
     #   together makes Gc&inch.in handle Gc&ipd/in and leaves stdin
     # ip: keeps same 0 (this process) when restarting
-    m G.t=>{}=>{noop=>1,io=>['in'],ip=>Gc&ip}
+    # ,ip=>Gc&ip
+    my $g =
+    m G.t=>{}=>{nogo=>1}
+    #,io=>['in']}
     # all are W to go and do
     #   esp with e later
     m Up
@@ -112,6 +147,9 @@ GoFishing: | # become Gc&bay/G.t of G1 ideally, possibly G0
         # opens new land as C
         Rw CeLovulation $C;
         
+        c&nogo && s&pid || sayre("Astep C.t") && next;
+        c&nogo && sayre("AstDoneu ep C.t") && last;
+        
         s&pid || return do {
             saygr "Flies in as: C.t $$";
             sleep(2), sayre("Doing life") for 1..4;
@@ -120,21 +158,27 @@ GoFishing: | # become Gc&bay/G.t of G1 ideally, possibly G0
         };
         saygr "Stands as: G.t ($$) -> C.t (s&pid)";
     }
+    !gs&pid && return sayyl(" AM g.t") &&
+        Rw Baying $forever=1;
     # always us now, wait for Up or so...
     # multiple inwardses, pretending to be in cluster and ourselves as we were
     Gc&inch.std = \*STDIN;
     
-    sleep 1;
     
-    my $op;
-    my $f = "G.d/G/Up";
-    sayre "... $f ";
-    sleep 1 until -l $f;
-    $op = readlink "$f/pid";
-    saygr "Waiting fr $op $f";
+    my $op = gs&pid || die "No first pid";
+    my $clean = &{
+        my @l = grep {!-e "/proc/$_" } split "\n", ''.`ls -1ct Gc&bay/G/Ge/p`;
+        @l && sayre "Kill @l";
+        kill KILL=>$_ for @l;
+    };
+    saygr "Waiting fr $op (or ".ki $g;
+    
     waitpid($op,0);
+    goto rem if readlink("Gc&bay/p/Up/will") eq 'restart';
     sayyl "Done! Restart?";
     <>;
+    rem: $clean->();
+    snooze 4000;
     goto town;
 CeLovulation: | # the C is causing a fork
     # or adopting the identity of:
@@ -142,6 +186,7 @@ CeLovulation: | # the C is causing a fork
     unless (c&noop) {
         my $pa = $$;
         (s&pid = fork()) && return;
+        Gc&ipi = 0;
         Gc&parent_pid = $pa;
     }
     else {
@@ -189,7 +234,7 @@ CeLovulation: | # the C is causing a fork
         unlink $Gt if -l $Gt;
         symlink "../ip/Gc&sip", $Gt;
         symlink $t, "Gc&ipd/Gt";
-        $0 .= " $Gt";
+        $0 .= " $t";
         G.t = $t;
     }
     
@@ -199,7 +244,7 @@ CeLovulation: | # the C is causing a fork
     symlink "../ip/Gc&sip", $pt;
     symlink $$, "Gc&ipd/pid";
     
-    return if c&noop;
+    return if c&nogo || c&noop;
     
     saybl "CellOvulation: $0";
     
@@ -231,14 +276,17 @@ Down: | # take medicine and go gondola riding
             $@ = '';
             return;
         }
+        $C = G&Ct,$C if ref $C eq 'ARRAY';
         Rw CeLovulation
         # returns nothing as the parent,
             || next;
-        # child may have Rw GiveTime
+        # child may have Rw GiveTime since
         saybl "Done a Down";
         if (T.Uddoff || Gc&freetime) {
             T.not = 1;
             return saybl "Uddoff";
         }
     }
+Exit: |
+    exit;
 

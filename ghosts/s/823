@@ -33,11 +33,19 @@ DoW: |
     G&elph,$s=>'';
 Kilo: |
     Rw Tiot;
-    my @l = grep{$_ && $_ ne $$} map{/(\d+)/} `ls -1 G.c.bay/p`;
-    symlink "restart", "Gc&bay/p/$$/will";
+    my @l;
+    if (G.d) {
+        @l = grep{$_ && $_ ne $$} grep {-e "/proc/$_" } split "\n", ''.`ls -1ct Gc&bay/G/Ge/p`;
+        symlink "restart", "Gc&ipd/will";
+    }
+    else {
+        @l = grep{$_ && $_ ne $$} map{/(\d+)/} `ls -1 G.c.bay/p`;
+        symlink "restart", "Gc&bay/p/$$/will";
+    }
     kill 'KILL', $_ for @l;
-    kill 'KILL', $$;
-    sayre "Killed $$ (self?) and: ".wdump(4,\@l)
+    
+    sayre "Killed: ".wdump(4,\@l);
+    exit;
     
 Elvis: | # track further instructions (e)
     Js&Simp = 'Sweeptapes';
