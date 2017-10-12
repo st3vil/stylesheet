@@ -1,15 +1,20 @@
 WebHost: |
     # use Mojo,
     # chew up Stylehut into bootstrappings and send
-    saygr "Being a WebHost";
+    saygr "Being a WebHost in ".(Gc&ipd || Gc&dir);
+    
     u Styleslops
+    
     use Mojolicious::Lite;
     use MIME::Base64;
     push @{app->static->paths}, '/home/s/styleshed/public';
     app->secrets(["nothing"]);
-    Gc&dir && # divert mojo log statements from our err channel
-    app->log->path("Gc&dir/mojo\.log");
+    # divert mojo log statements from our err channel
+    app->log->path((Gc&ipd || Gc&dir)."/mojo\.log")
+        if Gc&dir || Gc&ipd;
     
+    
+    no warnings qw(uninitialized redefine);
     
     #G.c.listen = readlink('listen') if -l 'listen';
     my @l = grep /[1-9]/, split '', dig Gc&bay;
