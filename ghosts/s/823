@@ -101,11 +101,11 @@ pi/comtu: |
     Js&Pause && return
         n paused=>23=>'||','%fw:300,hs:422'
     Js&bowls++;
-    $to = 'Udder' if $to eq 'U';
+    $to = Gc&Down || 'Udder' if $to eq 'U';
     
     my $pid;
     if (!$to) {
-        my $i = 2c&es || return
+        my $i = 2c&es || return # you may be holding a p cs=pid
             n wha=>4=>"with?"=>"%hs:289"
         if (i.t eq 'p') {
             $pid = ic&s
@@ -119,7 +119,7 @@ pi/comtu: |
     $pid = $to if $to =~ /^\d+$/;
     
     if (!$pid) {
-        $pid = readlink "$d/$to";
+        $pid = readlink(G.d ? "$d/$to/pid" : "$d/$to");
         G&always,J.sc,atpid=>$pid ||
             n pidchange=>1=>"pidchange",'%hs:666'
     }
@@ -131,7 +131,7 @@ pi/comtu: |
     };
     $t || die "Contuinuing with no t";
     
-    my $in = "$d/$pid/in";
+    my $in = G.d ? "G.d/p/$pid/in" : "$d/$pid/in";
     my $s = G&Ct,[$t=>'W'];
     G&xo,s.c,c&etc if c&etc;
     

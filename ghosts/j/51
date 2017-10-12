@@ -62,19 +62,32 @@ GoFishing: | # become Gc&bay/G.t of G1 ideally, possibly G0
     
     # cluster init/takeover/join?
     G.d = "Gc&bay/G/G.t";
+    for ("Gc&bay/p") { # the old pid+Gt directory
+        -e && !-l && die "$_ is a directory";
+        -l && unlink $_;
+        # making it see 
+        symlink "G/G.t/G", $_;
+    }
     # to contain 1-5 for this W,
     # ip/$ip - process'
     # G/$t - G names
     # W/$t - W names
-    for my $Ggt (qw'ip G W p') {
-        `rm -rf G.d/$Ggt`;
-        `mkdir -p G.d/$Ggt`;
+    town: for my $Gdt (qw'ip G W p') {
+        `rm -rf G.d/$Gdt`;
+        `mkdir -p G.d/$Gdt`;
     }
+    `rm -rf Gc&bay/neu`; # clustaceans like Opera
+    
     # become 0 first, the terminal wait/refork with G underneath it
     # 1 then takes up Ge-minding & the c
     # 2 takes up a self consciousness & the sc
     # by splitting further
     
+    # some everywheres
+    Gc&Up = 'Up'; # unify results to
+        # reads in free time (Baye) and incorporates
+    Gc&Down = 'Down'; # send work to
+        # blocking read (Down itself?), does CeLovulation per message
     
     # to fork an output handler (O) and children (U)
     my $M = [];
@@ -84,26 +97,31 @@ GoFishing: | # become Gc&bay/G.t of G1 ideally, possibly G0
     # noop: don't fork and go Motoring, just aquire ipdir
     # io: make only those channels
     #   together makes Gc&inch.in handle Gc&ipd/in and leaves stdin
-    my $g =
-    m G.t=>{}=>{noop=>1,io=>['in']}
+    # ip: keeps same 0 (this process) when restarting
+    m G.t=>{}=>{noop=>1,io=>['in'],ip=>Gc&ip}
     # all are W to go and do
     #   esp with e later
     m Up
     m Down
     m $_ for @{ar.m||[]};
     
-    # 
+    # these things should get their hangaroundness somehow
+    # probably reading Gc&inch and sleeping (via timer if loose)
     
     for my $C (@$M) {
         # opens new land as C
         Rw CeLovulation $C;
         
-        s&pid || return
+        s&pid || return do {
             saygr "Flies in as: C.t $$";
-        saygr "Stands as:  C.t $$";
+            sleep(2), sayre("Doing life") for 1..4;
+            saygr "Done";
+            exit;
+        };
+        saygr "Stands as: G.t ($$) -> C.t (s&pid)";
     }
     # always us now, wait for Up or so...
-    # multiple inwardses
+    # multiple inwardses, pretending to be in cluster and ourselves as we were
     Gc&inch.std = \*STDIN;
     
     sleep 1;
@@ -115,8 +133,8 @@ GoFishing: | # become Gc&bay/G.t of G1 ideally, possibly G0
     $op = readlink "$f/pid";
     saygr "Waiting fr $op $f";
     waitpid($op,0);
-    sayyl "Done!";
-    sleep 1;
+    sayyl "Done! Restart?";
+    <>;
     goto town;
 CeLovulation: | # the C is causing a fork
     # or adopting the identity of:
@@ -132,7 +150,8 @@ CeLovulation: | # the C is causing a fork
     Gc&ip = c&ip;
     
     # process' own space by ip
-    Gc&ipd = "G.d/ip/".join('.',@{Gc&ip});
+    Gc&sip = join('.',@{Gc&ip});
+    Gc&ipd = "G.d/ip/Gc&sip";
     `mkdir Gc&ipd`;
     
     # reopen io into ipd
@@ -161,20 +180,23 @@ CeLovulation: | # the C is causing a fork
         Gc&inch.>$ch = $ha if $mode eq '<';
     }
     
+    $0 = "Gc&ipd";
     # G names, become the latest source of W
     #   to group/stage e to
     unless (c&noGt) {
-        my $t = c&Gt || G.t;
+        my $t = c&Gt || C.t;
         my $Gt = "G.d/G/$t";
         unlink $Gt if -l $Gt;
-        symlink "../ip/@{Gc&ip}", $Gt;
-        symlink $Gt, "Gc&ipd/Gt"
+        symlink "../ip/Gc&sip", $Gt;
+        symlink $t, "Gc&ipd/Gt";
+        $0 .= " $Gt";
+        G.t = $t;
     }
     
     # p pids
     my $pt = "G.d/p/$$";
     unlink $pt if -l $pt;
-    symlink "../ip/@{Gc&ip}", $pt;
+    symlink "../ip/Gc&sip", $pt;
     symlink $$, "Gc&ipd/pid";
     
     return if c&noop;
@@ -182,11 +204,41 @@ CeLovulation: | # the C is causing a fork
     saybl "CellOvulation: $0";
     
     4s&toy->({to=>[$C]});
+    
     saybl "Wandering Ovv";
-Doeplr: |
+    
+    s&pid
+Up: | # organise gondolas, G Up receives Elanings for Wlanings
+    Rw Tiot;
+    n te=>''=>wdump(2, G.c),'dis,fs:5'
+    sayre "J.t: Hihi: A.inG";
+    Rw GiveTime;
+    snooze 222;
+    #n Fish
+    n Opera
+Down: | # take medicine and go gondola riding
     Rw Tiot;
     sayre "J.t: Hihi: A.inG";
-Doperl: |
-    Rw Tiot;
-    sayre "J.t: Hihi: A.inG";
+    # get stuck in a read loop, unless Gc&freetime
+    while (1) {
+        $_ = <STDIN>;
+        chomp;
+        snooze 333;
+        $_ =~ /\w/ || next;
+        my $C = eval { djson $_ };
+        if ($@) {
+            sayre "NOT json C: $_";
+            $@ = '';
+            return;
+        }
+        Rw CeLovulation
+        # returns nothing as the parent,
+            || next;
+        # child may have Rw GiveTime
+        saybl "Done a Down";
+        if (T.Uddoff || Gc&freetime) {
+            T.not = 1;
+            return saybl "Uddoff";
+        }
+    }
 
