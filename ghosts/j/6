@@ -1356,6 +1356,11 @@ Walkit: | # crawl tv
         # ^ accumulates on every depth's return
         d.d++;
         my @out;
+        my $S; # cb return
+        
+        $S = $y->($s,$d) if d.cbfirst;
+        return if d.not;
+        return $S if d.nofurther;
         
         # the two ways to go deep, should both?
         if (my $z = ss&z) {
@@ -1390,7 +1395,9 @@ Walkit: | # crawl tv
             push @out, G&ind,$next,$y,{%$d,d=>d.d-1};
         }
         
-        unshift @out, $s = $y->($s,$d);
+        $S = $y->($s,$d) if !d.cbfirst;
+        return if d.not;
+        unshift @out, $S;
         
         @out = grep{$_} @out;
         return () if !@out;
@@ -1400,7 +1407,7 @@ Walkit: | # crawl tv
             wantarray ? @out : join "\n", @out;
         }
         else { # an $N?
-            s.sc.z = $my if @$my && ref $s eq 'HASH';
+            S.sc.z = $my if @$my && ref $S eq 'HASH';
             return grep{$_} @out;
         }
         
