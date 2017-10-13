@@ -16,24 +16,32 @@ Gallip: |
     
     
 pi/filspile: | # hier filses
+    u Walkit
+    S
     # put files inside one another
     # all separation points must be supplied
     # < group ooo2,ooo3 as ooo{2,3}
     # groups ips and dirs
     T.op = $s;
-    my @l = G&op,'spi:fils';
+    my @l = G&op;
     my @p; # the path
     
-    n sse=>-od=>{s=>$s}
+    #n est=>-od=>{s=>\@l}
+    
     for my $C (@l) {
+        saybl "C.t is";
+        delete C.y.>$_ for qw'in next';
         C.y.fils = C.y.D;
-        while (@p) {
+        insi: while (@p) {
             my $l = $p[-1];
-            if (C.t =~ /^l.t(.+)$/) {
+            # dirs split / and ips split .
+            if (C.t =~ /^l.t(\W+)(.*)$/) {
+                sayre "^ l.t  $1 -> $2";
                 C.y.parent = $l;
-                s&bit = $1;
-                push @{ls&z}, $l;
-                last;
+                s&sep = $1;
+                s&bit = $2;
+                push @{ls&z||=[]}, $C;
+                last insi;
             }
             else {
                 pop @p;
@@ -41,29 +49,27 @@ pi/filspile: | # hier filses
         }
         push @p, $C;
     }
-    my @tops = grep { !C.y.parent } @l;
+    my @tops = grep { !_.y.parent } @l;
     die "No tops: ".ki\@l if !@tops && @l;
     
-    my @l = map { G&ind,$_ } @tops;
+    
+    my $y = &Cd{
+        c&ind = d.d;
+        d.hitip = 1 if s&sep eq '.';
+        d.not = 1 if d.hitip && s&sep eq '/';
+        $C
+    };
+    my @l = map { G&ind,$_,$y,{cbfirst=>1} } @tops;
     my $have;
-    for my $C (@l) {
-        $have.>C.t ++;
-        sayyl "IOn: ".ki $C;
-        next if c&ind > 2;
-        m C.t=>-od=>{depth=>c&ind,s=>C.y.C}
-    }
-    if (my @dont = grep { !$have.>_.t } @l) {
-        my $me = "(circular mounting?) Dont have "
-            .ki\@dont;
-        warn $me;
-        n ohno=>o5=>"!! $me",'dis:1,hs:577'
+    my @gl = map { G&aC,$_ } @l;
+    for (@l) {
+        my $t = defined _s&bit ? _s&bit : _.t;
+        my $s = "_c&ind -- ".G&aC,$_;
+        $s = " sep=_s&sep  _.t";
+        m $t=>-od=>{depth=>_c&ind,s=>$s}
     }
     
-    
-    some:
-        thing
-    some 3:
-        else
+    return;
     
     
 
