@@ -437,7 +437,8 @@ Exer: | # find bits for the show
     c&s =~ s/\/$//;
     c&s =~ s/\/\//\//g;
     c&do ||= 'l'; # or find
-    c&dobas = c&do;
+    # to know l goes dir: t, t, t  # so c&s = dir/t
+    my $may_containerise = c&do eq 'l';
     if (c&do eq 'l') {
         c&do = 'ls -1ct';
         c&nostderr = 1;
@@ -502,7 +503,7 @@ Exer: | # find bits for the show
             undef $l;
             next;
         }
-        if (c&dobas eq 'l' && c&s =~ /^($know.*)\/?:$/ && -d $1) {
+        if ($may_containerise && c&s =~ /^($know.*)\/?:$/ && -d $1) {
             $l = $C;
             c&s = $1;
             s&container = 1;
@@ -510,11 +511,20 @@ Exer: | # find bits for the show
         else {
             next if c&s =~ /^\Q$know\E/; # is full path
             if ($l) {
-                -e "lc&s/c&s" || die "($know) expected c&s to be in lc&s!";
+                -e "lc&s/c&s" || -l "lc&s/c&s" # may be a broken link
+                    || die "($know) expected lc&s/c&s    c&s to be in lc&s!";
                 c&s = "lc&s/c&s";
             }
             else {
-                -e "$know/c&s" || die "expected c&s to be in $know!";
+                if (!-e "$know/c&s") {
+                    if (c&s =~ /^\Q$know\E\/(.+)/) {
+                        die "Have $know and then $1";
+                        C.t = $1;
+                    }
+                    else {
+                        die "expected c&s to be in $know!";
+                    }
+                }
                 c&s = "$know/c&s";
             }
         }
