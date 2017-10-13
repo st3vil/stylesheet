@@ -476,3 +476,140 @@ Statics: | # Jig for-u, causing static u
     n Jig=>['bay/sac'=>-Gdo=>{},{z=>$M}]
     
 
+
+NewJigdoer: | # 0 bootstrap a G from W
+    Jc&tape = 'Dejo';
+    Js&ein.bo = 'Doable';
+    # send c&name, way mentioning n $W
+    # resolved via c&g for linked Inclusion
+    
+    # < get traceably these things its adding...
+    
+    # resolve W from closer,further
+    my @path = split',',c&g || die "give cg";
+    A.5.t = pop @path;
+    A.6.t = pop @path if @path;
+    G.c.bay || die "will need G";
+    
+    my $eh = hitime();
+    my $getway = &w{
+        my $w = G&t,w=>$w || die "Noway: $w";
+        wc&s
+    };
+    
+    # slurp these stored W for composing normal
+    my @W = grep {$_} map { /^n (\w+) */ }
+        split "\n", $getway->(c&name || die "give cname");
+    my @set = map {
+        my $f = G&Locate_read,$_;
+        $f .= "/1";
+        -f $f || die "NO such $_ ($f ?)";
+        $f
+    } @W;
+    
+    # make $Believe->($N) able
+    my @suub = map {
+        my ($t,$args) = @$_;
+        my $s = $getway->($t);
+        my $C = G&Ct,[$t=>1=>{s=>$s},{args=>$args,of=>'w'}];
+        G&perlcode,$C;
+        'my $'.$t.' = '.c&s;
+    } [Beach=>'s,f'],[Believe=>'N'];
+    
+    my $bab = &s{
+        my $C = G&Ct,["someba"=>1=>{s=>$s}];
+        G&CoBabbler;
+        C.c.s
+    };
+    
+    my @inc = ('G');
+    my $perl = join "\n\n",
+        $getway->('strictwarn'),
+        'use FindBin qw($Bin);',
+        'use lib "$Bin/othlia";',
+        'use lib "$Bin/slib";',
+        (map{"use $_;"}@inc),
+        'my ($A,$C,$G,$T);',
+        'my $begin = "NewBeginning";',
+        @suub,
+        'my @f = ('.join(",",map{"\n    '$_'"}@set)."\n);",
+        $bab->($getway->('Begin'));
+    
+    my $f = c&name.".pl";
+    write_file $f, $perl;
+    `chmod +x $f`;
+    sayre "Done";
+    exit;
+Dwangulit: |
+    n percepto=>3=>"Delicious"
+    n another=>4=>"Things"
+    m ff=>''=>"-$_" for 1..4;
+    u a
+    n \'of:mo'
+    dial:
+        # dave meant
+Luca: | # ghost -> wormhole flame thrower
+    Jc&tape = 'Dejo';
+    Js&ein.bo = 'Doable';
+    S
+    #my $d = Rw LowCat $bay=bay $g=via $t=LeMachine;
+    # over to Lize or NewJigdoer
+    n HaMachine=>-build_01=>{g=>'new'}
+    
+    y.n = 11;
+    # growing explore
+    Js&src ||= ['HaMachine'];
+    m $_=>-w for @{Js&src};
+    
+pi/build: | # for a W you want kept up to date
+    y.at.dos = 'buildlize';
+    y.at.dis = 3;
+    
+    n t=>o1=>C.t=>"fs:22,hs:488"
+    n does=>o2=>"build"
+    n doer=>o3=>" script","dos:buildscript"
+buildlize: | # pop over to Lize
+    my ($j) = e&_hJ;
+    my $C = jc&s;
+    my $g = c&g || die "No cg in ".ki$C;
+    G&elph,Lize=>W=>{g=>$g,add=>C.t}
+    
+buildscript: # pop over to Jigdoer
+    my ($j) = e&_hJ;
+    my $C = jc&s;
+    
+    my $g = c&g || die "No cg in ".ki$C;
+    
+    G&elph,NewJigdoer=>W=>{g=>$g,name=>C.t};
+    0
+    
+pi/w: | # looking at code
+    y.at.dos = 'wful';
+    my $w = c&w || c&s;
+    $w = G&t,w=>$w if !ref $w;
+    n t=>o1=>w.t=>"fs:22,hs:488"
+    n sc=>o2=>ki(w.sc)."\n"
+    
+    my @ch = split /\n\s*?\n/, wc&s;
+    for my $s (@ch) {
+        my $mt = 0.4;
+        saybl "Codin $s";
+        if ($s =~ s/^((?:# [^\n]+\n)+)//s) {
+            m coms=>''=>{s=>$1}=>{mt=>$mt,fs=>7}
+            $mt = 0;
+        }
+        m code=>''=>{s=>"$s\n"}=>{mt=>$mt,mb=>0.4,hs=>489}
+    }
+wful: | # click code
+    my $c = e&hC ->[-1];
+    1 && saygr "wful; ".wdump ec&us;
+    my $what = "what to";
+    T.pos = 0;
+    if (cc&s =~ /^\s*n (\w+)\s*$/sm) {
+        push @{Js&src||=[]},$1;
+        $what = "seek way $1";
+        # & exude 'n *' only shortening of w
+        return;
+    }
+    G&give,Budge=>s=>[$what,$c];
+
