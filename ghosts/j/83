@@ -131,7 +131,15 @@ pi/lise: | # watch filenames in pattern, input to pi/lis
             s&large = 1;
             return;
         }
-        1 && sayre "Read happens: C.t".(s&link && " (link is s&link)";
+        if (s&link) {
+            (my $couldbe = C.t) =~ s/[^\/]+$/s&link/;
+            if (!-e $couldbe) {
+                1 && sayyl "Ornamental link: C.t to s&link";
+                c&s = s&link;
+                return;
+            }
+        }
+        1 && sayre "Read happens: C.t".(s&link && " (link is s&link) f=".-f );
         -l C.t && !s&link && die "link not read already! C.t";
         c&s = read_file(C.t);
     };
