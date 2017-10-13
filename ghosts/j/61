@@ -1,14 +1,18 @@
-pi/clust: | # a look at a GG/p
+pi/clust: | # a look at a GG/p (or so)
     Jc&save = 'W';
     -d "$s/p" || die "No $s/p";
     y.at.dos = 'Clustout';
     
     my $eh = hitime();
     
-    my $scan = c&mode eq 'err' ? "$s/p{,/*/err}"
+    my $c;
+    c.s = G.d ? do { # Wet G Ge
+        c&mode eq 'err' ? "$s/G/Ge/ip/*/err"
+        : "$s/G/Ge/ip";
+    } : c&mode eq 'err' ? "$s/p{,/*/err}"
         : "$s/p{,/*}";
-    
-    n "s/p"=>-listle_1=>$scan,'qz'
+    c.do = 'f' if G.d;
+    n "s/p"=>-listle_1=>$c,'qz'
     my $dir = T.op.sc.dir;
     my $N = [ G&op,'pi:fils' ];
     
@@ -18,11 +22,14 @@ pi/clust: | # a look at a GG/p
     if (c&mode eq 'err') {
         @err = grep { _s&size } grep {_.t =~ /\/err$/} @$N;
         if (@err) {
-            my @s = grep{$_} map{ /p\/(\d+)\/err$/ }
+            my @s = grep{$_} map{
+                G.d ? /^$s\/G\/Ge\/ip\/(.+)\/err$/
+                : /p\/(\d+)\/err$/ }
                 map { _c&s } @err;
             for (@s) {
                 1s&err_spawn.>$_ ++ && next;
-                G&elph,Elvis=>[opt=>"Udder:Clustouting:the:$_,bay:$s"];
+                # Wet G by ipd
+                G&elph,Elvis=>[opt=>"Gc&Down:Clustouting:the:$_,bay:$s"];
             }
             m errors=>32=>"Errors: @s",'hs:586,fs:7,dis'
         }
@@ -66,8 +73,10 @@ Clustout: | # chase output, event
     #G&elph,Elvis=>[opt=>"Udder:Chase:the:os&pid"];
 Clustouting: | # chase output
     Rw Tiot;
-    Js&pid = c&the if c&the;
-    Jc&pd = (c&bay||G.c.bay).'/p/'.Js&pid;
+    Js&pid = c&the if c&the; # may be ip
+    my $bay = c&bay||G.c.bay;
+    my $dir = G.d ? "$bay/G/Ge/ip" : "$bay/p";
+    Jc&pd = "$dir/Js&pid";
     
     n t=>1=>Jc&pd,'%hs:347,fs:14'
     
@@ -296,29 +305,24 @@ pi/linkle: | # dedupe linked filenames
     }
 pi/listle: | # find filenames, ^^^^^^^^
     Jc&save = 'W';
-    my $l = Rw Lst + $s $upsetter=1;
+    my $h;
+    hc&do = c&do if c&do;
+    hc&nonempty = 1;
+    my $l = Rw Lst + $s $h;
     y.at.dir = ls&dir;
     my $s = join("\n", map {G&aC,$_ }@$M);
     n disop=>''=>$s,'fs:7,dis'
     _.y.cv = 6 for @$M;
     
 Lst: | # gives your $M files from ls -1ct, sleeps using your past
-    if (ar.upsetter) {
-        my $see = &{
-            dig ''.`bash -c "ls --full-time -1ct $s 2>/dev/null"`
-        };
-        my $before = $see->();
-        my $watch = &{
-            $see->() ne $before
-        };
-        push @{3s&upsetters}, $watch;
-    }
     # return bigger and bigger looks at the list
     my $laC;
     my $list = &i{
         my $C = G&Ct,[C.t=>''=>{s=>$s}];
         s&iterat = $i;
         c&lim = 16 * $i;
+        ar.h && G&oh,$C,ar.h;
+        
         my $N = Rw Exer;
         $laC = $C;
         $C
@@ -430,12 +434,37 @@ Exer: | # find bits for the show
     c&s =~ s/\/$//;
     c&s =~ s/\/\//\//g;
     c&do ||= 'l'; # or find
+    c&dobas = c&do;
     if (c&do eq 'l') {
         c&do = 'ls -1ct';
         c&nostderr = 1;
     }
-    c&cmd = c&nostderr ? qq[bash -c "c&do c&s 2>/dev/null"]
-        : "c&do c&s";
+    elsif (c&do eq 'f') {
+        c&size = "+0c" if c&nonempty;
+        my $size = " -size c&size" if c&size;
+        c&do = "find c&s $size";
+        c&sindo = 1;
+        sayre "Made up Exer: c&do";
+    }
+    if (my $ups = !A&upsetted++ && 3s&upsetters) {
+        # set up watcher sub, J awakes if returns true
+        my $cmd = c&do =~ /^ls\b/ ? "c&do c&s" :
+            # ls each thing from find to get timestamp/size
+            c&do =~ /^find/ ? "c&do -exec ls --full-time -1ct {} \\;"
+            : die "Watcher upsetter for c&do?";
+        sayyl "Seeing Upsetter Exer: $cmd";
+        my $see = &{
+            dig ''.`bash -c "$cmd 2>/dev/null"`
+        };
+        my $before = $see->();
+        my $watch = &{
+            $see->() ne $before
+        };
+        push @$ups, $watch;
+    }
+    my $es = c&sindo ? "" : c&s;
+    c&cmd = c&nostderr ? qq[bash -c "c&do $es 2>/dev/null"]
+        : "c&do $es";
     
     # search for string
     c&cmd .= "| grep c&grep" if c&grep;
@@ -470,7 +499,7 @@ Exer: | # find bits for the show
             undef $l;
             next;
         }
-        if (c&s =~ /^($know.*)\/?:$/ && -d $1) {
+        if (c&dobas eq 'l' && c&s =~ /^($know.*)\/?:$/ && -d $1) {
             $l = $C;
             c&s = $1;
             s&container = 1;
