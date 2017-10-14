@@ -1336,7 +1336,9 @@ Walkit: | # crawl tv
         my $r = d.refs ||= {};
         $r.>$ref && return;
         $r.>$ref = $s;
+        d.dl && d.dl < d.d && return;
         
+        d.nohup = d.noind = 1 if d.nohi;
         unless (d.nohup) {
             $s = G&hup,$s;
             s.y.D = $D;
@@ -1362,6 +1364,9 @@ Walkit: | # crawl tv
         return if d.not;
         return $S if d.nofurther;
         
+        my $my = [];
+        {
+        local d.last = $s;
         # the two ways to go deep, should both?
         if (my $z = ss&z) {
             @$z = grep{defined} @$z;
@@ -1371,7 +1376,6 @@ Walkit: | # crawl tv
         if (my $in = s.y.in) {
             push @out, G&ind,$in,$y,$d;
         }
-        my $my = [];
         @out = map {
             ! ref$_ ? join "\n", map {d.ind."$_"} split "\n", $_ :
             ref $_ eq 'HASH' ? do{
@@ -1387,8 +1391,9 @@ Walkit: | # crawl tv
             } :
             $_
         } grep {defined} @out;
+        }
         
-        if (my $next = s.y.next) {
+        if (my $next = !d.nonext && s.y.next) {
             my $d = {%$d};
             d.path = [@{d.path||[]}];
             pop @{d.path};
