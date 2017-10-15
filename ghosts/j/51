@@ -8,6 +8,7 @@ Interesting: | # running a cluster
     
     see Zuu
     
+    
     =head1 the G
     
     Gc&bay is the G,
@@ -20,6 +21,9 @@ Interesting: | # running a cluster
     G.t the thing, as it has its own process start
     
     =head Ge J    be generally, a cluster
+    
+      have to give c.WeaG from Motor to know to resume from g=G
+      could go Ge:
     
      Ge as a J should only complete/save on G/Ge
        no Ge J if in the very first process
@@ -65,16 +69,12 @@ Zuu: | # a G to start all the Gs
     # to wander
     m Ge=>''=>'spot'
     
-    _c&W = 'zmd' for @$M;
-    _c&cmd = "./spot\.pl _.t: _c&s/" for @$M;
-    Gs&fishing++ || 
-        Rw GoFishing $N:M;
-    
+    for (@$M) {
+        _c&W = 'zmd';
+        _c&cmd = "./spot\.pl _.t: _c&s/";
+    }
     
 Zupula: | # old way-machine, dangling
-    C.t eq c&W || 
-    if (c&cmd) { # have come back inside the fork
-    }
     # stylehouse - codeboxes webserver, writing to g/*
     # Goh/Goat reads k:vs from g/* into database and w/$pin
     for (qw'Goh Goat stylehouse') {
@@ -83,8 +83,10 @@ Zupula: | # old way-machine, dangling
         c&cmd = /^[A-Z]/ ? "perl got $_ 4 b" : "cd /h; perl $_\.pl";
         c&W = 'zmd'; # do Zapula (above) under a different name
     }
-    Gs&fishing++ || 
-        Rw GoFishing $N:M;
+    for (qw'Goh Goat') {
+        `kill -KILL $_` for grep{$_}map{/^\s*(\d+)/}
+            split"\n",''.`ps f | grep $_`;
+    }
     
     
 zmd: | # wormhole that is a command, inside a fork...
@@ -113,11 +115,12 @@ Ge: | # Ge Co, 1 finds itself and moves in, or plugs into the society...
             saybl "Adopting Gcipi = Gc&ipi";
         }
     }
-    
-    n "thught"=>1=>"tho"
+    # add G person
+    G.t ne 'Ge' &&
+        Rw G.t;
     
     Gs&fishing++ || 
-        Rw GoFishing - WebHost;
+        Rw GoFishing $N:M;
     
     n Gcipi=>1=>Gc&ipi
     saybl "IDnis!";
@@ -200,7 +203,7 @@ GoFishing: | # become Gc&bay/G.t of G1 ideally, possibly G0
         #   esp with e later
         m Up
         m Down
-        m $_ for @{ar.m||[]};
+        m WebHost
     }
     
     for my $C (@$M) {
