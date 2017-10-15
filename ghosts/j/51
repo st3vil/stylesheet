@@ -1,4 +1,14 @@
 Interesting: | # running a cluster
+    =head1 basis
+    
+    someone has to make w,
+    then we can all make W
+    
+    =head1 Gs
+     
+    Zupula -> upul/ # old codedit
+    Ge -> zap/         # to stay/kull
+    Ge -> spot/     # to wander
     
     =head1 the G
     
@@ -29,7 +39,7 @@ Interesting: | # running a cluster
        Ge - be still, be parent, exits if in < ['Exit']
           WebHost - receive Wlan
         Up - receive Elan
-        Si - watching process
+        Si - watching process (see zap/)
         Down - being from
          much branching under Down
     
@@ -49,6 +59,26 @@ Interesting: | # running a cluster
     =head1 W routing
     
     Gc&Glan the name on Opper to receive this W
+Zupula: | # old way-machine, dangling
+    C.t eq c&W || c&cmd || die "Expect to do c_cmd if not self";
+    if (c&cmd) { # have come back inside the fork
+        system c&cmd;
+        die "Eror: $!" if $!;
+        sayre "C.t Done!";
+        exit;
+    }
+    # stylehouse - codeboxes webserver, writing to g/*
+    # Goh/Goat reads k:vs from g/* into database and w/$pin
+    for (qw'Goh Goat stylehouse') {
+        my $C =
+        m $_
+        c&cmd = /^[A-Z]/ ? "perl got $_ 4 b" : "cd /h; perl $_\.pl";
+        c&W = J.t; # do Zapula (above) under a different name
+    }
+    Gs&fishing++ || 
+        Rw GoFishing $N:M;
+    
+    
 Co: | # see */Co/* bay/Cluster operandis / Troom, tell G what/how
     # the G/bay usually is in one piece
     # the name being mapped out to different things
@@ -79,7 +109,6 @@ GoFishing: | # become Gc&bay/G.t of G1 ideally, possibly G0
     my $p = $$;
     $| = 1; # autoflush output channel
     
-    
     # goner?
     # mkoJ called by Wout, sends lines with Ilan on Opper
     # Opper Ilan $f elvised by Ualve on Udders
@@ -94,7 +123,8 @@ GoFishing: | # become Gc&bay/G.t of G1 ideally, possibly G0
     # assume already 5s&stores
     Gc&bay || die "Nobay";
     
-    # cluster init/takeover/join?
+    # < cluster init/takeover/join?
+    
     G.d = "Gc&bay/G/G.t";
     for ("Gc&bay/p") { # the old pid+Gt directory
         -e && !-l && die "$_ is a directory";
@@ -123,36 +153,49 @@ GoFishing: | # become Gc&bay/G.t of G1 ideally, possibly G0
     Gc&Down = 'Down'; # send work to
         # blocking read (Down itself?), does CeLovulation per message
     
-    # to fork an output handler (O) and children (U)
-    my $M = [];
-    # always creates an ipd G.d/ip/$ip for itself,
-    #  usually putting in/out/err there and starting anew,
-    # but first:
-    # noop: don't fork and go Motoring, just aquire ipdir
-    # io: make only those channels
-    #   together makes Gc&inch.in handle Gc&ipd/in and leaves stdin
-    # ip: keeps same 0 (this process) when restarting
-    # ,ip=>Gc&ip
-    my $g =
-    m G.t=>{}=>{nogo=>1}
-    #,io=>['in']}
-    # all are W to go and do
-    #   esp with e later
-    m Up
-    m Down
-    m $_ for @{ar.m||[]};
+    # ^ could be more absolute?
+    #   error should happen and be noticed from afar
     
     # these things should get their hangaroundness somehow
-    # probably reading Gc&inch and sleeping (via timer if loose)
+    # probably reading Gc&inch.* and sleeping (via timer if loose)
+    
+    # recipes!
+    my $M = [@{ar.N||[]}];
+    my $g;
+    if (!@$M) {
+        # default:
+        #  - G.t: Ge sits here
+        #  - Up: unify/handle everything
+        #      should be comebackable one elvis tracey
+        #  - Down: a path leading to wilderness
+        
+        # creates an ipd G.d/ip/$ip (ipdir) for each
+        # < to refork Up...
+        # noop: don't fork and go Motoring, just aquire ipdir
+        # io: make only those channels
+        #   together makes Gc&inch.in handle Gc&ipd/in and leaves stdin
+        # ip: sets ip
+        
+        $g =
+        m G.t=>{}=>{nogo=>1}
+        #,io=>['in']}
+        # all are W to go and do
+        #   esp with e later
+        m Up
+        m Down
+        m $_ for @{ar.m||[]};
+    }
     
     for my $C (@$M) {
         # opens new land as C
         Rw CeLovulation $C;
         
-        c&nogo && s&pid || sayre("Astep C.t") && next;
-        c&nogo && sayre("AstDoneu ep C.t") && last;
-        
-        s&pid || return do {
+        if (c&nogo) {
+            # we go into that fork to do the rest of the forking
+            s&pid || sayre("Astep C.t") && next;
+            sayre("AstDoneu ep C.t") && last;
+        }
+        s&pid || return do { # never happens?
             saygr "Flies in as: C.t $$";
             sleep(2), sayre("Doing life") for 1..4;
             saygr "Done";
@@ -160,12 +203,14 @@ GoFishing: | # become Gc&bay/G.t of G1 ideally, possibly G0
         };
         saygr "Stands as: G.t ($$) -> C.t (s&pid)";
     }
-    !gs&pid && return sayyl(" AM g.t") &&
+    
+    $g && !gs&pid && return sayyl(" AM g.t") && # Ge leaves
         Rw Baying $forever=1;
+        
     # always us now, wait for Up or so...
     # multiple inwardses, pretending to be in cluster and ourselves as we were
     Gc&inch.std = \*STDIN;
-    
+    $g ||= $M->[0];
     
     my $op = gs&pid || die "No first pid";
     my $clean = &{
@@ -249,6 +294,7 @@ CeLovulation: | # the C is causing a fork
     return if c&nogo || c&noop;
     
     saybl "CellOvulation: $0";
+    sayyl "C: ".ki $C;
     
     4s&toy->({to=>[$C]});
     
