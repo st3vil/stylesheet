@@ -19,9 +19,8 @@ Sound: |
     # 232
     # xmodmap -e "keycode 232 ="
 
-ejc: |
+ejc: | # set Jc.>c.t = ec&us.s
     J.c.>c.t = ec&us.s || 1;
-
 Lis: | # speculate on Gigs
     Gc&Glan = 'Elan' if G.d;
     # Lst W 5s and show/organise updatables
@@ -29,34 +28,56 @@ Lis: | # speculate on Gigs
     # push soft and hard,
     #   soft to stick the update button down
     # knows about some Co
+    
+    # FactorEase - assemblages
+    my $ts = Rw fi/sembla bay g add;
+    
+    my $gd = "Jc&bay/Jc&g";
+    
+    n $gd=>-lis=>{s=>$gd,add=>delete(Jc&add)}
+    
+    $ts->();
+    
+fi/sembla: | # dropdown selectable (cultivatable?) location/path-shaped options
+    my $M = [];
+    my $i = 5;
+    for (@{ar.m}) {
+        my $d =
+        m $_=>($i++ / 100)
+        # set from C to J, and defaulty
+        J.c.>$_ = C.c.>$_ if exists C.c.>$_;
+        dc&s = J.c.>$_ ||=
+            $_ eq 'bay' ? Gc&bay || die "nobay" :
+            $_ eq 'g' ? 'neu'
+            : undef;
+        ds&sel = join'-',grep{$_} (
+            $_ eq 'g' ? split("\n",''.`ls -1ct Jc&bay`) :
+            $_ eq 'add' ? qw"HaMachine Stylehut TheStatics" :
+            ''), '?';
+        if (defined dc&s) {
+            dc&s = "dc&s/";
+        }
+        else {
+            dc&s = ":".d.t;
+            ds&hs = 398;
+            ds&fs = 6;
+        }
+        ds&ma = 0.1;
+        ds&fs ||= 8;
+        ds&dos = 'listype';
+        ds&Jc = 1;
+    }
+    n $_ for @$M;
+    
+    # time the whole thing - can cause feedback
+    #   if it is aware of its own motion
     my $eh = hitime();
-    
-    
-    Jc&bay = c&bay if c&bay;
-    my $bay = Jc&bay || Gc&bay || die "No bay";
-    Jc&g = c&g if c&g;
-    my $g = Jc&g || 'glow' || die 'No g';
-    
-    my $gd = "$bay/$g";
-    my $add = c&add || delete(Jc&add) || undef; # put Wt to start tops
-    
-    n $gd=>-lis=>{s=>$gd,add=>$add}
-    
-    #n gd=>-od=>{s=>T.op}
-    #{s=>$gd,add=>$add}}
-    
-    my $ts = hitime() - $eh;
-    my $delta = Rw mass $s:ts;
-    
-    n tripes=>o4=>$delta,'fs:6,hs:399'
-    
-    n G=>o5=>"Gc&bay/"
-    
-    my $gds = `ls -1ct $bay`;
-    n g=>o6=>":$g",'fs:8,hs:396,ma:0.1,dos:listype,Jc,sel:'.join('-',split("\n",$gds),'?')
-    
-    my @types = qw"HaMachine Stylehut TheStatics"; # T
-    n add=>o7=>":start",'fs:6,hs:399,dos:listype,Jc,sel:'.join('-',@types,'?')
+    return &{
+        my $ts = hitime() - $eh;
+        my $delta = Rw mass $s:ts;
+
+        n tripes=>o4=>$delta,'fs:6,hs:399'
+    };
     
 listype: | # type commands to Lis
     my $s = ec&us.s;
