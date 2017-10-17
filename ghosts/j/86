@@ -129,6 +129,7 @@ Kull: | # deletion/watcher, send -ipdrs
     @$M = @{Js&M} = grep {!_s&done} @{Js&M||=[]};
     
     delete _s&z for @$M;
+    delete _s&dos for @$M;
     
     @$M &&
     G&timer:1.5,&{ 4s&toy->({to=>['Kull']}) };
@@ -143,8 +144,19 @@ Kull: | # deletion/watcher, send -ipdrs
             C.t || die "weird dir";
             `rm -rf C.t`;
         };
-        !s&dead && do {
-            s&dead = 1 if !-e "/proc/s&pid";
+        !s&dead && s&state eq 'Z' && do {
+            s&dead = 1; # waiting for parent to reap
+        };
+        !s&dead && s&pid && do {
+            if (!-e "/proc/s&pid") {
+                s&dead = 1;
+            }
+            else {
+                my $s = ''.`cat /proc/s&pid/stat`;
+                $s =~ /^\d+ \(.+?\) (\w+) / || 
+                n Ernor=>s&pid=>"To '$s', get stat"
+                s&state = $1 if $1;
+            }
         };
         !s&dead && !s&sig_sent && do {
             s&pid ||= readlink("C.t/pid") || die "nopid C.t";
@@ -153,11 +165,14 @@ Kull: | # deletion/watcher, send -ipdrs
         };
     }
     
-    n have=>-havechanges=>{s=>$M},'qz'
+    n have=>-havechanges=>{M=>$M},'qz'
     n see=>-seechanges_2=>{s=>T.op}
+    
+    @$M = ();
 pi/havechanges: |
     # noop
-    @$M = @$s;
+    @$M = @{c&M};
+    #y.at.noise = Js&bowls++;
 pi/seechanges: |
     my $dl = 4;
     for (@{ss&z}) {
@@ -179,7 +194,7 @@ pi/seechanges: |
                     keys %$c || next;
                     $intro++ || push @g, "$nk: ";
                     my $s = !exists cc&s ? "$gk!" :
-                        !exists cc&was && 2 == grep /^\d+(\.\d+)?$/, cc&was, cc&s
+                        !exists cc&was && 2 == (grep /^\d+(\.\d+)?$/, cc&was, cc&s)
                             ? "$gk+".(cc&s - cc&was) :
                             "$gk=".slim(20,cc&s);
                     push @g, $s;
