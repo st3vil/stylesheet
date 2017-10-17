@@ -347,11 +347,12 @@ Down: | # take medicine and go gondola riding
     Gc&Glan = 'Glan';
     
     # get stuck in a read loop, unless Gc&freetime
+    Rw linkrement upto blockin;
     while (1) {
-        Rw linkrement upto blockin;
+        snooze 10000;
         $_ = <STDIN>;
+        length $_ || next;
         chomp;
-        snooze 333;
         $_ =~ /\w/ || next;
         my $C = eval { djson $_ };
         if ($@) {
@@ -362,7 +363,10 @@ Down: | # take medicine and go gondola riding
         $C = G&Ct,$C if ref $C eq 'ARRAY';
         Rw CeLovulation
         # returns nothing as the parent,
-            || next;
+        || do {
+            Rw linkrement upto blockin;
+            next;
+        };
         # child may have Rw GiveTime since
         saybl "Done a Down";
         if (T.Uddoff || Gc&freetime) {
