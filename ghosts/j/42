@@ -71,6 +71,7 @@ WebHost: |
     
     my $txm = 1s&txm ||= [];
     my $pend = 1s&pending ||= [];
+    my $rec = 1s&recent_ha ||= {};
     # handle each...
     G.Websock = &s{
         1 && say "Web is socked!";
@@ -81,8 +82,16 @@ WebHost: |
         $tx->max_websocket_size(512000);
         
         $s->on(message => &M,m{
+            #}
             $m = encode_utf8($m);
             1 && sayyl "Message from $addr ".$m;
+            
+            my $ha = dig $m;
+            $rec.>$ha ++ && sayre("Duplicate") && return
+                Rw linkrement request_dupe;
+            G&timer,0.3,$_ for &{ delete $rec.>$ha };
+            
+            
             my $d = eval { djson $m };
             $@ && die "Message doesnt decode: $@\n\n$m";
             
