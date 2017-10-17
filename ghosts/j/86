@@ -5,13 +5,15 @@ Gallip: |
     Rw UpSetulism;
     Rw GiveTime;
     S
+    Jc&bay ||= 'spot';
+    Jc&G ||= 'Ge';
     my $ts = Rw fi/sembla bay G add;
     
     my $d = Rw ReadMe;
     !ds&pid || ds&pid eq $$ || sayre("Giving over to ds&pid") && exit;
     y.at.pid = $$;
     
-    my $d = "spot/G/Ge";
+    my $d = "Jc&bay/G/Jc&G";
     
     n memwar=>-memwar=>{}
     
@@ -89,6 +91,7 @@ Cleanup: | # delete lives!
     my $U = c.y.up;
     my $o;
     os&pi = 'ipdrs'; # bunch of ipdrs
+    os&pointed = $c;
     
     # first try to break off the branch,
     #   resetting reality to there
@@ -105,31 +108,88 @@ Cleanup: | # delete lives!
         o.t = "GC cs&Gt";
         my @t = grep { _s&Gt eq cs&Gt } @{Us&z};
         pop @t if @t && $t[-1] ne $c;
-        @t = map { $inside->($_) } @t;
+        @t = map { $_, $inside->($_) } @t;
         os&z = \@t;
     }
-    # tips first? may make something come back from waitpid child briefly?
+    # tips first? may make something come back
+    #   from waitpid child briefly?
     @{os&z} = reverse @{os&z};
-    G&elph,Kull=>$o;
+    #G&give,Budge=>[this=>''=>{s=>$o}];
+    G&elph,Kull=>[$o];
     T.pos = '';
 Kull: | # deletion/watcher, send -ipdrs
     Rw Tiot;
-    # take a bunch of -ipdr/an -ipdrs and
-    Js&ein.pi.ipdrs.sMJ = &sMJ{
-        m $s
+    # take a bunch of -ipdr/an -ipdrs
+    Js&ein.pi.ipdrs.sMJ = &sMJje{
+        my $z = es&z;
+        Rw DeStyleM $M:z;
+        m $_ for @$z;
     };
     S
     @$M = @{Js&M} = grep {!_s&done} @{Js&M||=[]};
+    
+    delete _s&z for @$M;
+    
+    @$M &&
+    G&timer:1.5,&{ 4s&toy->({to=>['Kull']}) };
+    
+    # osc riddle, take steps
     for my $C (@$M) {
         if (!-d C.t) {
-            
+            s&dead || die "no-d before dead: C.t";
             s&done = 1;
         }
-        s&sig_sent ||= do {
-            s&pid ||= do {
-                
-            }
+        s&dead && !s&rmdir && do {
+            C.t || die "weird dir";
+            `rm -rf C.t`;
         };
+        !s&dead && do {
+            s&dead = 1 if !-e "/proc/s&pid";
+        };
+        !s&dead && !s&sig_sent && do {
+            s&pid ||= readlink("C.t/pid") || die "nopid C.t";
+            `kill -KILL s&pid`;
+            s&sig_sent = 1;
+        };
+    }
+    
+    n have=>-havechanges=>{s=>$M},'qz'
+    n see=>-seechanges_2=>{s=>T.op}
+pi/havechanges: |
+    # noop
+    @$M = @$s;
+pi/seechanges: |
+    my $dl = 4;
+    for (@{ss&z}) {
+        my $o = _.y.A;
+        o.t eq 'o' || die "o not o";
+        my $d = oc&diff;
+        
+        my $se = "_.t    y    ".ki(_.c)."   %   ".ki(_.sc);
+        
+        my $ch = "new!" if ds&allnew;
+        $ch = "." if !ds&neg;
+        $ch ||= do {
+            my @g;
+            for my $nk (qw'y c sc') {
+                my $n = ds&neg.>$nk;
+                my $intro;
+                for my $gk (sort keys %$n) {
+                    my $c = $n.>$gk;
+                    keys %$c || next;
+                    $intro++ || push @g, "$nk: ";
+                    my $s = !exists cc&s ? "$gk!" :
+                        !exists cc&was && 2 == grep /^\d+(\.\d+)?$/, cc&was, cc&s
+                            ? "$gk+".(cc&s - cc&was) :
+                            "$gk=".slim(20,cc&s);
+                    push @g, $s;
+                }
+            }
+            "  ~ @g";
+        };
+        
+        m _.t=>''=>"$se  ",dis
+        m _.t=>''=>"$ch",'dis,hs:857'
     }
 pi/filspile: | # hier filses
     u Walkit
@@ -205,6 +265,15 @@ StyleM: | # tiniest osc-like thing,
     for my $C (@$M) {
         local T.D = $m;
         G&h,$m;
+    }
+DeStyleM: | # delete style sc, when chewing on items...
+    my $O = G&t,'O';
+    my $m = O.y.tw.muchofany;
+    my $i = ms&scgkindex || die "Lost";
+    for (@$M) {
+        for my $k (keys %{_.sc}) {
+            delete _.sc.>$k if $i.>$k;
+        }
     }
 pi/filsipd: | # see process
     u Walkit
