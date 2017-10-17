@@ -97,7 +97,18 @@ zmd: | # wormhole that is a command, inside a fork...
     die "Eror: $!" if $!;
     sayre "C.t Done!";
     exit;
-    
+linkrement: | # symlinks in Gc&ipd/r/ to count/track growth/activities
+    Gc&ipd && -d "Gc&ipd" || return;
+    my ($t,$v) = @{ar.m};
+    my $append = $v =~ s/^_// if $v;
+    `mkdir Gc&ipd/r` if !-d "Gc&ipd/r";
+    my $l = "Gc&ipd/r/$t";
+    my $was = my $al = readlink($l) if -l $l;
+    $al = !defined $v ? ++$al : $append ? "$al;$v" : $v;
+    `unlink $l` if -l $l;
+    return if $v eq 'undef';
+    symlink $al, $l;
+    my $undo = &{ `unlink $l`; defined $was && symlink $was, $l };
 Co: | # see */Co/* bay/Cluster operandis / Troom, tell G what/how
     # the G/bay usually is in one piece
     # the name being mapped out to different things
@@ -337,6 +348,7 @@ Down: | # take medicine and go gondola riding
     
     # get stuck in a read loop, unless Gc&freetime
     while (1) {
+        Rw linkrement upto blockin;
         $_ = <STDIN>;
         chomp;
         snooze 333;

@@ -79,12 +79,20 @@ pi/filsipdrs: | # figure of ipd list, show a bunch (of potentially pi=ipdr)
             -l $Gt || next;
             ms&Gt = $Gt = readlink($Gt);
             mc&s .= ":$Gt";
-            -d "C.t/W" || next;
-            my @Ws = split "\n", ''.`ls -1ct C.t/W`;
-            @Ws || next;
-            my @os = grep{$_ ne $Gt} @Ws;
-            mc&s .= @os < @Ws ? "+" : "=";
-            mc&s .= join",",@os;
+            
+            
+            if (-d "C.t/W") { # W names it has, probably has a W for its Gt
+                my @Ws = split "\n", ''.`ls -1ct C.t/W`;
+                if (@Ws) {
+                    my @os = grep{$_ ne $Gt} @Ws;
+                    mc&s .= @os < @Ws ? "+" : "=";
+                    mc&s .= join",",@os;
+                }
+            }
+            if (-d "C.t/r") { # see linkrement
+                my @rs = split "\n", ''.`ls -1ct C.t/r`;
+                mc&s .= "      ".join(", ",map{"$_:".readlink("C.t/r/$_")} @rs);
+            }
         }
     }
 Cleanup: | # delete lives!
@@ -206,73 +214,7 @@ pi/seechanges: |
         m _.t=>''=>"$se  ",dis
         m _.t=>''=>"$ch",'dis,hs:857'
     }
-pi/filspile: | # hier filses
-    u Walkit
-    S
-    # put files inside one another
-    # all separation points must be supplied
-    # < group ooo2,ooo3 as ooo{2,3}
-    # groups ips and dirs
-    T.op = $s;
-    my @l = G&op;
-    my @p; # the path
-    
-    #n est=>-od=>{s=>\@l}
-    
-    for my $C (@l) {
-        #saybl "C.t is";
-        delete C.y.>$_ for qw'in next';
-        C.y.fils = C.y.D;
-        insi: while (@p) {
-            my $l = $p[-1];
-            # dirs split / and ips split .
-            if (C.t =~ /^l.t(\W+)(.*)$/) {
-                #sayre "^ l.t  $1 -> $2";
-                C.y.parent = $l;
-                s&sep = $1;
-                s&bit = $2;
-                push @{ls&z||=[]}, $C;
-                last insi;
-            }
-            else {
-                pop @p;
-            }
-        }
-        push @p, $C;
-    }
-    my @tops = grep { !_.y.parent } @l;
-    die "No tops: ".ki\@l if !@tops && @l;
-    
-    
-    my $cb = &Cd{
-        c&ind = d.d;
-        my $l = d.last;
-        C.y.up = $l if $l;
-        if (s&sep eq '.') {
-            s&isip = 1;
-            ls&isip = 1;
-        }
-        return d.not = 1 if ls&isip && s&sep eq '/';
-        $C
-    };
-    my @l = map { G&ind,$_,$cb,{cbfirst=>1,nohi=>1} } @tops;
-    my $have;
-    my @gl = map { G&aC,$_ } @l;
-    for my $C (@l) {
-        #_s&isip || next;
-        my $t = defined s&bit ? s&bit : C.t;
-        
-        m $t=>-filsipd=>{s=>$C},{ml=>c&ind,dis=>1}
-    }
-    
-    return;
-    Rw StyleM;
-    n everything=>3=>"Everything:",{z=>[@$M],ws=>1}
-    @$M = ();
-    
-    return;
-    
-    
+
 StyleM: | # tiniest osc-like thing, 
     my $O = G&t,'O';
     my $C = G&Ct,[ge=>''=>{}=>{fs=>4}];
@@ -290,55 +232,4 @@ DeStyleM: | # delete style sc, when chewing on items...
             delete _.sc.>$k if $i.>$k;
         }
     }
-pi/filsipd: | # see process
-    u Walkit
-    S
-    n C.t=>o1=>C.t=>'hs:693,fs:12'
-    
-    my $rw = 3s&filsipd_ref ||= {};
-    if (my $o = $rw.>$s ) {
-        die "Thing already in: ".G&aC,$C ."\n in: ".G&sn,C.y.A;
-    }
-    my @c;
-    my $cb = &Cd{
-        c&ind = d.d;
-        C.t = defined _s&bit ? _s&bit : _.t;
-        return if d.d == 1;
-        if (s&isip) {
-            push @c, $C;
-            return d.not = 1;
-        }
-        $C
-    };
-    my @l = G&ind,$s,$cb,{nonext=>1,nohi=>1,cbfirst=>1};
-    
-    #@l = map { G&aC,$_ } @l;
-    #n self=>2=>{s=>G&aC,$s },'hs:184';
-    #n selfis=>-od_21=>{noind=>1,s=>$s}
-    
-    0 && @c && 
-    n children=>3=>{s=>"and ".@c}
-    
-    y.n = 4;
-    my @p;
-    for my $C (@l) {
-        my $u = C.y.parent;
-        my ($el) = reverse @p;
-        #saybl "goes u.t / el.t / C.t";
-        pop @p until !@p || $p[-1] ne C.y.parent;
-        my $l = $p[-1];
-        my $M = $l ? (ls&z||=[]) : $M;
-        push @p, my $p =
-        m C.t =>''=>C.t,'ma,fs:8'
-        my $M = ps&z = [];
-        
-        exists s&link &&
-        m C.t =>''=>"-l"
-        
-        exists c&s && !$l &&
-        m cs=>''=>slim(30,c&s),'hs:857'
-    }
-    #n C.t=>4=>{s=>join"\n",@l},'dis'
-    
-    
 
