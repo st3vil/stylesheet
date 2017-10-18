@@ -7,7 +7,9 @@ Gallip: |
     S
     Jc&bay ||= 'spot';
     Jc&G ||= 'Ge';
-    my $ts = Rw fi/sembla bay G add;
+    Jc&detail ||= 'r';
+    Js&fi_detail = [qw'r p'];
+    my $ts = Rw fi/sembla bay G detail;
     
     my $d = Rw ReadMe;
     !ds&pid || ds&pid eq $$ || sayre("Giving over to ds&pid") && exit;
@@ -89,9 +91,24 @@ pi/filsipdrs: | # figure of ipd list, show a bunch (of potentially pi=ipdr)
                     mc&s .= join",",@os;
                 }
             }
-            if (-d "C.t/r") { # see linkrement
-                my @rs = split "\n", ''.`ls -1ct C.t/r`;
-                mc&s .= "      ".join(", ",map{"$_:".readlink("C.t/r/$_")} @rs);
+            if (3c&detail eq 'r') {
+                if (-d "C.t/r") { # see linkrement
+                    my @rs = split "\n", ''.`ls -1ct C.t/r`;
+                    mc&s .= "      ".join(", ",map{"$_:".readlink("C.t/r/$_")} @rs);
+                }
+            }
+            elsif (3c&detail eq 'p') {
+                my $p = readlink("C.t/pid");
+                $p || die "Nopid!";
+                my ($mem) = `cat /proc/$p/statm` =~ /(\d+)/;
+                $mem *= 3900.25;
+
+                my $fs = $mem > 70000000000 ? 14 : 7;
+                my $ms = Rw sciun $s:mem;
+                mc&s .= "       $ms";
+            }
+            else {
+                die "detail on A.3.t: 3c&detail";
             }
         }
     }
