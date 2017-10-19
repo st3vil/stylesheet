@@ -270,7 +270,7 @@ SeeC: |
     #   sometimes [C,C] -> [C.t,C.t], which is nice...
     # goo tensioner
     
-    my $spc = c&block ? 1 : a&space;
+    my $spc = c&block && 1 || a&space;
     # scale t fontsize
     my $fss = &s{
         my $over = length($s) / 14;
@@ -301,7 +301,7 @@ SeeC: |
     };
     
     s&return ||= do {
-    if ($spc < 1 || A&asone) { # one line C:t y c sc
+    if ($spc < 1 || A&asone || A&justty) { # one line C:t y c sc
         my $ac = G&aC,$s,'Ck5';
         
         $ac->[1] =~ s/^0\.//;
@@ -313,6 +313,8 @@ SeeC: |
         $y = $deyer->($y);
         n y=>201=>{s=>$y},'%hs:856,fs:7'
         
+        unless (A&justty) {
+        
         my $c = $kiorso->(s.c,shift(@$ac));
         n c=>2012=>{s=>$c},"%hs:656,fs:".$fss->($c)
         
@@ -321,6 +323,7 @@ SeeC: |
         n sc=>2021=>{s=>$sc},"%hs:456,fs:".$fss->($sc)
         
         $spc < 1 
+        }
     }
     elsif ($spc < 2) { # one line C:ty, c, sc
         my $ac = G&aC,$s,'Ck5';
@@ -368,22 +371,6 @@ SeeC: |
     # show how to gather training data
     
     # Quant: if C is t-cs- only, it's an empty-ish layer
-    if (G&q,$s,'o?.cs') {
-    
-    }
-    if (ref $s eq 'HASH' && keys %$s < 5 && 
-        G&isC,$s) {
-        # try
-        if (!keys %{s.y} && !keys %{s.sc}
-            && keys %{s.c} == 1 && exists s.c.s) {
-            n short=>12=>" t: s.t","%hs:457"
-            m "c\.s"=>-pud=>{s=>sc&s,ima=>[qw'c s']}
-            s&return = 2;
-            c&dl += 2;
-        }
-        s&return ||=
-            Rw Cpud;
-    }
 SeeA: |
     s&sy = 'A';
 
