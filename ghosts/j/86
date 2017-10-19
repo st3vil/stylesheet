@@ -37,19 +37,19 @@ pi/memwar: |
     n low=>''=>"Only $av memory available",'hs:856,fs:14'
     
     
-pi/filsipdrs: | # figure of ipd list, show a bunch (of potentially pi=ipdr)
-    my $z = ss&z || die "snoz";
+rez/thier: | # flat t=sip/fraction/etc -> depth, s&bit difference, ordered?
     my @p; # the path
+    my $sepr = ar.sep ? qr/\W+/ : '';
     for my $C (sort {a.t cmp b.t} @$z) {
         delete C.y.next;
         delete C.y.in;
         insi: while (@p) {
             my $l = $p[-1];
             # dirs split / and ips split .
-            if (C.t =~ /^l.t(\W+)(.*)$/) {
+            if (C.t =~ /^l.t($sepr)(.*)$/) {
                 sayre "^ l.t  $1 -> $2";
                 C.y.parent = $l;
-                s&sep = $1;
+                s&sep = $1 if $1;
                 s&bit = $2;
                 push @{ls&z||=[]}, $C;
                 last insi;
@@ -60,14 +60,26 @@ pi/filsipdrs: | # figure of ipd list, show a bunch (of potentially pi=ipdr)
         }
         push @p, $C;
     }
-    my @tops = grep {!_.y.parent} @$z;
+    # < order after s&bit separates and know numberology
+    grep {!_.y.parent} @$z
+ind/sort: | # clone/flatlist with rearrangement
+    # only sorts on each s&z
+    my $gk = ar.gk || 'bit';
+    my $cb = &Cd{
+        @{s&z} = sort {
+            exists a.sc.>$gk && exists b.sc.>$gk
+                && a.sc.>$gk <=> b.sc.>$gk
+        } @{s&z} if s&z;
+        $C
+    };
+    G&ind,$C,$cb,{cbfirst=>1};
+pi/filsipdrs: | # figure of ipd list, show a bunch (of potentially pi=ipdr)
+    my $z = ss&z || die "snoz";
+    
+    my @tops = Rw rez/thier $z $sep=nonword;
+    
     for my $C (@tops) {
-        my $cb = &Cd{
-            @{s&z} = sort { as&bit && bs&bit && as&bit <=> bs&bit } @{s&z}
-                if s&z;
-            $C
-        };
-        my @l = G&ind,$C,$cb,{cbfirst=>1};
+        my @l = Rw ind/sort;
         for my $C (@l) {
             my $te = defined s&bit ? s&bit : C.t;
             my $m =
