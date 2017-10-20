@@ -47,7 +47,7 @@ rez/thier: | # flat t=sip/fraction/etc -> depth, s&bit difference, ordered?
             my $l = $p[-1];
             # dirs split / and ips split .
             if (C.t =~ /^l.t($sepr)(.*)$/) {
-                sayre "^ l.t  $1 -> $2";
+                #sayre "^ l.t  $1 -> $2";
                 C.y.parent = $l;
                 s&sep = $1 if $1;
                 s&bit = $2;
@@ -73,20 +73,30 @@ ind/sort: | # clone/flatlist with rearrangement
         $C
     };
     G&ind,$C,$cb,{cbfirst=>1};
+Min/bits: | # entre for new life
+    # becomes local-est cs
+    my $te = defined s&bit ? s&bit : C.t;
+    # as depth knower
+    my $sc;
+    sc.ml = c&ind;
+    sc.dis = 1;
+    sc.dos = ar.dos if ar.dos;
+    
+    m C.t=>{C=>$C}=>{depth=>c&ind,s=>$te},$sc
 pi/filsipdrs: | # figure of ipd list, show a bunch (of potentially pi=ipdr)
     my $z = ss&z || die "snoz";
     
     my @tops = Rw rez/thier $z $sep=nonword;
     
     for my $C (@tops) {
+    
         my @l = Rw ind/sort;
+        
         for my $C (@l) {
-            my $te = defined s&bit ? s&bit : C.t;
-            my $m =
-            m C.t=>''=>{depth=>c&ind,s=>$te},{ml=>c&ind,dis=>1,dos=>'Cleanup'}
-            m.y.fils = $C;
             
-            my $M = ms&z = [];
+            my $m = Rw Min/bits + $dos=Cleanup;
+            
+            my $M = ms&z = []; # Style dodge?
             
             # read a few links/lists about its state
             my $Gt = "C.t/Gt";
@@ -103,6 +113,7 @@ pi/filsipdrs: | # figure of ipd list, show a bunch (of potentially pi=ipdr)
                     mc&s .= join",",@os;
                 }
             }
+            
             if (3c&detail eq 'r') {
                 if (-d "C.t/r") { # see linkrement
                     my @rs = split "\n", ''.`ls -1ct C.t/r`;
@@ -174,7 +185,7 @@ Kull: | # deletion/watcher, send -ipdrs
     # osc riddle, take steps
     for my $C (@$M) {
         if (!-d C.t) {
-            s&dead || die "no-d before dead: C.t";
+            s&dead || sayre "no-d before dead: C.t";
             s&done = 1;
         }
         s&dead && !s&rmdir && do {
@@ -243,7 +254,6 @@ pi/seechanges: |
         m _.t=>''=>"$se  ",dis
         m _.t=>''=>"$ch",'dis,hs:857'
     }
-
 StyleM: | # tiniest osc-like thing, 
     my $O = G&t,'O';
     my $C = G&Ct,[ge=>''=>{}=>{fs=>4}];
@@ -256,6 +266,7 @@ DeStyleM: | # delete style sc, when chewing on items...
     my $O = G&t,'O';
     my $m = O.y.tw.muchofany;
     my $i = ms&scgkindex || die "Lost";
+    $M = [$M] if ref $M ne 'ARRAY';
     for (@$M) {
         for my $k (keys %{_.sc}) {
             delete _.sc.>$k if $i.>$k;
