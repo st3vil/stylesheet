@@ -25,6 +25,16 @@ Impsev: | # restart lv when wil > 7
     }
     A.mo.sc.lastmo = 1s&lastmo;
     1s&lastmo = A.mo;
+EatsPi: |
+    for my $pi (@{ar.m}) {
+        Js&ein.pi.>$pi ->{sMJ} = &sMJje{
+            1 && saybl "Havi J.t: ".G&aC,$e;
+            m $e
+        };
+    }
+EatPi: | # hope throwing this pi ($c) into somewhere (e J.t) will do something
+    sayre "Hoping J.t will like ".G&aC,$c;
+    G&elph,J.t=>$c;
 Telon: | # comp sci helpyou
     Gc&Glan = 'Elan' if G.d;
     # Lst Ts and their 5ings
@@ -34,16 +44,14 @@ Telon: | # comp sci helpyou
     #1s&FishBrainDump = 1;
     Rw Impsev $and=init;
     Jc&save = 1;
-    Js&ein.pi.ghost.sMJ = &sMJje{
-        1 && saybl "Havi J.t: ".G&aC,$e;
-        Rw DeStyleM $M:e;
-        m $e
-    };
+    
+    # c&pi generates s&pi which become c&pi when fed to A.3
+    Rw EatsPi ghost;
+    
     S
     Jc&bay ||= 'spot';
     Jc&G ||= 'Ge';
     my $ts = Rw fi/sembla bay G add;
-    
     
     
     Js&boWls ||= do {
@@ -61,27 +69,8 @@ Telon: | # comp sci helpyou
     my $d = "Jc&bay/G/Jc&G";
     # edits the G init code into ^
     # amongst other way drawn from:
-    Js&Simp = 'Sweeptapes';
-    if (!Js&M) {
-        # init saved/feedback
-        my $t = Js&top;
-        my $M = Js&M = [];
-        m $_ for grep{_s&mix} @{ts&z||[]};
-    }
-    if (!@{Js&M||[]}) {
-        my $M = Js&M;
-        m j=>-clonge
-    }
-    m $_ for @{Js&M||[]};
     
-    delete _.y.cv for @$M;
-    _c&pi = delete _s&pi for grep{_s&pi} @$M;
-    _s&mix = 1 for @$M;
-    my $tw;
-    @$M = grep { !$tw.>_.t ++ } @$M;
-    
-    
-    Rw DeStyleM;
+    Rw piFeedTape + $default=j:-clonge;
     
     my $w = G&t,w=>"Todol";
     Js&sayin = wc&s;
@@ -96,6 +85,32 @@ Telon: | # comp sci helpyou
     
     $ts->();
     
+piFeedTape: | # your J state recovery
+    # Tiot shiftclick empties Js&M
+    Js&Simp = 'Sweeptapes';
+    Js&Cimp = 'Detapes';
+    # writes s&mix=1 on everything to feedback
+    if (!Js&M) {
+        # init saved/feedback
+        my $t = Js&top;
+        my $M = Js&M = [];
+        m $_ for grep{_s&mix} @{ts&z||[]};
+    }
+    if (!@{Js&M||[]}) {
+        my $M = Js&M;
+        if (my $d = ar.default) {
+            m ref $d ? $d : split(":", $d)
+        }
+    }
+    m $_ for @{Js&M||[]};
+    
+    delete _.y.cv for @$M;
+    _c&pi = delete _s&pi for grep{_s&pi} @$M;
+    _s&mix = 1 for @$M;
+    my $tw;
+    @$M = grep { !$tw.>_.t ++ } @$M;
+    
+    Rw DeStyleM;
     
 pi/clonge: | # ambiento
     #
@@ -103,9 +118,10 @@ pi/clonge: | # ambiento
     $s ||= C.t;
     my $f = Rw Glonge $s;
     
-    n t=>o1=>$f,'hs:788'
+    Rw Tiot + $t:f $nodis=1;
     
     n lies=>-lise_1=>$f,'%qz,fs'
+    
     my $t = T.op;
     my $z = ts&z;
     #n $f=>1=>''.`ls -1ct $f`
@@ -113,7 +129,7 @@ pi/clonge: | # ambiento
     for my $C (@tops) {
         my @l = Rw ind/sort;
         for my $C (@l) {
-            my $m = Rw Min/bits + $dos=Ghope;
+            my $m = Rw Min/bits + $dos=EatPi;
             ms&pi = 'ghost';
             ms&ma = 0.2;
             if ($C eq $l[0]) {
@@ -125,22 +141,24 @@ pi/clonge: | # ambiento
             delete ms&dis;
         }
     }
-Ghope: | # hope throwing this pi ($c) into somewhere (e J.t) will do something
-    sayre "Hoping J.t will like ".G&aC,$c;
-    G&elph,J.t=>$c;
 pi/ghost: | # being a C produced in some list
     # 
     s&dis = 1;
     s&file = C.t if -e C.t;
-    n t=>1=>C.t
+    Rw Tiot;
     #n yoa=>2=>ki($s),'fs:7,hs:595'
-    n self=>-od_3=>{dl=>2,s=>$C}
+    #n self=>-od_3=>{dl=>1,s=>$C}
+    
     
     my @l = my $S = $C;
     push @l, $S while $S = @l < 10 && S.y.C;
-    
     @l = map { $_, _.y.A && G&sn,_.y.A || "noyA" } @l;
-    n history=>-od_4=>{dl=>2,s=>\@l}
+    #n hisof=>-od_34=>{dl=>1,s=>[$C,C.y,$A]}
+    n history=>-od_4=>{dl=>1,s=>\@l}
+    # pis exist on a C.y.C wavestring beadchaining, the previum of which may have work
+    #   to be reinvolved as waves continue their journey
+    
+    # can locate 
     
 pi/Tin: | # code boxen, re C.t to alter? check js, hold something?
     #s&ab = 1;

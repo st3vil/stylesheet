@@ -98,11 +98,15 @@ Bayed: | # Opper's read line into mo
     T.nose = 2;
     
 Tiot: | # n head of a perspective
-    Js&ein.bo = 'Doable';
-    Jc&tape = 'Dejo:curve:Junov';
+    if (A.1 eq A.3) {
+        Js&ein.bo = 'Doable';
+        Jc&tape = 'Dejo:curve:Junov';
+    }
     y.at.dis = 3;
-    n t=>o1=>"C.t"=>'%fs:15,hs:488,dos:Reimp,dis:2'
     y.n = 11;
+    my $t = exists ar.t ? ar.t : C.t;
+    my $dis = ",dis:2" unless ar.nodis;
+    n t=>o1=>"$t"=>'%fs:15,hs:488,dos:Reimp,ma:0.2$dis'
 Thrext: | # n head of a so
     my $k = ar.m->[0];
     my ($num,$name) = split ':', C.sc.>$k;
@@ -116,24 +120,35 @@ Thrext: | # n head of a so
 Reimp: | # W name click shortens lv to one wave
     # can fix it if bunging out
     1 && saygr "Reimpung";
-    if (my $cb = Js&Cimp) {
+    
+    if (my $s = Js&Cimp) {
         if ( us&C ->{C} ) {
             sayre "Reimp Calling $s";
-            Rw ModNs $s;
+            Rw ModNs + $s;
         }
     }
     if (my $s = Js&Simp) {
         if ( us&S ) {
             sayre "Reimp Calling $s";
-            Rw ModNs $s;
+            Rw ModNs + $s;
         }
     }
     return T.pos = '' if delete T.done;
     Jc&imping = 1;
     T.pos = 1;
-Sweeptapes: | # empties Js&M
-    sayre "Sweeping J.t tape";
-    @{Js&M} = ();
+Sweeptapes: | # empties Js&M (to the trash?)
+    sayre "Sweeping j.t tape";
+    @{js&M} = ();
+Detapes: |
+    # remove $c from j2s&M
+    $j eq j.3 && die "W t Ctrl click";
+    
+    my $v = j.2;
+    vs&M || die "above no vsM: ".G&sn,$v;
+    my $was = @{vs&M};
+    sayyl "Removing j.t from $was";
+    @{vs&M} = grep { _.t ne j.t } @{vs&M};
+    $was == @{vs&M} && die "Didn't find j.t in: ".ki vs&M;
 Noop: | # to ignore an elvising, sleep J
     T.pos = '';
 
