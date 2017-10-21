@@ -84,7 +84,33 @@ Telon: | # comp sci helpyou
     #@$M = ();
     n GoWalking=>-Gug
     
+    # stack certain shapes next to each other
+    1s&Osulation = 'FormShapes';
+    
     $ts->();
+    
+FormShapes: | # stack certain shapes next to each other
+    # 
+    my @s;
+    my @M = @$M;
+    my $l;
+    while (@M) {
+        my $r = shift @M;
+        if (ls&shape && ls&shape eq rs&shape) {
+            push @s, [$l] unless @s && $s[-1]->[-1] eq $l;
+            push @{$s[-1]}, $r;
+        }
+        $l = $r;
+    }
+    for my $s (@s) {
+        my $i = 0;
+        for my $C (@$s) {
+            next unless $i++; # first one takes up space
+            s&ab = 1;
+            s&left = 3 * $i;
+        }
+    }
+    G&give,Budge=>[formshapes=>''=>{s=>\@s}];
     
 piFeedTape: | # your J state recovery
     # Tiot shiftclick empties Js&M
@@ -155,7 +181,7 @@ pi/ghost: | # opens ghost
     push @l, $S while $S = @l < 10 && S.y.C;
     @l = map { $_, _.y.A && G&sn,_.y.A || "noyA" } @l;
     #n hisof=>-od_34=>{dl=>1,s=>[$C,C.y,$A]}
-    n history=>-od_4=>{dl=>1,s=>\@l}
+    #n history=>-od_4=>{dl=>1,s=>\@l}
     # pis exist on a C.y.C wavestring beadchaining
     #  the previum of which may have work
     #   to be reinvolved as waves continue their journey
@@ -163,16 +189,24 @@ pi/ghost: | # opens ghost
     # can locate 
     n chunks=>-codof=>{f=>C.t},qz
     my @codes = G&op,'pi:code';
-    
+    my ($c) = grep {_.t eq 'data'} @codes;
+    $c = \@codes;
     #n C.t=>-lise=>{largemult=>18},'qz'
+    # < hook some reverse function here, for f <- ways
     
-    n ways=>-od_2=>{s=>\@codes}
+    # < sleep these on o of the y.C we are
+    
+    n ways=>-ways_2=>{s=>T.op}
+    
+    #n ways=>-od_3=>{s=>$c}
+    # shape us
+    s&shape = 'tot';
 pi/ways: | # beings in lines
     T.op = $s;
-    for my $f (G&op ) {
-        my $s = fc&s;
-        my @l = split "\n", $s;
-        
+    for (G&op,'pi:code' ) {
+        my $C =
+        m _.t=>{C=>$_}=>{s=>_.t},dis
+        (s&ml,s&fs) = (1,7) if _s&pren;
     }
 pi/Tin: | # code boxen, re C.t to alter? check js, hold something?
     #s&ab = 1;
