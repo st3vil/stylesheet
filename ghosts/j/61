@@ -12,6 +12,7 @@ pi/clust: | # a look at a GG/p (or so)
     } : c&mode eq 'err' ? "$s/p{,/*/err}"
         : "$s/p{,/*}";
     c.do = 'f' if G.d;
+    
     n "s/p"=>-listle_1=>$c,'qz'
     my $dir = T.op.sc.dir;
     my $N = [ G&op,'pi:fils' ];
@@ -21,21 +22,19 @@ pi/clust: | # a look at a GG/p (or so)
     my $M = []; # one-time messages + permanent errors
     if (c&mode eq 'err') {
         @err = grep { _s&size } grep {_.t =~ /\/err$/} @$N;
-        if (@err) {
-            my @s = grep{$_} map{
-                G.d ? /^$s\/G\/Ge\/ip\/(.+)\/err$/ ? $1 : die "Nomatch: $s at $_"
-                : /p\/(\d+)\/err$/ }
-                map { _c&s } @err;
-            for (@s) {
-                1s&err_spawn.>$_ ++ && next;
-                # Wet G by ipd
-                G&elph,Elvis=>[opt=>"Gc&Down:Clustouting:the:$_,bay:$s"];
-            }
-            m errors=>32=>"Errors: @s",'hs:586,fs:7,dis'
+        for my $r (@err) {
+            my $name =
+                G.d ? rc&s =~ /^$s\/G\/Ge\/ip\/(.+)\/err$/ ? $1 : die "Nomatch: $s at $_"
+                : rc&s =~ /p\/(\d+)\/err$/ && $1;
+            defined $name || next;
+            my $morename = "$name rs&size";
+            1s&err_spawn.>$morename ++ && next;
+            # Wet G by ipd
+            G&elph,Elvis=>[opt=>"Gc&Down:Clustouting:the:$name,bay:$s"];
         }
-        else {
-            c&skip_pile = 1;
-        }
+        @err &&
+        m errors=>32=>"Errors!",'hs:586,fs:12,dis'
+        c&skip_pile = 1 if !@err;
     }    
     
     unless (c&skip_pile) {
@@ -510,7 +509,10 @@ Exer: | # find bits for the show
             s&container = 1;
         }
         else {
-            next if c&s =~ /^\Q$know\E/; # is full path
+            if (c&s =~ /^\Q$know\E/) {# is full path
+                C.t = c&s;
+                next;
+            }
             if ($l) {
                 -e "lc&s/c&s" || -l "lc&s/c&s" # may be a broken link
                     || die "($know) expected lc&s/c&s    c&s to be in lc&s!";
