@@ -311,8 +311,19 @@ pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
     # follow progress
     my $o = Jc&origin = Rw t/FindOrigin $M $t:C.t $C:D;
     return if @$M; # ^ will m if problems
-    n on=>2=>"on: ".G&sn,o.y.A ,'ma,fs:7,hs:893'
-    n as=>3=>"as: ".G&aC,$o ,'ma,fs:7'
+    
+    my @Js = @{a&origin_hJ};
+    shift @Js; # W
+    for (@Js,$o) {
+        my $c = _.y eq $_ ? _c&s : $_;
+        m on=>''=>"c.t",'ml:0.3,fs:7,hs:897'
+        m is=>''=>"-cs&pi",'ml:0.3,fs:7,hs:697'
+        #$c eq $o && 
+    }
+    y.n = 4;
+    y.u = 5;
+    
+    #n as=>7=>"as: ".G&aC,$o ,'ma,fs:7'
     
 t/Awaits: | # create the destinationa
     # AwaitDest
@@ -325,16 +336,19 @@ t/CreateOrigin: | # mark to where it came from so elvistivity can fade out
     @os < 2 && 
         n argh=>3=>"Not enough history to find $t",'fs:7,dis,hs:566';
     @os > 2 && die "Lots of history";
-    # first o'ing?
+    # first o'ing
     my $os = $os[0];
-    # last o?
+    # last o
     my $c = $os->[-1];
     my $Y = c.y.A;
     my $J = Y.1;
-    J.3 ne A.3 && die "Origin not in J.t  ". G&give,Budge=>["gal"=>''=>{s=>$C}];
+    J.3 ne A.3 && die "Origin not in J.t  "
+        . G&give,Budge=>["gal"=>''=>{s=>$C}];
+    
     my @J = Rw fe/upJs $J;
     A.3 eq shift(@J) || die  "Origin not in J.t";
     
+    a&origin_hJ = \@J;
     A.sc.>$t = $c;
     
     # goes onto C.sc.>$t
@@ -350,10 +364,11 @@ t/FindOrigin: | # latter moment, look for s&origin, usu in 3
     my @p = split ';', C.sc.>$t;
     my $j = A.3;
     js&top || die "3: j.t not ready!";
-    my $i = 1;
+    my @J = $j;
     my @fi;
     
     push @p, C.t;
+    my $i = 1;
     my $c;
     for (@p) {
         js&top || die "Lost @p    at $_ No top: ".G&aC,$j;
@@ -388,9 +403,11 @@ t/FindOrigin: | # latter moment, look for s&origin, usu in 3
         push @fi, $f;
         $j = fs&J if fs&J; # not on KC?
         push @fi, "Found ".G&sn,$j ." on ".G&aC,$f;
+        push @J, $j;
         $j || push @fi, "No j on: ".ki $f if @p > $i;
         $i++;
     }
+    a&origin_hJ = \@J;
     A.sc.>$t = $c;
     
 fe/yCtrail: | # C.y.C trail
