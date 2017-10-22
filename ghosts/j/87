@@ -36,7 +36,7 @@ EatsPi: | # add things you like to eat
 PutThingAfterSource: | # stitch into M for EatsPi
     # $e is a $c, clicked on pi
     my $c =
-    m $e
+    m e.t, {C=>$e,cv=>e.y.cv}, e.c, e.sc
     c.y.up && warn "M doesnt deyer";
     
     my $s = e.y.up || die "no eyup";
@@ -47,7 +47,6 @@ PutThingAfterSource: | # stitch into M for EatsPi
         @$M = grep { $_ ne $c } @$M;
         @$M = map { $_ eq $is[0] ? ($_,$c) : $_ } @$M;
     }
-    G&give,Budge=>[this=>''=>{s=>$c}];
 EatPi: | # hope throwing this pi ($c) into somewhere (e J.t) will do something
     sayre "Hoping J.t will like ".G&aC,$c;
     G&elph,J.t=>$c;
@@ -91,7 +90,7 @@ Telon: | # comp sci helpyou
     
     my $w = G&t,w=>"Todol";
     Js&sayin = wc&s;
-    m sayin=>-Tin
+    #m sayin=>-Tin
     
     #n lies=>-lise_1=>"$d/ip",'%qz,fs'
     #n lizm=>-filsipdrs_2=>{s=>T.op}
@@ -152,6 +151,15 @@ piFeedTape: | # your J state recovery
     
     delete _.y.cv for @$M;
     _c&pi = delete _s&pi for grep{_s&pi} @$M;
+    # pi sc become c ^
+    # unless waiting for waves of things to come up...
+    my $i = 1s&Feedbowlings++;
+    for (grep{!$i && _s&pi eq 'way'} @$M) {
+        _s&pi = delete _c&pi ;
+        delete Jc&save;
+    }
+    Jc&save || G&timer:0.1,&{ 4s&toy->({to=>[J.t]}) };
+    
     _s&mix = 1 for @$M;
     my $tw;
     @$M = grep { !$tw.>_.t ++ } @$M;
@@ -219,19 +227,93 @@ pi/ways: | # beings in lines, gets ghost backing until it settles...
         s&fs = 9 - c&depth if c&depth;
         s&pi = 'way';
     }
-pi/way: | # the being
-    # 
-    Rw Tiot;
+
+Originfo: | # mark it so elvistivity can fade out, and find where to awake...
     my @l = my $S = $C;
-    push @l, $S while $S = @l < 10 && S.y.C;
+    push @l, $S while $S = @l < 30 && S.y.C;
+    s&origin && return
+        Rw Originfind;
+    
+    # find consecutive yA=o
+    my @os; 
+    my $l;
+    for (reverse @l) {
+        my $Y = _.y.A || next;
+        if (Y.t eq 'o') {
+            push @os, [] if !@os || $os[-1]->[-1] ne $l;
+            push @{$os[-1]}, $_;
+        }
+        $l = $_;
+    }
+    @os < 2 && 
+        n argh=>3=>"Not enough history to find origin",'fs:7,dis,hs:566';
+    @os > 2 && die "Lots of history";
+    # first o'ing?
+    my $os = $os[0];
+    # last o?
+    my $c = $os->[-1];
+    my $Y = c.y.A;
+    my $j = Y.1;
+    j.3 ne J.3 && die "Origin not in J.t";
+    my @J = $j;
+    my $i = 0;
+    push @J, $j while $j = $i++ < 20 && j.2 ne j.3 && j.2;
+    s&origin = join";",map{_.t}reverse @J;
+    
+    $c
+    
+Originfind: | # look for s&origin, usu in 3
+    my @p = split ';', s&origin;
+    my $j = A.3;
+    js&top || die "3: j.t not ready!";
+    my $i = 1;
+    my @fi;
+    
+    push @p, C.t;
+    
+    for (@p) {
+        js&top || die "Lost @p    at $_ No top: ".G&aC,$j;
+        my $f = js&top.y.tw.>$_;
+        if (!$f) {
+            m "Lost @p at $_"=>-od=>{s=>[@fi,js&top,$j]}
+            return
+        }
+        @p <= $i && return $f; # last hop is c
+        
+        if (!fs&J) {
+            if ($i == 1) {
+                # assuming the top is still from thaw
+                # but Jtv points to the thing, earlier in A.3's M
+                my $jv = js&Jtv.>$_;
+                if (keys %$jv != 1) {
+                    m "Lost @p at $_, maybe Jv:"=>-od=>{s=>[$j,$jv]}
+                    return;
+                }
+                ($j) = values %$jv;
+            }
+            else {
+                m "Lost @p at $_"=>-od=>{s=>[[$f]]}
+                return
+            }
+        }
+        else {
+            undef $j;
+        }
+        #$f = f.y.C if f.y.C; # not on KC
+        push @fi, $f;
+        $j = fs&J if fs&J; # not on KC?
+        push @fi, "Found ".G&sn,$j ." on ".G&aC,$f;
+        $j || push @fi, "No j on: ".ki $f if @p > $i;
+        $i++;
+    }
+    $j
+    
+Origist: | # origin infographics, merge with above
+    my @l = my $S = $C;
+    push @l, $S while $S = @l < 30 && S.y.C;
+    #
     @l = map { $_, _.y.A && G&sn,_.y.A || "noyA" } @l;
-    #n hisof=>-od_34=>{dl=>1,s=>[$C,C.y,$A]}
     n history=>-od_4=>{dl=>1,s=>\@l}
-    # pis exist on a C.y.C wavestring beadchaining
-    #  the previum of which may have work
-    #   to be reinvolved as waves continue their journey
-    
-    
 pi/Tin: | # code boxen, re C.t to alter? check js, hold something?
     #s&ab = 1;
     #s&ri = 0;
