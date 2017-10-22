@@ -270,32 +270,60 @@ pi/way: |
     # from one origin's chunks+ into code+ bits
     
     # all remotes
-    n origin=>-origin
-    n dest=>-origin
-
     m $_ for @{1s&M||[]};
+    if (!@$M) {
+        # assume origin is to be figured, dest picked
+        # slow push if -ghost, fast if -wayin
+        m origin=>-origin
+        m dest=>-origin
+        m codify=>-codify
+    }
+
 
     #n This=>-od_4=>{dl=>2,s=>$C}
+     
 
     # pis exist on a C.y.C wavestring beadchaining
     #  the previum of which may have work
     #   to be reinvolved as waves continue their journey
-pi/origin: | # embody an upCs&origin (C.t), show up/down stream ...
-    # from its s&origin 
-    # < and s&dest !
-    my $C = upc&s;
-    my $t = C.t;
-    C.sc.>$t ||= Rw t/CreateOrigin $t;
+pi/codify: | # spread out here, pack up an push changes when elvised
+    # find the origin named origin,
+    # get chunks from origin or last codify
+    # reversing itself and pushing to origin or so...
+    $s ||= "Something";
+    n sdo=>-Tin=>{s=>$s}
+pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
+    Rw Tiot;
+    c&creative = 1 if C.t eq 'origin';
     
-    my $o = Rw t/FindOrigin;
-    @$M || # ^ will m if problems
-    m origin=>-od=>{s=>G&aC,$o }
+    my $D = 2c&s;
+    
+    if (c&creative) { # the J that upC came from
+        D.sc.>C.t ||= Rw t/CreateOrigin $M $t:C.t $C:D;
+    }
+    else { # 
+        D.sc.>C.t ||= Rw t/Awaits $M $t:C.t $C:D;
+    }
+    # failure to stops us here
+    D.sc.>C.t || delete D.sc.>C.t;
+    D.sc.>C.t || return;
+    
+    # follow progress
+    my $o = Jc&origin = Rw t/FindOrigin $M $t:C.t $C:D;
+    return if @$M; # ^ will m if problems
+    n on=>2=>"on: ".G&sn,o.y.A ,'ma,fs:7,hs:893'
+    n as=>3=>"as: ".G&aC,$o ,'ma,fs:7'
+    
+t/Awaits: | # create the destinationa
+    # AwaitDest
+    n t=>2=>"Awaits s\&".$t
+    return;
 t/CreateOrigin: | # mark to where it came from so elvistivity can fade out
     # and find where to awake on push
     my @os = Rw fe/yCtrail $group=Ao+;
     
     @os < 2 && 
-        n argh=>3=>"Not enough history to find origin",'fs:7,dis,hs:566';
+        n argh=>3=>"Not enough history to find $t",'fs:7,dis,hs:566';
     @os > 2 && die "Lots of history";
     # first o'ing?
     my $os = $os[0];
@@ -303,27 +331,30 @@ t/CreateOrigin: | # mark to where it came from so elvistivity can fade out
     my $c = $os->[-1];
     my $Y = c.y.A;
     my $J = Y.1;
-    J.3 ne A.3 && die "Origin not in J.t";
-    my @J = Rw t/upJs $J;
+    J.3 ne A.3 && die "Origin not in J.t  ". G&give,Budge=>["gal"=>''=>{s=>$C}];
+    my @J = Rw fe/upJs $J;
     A.3 eq shift(@J) || die  "Origin not in J.t";
-    A&origin = $c;
-    s&origin = join";",map{_.t}reverse @J;
     
-t/upJs: | # Js above, not-1, 2+ and 3
+    A.sc.>$t = $c;
+    
+    # goes onto C.sc.>$t
+    join";",map{_.t} @J;
+    
+fe/upJs: | # Js above, not-1, 2+ and 3
     my @J = $J;
     my $i = 0;
     push @J, $J while $J = $i++ < 20 && $J ne J.3 && J.2;
     $i >= 20 && die "Many upJs";
     reverse @J
 t/FindOrigin: | # latter moment, look for s&origin, usu in 3
-    my @p = split ';', s&origin;
+    my @p = split ';', C.sc.>$t;
     my $j = A.3;
     js&top || die "3: j.t not ready!";
     my $i = 1;
     my @fi;
     
     push @p, C.t;
-    
+    my $c;
     for (@p) {
         js&top || die "Lost @p    at $_ No top: ".G&aC,$j;
         my $f = js&top.y.tw.>$_;
@@ -331,7 +362,8 @@ t/FindOrigin: | # latter moment, look for s&origin, usu in 3
             m "Lost @p at $_"=>-od=>{s=>[@fi,js&top,$j]}
             return
         }
-        @p <= $i && return $f; # last hop is c
+        $c = $f;
+        @p <= $i && last; # last hop is C
         
         if (!fs&J) {
             if ($i == 1) {
@@ -359,7 +391,7 @@ t/FindOrigin: | # latter moment, look for s&origin, usu in 3
         $j || push @fi, "No j on: ".ki $f if @p > $i;
         $i++;
     }
-    $j
+    A.sc.>$t = $c;
     
 fe/yCtrail: | # C.y.C trail
     my @l = my $S = $C;
@@ -378,7 +410,7 @@ fe/yCtrail: | # C.y.C trail
             }
             $l = $_;
         }
-        return \@os
+        return @os
     }
     
     return @l
@@ -401,7 +433,7 @@ pi/Tin: | # code boxen, re C.t to alter? check js, hold something?
     n t=>1=>C.t,'%sha:4 9 5 698'
     
     my $h = A.3.sc;
-    $s = $h.>C.t ||= C.t;
+    #$s = $h.>C.t ||= C.t;
     
     my $sc = G&peel,'%cod:perl,dig:steve,dos:Tinput';
     #sc.width = 4;
