@@ -61,6 +61,7 @@ Telon: | # comp sci helpyou
     #1s&FishBrainDump = 1;
     Rw Impsev $and=init;
     Jc&save = 1;
+    y.res = 100;
     
     # c&pi generates s&pi which become c&pi when fed to A.3
     Rw EatsPi chunks way ghost;
@@ -290,6 +291,12 @@ pi/codify: | # spread out here, pack up an push changes when elvised
     # find the origin named origin,
     # get chunks from origin or last codify
     # reversing itself and pushing to origin or so...
+    my ($j) = Rw te/Jpin + $p=origin $J:A.2;
+    
+    my $o = jc&origin || return
+        n ohno=>-od=>["No Jc\&origin"=>$j]
+    n seek=>-od_o3=>{dl=>1,s=>$o}
+    
     $s ||= "Something";
     n sdo=>-Tin=>{s=>$s}
 pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
@@ -312,8 +319,9 @@ pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
     my $o = Jc&origin = Rw t/FindOrigin $M $t:C.t $C:D;
     return if @$M; # ^ will m if problems
     
-    my @Js = @{a&origin_hJ};
-    shift @Js; # W
+    Jc&origin_hJ = a&origin_hJ;
+    
+    my @Js = @{Jc&origin_hJ};
     for (@Js,$o) {
         my $c = _.y eq $_ ? _c&s : $_;
         m on=>''=>"c.t",'ml:0.3,fs:7,hs:897'
@@ -361,55 +369,73 @@ fe/upJs: | # Js above, not-1, 2+ and 3
     $i >= 20 && die "Many upJs";
     reverse @J
 t/FindOrigin: | # latter moment, look for s&origin, usu in 3
-    my @p = split ';', C.sc.>$t;
     my $j = A.3;
     js&top || die "3: j.t not ready!";
-    my @J = $j;
-    my @fi;
     
-    push @p, C.t;
-    my $i = 1;
-    my $c;
-    for (@p) {
-        js&top || die "Lost @p    at $_ No top: ".G&aC,$j;
-        my $f = js&top.y.tw.>$_;
-        if (!$f) {
-            m "Lost @p at $_"=>-od=>{s=>[@fi,js&top,$j]}
-            return
-        }
-        $c = $f;
-        @p <= $i && last; # last hop is C
-        
-        if (!fs&J) {
-            if ($i == 1) {
-                # assuming the top is still from thaw
-                # but Jtv points to the thing, earlier in A.3's M
-                my $jv = js&Jtv.>$_;
-                if (keys %$jv != 1) {
-                    m "Lost @p at $_, maybe Jv:"=>-od=>{s=>[$j,$jv]}
-                    return
-                }
-                ($j) = values %$jv;
-            }
-            else {
-                m "Lost @p at $_"=>-od=>{s=>[[$f]]}
-                return
-            }
-        }
-        else {
-            undef $j;
-        }
-        #$f = f.y.C if f.y.C; # not on KC
-        push @fi, $f;
-        $j = fs&J if fs&J; # not on KC?
-        push @fi, "Found ".G&sn,$j ." on ".G&aC,$f;
-        push @J, $j;
-        $j || push @fi, "No j on: ".ki $f if @p > $i;
-        $i++;
-    }
+    my $p = [split ';', C.sc.>$t ];
+    push @$p, C.t;
+    my @J = Rw te/Jpin $M $J:j $p $Clast=1;
+    my $c = pop @J;
+    
     a&origin_hJ = \@J;
     A.sc.>$t = $c;
     
+te/Jpin: | # point through Js beyond $J by t, and maybe the last C
+    my @p = ref ar.p ? @{ar.p} : split ';', ar.p;
+    my $j = $J;
+    my $i = 1;
+    my @J; # Js beyond $J
+    my $c; # the last C
+    my @fi; # debug
+    for (@p) {
+        js&top || js&Jtv || die "Lost @p    at $_ No top: ".G&aC,$j;
+        my $f; # C with s&J
+        my $J; # next J
+        if (js&top) {
+            $f = js&top.y.tw.>$_;
+        }
+        if ($f && !fs&J && $i < @p) {
+            # more to go, look in Jtv, the f was probably thawed?
+            undef $f;
+        }
+        if (!$f && js&Jtv) {
+            my $jv = js&Jtv.>$_;
+            if (keys %$jv != 1) {
+                m "Lost @p at $_, maybe Jv:"=>-od=>{s=>[$j,$jv]}
+                return
+            }
+            ($J) = values %$jv;
+        }
+        if (!$f && $J) {
+            $f = Jc&s; # holds latest mo C
+        }
+        if ($f && !$J) {
+            $J = fs&J;
+            if (!$J) {
+                if (@p > $i) {
+                    m "Lost @p at $_"=>-od=>{s=>[@fi,js&top,$j]}
+                    return
+                }
+                elsif (!ar.Clast) {
+                    die "last thing in @p was only C: ".ki $f;
+                }
+                else {
+                    # last hop can be C, no J
+                }
+            }
+        }
+        $c = $f;
+        if ($J) {
+            push @fi, "Found ".G&sn,$J ." on ".G&aC,$f;
+            push @J, $J;
+        }
+        elsif (@p > $i) {
+            die "Lost @p at $_ with no J on ".G&aC,$f ."   try Cytw not CsJstopytw?"
+        }
+        $j = $J;
+        $i++;
+    }
+    ar.Clast ? (@J,$c) : @J;
 fe/yCtrail: | # C.y.C trail
     my @l = my $S = $C;
     push @l, $S while $S = @l < 30 && S.y.C;
