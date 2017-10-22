@@ -53,6 +53,7 @@ EatPi: | # hope throwing this pi ($c) into somewhere (e J.t) will do something
     T.pos = '';
 Telon: | # comp sci helpyou
     Gc&Glan = 'Elan' if G.d;
+    y.at.miw = '60%';
     # Lst Ts and their 5ings
     Rw Tiot;
     Rw UpSetulism;
@@ -205,7 +206,7 @@ pi/ghost: | # opens ghost file via -codof, has a -ways of them
     
     
     # can locate 
-    n chunks=>-codof=>{f=>C.t},qz
+    n chunks=>-codolf=>{f=>C.t},qz
     my @codes = G&op,'pi:code';
     my ($c) = grep {_.t eq 'data'} @codes;
     $c = \@codes;
@@ -219,6 +220,39 @@ pi/ghost: | # opens ghost file via -codof, has a -ways of them
     #n ways=>-od_3=>{s=>$c}
     # shape us
     s&shape = 'tot';
+pi/codolf: | # the file of code, yaml about pin=>way
+    # TODO Glocation
+    y.n = 3;
+    y.u = 4;
+    y.res = 100;
+    
+    my $f = c&f || 'g/'.c&s;
+    n $f=>-ftimedig
+    S
+    my $code = read_file($f);
+    my $hashc = '#'.'c';
+    my $mashc = ''; #qr/|[^\n]+$hashc/;
+    my @chunks = split /\n(?=\S$mashc)/sm, $code;
+    
+    my $i = 0;
+    for my $s (@chunks) {
+        $s =~ /\S/ || next;
+        my ($tip) = my @l = split "\n",$s;
+        my $t = $1 || $2 if $tip =~ /^([\/\w]+):|$hashc.*?(\w\w+)/;
+        my ($pren,$note) = split /\b\Q$t\E\b/, $tip, 2 if $t;
+        s/^: \|//, s/^\s*//, s/^\s*$hashc\s*//, s/# // for $note;
+        
+        $t ||= $tip;
+        my $sc;
+        sc.note = $note if $note;
+        sc.pren = $pren if $pren;
+        sc.l = \@l;
+        sc.i = $i;
+        sc.pi = 'code';
+        m $t=>''=>{s=>$s},$sc
+        $i++;
+    }
+    
 pi/ways: | # beings in lines, gets ghost backing until it settles...
     T.op = $s;
     for my $C (G&op,'pi:code' ) {
@@ -227,24 +261,39 @@ pi/ways: | # beings in lines, gets ghost backing until it settles...
         s&fs = 9 - c&depth if c&depth;
         s&pi = 'way';
     }
-
-Originfo: | # mark it so elvistivity can fade out, and find where to awake...
-    my @l = my $S = $C;
-    push @l, $S while $S = @l < 30 && S.y.C;
-    s&origin && return
-        Rw Originfind;
+pi/way: |
+    # resume itself...
+    # way with a -ghost source, which wanders into the bay
+    # if -chunks sourced, gather
+    Rw Tiot;
+    # can be many chunks/divisions,
+    # from one origin's chunks+ into code+ bits
     
-    # find consecutive yA=o
-    my @os; 
-    my $l;
-    for (reverse @l) {
-        my $Y = _.y.A || next;
-        if (Y.t eq 'o') {
-            push @os, [] if !@os || $os[-1]->[-1] ne $l;
-            push @{$os[-1]}, $_;
-        }
-        $l = $_;
-    }
+    # all remotes
+    n origin=>-origin
+    n dest=>-origin
+
+    m $_ for @{1s&M||[]};
+
+    #n This=>-od_4=>{dl=>2,s=>$C}
+
+    # pis exist on a C.y.C wavestring beadchaining
+    #  the previum of which may have work
+    #   to be reinvolved as waves continue their journey
+pi/origin: | # embody an upCs&origin (C.t), show up/down stream ...
+    # from its s&origin 
+    # < and s&dest !
+    my $C = upc&s;
+    my $t = C.t;
+    C.sc.>$t ||= Rw t/CreateOrigin $t;
+    
+    my $o = Rw t/FindOrigin;
+    @$M || # ^ will m if problems
+    m origin=>-od=>{s=>G&aC,$o }
+t/CreateOrigin: | # mark to where it came from so elvistivity can fade out
+    # and find where to awake on push
+    my @os = Rw fe/yCtrail $group=Ao+;
+    
     @os < 2 && 
         n argh=>3=>"Not enough history to find origin",'fs:7,dis,hs:566';
     @os > 2 && die "Lots of history";
@@ -253,16 +302,20 @@ Originfo: | # mark it so elvistivity can fade out, and find where to awake...
     # last o?
     my $c = $os->[-1];
     my $Y = c.y.A;
-    my $j = Y.1;
-    j.3 ne J.3 && die "Origin not in J.t";
-    my @J = $j;
-    my $i = 0;
-    push @J, $j while $j = $i++ < 20 && j.2 ne j.3 && j.2;
+    my $J = Y.1;
+    J.3 ne A.3 && die "Origin not in J.t";
+    my @J = Rw t/upJs $J;
+    A.3 eq shift(@J) || die  "Origin not in J.t";
+    A&origin = $c;
     s&origin = join";",map{_.t}reverse @J;
     
-    $c
-    
-Originfind: | # look for s&origin, usu in 3
+t/upJs: | # Js above, not-1, 2+ and 3
+    my @J = $J;
+    my $i = 0;
+    push @J, $J while $J = $i++ < 20 && $J ne J.3 && J.2;
+    $i >= 20 && die "Many upJs";
+    reverse @J
+t/FindOrigin: | # latter moment, look for s&origin, usu in 3
     my @p = split ';', s&origin;
     my $j = A.3;
     js&top || die "3: j.t not ready!";
@@ -287,7 +340,7 @@ Originfind: | # look for s&origin, usu in 3
                 my $jv = js&Jtv.>$_;
                 if (keys %$jv != 1) {
                     m "Lost @p at $_, maybe Jv:"=>-od=>{s=>[$j,$jv]}
-                    return;
+                    return
                 }
                 ($j) = values %$jv;
             }
@@ -307,6 +360,28 @@ Originfind: | # look for s&origin, usu in 3
         $i++;
     }
     $j
+    
+fe/yCtrail: | # C.y.C trail
+    my @l = my $S = $C;
+    push @l, $S while $S = @l < 30 && S.y.C;
+    @l >= 30 && die "many CyC";
+    
+    if (ar.group eq 'Ao+') {
+        # find consecutive yA=o
+        my @os; 
+        my $l;
+        for (reverse @l) {
+            my $Y = _.y.A || next;
+            if (Y.t eq 'o') {
+                push @os, [] if !@os || $os[-1]->[-1] ne $l;
+                push @{$os[-1]}, $_;
+            }
+            $l = $_;
+        }
+        return \@os
+    }
+    
+    return @l
     
 Origist: | # origin infographics, merge with above
     my @l = my $S = $C;
