@@ -339,20 +339,24 @@ Lst: | # gives your $M files from ls -1ct, sleeps using your past
     };
     
     # retrieves our last save, doesn't impart/resume it
-    my $d = Rw ReadMe;
+    my $d = Rw ReadMe
+        unless 1c&imping;
+    A.2.t eq 'j' && G&give,Budge=>['decode'=>''=>{s=>[$J,$d]}];
     # osc changing atom loads contents
     local A.V = 1;
     push @$M,
-        Rw Modulim $s $d $list $form;
+        Rw Modulim + $s $d $list $form;
     
     $laC
 Modulim: | # loadup M news from an ls or so
     # stop when old news found
-    my $piit = 'fils';
+    my $piit = 'fils'; # also $piturns
     my $done;
     my $list_done;
     my $seen; # C.t
-    my $seens; # c&s
+    # fixes name sleep confuse if `ls the/dir` shows 42
+    # $s/C.t hopefully puts the/dir/42
+    my $starts = $s;
     my @l;
     my $page = 1;
     my $M = [];
@@ -409,14 +413,24 @@ Modulim: | # loadup M news from an ls or so
         $con = [] if s&container;
         
         s&pi = $piit if $piit;
-        my $c = d.y.tw.>C.t;
+        my $moret = "$starts/C.t";
+        my $c = d.y.tw.>C.t || d.y.tw.>$moret;
         
-        my $cha = ki(c.sc) ne ki C.sc;
-        
+        my $cha = !$c || ki(c.sc) ne ki C.sc;
+        if ($cha && $c) {
+            # may be osc growth in -lise
+            # should be resumable, eg adding s&large
+            my $cs = {%{c.sc}};
+            my $sc = {%{C.sc}};
+            delete cs.pi;
+            delete sc.pi;
+            delete $cs.>$_ for grep {!exists $sc.>$_ } keys %$cs;
+            $cha = ki($sc) ne ki $cs;
+        }
         if ($cha) {
             $done = 0;
             $con && push @$con, $C;
-            saybl "Cha: C.t:  ".ki(c.sc)." ne ".ki C.sc;
+            saybl "Cha: C.t:  c.t == ".ki(c.sc)." ne ".ki C.sc;
         }
         elsif (!$con || !@$con) {
             sayyl "Done upon C.t";
@@ -426,7 +440,7 @@ Modulim: | # loadup M news from an ls or so
         push @$M, $C;
     }
     for my $C (@{ds&z}) {
-        next if $piit && $piit ne C.sc.pi;
+        next if $piit && $piit ne s&pi || ar.piturns && ar.piturns ne s&pi ;
         next if $seen.>C.t;
         next if !-e c&s;
         saybl "Cached C.t";
