@@ -107,6 +107,8 @@ Telon: | # comp sci helpyou
     #n lies=>-lise_1=>"$d/ip",'%qz,fs'
     #n lizm=>-filsipdrs_2=>{s=>T.op}
     
+    c&subM && 
+    n subM=>-od_912=>{s=>c&subM}
     n M=>-od_92=>{s=>$M}
     #@$M = ();
     n GoWalking=>-Gug
@@ -289,16 +291,22 @@ pi/way: | # -way as suggested
     
     Jc&save = 1;
     Js&top ||= Rw ReadMe;
+    delete Js&M; # keeps reading from Js&top
     Rw piFeedTape;
     
     if (!@$M) {
+        n init=>o3=>"Gitinit"
         # assume origin is to be figured, dest picked
         # slow push if -ghost, fast if -wayin
         m origin=>-origin=>{s=>$C}
         m dest=>-origin
         m codify=>-codify
     }
+    else {
+        n waysuming=>-od_04=>{s=>$M}
+    }
     my ($t,$o) = grep{_c&pi eq 'codify'}@$M;
+    $t || die "Nocodify";
     $o && die "toomany -codify";
     
     for (@$M) {
@@ -313,7 +321,7 @@ pi/way: | # -way as suggested
             }
             _c&head = $t;
         }
-        
+        _s&mix = 1;
     }
     # n these ^ so they know about each other...
     # origin should give codify pull request when it wakes up
@@ -323,44 +331,70 @@ pi/way: | # -way as suggested
     # delete as cutting content out
     
     #n This=>-od_4=>{dl=>2,s=>$C}
+    n "M-way"=>-od_92=>{s=>$M}
+    
+    3Cc&subM = $M;
     
 pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
     Rw Tiot;
     # we have an object to refer to, $s
-    
-    
-    if (ref $s) {
-        # the -way C's yCing's earliest J upwards
-        s&location = Rw t/CreateOrigin $C:s;
-    }
-    elsif ($s) {
-        # C.t name? suggests whatnow
-        s&location = Rw t/Awaits;
-    }
-    
-    s&location || return;
+    c&head || die "Nohead";
+    s&location ||= do {
+        if (ref $s) {
+            # the -way C's yCing's earliest J upwards
+            # < refind any time if given s=$C?
+            Rw t/CreateOrigin $C:s;
+        }
+        elsif ($s) {
+            # C.t name? suggests whatnow
+            Rw t/Awaits;
+        }
+    };
+    s&location || return sayre "No location C.t";
+    n location=>1=>"l:s&location",'hs:848'
     
     # read current origin of -way C as a path
     my $o = Jc&head = Rw t/FindOrigin;
     return if @$M; # ^ will m if problems
+    $o || die "no o";
     
+    # is over there
     s&remote = os&dige;
     
-    if (c&pull) { # send object to unpack to -codify
-        %{c&pull} = %$o;
+    # pull here
+    sayyl "C.t pull: ".ki c&pull;
+    if (my $p = c&pull) {
+        # sends object to -codify
+        pc&s = $o;
+        # local becomes as remote dige
         s&local = os&dige;
+        # head becomes as the head dige is
+        #   not carried from o because of encoding to branch
+        #     es' native dige-source types
+        #     so -origin sits on boundaries of dige-integrity
+        #     given a tree of source pouring out
+        p.sc = C.sc;
+        n done=>211=>'pulling','fs:6,hs:587'
     }
-    elsif (c&push) { # will be elvised around us
-    }
-    # < options to push to remote thing, pieces of running code?
-    
-    # should be set together as we push
+    # should be set together as we pull/push
     if (s&local ne s&remote) {
         n needs=>21=>'pull'
     }
     
-    # this side of the two-step linkage vs head (needing push)
-    if (s&local ne hs&head) {
+    # push there
+    if (c&push) {
+        # elvised, wakes up done
+        # our mos unravel thing
+    }
+    
+    # the -codify C, the working directory, is a head
+    my $h = c&head; 
+    # < options to push to remote thing, pieces of running code?
+    
+    # this -origin's head vs -codify's head
+    # - unless initing
+    # - it would have got it from here
+    if (hs&dige && s&head ne hs&dige) {
         n needs=>211=>'push'
     }
     
@@ -379,10 +413,17 @@ pi/codify: | # spread out here, pack up an push changes when elvised
     #os&dige || die "No dige on ".ki$o;
     
     Jc&save = 1;
-    Js&top ||= Rw ReadMe;
+    #Js&top ||= Rw ReadMe;
+    delete Js&M; # keeps reading from Js&top
     Rw piFeedTape;
+    if (@$M) {
+        n codifysuming=>-od_04=>{s=>$M}
+    }
     
-    if (my $s = c&pull) { # a -code or so
+    if (my $p = c&pull) { # a -code or so
+        my $s = pc&s;
+        $s || return
+            n nopull=>-od_1=>{s=>$p}
         my $m = $M;
         my $N = [grep{_s&mix}@$M]; # working directory
         my $M = []; # stuff to check out
@@ -393,11 +434,15 @@ pi/codify: | # spread out here, pack up an push changes when elvised
         n the_hop=>-od_94=>[$N,$M];
         # fm channel
         n pulled=>1=>"pulled s.t ss&dige"
-        s&parent = ss&dige;
         
-        # codify in reverse
+        # codify in reverse (not all of the way?)
         my $o = Rw Mun/codify + $M;
-        os&dige eq ss&dige || die "-codify doesn't roundtrip";
+        # could try and go all the way and:
+        #os&dige eq ss&dige || die "-codify doesn't roundtrip";
+        # our -origin's s&head
+        s&dige = os&dige;
+        ps&head = os&dige;
+        
         # Mun/condify, see that s&child starts at s&parent
         #   kind of like G will put that ^ jitter in a Down waiter
         
@@ -407,8 +452,9 @@ pi/codify: | # spread out here, pack up an push changes when elvised
         push @$m, @$M;
     }
     
+    _s&mix = 1 for @$M;
     
-    n M=>-od_92=>{s=>$M}
+    n "M-codify"=>-od_92=>{s=>$M}
 Min/codify: | # -way's -codify puts each chunk in a -codetta
     my $o = $s;
     #   add option to not, edit whole yaml chunk
@@ -439,7 +485,10 @@ Min/codify: | # -way's -codify puts each chunk in a -codetta
         
         if ($t) {
             my ($pren,$note) = split /\b\Q$t\E\b/, $l, 2;
-            s/^: \|//,s/^\s*//, s/^\s*$hashc\s*//, s/# // for $note;
+            s/^: \|//
+            # keep leading whitespace? indent the hashc or the comment after...
+            ,s/^\s*//, s/^\s*$hashc\s*//,
+            s/# // for $note;
             $indnext = 1 if !$n; # everything must be in that far
             $n = 
             m $t=>-codetta=>{}
@@ -465,7 +514,7 @@ Min/codify: | # -way's -codify puts each chunk in a -codetta
     
 Mun/codify: | # REVERSE -way's -codify makes from -codettas into a -code
     my $hashc = '#'.'c';
-    my $M = grep{_c&pi eq 'codetta'} @$M;
+    my $M = [grep{_c&pi eq 'codetta'} @$M];
     my ($f) = @$M;
     my $o;
     o.t = f.t;
@@ -482,7 +531,9 @@ Mun/codify: | # REVERSE -way's -codify makes from -codettas into a -code
         } @$M
     );
     oc&s = join "\n", @l;
-    os&dige = slm(12, dig oc&s); # chunk of way, sans indent dige
+    # makes it probably like the -code dige standard
+    # should be just a chunk of way, sans t, indent, com, etc?
+    os&dige = slm(12, dig oc&s);
     $o
     
 pi/pointer: | # describes s=[C] with t and s&pi
@@ -498,12 +549,14 @@ t/Awaits: | # create the destinationa
     # AwaitDest
     n t=>2=>"A.2.t Awaits remote"
     return;
-t/CreateOrigin: | # mark to where it came from so elvistivity can fade out
+t/CreateOrigin: | # where C came from so elvistivity can fade out
     # and find where to awake on push
     my @os = Rw fe/yCtrail $group=Ao+;
     
-    @os < 2 &&
+    if (@os < 2) {
         n argh=>3=>"Not enough history to find A.2.t's origin",'fs:7,dis,hs:566';
+        Rw Origist;
+    }
     @os > 2 && die "Lots of history";
     # first o'ing
     my $os = $os[0];
@@ -521,24 +574,24 @@ t/CreateOrigin: | # mark to where it came from so elvistivity can fade out
     
     join";",map{_.t} @J;
     
+t/FindOrigin: | # later moment, look for our -origin's location, usu in 3
+    my $j = A.3;
+    js&top || die "3: j.t not ready!";
+    
+    my $p = [split ';', s&location ];
+    push @$p, A.2.t; # < what our thing is called over there?
+    my @J = Rw te/Jpin $M $J:j $p $Clast=1;
+    my $c = pop @J;
+    
+    a&origin_hJ = \@J;
+    $c
+    
 fe/upJs: | # Js above, not-1, 2+ and 3
     my @J = $J;
     my $i = 0;
     push @J, $J while $J = $i++ < 20 && $J ne J.3 && J.2;
     $i >= 20 && die "Many upJs";
     reverse @J
-t/FindOrigin: | # latter moment, look for s&origin, usu in 3
-    my $j = A.3;
-    js&top || die "3: j.t not ready!";
-    
-    my $p = [split ';', C.sc.>$t ];
-    push @$p, C.t;
-    my @J = Rw te/Jpin $M $J:j $p $Clast=1;
-    my $c = pop @J;
-    
-    a&origin_hJ = \@J;
-    A.sc.>$t = $c;
-    
 te/Jpin: | # point through Js beyond $J by t, and maybe the last C
     my @p = ref ar.p ? @{ar.p} : split ';', ar.p;
     my $j = $J;
