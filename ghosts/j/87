@@ -294,19 +294,26 @@ pi/way: | # -way as suggested
     if (!@$M) {
         # assume origin is to be figured, dest picked
         # slow push if -ghost, fast if -wayin
-        m origin=>-origin
+        m origin=>-origin=>{s=>$C}
         m dest=>-origin
         m codify=>-codify
     }
     my ($t,$o) = grep{_c&pi eq 'codify'}@$M;
+    $o && die "toomany -codify";
     
     for (@$M) {
-        my $vac = !tc&pull && !ts&dige; # starting conditions
         if (_c&pi eq 'origin') {
-            if (_s&pull || $vac) {
-                
+            # if here is empty, may be just waking up, with stuff that should still dige
+            my $vac = !tc&pull && !ts&dige;
+            # auto pull first -origin
+            if (_c&pull || $vac) {
+                # plant a ref to C out, -origins mo first
+                _c&pull = tc&pull = {};
+                saygr "O pull _.t on A.1.t";
             }
+            _c&head = $t;
         }
+        
     }
     # n these ^ so they know about each other...
     # origin should give codify pull request when it wakes up
@@ -316,6 +323,54 @@ pi/way: | # -way as suggested
     # delete as cutting content out
     
     #n This=>-od_4=>{dl=>2,s=>$C}
+    
+pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
+    Rw Tiot;
+    # we have an object to refer to, $s
+    
+    
+    if (ref $s) {
+        # the -way C's yCing's earliest J upwards
+        s&location = Rw t/CreateOrigin $C:s;
+    }
+    elsif ($s) {
+        # C.t name? suggests whatnow
+        s&location = Rw t/Awaits;
+    }
+    
+    s&location || return;
+    
+    # read current origin of -way C as a path
+    my $o = Jc&head = Rw t/FindOrigin;
+    return if @$M; # ^ will m if problems
+    
+    s&remote = os&dige;
+    
+    if (c&pull) { # send object to unpack to -codify
+        %{c&pull} = %$o;
+        s&local = os&dige;
+    }
+    elsif (c&push) { # will be elvised around us
+    }
+    # < options to push to remote thing, pieces of running code?
+    
+    # should be set together as we push
+    if (s&local ne s&remote) {
+        n needs=>21=>'pull'
+    }
+    
+    # this side of the two-step linkage vs head (needing push)
+    if (s&local ne hs&head) {
+        n needs=>211=>'push'
+    }
+    
+    Jc&origin_hJ = a&origin_hJ if a&origin_hJ;
+    my @Js = @{Jc&origin_hJ};
+    Rw pi/pointer + $s:_ for [@Js,$o];
+    
+    y.n = 4;
+    y.u = 5;
+    
     
 pi/codify: | # spread out here, pack up an push changes when elvised
     # find the origin named origin,
@@ -352,19 +407,6 @@ pi/codify: | # spread out here, pack up an push changes when elvised
         push @$m, @$M;
     }
     
-    my @M = @$M;
-    for (@M) {
-        if (_c&pi eq 'pull') {
-            my ($j) = Rw te/Jpin + $p=C.t $J:A.2;
-            my $o = jc&origin || return
-                n ohno=>-od=>["No Jc\&origin"=>$j]
-            
-            # also puts y.at.origin_dige
-            Rw Min/codify + $s:o;
-        }
-    }
-    
-    #slm(12, dig $s);
     
     n M=>-od_92=>{s=>$M}
 Min/codify: | # -way's -codify puts each chunk in a -codetta
@@ -443,39 +485,6 @@ Mun/codify: | # REVERSE -way's -codify makes from -codettas into a -code
     os&dige = slm(12, dig oc&s); # chunk of way, sans indent dige
     $o
     
-pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
-    Rw Tiot;
-    c&creative = 1 if C.t eq 'origin';
-    
-    my $D = 2c&s;
-    
-    if (c&creative) { # the J that upC came from
-        D.sc.>C.t ||= Rw t/CreateOrigin $M $t:C.t $C:D;
-    }
-    else { # 
-        D.sc.>C.t ||= Rw t/Awaits $M $t:C.t $C:D;
-    }
-    # failure to stops us here
-    D.sc.>C.t || delete D.sc.>C.t;
-    D.sc.>C.t || return;
-    
-    # follow progress
-    my $o = Jc&origin = Rw t/FindOrigin $M $t:C.t $C:D;
-    return if @$M; # ^ will m if problems
-    
-    Jc&origin_hJ = a&origin_hJ;
-    
-    my @Js = @{Jc&origin_hJ};
-    
-    Rw pi/pointer + $s:_ for [@Js,$o];
-    
-    #y.at.origin_dige = ds&dige;
-    
-    y.n = 4;
-    y.u = 5;
-    
-    #n as=>7=>"as: ".G&aC,$o ,'ma,fs:7'
-    
 pi/pointer: | # describes s=[C] with t and s&pi
     for (@$s) {
         #G&isC,$_ || die "NotC: ".ki$_;
@@ -487,14 +496,14 @@ pi/pointer: | # describes s=[C] with t and s&pi
     
 t/Awaits: | # create the destinationa
     # AwaitDest
-    n t=>2=>"Awaits s\&".$t
+    n t=>2=>"A.2.t Awaits remote"
     return;
 t/CreateOrigin: | # mark to where it came from so elvistivity can fade out
     # and find where to awake on push
     my @os = Rw fe/yCtrail $group=Ao+;
     
-    @os < 2 && 
-        n argh=>3=>"Not enough history to find $t",'fs:7,dis,hs:566';
+    @os < 2 &&
+        n argh=>3=>"Not enough history to find A.2.t's origin",'fs:7,dis,hs:566';
     @os > 2 && die "Lots of history";
     # first o'ing
     my $os = $os[0];
@@ -509,9 +518,7 @@ t/CreateOrigin: | # mark to where it came from so elvistivity can fade out
     A.3 eq shift(@J) || die  "Origin not in J.t";
     
     a&origin_hJ = \@J;
-    A.sc.>$t = $c;
     
-    # goes onto C.sc.>$t
     join";",map{_.t} @J;
     
 fe/upJs: | # Js above, not-1, 2+ and 3
