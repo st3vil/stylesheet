@@ -63,7 +63,7 @@ EatPi: | # hope throwing this pi ($c) into somewhere (e J.t) will do something
     T.pos = '';
 Telon: | # comp sci helpyou
     Gc&Glan = 'Elan' if G.d;
-    y.at.miw = '60%';
+    y.at.miw = '40%';
     # Lst Ts and their 5ings
     Rw Tiot;
     Rw UpSetulism;
@@ -114,7 +114,8 @@ Telon: | # comp sci helpyou
     # stack certain shapes next to each other
     #1s&Osulation = 'FormShapes';
     for my $C (@$M) {
-        s&float = 'left' if c&pi eq 'ghost' || c&pi eq 'way';
+        s&float = 'left' if c&pi eq 'ghost';
+        s&float = 'right' if c&pi eq 'way';
     }
     
     $ts->();
@@ -142,7 +143,7 @@ FormShapes: | # stack certain shapes next to each other
     }
     G&give,Budge=>[formshapes=>''=>{s=>\@s}];
     
-piFeedTape: | # your J state recovery
+piFeedTape: | # your J state recovery - Js&M ||= Js&top for s&mix, s->cpi, dedupenames
     # Tiot shiftclick empties Js&M
     Js&Simp = 'Sweeptapes';
     Js&Cimp = 'Detapes';
@@ -163,6 +164,7 @@ piFeedTape: | # your J state recovery
     
     delete _.y.cv for @$M;
     _c&pi = delete _s&pi for grep{_s&pi} @$M;
+    if (0) {
     # pi sc become c ^
     # unless waiting for waves of things to come up...
     my $i = 1s&Feedbowlings++;
@@ -171,6 +173,7 @@ piFeedTape: | # your J state recovery
         delete Jc&save;
     }
     Jc&save || G&timer:0.1,&{ 4s&toy->({to=>[J.t]}) };
+    }
     
     _s&mix = 1 for @$M;
     my $tw;
@@ -264,6 +267,7 @@ pi/codolf: | # the file of code, yaml about pin=>way
         sc.l = \@l;
         sc.i = $i;
         sc.pi = 'code';
+        sc.dige = slm(12, dig $s);
         m $t=>''=>{s=>$s},$sc
         $i++;
     }
@@ -276,16 +280,17 @@ pi/ways: | # beings in lines, gets ghost backing until it settles...
         s&fs = 9 - c&depth if c&depth;
         s&pi = 'way';
     }
-pi/way: |
+pi/way: | # -way as suggested
     # resume itself...
     # way with a -ghost source, which wanders into the bay
     # if -chunks sourced, gather
+    # remember where upto
     Rw Tiot;
-    # can be many chunks/divisions,
-    # from one origin's chunks+ into code+ bits
     
-    # all remotes
-    m $_ for @{1s&M||[]};
+    Jc&save = 1;
+    Js&top ||= Rw ReadMe;
+    Rw piFeedTape;
+    
     if (!@$M) {
         # assume origin is to be figured, dest picked
         # slow push if -ghost, fast if -wayin
@@ -293,27 +298,151 @@ pi/way: |
         m dest=>-origin
         m codify=>-codify
     }
-
-
+    my ($t,$o) = grep{_c&pi eq 'codify'}@$M;
+    
+    for (@$M) {
+        my $vac = !tc&pull && !ts&dige; # starting conditions
+        if (_c&pi eq 'origin') {
+            if (_s&pull || $vac) {
+                
+            }
+        }
+    }
+    # n these ^ so they know about each other...
+    # origin should give codify pull request when it wakes up
+    # codify should save to dest when wired up
+    #  auto wire up something all the time
+    
+    # delete as cutting content out
+    
     #n This=>-od_4=>{dl=>2,s=>$C}
-     
-
-    # pis exist on a C.y.C wavestring beadchaining
-    #  the previum of which may have work
-    #   to be reinvolved as waves continue their journey
+    
 pi/codify: | # spread out here, pack up an push changes when elvised
     # find the origin named origin,
     # get chunks from origin or last codify
     # reversing itself and pushing to origin or so...
-    my ($j) = Rw te/Jpin + $p=origin $J:A.2;
+    #os&dige || die "No dige on ".ki$o;
     
-    my $o = jc&origin || return
-        n ohno=>-od=>["No Jc\&origin"=>$j]
+    Jc&save = 1;
+    Js&top ||= Rw ReadMe;
+    Rw piFeedTape;
     
-    n seek=>-od_o3=>{dl=>1,s=>$o}
+    if (my $s = c&pull) { # a -code or so
+        my $m = $M;
+        my $N = [grep{_s&mix}@$M]; # working directory
+        my $M = []; # stuff to check out
+        
+        Rw Min/codify + $M $s;
+        
+        @$N &&
+        n the_hop=>-od_94=>[$N,$M];
+        # fm channel
+        n pulled=>1=>"pulled s.t ss&dige"
+        s&parent = ss&dige;
+        
+        # codify in reverse
+        my $o = Rw Mun/codify + $M;
+        os&dige eq ss&dige || die "-codify doesn't roundtrip";
+        # Mun/condify, see that s&child starts at s&parent
+        #   kind of like G will put that ^ jitter in a Down waiter
+        
+        my $tw;
+        $tw.>$_ = 1 for @$N;
+        @$m = grep {!$tw.>$_ } @$m;
+        push @$m, @$M;
+    }
     
-    $s ||= "Something";
-    n sdo=>-Tin=>{s=>$s}
+    my @M = @$M;
+    for (@M) {
+        if (_c&pi eq 'pull') {
+            my ($j) = Rw te/Jpin + $p=C.t $J:A.2;
+            my $o = jc&origin || return
+                n ohno=>-od=>["No Jc\&origin"=>$j]
+            
+            # also puts y.at.origin_dige
+            Rw Min/codify + $s:o;
+        }
+    }
+    
+    #slm(12, dig $s);
+    
+    n M=>-od_92=>{s=>$M}
+Min/codify: | # -way's -codify puts each chunk in a -codetta
+    my $o = $s;
+    #   add option to not, edit whole yaml chunk
+    # < centralise code splits with underneaths of Bablar?
+    my $hashc = '#'.'c';
+    my @l = os&pi eq 'code' && os&l ? @{os&l} : split "\n",os&s;
+    # group onto $M
+    my $n; # last atom
+    my $indnext; # whether to next line defines:
+    my $indchop; # chop indent whitespace of -code form
+    os&pi ne 'code' && die "to codify from -os&pi";
+    
+    my $i = 0;
+    for my $l (@l) {
+        $i++;
+        # is it a heading
+        my $t = $1 || $2 if $l =~ /^([\/\w]+):|$hashc.*?(\w\w+)/;
+        $t && $1 && $n && die "more ways after: ".ki($n)."\n line $i: $l";
+        $t && $1 && os&pi ne 'code' && die "way title from -os&pi: ".ki$o;
+        
+        if ($indnext) {
+            $indchop = $1 if $l =~ /^(\s+)/ || die "no indent after ".ki ns&l;
+            $indnext = 0;
+        }
+        if (defined $indchop) {
+            $l =~ s/^$indchop// || die "breaks indent line $i: $l";
+        }
+        
+        if ($t) {
+            my ($pren,$note) = split /\b\Q$t\E\b/, $l, 2;
+            s/^: \|//,s/^\s*//, s/^\s*$hashc\s*//, s/# // for $note;
+            $indnext = 1 if !$n; # everything must be in that far
+            $n = 
+            m $t=>-codetta=>{}
+            ns&note = $note if length $note; # other notes e
+            ns&prenote = $pren if length $pren; # never?
+            # title is outside the babble, in named bubble code (yaml)
+            next;
+        }
+        $n || die "No title line $i: $l";
+        
+        push @{ns&l||=[]}, $l;
+    }
+    
+    for (@$M) {
+        _c&s = join "\n", @{_s&l};
+        _s&dige = slm(12, dig _c&s); # chunk of way, sans indent dige
+        _s&mix = 1;
+        
+        _s&fs = 6;
+        # start squishgame?
+    }
+    
+    
+Mun/codify: | # REVERSE -way's -codify makes from -codettas into a -code
+    my $hashc = '#'.'c';
+    my $M = grep{_c&pi eq 'codetta'} @$M;
+    my ($f) = @$M;
+    my $o;
+    o.t = f.t;
+    my @l = (
+        "f.t: |".(fs&note && " # fs&note"),
+        map {"    ".$_} # 4 ind
+        map { split "\n", $_ }
+        map {
+            my @l;
+            if (_s&note || _s&pren && $_ ne $f) {
+                @l = (_s&pren||"")."$hashc".(_s&note&&" # _s&note")
+            }
+            (@l, _c&s)
+        } @$M
+    );
+    oc&s = join "\n", @l;
+    os&dige = slm(12, dig oc&s); # chunk of way, sans indent dige
+    $o
+    
 pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
     Rw Tiot;
     c&creative = 1 if C.t eq 'origin';
@@ -337,16 +466,24 @@ pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
     Jc&origin_hJ = a&origin_hJ;
     
     my @Js = @{Jc&origin_hJ};
-    for (@Js,$o) {
+    
+    Rw pi/pointer + $s:_ for [@Js,$o];
+    
+    #y.at.origin_dige = ds&dige;
+    
+    y.n = 4;
+    y.u = 5;
+    
+    #n as=>7=>"as: ".G&aC,$o ,'ma,fs:7'
+    
+pi/pointer: | # describes s=[C] with t and s&pi
+    for (@$s) {
+        #G&isC,$_ || die "NotC: ".ki$_;
         my $c = _.y eq $_ ? _c&s : $_;
         m on=>''=>"c.t",'ml:0.3,fs:7,hs:897'
         m is=>''=>"-cs&pi",'ml:0.3,fs:7,hs:697'
         #$c eq $o && 
     }
-    y.n = 4;
-    y.u = 5;
-    
-    #n as=>7=>"as: ".G&aC,$o ,'ma,fs:7'
     
 t/Awaits: | # create the destinationa
     # AwaitDest
@@ -479,7 +616,9 @@ Origist: | # origin infographics, merge with above
     #
     @l = map { $_, _.y.A && G&sn,_.y.A || "noyA" } @l;
     n history=>-od_4=>{dl=>1,s=>\@l}
-pi/Tin: | # code boxen, re C.t to alter? check js, hold something?
+pi/Tin: |
+    Rw pi/codetta;
+pi/codetta: | # code boxen, re C.t to alter? check js, hold something?
     #s&ab = 1;
     #s&ri = 0;
     #s&zi = -30;
