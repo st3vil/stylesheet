@@ -341,7 +341,6 @@ Lst: | # gives your $M files from ls -1ct, sleeps using your past
     # retrieves our last save, doesn't impart/resume it
     my $d = Rw ReadMe
         unless 1c&imping;
-    A.2.t eq 'j' && G&give,Budge=>['decode'=>''=>{s=>[$J,$d]}];
     # osc changing atom loads contents
     local A.V = 1;
     push @$M,
@@ -440,9 +439,17 @@ Modulim: | # loadup M news from an ls or so
         push @$M, $C;
     }
     for my $C (@{ds&z}) {
-        next if $piit && $piit ne s&pi || ar.piturns && ar.piturns ne s&pi ;
+        # wind back pi from what it turns
+        next unless !$piit || $piit eq s&pi || !ar.piturns || 
+            ar.piturns eq s&pi && do {
+                s&pi = $piit;
+                c&s = C.t; # huh
+            };
         next if $seen.>C.t;
-        next if !-e c&s;
+        if (!-e C.t) {
+            sayre "C.t vanishes cs: c&s";
+            next;
+        }
         saybl "Cached C.t";
         push @$M, $C;
     }

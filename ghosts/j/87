@@ -19,10 +19,16 @@ Impsev: | # restart lv when wil > 7
     if (ar.and eq 'init') {
         # normal-ish web state starting new log, eg Telon
         # knows its last 1, restarts 7ing
-        1c&imping = 1 unless 1s&lastmo
+        unless (1s&lastmo) {
+            sayre "A.1.t's init imping";
+            1c&imping = 1 
+        }
     }
     if (my $s = 1s&s) {
-        1c&imping = 1 if ss&wil > 7
+        if (ss&wil > 7) {
+            sayre "A.1.t's wil=ss&wil imping";
+            1c&imping = 1
+        }
     }
     A.mo.sc.lastmo = 1s&lastmo;
     1s&lastmo = A.mo;
@@ -41,7 +47,11 @@ PutThingAfterSource: | # stitch into M for EatsPi
     
     my $s = e.y.up || die "no eyup";
     $s = ss&J || die "no J";
-    $s = s.2 until s.2 eq s.3;
+    my $i = 1;
+    my @S = $s;
+    push @S, $s = s.2 until $i++ > 20 || $s eq s.3;
+    $i > 20 && die "2 follow Swierdness: ".ki \@S;
+    
     my @is = grep { _.t eq s.1.t } @$M;
     if (@is == 1) {
         @$M = grep { $_ ne $c } @$M;
@@ -178,7 +188,7 @@ pi/clonge: | # ambiento numbery ghostlisting
     
     Rw Tiot + $t:f $nodis=1;
     1c&imping &&
-        n imping=>11=>"IMPING"
+        n imping=>91=>"IMPING"
     
     n lies=>-lise_1=>$f,'%qz,fs'
     
