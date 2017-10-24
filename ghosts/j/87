@@ -22,6 +22,10 @@ Todol: |
       working directory (a -way)
         which all get pushed
       reverse pi to some place, for head to w
+
+    and build wormholes
+    should remember exactly where we are
+    
 Telon: | # comp sci helpyou
     Gc&Glan = 'Elan' if G.d;
     y.at.miw = '40%';
@@ -309,15 +313,15 @@ pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
 GitsAct: | # do what cc&s says
     # FactorEase, with e...
     # jc&s is somewhere from $o, from hC, from tv
-    my $s = 'JC: -? -origin$';
-    my ($t,$o) = Rw fe/hCgrab $s;
+    my $s = '-? -origin$';
+    my ($t,$o) = Rw fe/JC_hC $s;
     $o || return;
     
     my $do = cc&s;
     if ($do eq 'pull') {
         # will go back into -way
-        #G&give:Budge=>['apull'=>''=>{s=>[[$o,jc&s.y.OC ]]}];
         oc&pull = 'clicked';
+        G&give:Budge=>['apull'=>''=>{s=>[[$t,$o ]]}];
     }
     elsif ($do eq 'push') {
     
@@ -325,21 +329,52 @@ GitsAct: | # do what cc&s says
     else {
         G&give:Budge=>['does what?'=>''=>{s=>$c}];
     }
-fe/hCgrab: |
-    if ($s eq 'JC: -? -origin$') {
-        my @JCs = grep { _s&J && _.y.cv != 0.9 } e&_hC;
-        my ($t,$o) = @JCs[-2,-1];
-        # -?
-        ts&pi || return
-            G&give:Budge=>['Jup2 should be pi'=>''=>{s=>e&hC }];
-        # -origin
-        os&pi eq 'origin' || return
-            G&give:Budge=>['Jup should be -origin'=>''=>{s=>e&hC }];
-        return ($t,$o);
-    }
-    else {
-        die "Factor other: $s";
-    }
+fe/JC_hC: |
+    # JC_hC:
+    my @JCs = grep { _s&J && _.y.cv != 0.9 } e&_hC;
+    
+    return @JCs unless ar.s;
+    
+    # scheming like "-? -origin$"
+    # < slide anywhere in the hC it likes,
+    #   look in Js for housed lingo
+    my $s = ar.s;
+    
+    my $fail = 0;
+    my $prob = &sC{
+        G&give:Budge=>[$s=>''=>{s=>[on=>$C,amongst=>e&hC ] }];
+        $fail++;
+        return
+    };
+        my $rev = $s =~ s/\$$//;
+        my @s = split ' ', $s;
+        @s = reverse @s if $rev;
+        my @l = @JCs;
+        my @r;
+        my $name = "Jup";
+        my $i;
+        for my $s (@s) {
+            my $C = $rev ? pop @l : shift @l;
+            $C || die "out of bits for $_";
+            if ($s =~ /^-(\S+)$/) {
+                if ($1 eq '?') {
+                    s&pi || $prob->("Jup$i should be pi",$C)
+                }
+                else {
+                    s&pi eq $1 || $prob->("Jup$i should be pi=$1",$C)
+                }
+            }
+            else {
+                die "faes $s";
+            }
+            push @r, $C;
+            $i || $i++;
+            $i++;
+            return if $fail;
+        }
+        
+        @r = reverse @r if $rev;
+        return @r;
 pi/codify: | # spread out here, pack up an push changes when elvised
     # get chunks from origin or last codify
     # reversing itself and pushing to origin or so...
@@ -510,8 +545,8 @@ Tinput: | # handly talky box
     # should be of autocomplete, lost-focus and escape
     
     my $s = us&code || die "Nocode to tinput";
-    G&give,Budge=>['Tinput'=>''=>{s=>e&hJ}];
-    
+    G&give:Budge=>['Tinput'=>''=>{dl=>2,s=>e&hC }];
+    return;
     1 && saybl "tinput: ".G&es , " (J.t's j.t) says: $s";
     J.3 eq $J || die "J not J3: ".G&sn,$J;
     
