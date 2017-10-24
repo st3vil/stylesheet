@@ -117,7 +117,7 @@ Telon: | # comp sci helpyou
     #1s&Osulation = 'FormShapes';
     for my $C (@$M) {
         s&float = 'left' if c&pi eq 'ghost';
-        s&float = 'right' if c&pi eq 'way';
+        s&float = 'left' if c&pi eq 'way';
     }
     
     $ts->();
@@ -299,12 +299,12 @@ pi/way: | # -way as suggested
         # assume origin is to be figured from our C's yCource, dest picked
         # < slow push if to -ghost, fast if -wayin
         # 
-        m origin=>-origin=>{s=>$C}
+        m origin=>-origin=>{upstream=>$C}
         m dest=>-origin
         m codify=>-codify
     }
     else {
-        n waysuming=>-od_04=>{s=>$M}
+        #n waysuming=>-od_04=>{s=>$M}
     }
     my ($t,$o) = grep{_c&pi eq 'codify'}@$M;
     $t || die "Nocodify";
@@ -332,27 +332,36 @@ pi/way: | # -way as suggested
     # delete as cutting content out
     
     #n This=>-od_4=>{dl=>2,s=>$C}
-    n "M-way"=>-od_92=>{s=>$M}
+    #n "M-way"=>-od_92=>{s=>$M}
     
-    3Cc&subM = $M;
     
 pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
     Rw Tiot;
     # we have an object to refer to, $s
     c&head || die "Nohead";
     s&location ||= do {
-        if (ref $s) {
-            # the -way C's yCing's earliest J upwards
-            # < refind any time if given s=$C?
-            Rw t/CreateOrigin $C:s;
+        # -way should resume its M with our s&location
+        #   if it is being resumed its C will not be tracable to -ghost
+        #   should leave a note on the -way/checkout instance,
+        #     in case its insides have vanished!?
+        if (my $s = c&upstream) {
+            # ^ may be a dead C later, when A.3 resumes open
+            #   AND our -way since cloning has been deleted?
+            my $l = Rw t/CreateOrigin $C:s;
+            my $p = A.2.c.s;
+            $p = p.y.moC; # n'd $C hups?
+            # ! never makes it:
+            2Cs&location = $l if $l;
+            $l || 2Cs&location
         }
-        elsif ($s) {
+        else {
             # C.t name? suggests whatnow
-            Rw t/Awaits;
+            Rw t/Awaits
         }
     };
-    s&location || return #sayre "No location C.t";
-    n location=>1=>"l:s&location",'hs:848'
+    s&location || return do { #sayre "No location C.t";
+        n location=>1=>"l:s&location",'hs:848'
+    };
     
     # read current origin of -way C as a path
     my $o = Jc&head = Rw t/FindOrigin;
@@ -422,7 +431,7 @@ pi/codify: | # spread out here, pack up an push changes when elvised
     # pi-with-Jtv's c.s usually not saved (still not taped)
     1c&savepics = 1;
     if (@$M) {
-        n codifysuming=>-od_04=>{s=>$M}
+        #n codifysuming=>-od_04=>{s=>$M}
     }
     else {
             
@@ -462,7 +471,10 @@ pi/codify: | # spread out here, pack up an push changes when elvised
     
     _s&mix = 1 for @$M;
     
-    n "M-codify"=>-od_92=>{s=>$M}
+    # start squishgame?
+    _s&fs = 7 for @$M;
+    
+    #n "M-codify"=>-od_92=>{s=>$M}
 Min/codify: | # -way's -codify puts each chunk in a -codetta
     my $o = $s;
     #   add option to not, edit whole yaml chunk
@@ -514,10 +526,6 @@ Min/codify: | # -way's -codify puts each chunk in a -codetta
     for (@$M) {
         _c&s = join "\n", @{_s&l};
         _s&dige = slm(12, dig _c&s); # chunk of way, sans indent dige
-        _s&mix = 1;
-        
-        _s&fs = 6;
-        # start squishgame?
     }
     
     
@@ -556,7 +564,7 @@ pi/pointer: | # describes s=[C] with t and s&pi
     
 t/Awaits: | # create the destinationa
     # AwaitDest
-    n t=>2=>"A.2.t Awaits remote"
+    n t=>2=>"awaits"
     return;
 t/CreateOrigin: | # where C came from so elvistivity can fade out
     # and find where to awake on push
@@ -565,6 +573,7 @@ t/CreateOrigin: | # where C came from so elvistivity can fade out
     if (@os < 2) {
         n argh=>3=>"Not enough history to find A.2.t's origin",'fs:7,dis,hs:566';
         Rw Origist;
+        return;
     }
     @os > 2 && die "Lots of history";
     # first o'ing
