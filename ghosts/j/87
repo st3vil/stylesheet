@@ -15,52 +15,12 @@ Todol: |
     colonies pumped through Telon, which watches jobs
     jewelis == each
     # $s =~ s/\n/↯/g;
-Impsev: | # restart lv when wil > 7
-    if (ar.and eq 'init') {
-        # normal-ish web state starting new log, eg Telon
-        # knows its last 1, restarts 7ing
-        unless (1s&lastmo) {
-            sayre "A.1.t's init imping";
-            1c&imping = 1 
-        }
-    }
-    if (my $s = 1s&s) {
-        if (ss&wil > 7) {
-            sayre "A.1.t's wil=ss&wil imping";
-            1c&imping = 1
-        }
-    }
-    A.mo.sc.lastmo = 1s&lastmo;
-    1s&lastmo = A.mo;
-EatsPi: | # add things you like to eat
-    for my $pi (@{ar.m}) {
-        Js&ein.pi.>$pi ->{sMJ} = &sMJje{
-            1 && saybl "Havi J.t: ".G&aC,$e;
-            Rw PutThingAfterSource $e $M;
-        };
-    }
-PutThingAfterSource: | # stitch into M for EatsPi
-    # $e is a $c, clicked on pi
-    my $c =
-    m e.t, {C=>$e,cv=>e.y.cv}, e.c, e.sc
-    c.y.up && warn "M doesnt deyer";
     
-    my $s = e.y.up || die "no eyup";
-    $s = ss&J || die "no J";
-    my $i = 1;
-    my @S = $s;
-    push @S, $s = s.2 until $i++ > 20 || s.2 eq s.3 || $s eq s.3;
-    $i > 20 && die "2 follow Swierdness: ".ki \@S;
-    
-    my @is = grep { _.t eq s.1.t } @$M;
-    if (@is == 1) {
-        @$M = grep { $_ ne $c } @$M;
-        @$M = map { $_ eq $is[0] ? ($_,$c) : $_ } @$M;
-    }
-EatPi: | # hope throwing this pi ($c) into somewhere (e J.t) will do something
-    sayre "Hoping J.t will like ".G&aC,$c;
-    G&elph,J.t=>$c;
-    T.pos = '';
+      reverse pi to some place, for head to w
+
+
+
+
 Telon: | # comp sci helpyou
     Gc&Glan = 'Elan' if G.d;
     y.at.miw = '40%';
@@ -100,21 +60,11 @@ Telon: | # comp sci helpyou
     
     Rw piFeedTape + $default=j:-clonge;
     
-    my $w = G&t,w=>"Todol";
-    Js&sayin = wc&s;
-    #m sayin=>-Tin
+    #n M=>-od_92=>{s=>$M}
     
-    #n lies=>-lise_1=>"$d/ip",'%qz,fs'
-    #n lizm=>-filsipdrs_2=>{s=>T.op}
-    
-    c&subM && 
-    n subM=>-od_912=>{s=>c&subM}
-    n M=>-od_92=>{s=>$M}
-    #@$M = ();
     n GoWalking=>-Gug
     
-    # stack certain shapes next to each other
-    #1s&Osulation = 'FormShapes';
+    # stack certain shapeleyishly
     for my $C (@$M) {
         s&float = 'left' if c&pi eq 'ghost';
         s&float = 'left' if c&pi eq 'way';
@@ -122,67 +72,7 @@ Telon: | # comp sci helpyou
     
     $ts->();
     
-FormShapes: | # stack certain shapes next to each other
-    # 
-    my @s;
-    my @M = @$M;
-    my $l;
-    while (@M) {
-        my $r = shift @M;
-        if (ls&shape && ls&shape eq rs&shape) {
-            push @s, [$l] unless @s && $s[-1]->[-1] eq $l;
-            push @{$s[-1]}, $r;
-        }
-        $l = $r;
-    }
-    for my $s (@s) {
-        my $i = 0;
-        for my $C (@$s) {
-            next unless $i++; # first one takes up space
-            s&ab = 1;
-            s&left = 3 * $i;
-        }
-    }
-    G&give,Budge=>[formshapes=>''=>{s=>\@s}];
-    
-piFeedTape: | # your J state recovery - Js&M ||= Js&top for s&mix, s->cpi, dedupenames
-    # Tiot shiftclick empties Js&M
-    Js&Simp = 'Sweeptapes';
-    Js&Cimp = 'Detapes';
-    # writes s&mix=1 on everything to feedback
-    if (!Js&M) {
-        # init saved/feedback
-        my $t = Js&top;
-        my $M = Js&M = [];
-        m $_ for grep{_s&mix} @{ts&z||[]};
-    }
-    if (!@{Js&M||[]}) {
-        my $M = Js&M;
-        if (my $d = ar.default) {
-            m ref $d ? $d : split(":", $d)
-        }
-    }
-    m $_ for @{Js&M||[]};
-    
-    delete _.y.cv for @$M;
-    _c&pi = delete _s&pi for grep{_s&pi} @$M;
-    if (0) {
-    # pi sc become c ^
-    # unless waiting for waves of things to come up...
-    my $i = 1s&Feedbowlings++;
-    for (grep{!$i && _s&pi eq 'way'} @$M) {
-        _s&pi = delete _c&pi ;
-        delete Jc&save;
-    }
-    Jc&save || G&timer:0.1,&{ 4s&toy->({to=>[J.t]}) };
-    }
-    
-    _s&mix = 1 for @$M;
-    my $tw;
-    @$M = grep { !$tw.>_.t ++ } @$M;
-    
-    Rw DeStyleM;
-    
+
 pi/clonge: | # ambiento numbery ghostlisting
     #
     s&dis = 1;
@@ -566,134 +456,7 @@ t/Awaits: | # create the destinationa
     # AwaitDest
     n t=>2=>"awaits"
     return;
-t/CreateOrigin: | # where C came from so elvistivity can fade out
-    # and find where to awake on push
-    my @os = Rw fe/yCtrail $group=Ao+;
-    
-    if (@os < 2) {
-        n argh=>3=>"Not enough history to find A.2.t's origin",'fs:7,dis,hs:566';
-        Rw Origist;
-        return;
-    }
-    @os > 2 && die "Lots of history";
-    # first o'ing
-    my $os = $os[0];
-    # last o
-    my $c = $os->[-1];
-    my $Y = c.y.A;
-    my $J = Y.1;
-    J.3 ne A.3 && die "Origin not in J.t  "
-        . G&give,Budge=>["gal"=>''=>{s=>$C}];
-    
-    my @J = Rw fe/upJs $J;
-    A.3 eq shift(@J) || die  "Origin not in J.t";
-    
-    a&origin_hJ = \@J;
-    
-    join";",map{_.t} @J;
-    
-t/FindOrigin: | # later moment, look for our -origin's location, usu in 3
-    my $j = A.3;
-    js&top || die "3: j.t not ready!";
-    
-    my $p = [split ';', s&location ];
-    push @$p, A.2.t; # < what our thing is called over there?
-    my @J = Rw te/Jpin $M $J:j $p $Clast=1;
-    my $c = pop @J;
-    
-    a&origin_hJ = \@J;
-    $c
-    
-fe/upJs: | # Js above, not-1, 2+ and 3
-    my @J = $J;
-    my $i = 0;
-    push @J, $J while $J = $i++ < 20 && $J ne J.3 && J.2;
-    $i >= 20 && die "Many upJs";
-    reverse @J
-te/Jpin: | # point through Js beyond $J by t, and maybe the last C
-    my @p = ref ar.p ? @{ar.p} : split ';', ar.p;
-    my $j = $J;
-    my $i = 1;
-    my @J; # Js beyond $J
-    my $c; # the last C
-    my @fi; # debug
-    for (@p) {
-        js&top || js&Jtv || die "Lost @p    at $_ No top: ".G&aC,$j;
-        my $f; # C with s&J
-        my $J; # next J
-        if (js&top) {
-            $f = js&top.y.tw.>$_;
-        }
-        if ($f && !fs&J && $i < @p) {
-            # more to go, look in Jtv, the f was probably thawed?
-            undef $f;
-        }
-        if (!$f && js&Jtv) {
-            my $jv = js&Jtv.>$_;
-            if (keys %$jv != 1) {
-                m "Lost @p at $_, maybe Jv:"=>-od=>{s=>[$j,$jv]}
-                return
-            }
-            ($J) = values %$jv;
-        }
-        if (!$f && $J) {
-            $f = Jc&s; # holds latest mo C
-        }
-        if ($f && !$J) {
-            $J = fs&J;
-            if (!$J) {
-                if (@p > $i) {
-                    m "Lost @p at $_"=>-od=>{s=>[@fi,js&top,$j]}
-                    return
-                }
-                elsif (!ar.Clast) {
-                    die "last thing in @p was only C: ".ki $f;
-                }
-                else {
-                    # last hop can be C, no J
-                }
-            }
-        }
-        $c = $f;
-        if ($J) {
-            push @fi, "Found ".G&sn,$J ." on ".G&aC,$f;
-            push @J, $J;
-        }
-        elsif (@p > $i) {
-            die "Lost @p at $_ with no J on ".G&aC,$f ."   try Cytw not CsJstopytw?"
-        }
-        $j = $J;
-        $i++;
-    }
-    ar.Clast ? (@J,$c) : @J;
-fe/yCtrail: | # C.y.C trail
-    my @l = my $S = $C;
-    push @l, $S while $S = @l < 30 && S.y.C;
-    @l >= 30 && die "many CyC";
-    
-    if (ar.group eq 'Ao+') {
-        # find consecutive yA=o
-        my @os; 
-        my $l;
-        for (reverse @l) {
-            my $Y = _.y.A || next;
-            if (Y.t eq 'o') {
-                push @os, [] if !@os || $os[-1]->[-1] ne $l;
-                push @{$os[-1]}, $_;
-            }
-            $l = $_;
-        }
-        return @os
-    }
-    
-    return @l
-    
-Origist: | # origin infographics, merge with above
-    my @l = my $S = $C;
-    push @l, $S while $S = @l < 30 && S.y.C;
-    #
-    @l = map { $_, _.y.A && G&sn,_.y.A || "noyA" } @l;
-    n history=>-od_4=>{dl=>1,s=>\@l}
+
 pi/Tin: |
     Rw pi/codetta;
 pi/codetta: | # code boxen, re C.t to alter? check js, hold something?
