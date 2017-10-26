@@ -284,8 +284,74 @@ fe/fi: | # see expectantly along nkgk path, check objects are
         $m eq 'sz' ?
             ref $S eq 'ARRAY' # or any not C?
             || $die->("notaz")
+        :
+        $m eq 'yup' ?
+            ref $S eq 'HASH' && S.y ne $S
+            || $die->("notyup/C")
+        :
+        $m eq 'cs' ?
+            ref $S eq 'HASH' && S.y ne $S
+            || $die->("notcs/C")
         : die "make up sanity check for $m";
         $s = $S;
     }
     $s
+fe/innards: | # gives you the s&Jtopz, or its reduction
+    my $z = Rw fe/fi $C sJ stop sz;
+    if (ar.pi) {
+        $z = [grep{_s&pi eq ar.pi} @$z];
+        @$z || die "No ar.pi in ".ki$z;
+        ar.n && ar.n != @$z && die "Expecting ar.n ar.pi, got ".@$z.": ".ki$z;
+    }
+    ar.n == 1 ? $z->[0] : $z;
+    
+fe/Mitch: | # replace the like-$i in $M, or insert
+    my $t = Rw fe/Map $M $t=i.t $n=1?;
+    if (!$t) {
+        if (my $w = ar.w) {
+            # find $w's prev and add it next
+            w.t eq i.t || die "How is w.t where i.t is?";
+            my $p = w.y.prev;
+            my $t = Rw fe/Map $M $t=p.t $n=1?;
+            $t || die "Still can't find where to put i.t";
+            @$M = map { $_ eq $t ? ($_,$i) : $_ } @$M
+        }
+        else {
+            push @$M, $i
+        }
+    }
+    else {
+        @$M = map { $_ eq $t ? $i : $_ } @$M
+    }
+fe/Map: | # $M for $pi, $not, $n=1
+    my $pi = ar.pi;
+    my $m = [grep{
+        my $v = $pi ? _s&pi eq $pi
+            : defined ar.t ? _.t eq ar.t
+            : die "looking for?";
+        $v = !$v if ar.not;
+        $v
+    } @$M];
+    $pi = ($pi&&"$pi && ")."t=ar.t" if defined ar.t && !ar.pi;
+    if (defined ar.n) {
+        my $n = ar.n;
+        if ($n =~ /^(\d+)\?$/) { # that number or nothing
+            $n = ar.n = $1;
+            $n = 0 if @$m == 0;
+        }
+        if (ar.n =~ /^(\d+)?\+$/) {
+            my $n = $1 || 1;
+            @$m >= ($1||1) || die "Expected >= $n $pi, but got ".@$m.": ".ki @$m;
+        }
+        else {
+            @$m == ar.n || die "Expected ar.n $pi, but got ".@$m.": ".ki @$m;
+        }
+    }
+    my $d;
+    if (ar.out) { # those not selected
+        d.out = [grep{my$v=$_; 0==grep{$_ eq $v}@$m}@$M]
+    }
+    $m = $m->[0] if ar.n == 1;
+    1 && saybl "Whav ".(wantarray && "ARRAY")." and ".@{d.out||[]};
+    wantarray ? ($m,d.out) : $m
 

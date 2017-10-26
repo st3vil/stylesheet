@@ -135,7 +135,7 @@ pi/ghost: | # opens ghost file via -codof, has a -ways of them
     #n ways=>-od_3=>{s=>$c}
     # shape us
     s&shape = 'tot';
-pi/codolf: | # the file of -code, yaml about pin=>way
+pi/codolf: | # read file of -code, yaml about pin=>way
     # TODO Glocation
     y.n = 3;
     y.u = 4;
@@ -169,6 +169,54 @@ pi/codolf: | # the file of -code, yaml about pin=>way
         $i++;
     }
     
+pi/codolf/intake: | # write file of -code from $M
+    # M has probably one change/extra already in it
+    die"Send -codes, got: ".join("-",map{_s&pi}@$M)."
+        ".ki$M 
+    unless @$M && @$M == grep{_s&pi eq 'code'} @$M;
+    # each -code's c&s is a chunk of indented/comment infested yaml:
+    #   "pin: |( ?#[^\n]+)?\n(    way\n)+"
+    my $s = join"\n",map{_c&s}@$M;
+    $s .= "\n" if $s =~ /[^\n]$/;
+    write_file($f,$s);
+pushout: | # push to $w-way/$o-origin
+    # wants $d-codify
+    my $d = ar.d ||= Rw fe/innards $C:w $pi=codify $n=1;
+    
+    # -origin's J
+    my $j = os&J;
+    # 's download
+    my $h = jc&head || die "push to disconnected origin j.t";
+    # has a language
+    my $lang = hs&pi ;
+    my $memk = "encoded_$lang";
+    my $i = d.y.>$memk ||= do {
+        # -codify's $M of -codettas
+        my $M = ar.M ||= Rw fe/innards $C:d $pi=codetta;
+        $lang eq 'code' || die "other encosion: $lang";
+        Rw pi/codetta/to/code $M;
+    };
+    
+    # -codolf 9
+    my $l = Rw fe/fi $C:h yup;
+    
+    # 's M (same as ls&z but going via J is aliver)
+    my $M = Rw fe/fi $C:l sJ stop sz;
+    # has one other thing (the file itself)
+    my ($f,$M) = Rw fe/Map $M $not=1 $pi:lang $n=1 $out=1;
+    # add/replace $i to $M, prev/next clueing with $w
+    Rw fe/Mitch $M $i $w; 
+    
+    # move 9 -> mo C or the one before it
+    $l = Rw fe/fi $C:l sJ cs;
+    
+    ls&pi eq 'codolf' || die "pushing new places: ".ki$l;
+    
+    -f f.t || die "f.t not there!";
+    
+    Rw pi/ls&pi/intake $M $f:f.t;
+    
+    # wants to know...
 pi/ways: | # beings in lines, gets ghost backing until it settles...
     T.op = $s;
     for my $C (G&op,'pi:code' ) {
@@ -465,6 +513,7 @@ pi/codetta/to/code: | # REVERSE -way's -codify makes from -codettas into a -code
     # makes it probably like the -code dige standard
     # should be just a chunk of way, sans t, indent, com, etc?
     os&dige = slm(12, dig oc&s);
+    os&pi = 'code';
     $o
     
 t/Awaits: | # create the destinationa
@@ -515,12 +564,12 @@ codein: | # change $w-way/$d-codify/$t-codetta talky box
     G&xot,$t,$E;
     
     # get -codify M
-    my $z = Rw fe/fi $C:d sJ stop sz;
+    my $M = Rw fe/fi $C:d sJ stop sz;
     
     # -codify itself doesn't have a join-and-digest happening...
     # so use -code, or the first one it encounters via -origin
     # to run changes through to update head, -codify's s&dige
-    my $i = Rw pi/codetta/to/code $M:z;
+    my $i = Rw pi/codetta/to/code $M;
     my $was = ds&dige;
     ds&dige = is&dige; # diff to -origins s&heads 
     d.y.encoded_code = $i; # memo for pushes
@@ -530,11 +579,9 @@ codein: | # change $w-way/$d-codify/$t-codetta talky box
     for my $o (@$r) {
         next unless ws&settlement <= os&settlement;
         my $j = os&J || die "No origin J: ".ki$o;
-        my $h = js&head ||
-            next; # not tuned in, next trip around?
+        next unless jc&head; # not tuned in, next trip around?
         Rw pushout $w $o $d $M;
     }
-    G&give:Budge=>['coeein'=>''=>{dl=>2,s=>[$was=>$t,into=>$o,for=>@r]}];
     return;
     
     # off to build a new -codify
@@ -545,24 +592,6 @@ codein: | # change $w-way/$d-codify/$t-codetta talky box
     J.sc.>j.t = $s;
     T.pos = $was ne j.t;
     #J.vid = us&code;
-pushout: | # push to $w-way/$o-origin
-    # wants $d-codify
-    my $d = ar.d ||= Rw fe/innards $C:w $pi=codify $n=1;
-    # 's $M of -codettas
-    my $M = ar.M ||= Rw fe/innards $C:d $pi=codetta;
-    
-    my $j = os&J;
-    my $i = 
-    
-fe/innards: | # gives you the s&Jtopz, or its reduction
-    my $z = Rw fe/fi $C sJ stop sz;
-    if (ar.pi) {
-        $z = [grep{_s&pi eq ar.pi} @$z];
-        @$z || die "No ar.pi in ".ki$z;
-        ar.n && ar.n != @$z && die "Expecting ar.n ar.pi, got ".@$z.": ".ki$z;
-    }
-    ar.n == 1 ? $z->[0] : $z;
-    
 
 GoWalking: |
     Rw Tiot;
