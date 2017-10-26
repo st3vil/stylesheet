@@ -196,10 +196,8 @@ pi/codolf/intake: | # write file of -code from $M
     # each -code's c&s is a chunk of indented/comment infested yaml:
     #   "pin: |( ?#[^\n]+)?\n(    way\n)+"
     my $s = join"\n",map{_c&s}@$M;
-    $s .= "\n" if $s =~ /[^\n]$/;
+    #$s .= "\n" if $s =~ /[^\n]$/;
     write_file($f,$s);
-
-
 pi/way: | # -way as suggested
     # resume itself...
     # way with a -ghost source, which wanders into the bay
@@ -251,10 +249,11 @@ pi/way: | # -way as suggested
 pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
     Rw Tiot;
     
-    # we have an object to refer to, $s
-    # and c&head is its unpacked state,
+    # we have an object from c&upstream
+    # and c&head is its unfurled, alive state,
     #    -codify with a s&dige from an encoding to some form with a dige
     c&head || die "Nohead";
+    
     s&location ||= do {
         # -way should resume its M with our s&location
         #   if it is being resumed its C will not be tracable to -ghost
@@ -306,8 +305,10 @@ pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
     if (s&local ne s&remote) {
         my $w = 
         n needs=>21=>pull=>'dos:GitsAct,fs:12,hs:746'
-        $ohno &&
-        n and=>2101=>"just pushed here, it diges differently?",'fs:7'
+        if ($ohno) {
+            n and=>2101=>"just pushed here, it diges differently?",'fs:7'
+            Rw Diff $o $i:ohno;
+        }
     }
     
     # push there
@@ -334,6 +335,16 @@ pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
     y.n = 4;
     y.u = 5;
     
+Diff: | # i<->o c&s
+    my @l = map {
+        my $f = "/tmp/valiput_Dif_$$".($i eq $_ && "_i" || "_o");
+        write_file($f,_c&s||"NOTHING");
+        $f
+    } $i,$o;
+    my $diff = `diff @l`;
+    `rm $_` for @l;
+    G&give:Budge=>["Diff i.t"=>''=>{s=>$diff}];
+    #
 pi/pointer: | # describes pointer $s=[C+] with t and s&pi
     for (@$s) {
         #G&isC,$_ || die "NotC: ".ki$_;
@@ -376,6 +387,7 @@ pushout: | # push to $w-way/$o-origin
     # has a language
     my $lang = hs&pi ;
     my $memk = "encoded_$lang";
+    # to encode -way into $i
     my $i = d.y.>$memk ||= do {
         # -codify's $M of -codettas
         my $M = ar.M ||= Rw fe/innards $C:d $pi=codetta;
@@ -388,12 +400,12 @@ pushout: | # push to $w-way/$o-origin
     
     # 's M (same as ls&z but going via J is aliver)
     my $M = Rw fe/fi $C:l sJ stop sz;
-    # has one other thing (the file itself)
+    # has one other thing (the file)
     my ($f,$M) = Rw fe/Map $M $not=1 $pi:lang $n=1 $out=1;
     # add/replace $i to $M, prev/next clueing with $w
     Rw fe/Mitch $M $i $w; 
     
-    # move 9 -> mo C or the one before it
+    # move 9 up to mo C or the one before (yCish) it
     $l = Rw fe/fi $C:l sJ cs;
     
     ls&pi eq 'codolf' || die "pushing new places: ".ki$l;
@@ -402,10 +414,10 @@ pushout: | # push to $w-way/$o-origin
     
     Rw pi/ls&pi/intake $M $f:f.t;
     
-    # update the -origin on the changed -way
+    # update the -origin on the changed -way, encoded into $i
     os&local = os&remote = is&dige;
     os&head = is&dige; # or from whatever encosion head/-way/-codify is using
-    os&next_should_be_still = 1;
+    os&next_should_be_still = $i;
     
     # wants to know...
 codein: | # change $w-way/$d-codify/$t-codetta talky box
