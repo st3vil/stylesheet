@@ -152,10 +152,13 @@ Detapes: |
     
     my $v = j.2;
     vs&M || die "above no vsM: ".G&sn,$v;
-    my $was = @{vs&M};
-    sayyl "Removing j.t from $was";
-    @{vs&M} = grep { _.t ne j.t } @{vs&M};
-    $was == @{vs&M} && die "Didn't find j.t in: ".ki vs&M;
+    # if a Remembers, tv is the upstream of M
+    my $z = vc&Mource eq 'tv' ? vs&top.sc.z : vs&M;
+    my $was = @$z;
+    my $s = sayyl "Removing j.t from $was";
+    @$z = grep { !_s&mix && _.t ne j.t } @$z;
+    $was == @$z && die "Didn't find j.t in: ".ki $z;
+    
 Noop: | # to ignore an elvising, sleep J
     T.pos = '';
 
