@@ -323,7 +323,7 @@ GitsAct: | # do what cc&s says
     # FactorEase, with e...
     # jc&s is somewhere from $o, from hC, from tv
     my $s = '-? -origin$';
-    my ($t,$o) = Rw fe/JC_hC $s;
+    my ($w,$o) = Rw fe/JC_hC $s;
     $o || return;
     
     my $do = cc&s;
@@ -332,7 +332,7 @@ GitsAct: | # do what cc&s says
         oc&pull = 'clicked';
     }
     elsif ($do eq 'push') {
-        # 
+        Rw pushout $w $o;
     }
     else {
         G&give:Budge=>['does what?'=>''=>{s=>$c}];
@@ -367,7 +367,7 @@ pi/codify: | # spread out here, pack up an push changes when elvised
         n pulled=>1=>"pulled s.t ss&dige"
         
         # codify in reverse (not all of the way?)
-        my $o = Rw pi/codify/to/code + $M;
+        my $o = Rw pi/codetta/to/code + $M;
         # could try and go all the way and:
         #os&dige eq ss&dige || die "-codify doesn't roundtrip";
         # our -origin's s&head
@@ -493,50 +493,48 @@ pi/codetta: | # code boxen, re C.t to alter? check js, hold something?
     n "z fo" =>1 =>{s=>$s},$sc
     
     y.at.cssdel = 'transform';
-codein: | # handly talky box, under a thing, under a thing
+codein: | # change $w-way/$d-codify/$t-codetta talky box
     my $s = "-? s\&dige s\&dige\$";
-    my ($w,$t,$o) = Rw fe/JC_hC $s;
+    my ($w,$d,$t) = Rw fe/JC_hC $s;
     
-    # ways know their way back as an -origin
+    # a -way/-origin saves
     ws&pi eq 'way' || die "noway";
     # and these are ours
-    ts&pi eq 'codify' || die "nocodify";
-    os&pi eq 'codetta' || die "codetta";
+    ds&pi eq 'codify' || die "nocodify";
+    ts&pi eq 'codetta' || die "codetta";
     
-    # new it of $c, build a new -codetta,
-    # put together a new -codetta
+    # new $o of $c, put together a new -codetta
     my $E = {};
-    E.t = o.t;
+    E.t = t.t;
     Ec&s = us&code || die "Nocode to tinput";
     #return T.pos = 0 if Ec&s eq oc&s;
     Es&dige = slm(12, dig Ec&s);
     Es&pi = 'codetta';
     
     # feed modified -codetta back into -codify M
-    G&xo,$o,$E;
+    G&xot,$t,$E;
+    
+    # get -codify M
+    my $z = Rw fe/fi $C:d sJ stop sz;
     
     # -codify itself doesn't have a join-and-digest happening...
-    # so have it remember the first one it encounters
+    # so use -code, or the first one it encounters via -origin
     # to run changes through to update head, -codify's s&dige
-    
-    # 
-    # or s&dige on -codify vs -remote
-    # change -codify s&dige to a that of a -code
-    #    as determined by the to-form, instead of inventing a way to cocnc the first origin's other
-    #   
-    # differing from -origin's head , 
-    # and push to any -origins
-    #   
-    # to make for a push
-    
-    my $z = Rw fe/fi $C:t sJ stop sz;
-    my $found;
-    $z = [grep{$_}map{$_ eq $o && ++$found && $E || $_} @$z];
-    $found == 1 ||
-    die "no find to replace past Es&pi in t.t's z: ".ki $z;
     my $i = Rw pi/codetta/to/code $M:z;
+    my $was = ds&dige;
+    ds&dige = is&dige; # diff to -origins s&heads 
+    d.y.encoded_code = $i; # memo for pushes
     
-    G&give:Budge=>['coeein'=>''=>{dl=>2,s=>[$t,into=>$i]}];
+    # get -way's M's -origins
+    my $r = Rw fe/innards $C:w $pi=origin;
+    for my $o (@$r) {
+        next unless ws&settlement <= os&settlement;
+        my $j = os&J || die "No origin J: ".ki$o;
+        my $h = js&head ||
+            next; # not tuned in, next trip around?
+        Rw pushout $w $o $d $M;
+    }
+    G&give:Budge=>['coeein'=>''=>{dl=>2,s=>[$was=>$t,into=>$o,for=>@r]}];
     return;
     
     # off to build a new -codify
@@ -547,6 +545,25 @@ codein: | # handly talky box, under a thing, under a thing
     J.sc.>j.t = $s;
     T.pos = $was ne j.t;
     #J.vid = us&code;
+pushout: | # push to $w-way/$o-origin
+    # wants $d-codify
+    my $d = ar.d ||= Rw fe/innards $C:w $pi=codify $n=1;
+    # 's $M of -codettas
+    my $M = ar.M ||= Rw fe/innards $C:d $pi=codetta;
+    
+    my $j = os&J;
+    my $i = 
+    
+fe/innards: | # gives you the s&Jtopz, or its reduction
+    my $z = Rw fe/fi $C sJ stop sz;
+    if (ar.pi) {
+        $z = [grep{_s&pi eq ar.pi} @$z];
+        @$z || die "No ar.pi in ".ki$z;
+        ar.n && ar.n != @$z && die "Expecting ar.n ar.pi, got ".@$z.": ".ki$z;
+    }
+    ar.n == 1 ? $z->[0] : $z;
+    
+
 GoWalking: |
     Rw Tiot;
     # extrane
