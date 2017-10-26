@@ -77,7 +77,6 @@ Telon: | # comp sci helpyou
     
     $ts->();
     
-
 pi/clonge: | # ambiento numbery ghostlisting
     #
     s&dis = 1;
@@ -216,6 +215,11 @@ pushout: | # push to $w-way/$o-origin
     
     Rw pi/ls&pi/intake $M $f:f.t;
     
+    # update the -origin on the changed -way
+    os&local = os&remote = is&dige;
+    os&head = is&dige; # or from whatever encosion head/-way/-codify is using
+    os&next_should_be_still = 1;
+    
     # wants to know...
 pi/ways: | # beings in lines, gets ghost backing until it settles...
     T.op = $s;
@@ -316,6 +320,7 @@ pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
     
     # pull here
     if (my $p = c&pull) {
+        p.t = C.t;
         # also sent to -codify, attach object
         pc&s = $o;
         # local becomes as remote dige
@@ -329,9 +334,12 @@ pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
         n done=>211=>'pulling','fs:6,hs:587'
     }
     # should be set together as we pull/push
+    my $ohno = delete s&next_should_be_still;
     if (s&local ne s&remote) {
         my $w = 
         n needs=>21=>pull=>'dos:GitsAct,fs:12,hs:746'
+        $ohno &&
+        n and=>2101=>"just pushed here, it diges differently?",'fs:7'
     }
     
     # push there
@@ -407,9 +415,10 @@ pi/codify: | # spread out here, pack up an push changes when elvised
         my $N = [grep{_s&mix}@$M]; # working directory
         my $M = []; # stuff to check out
         
+        saygr "pulling s.t from p.t";
         Rw pi/codetta/from/code + $M $s;
         
-        @$N &&
+        @$N && # could stay around as ah...
         n the_hop=>-od_94=>[$N,$M];
         # fm channel
         n pulled=>1=>"pulled s.t ss&dige"
@@ -473,10 +482,11 @@ pi/codetta/from/code: | # -way's -codify puts each chunk in a -codetta
             ,s/^\s*//, s/^\s*$hashc\s*//,
             s/# // for $note;
             $indnext = 1 if !$n; # everything must be in that far
-            $n = 
+            $n =  
             m $t=>-codetta=>{}
             ns&note = $note if length $note; # other notes e
             ns&prenote = $pren if length $pren; # never?
+            #sayyl "Sectioned by $l\n    n: ".G&aC,$n;
             # title is outside the babble, in named bubble code (yaml)
             next;
         }
@@ -486,6 +496,7 @@ pi/codetta/from/code: | # -way's -codify puts each chunk in a -codetta
     }
     
     for (@$M) {
+        _s&l || die "Nothing in _.t?";
         _c&s = join "\n", @{_s&l};
         _s&dige = slm(12, dig _c&s); # chunk of way, sans indent dige
     }
@@ -503,7 +514,7 @@ pi/codetta/to/code: | # REVERSE -way's -codify makes from -codettas into a -code
         map { split "\n", $_ }
         map {
             my @l;
-            if (_s&note || _s&pren && $_ ne $f) {
+            if ((_s&note || _s&pren) && $_ ne $f) {
                 @l = (_s&pren||"")."$hashc".(_s&note&&" # _s&note")
             }
             (@l, _c&s)
@@ -543,6 +554,8 @@ pi/codetta: | # code boxen, re C.t to alter? check js, hold something?
     
     y.at.cssdel = 'transform';
 codein: | # change $w-way/$d-codify/$t-codetta talky box
+    # off to build a new -codify M
+    #  push to easy origins
     my $s = "-? s\&dige s\&dige\$";
     my ($w,$d,$t) = Rw fe/JC_hC $s;
     
@@ -560,10 +573,10 @@ codein: | # change $w-way/$d-codify/$t-codetta talky box
     Es&dige = slm(12, dig Ec&s);
     Es&pi = 'codetta';
     
-    # feed modified -codetta back into -codify M
+    # feed modified -codetta to itself in -codify M
     G&xot,$t,$E;
     
-    # get -codify M
+    # get -codify M - unify them to get a s&dige on -codify
     my $M = Rw fe/fi $C:d sJ stop sz;
     
     # -codify itself doesn't have a join-and-digest happening...
@@ -574,6 +587,9 @@ codein: | # change $w-way/$d-codify/$t-codetta talky box
     ds&dige = is&dige; # diff to -origins s&heads 
     d.y.encoded_code = $i; # memo for pushes
     
+    # paused is really pretending to be another point in the tree...
+    return if ds&paused; 
+    
     # get -way's M's -origins
     my $r = Rw fe/innards $C:w $pi=origin;
     for my $o (@$r) {
@@ -582,17 +598,6 @@ codein: | # change $w-way/$d-codify/$t-codetta talky box
         next unless jc&head; # not tuned in, next trip around?
         Rw pushout $w $o $d $M;
     }
-    return;
-    
-    # off to build a new -codify
-    #  push to easy origins
-    # $w,into=>$E
-    
-    my $was = J.sc.>j.t;
-    J.sc.>j.t = $s;
-    T.pos = $was ne j.t;
-    #J.vid = us&code;
-
 GoWalking: |
     Rw Tiot;
     # extrane
