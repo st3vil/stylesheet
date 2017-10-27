@@ -128,13 +128,17 @@ t/FindOrigin: | # later moment, look for our -origin's location, usu in 3
     a&origin_hJ = \@J;
     $c
     
+fe/upJpath: | # upJs as path, like CreateOrigin returns
+    my @J = Rw fe/upJs $J;
+    A.3 eq shift(@J) || die  "Origin not in J.t";
+    my $s = join";",map{_.t} @J;
+    wantarray ? ($s,@J) : $s
 fe/upJs: | # Js above, not-1, 2+ and 3
     my @J = $J;
     my $i = 0;
     push @J, $J while $J = $i++ < 20 && $J ne J.3 && J.2;
     $i >= 20 && die "Many upJs";
     reverse @J
-
 te/Jpin: | # point through Js beyond $J by t, and maybe the last C
     my @p = ref ar.p ? @{ar.p} : split ';', ar.p;
     my $j = $J;
