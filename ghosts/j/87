@@ -37,7 +37,7 @@ Todol: | # YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
     and build wormholes
     should remember exactly where we are
     
-Telon: | # comp sci helpyou
+Telon: | # comp sci helpyou !!!!
     Gc&Glan = 'Elan' if G.d;
     y.at.miw = '40%';
     # Lst Ts and their 5ings
@@ -181,7 +181,6 @@ pi/codolf: | # read file of -code, yaml about pin=>way
         my $sc;
         sc.note = $note if $note;
         sc.pren = $pren if $pren;
-        sc.l = \@l;
         sc.i = $i;
         sc.pi = 'code';
         sc.dige = slm(12, dig $s);
@@ -197,7 +196,7 @@ pi/codolf/intake: | # write file of -code from $M
     # each -code's c&s is a chunk of indented/comment infested yaml:
     #   "pin: |( ?#[^\n]+)?\n(    way\n)+"
     my $s = join"\n",map{_c&s}@$M;
-    #$s .= "\n" if $s =~ /[^\n]$/;
+    $s .= "\n" if $s =~ /[^\n]$/;
     write_file($f,$s);
 pi/way: | # -way as suggested
     # resume itself...
@@ -528,15 +527,15 @@ pi/codetta: | # code boxen, re C.t to alter? check js, hold something?
     y.at.cssdel = 'transform';
 pi/codetta/from/code: | # -way's -codify puts each chunk in a -codetta
     my $o = $s;
+    os&pi ne 'code' && die "to codify from -os&pi";
     #   add option to not, edit whole yaml chunk
     # < centralise code splits with underneaths of Bablar?
     my $hashc = '#'.'c';
-    my @l = os&pi eq 'code' && os&l ? @{os&l} : split "\n",os&s;
+    my @l = split "\n",os&s;
     # group onto $M
     my $n; # last atom
     my $indnext; # whether to next line defines:
     my $indchop; # chop indent whitespace of -code form
-    os&pi ne 'code' && die "to codify from -os&pi";
     
     my $i = 0;
     for my $l (@l) {
@@ -577,7 +576,8 @@ pi/codetta/from/code: | # -way's -codify puts each chunk in a -codetta
     
     for (@$M) {
         _s&l || die "Nothing in _.t?";
-        _c&s = join "\n", @{_s&l};
+        _c&s = join "\n", @{delete _s&l};
+        _c&s .= "\n" if _c&s =~ /[^\n]$/;
         _s&dige = slm(12, dig _c&s); # chunk of way, sans indent dige
     }
     
@@ -601,6 +601,7 @@ pi/codetta/to/code: | # REVERSE -way's -codify makes from -codettas into a -code
         } @$M
     );
     oc&s = join "\n", @l;
+    oc&s .= "\n" if oc&s =~ /[^\n]$/;
     # makes it probably like the -code dige standard
     # should be just a chunk of way, sans t, indent, com, etc?
     os&dige = slm(12, dig oc&s);
