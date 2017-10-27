@@ -106,6 +106,7 @@ pi/ghosts: | # ghost fractioney listing
     1c&imping &&
         n imping=>91=>"IMPING"
     
+    my $s = C.t || die "nowhere"; # our c&s disappears...
     n lies=>-lise_1=>$s,'%qz,fs'
     
     my $t = T.op;
@@ -188,6 +189,7 @@ pi/codolf: | # read file of -code, yaml about pin=>way
         sc.pren = $pren if $pren;
         sc.i = $i;
         sc.pi = 'code';
+        $s .= "\n" if $s !~ /\n$/;
         sc.dige = slm(12, dig $s);
         m $t=>''=>{s=>$s},$sc
         $i++;
@@ -200,8 +202,9 @@ pi/codolf/intake: | # write file of -code from $M
     unless @$M && @$M == grep{_s&pi eq 'code'} @$M;
     # each -code's c&s is a chunk of indented/comment infested yaml:
     #   "pin: |( ?#[^\n]+)?\n(    way\n)+"
-    my $s = join"\n",map{_c&s}@$M;
-    $s .= "\n" if $s =~ /[^\n]$/;
+    my $s = join"\n",map{
+        _c&s =~ /\n$/ ? _c&s : "_c&s\n"
+    }@$M;
     write_file($f,$s);
 pi/way: | # -way as suggested
     # resume itself...
@@ -291,6 +294,7 @@ pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
     s&remote = os&dige;
     
     # pull here
+    n pull=>21=>'pull',{dos=>'GitsAct',fs=>6}
     if (my $p = c&pull) {
         p.t = C.t;
         # also sent to -codify, attach object
@@ -303,15 +307,15 @@ pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
         #     so -origin sits on boundaries of dige-integrity
         #     given a tree of source pouring out
         p.sc = C.sc;
-        n done=>211=>'pulling','fs:6,hs:587'
+        n pull_done=>2101=>'ing','fs:6,hs:587'
     }
+    
     # should be set together as we pull/push
     my $ohno = delete s&next_should_be_still;
     if (s&local ne s&remote) {
-        my $w = 
-        n needs=>21=>pull=>'dos:GitsAct,fs:12,hs:746'
+        n pull=>21=>'pull'=>'dos:GitsAct,fs:12,hs:746'
         if ($ohno) {
-            n and=>2101=>"just pushed here, it diges differently?",'fs:7'
+            n and=>221=>" != diges itself?",'fs:7'
             Rw Diff $o $i:ohno;
         }
     }
@@ -329,8 +333,13 @@ pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
     # this -origin's head vs -codify's head
     # - unless initing
     # - it would have got it from here
+    my $p =
+    n needs=>211=>'push',{dos=>'GitsAct',fs=>6}
     if (hs&dige && s&head ne hs&dige) {
-        n needs=>211=>'push',{dos=>'GitsAct'}
+        delete ps&fs;
+    }
+    if ($ohno) {
+        n push_done=>2111=>'ing','fs:6,hs:587'
     }
     
     Jc&origin_hJ = a&origin_hJ if a&origin_hJ;
@@ -340,7 +349,6 @@ pi/origin: | # label relation on upCs&origin (or so) show up/down stream ...
     y.n = 4;
     y.u = 5;
     
-
 pi/pointer: | # describes pointer $s=[C+] with t and s&pi
     for (@$s) {
         #G&isC,$_ || die "NotC: ".ki$_;
@@ -474,8 +482,7 @@ pi/codify: | # spread out here, pack up an push changes when elvised
     
     if (my $p = c&pull) { # a -code or so
         my $s = pc&s;
-        $s || return
-            n nopull=>-od_1=>{s=>$p}
+        $s || die "nopull!?";
         my $m = $M;
         my $N = [grep{_s&mix}@$M]; # working directory
         my $M = []; # stuff to check out
@@ -483,10 +490,10 @@ pi/codify: | # spread out here, pack up an push changes when elvised
         saygr "pulling s.t from p.t";
         Rw pi/codetta/from/code + $M $s;
         
-        @$N && # could stay around as ah...
-        n the_hop=>-od_94=>[$N,$M];
+        #@$N && # could stay around as ah...
+        #n the_hop=>-od_94=>[$N,$M];
         # fm channel
-        n pulled=>1=>"pulled s.t ss&dige"
+        #n pulled=>1=>"pulled s.t ss&dige"
         
         # codify in reverse
         my $o = Rw pi/codetta/to/code + $M;
@@ -496,19 +503,20 @@ pi/codify: | # spread out here, pack up an push changes when elvised
         s&dige = os&dige;
         ps&head = os&dige;
         
-        
-        
         my $tw;
         $tw.>$_ = 1 for @$N;
         @$m = grep {!$tw.>$_ } @$m;
         push @$m, @$M;
     }
     
+    
+    
     _s&mix = 1 for @$M;
     
     # start squishgame?
     _s&fs = 7 for @$M;
     
+    #G&give:Budge=>['sok'=>''=>{s=>$M}];
     #n "M-codify"=>-od_92=>{s=>$M}
 pi/codetta: | # code boxen, re C.t to alter? check js, hold something?
     # our s&dige, parts to -codify's s&dige
@@ -532,11 +540,11 @@ pi/codetta: | # code boxen, re C.t to alter? check js, hold something?
     y.at.cssdel = 'transform';
 pi/codetta/from/code: | # -way's -codify puts each chunk in a -codetta
     my $o = $s;
-    os&pi ne 'code' && die "to codify from -os&pi";
+    os&pi eq 'code' || die "to codify from -os&pi";
     #   add option to not, edit whole yaml chunk
     # < centralise code splits with underneaths of Bablar?
     my $hashc = '#'.'c';
-    my @l = split "\n",os&s;
+    my @l = split "\n",oc&s;
     # group onto $M
     my $n; # last atom
     my $indnext; # whether to next line defines:
@@ -596,7 +604,11 @@ pi/codetta/to/code: | # REVERSE -way's -codify makes from -codettas into a -code
     my @l = (
         "f.t: |".(fs&note && " # fs&note"),
         map {"    ".$_} # 4 ind
-        map { split "\n", $_ }
+        map {
+            my @l = split "\n", $_;
+            pop @l while @l && $l[-1] =~ /^\s*$/;
+            @l
+        }
         map {
             my @l;
             if ((_s&note || _s&pren) && $_ ne $f) {
@@ -606,7 +618,7 @@ pi/codetta/to/code: | # REVERSE -way's -codify makes from -codettas into a -code
         } @$M
     );
     oc&s = join "\n", @l;
-    oc&s .= "\n" if oc&s =~ /[^\n]$/;
+    oc&s .= "\n" if oc&s !~ /\n$/;
     # makes it probably like the -code dige standard
     # should be just a chunk of way, sans t, indent, com, etc?
     os&dige = slm(12, dig oc&s);
