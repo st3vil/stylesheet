@@ -77,31 +77,47 @@ ET: | # many set T after e
 ETsleepier: | # mo considers waking up early
     A.1 eq A.3 && return
         Rw FourSleep;
-    my $r = 3c&TE;
-    my $p = 2c&TE;
+    my $r = 3c&TE; # the one's results
+    my $p = 2c&ET; # the last many's expectation
     # 
     my $t = A.1.t;
     
-    my @z = grep { _.t =~ /^\Q$t\E;?(.*)?$/ && do {
-    my $h = 2c&
+    my $h; # here, with t
+    my @z = grep{$_} map { # in here, shortened t, same y/c/sc
+        _.t =~ /^\Q$t\E$/ ? do {
+            $h = $_;
+            0
+        } :
+        _.t =~ /^\Q$t\E;?(.*)?$/ ? do {
+            my $hash = {%$_,t=>$1};
+        } : undef; # not here
+    } @{ps&z||[]};
+    
+    my $d = 1c&ET = {}; # our many's expectation
+    dc&want.children = 1 if @z;
+    
+    
+    if ($h || @z) {
+        push @{rs&z}, "1c&sip A.1.t: $h / ".@z;
+        ds&z = \@z;
+        #G&give:Budge=>[indl=>''=>{dl=>4,s=>[$t,$r,\@z]}];
+    }
+        
+    #push @{rs&z}, "1c&sip A.1.t --> ".G&aC,$_ for @z;
+    
     
     Rw FourSleep;
     # 3c&ET 
     # and our 1c&ET replace with new directions
     # if some clues, sleep
-    return if ;
     
-    push @{rs&z}, "1c&sip A.1.t --- -s&pi   a&dec";
-    
-    
-    
-    
-    
+    push @{rs&z}, "1c&sip     A.1.t --- -s&pi   a&dec";
     
     
     # 
     
-    # hook M
+    # hook M with many of this function too
+    # if the first group of -pis are still the rest can sleep?
 IET: | # singularly you ET
     A.1 eq A.3 || die "Be W";
     my $et = 3c&ET;
