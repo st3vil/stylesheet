@@ -12,6 +12,8 @@ ET: | # many set T after e
     t.y.cv = "0.$n";
     
     my $wake = ar.wake || [];
+    $wake = [$wake] if ref $wake ne 'ARRAY';
+    
     if ($n eq '2') { # wake to the smallest j we visited
         if ($J ne $j) {
             push @$wake, $j;
@@ -50,25 +52,40 @@ ETsleepier: | # mo considers waking up early
         } : undef; # not here
     } @{ps&z||[]};
     
+    my @t; # talkylines
+    
     my $d = 1c&ET = {}; # our many's expectation
-    dc&want.children = 1 if @z;
+    if (@z) {
+        dc&want.children = 5; # wake for someone
+        dc&theyllknow = 1;
+    }
     
     
     if ($h || @z) {
-        push @{rs&z}, "1c&sip A.1.t: $h / ".@z;
+        push @t, "1c&sip A.1.t: ".@z.": ".ki $h;
         ds&z = \@z;
         #G&give:Budge=>[indl=>''=>{dl=>4,s=>[$t,$r,\@z]}];
     }
+    else {
+        if (pc&theyllknow) { # but we dont
+            # a sibling is awake
+            dc&want.dunno = -5;
+        }
+    }
         
     #push @{rs&z}, "1c&sip A.1.t --> ".G&aC,$_ for @z;
-    
+    if (dc&want) {
+        c&want && die "Merge wants";
+        c&want = dc&want;
+    }
     
     Rw FourSleep;
     # 3c&ET 
     # and our 1c&ET replace with new directions
     # if some clues, sleep
     
-    push @{rs&z}, "1c&sip     A.1.t --- -s&pi   a&dec";
+    push @t, "1c&sip     A.1.t --- -s&pi   a&dec";
+    push @{rs&z}, @t if @t;
     
     
     # 
