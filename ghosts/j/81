@@ -78,6 +78,8 @@ pi/od: | # data splayer
 HaveDepth: |
     c&depth ||= 2Cc&depth + 1;
     
+    c&depth += ar.depth_add;
+    
     # how many M inners before 'more' (depth first)
     3Cc&intlim ||= 15;
     # max depth before like nothash
@@ -134,14 +136,19 @@ Indentity: | # bit of basket "$ind<" and name of bit there (C.t)
     y.at.ws=1;
     y.clos=1;
     A&ind = join'', ('  ') x (c&depth - 1);
+    if (my $jump = c&depth - 2Cc&depth - 1) {
+        die "Depth jumped $jump down c&depth - 2Cc&depth  into ".G&sn if $jump < 0;
+        A&ind =~ s/  /../ for 1..$jump;
+    }
     y.at.dis = 1;
     s&dis = 3;
     
     n ind=>o7=>A&ind
     n sli=>o8=>"<  ",'%hs:784,dos:Crank'
     
+    a&thet =
     c&quiet_t && a&space < 2 ||
-    n t=>1=>"C.t ",'%dos:Crank'
+    n t=>1=>"C.t",'%dos:Crank,mr:0.6'
     
 Trunks: | # adj depth for shape/truncation of too-hyperlinkage
     # 
@@ -312,7 +319,15 @@ SeeC: |
         $ac->[1] =~ s/^0\.//;
         my $fs = $fss->($ac->[0]);
         #
-        n t=>2=>{s=>shift @$ac},"%hs:356,fs:$fs,mw:14"
+        my $te = shift @$ac;
+        if (my $t = a&thet) { # from Indentity
+            t.sc.not = 1 if tc&s eq $te; # v is better
+        }
+        if ($te eq '') {
+            $te = "''";
+            $fs += 5;
+        }
+        n t=>2=>{s=>$te},"%hs:356,fs:$fs,mw:14"
         n ycv=>2=>{s=>shift @$ac},'%fs:12,ma:0.3'
         my $y = shift @$ac;
         $y = $deyer->($y);
