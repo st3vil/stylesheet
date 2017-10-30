@@ -80,6 +80,7 @@ ETsl: | # mo considers waking up about 4/5
         m inside=>''=>{}=>'count:'.@z
     }
     elsif (!ls&unspec) {
+        # something is in $l
         m awake=>''=>{s=>$l}
     }
     else { # ls&unspec, not if @z (or $l) was found
@@ -89,16 +90,15 @@ ETsl: | # mo considers waking up about 4/5
             lc&want.dunno = -5;
         }
     }
-        
-    #push @{rs&z}, "1c&sip A.1.t --> ".G&aC,$_ for @z;
+    
     if (lc&want) {
         c&want && die "Merge wants";
         c&want = lc&want;
     }
     
     Rw FourSleep;
-    
-    Rc&s = a&J_awake ? 'wake' : 'sleep';
+    # A&awake never works?
+    Rc&s = T.Z ? 'sleep':'wake';
     Rs&sip = 1c&sip;
     Rs&pi = s&pi if s&pi ;
     Rs&dec = a&dec;
@@ -134,15 +134,16 @@ IET: | # singularly you ET
 TEing: | # prove ET TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
     Rw Tiot;
     Rw GiveTime;
+    m SampEl=>-Wug
     my $c =
     n TEer
     
     
 SeeTEer: |
-    Rw Tiot;
+    Rw Tiot + $nodis=1;
+    
     Jc&es = delete Gs&follow if Gs&follow;
     my $s = Jc&es;
-    my $i;
     m _.t=>-TE=>{s=>$_} for @$s;
 pi/TE: |
     #
@@ -155,26 +156,31 @@ pi/TE: |
     ++A&igke.J;
     #ss&J && ++A&igke.J && # having a J
     #Rw pi/AJ $s:ss&J;
+    # SampEl
     
     s&sy &&
         n sy=>o75=>s&sy=>"%hs:7574,ab:1,poi:0,lh:40%,fs:".int(100 / c&depth)
-        
+
+    if (s&sy eq 'r') {
+        # on Hut ds (drop sc) doesn't yet remove styles
+        y.at.opa = sc&s eq 'sleep' ? 0.6 : 1;
+    }
     Rw od/sings + i sip pi dec;
     
-    if (0 && !ref sc&s && length sc&s > 40) {
+    if (!ref sc&s && length sc&s > 40) {
         A&igke.s++;
         n s=>-od_27=>{s=>sc&s},'hs:8,hs:288'
     }
     
     A&asone = 1;
-    A&igke.>$_++ for qw'sip l depth';
+    A&igke.>$_++ for qw'sip l depth z';
     Rw SeeC;
     
     y.n = 6;
     y.u = 67;
     
-    m "z".a&iey++ =>-TE=>{s=>$_} for @{ss&z||[]};
-    _s&fs = 8 for @$M;
+    m _.t=>-TE=>{s=>$_} for @{ss&z||[]};
+    #_s&fs = 8 for @$M;
     map { _s&sy = C.t } @$M if length C.t == 1;
     
     ss&l &&
@@ -210,6 +216,129 @@ od/sings: | # things -od might do but better
         nc&s = delete(ns&prep).nc&s if ns&prep;
     }
     
+SampEl: | # interaction captura
+    # et
+    Rw Tiot;
+    
+    # facts on this G? whose source is $G, as opposed to
+    #  Gip - sub-$Gt pieces of the same process
+    #  $Gt or some other in-bay,
+    #  or out of bay/Gd spec
+    # pi for the object that has location sensitive names
+    #   be able to imply a domain to all of a kind of names within
+    #   and move stuff around sensibly
+    #   border crossings
+    #   and storing stuff remotely (G&give) such that they know us
+    #     and we know ~ what should be there
+    
+    # stuff we have been elvised
+    n "Gc&ipd/in"=>-lise=>{},'qz'
+    
+    my @z = G&op;
+    n lise=>-od=>\@z
+    for (@z) {
+        n _.t=>-tail=>{s=>_.t},'qz'
+    }
+    my @z = G&op;
+    n tail=>-od=>\@z
+    for (@z) {
+        n _.t=>-json=>{s=>_c&s},'qz'
+    }
+    my @z = G&op;
+    n jsons=>-od=>\@z
+    for (@z) {
+        n _.t=>-meaning=>{s=>_c&s}
+        #,'qz'
+    }
+    
+    
+    erh:
+        GHere
+fe/since: | # returns things from ground since last since
+    my $g = A.ground || die "ngorund";
+    my @z = @{gs&z||[]};
+    my $s = a&last_since;
+    shift @z until !$s || $z[0] eq $s;
+    a&last_since = $z[-1] if @s
+    
+    if (@{ar.m||[]}."" =~ /their/) {
+        # wanted their C, not their C
+        @z = map {
+            my $M = Rw fe/fi $C:_ sJ stop sz;
+            @$M
+        } @z;
+    }
+    
+    
+    @z;
+    
+    
+pi/tail: | # reading a file continuously
+    y.cyc = 1000;
+    -f $s || die "send file not $s";
+    if (1) {
+        my $s = read_file($s);
+        for my $l (split "\n", $s) {
+            my $dig = slm 9, dig $l;
+            m $dig=>''=>{s=>$l}
+        }
+        return;
+    }
+    
+    my ($ino,$size) = (stat $s)[1,7];
+    if (1s&ino && 1s&size) {
+        delete 1s&filehandle if 1s&ino ne $ino || 1s&size > $size;
+        delete Js&M;
+    }
+    (1s&ino,1s&size) = ($ino,$size);
+    
+    my $h = 1s&filehandle ||= do {
+        open(my $h, '<', $s)
+             || die "$s open fail: $!";
+        $! && sayre "$s open noise: $!";
+        $h
+    };
+    
+    my $M = Js&M ||= [];
+    # only does one...
+    
+    while (1 || !eof $h) {
+        my $l = readline $h;
+        length $l || last,
+        n nothingmr=>''=>"No more"
+        my $dig = slm 9, dig $l;
+        m $dig=>''=>{s=>$l}
+    }
+    
+    n seeings=>-od=>{s=>wdump 2, $h};
+    
+    @{ar.M} = @$M;
+pi/json: | # decode c&s to data.c.s
+        if ($s =~ /^(\[|\{)/) {
+            my $C = eval { djson $s };
+            if ($@) {
+                sayre "NOT json C: $_";
+                $@ = '';
+                return;
+            }
+            $C = G&Ct,$C if ref $C eq 'ARRAY'; # TODO may be z
+            #sayre "Amos: ".wdump 3, [$s, $C, C.c.e];
+            
+            n data=>''=>{s=>$C}
+        }
+        else {
+            die "Strange: $s";
+        }
+pi/meaning: | # unpack what it is and why, W/e/us
+    my $c = {C=>$s};
+    my $e = c.e = sc&e if sc&e;
+    c.us = ec&us if ec&us;
+    c.es = ec&s if ref ec&s eq 'HASH';
+    c.ep = c.es.p if c.es.p;
+    
+    # apply schemas
+    
+    n C.t=>-od=>{s=>$c}
 TEer: | # use ET
     Rw Tiot;
     Rw IET;
@@ -248,15 +377,24 @@ pi/ETcet: |
     
     _s&mix = 1 for @$M;
 ETvis: |
+    my $wake = [];
+    push @$wake, $j;
+    
     # use something... make this usual change to a j's mo C in j.2...
     my $K = Rw fe/J2C $J:j;
     Ks&fis ||= 20;
     Ks&fis++;
     
+    my $S = $K;
+    $S = S.y.prev for 1..2;
+    if ($S) {
+        push @$wake, Ss&J if Ss&J;
+        Ss&fis += 10;
+    }
+    
+    
     G&give:Budge=>[ffffe=>''=>{dl=>1,s=>[[[j.2,$j]],[[$K,$c]]]}];
     
-    my $wake = [];
-    push @$wake, $j;
     1c&ET &&
     Rw ET + $wake 1;
     
