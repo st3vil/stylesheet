@@ -236,18 +236,19 @@ SampEl: | # interaction captura
     
     my @z = G&op;
     n lise=>-od=>\@z
+    Rw fe/since;
     for (@z) {
         n _.t=>-tail=>{s=>_.t},'qz'
     }
-    my @z = G&op;
+    my @z = Rw fe/since their;
     n tail=>-od=>\@z
     for (@z) {
         n _.t=>-json=>{s=>_c&s},'qz'
     }
-    my @z = G&op;
+    my @z = Rw fe/since their;
     n jsons=>-od=>\@z
     for (@z) {
-        n _.t=>-meaning=>{s=>_c&s}
+        m _.t=>-meaning=>{s=>_c&s}
         #,'qz'
     }
     
@@ -257,11 +258,16 @@ SampEl: | # interaction captura
 fe/since: | # returns things from ground since last since
     my $g = A.ground || die "ngorund";
     my @z = @{gs&z||[]};
-    my $s = a&last_since;
-    shift @z until !$s || $z[0] eq $s;
-    a&last_since = $z[-1] if @s
+    if (my $s = a&last_since) {
+        while (@z) {
+            $s eq shift(@z) && last;
+        }
+    }
+    a&last_since = $z[-1] if @z;
     
     if (@{ar.m||[]}."" =~ /their/) {
+        # not od
+        @z = grep {_s&pi ne 'od'} @z;
         # wanted their C, not their C
         @z = map {
             my $M = Rw fe/fi $C:_ sJ stop sz;
