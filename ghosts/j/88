@@ -232,29 +232,50 @@ SampEl: | # interaction captura
     #     and we know ~ what should be there
     
     # stuff we have been elvised
-    n "Gc&ipd/in"=>-lise=>{},'qz'
     
-    my @z = G&op;
-    n lise=>-od=>\@z
     Rw fe/since;
-    for (@z) {
-        n _.t=>-tail=>{s=>_.t},'qz'
-    }
-    my @z = Rw fe/since their;
+    
+    n "Gc&ipd/in"=>-staticlines=>{},'qz'
+    
+    my @z = Rw fe/since their nonqz their;
+    
     n tail=>-od=>\@z
     for (@z) {
+        next if _c&s =~ /"p":\[\["SampEl"]/;
         n _.t=>-json=>{s=>_c&s},'qz'
+        _.y.A || die "noya?";
+        A.tsource ||= _.y.A.1;
     }
+    
     my @z = Rw fe/since their;
     n jsons=>-od=>\@z
     for (@z) {
-        m _.t=>-meaning=>{s=>_c&s}
-        #,'qz'
+        n _.t=>-meaning=>{s=>_c&s}
+    }
+    my @z = Rw fe/since -;
+    n thence=>-od=>{s=>\@z}
+    
+    
+    if (my $t = A.tsource) {
+        $t = Rw fe/fi $C:t stop;
+        t.y.tw || die "notw del ".ki$t;
+        1s&json = join "", map{"$_\n"}
+            map{_c&s || "OHNO: _.t"}
+            map{ t.y.tw.>_.t } @z;
+        n json=>-tin_o23=>{}=>'fs:4'
     }
     
     
     erh:
         GHere
+pi/staticlines: | # lise and -tail pile
+    n $s=>-lise=>{},'qz'
+    
+    my @z = G&op;
+    for (@z) {
+        n _.t=>-tail=>{s=>_.t}
+    }
+    
 fe/since: | # returns things from ground since last since
     my $g = A.ground || die "ngorund";
     my @z = @{gs&z||[]};
@@ -265,18 +286,27 @@ fe/since: | # returns things from ground since last since
     }
     a&last_since = $z[-1] if @z;
     
-    if (@{ar.m||[]}."" =~ /their/) {
-        # not od
-        @z = grep {_s&pi ne 'od'} @z;
-        # wanted their C, not their C
-        @z = map {
-            my $M = Rw fe/fi $C:_ sJ stop sz;
-            @$M
-        } @z;
+    # not od
+    @z = grep {_s&pi ne 'od'} @z;
+    
+    for (@{ar.m||[]}) {
+        if ($_ eq 'their') {
+            # wanted their C, not their C
+            @z = map {
+                my $M = Rw fe/fi $C:_ sJ stop sz;
+                @$M
+            } @z;
+        }
+        elsif (/^non(\w+)$/) {
+            my $notsc = $1;
+            @z = grep { !exists _.sc.>$notsc } @z;
+        }
+        else {
+            die "since clause $_";
+        }
     }
     
-    
-    @z;
+    @z
     
     
 pi/tail: | # reading a file continuously
@@ -320,6 +350,7 @@ pi/tail: | # reading a file continuously
     
     @{ar.M} = @$M;
 pi/json: | # decode c&s to data.c.s
+    my $t = C.t;
         if ($s =~ /^(\[|\{)/) {
             my $C = eval { djson $s };
             if ($@) {
@@ -330,21 +361,37 @@ pi/json: | # decode c&s to data.c.s
             $C = G&Ct,$C if ref $C eq 'ARRAY'; # TODO may be z
             #sayre "Amos: ".wdump 3, [$s, $C, C.c.e];
             
-            n data=>''=>{s=>$C}
+            n $t=>''=>{s=>$C}
         }
         else {
             die "Strange: $s";
         }
 pi/meaning: | # unpack what it is and why, W/e/us
+    ref $s eq 'HASH' || return
+        n "Not a hash: ",-od=>{s=>$s}
     my $c = {C=>$s};
     my $e = c.e = sc&e if sc&e;
     c.us = ec&us if ec&us;
     c.es = ec&s if ref ec&s eq 'HASH';
     c.ep = c.es.p if c.es.p;
+    $s = c&s = $c;
+    c&dl = 1;
+    # apply schemas ^
+    if (c.ep) {
+        my @p;
+        for (@{c.ep||[]}) {
+            my ($t,$cv) = @$_;
+            push @p, $t unless @p && $t eq $p[-1];
+        }
+        n pointer=>18=>join("/",@p),'fs:12,ma:0.3';
+    }
+    if (my $h = c.es || c.us) { # win upgrase jse c&s=json to c&us:data
+        my $hav = join' ',grep{$_}(map{$h.>$_ && $_}qw'S C A M'), h.type;
+        n nuance=>181=>$hav,'fs:8,ma:0.3,hs:999,fw:3';
+    }
     
-    # apply schemas
-    
-    n C.t=>-od=>{s=>$c}
+    local c&pi = 'od'; # messy, cos v many-maker copies what we are
+    Rw pi/od + $s;
 TEer: | # use ET
     Rw Tiot;
     Rw IET;
