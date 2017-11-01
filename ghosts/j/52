@@ -1,4 +1,47 @@
 
+MotorTime: | # serve time
+    4c&todo ||= []; # may be immediately done
+    sayre "Plan future: ".ki $_ for @{4c&todo};
+    my $tz;
+    for my $y (@{4c&todo}) {
+        my ($Y,$s,$cb) = @$y;
+        saybl "Timering $s: ".G&sn,$Y;
+        push @{$tz.>$s ||=[]}, [$Y,$cb];
+    }
+    @{4c&todo} = ();
+    if (!$tz) {
+        if (my $wd = Gc&when_done) {
+            G&e,@$_ for @$wd;
+        }
+        return;
+    }
+    my @int;
+    my $tiny_bits = 0.05;
+    # < using Motor for each G&time callback,
+    #   so the list can be advanced one time at a time
+    #   and fetime can be adjusted
+    #   which makes everything look like it happens instantly
+    for my $s (sort map {0+$_} keys %$tz) {
+        push @int, $s;
+        my $v = $tz.>$s;
+        if (Gc&asap) {
+            # lie about fetime
+            # so shows/tests render fast
+            #   with what looks like real time within
+            $s = $tiny_bits * @int;
+        }
+        Mojo::IOLoop->timer($s,&{
+            1 && sayyl "Here again!";
+            for my $y (@$v) {
+                my ($Y,$cb) = @$y;
+                1 && saybl "Comeback $s: ".G&sn,$Y;
+                $cb->();
+            }
+        });
+    }
+    sayyl "Have timers at ".join", ", @int;
+    Gc&freetime ||
+        Rw GiveTime;
 GiveTime: | # release from reading input
     Gc&clockon = sub {
         1 && saybl "GiveTime: G.t";
