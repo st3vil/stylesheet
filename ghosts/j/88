@@ -80,14 +80,14 @@ ETsl: | # mo considers waking up about 4/5
         } : undef; # not here
     } @{ps&z||[]};
     
-    ls&unspec = 1 if !$l; # may not know (may still have @z)
+    ls&mystery = 1 if !$l; # no direct information (may still have @z)
     ls&J = A.1; # our expectation knows us
     ps&last = $l; # it can follow itself up as the next sibling
     1c&ET = $l; # it attaches itself here (for children)
     Rs&l = $l; # 1c&TE (R) knows ~ 1c&ET (L)
     
     # skip if l is specific enough:
-    if (@z && !ls&unspec) {
+    if (@z && !ls&mystery) {
         die "self and other";
     }
     elsif (@z) {
@@ -97,11 +97,11 @@ ETsl: | # mo considers waking up about 4/5
         lc&theyllknow = 1;
         m inside=>''=>{}=>'count:'.@z
     }
-    elsif (!ls&unspec) {
+    elsif (!ls&mystery) {
         # something is in $l
         m awake=>''=>{s=>$l}
     }
-    else { # ls&unspec, not if @z (or $l) was found
+    else { # ls&mystery, not if @z (or $l) was found
         # (osc needed any time @zward changes)
         if (pc&theyllknow) { # but we dont
             # a sibling is awake
@@ -126,7 +126,7 @@ ETsl: | # mo considers waking up about 4/5
     
     # hook M with many of this function too
     # if the first group of -pis are still the rest can sleep?
-IET: | # singularly you ET
+IET: | # you ET
     A.1 eq A.3 || die "Be W";
     my $et = 3c&ET;
     
@@ -155,8 +155,7 @@ TEing: | # prove ET TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
     n TEoer
     
     
-
-SeeTEer: |
+SeeTEer: | # See what ETs been happening
     Rw Tiot + $nodis=1;
     
     Jc&es = delete Gs&follow if Gs&follow;
@@ -233,12 +232,6 @@ od/sings: | # things -od might do but better
         nc&s = delete(ns&prep).nc&s if ns&prep;
     }
     
-
-
-
-
-
-
 TEoaTest: |
     my $i = Js&bowls++;
     sayyl "C.t's $i";
@@ -288,8 +281,10 @@ TEoer: | # use ET to sleep a workflow
     
     my $i = Js&set.two ||= {two=>'8',three=>'^',four=>"@@@-"};
     
+    # makes loop
     Rw TEoaTest + $o $oi $oii $i;
     
+    # ground cursor from here
     Rw fe/since;
     
     n galvi=>-TEope_1=>{s=>$o},'qz'
@@ -367,7 +362,7 @@ pi/TEext: | # creatures
         $y = y.y.C while y.y.C;
         for my $n (1..15) {
             my $C =
-            m _.t=>''=>{s=>_c&s},{%{y.sc}}
+            m _.t."_$n"=>''=>{s=>_c&s},{%{y.sc}}
             s&fs = 22 + (5 * (0.4*$n - 2));
             s&fs *= 2 if $n / 3 =~ /(2|3|4)$/;
             
