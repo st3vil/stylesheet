@@ -1,0 +1,143 @@
+SampEl: | # interaction captura
+    # et
+    Rw Tiot;
+    
+    # facts on this G? whose source is $G, as opposed to
+    #  Gip - sub-$Gt pieces of the same process
+    #  $Gt or some other in-bay,
+    #  or out of bay/Gd spec
+    # pi for the object that has location sensitive names
+    #   be able to imply a domain to all of a kind of names within
+    #   and move stuff around sensibly
+    #   border crossings
+    #   and storing stuff remotely (G&give) such that they know us
+    #     and we know ~ what should be there
+    
+    # stuff we have been elvised
+    
+    Rw fe/since;
+    
+    n "Gc&ipd/in"=>-staticlines=>{},'qz'
+    
+    my @z = Rw fe/since their nonqz their;
+    
+    n tail=>-od=>\@z
+    for (@z) {
+        next if _c&s =~ /"p":\[\["SampEl"]/;
+        n _.t=>-json=>{s=>_c&s},'qz'
+        _.y.A || die "noya?";
+        A.tsource ||= _.y.A.1;
+    }
+    
+    my @z = Rw fe/since their;
+    n jsons=>-od=>\@z
+    for (@z) {
+        n _.t=>-meaning=>{s=>_c&s}
+    }
+    my @z = Rw fe/since -;
+    n thence=>-od=>{s=>\@z}
+    
+    
+    if (my $t = A.tsource) {
+        $t = Rw fe/fi $C:t stop;
+        t.y.tw || die "notw del ".ki$t;
+        1s&json = join "", map{"$_\n"}
+            map{_c&s || "OHNO: _.t"}
+            map{ t.y.tw.>_.t } @z;
+        n json=>-tin_o23=>{}=>'fs:4'
+    }
+    
+    
+    erh:
+        GHere
+pi/staticlines: | # lise and -tail pile
+    n $s=>-lise=>{},'qz'
+    
+    my @z = G&op;
+    for (@z) {
+        n _.t=>-tail=>{s=>_.t}
+    }
+    
+pi/tail: | # reading a file continuously # TODO try -s $h instead of !eof
+    y.cyc = 1000;
+    -f $s || die "send file not $s";
+    if (1) {
+        my $s = read_file($s);
+        for my $l (split "\n", $s) {
+            my $dig = slm 9, dig $l;
+            m $dig=>''=>{s=>$l}
+        }
+        return;
+    }
+    
+    my ($ino,$size) = (stat $s)[1,7];
+    if (1s&ino && 1s&size) {
+        delete 1s&filehandle if 1s&ino ne $ino || 1s&size > $size;
+        delete Js&M;
+    }
+    (1s&ino,1s&size) = ($ino,$size);
+    
+    my $h = 1s&filehandle ||= do {
+        open(my $h, '<', $s)
+             || die "$s open fail: $!";
+        $! && sayre "$s open noise: $!";
+        $h
+    };
+    
+    my $M = Js&M ||= [];
+    # only does one...
+    
+    while (1 || !eof $h) {
+        my $l = readline $h;
+        length $l || last,
+        n nothingmr=>''=>"No more"
+        my $dig = slm 9, dig $l;
+        m $dig=>''=>{s=>$l}
+    }
+    
+    n seeings=>-od=>{s=>wdump 2, $h};
+    
+    @{ar.M} = @$M;
+pi/json: | # decode c&s to data.c.s
+    my $t = C.t;
+        if ($s =~ /^(\[|\{)/) {
+            my $C = eval { djson $s };
+            if ($@) {
+                sayre "NOT json C: $_";
+                $@ = '';
+                return;
+            }
+            $C = G&Ct,$C if ref $C eq 'ARRAY'; # TODO may be z
+            #sayre "Amos: ".wdump 3, [$s, $C, C.c.e];
+            
+            n $t=>''=>{s=>$C}
+        }
+        else {
+            die "Strange: $s";
+        }
+pi/meaning: | # unpack what it is and why, W/e/us
+    ref $s eq 'HASH' || return
+        n "Not a hash: ",-od=>{s=>$s}
+    my $c = {C=>$s};
+    my $e = c.e = sc&e if sc&e;
+    c.us = ec&us if ec&us;
+    c.es = ec&s if ref ec&s eq 'HASH';
+    c.ep = c.es.p if c.es.p;
+    $s = c&s = $c;
+    c&dl = 1;
+    # apply schemas ^
+    if (c.ep) {
+        my @p;
+        for (@{c.ep||[]}) {
+            my ($t,$cv) = @$_;
+            push @p, $t unless @p && $t eq $p[-1];
+        }
+        n pointer=>18=>join("/",@p),'fs:12,ma:0.3';
+    }
+    if (my $h = c.es || c.us) { # win upgrase jse c&s=json to c&us:data
+        my $hav = join' ',grep{$_}(map{$h.>$_ && $_}qw'S C A M'), h.type;
+        n nuance=>181=>$hav,'fs:8,ma:0.3,hs:999,fw:3';
+    }
+    
+    local c&pi = 'od'; # messy, cos v many-maker copies what we are
+    Rw pi/od + $s;

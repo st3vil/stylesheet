@@ -378,3 +378,36 @@ Diff: | # i<->o c&s
     G&give:Budge=>["Diff i.t"=>''=>{s=>$diff}];
     #
 
+fe/since: | # returns things from ground since last since
+    my $g = A.ground || die "ngorund";
+    my @z = @{gs&z||[]};
+    if (my $s = a&last_since) {
+        while (@z) {
+            $s eq shift(@z) && last;
+        }
+    }
+    a&last_since = $z[-1] if @z;
+    
+    # not od
+    @z = grep {_s&pi ne 'od'} @z;
+    
+    for (@{ar.m||[]}) {
+        if ($_ eq 'their') {
+            # wanted their C, not their C
+            @z = map {
+                my $M = Rw fe/fi $C:_ sJ stop sz;
+                @$M
+            } @z;
+        }
+        elsif (/^non(\w+)$/) {
+            my $notsc = $1;
+            @z = grep { !exists _.sc.>$notsc } @z;
+        }
+        else {
+            die "since clause $_";
+        }
+    }
+    
+    @z
+    
+    
