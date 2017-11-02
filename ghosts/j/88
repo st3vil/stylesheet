@@ -52,22 +52,31 @@ ET: | # collecT after e how to refresh
         push @{ts&z||=[]}, $z;
     }
 ETsl: | # mo considers waking up about 4/5
-    A.1 eq A.3 && return
+    if (A.1 eq A.3) {
+        # would never happen if we localise sleeper inside W
+        # can form its own wakeup theories when it IETs
+        return
         Rw FourSleep;
-    # if some clues, sleep
+    }
+    # clues == expectation
+    # no clues, wake
+    # some clues, sleep
+    # clue points here, wake
     
-    my $r = 3c&TE; # the/one's results
+    # what goes in to ET,
+    # how ET-ing worked out in the many TE
+    
+    my $r = 3c&TE; # 3's result
     my $M = rs&z ||= [];
     
-    my $R = 1c&TE = # our results
+    my $R = 1c&TE = # 1's results, as a flatlist on 3's result
     m A.1.t=>''
     my $M = Rs&z ||= []; # random talkylines
     
     
-    
-    my $p = 2c&ET; # parent/many's expectation
+    my $p = 2c&ET; # 2's clues
     my $t = A.1.t; # us as a name
-    my $l; # our expectation, with t:
+    my $l; # our clue, with t:
     
     my @z = grep{$_} map {
         _.t =~ /^\Q$t\E$/ ? do {
@@ -80,34 +89,90 @@ ETsl: | # mo considers waking up about 4/5
         } : undef; # not here
     } @{ps&z||[]};
     
-    ls&mystery = 1 if !$l; # no direct information (may still have @z)
-    ls&J = A.1; # our expectation knows us
-    ps&last = $l; # it can follow itself up as the next sibling
-    1c&ET = $l; # it attaches itself here (for children)
-    Rs&l = $l; # 1c&TE (R) knows ~ 1c&ET (L)
+    ls&noclue = 1 if !$l; # no direct information (may still have @z)
+    
+    1c&ET = $l; # clue glues itself onto here (for children)
+    Rs&l = $l; # 1c&TE (R) knows ~ 1c&ET (l)
+    
+    # our clue knows us
+    ls&J = A.1;
+    Rs&sip = 1c&sip;
+    Rs&pi = s&pi if s&pi ;
+    
+    # upward path?
+    my $S = A.1;
+    Rs&depth ++ while $S = S.1 ne S.3 && S.2;
+    # no sleep allowed
+    Rs&imping = 1 if 1c&imping || 2c&imping;
+    
+    Rs&bowlings = ++1s&bowlings;
     
     # skip if l is specific enough:
-    if (@z && !ls&mystery) {
+    if (@z && !ls&noclue) {
         die "self and other";
+    }
+    elsif (Rs&imping) {
+        lc&want.imping = 5;
     }
     elsif (@z) {
         # for others
+        # (osc needed any time @zward changes)
         ls&z = \@z;
         lc&want.children = 5; # wake for someone
         lc&theyllknow = 1;
         m inside=>''=>{}=>'count:'.@z
     }
-    elsif (!ls&mystery) {
+    elsif (!ls&noclue) {
         # something is in $l
         m awake=>''=>{s=>$l}
     }
-    else { # ls&mystery, not if @z (or $l) was found
-        # (osc needed any time @zward changes)
+    elsif (1s&top) { # non-init ls&noclue
         if (pc&theyllknow) { # but we dont
             # a sibling is awake
             lc&want.dunno = -5;
         }
     }
+    else { # init ls&noclue
+        # wants to try FourSearch before deciding?
+        Rs&init = 'noclue';
+    }
+    
+    
+        if (my $inmode = 2c&ETmode) {
+            if ($inmode eq '2') {
+                if (ps&percolating) { # change, until steady?
+                    lc&want.perc = 6;
+                }
+                elsif (my $L = ps&last) {
+                    my $j = Ls&J || die "NolastJ";
+                    my $c = jc&s;
+                    # keep waking until
+                    my $pl = js&s.sc.Jo || die "Unlabelled s: ".ki js&s;
+                    my $was = 1s&last_previous_label;
+                    1s&last_previous_label = $pl;
+                    if ($was ne $pl) {
+                        m percolation=>''=>{was=>$was,now=>$pl}
+                        lc&want.percolation = 6;
+                        ps&percolating = 1;
+                    }
+                    elsif (s&open) {
+                        m tocheck=>''
+                        lc&want.tocheck = 6;
+                    }
+                    elsif (cs&pi ne js&pi) {
+                        Rs&prev = "L.t for j.t";
+                    }
+                }
+                else {
+                    Rs&first_in = '2';
+                    1s&s && G&give,Budge=>['slope'=>''=>{s=>1s&s}];
+                    lc&want.first = 6;
+                }
+            }
+        }
+    
+    
+    ps&last = $l; # for the next sibling
     
     if (lc&want) {
         c&want && die "Merge wants";
@@ -118,11 +183,7 @@ ETsl: | # mo considers waking up about 4/5
     
     # A&awake never works?
     Rc&s = T.Z ? 'sleep':'wake';
-    Rs&sip = 1c&sip;
-    Rs&pi = s&pi if s&pi ;
-    Rs&dec = a&dec;
-    my $S = A.1;
-    Rs&depth ++ while $S = S.1 ne S.3 && S.2;
+    Rs&dec = a&dec if a&dec;
     
     # hook M with many of this function too
     # if the first group of -pis are still the rest can sleep?
@@ -133,12 +194,17 @@ IET: | # you ET
     # the map to use this time
     my $l = 3c&ET = et.y.next || {};
     l.t ||= 'default';
+    # and some?
+    lc&theyllknow = 1 if 1s&top;
+    # put ETmode on here?
+    #   it could be fired at a particular j as well...
+    #   for major and minor messing with the machine of process
     
     # to what will be
     my $r = 3c&TE = {};
     r.t ||= 'default';
     
-    # should A.3 local...
+    # < A.3 local...
     4c&way_foursleep = 'ETsl';
     
     # to show what it went in with
@@ -237,19 +303,13 @@ TEoaTest: |
     sayyl "C.t's $i";
     my $mess = Js&set.messings ||= [&{
     
-    }, &{
-    
-    }, &{
-    
-    }
+    },
     ];
     if (my $r = $mess->[$i]) {
         $r->();
-        #G&e,Bayed=>[s=>$r];
     }
-    else {
-        A&done++
-    }
+    $mess->[$i+1] || A&done++;
+    
     1 && sayyl((A&done?"Leaving":"A")." C.t!");
     
     A&done ||
@@ -258,6 +318,9 @@ TEoaTest: |
 TEoer: | # use ET to sleep a workflow
     Rw Tiot;
     Rw IET;
+    # become still after continuous bunch of same pis
+    Jc&ETmode = 2;
+    n A=>o24=>"Another"
     y.at.wi = 30;
     y.at.he = 22;
     s&bo = '3px solid pink';
@@ -376,6 +439,8 @@ pi/TEext: | # creatures
             #s&hs = '8955';
             
             s&blr = 1.74 * $n if $n =~ /[1234]$/;
+            
+            s&dos = 'ETvis';
         }
     } 
 TEsting: | # prove TEer
