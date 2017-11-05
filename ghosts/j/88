@@ -127,13 +127,13 @@ ETsl: | # mo considers waking up about 4/5
         die "self and other";
     }
     elsif (Rs&imping) {
-        lc&want.imping = 5;
+        lc&want.imping = 6;
     }
     elsif (@z) {
         # for others
         # (osc needed any time @zward changes)
         ls&z = \@z;
-        lc&want.children = 5; # wake for someone
+        lc&want.children = 8; # wake for someone
         lc&theyllknow = 1;
         #m inside=>''=>{}=>'count:'.@z
     }
@@ -142,12 +142,12 @@ ETsl: | # mo considers waking up about 4/5
         m awake=>''=>{s=>$l}
     }
     elsif (1s&top) { # non-init ls&noclue
+        if ($D && Ds&open) {
+            lc&want.open = 5;
+        }
         if (1c&ETmode) {
             # we have sleeping configured, probably go in
             lc&want.knowing = 5;
-        }
-        elsif ($D && Ds&open) {
-            lc&want.open = 5;
         }
         elsif (pc&theyllknow) { # but we dont
             # a sibling is awake
@@ -225,7 +225,13 @@ ETmode: | # when 1s&ETmode
                     #    -origin puts stuff outside (mo C) itself (9->)
                     
                     if (ps&percolating) { # already changing, until steady?
-                        lc&want.perc = 6;
+                        my $n = js&s.sc.notice;
+                        if (cs&open && ns&sleep) { # s&opens can stop percolation
+                            lc&want.deperc = -6;
+                        }
+                        else {
+                            lc&want.perc = 6;
+                        }
                     }
                     elsif ($was ne $pl) { # changing
                         m percolation=>''=>{was=>$was,now=>$pl}
@@ -248,7 +254,7 @@ ETmode: | # when 1s&ETmode
                     }
                     elsif (cs&pi ne s&pi) { # progression of language
                         ps&stillness = 1;
-                        lc&want.pistill = -5;
+                        lc&want.pistill = -6;
                         m not_first_pi=>''=>{s=>"cs&pi <=> s&pi"}
                     }
                     else {
@@ -257,7 +263,6 @@ ETmode: | # when 1s&ETmode
                     }
                 }
                 else {
-                    m first=>''=>"s&pi"
                     lc&want.first = 6;
                 }
             }
@@ -353,6 +358,7 @@ pi/TE: |
     
     A&asone = 1;
     A&igke.>$_++ for qw'sip l depth z';
+    A&hemsize = 100; # allow ki up to 100 long
     Rw SeeC;
     
     y.n = 6;
