@@ -135,11 +135,13 @@ Indentity: | # bit of basket "$ind<" and name of bit there (C.t)
     y.at.qs=1;
     y.at.ws=1;
     y.clos=1;
-    A&ind = join'', ('  ') x (c&depth - 1);
     y.at.dis = 1;
     s&dis = 3;
     
-    n ind=>o7=>A&ind
+    if (c&depth) {
+        A&ind = join'', ('  ') x (c&depth - 1);
+        n ind=>o7=>A&ind
+    }
     n sli=>o8=>"<  ",'%hs:784,dos:Crank'
     
     unless (c&quiet_t && a&space < 2) {
@@ -262,6 +264,29 @@ Trunks: | # adj depth for shape/truncation of too-hyperlinkage
             A&nomorekeys = 1;
         }
     }
+    
+pi/SeeC: | # inlinier SeeC
+    Rw MayC;
+    # be lenient on t/y/c missing
+    #die "not a C: ".ki $s if !c&istycsc;
+    c&quiet_t = 1;
+    Rw Indentity;
+    delete y.at.dis;
+    delete y.at.ws;
+    delete s&dis;
+    
+    A&asone = 1;
+    Rw SeeC;
+    
+    if (my $de = c&decor) { # & t override
+        y.at.bo = '2px solid yellow';
+        n t=>2=>{s=>"$de"},"%hs:356,fs:22,mw:14"
+    }
+    
+    # < name this od/burst, for climbing off specific formation
+    Js&boost &&
+    n '^'=>-od_7=>{dl=>2,s=>$s}
+    
     
 SeeC: |
     s&sy = 'C';

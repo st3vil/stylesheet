@@ -38,6 +38,7 @@ ET: | # collecT after e how to refresh
         }
     }
     elsif ($n eq '1') { # wake probably (not definitely) nothing
+        
     }
     else {
         die "What doing?".
@@ -104,8 +105,22 @@ ETsl: | # mo considers waking up about 4/5
     Rs&depth ++ while $S = S.1 ne S.3 && S.2;
     # no sleep allowed
     Rs&imping = 1 if 1c&imping || 2c&imping;
-    
     Rs&bowlings = ++1s&bowlings;
+    
+    my $D; # our C's last life
+    if (1s&top) {
+        # lets regurge last C.sc
+        my $g = A.mo.up.ground || die "no ground";
+        my $d = 2s&drains.>g.t; # ''
+        gs&J eq ds&J || die "Confuse gs&J.t and ds&J.t";
+        my @l = grep { _.t eq C.t } @{ds&z};
+        @l = grep { _.y.cv eq C.y.cv } @{ds&z};
+        ($D,my$o) = @l;
+        $o && die "found more than D.t: C.y.cv "
+            .G&give,Budge=>["wihe"=>''=>{s=>\@l}];
+    }
+    
+    
     
     # skip if l is specific enough:
     if (@z && !ls&noclue) {
@@ -120,8 +135,7 @@ ETsl: | # mo considers waking up about 4/5
         ls&z = \@z;
         lc&want.children = 5; # wake for someone
         lc&theyllknow = 1;
-        Rs&Heloo = "loool";
-        m inside=>''=>{}=>'count:'.@z
+        #m inside=>''=>{}=>'count:'.@z
     }
     elsif (!ls&noclue) {
         # something is in $l
@@ -129,8 +143,11 @@ ETsl: | # mo considers waking up about 4/5
     }
     elsif (1s&top) { # non-init ls&noclue
         if (1c&ETmode) {
-            # they have sleeping configured
+            # we have sleeping configured, probably go in
             lc&want.knowing = 5;
+        }
+        elsif ($D && Ds&open) {
+            lc&want.open = 5;
         }
         elsif (pc&theyllknow) { # but we dont
             # a sibling is awake
@@ -159,15 +176,8 @@ ETsl: | # mo considers waking up about 4/5
     Rs&dec = a&dec if a&dec;
     
     if (Rc&s eq 'sleep') {
-        # lets regurge last C.sc
-        my $g = A.mo.up.ground || die "no ground";
-        my $d = 2s&drains.>g.t; # ''
-        gs&J eq ds&J || die "Confuse gs&J.t and ds&J.t";
-        my ($t,$o) = grep { _.t eq C.t } @{ds&z};
-        $o && die "found more than t.t: ".ki $o;
-        C.sc.>$_ ||= t.sc.>$_ for keys %{t.sc};
+        C.sc.>$_ ||= D.sc.>$_ for keys %{D.sc};
     }
-    
     # hook M with many of this function too
     # if the first group of -pis are still the rest can sleep?
 ETmode: | # when 1s&ETmode
@@ -197,9 +207,14 @@ ETmode: | # when 1s&ETmode
                 if (my $L = ps&last) {
                     my $j = Ls&J || die "NolastJ";
                     my $c = jc&s;
-                    
                     # notice previous things version
-                    my $pl = js&s.sc.Jo || die "Unlabelled s: ".ki js&s;
+                    if (!js&s || !keys %{js&s.sc}) {
+                        # < would like to know about new cases of this
+                        #   or if its not right after C-decoring stuff like -Gug
+                        lc&want.first_oscer = 6;
+                        return;
+                    }
+                    my $pl = js&s.sc.Jo || die "Unlabelled s: ".G&sn,$j ."\n os:".ki js&s;
                     my $was = 1s&last_previous_label;
                     1s&last_previous_label = $pl;
                     
@@ -228,6 +243,8 @@ ETmode: | # when 1s&ETmode
                     }
                     elsif (ps&stillness) {
                         lc&want.stillpi = -5;
+                        # the chain being still overrides the -pi knowing ETmode
+                        delete lc&want.knowing;
                     }
                     elsif (cs&pi ne s&pi) { # progression of language
                         ps&stillness = 1;
@@ -272,9 +289,10 @@ IET: | # you ET
     # < A.3 local...
     4c&way_foursleep = 'ETsl';
     
+    my $i = ++Js&IETs;
+    return if ar.nofollow;
     # to show what it went in with
     my $M = Gs&follow ||= [];
-    my $i = ++Js&IETs;
     m A.1.t=>''=>{}=>{i=>$i,l=>$l,r=>$r,J=>A.1,mo=>$A}
     
 TEing: | # prove ET TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
@@ -289,6 +307,7 @@ TEing: | # prove ET TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
 SeeTEer: | # See what ETs been happening
     y.at.bg = '3834';
     Rw Tiot + $nodis=1;
+    #Rw IET + $nofollow=1;
     
     Jc&es = delete Gs&follow if Gs&follow;
     my $s = Jc&es;
@@ -309,12 +328,20 @@ pi/TE: |
     #ss&J && ++A&igke.J && # having a J
     #Rw pi/AJ $s:ss&J;
     # SampEl
+    my $r = A.r && A.r.c.s.c.s;
+    if (my $j = $r && rc&s eq 'wake' && !rs&imping && ss&J) {
+        #n 6=>-od_6=>{s=>A.r.c.s.c.s.c.s}
+        if (my $o = js&s) {
+            n jay=>-SeeC_3=>{s=>os&notice,decor=>'s'}
+        }
+    }
     
     s&sy &&
         n sy=>o75=>s&sy=>"%hs:7574,ab:1,poi:0,lh:40%,fs:".int(100 / c&depth)
 
     if (s&sy eq 'r') {
         # on Hut ds (drop sc) doesn't yet remove styles
+        A.r = $A;
         y.at.opa = sc&s eq 'sleep' ? 0.6 : 1;
     }
     Rw od/sings + i sip pi dec;

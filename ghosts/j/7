@@ -1,8 +1,9 @@
 
 FishBrains: |
     # etc
-        my $r; # top C, what goes in to it
-        my $ch; # its partition/page
+        # C is this osc channel/page/1s&brain.>$ch
+        my $r; # top C/1s&root 9, what goes in to it
+        my $ch; # its channel/partition/page
         if ($r = A&thaw) {
             1c&thaw = $r;
             A&imp = 1;
@@ -45,8 +46,12 @@ FishBrains: |
         
         # osc C: brain is ongoing, one per ground
         A&s = $C = 1s&brains.>$ch ||= G&Ct,[$ch=>1=>{}=>{J=>A.1}];
+        
         # squished bits to give the 9, cJo=version
         s&label = {c=>{}};
+        
+        # says what just happened, even sleepings
+        my $n = s&notice = {c=>{}};
         
         if (A&imp || delete 1c&imping) { # reset or seek?
             # o will see anew
@@ -54,6 +59,7 @@ FishBrains: |
             1 && saygr "imping: ".G&sn;
             A&imp ||= 1;
             delete s&o.>$_ for qw'in ut';
+            ns&imping = 1;
         }
         
         # o in - to map the drain and OC the changes
@@ -76,6 +82,7 @@ FishBrains: |
             c&Jo = ss&Jo;
         };
         
+        #c o in
         my $o = A&in = G&o,$r,{liveon=>$C,t=>'in',yoff=>'OC',map=>$m,V=>0};
         
         # where we'd want to forget $d, the drain itself...
@@ -86,6 +93,7 @@ FishBrains: |
         # sleep: before 9 takes all under, no Core means still
         unless (@{A&Core}) {
             sayre "Sleeps in: ".G&sn;
+            ns&sleep = 'in';
             return $C
         }
         
@@ -165,10 +173,13 @@ FishBrains: |
             @{A&KAs} > 1 && sayre "Had KAs tho";
             Yc&el ne '8' && sayre "Not rel8 tho: Yc&el";
             sayre "Sleeps ou: ".G&sn;
+            ns&sleep = 'ou';
             return $C
         }
         
-        
+        my $cw;
+        $cw.>_c&el ++ for @{A&KAs};
+        ns&change = ki $cw;
         
         # K - only changes and their parents
         #   <6 becomes things for s&top, s&tv, etc
