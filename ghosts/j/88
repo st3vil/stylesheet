@@ -120,6 +120,7 @@ ETsl: | # mo considers waking up about 4/5
         ls&z = \@z;
         lc&want.children = 5; # wake for someone
         lc&theyllknow = 1;
+        Rs&Heloo = "loool";
         m inside=>''=>{}=>'count:'.@z
     }
     elsif (!ls&noclue) {
@@ -127,7 +128,11 @@ ETsl: | # mo considers waking up about 4/5
         m awake=>''=>{s=>$l}
     }
     elsif (1s&top) { # non-init ls&noclue
-        if (pc&theyllknow) { # but we dont
+        if (1c&ETmode) {
+            # they have sleeping configured
+            lc&want.knowing = 5;
+        }
+        elsif (pc&theyllknow) { # but we dont
             # a sibling is awake
             lc&want.dunno = -5;
         }
@@ -287,6 +292,10 @@ SeeTEer: | # See what ETs been happening
     
     Jc&es = delete Gs&follow if Gs&follow;
     my $s = Jc&es;
+    my $many;
+    $many++, shift @$s while @$s > 2;
+    $many &&
+        n many=>o3=>"Ignored $many",dis
     m _.t=>-TE=>{s=>$_} for @$s;
 pi/TE: |
     #
