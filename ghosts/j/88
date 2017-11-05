@@ -153,10 +153,21 @@ ETsl: | # mo considers waking up about 4/5
     Rc&s = T.Z ? 'sleep':'wake';
     Rs&dec = a&dec if a&dec;
     
+    if (Rc&s eq 'sleep') {
+        # lets regurge last C.sc
+        my $g = A.mo.up.ground || die "no ground";
+        my $d = 2s&drains.>g.t; # ''
+        gs&J eq ds&J || die "Confuse gs&J.t and ds&J.t";
+        my ($t,$o) = grep { _.t eq C.t } @{ds&z};
+        $o && die "found more than t.t: ".ki $o;
+        C.sc.>$_ ||= t.sc.>$_ for keys %{t.sc};
+    }
+    
     # hook M with many of this function too
     # if the first group of -pis are still the rest can sleep?
 ETmode: | # when 1s&ETmode
     # chain reaction strategy
+    my $mode = 2c&ETmode;
     
     # for taking pictures of last mo C
     my $drop;
@@ -177,8 +188,7 @@ ETmode: | # when 1s&ETmode
         $s
     };
     
-        if (my $inmode = 2c&ETmode) {
-            if ($inmode eq '2') {
+            if ($mode eq '2') {
                 if (my $L = ps&last) {
                     my $j = Ls&J || die "NolastJ";
                     my $c = jc&s;
@@ -193,9 +203,6 @@ ETmode: | # when 1s&ETmode
                     1s&last_previous_C = $lastC;
                     # AND its C, now mo'd
                     #    -origin puts stuff outside (mo C) itself (9->)
-                    
-                    3s&sentaslop++ ||
-                        G&give:Budge=>['slope'=>''=>{s=>$lastC}];
                     
                     if (ps&percolating) { # already changing, until steady?
                         lc&want.perc = 6;
@@ -220,18 +227,26 @@ ETmode: | # when 1s&ETmode
                     elsif (cs&pi ne s&pi) { # progression of language
                         ps&stillness = 1;
                         lc&want.pistill = -5;
-                        m nonfirst_different=>''=>{s=>"cs&pi <=> s&pi"}
+                        m not_first_pi=>''=>{s=>"cs&pi <=> s&pi"}
                     }
                     else {
-                        m nonfirst_nondifferent=>''=>{s=>"cs&pi <=> s&pi"}
+                        m first_pi=>''=>{s=>"s&pi"}
+                        lc&want.first = 6;
                     }
                 }
                 else {
-                    Rs&first_in = '2';
+                    m first=>''=>"s&pi"
                     lc&want.first = 6;
                 }
             }
-        }
+            elsif ($mode eq '1') {
+                # should sleep if C same...
+                die "some 1";
+            }
+            else {
+                # 
+                die "mode of $mode";
+            }
 IET: | # you ET
     A.1 eq A.3 || die "Be W";
     my $et = 3c&ET;
@@ -344,9 +359,8 @@ od/sings: | # things -od might do but better
         nc&s = delete(ns&prep).nc&s if ns&prep;
     }
     
-TEsting: | # prove TEer and TEoer
-    # basic $want=[J+] ing, this surrounds it to send elvising in
-    n TEerTest
+
+TEosting: | # prove TEoer
     # ETmode == 2
     n TEoer
 TEoaTest: |
@@ -355,12 +369,14 @@ TEoaTest: |
     }, &{
         i.three = '+';
     }, &{
-    
+        
     }, &{
         i.three = '^';
         i.four = '~@-@';
     }, &{
-    
+        my $C = G&hup,$o->[0];
+        s&size = 3;
+        #push @$o, $C;
     }, &{
         _s&size += 10 for @$oi;
     },
@@ -513,6 +529,9 @@ pi/TEext: | # creatures
             s&dos = 'ETvis';
         }
     } 
+TEsting: | # prove TEer
+    # basic $want=[J+] ing, this surrounds it to send elvising in
+    n TEerTest
 TEerTest: | # prove TEer and TEoer
     Gc&quietbeing = 1;
     my $i = Js&bowls++;
