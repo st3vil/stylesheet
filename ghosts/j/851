@@ -65,7 +65,14 @@ piFeedTape: | # your J state recovery - Js&M ||= Js&top for s&mix, s->cpi, dedup
     if (!@{Js&M||[]}) {
         my $M = Js&M;
         if (my $d = ar.default) {
-            m ref $d ? $d : split(":", $d)
+            if (ref $d) {
+                m $d
+            }
+            else {
+                for my $n (split ',', $d) {
+                    m split(":", $n)
+                }
+            }
         }
     }
     m $_ for @{Js&M||[]};
@@ -411,3 +418,4 @@ fe/since: | # returns things from ground since last since
     @z
     
     
+
