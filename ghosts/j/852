@@ -28,8 +28,11 @@ ind/sort: | # clone/flatlist with rearrangement
     my $gk = ar.gk || 'bit';
     my $cb = &Cd{
         @{s&z} = sort {
-            exists a.sc.>$gk && exists b.sc.>$gk
-                && a.sc.>$gk <=> b.sc.>$gk
+            exists a.sc.>$gk && exists b.sc.>$gk && do {
+                a.sc.>$gk =~ /^\d+$/ && b.sc.>$gk =~ /^\d+$/
+                ? a.sc.>$gk <=> b.sc.>$gk
+                : a.sc.>$gk cmp b.sc.>$gk
+            }
         } @{s&z} if s&z;
         $C
     };
