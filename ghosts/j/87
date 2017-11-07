@@ -219,7 +219,11 @@ pi/codolf: | # read file of -code, yaml about pin=>way
     }
     
 pi/codolf/intake: | # write file of -code from $M
-    # M has probably one change/extra already in it
+    # M has the adjustment already
+    # 
+    my $f = j.t;
+    -f $f || die "$f not there! am ".G&sn,$j;
+    
     die"Send -codes, got: ".join("-",map{_s&pi}@$M)."
         ".ki$M 
     unless @$M && @$M == grep{_s&pi eq 'code'} @$M;
@@ -457,9 +461,7 @@ pushout: | # push to $w-way/$o-origin
     
     ls&pi eq 'codolf' || die "pushing new places: ".ki$l;
     
-    -f f.t || die "f.t not there!";
-    
-    Rw pi/ls&pi/intake $M $f:f.t;
+    Rw pi/ls&pi/intake $M $j:f;
     
     # update the -origin on the changed -way, encoded into $i
     os&local = os&remote = is&dige;
