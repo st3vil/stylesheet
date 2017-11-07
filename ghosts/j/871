@@ -1,3 +1,33 @@
+EditLatter: | # Alterate into editing the last pi form
+    # in t only list, allowing easy rejig
+    # collect orphans
+    #   names get started as "#", or alienated
+    #      zap them back in when put somewhere else on this Te
+    
+    # when title is shift-clicked
+    1s&Simp = 'Alterate';
+    return unless 1c&Alterating;
+    # qz the last C entered, edit it
+    my $t = T.op;
+    my @z = Rw fe/since;
+    my @pi = grep {_s&pi} @z;    
+    @pi != 2 && die "editing for 2 pi process: ".ki \@pi;
+    # o: origin, should have pi/*/intake
+    # l: pose, probably -way
+    my ($o,$l) = @pi;
+    l.t eq t.t || die "last since not T_op".ki[$l,$t];
+    
+    ls&qz = 1;
+    
+    #n wedit=>-od_3=>{s=>[os&J.sc.top.sc.z,ls&J.sc.top.sc.z]}
+    
+    n edit=>-map_4=>{o=>os&J,s=>$t}
+    
+Alterate: |
+    sayyl "Altering j.t on J.t";
+    jc&Alterating = !jc&Alterating;
+    3c&ET &&
+    Rw ET 2;
 pi/map: | # volts above list of names
     # make list of reorderable names
     # vanishings live in the nearest -orphanage
@@ -19,19 +49,18 @@ pi/map: | # volts above list of names
     sc.dig = s&dig if s&dig;
     my $s = join "\n", map {_.t} @z;
     n "z fo" =>1 =>{s=>$s},$sc
-    n "Aong"=>2=>G&sn,$J  
-    n orign=>-od_3=>{s=>Jc&origin}
     
     y.at.cssdel = 'transform';
 mapin: | # rearrange names of -way
     # like codein but taking reordering -way's $M
     # sho
-    my $o = jc&origin || die "Not on ".G&sn,$j;
+    my $o = jc&origin || die "No origin on: ".G&sn,$j;
+    o.y eq $o || die "o should be J: ". $o;
+    my $opi = oc&s.c.pi || die "o should be pi, moC: ".ki oc&s;
     
+    local T.op = os&top || die "notop on o.t";
+    my $z = [G&op,3 ];
     # deals pi
-    G&give,Budge=>["SL[pa"=>''=>{s=>,[$j,$o]}];
-    return;
-    my $z = [grep{_s&pi}@{os&z||[]}];
     my $pi = do { # what kind of pi
         my $pitw;
         $pitw.>$_ ++ for map {_s&pi} @$z;
@@ -47,15 +76,15 @@ mapin: | # rearrange names of -way
     my @l = grep{length}split "\n", $s;
     
     my ($h,$new,$gone);
-    my $M;
+    my $M = [];
     for (@l) {
         $h.>$_ = do {
             if ($tw.>$_ ) {
-                m $tw.>$_
+                m $tw.>$_  
             }
             else {
                 $new.>$_ =
-                m $_=>''
+                m $_=>''  
             }
         }
     }
@@ -68,8 +97,9 @@ mapin: | # rearrange names of -way
     }
     else {
         # goners orphaned
-        my $z = [grep{$gone.>$_ } @$z];
-        G&elph,Orphanage=>["j.2.2.t/j.2.t"=>-orphan=>{},{z=>$z}];
+        my $se = [grep{$gone.>_.t } @$z];
+        @$se &&
+        G&elph,Orphanage=>["j.2.2.t/j.2.t"=>-orphan=>{s=>$se}];
     }
     
     for my $C (@$M) {
@@ -83,6 +113,10 @@ mapin: | # rearrange names of -way
         # the intake method should handle no c.s as an empty item
         # for way that means it's '# <'
     }
+    
+    Rw pi/$opi/intake $M;
+    3c&ET &&
+    Rw ET $wake:o 2;
 cl/Wake: | # the impulse to wake a vector
     # should allow ETing or similar?
     # collect that other thing again
@@ -101,17 +135,20 @@ fe/Nab: | # select from $W using index definition and $C for parameters
     my $o =
     n $W=>V
     my $j = os&J || return;
+    
     # choose which index to use
     my $ind = js&indexen;
     $ind && values %$ind == 1 || die "strange $W sc_indexen: ".ki$ind;
     my ($k,$i) = %$ind;
     my $or = j.sc.>$k || die "no index $k on $W";
+    
     # look at the definition of that index
     my $in = [@$i];
     my $it = pop @$in; # how to handle the item
     @$in == 2 || die "$W $k must be 2sphere, not: ".ki $in;
     $in[0] =~ /\*$/ || die "$W $k step 1 must be glob, is $in[0]";
     $in[1] eq 't' || die "$W $k step 2 must be t, is $in[1]";
+    
     # < should work off tv as well as this shady $or
     for my $f (keys %$or) { # or $in[0]
         my $rp = $or.>$f;
@@ -156,7 +193,7 @@ Orphanage: | # (pi) objects apparently vanishing from other places
     # so they can be got back when their name turns
     #   up in a slighly different place
     Js&ein.pi.orphan.sMJ = &sMJje{
-        my $z = es&z || $s && [$s] || die "what? ".ki$e;
+        my $z = ref $s eq 'ARRAY' ? $s : [$s];
         my $or = Js&orphans ||= {};
         my $fr = $or.>e.t ||= {};
         $fr.>_.t = $_ for @$z;
@@ -165,7 +202,9 @@ Orphanage: | # (pi) objects apparently vanishing from other places
     # explains self
     Js&indexen.orphans ||= [qw'from* t Chem-leaves'];
     my $or = Js&orphans ||= {};
+    #n roll=>-od=>{s=>$or}
     
+    y.n = 3;
     for my $f (sort keys %$or) { # from name
         my $rp = $or.>$f;
         if (!keys %$rp) {
@@ -234,36 +273,7 @@ pi/worm: | # the enTrancement of G.t
     Rw EditLatter;
     
     
-EditLatter: | # Alterate into editing the last pi form
-    # in t only list, allowing easy rejig
-    # collect orphans
-    #   names get started as "#", or alienated
-    #      zap them back in when put somewhere else on this Te
-    
-    # when title is shift-clicked
-    1s&Simp = 'Alterate';
-    return unless 1c&Alterating;
-    # qz the last C entered, edit it
-    my $t = T.op;
-    my @z = Rw fe/since;
-    my @pi = grep {_s&pi} @z;    
-    @pi != 2 && die "editing for 2 pi process: ".ki \@pi;
-    # o: origin, should have pi/*/intake
-    # l: pose, probably -way
-    my ($o,$l) = @pi;
-    l.t eq t.t || die "last since not T_op".ki[$l,$t];
-    
-    ls&qz = 1;
-    
-    n wedit=>-od_3=>{s=>[os&J.sc.top.sc.z,ls&J.sc.top.sc.z]}
-    
-    n edit=>-map_4=>{o=>os&J,s=>$t}
-    
-Alterate: |
-    sayyl "Altering j.t on J.t";
-    jc&Alterating = !jc&Alterating;
-    3c&ET &&
-    Rw ET 2;
+
 pi/wormin: | # open anything useful
     # what 1-2
     # how 2-3
