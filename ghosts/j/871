@@ -139,8 +139,9 @@ cl/Wake: | # the impulse to wake a vector
         }
     }
 fe/Nab: | # select from $W using index definition and $C for parameters
-    # work in progress, work die out, recurse
-    #   wants to be udder of large map functions
+    # work in progress, work die out
+    #  loop to recurse any index
+    #   wants to be under large map functions/o
     my $o =
     n $W=>V
     my $j = os&J || return;
@@ -180,23 +181,6 @@ fe/Nab: | # select from $W using index definition and $C for parameters
         last;
     }
     #
-NabOrphan: | # remember C.t
-    my $W = 'Orphanage';
-    my $o =
-    n $W=>V
-    Rw fe/fi $C sJ stop sz
-    my $j = os&J || die "No Orphanage";
-    my $or = js&orphans || return;
-    for my $f (%$or) { # from name
-        if (my $g = delete $f.>C.t ) {
-            (C.c,C.sc) = (g.c,g.sc);
-            # send update
-            Rw Wake $W casually;
-            last;
-        }
-    }
-    
-    
 Orphanage: | # (pi) objects apparently vanishing from other places
     Rw Tiot;
     # so they can be got back when their name turns
@@ -327,11 +311,15 @@ pi/wormin/intake: | # write worm  from $M
         G&xo,$_,$o;
     }
     
-    die"Send -ofw, got: ".join("-",map{_s&pi}@$M)."
-        ".ki$M 
-    unless @$M && @$M == grep{_s&pi eq 'ofw'} @$M;
+    Rw cz/M $M $pi=ofw;
     
     G&give,Budge=>[ofw_intake=>''=>{s=>$M}];
+cz/M: | # Czech M, check nonempty and all are a certain pi
+    my $pi = ar.pi || die "whatnow";
+    return if ar.emptyok && !@$M;
+    die"Send -$pi, got: ".join("-",map{_s&pi}@$M)."
+        ".ki$M 
+    unless @$M && @$M == grep{_s&pi eq $pi} @$M;
 WormCo: | # be another
     # receive updates to self via elvis
     
