@@ -115,13 +115,13 @@ mapin: | # rearrange names of -way
     }
     
     # apply organising to organism
-    Rw pi/$opi/intake $j:o.2 $M;
+    Rw pi/$opi/intake + $j:o.2 $M;
     
     # turn off -map
-    Rw Alterate $j:j.2;
+    Rw Alterate + $j:j.2;
     
     3c&ET &&
-    Rw ET $wake:o 2;
+    Rw ET + $wake:o 2;
 cl/Wake: | # the impulse to wake a vector
     # should allow ETing or similar?
     # collect that other thing again
@@ -151,8 +151,8 @@ fe/Nab: | # select from $W using index definition and $C for parameters
     my $in = [@$i];
     my $it = pop @$in; # how to handle the item
     @$in == 2 || die "$W $k must be 2sphere, not: ".ki $in;
-    $in[0] =~ /\*$/ || die "$W $k step 1 must be glob, is $in[0]";
-    $in[1] eq 't' || die "$W $k step 2 must be t, is $in[1]";
+    $in->[0] =~ /\*$/ || die "$W $k step 1 must be glob, is $in->[0]";
+    $in->[1] eq 't' || die "$W $k step 2 must be t, is $in->[1]";
     
     # < should work off tv as well as this shady $or
     for my $f (keys %$or) { # or $in[0]
@@ -167,7 +167,7 @@ fe/Nab: | # select from $W using index definition and $C for parameters
             elsif ($do eq 'leaves') {
                 delete $rp.>C.t;
                 delete $or.>$f if !keys %{$or.>$f };
-                Rw Wake $W casually;
+                Rw cl/Wake $W casually;
             }
             else {
                 die "unknown doing $do for $W index $k: @$in $it";
