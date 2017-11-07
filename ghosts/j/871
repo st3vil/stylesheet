@@ -1,7 +1,14 @@
 pi/map: | # volts above list of names
     # make list of reorderable names
     # vanishings live in the nearest -orphanage
-    Jc&origin = c&o || die "no origin?";
+    
+    # the J whose s&tops&z is to be rearranged
+    my $o = Jc&origin = c&o || die "no origin?";
+    o.y eq $o || die "origin not J: ".ki $o;
+    
+    # anything else whose s&z is to be rearranged
+    #   should mirror $o's set but with less complexity?
+    #   could be a subset of $o, reorganise only those things...
     s.y && s.y.cv == 0.9 || die "What is s? ".ki $s;
     my @z = @{ss&z};
     # sembla t/t y/t com
@@ -12,13 +19,18 @@ pi/map: | # volts above list of names
     sc.dig = s&dig if s&dig;
     my $s = join "\n", map {_.t} @z;
     n "z fo" =>1 =>{s=>$s},$sc
+    n "Aong"=>2=>G&sn,$J  
+    n orign=>-od_3=>{s=>Jc&origin}
     
     y.at.cssdel = 'transform';
 mapin: | # rearrange names of -way
     # like codein but taking reordering -way's $M
     # sho
-    my $o = jc&origin;
+    my $o = jc&origin || die "Not on ".G&sn,$j;
+    
     # deals pi
+    G&give,Budge=>["SL[pa"=>''=>{s=>,[$j,$o]}];
+    return;
     my $z = [grep{_s&pi}@{os&z||[]}];
     my $pi = do { # what kind of pi
         my $pitw;
@@ -37,24 +49,133 @@ mapin: | # rearrange names of -way
     my ($h,$new,$gone);
     my $M;
     for (@l) {
-        $h.>$_ ++;
-        if ($tw.>$_ ) {
-            m $tw.>$_
-        }
-        else {
-            m $_=>''
-            $new.>$_ ++;
+        $h.>$_ = do {
+            if ($tw.>$_ ) {
+                m $tw.>$_
+            }
+            else {
+                $new.>$_ =
+                m $_=>''
+            }
         }
     }
-    $gone.>$_ ++ for grep{!$h.>$_ }keys %$tw;
+    $gone.>$_ = $tw.>$_ for grep{!$h.>$_ }keys %$tw;
+    
+    if (keys %$gone == 1 && keys %$new == 1) {
+        # swap em in, called Chem in fe/Nab
+        my ($g,$n) = (values %$gone, values %$new);
+        (n.c,n.sc) = (g.c,g.sc);
+    }
+    else {
+        # goners orphaned
+        my $z = [grep{$gone.>$_ } @$z];
+        G&elph,Orphanage=>["j.2.2.t/j.2.t"=>-orphan=>{},{z=>$z}];
+    }
     
     for my $C (@$M) {
-        next if sπ
-        # look for the name in an orphanage 
-        
+        next if s&pi ;
+        # look for the name in an orphanage
+        # < the origin/above could have its own
+        Rw fe/Nab $C $W=Orphanage;
+        #Rw NabOrphan $C if $orphans;
+        next if s&pi ;
         # otherwise...
         # the intake method should handle no c.s as an empty item
         # for way that means it's '# <'
+    }
+cl/Wake: | # the impulse to wake a vector
+    # should allow ETing or similar?
+    # collect that other thing again
+    for (@{ar.m}) {
+        if ($_ eq 'casually') {
+            ref $W && die "Wake ref W may misshape 4 cto?";
+            G&timer:0.1,&{ 4s&toy->({to=>[$W]}) };
+        }
+        else {
+            die "Dont know how to wake $_";
+        }
+    }
+fe/Nab: | # select from $W using index definition and $C for parameters
+    # work in progress, work die out, recurse
+    #   wants to be udder of large map functions
+    my $o =
+    n $W=>V
+    my $j = os&J || return;
+    # choose which index to use
+    my $ind = js&indexen;
+    $ind && values %$ind == 1 || die "strange $W sc_indexen: ".ki$ind;
+    my ($k,$i) = %$ind;
+    my $or = j.sc.>$k || die "no index $k on $W";
+    # look at the definition of that index
+    my $in = [@$i];
+    my $it = pop @$in; # how to handle the item
+    @$in == 2 || die "$W $k must be 2sphere, not: ".ki $in;
+    $in[0] =~ /\*$/ || die "$W $k step 1 must be glob, is $in[0]";
+    $in[1] eq 't' || die "$W $k step 2 must be t, is $in[1]";
+    # < should work off tv as well as this shady $or
+    for my $f (keys %$or) { # or $in[0]
+        my $rp = $or.>$f;
+        my $g = $rp.>C.t; # or $in[1]
+        $g || next;
+        
+        for my $do (split '-', $it) {
+            if ($do eq 'Chem') {
+                (C.c,C.sc) = (g.c,g.sc);
+            }
+            elsif ($do eq 'leaves') {
+                delete $rp.>C.t;
+                delete $or.>$f if !keys %{$or.>$f };
+                Rw Wake $W casually;
+            }
+            else {
+                die "unknown doing $do for $W index $k: @$in $it";
+            }
+        }
+        last;
+    }
+    #
+NabOrphan: | # remember C.t
+    my $W = 'Orphanage';
+    my $o =
+    n $W=>V
+    Rw fe/fi $C sJ stop sz
+    my $j = os&J || die "No Orphanage";
+    my $or = js&orphans || return;
+    for my $f (%$or) { # from name
+        if (my $g = delete $f.>C.t ) {
+            (C.c,C.sc) = (g.c,g.sc);
+            # send update
+            Rw Wake $W casually;
+            last;
+        }
+    }
+    
+    
+Orphanage: | # (pi) objects apparently vanishing from other places
+    Rw Tiot;
+    # so they can be got back when their name turns
+    #   up in a slighly different place
+    Js&ein.pi.orphan.sMJ = &sMJje{
+        my $z = es&z || $s && [$s] || die "what? ".ki$e;
+        my $or = Js&orphans ||= {};
+        my $fr = $or.>e.t ||= {};
+        $fr.>_.t = $_ for @$z;
+    };
+    S
+    # explains self
+    Js&indexen.orphans ||= [qw'from* t Chem-leaves'];
+    my $or = Js&orphans ||= {};
+    
+    for my $f (sort keys %$or) { # from name
+        my $rp = $or.>$f;
+        if (!keys %$rp) {
+            delete $or.>$f;
+            next;
+        }
+        m $f=>''=>$f=>"fs:7,hs:588,dis"
+        for my $t (sort keys %$rp) { # name
+            m $t=>''=>$t=>"float:left"
+        }
     }
 pi/worms: | # G.t enTrances
     s&dis = 1;
@@ -136,7 +257,7 @@ EditLatter: | # Alterate into editing the last pi form
     
     n wedit=>-od_3=>{s=>[os&J.sc.top.sc.z,ls&J.sc.top.sc.z]}
     
-    n edit=>-map_4=>{o=>$o,s=>$t}
+    n edit=>-map_4=>{o=>os&J,s=>$t}
     
 Alterate: |
     sayyl "Altering j.t on J.t";
