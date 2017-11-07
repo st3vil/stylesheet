@@ -93,4 +93,107 @@ cz/M: | # Czech M, check nonempty and all are a certain pi
     die"Send -$pi, got: ".join("-",map{_s&pi}@$M)."
         ".ki$M 
     unless @$M && @$M == grep{_s&pi eq $pi} @$M;
+te/Jpin: | # point through Js beyond $J by t, and maybe the last C
+    my @p = ref ar.p ? @{ar.p} : split ';', ar.p;
+    my $j = $J;
+    my $i = 1;
+    my @J; # Js beyond $J
+    my $c; # the last C
+    my @fi; # debug
+    for (@p) {
+        js&top || js&Jtv || die "Lost @p    at $_ No top: ".G&aC,$j;
+        my $f; # C with s&J
+        my $J; # next J
+        if (js&top) {
+            $f = js&top.y.tw.>$_;
+        }
+        if ($f && !fs&J && $i < @p) {
+            # more to go, look in Jtv, the f was probably thawed?
+            undef $f;
+        }
+        if (!$f && js&Jtv) {
+            my $jv = js&Jtv.>$_;
+            if (keys %$jv != 1) {
+                m "Lost @p at $_, maybe Jv:"=>-od=>{s=>[$j,$jv]}
+                return
+            }
+            ($J) = values %$jv;
+        }
+        if (!$f && $J) {
+            $f = Jc&s; # holds latest mo C
+        }
+        if ($f && !$J) {
+            $J = fs&J;
+            if (!$J) {
+                if (@p > $i) {
+                    m "Lost @p at $_"=>-od=>{s=>[@fi,js&top,$j]}
+                    return
+                }
+                elsif (!ar.Clast) {
+                    die "last thing in @p was only C: ".ki $f;
+                }
+                else {
+                    # last hop can be C, no J
+                }
+            }
+        }
+        $c = $f;
+        if ($J) {
+            push @fi, "Found ".G&sn,$J ." on ".G&aC,$f;
+            push @J, $J;
+        }
+        elsif (@p > $i) {
+            die "Lost @p at $_ with no J on ".G&aC,$f ."   try Cytw not CsJstopytw?"
+        }
+        $j = $J;
+        $i++;
+    }
+    ar.Clast ? (@J,$c) : @J;
+t/CreateOrigin: | # storable J path of CyC+'s origin (-origin's s&location)
+    # came from so elvistivity can fade out
+    #   and find where to awake on push
+    my @os = Rw fe/yCtrail $group=Ao+;
+    
+    if (@os < 2) {
+        n argh=>3=>"Not enough history to find A.2.t's origin",'fs:7,dis,hs:566';
+        Rw Origist;
+        return;
+    }
+    @os > 2 && die "Lots of history";
+    # first o'ing
+    my $os = $os[0];
+    # last o
+    my $c = $os->[-1];
+    my $Y = c.y.A;
+    my $J = Y.1;
+    J.3 ne A.3 && die "Origin not in J.t  "
+        . G&give,Budge=>["gal"=>''=>{s=>$C}];
+    
+    my @J = Rw fe/upJs $J;
+    A.3 eq shift(@J) || die  "Origin not in J.t";
+    
+    a&origin_hJ = \@J;
+    
+    join";",map{_.t} @J;
+    
+t/FindOrigin: | # later moment, look for our -origin's location, usu in 3
+    my $j = A.3;
+    js&top || die "3: j.t not ready!";
+    
+    # < using fe/Nab to choose $path/(w,ways)'s w as the most-original thing
+    # < pushing to a different name?
+    my $p = [split ';', s&location ];
+    push @$p, A.2.t; # < what our thing is called over there?
+    
+    my @J = Rw te/Jpin $M $J:j $p $Clast=1;
+    return unless @J; # failed
+    my $c = pop @J;
+    
+    a&origin_hJ = \@J;
+    $c
+    
+t/Awaits: | # create and/or pointer to the zone, where our way appears to G
+    # AwaitDest
+    n t=>2=>"awaits"
+    return;
 
