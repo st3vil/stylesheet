@@ -94,6 +94,7 @@ cz/M: | # Czech M, check nonempty and all are a certain pi
         ".ki$M 
     unless @$M && @$M == grep{_s&pi eq $pi} @$M;
 te/Jpin: | # point through Js beyond $J by t, and maybe the last C
+    # similar to Elvising ~ 3
     my @p = ref ar.p ? @{ar.p} : split ';', ar.p;
     my $j = $J;
     my $i = 1;
@@ -114,8 +115,11 @@ te/Jpin: | # point through Js beyond $J by t, and maybe the last C
         if (!$f && js&Jtv) {
             my $jv = js&Jtv.>$_;
             if (keys %$jv != 1) {
+                a&lost_point = $_;
                 m "Lost @p at $_, maybe Jv:"=>-od=>{s=>[$j,$jv]}
-                return
+                T.Jpinfail = 1; # enclosing (t/FindOrigin) must handle
+                # to return as much as possible:
+                return @J;
             }
             ($J) = values %$jv;
         }
@@ -166,8 +170,13 @@ t/CreateOrigin: | # storable J path of CyC+'s origin (-origin's s&location)
     my $c = $os->[-1];
     my $Y = c.y.A;
     my $J = Y.1;
+    
+    Rw t/OriJin $J;
+    
+t/OriJin: | # given J, return path like -origin's s&location
+    # is missing the C that we are
     J.3 ne A.3 && die "Origin not in J.t  "
-        . G&give,Budge=>["gal"=>''=>{s=>$C}];
+        . G&give:Budge=>["gal"=>''=>{s=>[$J,J.3,"J.3.t vs A.3.t",A.3,C=>$C]}];
     
     my @J = Rw fe/upJs $J;
     A.3 eq shift(@J) || die  "Origin not in J.t";
@@ -186,14 +195,12 @@ t/FindOrigin: | # later moment, look for our -origin's location, usu in 3
     push @$p, A.2.t; # < what our thing is called over there?
     
     my @J = Rw te/Jpin $M $J:j $p $Clast=1;
-    return unless @J; # failed
+    # know the way in for navigation bar
+    a&origin_hJ = \@J;
+    # even if it didn't get all the way:
+    return if !@J || delete T.Jpinfail;
     my $c = pop @J;
     
-    a&origin_hJ = \@J;
     $c
     
-t/Awaits: | # create and/or pointer to the zone, where our way appears to G
-    # AwaitDest
-    n t=>2=>"awaits"
-    return;
 
