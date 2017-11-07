@@ -419,4 +419,47 @@ fe/since: | # returns things from ground since last since
     @z
     
     
+fe/Nab: | # select from $W using index definition and $C for parameters
+    # work in progress, work die out
+    #  loop to recurse any index
+    #   wants to be under large map functions/o
+    my $o =
+    n $W=>V
+    my $j = os&J || return;
+    
+    # choose which index to use
+    my $ind = js&indexen;
+    $ind && values %$ind == 1 || die "strange $W sc_indexen: ".ki$ind;
+    my ($k,$i) = %$ind;
+    my $or = j.sc.>$k || die "no index $k on $W";
+    
+    # look at the definition of that index
+    my $in = [@$i];
+    my $it = pop @$in; # how to handle the item
+    @$in == 2 || die "$W $k must be 2sphere, not: ".ki $in;
+    $in->[0] =~ /\*$/ || die "$W $k step 1 must be glob, is $in->[0]";
+    $in->[1] eq 't' || die "$W $k step 2 must be t, is $in->[1]";
+    
+    # < should work off tv as well as this shady $or
+    for my $f (keys %$or) { # or $in[0]
+        my $rp = $or.>$f;
+        my $g = $rp.>C.t; # or $in[1]
+        $g || next;
+        
+        for my $do (split '-', $it) {
+            if ($do eq 'Chem') {
+                (C.c,C.sc) = (g.c,g.sc);
+            }
+            elsif ($do eq 'leaves') {
+                delete $rp.>C.t;
+                delete $or.>$f if !keys %{$or.>$f };
+                Rw cl/Wake $W casually;
+            }
+            else {
+                die "unknown doing $do for $W index $k: @$in $it";
+            }
+        }
+        last;
+    }
+    #
 
