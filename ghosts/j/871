@@ -102,6 +102,7 @@ mapin: | # rearrange names of -way
         G&elph,Orphanage=>["j.2.2.t/j.2.t"=>-orphan=>{s=>$se}];
     }
     
+    my $N = []; # explicitly new things, subset of $M
     for my $C (@$M) {
         next if s&pi ;
         # look for the name in an orphanage
@@ -112,13 +113,16 @@ mapin: | # rearrange names of -way
         # otherwise...
         # the intake method should handle no c.s as an empty item
         # for way that means it's '# <'
+        push @$N, $C;
     }
     
     # apply organising to organism
-    Rw pi/$opi/intake + $j:o.2 $M;
+    Rw pi/$opi/intake + $j:o.2 $M $N;
     
     # turn off -map
     Rw Alterate + $j:j.2;
+    # ^ generates ET as well as v
+    # < see them merge
     
     3c&ET &&
     Rw ET + $wake:o 2;
@@ -306,6 +310,23 @@ pi/wormin: | # open anything useful
     
 pi/wormin/intake: | # write worm  from $M
     # collect M, elvis to WormCo
+    my $f = j.t;
+    -f $f || die "$f not there! am ".G&sn,$j;
+    
+    # New names-only want to be inflated to empty
+    for (@{ar.N||[]}) {
+        # make copy that will be in -codetta form,
+        # convert that to -code to get yaml around it
+        # < rename -code -ycode?
+        my $C = G&hup,$_;
+        s&pi ||= 'codetta';
+        c&s ||= "#";
+        s&note ||= "new";
+        my $M = [$C];
+        my $o = Rw pi/codetta/to/code $M;
+        G&xo,$_,$o;
+    }
+    
     die"Send -ofw, got: ".join("-",map{_s&pi}@$M)."
         ".ki$M 
     unless @$M && @$M == grep{_s&pi eq 'ofw'} @$M;
