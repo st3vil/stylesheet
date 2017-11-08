@@ -247,9 +247,15 @@ fe/Mitch: | # replace the like-$i in $M, or insert
             # find $w's prev and add it next
             w.t eq i.t || die "How is w.t where i.t is?";
             my $p = w.y.prev;
-            my $t = Rw fe/Map $M $t=p.t $n=1?;
-            $t || die "Still can't find where to put i.t";
-            @$M = map { $_ eq $t ? ($_,$i) : $_ } @$M
+            # < way to pass through some ar?
+            my $nonfatal = ar.nonfatal;
+            my $t = Rw fe/Map $nonfatal $M $t=p.t $n=1?;
+            if ($t) {
+                @$M = map { $_ eq $t ? ($_,$i) : $_ } @$M
+            }
+            else {
+                push @$M, $i;
+            }
         }
         else {
             push @$M, $i
@@ -276,10 +282,12 @@ fe/Map: | # select/check $M for $pi, $not, $n=1 returns the one
         }
         if (ar.n =~ /^(\d+)?\+$/) {
             my $n = $1 || 1;
-            @$m >= ($1||1) || die "Expected >= $n $pi, but got ".@$m.": ".ki @$m;
+            @$m >= ($1||1) || ar.nonfatal && return
+                || die "Expected >= $n $pi, but got ".@$m.": ".ki @$m;
         }
         else {
-            @$m == ar.n || die "Expected ar.n $pi, but got ".@$m.": ".ki @$m;
+            @$m == ar.n || ar.nonfatal && return
+                || die "Expected ar.n $pi, but got ".@$m.": ".ki @$m;
         }
     }
     my $d;

@@ -116,7 +116,7 @@ te/Jpin: | # point through Js beyond $J by t, and maybe the last C
             my $jv = js&Jtv.>$_;
             if (keys %$jv != 1) {
                 a&lost_point = $_;
-                m "Lost @p at $_, maybe Jv:"=>-od=>{s=>[$j,$jv]}
+                m "Lost @p at $_, maybe Jv:"=>-od_5=>{s=>[$j,$jv]}
                 T.Jpinfail = 1; # enclosing (t/FindOrigin) must handle
                 # to return as much as possible:
                 return @J;
@@ -130,7 +130,7 @@ te/Jpin: | # point through Js beyond $J by t, and maybe the last C
             $J = fs&J;
             if (!$J) {
                 if (@p > $i) {
-                    m "Lost @p at $_"=>-od=>{s=>[@fi,js&top,$j]}
+                    m "Lost @p at $_"=>-od_5=>{s=>[@fi,js&top,$j]}
                     return
                 }
                 elsif (!ar.Clast) {
@@ -189,6 +189,9 @@ t/FindOrigin: | # later moment, look for our -origin's location, usu in 3
     my $j = A.3;
     js&top || die "3: j.t not ready!";
     
+    # < failing with an object in T.Jpinfail
+    # < pointing with a -pointer, that can unpack from the s&location
+    #   which implies it...
     # < using fe/Nab to choose $path/(w,ways)'s w as the most-original thing
     # < pushing to a different name?
     my $p = [split ';', s&location ];
@@ -196,7 +199,7 @@ t/FindOrigin: | # later moment, look for our -origin's location, usu in 3
     
     my @J = Rw te/Jpin $M $J:j $p $Clast=1;
     # know the way in for navigation bar
-    a&origin_hJ = \@J;
+    a&origin_hJ = \@J if @J;
     # even if it didn't get all the way:
     return if !@J || delete T.Jpinfail;
     my $c = pop @J;
