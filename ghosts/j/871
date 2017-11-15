@@ -49,34 +49,41 @@ pi/worm: | # the enTrancement of G.t
     #,qz
     
     # < sleep these on o of the y.C we are
-    
-    n ways=>-ways_2=>{s=>T.op}
+    my $z = T.op;
+    n waysev=>-od_13=>{s=>$z}
+    n ways=>-ways_2=>{s=>$z}
     
     Rw EditLatter;
     
     
-pi/wormin: | # open anything useful
+pi/wormin: | # open anything useful, to -ofw
+    Jc&save = Jc&tape = 1;
+    y.n = 3;
+    y.u = 4;
+    y.res = 100;
     1s&piduces = 'ofw';
-    # what 1-2
+    # sources 1-2
     # how 2-3
     # ways 3-4
     # shapes 4-5
     Rw fe/since;
     my $v =
-    n c&f=>''=>{W=>c&f,pin=>'WormCo',Wea=>'Co'}
+    n c&f=>''=>{W=>c&f,pin=>'WormCo',Wea=>'Co'},'noii'
+    
     my $j = vs&J;
     my ($w) = grep{_.t eq 'w'} 
         Rw fe/since their;
     
-    my $s = join"\n", G&ind,$w,'aC';
-    n c&f=>''=>{s=>$s}
-    n "c&f od"=>-od=>{s=>$w}
     
-    y.n = 3;
-    y.u = 4;
+    my $s = join"\n", G&ind,$w,'aC';
+    n c&f=>2=>{s=>$s}
+    n "c&f od"=>-od_2=>{s=>$w}
+    
     for my $o (@{ws&z}) {
         my $C =
         m $o
+        C.y.cv = ''; # isolate Swim's ||= 0.1
+        #delete s&of;
         s&pi = 'ofw';
     }
     # be the source of these...
@@ -97,14 +104,92 @@ pi/wormin/intake: | # write worm  from $M
         c&s ||= "#";
         s&note ||= "new";
         my $M = [$C];
-        my $o = Rw pi/codetta/to/code $M;
+        my $o = Rw pi/codetta/to/ofw $M;
         G&xo,$_,$o;
     }
     
     Rw cz/M $M $pi=ofw;
     
     G&give,Budge=>[ofw_intake=>''=>{s=>$M}];
-
+pi/codetta/from/ofw: | # -ofw to M-codettas
+    my $o = $s;
+    os&pi eq 'ofw' || die "to codify from -os&pi";
+    # < option to not, edit whole yaml chunk
+    # < centralise code splits with underneaths of Bablar?
+    my $hashc = '#'.'c';
+    my @l = split "\n",oc&s;
+    # last atom/beginning, with title, note, etc...
+    my $n = G&Ct,[o.t=>-codetta=>{},{%{o.sc}}];
+    
+    my $i = 0;
+    for my $l (@l) {
+        $i++;
+        # is it a chunk heading
+        my $t = $1 || $2 if $l =~ /^([\/\w]+):|$hashc.*?(\w\w+)/;
+        $t && $1 && $n && die "seems to have ways in way: ".ki($n)."\n line $i: $l";
+        
+        if ($t) {
+            my ($pren,$note) = split /\b\Q$t\E\b/, $l, 2;
+            s/^: \|//
+            # keep leading whitespace? indent the hashc or the comment after...
+            ,s/^\s*//, s/^\s*$hashc\s*//,
+            s/# // for $note;
+            $n =  
+            m $t=>-codetta=>{}
+            ns&note = $note if length $note; # other notes e
+            ns&prenote = $pren if length $pren; # never?
+            #sayyl "Sectioned by $l\n    n: ".G&aC,$n;
+            # title is outside the babble, in named bubble code (yaml)
+            next;
+        }
+        $n || die "No title line $i: $l";
+        
+        push @{ns&l||=[]}, $l;
+    }
+    
+    for (@$M) {
+        _s&l || die "Nothing in _.t?";
+        _c&s = join "\n", @{delete _s&l};
+        _c&s .= "\n" if _c&s =~ /[^\n]$/;
+        _s&dige = slm(12, dig _c&s); # chunk of way, sans indent dige
+    }
+    
+    
+    G&give,Budge=>[madeup=>''=>{s=>$M}];
+    die "madeup";
+pi/codetta/to/ofw: | # REVERSE M-codettas to -ofw
+    # as -code without the yaml surround/indent
+    my $hashc = '#'.'c';
+    my $M = [grep{_c&pi eq 'codetta' || _s&pi eq 'codetta'} @$M];
+    my ($f) = @$M;
+    my $o;
+    o.t = f.t;
+    
+    my @l = (
+        map {
+            my @l = split "\n", $_;
+            pop @l while @l && $l[-1] =~ /^\s*$/;
+            @l
+        }
+        map {
+            my @l;
+            if ((_s&note || _s&pren) && $_ ne $f) {
+                @l = (_s&pren||"")."$hashc".(_s&note&&" # _s&note")
+            }
+            (@l, _c&s)
+        } @$M
+    );
+    oc&s = join "\n", @l;
+    oc&s .= "\n" if oc&s !~ /\n$/;
+    
+    o.sc = {%{f.sc}};
+    # s&note etc must come too, but not randomness
+    Rw DeStyleM $M:o $etc=1;
+    # should be same unless chunky (@$M > 1)
+    os&dige = slm(12, dig oc&s);
+    os&pi ||= 'ofw';
+    $o
+    
 WormCo: | # be another
     # receive updates to self via elvis
     
