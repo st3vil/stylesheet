@@ -266,33 +266,39 @@ fe/Mitch: | # replace the like-$i in $M, or insert
     }
 fe/Map: | # select/check $M for $pi, $not, $n=1 returns the one
     my $pi = ar.pi;
+    $pi || defined ar.t || die "looking for?";
+    my $d;
     my $m = [grep{
-        my $v = $pi ? _s&pi eq $pi
-            : defined ar.t ? _.t eq ar.t
-            : die "looking for?";
+        my $v = 1; # pass
+        $v = 0 if $pi && _s&pi ne $pi;
+        $v = 0 if defined ar.t && _.t ne ar.t;
         $v = !$v if ar.not;
+        push @{d.out||=[]}, $_ if ar.out && !$v; # those not selected
         $v
     } @$M];
-    $pi = ($pi&&"$pi && ")."t=ar.t" if defined ar.t && !ar.pi;
+    my $desc = "-$pi" if $pi;
+    $desc = ($desc&&"$desc && ")."t=ar.t" if defined ar.t;
+    $desc = "not $desc" if defined ar.not;
+    $desc = "ar.n $desc" if defined ar.n;
     if (defined ar.n) {
         my $n = ar.n;
         if ($n =~ /^(\d+)\?$/) { # that number or nothing
             $n = ar.n = $1;
             $n = 0 if @$m == 0;
         }
-        elsif ($n =~ /^(\d+)?\+$/) {
+        if ($n =~ /^(\d+)?\+$/) {
             my $n = $1 || 1;
-            @$m >= $n || ar.nonfatal && return
-                || die "Expected >= $n $pi, but got ".@$m.": ".ki @$m;
+            unless (@$m >= $n) {
+                ar.nonfatal && return;
+                die "Expected >= $n from $desc, but got ".@$m.": ".ki $m;
+            }
         }
         else {
-            @$m == $n || ar.nonfatal && return
-                || die "Expected ar.n $pi, but got ".@$m.": ".ki @$m;
+            unless (@$m == $n) {
+                ar.nonfatal && return;
+                die "Expected $n from $desc, but got ".@$m.": ".ki $m;
+            }
         }
-    }
-    my $d;
-    if (ar.out) { # those not selected
-        d.out = [grep{my$v=$_; 0==grep{$_ eq $v}@$m}@$M]
     }
     if (ar.n == 1) {
         $m = $m->[0];
