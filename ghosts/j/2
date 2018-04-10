@@ -2,7 +2,6 @@
 DungBeatles: | # rolling language around
     # getting Wesources
     n SunBeatle
-    # growth: ZenBeatle
     
     # using Wesources
     n ThWay
@@ -11,15 +10,31 @@ DungBeatles: | # rolling language around
     n Babblar
 ZenBeatle: | # byt (way solver) looks in ghost/
     u i
-    sal:
-        $s + 3
+    # to look at way/whatever paths up the net, then ask for help or hang open
     byt: %acgt:s t
-        # hereford
-        die "You look for $s called $t";
-    h:
-        die "You h $s";
-    zaputa:
-        die "Hered";
+        if ($s eq 'W') {
+            my $f = G&Locate_read,$t;
+            G&Ct,[$t=>1=>{resume=>$f}];
+        }
+        elsif ($s eq 'w') {
+            # going, hash tied to a directory
+            # makes digest when way entered
+            (my $fi = $t) =~ s/\W/-/g;
+            my $f = "wormhole/way/$fi";
+            unless (-f $f) {
+                $f = glob "ghost/*/$fi";
+                $f && -f $f || sayre("Not byt $s $t: $f") && return;
+            }
+            my $w = {t=>$t,y=>{}};
+            wc&s = read_file($f);
+            ws&dige = slm(12, dig wc&s);
+            ws&of = 'w';
+            $w
+        }
+        else {
+            sayre "Unknown search $s $t ";
+            return;
+        }
 Steve: | # piece
     u ZenBeatle
     S
@@ -37,7 +52,7 @@ Steve: | # piece
     my $t = js&top;
     my $of = [$t,ts&z,$byt];
     my $fi = A.5;
-    G&byt,'o','Faupluit';
+    my $of = G&t,'w','Bol';
     n $W=>-od=>{s=>$of}
     #G&seetal,'sor','baim';
     vla:
@@ -150,7 +165,6 @@ SunBeatle: | # world primitives
             
             my $the = $on.>C.t;
             if (my $by = !$the && Ys&tby) {
-                my $A = $Y;
                 $the = G&$by,$s,$t;
             }
             $the || next;
