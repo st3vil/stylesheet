@@ -63,9 +63,19 @@ Wed: |
         my $loca = '/js/'.$t.'/'.$ver;
         #$c->redirect_to($loca);
         $c->res->headers->append(Location => $loca);
-        $c->render(text=>"function how_${t}_$ver () {return 'Itv data for $t at $ver'}");
+        $c->render(text=>
+            "function how_${t}_$ver () {return 'Itv data for $t at $ver'}\n");
     };
-    
+    get '/earer' => &c{
+        my $dat = $c->param('data');
+        #$dat = djson($dat);
+        my $s = G&Ct,[earer=>''=>{s=>$dat}];
+        my $el = [give=>''=>{s=>$s}];
+        my $W = [Wederr=>$el];
+        G&timer:0.1,&{ 4s&toy->({to=>[$W]}) };
+        $c->render(text=>"hmm\n");
+    };
+    #c other Wedery
     # handlers for image receiver
     Rw Tism;
     
