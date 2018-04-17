@@ -1,6 +1,7 @@
 Wed: |
     # use Mojo, serve ghost/
     saygr "Being Wed in ".(Gc&ipd || Gc&dir);
+    
     u Styleslops
     
     use Mojolicious::Lite;
@@ -49,8 +50,20 @@ Wed: |
         $c->render(text=>"A\.sc\.start\.push('$next');\n$s");
     };
     
-    get '/andnow' => &c{
+    # W as <script> js include
+    get '/js/:t/:ver' => {ver=>'?'} => &c{
+        my $t = $c->param('t');
         sayre "Andnow!";
+        my $ver = $c->param('ver');
+        undef $ver if $ver eq '?';
+        $ver ||= do {
+            # resolve t to t/ver
+            '3854753'
+        };
+        my $loca = '/js/'.$t.'/'.$ver;
+        #$c->redirect_to($loca);
+        $c->res->headers->append(Location => $loca);
+        $c->render(text=>"function how_${t}_$ver () {return 'Itv data for $t at $ver'}");
     };
     
     # handlers for image receiver
@@ -137,7 +150,7 @@ Wed: |
             $tx->send($m)
         }
     };
-Wedpagery: | # minimal page that sucks in more stuff from Stylehut
+Wedpagery: | # starting page
     # use the js filter, store in ...
     index: %js:html
         <!DOCTYPE html>
