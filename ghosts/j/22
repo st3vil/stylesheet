@@ -56,15 +56,14 @@ Wed: |
         sayre "Andnow!";
         my $ver = $c->param('ver');
         undef $ver if $ver eq '?';
-        $ver ||= do {
-            # resolve t to t/ver
-            '3854753'
-        };
-        my $loca = '/js/'.$t.'/'.$ver;
+        my $C = G&Ct,[$t,'',{ver=>$ver}];
+        my $s = Rw NutServe $C;
+        $s || return $c->res->code(404), $c->render(text=>"Not found\n");
+        
+        my $loca = '/js/'.C.t.'/'.c&ver;
         #$c->redirect_to($loca);
         $c->res->headers->append(Location => $loca);
-        $c->render(text=>
-            "function how_${t}_$ver () {return 'Itv data for $t at $ver'}\n");
+        $c->render(text=>$s);
     };
     get '/earer' => &c{
         my $dat = $c->param('data');
@@ -238,4 +237,201 @@ Wederr: |
     }
     
     
+NutServe: | # returns string of js u for <script>
+    delete G.way.NutServe;
+    
+    my $bb = &s{
+        my $C = G&Ct,['toStartHut',1,{s=>$s}];
+        Rw JaBabz $C;
+        c&s
+    };
+    # get a json encoded string
+    my $enj = &s{
+        $s = sjson[$s];
+        $s =~ s/^\[|\]$//sg;
+        $s
+    };
+    
+    C.t && exists c&ver || die "C not like t/ver: ".ki$C;
+    
+    my $t = C.t;
+    c&ver && die "TODO version specific";
+    
+    # look in the javascript u stash
+    local A.6.t = 'je';
+    my $f = G&Locate_read,$t;
+    $f || return;
+    # storage dep
+    my $l = "$f/1";
+    my $li = readlink $l;
+    # find version
+    (c&ver) = $li =~ /^h\/(\w+)$/;
+    # get C
+    my $d = G&Beach,"$f/1" if $f;
+    $d || die "No such $t in Gc&bay je etc";
+    
+    sayre "Found C.t W in $f";
+    ($d) = @$d;
+    T.op = $d;
+    my @W = G&op,'cW:javascript';
+    
+    # cache by t/ver
+    # first function, on the first line, should be a toc
+    # one item per line of it, including line number ranges
+    my $D = G&Ct,[C.t,'',{},{ver=>c&ver}]; # toc
+    my $zI = Ds&z = []; # Is
+    my $N = []; # flat list, to include toc
+    for my $I (@W) {
+        (my $Icv = I.y.cv) =~ s/^0\.//;
+        for my $i (@{Is&z}) {
+            (my $icv = i.y.cv) =~ s/^0\.//;
+            my $name = join'_',C.t,c&ver,I.t,$Icv,i.t,$icv;
+            $name =~ s/\W+/-/g;
+            is&name = $name;
+            ic&s =~ s/^function/function $name/
+                || die "Doesn't ^function: ".ki $s;
+            push @$N, $i;
+        }
+    }
+    
+    for my $i (@$N) {
+        ic&s =~ /\n$/ || die "No trailing \\n: ".ki $i;
+        my $lines = split "\n", ic&s;
+        is&lines = $lines - 3; # imply function...{\n...\n}\n
+    }
+    
+    my @toc; # [ind t y c sc]+
+    for my $I (@W) {
+        (my $Icv = I.y.cv) =~ s/^0\.//;
+        push @toc, 
+        for my $i (@{Is&z}) {
+    
+    return wdump 5, $N;
+            [
+            # send an I grower, puts the subs G.t/h
+            "eval(".$enj->($bb->(<<'')).");",
+                A.I = {};
+                A&loadI = &v{
+                    var C = {t:v[0], y:{cv:v[1]}, c:v[2], sc:v[3]};
+                    console.log('loadI: '+s&js+'/'+C.t, C);
+                    // to show I/t/cv in function definition
+                    var t = (C.sc.js||"unknown")+"_"+C.t+"_"+(C.y.cv+"").substr(2);
+                    c&code = eval(t+' = '+c&s);
+                    // make I
+                    A.I[s&js] ||= {t:s&js, y:{cv:0.001,tw:{},tv:{}}, c:{}, sc:{z:[]}};
+                    var I = A.I[s&js];
+                    // grow I
+                    I.y.tv[C.t] ||= {};
+                    I.y.tv[C.t][C.y.cv] = C;
+                    I.y.tw[C.t] = C;
+                    var l = I.sc.z.slice(-1);
+                    l[0] and l[0].y.next = C;
+                    I.sc.z.push(C);
+                    I.y.in ||= C;
+                    if (I.t === 'i' && (C.t === 'h' || C.t === 't')) {
+                        G[C.t] = c&code;
+                    }
+                };
+            # then the many I/$s=sc.js/$t
+            (map{ 
+                map { "A\.c\.loadI(".sjson([_.t,_.y.cv,_.c,_.sc]).");" } @{_s&z}
+            } @W),
+            # and connect
+            #"G\.h(A,C,G,T,'begin')"
+            ]
+        
+    
+    
+StyleNut: | # unify NutMachine (newer) and Stylehut
+    n Stylehut
+    # newer, absorb-all
+    n NutMachine
+NutMachine: | # totality of core js-ness
+    n NutWorld
+    n NutProcess
+    n NutErupts
+    
+NutWorld: | # 123 sheer being
+    n NutSeq
+    n NutDung
+    n NutJay
+NutProcess: | # TODO 456 resonance
+    return;
+    # the o
+    n NutCertainty
+    # the s
+    n NutConsciousness
+NutErupts: | # TODO standards
+    # c&e/J requests
+    #n NutElve
+    
+    # 72 load/save
+    #   should be in Dung
+    #n NutPlacement
+    
+    # 8 numbers
+    #   nice ways above the tubing
+    #n NutInt
+    # ^ contains:
+    # 9 talkying
+    #n NutTal
+    
+    
+    # house gets ThArt (StripesEdge, Space)
+    #   StripesEdge is one thing with an index of Styles in Ang
+    #     Ang is Stripes and Oscgrin,
+    #     the universals that format and the functions that do so
+    
+    # hut/Nut should get its side of the styles...
+    # 
+NutSeq: | # self
+    # some use of of=eye, which G&h searches like of=i
+    # and StartHut/LoadI blows away each A.I.? it loads up
+    # we shall om/receive news as N, functions in eye
+    n NutAye
+    n NutSea
+    n NutTub
+NutAye: | # A without tubeyness
+    u j
+    n \'of:eye'
+    # begin being
+    Aye:
+        $V = $.extend({},A);
+        V.2 = A;
+        $A = V;
+        s and A.t = s;
+        A.y = A;
+        A.c = {};
+        A.sc = {};
+        A.om ||= A;
+        A.om == A.up and A.mo = A;
+        A[1] = A;
+        
+        T.d ||= 1;
+        return A
+NutSea: | # line etc into C
+    u j
+    n \'of:eye'
+    # 
+    # ReadLines, G&m, G&A
+    Cye:
+        // guess t y c sc
+    # and a bit of xotila
+NutTub: | # A tubeyness
+    u j
+    n \'of:eye'
+    # go, stop, mode
+    throat:
+        // do I for C
+NutDung: | # getting things
+    u j
+    n \'of:eye'
+    ting: %acgt:t ver
+        // blocking unless a&async
+        // get content from
+        $get = '/js/'+t;
+        ver and get += '/'+ver;
+        $.get(get);
+NutJay: | # persistent thing
+    # quank
 
