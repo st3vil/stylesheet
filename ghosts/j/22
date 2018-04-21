@@ -255,7 +255,6 @@ NutServe: | # returns string of js u for <script>
     C.t && exists c&ver || die "C not like t/ver: ".ki$C;
     
     my $t = C.t;
-    c&ver && die "TODO version specific";
     
     # look in the javascript u stash
     local A.6.t = 'je';
@@ -265,12 +264,20 @@ NutServe: | # returns string of js u for <script>
     my $l = "$f/1";
     my $li = readlink $l;
     # find version
-    (c&ver) = $li =~ /^h\/(\w+)$/;
+    my ($ver) = $li =~ /^h\/(\w+)$/ || die "not h/dig looking: $li";
+    $li = "$f/$li";
+    if (c&ver && c&ver ne $ver) {
+        $li =~ s/$ver$/c&ver/ || die "Cant find $ver in $l";
+        $ver = c&ver;
+        -f $li || warn("Cant find C.t at ver=c&ver,"
+            ." try the $ver?"), return;
+    }
+    c&ver = $ver;
     # get C
-    my $d = G&Beach,"$f/1" if $f;
-    $d || die "No such $t in Gc&bay je etc";
+    my $d = G&Beach,$li if $li;
+    $d || die "No such $t in Gc&bay je etc ($li)";
     
-    sayre "Found C.t W in $f";
+    sayre "Found C.t W in $li";
     ($d) = @$d;
     T.op = $d;
     my @W = G&op,'cW:javascript';
@@ -286,7 +293,7 @@ NutServe: | # returns string of js u for <script>
         for my $i (@{Is&z}) {
             (my $icv = i.y.cv) =~ s/^0\.//;
             my $name = join'_',C.t,c&ver,I.t,$Icv,i.t,$icv;
-            $name =~ s/\W+/-/g;
+            $name =~ s/\W+/_/g;
             is&name = $name;
             ic&s =~ s/^function/function $name/
                 || die "Doesn't ^function: ".ki $s;
@@ -297,49 +304,42 @@ NutServe: | # returns string of js u for <script>
     for my $i (@$N) {
         ic&s =~ /\n$/ || die "No trailing \\n: ".ki $i;
         my $lines = split "\n", ic&s;
-        is&lines = $lines - 3; # imply function...{\n...\n}\n
+        is&lines = $lines; # also ^function...{\n and \n}\n$
     }
     
     my @toc; # [ind t y c sc]+
     for my $I (@W) {
         (my $Icv = I.y.cv) =~ s/^0\.//;
-        push @toc, 
+        push @toc, ['',I.t,I.y.cv,I.c,I.sc];
         for my $i (@{Is&z}) {
+            push @toc, ['  ',i.t,i.y.cv,i.c,i.sc];
+        }
+        delete Is&z;
+    }
     
-    return wdump 5, $N;
-            [
-            # send an I grower, puts the subs G.t/h
-            "eval(".$enj->($bb->(<<'')).");",
-                A.I = {};
-                A&loadI = &v{
-                    var C = {t:v[0], y:{cv:v[1]}, c:v[2], sc:v[3]};
-                    console.log('loadI: '+s&js+'/'+C.t, C);
-                    // to show I/t/cv in function definition
-                    var t = (C.sc.js||"unknown")+"_"+C.t+"_"+(C.y.cv+"").substr(2);
-                    c&code = eval(t+' = '+c&s);
-                    // make I
-                    A.I[s&js] ||= {t:s&js, y:{cv:0.001,tw:{},tv:{}}, c:{}, sc:{z:[]}};
-                    var I = A.I[s&js];
-                    // grow I
-                    I.y.tv[C.t] ||= {};
-                    I.y.tv[C.t][C.y.cv] = C;
-                    I.y.tw[C.t] = C;
-                    var l = I.sc.z.slice(-1);
-                    l[0] and l[0].y.next = C;
-                    I.sc.z.push(C);
-                    I.y.in ||= C;
-                    if (I.t === 'i' && (C.t === 'h' || C.t === 't')) {
-                        G[C.t] = c&code;
-                    }
-                };
-            # then the many I/$s=sc.js/$t
-            (map{ 
-                map { "A\.c\.loadI(".sjson([_.t,_.y.cv,_.c,_.sc]).");" } @{_s&z}
-            } @W),
-            # and connect
-            #"G\.h(A,C,G,T,'begin')"
-            ]
+    my $toc_lines = @toc + 3; # also ^function...{\n and \n}\n$
+    my $code_lines = 0;
+    for my $i (@$N) {
+        is&line = $toc_lines + $code_lines;
+        $code_lines += is&lines;
+    }
+    
+    my @codes = map { delete _c&s } @$N;
+    
+    my $name = join'_', C.t, c&ver ;
+    $name =~ s/\W+/_/g;
+    
+    my $s = join "",
+        "function $name () { return [\n",
+        # data and code has indent
+        (map { $_->[0].sjson($_)."\n" } @toc),
+        "]}\n",
+        @codes;
+    
+    return $s;
         
+    
+    return wdump 5, \@toc;
     
     
 StyleNut: | # unify NutMachine (newer) and Stylehut
