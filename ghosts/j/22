@@ -249,10 +249,16 @@ HutNuts: | # extra ballsy refactoring starts, in StyleHut
             console.log("Window error: ",e,r,o,l);
             return;
         };
-        $cb = &v,x,f,e{
-            console.log("script onload: ",v,x,f,e);
-            console.log("Have a toc: ",NutSeq_470f77330());
-            console.log("Have an aye: ",NutSeq_470f77330_eye_001_Aye_1(A,C,G,T));
+        $cb = &t,ver,script,e{
+            console.log("script onload: ",script,e,t,ver,e);
+            $tocfunc = t+'_'+ver;
+            console.log("Have a toc: ",tocfunc);
+            $toc = window[tocfunc]();
+            $.each(toc, &k,v{
+                console.log("Have a toc: ",v);
+            });
+            console.log("Have an aye: ",
+                NutSeq_470f77330_eye_001_Aye_1(A,C,G,T));
         };
         G&jsung,'NutSeq',null,cb;
     
@@ -265,16 +271,19 @@ HutNuts: | # extra ballsy refactoring starts, in StyleHut
         $.ajax(get).done(&s,t,c{
             t != 'success' and throw "Failed request: "+t, c;
             $src = c.getResponseHeader('Location');
-            G&addscript,src,cb;
+            $m = src.match('^\/js\/(\\w+)-(\\w+)');
+            $t = m[1];
+            $ver = m[2];
+            $callback = &script,e{ cb(t,ver,script,e); };
+            G&addscript,src,callback;
         });
-        return;
     
     addscript: %acgt:src cb
-        var sc = document.createElement( 'script' );
-        sc.setAttribute( 'src', src );
-        sc.setAttribute( 'type', 'text/javascript' );
-        cb and sc.onload = cb;
-        A.on.appendChild( sc );
+        var script = document.createElement('script');
+        script.setAttribute('src', src);
+        script.setAttribute('type', 'text/javascript');
+        cb and script.onload = &e{ cb(script,e) };
+        A.on.appendChild(script);
 JigHutNuts: | # send HutNuts, should be enough to get NutServe'd
     # NetJig only updates only things that are already there
     # needs to be compiled into je/StyleHut and StartHut'd to add
