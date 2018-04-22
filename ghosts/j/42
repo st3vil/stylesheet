@@ -232,7 +232,8 @@ StartHut: | # dripple
         $s
     };
     
-    my $N = a&HutN ||= do {
+    my $N; # whole set, possibly cached
+    
         my $t = 'Stylehut';
         if (0) {
             # child exits, see also Lize for updating paths
@@ -247,13 +248,23 @@ StartHut: | # dripple
         }
         local A.6.t = 'je';
         my $f = G&Locate_read,$t;
-        my $d = G&Beach,"$f/1" if $f;
-        if ($d) {
+        my $li = readlink "$f/1";
+        if (a&HutN && $li && $li eq a&lastli) {
+            # cached
+            $N = a&HutN;
+        }
+        else {
+            delete a&HutM;
+            
+            my $d = G&Beach,"$f/1" if $f;
+            $d || die "No such $t in Gc&bay je etc";
+        
             sayre "Found C.t W in $f";
             ($d) = @$d;
             T.op = $d;
             my @W = G&op,'cW:javascript';
-            [
+            
+            $N = [
             # send an I grower, puts the subs G.t/h
             "eval(".$enj->($bb->(<<'')).");",
                 A.I = {};
@@ -284,12 +295,12 @@ StartHut: | # dripple
             } @W),
             # and connect
             "G\.h(A,C,G,T,'begin')"
-            ]
+            ];
+            a&HutN = $N;
+            a&lastli = $li;
         }
-        else {
-            die "No such $t in Gc&bay je etc";
-        }
-    };
+    
+    
     # batches of 30
     my $M = a&HutM ||= do {
         my $M = [];
