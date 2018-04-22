@@ -54,16 +54,15 @@ Wed: |
     };
     
     # W as <script> js include
-    get '/js/:t/:ver' => {ver=>'?'} => &c{
+    get '/js/:t' => &c{
         my $t = $c->param('t');
-        sayre "Andnow!";
-        my $ver = $c->param('ver');
-        undef $ver if $ver eq '?';
+        $t =~ s/\.js$//;
+        my $ver = $2 if $t =~ s/^(\w+)-(\w+)$/$1/;
         my $C = G&Ct,[$t,'',{ver=>$ver}];
         my $s = Rw NutServe $C;
         $s || return $c->res->code(404), $c->render(text=>"Not found\n");
         
-        my $loca = '/js/'.C.t.'/'.c&ver;
+        my $loca = '/js/'.C.t.'-'.c&ver.'.js';
         #$c->redirect_to($loca);
         $c->res->headers->append(Location => $loca);
         $c->render(text=>$s);
@@ -245,26 +244,37 @@ HutNuts: | # extra ballsy refactoring starts, in StyleHut
     # to be NutDung later
     u j
     begoin:
-        A.on = $('body');
-        window.onerror = &e,r{
-            console.log("Window error: ",e,r);
+        A.on = $('body')[0];
+        window.onerror = &e,r,o,l{
+            console.log("Window error: ",e,r,o,l);
             return;
         };
-        G&jsung,'NutSeq';
-        
-    jsung: %acgt:t ver
-        // ajax needs to be async
-        // a&async || die "A is not continuable";
+        $cb = &v,x,f,e{
+            console.log("script onload: ",v,x,f,e);
+            console.log("Have a toc: ",NutSeq_470f77330());
+            console.log("Have an aye: ",NutSeq_470f77330_eye_001_Aye_1(A,C,G,T));
+        };
+        G&jsung,'NutSeq',null,cb;
+    
+    # request needs to be async, a&async || die?
+    # we get it first to read the proper Location
+    #   so the <script> tag src is exact
+    jsung: %acgt:t ver cb
         $get = '/js/'+t;
-        ver and get += '/'+ver;
-        // can also add the <script> element, with .onload
-        // probably needs both ways
-          // with the reading of the Location header
-            // for exact error reporting
-        $.ajax(get).done(&v,x,f{
-            console.log("Found: ",v,x,f);
+        ver and get += '-'+ver;
+        $.ajax(get).done(&s,t,c{
+            t != 'success' and throw "Failed request: "+t, c;
+            $src = c.getResponseHeader('Location');
+            G&addscript,src,cb;
         });
-        
+        return;
+    
+    addscript: %acgt:src cb
+        var sc = document.createElement( 'script' );
+        sc.setAttribute( 'src', src );
+        sc.setAttribute( 'type', 'text/javascript' );
+        cb and sc.onload = cb;
+        A.on.appendChild( sc );
 JigHutNuts: | # send HutNuts, should be enough to get NutServe'd
     # NetJig only updates only things that are already there
     # needs to be compiled into je/StyleHut and StartHut'd to add
@@ -367,7 +377,7 @@ NutServe: | # returns string of js u for <script>
     my $s = join "",
         "function $name () { return [\n",
         # data and code has indent
-        (map { $_->[0].sjson($_)."\n" } @toc),
+        (map { $_->[0].sjson($_).",\n" } @toc),
         "]}\n",
         @codes;
     
@@ -432,7 +442,7 @@ NutAye: | # A without tubeyness
     # begin being
     Aye:
         $V = $.extend({},A);
-        V.2 = A;
+        V.up = A;
         $A = V;
         s and A.t = s;
         A.y = A;
@@ -440,7 +450,6 @@ NutAye: | # A without tubeyness
         A.sc = {};
         A.om ||= A;
         A.om == A.up and A.mo = A;
-        A[1] = A;
         
         T.d ||= 1;
         return A
