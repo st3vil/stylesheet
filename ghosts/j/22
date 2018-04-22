@@ -42,12 +42,15 @@ Wed: |
         my $i = $c->param('step') || 0;
         sayre "T wants to start at $i";
         my $next = "/thestart?step=".($i+1);
-        my $s = Rw StartHut $i
+        my $s = Rw StartHut $i $nocache=1
             || return
                 $c->render(text=>"document\.title = 'Gc&bay';"
-                    ."G\.h(A,C,G,T,'c','started');"
+                    ."G\.h(A,C,G,T,'c','starteeed');"
                     ."A\.sc\.start\.push('/andnow');");
         $c->render(text=>"A\.sc\.start\.push('$next');\n$s");
+    };
+    get '/andnow' => &c{
+        $c->render(text=>"G\.h(A,C,G,T,'begoin');");
     };
     
     # W as <script> js include
@@ -237,6 +240,36 @@ Wederr: |
     }
     
     
+HutNuts: | # extra ballsy refactoring starts, in StyleHut
+    # i pull things in
+    # to be NutDung later
+    u j
+    begoin:
+        A.on = $('body');
+        window.onerror = &e,r{
+            console.log("Window error: ",e,r);
+            return;
+        };
+        G&jsung,'NutSeq';
+        
+    jsung: %acgt:t ver
+        // ajax needs to be async
+        // a&async || die "A is not continuable";
+        $get = '/js/'+t;
+        ver and get += '/'+ver;
+        // can also add the <script> element, with .onload
+        // probably needs both ways
+          // with the reading of the Location header
+            // for exact error reporting
+        $.ajax(get).done(&v,x,f{
+            console.log("Found: ",v,x,f);
+        });
+        
+JigHutNuts: | # send HutNuts, should be enough to get NutServe'd
+    # NetJig only updates only things that are already there
+    # needs to be compiled into je/StyleHut and StartHut'd to add
+    n NetJig=>W=>{the_W=>'HutNuts'}
+    
 NutServe: | # returns string of js u for <script>
     delete G.way.NutServe;
     
@@ -264,8 +297,10 @@ NutServe: | # returns string of js u for <script>
     my $l = "$f/1";
     my $li = readlink $l;
     # find version
-    my ($ver) = $li =~ /^h\/(\w+)$/ || die "not h/dig looking: $li";
+    my ($ver) = $li =~ /^h\/(\w+)$/;
+    $ver || die "not h/dig looking: $li";
     $li = "$f/$li";
+    # specify version
     if (c&ver && c&ver ne $ver) {
         $li =~ s/$ver$/c&ver/ || die "Cant find $ver in $l";
         $ver = c&ver;
