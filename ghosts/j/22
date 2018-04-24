@@ -518,6 +518,7 @@ NutAye: | # A without tubeyness
             G&thro;
         }
         return A
+    # descript/mapself
 NutSea: | # line etc into C
     u j
     n \'of:eye'
@@ -525,6 +526,28 @@ NutSea: | # line etc into C
     # ReadLines, G&m, G&A
     Cye:
         // guess t y c sc
+    # parse ONE C-like scrap of something, not a Line
+    inC:
+        C = s;
+        if (C.constructor == Array) {
+            C = {t:C[0],y:C[1],c:C[2],sc:C[3]};
+            typeof C.c  === 'string' and C.c =  G&peel,C.c;
+            typeof C.sc === 'string' and C.sc = G&peel,C.sc;
+        }
+        else
+        if (C.constructor == Object &&
+            !C.t && !C.y && !C.c && !C.sc) {
+            $.each(C, &k,v{ G&$k,v }); T.not = 1;
+        }
+        else
+        typeof C === 'string' and C = {c: {s: C}};
+        typeof C.c === 'string' and C.c = {s: C.c};
+        typeof C.y === 'string' || typeof C.y === 'number' and C.y = {cv: G&sca,C.y };
+        !typeof C.t === 'string' and console.log('queda',C);
+        C.c ||= {};
+        C.sc ||= {};
+        return C;
+    
     # and a bit of xotila
 NutTub: | # A tubeyness
     u j
@@ -532,6 +555,90 @@ NutTub: | # A tubeyness
     # go, stop, mode
     thro:
         // do I for C
+
+    # subroutine call
+    # TODO many args, up to acgt+5 & clued on D?
+    # TODO Gc&B stacking
+    # TODO G.i.* = A.I.i.y.tw.*.c.code
+    h: %acgt:s so st sh sf si
+        $z = s;
+        typeof s === 'string' and z = G.t(A,C,G,T,'i',s);
+        typeof s === 'string' && !z and z = G.t(A,C,G,T,'eye',s);
+        !z and throw "No way: "+s;
+        T.D = z;
+        return z.c.code(A,C,G,T,so,st,sh,sf,si);
+    
+    # look up A slope for the I/$s (embryo) or the I/$s/$t (part)
+    t: %acgt:s t
+        var z;
+        $.each([1,2,3,4,5], &i,v{
+            z and return;
+            var Y = A[v];
+            !Y and return;
+            var I = Y.I;
+            !I and return;
+            z = I[s];
+            t and z = z.y.tw[t];
+        });
+        return z;
+    
+    # persona perforthe webclient channels
+    # so the G copies and lives from/to W
+    # h reach up/down to applied layers of you
+    # top level mirage is o(ww,Wid,$s) 
+    # which ins ww (G.Wid for Oth), J.id (Wid)
+    # and the difference is you
+    
+    # toplevel n-tering
+    om:
+        A$ = G&A,'om';
+        s and C = s;
+        C$ = G&inC,C;
+        C.y.A = A;
+        t$ = T;
+        T$ = {};
+        if (t) {
+            t.d and T.d = t.d + 1;
+        }
+        A&T = T;
+        G&throat,2,C;
+        T.alk = 'w'+T.d+' '+C.t+' '+ G&ks,C.c +'%'+G&ks,C.sc;
+        s&css ||= {};
+        s&anc ||= {};
+        G&throat,7;
+    
+    # jog job through embryo A.t
+    # up to ov
+    throat: %acgt:ov sC
+        T.not and return 0;
+        ov and A&ov = G&sca,ov;
+        sC and A&s = C;
+        C = A&s;
+        T = A&T;
+        t$ = G&t,A.t;
+        !t and G&er:"throat no "+A.t, A;
+        
+        var z = t.y.in;
+        while (z && A.c.ov >= z.y.cv) {
+            T.not and break
+            var D = z;
+            z = z.y.next;
+            
+            A.c.cv > D.y.cv and continue
+            C = A&s;
+            if (!D.sc.any) {
+                D.sc.nk and !C[D.sc.nk] and continue;
+                D.sc.gk and !C[D.sc.nk][D.sc.gk] and continue;
+            }
+            var es;
+            D.sc.gk and es = C[D.sc.nk][D.sc.gk];
+            D.sc.s and es = D.sc.s;
+            G.h(A,C,G,T,D,es);
+            T.not == '2' and return delete T.not;
+            A.c.cv = D.y.cv;
+        }
+        return !T.not;
+    
 NutDung: | # getting things
     u j
     n \'of:eye'
