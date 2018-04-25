@@ -420,6 +420,76 @@ HutNuts: | # extra ballsy refactoring starts (in Stylehut)
         script.setAttribute('type', 'text/javascript');
         cb and script.onload = &e{ cb(script,e) };
         A.on.appendChild(script);
+NutSock: | # websockets
+    u jc
+    n \'of:ws'
+    # give A websocket
+    #   winds itself back when disconnected
+    # spawns:
+    #   A=send when you G&h,a&send,'YourString'
+    #   A=receive when the a&receive happens, which sends 
+    #   and A receive (or whatever you set a&receive)
+    #   put in a J=tel to be recording stuff,
+    #     making compressions
+    # use A to hold event-emitting things that will spring more A
+    start 2: %any
+        a&ws && a&ws.readyState == 1 and return
+        
+        A&ws ||= 'ws://'+location.host+'/s';
+        
+        $ws = a&ws = new WebSocket(A&ws);
+        
+        ws.onopen = &{
+            ws !== a&ws  and return ~sockalivedupe: A&ws
+            delete a&dead;
+            
+            ~connected: s.s
+            $('body').stop().css('-webkit-filter', '');
+        };
+        
+        ws.onclose = &{
+            ws !== a&ws  and return ~sockalivedupe: A&ws
+            a&dead = (a&dead||0) + 1
+            
+            ~closed: s.s
+            $('body').stop().css('-webkit-filter',
+                'blur(1px) brightness(1.3) contrast(2)');
+            
+            // wanting T.N=1 to do so
+            A.cv = 0.1;
+            1s&N.push(A);
+            $delay = 250
+            T.N.1.500;
+        };
+        
+        ws.onmessage = &ev{
+            a&receive(ev.data,ev);
+        };
+        
+        // to be G&h,wss&send,'YourLines'
+        a&send = &Y,C,G,T,s{
+            $A = G&Aye,'ws',9,{Y:Y};
+            // test coverage:
+            c.readyState !== 1 and ~sockdropped: s, s
+            // if too long?
+            typeof s != 'string' and s = JSON.stringify(s);
+            c.send(s);
+        };
+        //a&receive =
+    
+        // wanting T.N=6 to do so
+        A.cv = 0.6
+    
+    
+    # try sockneck again every .25 seconds
+    # then every 2.5 seconds
+    sockrecon:
+        var t = 25000;
+        s.fail++;
+        s.fail < 100 and t = 250
+        ~sockrecon: s.fail
+        G&yl:t,&{ G&sockneck,s };
+    
 NutMachine: | # totality of core js-ness
     # telephone otherness
     n NutSock
@@ -698,7 +768,40 @@ NutJay: | # persistent thing, all usual
     u j
     n \'of:eye'
     # quank the repeating part
-    # s would be the W on the server to try and ws
+    
+    
+    # each s/page/C context/sphere/drain it has,
+    # has an up to dateness, where the other language joins on,
+    #   like ws, can push/want updates through
+    #   when drain C's yA's a&v (J-ish version) or A&sip changes
+    #   or the C could be getting checked/o'd more often the usual
+    #   
+    #   looking at drain things' A's ip? or its A.c.v-ersion?
+    #   or A.4+1's ip being more recent?
+    #   want to wind up any A in drain <= 6?
+    #   the s's M's As and Cs, the sources of what's on the page, change
+    #   so there can be a way to encode a s's source/ingredients as an s
+    #  and vaguely the last ip number of A.4+1 being > that remembered
+    #    that remembererd ~= encoded as universal view of the A holding stuff
+    #   means 
+    # the ipi of the A.4+1 on the  
+    
+    
+    # s&v will be a version/timestamp
+    # t will be Where it is
+    # cv some kind of trust/doneness feng shui,
+    #   likely to separate many of the same J
+    # c/sc ongoing house of definition,
+    # to be sprung out by pin
+    #  which is to draw the usual picture,
+    #  and define hooks/elvising,
+    #  so as to create services and lingo/policy for other morphologies
+    #  and physics for interaction
+    
+    
+    # s would be the W on the server to try and ws or so
+    #   when elvises fail they just return W page
+    #   makes a socket hang around, whatever comes across.
     # begins
     # 1s&N are A/C wanting attention/typing in
     Jinthe:
@@ -745,6 +848,7 @@ NutJay: | # persistent thing, all usual
         G&A,A
     
     # sproutling
+    # J, they inherit like a stretchier A
     J:
         $V = A;
         $A = A.1||A;
@@ -756,35 +860,148 @@ NutJay: | # persistent thing, all usual
         Js&N ||= [];
         return J
     
-    # each s/page/C context/sphere/drain it has,
-    # has an up to dateness, where the other language joins on,
-    #   like ws, can push/want updates through
-    #   when drain C's yA's a&v (J-ish version) or A&sip changes
-    #   or the C could be getting checked/o'd more often the usual
-    #   
-    #   looking at drain things' A's ip? or its A.c.v-ersion?
-    #   or A.4+1's ip being more recent?
-    #   want to wind up any A in drain <= 6?
-    #   the s's M's As and Cs, the sources of what's on the page, change
-    #   so there can be a way to encode a s's source/ingredients as an s
-    #  and vaguely the last ip number of A.4+1 being > that remembered
-    #    that remembererd ~= encoded as universal view of the A holding stuff
-    #   means 
-    # the ipi of the A.4+1 on the  
+    # contraptions of J
     
     
-    # s&v will be a version/timestamp
-    # t will be Where it is
-    # cv some kind of trust/doneness feng shui,
-    #   likely to separate many of the same J
-    # c/sc ongoing house of definition,
-    # to be sprung out by pin
-    #  which is to draw the usual picture,
-    #  and define hooks/elvising,
-    #  so as to create services and lingo/policy for other morphologies
-    #  and physics for interaction
+    # J's support crew, secondary colours
+    # who keep normal
+    # may be n'd and s'd
+    sJ:
+        my ($J,$s) = ref $s ? ($s,shift@Me) : (A.1,$s);
+        J.sc.>$s ||= do {
+            my $j = G&J,$J,$s;
+            j.I = 5s&NormalI if 5s&NormalI;
+            $j
+        };
     
-    #
+    # adds to ground
+    # < sometimes given [C,C,C]?
+    #   @$s = ([@$s]) unless ref $s->[0] eq 'ARRAY' 
+    #     || ref $s->[0] eq 'HASH';
+    n: %acgt
+        pop @Me if $Me[-1] eq '';
+        G&clusp;
+        $C = G&Ct,\@Me;
+        #saybl "in: ".G&aC,$C;
+        G&A,mo=>8=>{s=>$C};
+        #saybl "out: ".G&aC,$C .(s&of && "    of=s&of");
+        $C
+    
+    # the many accumulate in $M, passed in
+    # an $M=[] is given to the way and mo'd as 9c&M in J6
+    # < sometimes given [C,C,C]?
+    m: %acgt:M
+        pop @Me if $Me[-1] eq '';
+        G&clusp;
+        my $c = G&Ct,\@Me;
+        push @$M, $c;
+        $c
+    
+    # ephemeral n without:
+    # - clusping the mind, or
+    # - attaching to this ground (usu for c.e)
+    # < e could be reliabilitied by grounding and osc work
+    # usually n \'of:mo' -> C.c.of=mo
+    # but for e it A.c.of=mo, for eg nomem
+    elph: %acgt
+        G&e,@Me;
+    e: %acgt
+        @Me == 1 && (!ref $Me[0]
+            || ref $Me[0] eq 'SCALAR') &&
+            return G&E,@Me;
+        pop @Me if $Me[-1] eq '';
+        my $c;
+        $c = shift @Me if ref $Me[0] eq 'SCALAR';
+        $c = $c ? G&peel,$$c : {};
+        c.nogro = 1;
+        
+        $C = G&Ct,\@Me;
+        saybl "e: ".ki $C;
+        G&A,mo=>8=>{s=>$C,%$c};
+        $C
+    
+    # adds to mind, G&clusp causes it to be made
+    u: %acgt
+        pop @Me if $Me[-1] eq '';
+        my $u = G&sJ,'u';
+        push @{uc&N||=[]}, \@Me;
+        if (@Me == 1 && $Me[0] eq '') { 
+            # u '' # resets to normal
+            return G&clusp;
+        }
+        
+    # clasp u
+    # 5s&NormalI is default if no u
+    # 5s&NormalC is base, it's s&J holding I as usual
+    #   O ii hoists faster than entering everything from the start
+    # < only elvising altering We things
+    # < lots of I.i things only being on 5 so this has less to chew
+    # < knowing I.i never needs to know order/y.next... unless stored
+    clusp:
+        # before 5/House sets up
+        return saybl G&aC ." u are early"
+            unless 5s&NormalI;
+        
+        # u unchanged
+        if (my $u = 1s&u) {
+            return if uc&N && !@{uc&N};
+        }
+        my $u = G&sJ,'u';
+        uc&is = 'mind';
+        my $J = A.1;
+        
+        J.I = A.I = do {
+            my $A = G&A,clusping=>0;
+            A.clusping = $A;
+            A.1 = $u;
+            A.2 = $J;
+            my $N = 1c&N || [];
+            # u '' # resets to normal
+            $N = [] if @$N == 1 && @{$N->[0]} == 1 && $N->[0]->[0] eq '';
+            1c&N = [];
+            if (@$N) {
+                local A.trip;
+                local A&trip;
+                # this may be an alias for speed rather than canonical
+                # name should include versions: Normal#3893a73, c#489bc58
+                #   being ha, or c#1.42.492 for incremental version
+                #   maybe wanting hostnames
+                # the 5 might create some W for each mind it makes
+                my $uname = slm 15, dig wdump 3, $N;
+                1 && saygr G&sn ." u: ".ki $N;
+                5s&ucache.>$uname ||= do {
+                    1c&is = 'mind'; # static encouraged
+                    # enter stuff to form mind
+                    
+                    my $ch = $uname;
+                    1s&grounds.>$ch = A.ground = G&Ct,[$ch=>1=>{},{J=>A.1}];
+                    
+                    1s&root = G&Ct,[$uname=>9=>{root=>1}];
+                    map { G&A,mo=>1=>{s=>$_} }
+                    map { G&Ct,$_ }
+                        # s&J holding I as usual
+                        (5s&NormalC || die "create NormalC");
+                    
+                    map { G&A,mo=>8=>{s=>$_} }
+                        # like a J6
+                        1s&root, # must be findable in drain
+                    map { G&Ct,$_ }
+                        # entered stuff
+                        @$N;
+                    # 
+                    my $s = G&s;
+                    ss&I || die "clusp no I, $uname: ".ki $s;
+                };
+            }
+            else {
+                my $C = 5s&NormalC || die "nonormalC";
+                my $J = s&J || die "nonormalCJ";
+                Js&I || die "nonormalCJI";
+            }
+        };
+        # get this J's mo throat to reopen its mind
+        T.seek = 1;
+       
 NutJaying: | # how to sequence a J
     u jc
     n \'of:n'
@@ -871,74 +1088,4 @@ NutCore: | # core is a personality for relationships between things
     # stuff to one day compile into the throat
     # or boundary effects
     # points for things respected by other things
-NutSock: | # websockets
-    u jc
-    n \'of:ws'
-    # give A websocket
-    #   winds itself back when disconnected
-    # spawns:
-    #   A=send when you G&h,a&send,'YourString'
-    #   A=receive when the a&receive happens, which sends 
-    #   and A receive (or whatever you set a&receive)
-    #   put in a J=tel to be recording stuff,
-    #     making compressions
-    # use A to hold event-emitting things that will spring more A
-    start 2: %any
-        a&ws && a&ws.readyState == 1 and return
-        
-        A&ws ||= 'ws://'+location.host+'/s';
-        
-        $ws = a&ws = new WebSocket(A&ws);
-        
-        ws.onopen = &{
-            ws !== a&ws  and return ~sockalivedupe: A&ws
-            delete a&dead;
-            
-            ~connected: s.s
-            $('body').stop().css('-webkit-filter', '');
-        };
-        
-        ws.onclose = &{
-            ws !== a&ws  and return ~sockalivedupe: A&ws
-            a&dead = (a&dead||0) + 1
-            
-            ~closed: s.s
-            $('body').stop().css('-webkit-filter',
-                'blur(1px) brightness(1.3) contrast(2)');
-            
-            // wanting T.N=1 to do so
-            A.cv = 0.1;
-            1s&N.push(A);
-            $delay = 250
-            T.N.1.500;
-        };
-        
-        ws.onmessage = &ev{
-            a&receive(ev.data,ev);
-        };
-        
-        // to be G&h,wss&send,'YourLines'
-        a&send = &Y,C,G,T,s{
-            $A = G&Aye,'ws',9,{Y:Y};
-            // test coverage:
-            c.readyState !== 1 and ~sockdropped: s, s
-            // if too long?
-            typeof s != 'string' and s = JSON.stringify(s);
-            c.send(s);
-        };
-        //a&receive =
-    
-        // wanting T.N=6 to do so
-        A.cv = 0.6
-    
-    
-    # try sockneck again every .25 seconds
-    # then every 2.5 seconds
-    sockrecon:
-        var t = 25000;
-        s.fail++;
-        s.fail < 100 and t = 250
-        ~sockrecon: s.fail
-        G&yl:t,&{ G&sockneck,s };
-    
 
