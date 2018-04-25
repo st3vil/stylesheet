@@ -431,12 +431,11 @@ NutSock: | # websockets
     # give A websocket
     #   winds itself back when disconnected
     # spawns:
-    #   A=send when you G&h,a&send,'YourString'
+    #   A=send when you G&h,wss&send,'YourString'
     #   A=receive when the a&receive happens, which sends 
     #   and A receive (or whatever you set a&receive)
     #   put in a J=tel to be recording stuff,
     #     making compressions
-    # use A to hold event-emitting things that will spring more A
     start 2: %any
         a&ws && a&ws.readyState == 1 and return
         
@@ -448,7 +447,7 @@ NutSock: | # websockets
             ws !== a&ws  and return ~sockalivedupe: A&ws
             delete a&dead;
             
-            ~connected: s.s
+            ~connected: A&ws
             $('body').stop().css('-webkit-filter', '');
         };
         
@@ -456,35 +455,59 @@ NutSock: | # websockets
             ws !== a&ws  and return ~sockalivedupe: A&ws
             a&dead = (a&dead||0) + 1
             
-            ~closed: s.s
+            ~closed: A&ws
             $('body').stop().css('-webkit-filter',
                 'blur(1px) brightness(1.3) contrast(2)');
             
-            // wanting T.N=1 to do so
+            $delay = 0.3;
+            s&dead > 100 and delay *= 10;
+            T.N.1 = delay;
+            // but without T.N:
             A.cv = 0.1;
             1s&N.push(A);
-            $delay = 300;
-            // T.N.1 = 0.3; 300 ms delay, x10 if been ages
         };
         
         ws.onmessage = &ev{
-            a&receive(ev.data,ev);
+            a&receive(A,C,G,T,ev.data,ev);
+        };
+        // generally it would be tied to a dialectic state
+        //   see making compressions ^
+        // Y may != A if someone in 4 uses our a&receive
+        a&receive = &Y,C,G,T,s,ev{
+            $A = G&Aye,'receive',0,{Y:Y};
+            
+            // could be in I.receive
+            
+            $guesswork = e.substr(0,1);
+            guesswork == "[" and s = $.parseJSON(s)
+            guesswork == "{" and s = $.parseJSON(s)
+            
+            // trusted to create anything
+            G&n,s
         };
         
-        // to be G&h,wss&send,'YourLines'
-        a&send = &Y,C,G,T,s{
-            $A = G&Aye,'ws',9,{Y:Y};
+        // Y whoever G&h,wss&send,'YourString'
+        a&send = &Y,C,G,T,s,eg{
+            $A = G&Aye,'send',0,{Y:Y};
+            
+            // could be in I.send
+            
             // test coverage:
-            c.readyState !== 1 and ~sockdropped: s, s
-            // if too long?
+            $ws = upa&ws;
+            ws.readyState !== 1 and ~sockdropped: upA&ws
+            
             typeof s != 'string' and s = JSON.stringify(s);
-            c.send(s);
+            
+            // if too long?
+            ws.send(s);
         };
-        //a&receive =
     
         // wanting T.N=6 to do so
         A.cv = 0.6
     
+    n \'of:send'
+    
+    n \'of:receive'
     
     # try sockneck again every .25 seconds
     # then every 2.5 seconds
@@ -825,7 +848,6 @@ NutJayTo: |
         A.t = 'top';
         $J = A.1 = A.2 = A.3 = A.4 = G&J,'Four';
         J.1 = J.2 = J.3 = J.4 = J;
-        1s&N = []; // for A/C workload
         // 1s&z etc for showing state
         
         
