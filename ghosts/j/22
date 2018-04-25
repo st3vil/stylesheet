@@ -254,7 +254,12 @@ NutServe: | # turns js W into a <script> with toc in C
     my $li = readlink $l;
     # find version
     my ($ver) = $li =~ /^h\/(\w+)$/;
-    $ver || die "not h/dig looking: $li";
+    if (!$ver) {
+        # hardlink? pull from meta
+        ($ver) = `cat $f/2` =~ /1:(\w+)\b/;
+        $ver || die "not h/dig looking: $f says $li";
+        $li = "h/$ver";
+    }
     $li = "$f/$li";
     # specify version
     if (c&ver && c&ver ne $ver) {
@@ -672,7 +677,7 @@ NutTub: | # A tubeyness
         T.not and return
         ov and A&ov = G&sca,ov;
         sC and A&s = sC;
-        C = A&s;
+        C = A&s = A&s || {t:'',y:{A:A},c:{},sc:{}};
         $t = G&t,A.t;
         !t and throw "thro no t: "+A.t, A;
         
