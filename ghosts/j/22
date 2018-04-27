@@ -45,37 +45,15 @@ Wed: |
         my $s = Rw StartHut $i $nocache=1
             || return
                 $c->render(text=>"document\.title = 'Gc&bay';"
-                    ."G\.h(A,C,G,T,'c','starteeed');"
+                    ."G\.h(A,C,G,T,'c','*');"
                     ."A\.sc\.start\.push('/andnow');");
         $c->render(text=>"A\.sc\.start\.push('$next');\n$s");
     };
     get '/andnow' => &c{
         $c->render(text=>"\$('<h2 onclick=\"G\.h(A,C,G,T,\\'begoin\\');\">G</h2>').appendTo('body')");
     };
+    Rw ServeC;
     
-    # W as <script> js include
-    get '/js/:t' => &c{
-        my $t = $c->param('t');
-        $t =~ s/\.js$//;
-        my $ver = $2 if $t =~ s/^(\w+)-(\w+)$/$1/;
-        my $C = G&Ct,[$t,'',{ver=>$ver}];
-        my $s = Rw NutServe $C;
-        $s || return $c->res->code(404), $c->render(text=>"Not found\n");
-        
-        my $loca = '/js/'.C.t.'-'.c&ver.'.js';
-        #$c->redirect_to($loca);
-        $c->res->headers->append(Location => $loca);
-        $c->render(text=>$s);
-    };
-    get '/earer' => &c{
-        my $dat = $c->param('data');
-        #$dat = djson($dat);
-        my $s = G&Ct,[earer=>''=>{s=>$dat}];
-        my $el = [give=>''=>{s=>$s}];
-        my $W = [Wederr=>$el];
-        G&timer:0.1,&{ 4s&toy->({to=>[$W]}) };
-        $c->render(text=>"hmm\n");
-    };
     #c other Wedery
     # handlers for image receiver
     Rw Tism;
@@ -368,10 +346,10 @@ HutNuts: | # extra ballsy refactoring starts (in Stylehut)
     jsung: %acgt:t ver cb
         $get = '/js/'+t;
         ver and get += '-'+ver;
-        $.ajax(get).done(&s,t,c{
-            t != 'success' and throw "Failed request: "+t, c;
+        $.ajax(get).done(&s,how,c{
+            how != 'success' and throw "Failed request: "+how, c;
             $src = c.getResponseHeader('Location');
-            $m = src.match('^\/js\/(\\w+)-(\\w+)');
+            $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
             $W = m[1];
             $ver = m[2];
             $callback = &script,e{
@@ -412,10 +390,11 @@ HutNuts: | # extra ballsy refactoring starts (in Stylehut)
                         throw "deep C: "+W+"/"+t,v
                     }
                 });
-                
-                
                 cb(t,ver,script,e); 
             };
+            $have = $('body script[src="'+src+'"]');
+            have.length and return callback();
+            ~acquired: t, ver
             G&addscript,src,callback;
         });
     
@@ -787,9 +766,88 @@ NutDung: | # getting things/I
         });
         return z;
     
+ServeC: | # gets for C
+    # W as <script> js include
+    get '/js/:t' => &c{
+        my $t = $c->param('t');
+        $t =~ s/\.js$//;
+        my $ver = $2 if $t =~ s/^(\w+)-(\w+)$/$1/;
+        my $C = G&Ct,[$t,'',{ver=>$ver}];
+        my $s = Rw NutServe $C;
+        $s || return $c->res->code(404), $c->render(text=>"Not found\n");
+        
+        my $loca = '/js/'.C.t.'-'.c&ver.'.js';
+        #$c->redirect_to($loca);
+        $c->res->headers->append(Location => $loca);
+        $c->render(text=>$s);
+    };
+    get '/earer' => &c{
+        my $dat = $c->param('data');
+        #$dat = djson($dat);
+        my $s = G&Ct,[earer=>''=>{s=>$dat}];
+        my $el = [give=>''=>{s=>$s}];
+        my $W = [Wederr=>$el];
+        G&timer:0.1,&{ 4s&toy->({to=>[$W]}) };
+        $c->render(text=>"hmm\n");
+    };
+    get '/do' => &c{
+        if (my $get = $c->param('get')) {
+            $get =~ /^(\w+)'s (\w+) (\w+)$/;
+            `tail 
+        }
+        else {
+            
+        }
+    
 NutC: | # make C
     u j
     n \'of:eye'
+    # start, having I
+    # s would be the W on the server to try and ws or so
+    #   when elvises fail they just return W page
+    #   makes a socket hang around, whatever comes across.
+    # begins
+    # 1s&N are A/C wanting attention/typing in
+    Jinthe:
+        A&ws ||= 1;
+        
+        window.onerror = &msg,url,lineNo,colNo,error{
+            G&Ban,msg,url,lineNo,colNo,error;
+            return
+        };
+        
+        A.t = 'top';
+        $J = A.1 = A.2 = A.3 = A.4 = G&J,'Four';
+        J.1 = J.2 = J.3 = J.4 = J;
+        // 1s&z etc for showing state
+        
+        
+        // location.search.match('^\\\?v=')
+        
+        // click, keys - outsiders starting with A.5
+        G.clon = &{ $(window).on("click", &ev{ G&cl,ev }) };
+        G.keon = &{ $(window).on("keydown", &ev{ G&ke,ev }) };
+        G.clof = &{ $(window).off("click") };
+        G.keof = &{ $(window).off("keydown") };
+        G.doh = &ev,h{ G&doh,ev,h };
+        
+        G.togwid = &m,fr,to{
+            if ($(m).attr('togwid') == to)
+                to = fr
+            $(m).attr('togwid', to)
+            $(m).css('width', to);
+        };
+        
+        // G&sockneck;
+        4s&ws = G&Aye,'ws',9;
+        
+        G&headi,'A','Jin';
+        G&headi,'C','Typ';
+        G&headi,'G','begoin';
+        G&headi,'T','Tri';
+        
+        G.clon(); G.keon()
+
     # make buttons
     headi: %acgt:s t
         t ||= s
@@ -805,15 +863,33 @@ NutC: | # make C
     # A: run funnel
     Jin:
         // find all 1s&N
+        
         G&A,A
         ~Jin
     
     # C: collect chatter
+    # create error, order its fixing
     Typ:
-        throw "Here"
+        $.get(/
+        throw "Here!"
     # G reinits...
     
     # T adjusts net
+    
+    # when error
+    Ban: %acgt:msg url lineNo colNo er
+        // communicate to thro if handley
+        $v = new URL(url);
+        $src = v.pathname;
+        $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
+        $W = m[1];
+        $ver = m[2];
+        $style = "font-size:126%,color:red";
+        msg = msg+'<a id="bungle" href="#">?<a>';
+        
+        $e = '<span style="'.style.'">! '+W+': '+msg+'</span>';
+        G&c,e;
+        console.log("Window error: ",msg);
 NutJay: | # persistent thing, all usual
     n NutC
     n NutJayTo
@@ -853,50 +929,6 @@ NutJayTo: |
     #  and physics for interaction
     
     
-    # s would be the W on the server to try and ws or so
-    #   when elvises fail they just return W page
-    #   makes a socket hang around, whatever comes across.
-    # begins
-    # 1s&N are A/C wanting attention/typing in
-    Jinthe:
-        A&ws ||= 1;
-        
-        window.onerror = &e,r,o,l{
-            console.log("Window error: ",e,r,o,l);
-            return;
-        };
-        
-        A.t = 'top';
-        $J = A.1 = A.2 = A.3 = A.4 = G&J,'Four';
-        J.1 = J.2 = J.3 = J.4 = J;
-        // 1s&z etc for showing state
-        
-        
-        // our s&Jholder
-        
-        // location.search.match('^\\\?v=')
-        
-        // click, keys - outsiders starting with A.5
-        G.clon = &{ $(window).on("click", &ev{ G&cl,ev }) };
-        G.keon = &{ $(window).on("keydown", &ev{ G&ke,ev }) };
-        G.clof = &{ $(window).off("click") };
-        G.keof = &{ $(window).off("keydown") };
-        G.doh = &ev,h{ G&doh,ev,h };
-        
-        G.togwid = &m,fr,to{
-            if ($(m).attr('togwid') == to)
-                to = fr
-            $(m).attr('togwid', to)
-            $(m).css('width', to);
-        };
-        
-        // G&sockneck;
-        4s&ws = G&Aye,'ws',9;
-        
-        G&headi,'A','Jin';
-        G&headi,'C','Typ';
-        
-        G.clon(); G.keon()
     #c NutJunc
     
     # sproutling
@@ -961,7 +993,8 @@ NutJayTo: |
             # u '' # resets to normal
             return G&clusp;
         }
-        
+    
+    
     # clasp u
     # 5s&NormalI is default if no u
     # 5s&NormalC is base, it's s&J holding I as usual
