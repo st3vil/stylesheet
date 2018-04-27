@@ -511,20 +511,6 @@ NutSock: | # websockets
         // wanting T.N=6 to do so
         A.cv = 0.6
     
-    n \'of:send'
-    
-    n \'of:receive'
-    
-    # try sockneck again every .25 seconds
-    # then every 2.5 seconds
-    0 &&
-    sockrecon:
-        var t = 25000;
-        s.fail++;
-        s.fail < 100 and t = 250
-        ~sockrecon: s.fail
-        G&yl:t,&{ G&sockneck,s };
-    
 NutMachine: | # totality of core js-ness
     A.hardlink = 1;
     # telephone otherness
@@ -803,6 +789,7 @@ NutDung: | # getting things/I
     
 NutJay: | # persistent thing, all usual
     n NutJayTo
+    n NutJaying
 NutJayTo: |
     u j
     n \'of:eye'
@@ -879,8 +866,7 @@ NutJayTo: |
         4s&ws = G&Aye,'ws',9;
         
         G.clon(); G.keon();
-        
-        
+    #c NutJunc
     # run funnel
     Jin:
         // find all 1s&N
@@ -888,9 +874,10 @@ NutJayTo: |
     
     # sproutling
     # J, they inherit like a stretchier A
-    J:
+    J: %acgt:J s
+        typeof J == 'string' and s = J; J = A.1;
         $V = A;
-        $A = A.1||A;
+        $A = J||A;
         $J = G&Aye,s;
         // on a chain
         J.2 = J.1;
@@ -901,71 +888,48 @@ NutJayTo: |
     
     # contraptions of J
     
-    =pod
     # J's support crew, secondary colours
     # who keep normal
     # may be n'd and s'd
     sJ: %acgt:J s
-        typeof J == 'string' and 
-        my ($J,$s) = ref $s ? ($s,shift@Me) : (A.1,$s);
-        J.sc.>$s ||= do {
-            my $j = G&J,$J,$s;
-            j.I = 5s&NormalI if 5s&NormalI;
-            $j
-        };
+        typeof J == 'string' and s = J; J = A.1;
+        J.sc[s] and return J.sc[s];
+        $j = G&J,J,s;
+        j.I = A.4.I;
+        return j
     
     # adds to ground
     # < sometimes given [C,C,C]?
-    #   @$s = ([@$s]) unless ref $s->[0] eq 'ARRAY' 
-    #     || ref $s->[0] eq 'HASH';
-    n: %acgt
-        pop @Me if $Me[-1] eq '';
-        G&clusp;
-        $C = G&Ct,\@Me;
-        #saybl "in: ".G&aC,$C;
-        G&A,mo=>8=>{s=>$C};
-        #saybl "out: ".G&aC,$C .(s&of && "    of=s&of");
-        $C
-    
-    # the many accumulate in $M, passed in
-    # an $M=[] is given to the way and mo'd as 9c&M in J6
-    # < sometimes given [C,C,C]?
-    m: %acgt:M
-        pop @Me if $Me[-1] eq '';
-        G&clusp;
-        my $c = G&Ct,\@Me;
-        push @$M, $c;
-        $c
-    
-    #c NutElvis
-    # ephemeral n without:
-    # - clusping the mind, or
-    # - attaching to this ground (usu for c.e)
-    # < e could be reliabilitied by grounding and osc work
-    # usually n \'of:mo' -> C.c.of=mo
-    # but for e it A.c.of=mo, for eg nomem
-    elph: %acgt
-        G&e,@Me;
-    e: %acgt
-        @Me == 1 && (!ref $Me[0]
-            || ref $Me[0] eq 'SCALAR') &&
-            return G&E,@Me;
-        pop @Me if $Me[-1] eq '';
-        my $c;
-        $c = shift @Me if ref $Me[0] eq 'SCALAR';
-        $c = $c ? G&peel,$$c : {};
-        c.nogro = 1;
+    n:
+        typeof s != 'object' and throw "weird n", s;
         
-        $C = G&Ct,\@Me;
-        saybl "e: ".ki $C;
-        G&A,mo=>8=>{s=>$C,%$c};
-        $C
+        //G&clusp;
+        
+        $C = G&Cye,s;
+        G&Aye,'n',8,{s:C};
+        return C
+    
+    # the usual many things accumulate in $M=[]
+    # things given by the way
+    # lives on 9c&M, gets n'd end of 6
+    # < sometimes given [C,C,C]?
+    m: %acgt:M s
+        typeof s != 'object' and throw "weird m", s
+        s.constructor == Array and return $.each(M,&i,v{ G&m,$v })
+        
+        //G&clusp;
+        
+        $C = G&Cye,s;
+        M.push(C);
+        return C
+    =pod
     #c NutMinds
     # adds to mind, G&clusp causes it to be made
-    u: %acgt
-        pop @Me if $Me[-1] eq '';
+    # can do an A:u if mix is simple/found enough
+    # accumulated on 1s&u=J:u for clusping onto A.1
+    u:
         my $u = G&sJ,'u';
-        push @{uc&N||=[]}, \@Me;
+        push @{uc&N||=[]}, s;
         if (@Me == 1 && $Me[0] eq '') { 
             # u '' # resets to normal
             return G&clusp;
@@ -980,8 +944,7 @@ NutJayTo: |
     # < knowing I.i never needs to know order/y.next... unless stored
     clusp:
         # before 5/House sets up
-        return saybl G&aC ." u are early"
-            unless 5s&NormalI;
+        return unless 5s&NormalI;
         
         # u unchanged
         if (my $u = 1s&u) {
@@ -1042,8 +1005,32 @@ NutJayTo: |
         };
         # get this J's mo throat to reopen its mind
         T.seek = 1;
-       
+    
+    #c NutElvis
+    # ephemeral n without:
+    # - clusping the mind, or
+    # - attaching to this ground (usu for c.e)
+    # < e could be reliabilitied by grounding and osc work
+    # usually n \'of:mo' -> C.c.of=mo
+    # but for e it A.c.of=mo, for eg nomem
+    elph: %acgt
+        G&e,@Me;
+    e: %acgt
+        @Me == 1 && (!ref $Me[0]
+            || ref $Me[0] eq 'SCALAR') &&
+            return G&E,@Me;
+        pop @Me if $Me[-1] eq '';
+        my $c;
+        $c = shift @Me if ref $Me[0] eq 'SCALAR';
+        $c = $c ? G&peel,$$c : {};
+        c.nogro = 1;
+        
+        $C = G&Ct,\@Me;
+        saybl "e: ".ki $C;
+        G&A,mo=>8=>{s=>$C,%$c};
+        $C
     =cut
+    
 NutJaying: | # how to sequence a J
     u jc
     n \'of:n'
@@ -1054,70 +1041,97 @@ NutJaying: | # how to sequence a J
     # they want to commit or abort, be histree for o
     # and be a collection of in-progress C for slow/scattery J
     n 1:
-        A.mo = $A;
-        C.y.A = $A;
-        # deal with real space?
-        C.y.cv = 0.1 if C.y.cv eq '';
-        C.y.cv *= -1 if C.y.cv < 0;
-        C.y.cv *= 0.1 until C.y.cv < 1;
-        if (my $g = !A&nogro && A.ground) {
-            push @{gs&z||=[]}, $C
-        }
+        A.n = A;
+        y&A != A and throw "wild C: ", C
+        A&nogro and return
+        $g = A.ground;
+        !g and return;
+        gs&z ||= [];
+        gs&z.push(C);
     
     # various dynamics to the same basic particle
     pi 12:
-        pi || die "Give pi: ".ki$C;
+        !s and throw "Give pi: ".ki$C;
         c&J = "pi/$pi";
     
     # just looking for W, maybe retrieve static?
     # < using T.Z somehow to say jump to 8 after 2,
     #   might be useful for always tripping trips
     V 12:
-        c&W = $V;
+        c&W = s;
         A&twotoeight = 1;
     
     # networkily named thing
     W 12:
-        ref $s && die "ref cW";
-        $W = c&W = C.t if !$W || $W eq '1';
-        c&J = $W;
+        typeof s != 'string' and throw 'ref cW', C
+        !s || s == '1' and s = c&W = C.t;
+        !s and throw 'non t W', C;
+        c&J = s;
+        s&W = s;
         A&Jup = A.4;
         A&Jcv = 0.1;
-        s&W = $W;
     
     # look it up
+    #   the in-T knows the out-T
+    #    this auto when the A.t exists already (A[A.t])
+    #    might become several different T.things, which are
+    #    lingo network receivers on other objects in the process
+    #    T is a space to make marks
+    #   the s&J may already be there
+    #   the A&Jup is A.1 (becomes A.2) has s&Jtv
+    #    unless W, when its 4
     J 2:
-        T.oT = A.mo.up.mo.c.T;
-        my $J = s&J && return;
+        $upn = A.n.up.n;
+        upn && upn.c.T and T.oT = upn.c.T;
+        
+        s&J and return;
+        
         A&Jup ||= A.1;
         A&Jcv ||= C.y.cv;
         
-        $J = G&pint,A&Jup,sc=>Jtv=>C.t,A&Jcv
-            unless A&nomem;
-        
-        s&J = $J;
+        $J
+        if (!A&nomem) {
+            // or G&pint,A&Jup,sc=>Jtv=>C.t,A&Jcv
+            $Jtv
+            A&Jup && A&Jup.sc.Jtv and Jtv = A&Jup.sc.Jtv
+            if (Jtv[C.t] && Jtv[C.t][A&Jcv])
+                J = Jtv[C.t][A&Jcv]
+        }
+        J and s&J = J;
         
         if (A&twotoeight) {
-            T.oT.op = $J && Js&s && Js&s.sc.top;
+            T.oT.op = J && Js&s && Js&s.sc.top;
             return T.not = 1;
         }
     
     # J encode π 
-    # previous J is A.2, may differ from "above" J in J.2
+    # previous J is A.2, may differ from creator "above" J in J.2
+    #  make interesting maps of things tunneling to others
     # esp in W-W situ, their J.2 is A.4/A&Jup
+    #  blab channels
+    #   !A&nogro && sayyl "J ! C.t".(c&pi && " C.y.cv -".c&pi);
+    # 1c&s = C means particle holds passing wave of culture
+    #  what it will be already is interesting
+    #   its C.y.A may still be doing,  be many of the self,
+    #   when doing small things on yourself, while
+    #   doings big things on yourself, so group what to osc so
+    #   bigger bits sort themselves out later.
+    #   have a churn/sc energy measure in 6!
+    # also with the T ^
+    #  there's some boundary effect to be pleased out of it
     J 3:
-        s&J ||= do {
-            !A&nogro && sayyl "J ! C.t".(c&pi && " C.y.cv -".c&pi);
-            G&J,A&Jup,C.t;
-        };
+        if (!s&J) {
+            s&J = G&J,A&Jup,C.t;
+        }
         A.2 = A.1;
         A.1 = s&J;
-        A.3 = s&J.3 = s&J if c&W;
-        1c&s = $C; # particle holds passing wave, may tangle
-        1c&T = $T; # and that, why not
+        c&W and A.3 = s&J.3 = s&J;
+        1c&s = C;
+        1c&T = T;
     
     pi 3:
         s&pi = $pi;
+        typeof 2c&d != 'number' and 2c&d = 0;
         1c&d = 2c&d + 1;
     
     # W 31 trips
