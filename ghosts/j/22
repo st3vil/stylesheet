@@ -440,7 +440,7 @@ NutSock: | # websockets
             
             $delay = 0.3;
             s&dead > 100 and delay *= 10;
-            T.N.1 = delay;
+            //T.N.1 = delay;
             // but without T.N:
             A.cv = 0.1;
             1s&N.push(A);
@@ -792,13 +792,14 @@ ServeC: | # gets for C
     };
     get '/do' => &c{
         if (my $get = $c->param('get')) {
-            $get =~ /^(\w+)'s (\w+) (\w+)$/;
-            `tail 
+            my ($who,$does,$what) = $get =~ /^(\w+)'s (\w+) (\w+)$/;
+            `tail G.t/p/$who`
         }
         else {
             
         }
-    
+        $c->render(text=>"hmm\n");
+    };
 NutC: | # make C
     u j
     n \'of:eye'
@@ -812,7 +813,10 @@ NutC: | # make C
         A&ws ||= 1;
         
         window.onerror = &msg,url,lineNo,colNo,error{
+            A&bang and return
+            A&bang = 1;
             G&Ban,msg,url,lineNo,colNo,error;
+            A&bang = 0;
             return
         };
         
@@ -870,26 +874,81 @@ NutC: | # make C
     # C: collect chatter
     # create error, order its fixing
     Typ:
-        $.get(/
-        throw "Here!"
+        $.ajax('do').done(&s,how,c{
+            how != 'success' and throw "Ban faile: "+how, c;
+            
+        });
     # G reinits...
     
     # T adjusts net
     
     # when error
+    # communicate to thro if handley
     Ban: %acgt:msg url lineNo colNo er
-        // communicate to thro if handley
+        $style = "font-size:156%,color:red";
+        // catch up innard
+        $mid = Math.random().toPrecision().match('\.(\\d+)')[1];
+        mid = 'id'+mid;
+        $fil = &s,append{
+            $lin = $('a#'+mid)[0];
+            append and s = lin.innerHTML + s
+            lin.innerHTML = s;
+        };
+        $say = msg+'<a id="'+mid+'" href="#" style="color:white">?<a>';
+        
+        $W
+        $ver
+        
         $v = new URL(url);
         $src = v.pathname;
         $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
-        $W = m[1];
-        $ver = m[2];
-        $style = "font-size:126%,color:red";
-        msg = msg+'<a id="bungle" href="#">?<a>';
-        
-        $e = '<span style="'.style.'">! '+W+': '+msg+'</span>';
+        if (m) {
+            W = m[1];
+            ver = m[2];
+        }
+        $Wsay = '';
+        W and Wsay = W+': ';
+        $e = '<span style="'+style+'">! '+Wsay+say+'</span>';
         G&c,e;
         console.log("Window error: ",msg);
+        
+        !m and return fil(url);
+        
+        // get the lines, in the <script> already?
+        $.ajax(src).done(&s,how,c{
+            how != 'success' and throw "Ban faile: "+how, c;
+            $src = c.getResponseHeader('Location');
+            $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
+            $W = m[1];
+            $ver = m[2];
+            $lines = s.split("\n");
+            $l = lines[lineNo-1];
+            $prior = 1;
+            $sub
+            while (1) {
+                prior++;
+                $line = lines[lineNo-prior];
+                line == null and break;
+                $fu = line.match('^function '+W+'_'+ver
+                    +'(\\w+)_(\\d+)_(\\w+)_(\\d+)\\(');
+                !fu and continue
+                $cv = '';
+                fu[4] != '1' and cv = fu[4]
+                sub = fu[1]+cv+'/'+fu[3];
+                break
+            }
+            sub ||= "see "+v;
+            fil(sub+": "+l);
+        });
+        
+        // check if current
+        $.ajax('/js/'+W).done(&s,how,c{
+            how != 'success' and throw "Ban faile: "+how, c;
+            $rep = c.getResponseHeader('Location');
+            src != rep and fil("(old)",1);
+        });
+        
+        
 NutJay: | # persistent thing, all usual
     n NutC
     n NutJayTo
