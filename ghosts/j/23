@@ -218,6 +218,7 @@ NutJaying: | # A sequence J
         !g and return;
         gs&z ||= [];
         gs&z.push(C);
+        ~grounds: A.1.t, C.t
     
     # various dynamics to the same basic particle
     pi 12:
@@ -233,8 +234,8 @@ NutJaying: | # A sequence J
     
     # networkily named thing
     W 12:
-        typeof s != 'string' and throw 'ref cW', C
         !s || s == '1' and s = c&W = C.t;
+        typeof s != 'string' and throw 'ref cW', C
         !s and throw 'non t W', C;
         c&J = s;
         s&W = s;
@@ -388,12 +389,11 @@ NutJaying: | # A sequence J
         
         1s&grounds ||= [];
         1s&grounds[A&page] = A.ground = G&Cye,[A&page,1,{},{J:s&J}];
-        // and sleep from 1s&drains, osc's impressions? '
-        12c&imping and 1c&imping++ // reset lv
+        A.1[2].c.imping and 1c&imping++ // reset lv
         
         $ise = '';
         c&e and ise = " (e:"+c&e.t+")";
-        $de = "(".A&pin.")".ise;
+        $de = "("+A&pin+")"+ise;
         A.1.t == A&pin and de = ise
         ~J: A.1.t, de
         
@@ -402,7 +402,7 @@ NutJaying: | # A sequence J
         $sc = y.sc = {};
         1s&root = G&Cye,[A.1.t,y,c,sc];
         // begin 9 mo now to give it a Normal A.I
-        $r = G&Aye,n=>1=>{s=>1s&root};
+        $r = G&Aye,'n',1,{s:1s&root};
         $ar = c&ar || {};
         $s = c&s;
         $M = c.M = [];
@@ -410,11 +410,11 @@ NutJaying: | # A sequence J
             // Rw A&pin + $J:A.1 $y $M $s;
         }
         else {
-            G&h,A&pin,$M
+            G&h,A&pin,M
         }
         T.nose and return;
         
-        12c&imping and y.imp = 1
+        A.1[2].c.imping and y.imp = 1
         y.imp and 1c&imping = 1; delete y.imp;
         
         !M.length and delete c.M
@@ -438,9 +438,9 @@ NutJaying: | # A sequence J
     # J leaves T.op just outside
     # < sJ or cJ should do this
     J 8:
-        Rw $_ - $J for @{A&wayght||[]};
-        $_->($J) for @{A&codeght||[]};
-        T.oT.op = 1s&s.sc.top;
+        //Rw $_ - $J for @{A&wayght||[]};
+        //$_->($J) for @{A&codeght||[]};
+        1s&s and T.oT.op = 1s&s.sc.top;
     
     # < do til 9?
     
@@ -507,8 +507,8 @@ NutC: | # make C
         // location.search.match('^\\\?v=')
         
         // click, keys - outsiders starting with A.5
-        G.clon = &{ $(window).on("click", &ev{ G&cl,ev }) };
-        G.keon = &{ $(window).on("keydown", &ev{ G&ke,ev }) };
+        G.clon = &{ $(window).on("click", &ev{ G&gev,ev }) };
+        G.keon = &{ $(window).on("keydown", &ev{ G&gev,ev }) };
         G.clof = &{ $(window).off("click") };
         G.keof = &{ $(window).off("keydown") };
         G.doh = &ev,h{ G&doh,ev,h };
@@ -529,7 +529,8 @@ NutC: | # make C
         G&headi,'T','Tri';
         
         G.clon(); G.keon()
-
+    
+    
     # make buttons
     headi: %acgt:s t
         t ||= s
@@ -547,74 +548,6 @@ NutC: | # make C
     
     # T adjusts net
     
-    # when error
-    # communicate to thro if handley
-    # genericalised linkage to source finding?
-    Ban: %acgt:msg url lineNo colNo er
-        $style = "font-size:156%,color:red";
-        // catch up innard
-        $mid = Math.random().toPrecision().match('\.(\\d+)')[1];
-        mid = 'id'+mid;
-        $fil = &s,append{
-            $lin = $('a#'+mid)[0];
-            append and s = lin.innerHTML + s
-            lin.innerHTML = s;
-        };
-        $say = msg+'<a id="'+mid+'" href="#" style="color:white">?<a>';
-        
-        $W
-        $ver
-        
-        $v = new URL(url);
-        $src = v.pathname;
-        $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
-        if (m) {
-            W = m[1];
-            ver = m[2];
-        }
-        $Wsay = '';
-        W and Wsay = W+': ';
-        $e = '<span style="'+style+'">! '+Wsay+say+'</span>';
-        G&c,e;
-        console.log("Window error: ",msg);
-        
-        !m and return fil(url);
-        
-        // get the lines, in the <script> already?
-        $.ajax(src).done(&s,how,c{
-            how != 'success' and throw "Ban faile: "+how, c;
-            $src = c.getResponseHeader('Location');
-            $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
-            $W = m[1];
-            $ver = m[2];
-            $lines = s.split("\n");
-            $l = lines[lineNo-1];
-            $prior = 1;
-            $sub
-            while (1) {
-                prior++;
-                $line = lines[lineNo-prior];
-                line == null and break;
-                $fu = line.match('^function '+W+'_'+ver
-                    +'(\\w+)_(\\d+)_(\\w+)_(\\d+)\\(');
-                !fu and continue
-                $cv = '';
-                fu[4] != '1' and cv = fu[4]
-                sub = fu[1]+cv+'/'+fu[3];
-                break
-            }
-            sub ||= "see "+v;
-            fil(sub+": "+l);
-        });
-        
-        // check if current
-        $.ajax('/js/'+W).done(&s,how,c{
-            how != 'success' and throw "Ban faile: "+how, c;
-            $rep = c.getResponseHeader('Location');
-            src != rep and fil("(old)",1);
-        });
-        
-        
     #c A: run funnel
     Jin:
         // find all 1s&N
@@ -634,11 +567,70 @@ NutC: | # make C
             how != 'success' and throw "Ban faile: "+how, c;
         });
     
-    
+    # putting things on could...
+    # < clean away use of the drain as the top C
+    # < dome system composing them onto the root C directly...
+    #   would expose useful tools for playing data...
     s: %acgt:c sc
         $A = G&Aye,'s',0,c,sc;
-        # s could order a particular ground
-        Rw FishBrains $A;
+        $g = A.ground;
+        // ground -> drain, so it can be resupposed
+        // < keeping stuff on 9... replace 1s&root with the drained one?
+        1s&drains ||= {};
+        $d = 1s&drains[g.t] = 1s&drains[g.t] || G&Cye,$g;
+        $was = ds&z;
+        ds&z = $.unique(gs&z),filter(&i,C{
+            $Y = C.y.A;
+            if (Y && (Yc&T.not || s¬) {
+                return 0
+            }
+            return 1;
+        });
+        $r = 1s&root || throw "how to hold many"
+        
+        # osc C: brain is ongoing, one per ground
+        1s&brains ||= {};
+        $C = A&s = 1s&brains[g.t] ||= G&Cye,[g.t=>1=>{}=>{J=>A.1}];
+        
+        &di,ff{
+            typeof di != 'object' and return di == ff
+            $wh = {gone:{},diff:{},new:{},same:{}};
+            $.each(di, &k,v{
+                !exists ff[k] and return wh.gone = k;
+                ff[k] == 
+            });
+        }
+        
+        // make diff
+        
+        
+        # hangs brain up on the J
+        1s&s = $C;
+        r.y.OA and ~
+            
+            if (r.y.OA) {
+                warn G&sn ." root already osc'd, sleeping";
+                return $C
+            }
+            rs&z && die "Root9 r.t has scz: ".ki rs&z;
+            rs&z = [grep {$_ ne $r} @{ds&z}];
+            @{ds&z} == @{rs&z}+1 || die "Root9 r.t wasn't grounded?";
+        }
 
     
+NutEl: | # be in
+    u j
+    n \'of:eye'
+    # process any event
+    gev: %acgt:ev J
+        // J has quick ev respondo?
+        G&Aye,'ev',9,{ev:ev}
+        
+    
+    u jc
+    n \'of:ev'
+    
+    # that an event must emerge
+    ev 1:
+        console.log("Haveth",s)
 
