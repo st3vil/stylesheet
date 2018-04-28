@@ -790,7 +790,7 @@ ServeC: | # gets for C
         G&timer:0.1,&{ 4s&toy->({to=>[$W]}) };
         $c->render(text=>"hmm\n");
     };
-    get '/do' => &c{
+    get '/do/:get' => &c{
         if (my $get = $c->param('get')) {
             my ($who,$does,$what) = $get =~ /^(\w+)'s (\w+) (\w+)$/;
             `tail G.t/p/$who`
@@ -874,10 +874,16 @@ NutC: | # make C
     # C: collect chatter
     # create error, order its fixing
     Typ:
-        $.ajax('do').done(&s,how,c{
+        A = G&Aye,'Typ';
+        A.on = this;
+        
+        console.log("on: ",A.on);
+        G&n,[C=>''=>{cod:1,s:'Here'}];
+        
+        $.ajax('do/Lis est Ref').done(&s,how,c{
             how != 'success' and throw "Ban faile: "+how, c;
-            
         });
+    
     # G reinits...
     
     # T adjusts net
