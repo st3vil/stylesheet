@@ -574,7 +574,9 @@ NutC: | # make C
     #   would expose useful tools for playing data...
     s: %acgt:c sc
         $A = G&Aye,'s',0,c,sc;
+        
         $g = A.ground;
+        
         // ground -> drain, so it can be resupposed
         // < keeping stuff on 9... replace 1s&root with the drained one?
         1s&drains ||= {};
@@ -652,11 +654,12 @@ NutC: | # make C
                 C.y.OC == r and lr = C
             });
             lr ||= G&Cye,[r.t,{cv:r.y.cv,OC:r},{el:3}];
-            lr.sc.z and throw "lv root already z:", lr, r
             lr.sc.z = $(rs&lv).filter(&i,C{
                 // and
                 return C.y.OC != r
             });
+            // delete rs&lv; lets top s&lv its latest change
+            delete lr.sc.lv; // is a property out there, lv insides are s&z
             s&lv.push(lr);
         }
         
@@ -667,7 +670,7 @@ NutC: | # make C
         
 
         
-        if (s&lv.length > s&readlv) {
+        if (s&lv.length > (s&readlv || 0)) {
             $lv = s&lv.slice(s&readlv || 0);
             s&readlv = s&lv.length;
             G&Hut,lv;
@@ -676,7 +679,8 @@ NutC: | # make C
     
     # send to Hut, the conscruction, give A.on already
     Hut: %acgt:lv
-        $.each(lv, &i,v{
+        for (var i = 0; i < lv.length; i++) {
+            var v = lv[i];
             // recur W, where A.b starts
             $W = A.on.thing = A.on.thing || {};
             A.W = W;
@@ -687,8 +691,7 @@ NutC: | # make C
             A.om ||= A;
             A.om == A.up and A.mo = A;
 
-            s and C = s;
-            $C = G&Cye,C;
+            $C = G&Cye,v;
             C.y.A = A;
 
             A&T = T;
@@ -697,7 +700,7 @@ NutC: | # make C
             s&css ||= {};
             s&anc ||= {};
             G&thro,7;
-        });
+        }
 NutEl: | # be in
     u j
     n \'of:eye'
