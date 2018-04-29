@@ -131,6 +131,7 @@ NutTub: | # A tubeyness
     # do I for C (A&s): go, stop, mode
     # jog job through embryo A.t
     # up to ov
+    # T.N=2 or T.N.2=? sets A.cv = 2 and 1s&N queue
     thro: %acgt:ov sC
         $T = A&T = A&T || {};
         T.not and return
@@ -143,11 +144,12 @@ NutTub: | # A tubeyness
         var z = t.y.in;
         while (z && A.c.ov >= z.y.cv) {
             T.not and break
-            var D = z;
+            $D = z;
             z = z.y.next;
-            $Acv = A.cv;
             
             A.cv > D.y.cv and continue
+            $Acv = A.cv;
+            T.N ||= {};
             C = A&s;
             if (!D.sc.any) {
                 D.sc.nk and !C[D.sc.nk] and continue;
@@ -156,11 +158,46 @@ NutTub: | # A tubeyness
             $es;
             D.sc.gk and es = C[D.sc.nk][D.sc.gk];
             D.sc.s and es = D.sc.s;
+            
             G.h(A,C,G,T,D,es);
-            T.N and A.cv = 1; 1s&N
-            T.not == '2' and return delete T.not;
+            
+            T.N != null and G&TN,T.N; delete T.N
+            T.not == '2' and return delete T.not
             Acv == A.cv and A.cv = D.y.cv;
+            
+            T.whack || T.not || T.seek != null and break
         }
-        return !T.not;
+        if (T.seek != null) {
+            T.seek != 0 and A.cv = G&sca,T.seek
+            // A.t probably changed, become new personality
+            delete T.seek;
+            return G&thro;
+        }
+        return delete T.not;
+    
+    # T.seek = 0 keeps cv of function it is,
+    #   and so 5 starts again
+    # or the same 3 is taken when e finds J from its ev
+    # T.N = 0 should also leave A.cv==D.y.cv the T.N came from,
+    #   and T.N.0 = 3 means event should have worked by the time of 3
+    #   map the gazing of code with such, make it exponial?
+    #   
+    
+    # throat thing T.N=1 do stuff from 1 later...
+    # 1s&N queue for later
+    # T.not lets go
+    TN:
+        1s&N.push(A);
+        if (typeof s == 'object') {
+            $k = keys(s);
+            k.length != 1 and throw "com TN{}"
+            k = k[0];
+            $v = s[k];
+            s = 0+k;
+            // check back/rerequest/slomo t
+        }
+        typeof s != 'number' and throw "com TN";
+        s != 0 and A.cv = G&sca,s;
+        T.not = 1;
     
 
