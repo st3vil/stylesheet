@@ -115,7 +115,7 @@ NutJayTo: |
         c = {};
         C.constructor == Array and C = G&Cye,C
         s.constructor == Array and s = G&Cye,s
-        // if first C not C it is A.c, and second becomes first
+        // if first C not C it is A.c, second becomes first
         !(C.y && C.c && C.sc) and c = C; C = s; s = null;
         
         // put second C on first as c&e
@@ -131,46 +131,43 @@ NutJayTo: |
         
         G&Aye,'n',8,c;
         
-        $C
+        C
     #c NutMinds
     # adds to mind, G&clusp causes it to be made
     # can do an A:u if mix is simple/found enough
     # accumulated on 1s&u=J:u for clusping onto A.1
-    0 &&
+    # u '' # resets to normal
     u:
-        my $u = G&sJ,'u';
-        push @{uc&N||=[]}, s;
-        if (@Me == 1 && $Me[0] eq '') { 
-            # u '' # resets to normal
-            return G&clusp;
-        }
-    
+        $u = G&sJ,'u';
+        uc&N ||= [];
+        uc&N.push(s);
+        s.constructor == Array && s[0] == '' and G&clusp
+    # ]
     
     # clasp u
-    # 5s&NormalI is default if no u
-    # 5s&NormalC is base, it's s&J holding I as usual
+    # 5s&NormalI/A.4.I is default if no u
+    # 5s&NormalC is base, it's s&J holding I as usual,
     #   O ii hoists faster than entering everything from the start
     # < only elvising altering We things
     # < lots of I.i things only being on 5 so this has less to chew
     # < knowing I.i never needs to know order/y.next... unless stored
     0 &&
     clusp:
-        # before 5/House sets up
-        return unless 5s&NormalI;
+        ! 4s&NormalI and return
         
-        # u unchanged
-        if (my $u = 1s&u) {
-            return if uc&N && !@{uc&N};
-        }
-        my $u = G&sJ,'u';
+        // a u init, still, could lead to not picking it up during elvising?
+        1s&u && 1s&u.c.N && 1s&u.c.N.length == 0 and return
+        
+        $u = G&sJ,'u';
         uc&is = 'mind';
-        my $J = A.1;
+        $J = A.1;
+        $I;
         
-        J.I = A.I = do {
-            my $A = G&A,clusping=>0;
-            A.clusping = $A;
-            A.1 = $u;
-            A.2 = $J;
+            $A = G&Aye,'clusping',0;
+            A.clusping = A;
+            A.1 = u;
+            A.2 = J;
+            
             my $N = 1c&N || [];
             # u '' # resets to normal
             $N = [] if @$N == 1 && @{$N->[0]} == 1 && $N->[0]->[0] eq '';
@@ -215,8 +212,9 @@ NutJayTo: |
                 Js&I || die "nonormalCJI";
             }
         };
-        # get this J's mo throat to reopen its mind
-        T.seek = 1;
+        // T.seek = '' makes A:n (or so) thro to get new mind from now on
+        // T.seek = 0 same but repeat this step/A.cv
+        T.seek = '';
     
     
 NutDung: | # getting things/I
