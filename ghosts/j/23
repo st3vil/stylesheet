@@ -135,9 +135,10 @@ NutJayTo: |
 NutMind: | # do as
     u j
     n \'of:eye'
-    # adds to the A,1's mind, G&clusp causes it to be made
-    # can do an A:u if mix is simple/found enough
-    # accumulated on 1s&u=J:u for clusping onto A.1
+    # u like n takes C, but more like m saves it up until:
+    # G&clusp causes it to be made into I for A.1
+    #   can do an A:u if mix is simple/found enough
+    #  G&sJ makes A.I=Normal that hangs out in 1s&u
     # u '' # resets to normal
     u:
         $u = G&sJ,'u';
@@ -148,8 +149,8 @@ NutMind: | # do as
     
     # clasp u
     # we can reflect
-    # 5s&NormalI/A.4.I is default if no u
-    # 5s&NormalC is base, it's s&J holding I as usual,
+    # 4s&NormalI/A.4.I is default if no u
+    # 4s&NormalC is base, it's s&J holding I as usual,
     #   O ii hoists faster than entering everything from the start
     # < only elvising altering We things
     # < lots of I.i things only being on 5 so this has less to chew
@@ -175,8 +176,8 @@ NutMind: | # do as
         };
         
         $N = 1c&N || [];
-        // squash the [''], from: u ''
-        N.length == 1 && isar(N[0]) && N[0].length == 1 && N[0][0] == '' and N = [];
+        # squash the [''], from: u ''
+        N.length == 1 && G&datam,N[0],'[]' && N[0].length == 1 && N[0][0] == '' and N = [];
         
         1c&N = [];
         
@@ -197,7 +198,49 @@ NutMind: | # do as
         // T.seek = '' makes A:n (or so) thro to get new mind from now on
         // T.seek = 0 same but repeat this step/A.cv
         T.seek = '';
-    
+    # that is? recurse?
+    # checks s for being [] or [['']]
+    datam: %s c
+        typeof c == 'string' and c = {s:c};
+        c.d ||= 1;
+        c.d > 3 and throw "large datam";
+        $zc = [];
+        # read the question
+        if (c.s.match('^\\[')) {
+            c.s = c.s.replace(/^\[|\]$/g, '');
+            c.array = 1;
+        }
+        if (c.s.match("^'")) {
+            c.eq = c.s.replace(/^'|'$/g, '');
+            delete c.s;
+        }
+        # make an answer
+        if (c.array) {
+            !(typeof s == 'object' && s.constructor == Array) and return
+        }
+        if (c.eq) {
+            s != c.eq and return
+        }
+        !c.s and return;
+        # more inside
+        $ss = c.s.split(',');
+        # check the size of the next set in
+        if (s.length != ss.length)
+            ~diflen: s, things
+            return
+        }
+        # check each thing
+        for (var si in ss) {
+            $oc = ss[si];
+            $os = s[si];
+            oc = {s:oc,d:c.d+1};
+            if (!G&datam,os,oc ) {
+                ~subfa: os, oc
+                return;
+            }
+        }
+        return 1
+        
     #c Au
     u jc
     n \'of:u'
@@ -223,7 +266,7 @@ NutMind: | # do as
         C.y.A ||= A;
         C.y.A != A and throw "wild C: ", C
     
-    # do we already know this, resync that
+    # do we already know this A:u, resync that
     # or sprout and tug A:u's
     # tonly is always, until we can do Jing for u
     N 11:
@@ -825,7 +868,10 @@ NutC: | # make C
         A.t = 'top';
         $J = A.1 = A.2 = A.3 = A.4 = G&J,'Four';
         J.1 = J.2 = J.3 = J.4 = J;
-        // 1s&z etc for showing state
+        # 1s&z etc for showing state
+        # 1s&N is A-ction, stuff to do,
+        # Jambien everything in 1s&Jtv
+        4s&NormalI = A.I;
         
         
         // location.search.match('^\\\?v=')
