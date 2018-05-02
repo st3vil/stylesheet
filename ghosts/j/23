@@ -549,7 +549,7 @@ NutMind: | # do as
             $ver = m[2];
             
             s&v = ver;
-            a&now = Date.now() / 1000;
+            a&now = G&time;
             
             $callback = &script,e{
                 # check for errors from that script?
@@ -617,15 +617,11 @@ NutMind: | # do as
             # present N into A:u
             # another A.u
             
-        
-        
-        
     # A:u's check themselves
     W 8:
-        $now = Date.now() / 1000;
         $ok = a&I
             && s&v == a&v
-            && a&now + 10 > now;
+            && a&now && G&time,a&now,10;
         ok and return
         T.seek = 3;
     #c Jing from here
@@ -1063,6 +1059,15 @@ NutC: | # make C
         G.clof(); G.keof();
         G.clon(); G.keon()
     
+    # 4dp unix timestamp
+    time: %acgt:time delta
+        $now = Date.now() / 1000;
+        # delta as ttl
+        time && delta and return time + delta > now
+        # time since time
+        time and return now - time
+        # time
+        return now
     
     # make buttons
     headi: %acgt:s t
