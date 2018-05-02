@@ -591,7 +591,7 @@ NutMind: | # do as
                     }
                 }
                 
-                4s&N.push(A)
+                a&ready = 1;
             };
             
             $have = $('body script[src="'+src+'"]');
@@ -599,6 +599,10 @@ NutMind: | # do as
             ~acquired: t, ver
             G&addscript,src,callback;
         });
+        
+        a&ready = 0;
+        4s&N.push(A);
+        T.not = 1;
     
         #   fail, chase W startup
         #   uptodate TN8
@@ -991,6 +995,16 @@ ServeC: | # gets for C
         }
         $c->render(text=>"hmm\n");
     };
+    # the way
+    # < Accept headers to get the various translations
+    get '/way/:way' => &c{
+        my $t = $c->param('way');
+        $t =~ s/\W+/-/g;
+        my $w = G&t,w=>$t;
+        $w || return $c->reply->not_found;
+        $c->res->headers->append(Dige => ws&dige);
+        $c->render(text => wc&s);
+    };
 NutC: | # make C
     u j
     n \'of:eye'
@@ -1014,6 +1028,8 @@ NutC: | # make C
         A.t = 'top';
         $J = A.1 = A.2 = A.3 = A.4 = G&J,'Four';
         J.1 = J.2 = J.3 = J.4 = J;
+        $f = G&J,'Five';
+        A.5 = J.5 = f.5 = f;
         # 1s&z etc for showing state
         # 1s&N is A-ction, stuff to do,
         # Jambien everything in 1s&Jtv
@@ -1075,7 +1091,7 @@ NutC: | # make C
     # C: collect chatter
     # create error, order its fixing
     Typ:
-        // becomes J, comes back
+        # becomes J, comes back
         A.1.t != 'Typ' and return G&n,['Typ','',{W:1,on:s}];
         c&on and A.on = c&on;
         
@@ -1086,139 +1102,42 @@ NutC: | # make C
             how != 'success' and throw "Ban faile: "+how, c;
         });
     
-    #c pudding things on could...
-    # < clean away use of the drain as the top C
-    # < dome system composing them onto the root C directly...
-    #   would expose useful tools for playing data...
-    s: %acgt:c sc
-        $A = G&Aye,'s',0,c,sc;
+    # gets its own way, comes back, assum
+    Tri:
+        # becomes J, comes back
+        $pin = 'Tri';
+        A.1.t != pin and return G&n,[pin,'',{W:1,on:s}];
+        c&on and A.on = c&on;
         
-        $g = A.ground;
+        # has very recent pin of itself,
+        #   or comes back async via 1s&N
+        #     which it must be in a thro to do
+        w = G&t,'w',pin;
+        !(w && ws&now && G&time,ws&now,2) and w = null
         
-        // ground -> drain, so it can be resupposed
-        // < keeping stuff on 9... replace 1s&root with the drained one?
-        1s&drains ||= {};
-        $d = 1s&drains[g.t] = 1s&drains[g.t] || G&Cye,g;
-        $was = ds&z;
-        ds&z = $.unique(gs&z).filter(&C,i{
-            !C.t || !C.y || !C.c || !C.sc and throw "low on C: ", C
-            $Y = C.y.A;
-            if (Y && (Yc&T.not || C.sc.not)) {
-                return 0
-            }
-            return 1;
-        });
-        $r = 1s&root;
-        !r and throw "how to hold many"
-        
-        // brain per ground, ongoing
-        1s&brains ||= {};
-        $C = A&s = 1s&brains[g.t] = 1s&brains[g.t] || G&Cye,[g.t,1,{},{J:A.1}];
-        
-        $diff = &di,ff{
-            typeof di != 'object' and return di != ff
-            $wh = {gone:{},diff:{},new:{},same:{}};
-            $.each(di, &k,v{
-                null == ff[k] and wh.new[k] = {};
-                ff[k] != di[k] and wh.diff[k] = {};
-                wh.same[k] = {};
+        if (!w) {
+            $get = '/way/'+pin;
+            $.ajax(get).done(&s,how,c{
+                how != 'success' and throw "Failed request: "+how, c;
+                $dige = c.getResponseHeader('Dige');
+                $w = G&Cye,[pin,1,{s:s},{of:'w',dige:dige}];
+                A.5.I ||= {};
+                $D = A.5.I.w = A.5.I.w || {};
+                D.y ||= {};
+                D.y.tw ||= {};
+                D.y.tw[pin] = w;
+                
+                a&ready = 1;
+                ~Tri ready:
             });
-            $.each(ff, &k,v{
-                null == di[k] and wh.gone[k] = {};
-            });
-            $.each(wh, &k,v{
-                v.length and return 1;
-            });
-        };
-        
-        $la = s&top;
-        $ltv = la && la.y.tv;
-        $tw = r.y.tw = {};
-        $tv = r.y.tv = {};
-        rs&z = [];
-        rs&lv = [];
-        $.each(ds&z, &i,C{
-            // put on tv
-            tv[C.t] ||= {};
-            tv[C.t][C.y.cv] = C;
-            rs&z.push(C);
-            
-            // diff
-            $D = ltv && ltv[C.t] && ltv[C.t][C.y.cv];
-            D ||= {};
-            $cha = diff(C.t,D.t)
-                || diff(C.c,D.c||{})
-                || diff(C.sc,D.sc||{});
-            
-            !cha and return
-            
-            // make patch
-            $s = G&Cye,C;
-            s.y.OC = C;
-            sc&el = 1;
-            rs&lv.push(s);
-        });
-        la &&
-        $.each(la.sc.z, &i,C{
-            tv[C.t] && tv[C.t][C.y.cv] and return
-            rs&lv.push(G&Cye,[C.t,C.y.cv,{el:9}]);
-        });
-        
-        // consequence change
-        s&lv ||= [];
-        if (rs&lv.length) {
-            $lr;
-            $.each(rs&lv, &i,C{
-                C.y.OC == r and lr = C
-            });
-            lr ||= G&Cye,[r.t,{cv:r.y.cv,OC:r},{el:3}];
-            lr.sc.z = $(rs&lv).filter(&i,C{
-                // and
-                return C.y.OC != r
-            });
-            // delete rs&lv; lets top s&lv its latest change
-            delete lr.sc.lv; // is a property out there, lv insides are s&z
-            s&lv.push(lr);
+            ~Tri waits:
+            return T.N = 0;
         }
-        
-        s&top = r;
-        
-        // hangs brain up on the J
-        1s&s = C;
-        
-
-        
-        if (s&lv.length > (s&readlv || 0)) {
-            $lv = s&lv.slice(s&readlv || 0);
-            s&readlv = s&lv.length;
-            G&Hut,lv;
-        }
-        return C
+        ~Tri stuff:
+        # stuff
+Tri: | # a javascript pin
+    # waddley
     
-    # send to Hut, the conscruction, give A.on already
-    Hut: %acgt:lv
-        for (var i = 0; i < lv.length; i++) {
-            var v = lv[i];
-            // recur W, where A.b starts
-            $W = A.on.thing = A.on.thing || {};
-            A.W = W;
-
-            // do om, depth of A:n
-            T.d = (T.oT && T.oT.d) + 1;
-            $A = G&Aye,'om';
-            A.om ||= A;
-            A.om == A.up and A.mo = A;
-
-            $C = G&Cye,v;
-            C.y.A = A;
-
-            A&T = T;
-            G&thro,2,C;
-            T.alk = 'w'+T.d+' '+C.t+' '+ G&ks,C.c +'%'+G&ks,C.sc;
-            s&css ||= {};
-            s&anc ||= {};
-            G&thro,7;
-        }
 NutEl: | # be in
     u j
     n \'of:eye'
