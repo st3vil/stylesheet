@@ -41,11 +41,14 @@ JaBabz: | # make hutscript javascript
     my $nls = qr/[ \t]*/;
     
     # # comment to // comment
-    c&s =~ s/^(\s+)#/$1\/\//g;
+    c&s =~ s/^(\s*)#/$1\/\//gsm;
     
     # capital A is the more empiricle
     c&s =~ s/\bA&(\w+)\b/A\.c\.$1/g;
     c&s =~ s/\ba&(\w+)\b/A\.sc\.$1/g;
+    # and for somea&goof -> A.some.sc.goof
+    c&s =~ s/\b(\w+)A&(\w+)\b/A\.$1\.c\.$2/g;
+    c&s =~ s/\b(\w+)a&(\w+)\b/A\.$1\.sc\.$2/g;
     
     # 3s&do -> A.3.sc.do
     c&s =~ s/\b(\d)(s|c)&(\w+)\b/"A[$1].".($2 eq 's' ? 'sc' : 'c').".$3"/smeg;
@@ -55,6 +58,7 @@ JaBabz: | # make hutscript javascript
     c&s =~ s/\b([a-z]+)\.(\d)\b/$1.'['.$2.']'/gie;
     
     # vs&do -> v.sc.do, etc
+    # < doing the above three paragraphs in this one:
     # < upCs&pi...
     c&s =~ s[\b(\w+)(s|c)&(\w+)\b][
         my $arm = ($2 eq 's' ? 'sc' : $2).".$3";
@@ -62,10 +66,12 @@ JaBabz: | # make hutscript javascript
         my $wa = $on;
         my $s = 'A';
         if ($on =~ /^(up)+$/) { # ups&do -> A.up.sc.do
+            # the other A aliases use upa&do
             $s .= '.up' while $on =~ s/^up//;
         }
-        elsif ($on =~ /^\w\w+$/) { # oms&do -> A.om.sc.do
-            $s .= '.'.$on;
+        elsif ($on =~ /^\w\w+$/) { # oms&do -> om.sc.do
+            # used to hang off A
+            $s = $on;
         }
         else { # zs&do -> z.sc.do
             $s = $on;
@@ -153,6 +159,11 @@ jst: | # test js babbler
         knuckles$;
         ~$knuckles: fav, ours
         //etc
+        # etc
+        Ys&nope = 1;
+        loa&ayer = 3;
+        alos&vara = 3;
+        # this and that
     #
 
     Rw JaBabz;
@@ -175,7 +186,7 @@ jst: | # test js babbler
             }
         
         G.h(A,C,G,T,"wide","several ticks");
-        G.h(A,C,G,T,some,4,56-3, (28 / A.5.sc.e))
+        G.h(A,C,G,T,some,4,56-3, (28 / A[5].sc.e))
         A[5].sc.log = [];
         var tys = function(acto){
             if (vase) {
@@ -187,6 +198,11 @@ jst: | # test js babbler
         var knuckles;
         G.h(A,C,G,T,"c",knuckles,[fav, ours]);
         //etc
+        // etc
+        Y.sc.nope = 1;
+        A.lo.sc.ayer = 3;
+        alo.sc.vara = 3;
+        // this and that
     # 
     c&s eq $good && return saygr "jst good";
     saygr "Result: ".length(c&s)." vs ".length($good), c&s;
@@ -678,7 +694,7 @@ Stylating: | # A ting, h/t/om/throat
             var I = Y.I;
             !I and return;
             z = I[s];
-            t and z = z.y.tw[t];
+            z && t and z = z.y.tw[t];
         });
         return z;
     
