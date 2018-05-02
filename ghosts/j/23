@@ -283,18 +283,54 @@ NutMind: | # do as
             Ys&N ||= [];
             Ys&N.push(A.clusping);
             
-            # thro them
+            # them
             a&z.push(Y);
         }
-    N 6:
+        # proceed to succeed
+        A.cv = 0.8;
+    # A:u checks a&z=[A:u's]
+    # u 8 checks itself,
+    #  by u' 8 checking themselves
+    #   (may go async if their cv drop)
+    #  if any change:
+    #   u 6 mixing
+    #  then u 8 again
+    N 8:
         $not
+        # check u' 8
         for (var zi in a&z) {
             $Y = a&z[zi];
-            # u' 8 checks the linkage/version, winds back to 3 if not
+            # u' 8 checks the linkage/version on some object
+            # winds back to 3 if not
             G&thro,Y,8;
             Y.cv < 0.8 and not = 1;
         }
-        not and throw "SLeep because "+Y.cv, Y
+        if (not) {
+            # set u to < 8, but so u 8 checks again before u 6 mixes
+            A.cv = 0.7;
+            throw "SLeep because "+Y.cv, Y
+            # they have 4s&N to bring them back,
+            # who must also take care of their a&N,
+            # bringing back our A:u,
+            # and must also take care of that a&N,
+            # bringing back A.cluspings,
+            # who without a T is gone past/up to:
+            # the A:n that wants to thro some more
+        }
+        # check versions given by u' to what we last took in
+        $have = [];
+        for (var zi in a&z) {
+            $Y = a&z[zi];
+            $C = Yc&s;
+            !s&v and throw "u' with no version", C
+            have.push(C.t+' '+s&v);
+        }
+        have = have.join(', ');
+        
+        have != a&have and T.seek = 6;
+        #
+        # be simple
+    #
     #c mixing
     N 7:
         for (var zi in a&z) {
@@ -302,9 +338,19 @@ NutMind: | # do as
             # u' 8 should have I
             !Ys&I and throw "No I back", uname, Y
         }
+        $have = [];
+        for (var zi in a&z) {
+            $Y = a&z[zi];
+            $C = Yc&s;
+            !s&v and throw "u' with no version", C
+            have.push(C.t+' '+s&v);
+        }
+        have = have.join(', ');
+        
+        have != a&have
         # mix them all together...
     0 &&
-    Believe:
+    Believe 7:
         # take $N, produces A.i/A.ii
         my $hup = &s{
             my $C = {%$s};
@@ -446,11 +492,16 @@ NutMind: | # do as
             
         }
     
-    # A:u's: know some meta things,
+    #c A:u's know some meta things,
     # be somewhat collective,
     #  one A:u' may wake up many A:u
-    #  4 can A:u' a&v++, waking it up on top
-    #  A:u' has 
+    #  4 can A:u' a&v++ when it hears about change,
+    #    waking it up on top
+    #  A:u' wakes all its A:u,
+    #  A:u wakes all its A.cluspings on top
+    #  who aggregate into an A:n happening like it did before
+    #  but when it his this (A:u, A:u') structure again
+    #  everything will be ready
     #  
     # and be known to the meta thing pusher, 4:
     #   those A:u may resync s&M 
@@ -460,8 +511,7 @@ NutMind: | # do as
     #    by pushing Js&N <- A:u
     #    and 1s
     # < slightly trust that 4 will note W change by:
-    #     a&v++, and 1s&N = A # but who is A.1 ?
-    #     so these collect
+    #     A:u's Cs&v++, and 1s&N = A
     #     
     #       attracting attention to the A:u's 
     #       which might go up to A:u from A:u's that changed
@@ -474,24 +524,85 @@ NutMind: | # do as
         }
         s&uname = C.t;
     
-    #c A:u's
-    # while A:u is overhead, A:u's start creating,
-    #  to come back through A:u, until it would G&clusp,
-    #   then thro A.n can continue, probably needing T.oT to continue
-    #   
-    # A:u's should start creating, come back through A:u, 
-    js 2:
-        
-        a&check 
-        # ttl/trust or:
+    #c js3 A gets flock of A.I.? made from a W
+    # as <script> via NutServe and the /js/$t-$ver handler 
+    #  the G of the webserver and /je/ is Where
+    # to mix as in u:
+    #   several A get this function to fill their A.I somethings
+    #   then they all get osc for a J, or A=u for speed
+    #   then this sorting together of A.I can be much faster...
+    # < a&async || die?
+    # we get it first to read the proper Location
+    #   so the <script> tag src is exact
+    # < dependency/housing
+    js 3:
+        a&I = {};
         # lookup code, come back:
-        
+        $get = '/js/'+C.t;
+        # T would put this c&v to wind back from bugs
+        c&v and get += '-'+c&v;
+        $.ajax(get).done(&s,how,c{
+            how != 'success' and throw "Failed request: "+how, c;
+            $src = c.getResponseHeader('Location');
+            $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
+            $W = m[1];
+            $ver = m[2];
+            
+            s&v = ver;
+            a&now = Date.now() / 1000;
+            
+            $callback = &script,e{
+                # check for errors from that script?
+                $tocfunc = W+'_'+ver;
+                $toc = window[tocfunc]();
+                $D;
+                for (var k in toc) {
+                    $v = toc[k];
+                    $ind = v[0];
+                    $t = v[1];
+                    $cv = v[2];
+                    $c = v[3];
+                    $sc = v[4];
+                    $C = {t:t, y:{cv:cv}, c:c, sc:sc};
+                    if (ind == '') {
+                        D = a&I[t] = C;
+                        D.y.tw = {};
+                        D.y.tv = {};
+                        Ds&z ||= [];
+                    }
+                    else if (ind == '  ') {
+                        D.t != s&js and throw "Csjs not last D", C, D;
+                        c&code = window[s&name];
+                        typeof c&code != 'function' and throw "Cccode not function", C, D;
+                        # grow I
+                        D.y.tv[C.t] ||= {};
+                        D.y.tv[C.t][C.y.cv] = C;
+                        D.y.tw[C.t] = C;
+                        $l = Ds&z.slice(-1);
+                        l[0] and l[0].y.next = C;
+                        Ds&z.push(C);
+                        D.y.in ||= C;
+                        if (D.t === 'i' && (C.t === 'h' || C.t === 't')) {
+                            G[C.t] = c&code;
+                        }
+                    }
+                    else {
+                        throw "deep C: "+W+"/"+t,v
+                    }
+                }
+                
+                4s&N.push(A)
+            };
+            
+            $have = $('body script[src="'+src+'"]');
+            have.length and return callback();
+            ~acquired: t, ver
+            G&addscript,src,callback;
+        });
+    
         #   fail, chase W startup
         #   uptodate TN8
         
-        
-        
-    W 3:
         # get, callback fills in A&v
             # so the bunch assembles on 1s&minds[uname] = A:u with sc.I
             
@@ -501,13 +612,21 @@ NutMind: | # do as
             # an A:u 6 unifies A:u 3s, and A:u 7s compile it, 5wichboard 4ces
             # present N into A:u
             # another A.u
-    #c A:u mixes I
-    N 6:
+            
         
-        A.cv = 71
+        
+        
+    # A:u's check themselves
+    W 8:
+        $now = Date.now() / 1000;
+        $ok = a&I
+            && s&v == a&v
+            && a&now + 10 > now;
+        ok and return
+        T.seek = 3;
+    #c Jing from here
     0 &&
-    N 7:
-        
+    not:
         my $uname = slm 15, dig wdump 3, $N;
             1 && saygr G&sn ." u: ".ki $N;
             5s&ucache.>$uname ||= do {
@@ -533,37 +652,6 @@ NutMind: | # do as
                     my $s = G&s;
                     ss&I || die "clusp no I, $uname: ".ki $s;
                 };
-    #c A:u checks a&z=[A:u's]
-    N 8:
-        # resync happens from 8, which shall:
-        #  8 checks ingredient queue:
-        #   new/old:
-        #      T.N.6=3 (expect mix in 3s)
-        #     thro to A:u's
-        #     who eventually thro A:u at 
-        #   same, keep a&I
-        #   done, remix a&I
-        #   
-        for (var A in a&z) {
-            
-        }
-        
-        #
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        # be simple
-    # A:u's check themselves
-    W 8:
-        A&v == a&v # 
-        
 NutDung: | # getting things/I
     u j
     n \'of:eye'
@@ -622,78 +710,6 @@ NutDung: | # getting things/I
     entre:
         G&jsung,'NutMachine',null,cb;
     
-    # A gets flock of A.I.? made from a W
-    # as <script> via NutServe and the /js/$t-$ver handler 
-    #  the G of the webserver and /je/ is Where
-    # to mix as in u:
-    #   several A get this function to fill their A.I somethings
-    #   then they all get osc for a J, or A=u for speed
-    #   then this sorting together of A.I can be much faster...
-    # < a&async || die?
-    # we get it first to read the proper Location
-    #   so the <script> tag src is exact
-    # < dependency/housing
-    jsung: %acgt:t ver cb
-        $get = '/js/'+t;
-        ver and get += '-'+ver;
-        $.ajax(get).done(&s,how,c{
-            how != 'success' and throw "Failed request: "+how, c;
-            $src = c.getResponseHeader('Location');
-            $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
-            $W = m[1];
-            $ver = m[2];
-            $callback = &script,e{
-                $tocfunc = W+'_'+ver;
-                console.log("Have a toc: ",tocfunc);
-                $toc = window[tocfunc]();
-                $D;
-                $.each(toc, &k,v{
-                    $ind = v[0];
-                    $t = v[1];
-                    $cv = v[2];
-                    $c = v[3];
-                    $sc = v[4];
-                    $C = {t:t, y:{cv:cv}, c:c, sc:sc};
-                    if (ind == '') {
-                        D = A.I[t] = C;
-                        D.y.tw = {};
-                        D.y.tv = {};
-                        Ds&z ||= [];
-                    }
-                    else if (ind == '  ') {
-                        D.t != s&js and throw "Csjs not last D", C, D;
-                        c&code = window[s&name];
-                        typeof c&code != 'function' and throw "Cccode not function", C, D;
-                        // grow I
-                        D.y.tv[C.t] ||= {};
-                        D.y.tv[C.t][C.y.cv] = C;
-                        D.y.tw[C.t] = C;
-                        $l = Ds&z.slice(-1);
-                        l[0] and l[0].y.next = C;
-                        Ds&z.push(C);
-                        D.y.in ||= C;
-                        if (D.t === 'i' && (C.t === 'h' || C.t === 't')) {
-                            G[C.t] = c&code;
-                        }
-                    }
-                    else {
-                        throw "deep C: "+W+"/"+t,v
-                    }
-                });
-                cb(t,ver,script,e); 
-            };
-            $have = $('body script[src="'+src+'"]');
-            have.length and return callback();
-            ~acquired: t, ver
-            G&addscript,src,callback;
-        });
-    
-    addscript: %acgt:src cb
-        var script = document.createElement('script');
-        script.setAttribute('src', src);
-        script.setAttribute('type', 'text/javascript');
-        cb and script.onload = &e{ cb(script,e) };
-        A.on.appendChild(script);
 NutJaying: | # A sequence J
     u jc
     n \'of:n'
