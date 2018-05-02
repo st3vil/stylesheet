@@ -42,6 +42,7 @@ JaBabz: | # make hutscript javascript
     
     # # comment to // comment
     c&s =~ s/^(\s*)#/$1\/\//gsm;
+    c&s =~ s/; #/; \/\//gsm;
     
     # capital A is the more empiricle
     c&s =~ s/\bA&(\w+)\b/A\.c\.$1/g;
@@ -87,6 +88,44 @@ JaBabz: | # make hutscript javascript
     # goner?
     c&s =~ s/^t\&([^\s;]+)(;)?/!G\&t,$1 and return;/gm;
     
+    #c each
+            # each etc $data {    into:
+            # while (my ($e,$tv) = each %$data) {
+            # while (my ($t,$c) = each %$tv) {
+            #   so the value tv is for t-ing into
+            # DIY closing brackets
+            # avoids eaching nonref after first
+            # could replace with G&chew-ish call if more spec
+            # and know indents to close
+            my $doi = sub {
+                my ($ind,$in,$from) = @_;
+                my @in = split ',', $in;
+                @in = split '', $in[0] if @in == 1;
+                my @open;
+                while (@in) {
+                    my $k = shift(@in);
+                    my $v = shift(@in);
+                    unshift @in, $v if @in;
+                    $v = $v.'v' if @in;
+                    
+                    my $s = "for (var $k in $from) {";
+                    $s .= "\n    var $v = $from\[$k];";
+                    $s .= "\n    if(typeof $v != 'object') { continue }"
+                        if @in;
+                    
+                    $from = $v;
+                    push @open, $s;
+                }
+                @open = map { $ind.$_ } @open;
+                join "\n", @open;
+            };
+            c&s =~ s/^(\s*)each (\w+(,\w+)*) (\S+) \{(\s*)$/
+                $doi->($1,$2,$4);
+            /smeg;
+
+    
+    #
+    #c other
     # (~hifnotc)?~com message: list, of, interestings
     c&s =~ s{(^|\{|and |return ) *~(?:(\w+)~)?(\$?\w+(?:$nlp?:)?)(?: ($nlp))?;?$}{
         my $ope = $1;
@@ -167,6 +206,11 @@ jst: | # test js babbler
         # this and that
                 !C[D.sc.nk][D.sc.gk] and continue;
         !D and s == 'js' and return G&t_js,c,t
+        each tvJ 1s&Jtv||{} {
+            $N = Js&N || continue;
+            N.length || continue;
+            JN[J] = N;
+        }}
     #
 
     Rw JaBabz;
@@ -210,6 +254,22 @@ jst: | # test js babbler
                 if (!C[D.sc.nk][D.sc.gk]) {
                     continue;
                 }
+        if (!D) {
+            if (s == 'js') {
+                return G.h(A,C,G,T,'t_js',c,t)
+            }
+        }
+        for (var t in A[1].sc.Jtv||{}) {
+            var vv = A[1].sc.Jtv||{}[t];
+            typeof vv == 'object' || continue;
+        for (var v in vv) {
+            var J = vv[v];
+            var N = J.sc.N || continue;
+            N.length || continue;
+            JN[J] = N;
+        }}
+
+
 
     # 
     c&s eq $good && return saygr "jst good";
