@@ -12,8 +12,8 @@ NutConsciousness: |
         
         $g = A.ground;
         
-        // ground -> drain, so it can be resupposed
-        // < keeping stuff on 9... replace 1s&root with the drained one?
+        # ground -> drain, so it can be resupposed
+        # < keeping stuff on 9... replace 1s&root with the drained one?
         1s&drains ||= {};
         $d = 1s&drains[g.t] = 1s&drains[g.t] || G&Cye,g;
         $was = ds&z;
@@ -28,24 +28,26 @@ NutConsciousness: |
         $r = 1s&root;
         !r and throw "how to hold many"
         
-        // brain per ground, ongoing
+        # brain per ground, ongoing
         1s&brains ||= {};
         $C = A&s = 1s&brains[g.t] = 1s&brains[g.t] || G&Cye,[g.t,1,{},{J:A.1}];
         
-        $diff = &di,ff{
+        $diff = &di,ff,dd{
             typeof di != 'object' and return di != ff
             $wh = {gone:{},diff:{},new:{},same:{}};
-            $.each(di, &k,v{
+            each kv di {
                 null == ff[k] and wh.new[k] = {};
                 ff[k] != di[k] and wh.diff[k] = {};
                 wh.same[k] = {};
-            });
-            $.each(ff, &k,v{
+            }
+            each kv ff {
                 null == di[k] and wh.gone[k] = {};
-            });
-            $.each(wh, &k,v{
-                v.length and return 1;
-            });
+            }
+            each qua,k,ha wh {
+                qua == 'same' and continue
+                dd && dd.ignore == k and continue
+                return 1
+            }}
         };
         
         $la = s&top;
@@ -53,56 +55,65 @@ NutConsciousness: |
         $tw = r.y.tw = {};
         $tv = r.y.tv = {};
         rs&z = [];
-        rs&lv = [];
-        $.each(ds&z, &i,C{
-            // put on tv
-            tv[C.t] ||= {};
-            tv[C.t][C.y.cv] = C;
-            rs&z.push(C);
+        $lv = [];
+        each iD ds&z {
+            # put on tv, even 9/r
+            tv[D.t] ||= {};
+            tv[D.t][D.y.cv] = D;
+            D != r and rs&z.push(D);
             
-            // diff
-            $D = ltv && ltv[C.t] && ltv[C.t][C.y.cv];
-            D ||= {};
-            $cha = diff(C.t,D.t)
-                || diff(C.c,D.c||{})
-                || diff(C.sc,D.sc||{});
+            # diff last C
+            $L = ltv && ltv[D.t] && ltv[D.t][D.y.cv];
+            L ||= {};
+            $cha = diff(D.t,L.t)
+                || diff(D.c,L.c||{})
+                || diff(D.sc,L.sc||{},{ignore:'z'});
             
-            !cha and return
+            !cha and continue
             
-            // make patch
-            $s = G&Cye,C;
-            s.y.OC = C;
+            # make patch/lv
+            $s = G&Cye,D;
+            s.y.OC = D;
+            # limited
             sc&el = 1;
-            rs&lv.push(s);
-        });
-        la &&
-        $.each(la.sc.z, &i,C{
-            tv[C.t] && tv[C.t][C.y.cv] and return
-            rs&lv.push(G&Cye,[C.t,C.y.cv,{el:9}]);
-        });
+            lv.push(s);
+        }
+        # notice gone C
+        if (la) {
+            each iL las&z {
+                tv[L.t] && tv[L.t][L.y.cv] and continue
+                lv.push(G&Cye,[L.t,L.y.cv,{el:9}]);
+            }
+        }
         
-        // consequence change
+        s&v ||= 0;
+        $chsymb = '~'; # stillness?
+        
+        # consequence change
         s&lv ||= [];
-        if (rs&lv.length) {
+        if (lv.length) {
+            s&v++;
+            chsymb = 's';
+            
+            # the lv root is C for 1s&root
             $lr;
-            $.each(rs&lv, &i,C{
-                C.y.OC == r and lr = C
-            });
+            each iD lv {
+                D.y.OC == r and lr = D
+            }
+            # which may not be 
             lr ||= G&Cye,[r.t,{cv:r.y.cv,OC:r},{el:3}];
-            lr.sc.z = $(rs&lv).filter(&i,C{
-                // and
-                return C.y.OC != r
+            # contains everything else
+            lrs&z = $(lv).filter(&i,D{
+                return D.y.OC != r
             });
-            // delete rs&lv; lets top s&lv its latest change
-            delete lr.sc.lv; // is a property out there, lv insides are s&z
             s&lv.push(lr);
         }
         
         s&top = r;
         
-        // hangs brain up on the J
+        # hangs brain up on the J
         1s&s = C;
-        
+        ~osc A.1.t, chsymb, s&v
 
         
         if (s&lv.length > (s&readlv || 0)) {
@@ -112,15 +123,15 @@ NutConsciousness: |
         }
         return C
     
-    # send to Hut, the conscruction, give A.on already
+    #c send lv to Hut, the contractor, have A.on already
     Hut: %acgt:lv
         for (var i = 0; i < lv.length; i++) {
             var v = lv[i];
-            // recur W, where A.b starts
+            # recur W, where A.b starts
             $W = A.on.thing = A.on.thing || {};
             A.W = W;
 
-            // do om, depth of A:n
+            # do om, depth of A:n
             T.d = (T.oT && T.oT.d) + 1;
             $A = G&Aye,'om';
             A.om ||= A;
