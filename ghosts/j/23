@@ -138,9 +138,8 @@ NutMind: | # do as
             # anyway, check form and name the wave of u
             $NisWs = 1;
             $con = [];
-            for (var ni in N) {
-                $n = N[ni];
-                G&datam,n,"['*']" and con.push(n[0]);
+            each in N {
+                G&datam,n,"['*']" and con.push(n[0]); continue
                 NisWs = 0;
             }
             !NisWs and throw "Complicated u Cs: ", s
@@ -163,6 +162,7 @@ NutMind: | # do as
                 Y = G&Aye,'u',8,{s:C};
             }
             
+            # will be thrown out by now...
             # shelve
             1s&minds[uname] = Y;
             
@@ -192,6 +192,9 @@ NutMind: | # do as
     #c Au
     u jc
     n \'of:u'
+    # 4s&mind[W] = Y has Ys&N += A:clusping
+    # should mow/aggregate by A.3 regularly,
+    #   also chancing to figure what domes the mind is for?
     
     # u splits many, requests them, they comeback, we unify when all there
     # alternative ways to include mind happens, eg /js/$t
@@ -226,7 +229,7 @@ NutMind: | # do as
             
             # A:u's may resync
             4s&mind ||= [];
-            $Y = 1s&mind[W];
+            $Y = 4s&mind[W];
             
             if (!Y) {
                 $C = G&Cye,n;
@@ -236,7 +239,7 @@ NutMind: | # do as
             }
             
             # shelve
-            1s&mind[W] = Y;
+            4s&mind[W] = Y;
             
             # wake us
             Ys&N ||= [];
@@ -555,7 +558,7 @@ NutMind: | # do as
             
             $have = $('body script[src="'+src+'"]');
             have.length and return callback();
-            ~acquired: t, ver
+            ~uquired: W, ver
             G&addscript,src,callback;
         });
         
@@ -958,6 +961,11 @@ NutC: | # make C
         J.1 = J.2 = J.3 = J.4 = J;
         $f = G&J,'Five';
         A.5 = J.5 = f.5 = f;
+        1s&Jtv ||= {};
+        1s&Jtv[A.4.t] ||= {};
+        1s&Jtv[A.4.t][0.01] = A.4;
+        1s&Jtv[A.5.t] ||= {};
+        1s&Jtv[A.5.t][0.01] = A.5;
         # 1s&z etc for showing state
         # 1s&N is A-ction, stuff to do,
         # Jambien everything in 1s&Jtv
@@ -1024,15 +1032,17 @@ NutC: | # make C
         A.1.t != 'Four' and ~wherefour
         
         # find all 1s&N
-        1s&Jtv ||= {};
-        $tN = {}; # W, their s&N
+        # Four/Five will come first since cv=0.01 (javascript sorts!)
+        $vtN = {}; # cv, W, their s&N
         each tvJ 1s&Jtv {
             $N = Js&N;
             !(N && N.length) and continue;
-            tN[J.t] = N;
+            vtN[v] ||= {};
+            vtN[v][J.t] = N;
         }}
-        $sum = 1s&N.length;
-        each tN tN {
+        # make wording about it
+        $sum = '';
+        each vtN vtN {
             $what = N.length;
             if (what < 3) {
                 what = [];
@@ -1042,18 +1052,18 @@ NutC: | # make C
                 what = what.join(',');
             }
             sum += ' '+t+'('+what;
-        }
+        }}
         ~Jin: sum
-        
         # thinking
-        each tN tN {
+        
+        each vtN vtN {
             $oN = N.slice();
             each iY oN {
                 G&thro,Y
                 $ch = N.shift();
                 ch != Y and throw "each iter/N not in order";
             }
-        }
+        }}
     
     # C: collect chatter
     # create error, order its fixing
@@ -1061,6 +1071,11 @@ NutC: | # make C
         # becomes J, comes back
         A.1.t != 'Typ' and return G&n,['Typ','',{W:1,on:s}];
         c&on and A.on = c&on;
+        
+        G&datam,[],"['*']" and throw "Isnt 1"
+        !G&datam,['anything'],"['*']" and throw "Isnt 2"
+        !G&datam,[['']],"[['']]" and throw "Isnt 3"
+        G&datam,[['']],"['']" and throw "Isnt 4"
         
         G&u,['NutDung'];
         G&clusp;
