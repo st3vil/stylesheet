@@ -317,84 +317,77 @@ NutMind: | # do as
         #have == a&have and return
         # mix them all together...
         
-        # the Aa&I in a&z
-        
         $hup = &s{
             $C = {y:{},c:{},sc:{}};
             C.t = s.t;
-            $.extend(C.y,s.y);
+            C.y.cv = s.y.cv;
+            #$.extend(C.y,s.y);
             $.extend(C.c,s.c);
             $.extend(C.sc,s.sc);
             return C
         };
-        # t v = C what are with sz D
-        $tv = {};
+        $I = {}; # t:I with .y.tv for
+        # can be t:cv:I?
         each iY a&z {
-            $I = Ys&I;
             !Ys&I and throw "no I on u': ", Y;
+            $C = Yc&s;
             #
-        for my $P (@$N) { # Punter 9
-            for my $C (@{Ps&z||[]}) { # Water 0.001
-                c&W || next;
-
-                $C = $hup->($C);
-                C.y = {cv=>C.y.cv};
-                my $z = delete s&z;
-
-                if (my $c = $tv.>C.t.>C.y.cv ) {
-                    # merge sc from the rest?
-                    cs&contrib .= ",P.t";
-                    $C = $c;
+            each of,W Ys&I {
+                $z = delete Ws&z;
+                !z and throw "No items in We", W
+                
+                c = I[W.t];
+                if (c) {
+                    cs&contrib += ','+C.t;
+                    cs&many_contrib = 1;
+                    W = c;
                 }
                 else {
-                    s&contrib = P.t;
-                    $tv.>C.t.>C.y.cv = $C;
+                    W = hup(W);
+                    W.y.tv = {};
+                    W.y.tw = {};
+                    Ws&contrib = C.t;
+                    I[W.t] = W;
                 }
-                s&z ||= [];
-                for my $D (@$z) { # Doing 1
-                    if (my $over = C.y.tv.>D.t && C.y.tv.>D.t.>D.y.cv ) {
-                        @{s&z} = grep { $_ ne $over } @{s&z};
-                        delete C.y.tw.>D.t if C.y.tw.>D.t eq $over;
+                each iD z {
+                    # remove any earlier (a&z/u order matters) same thing
+                    if (W.y.tv[D.t] && W.y.tv[D.t][D.y.cv]) {
+                        $was = W.y.tv[D.t] && W.y.tv[D.t][D.y.cv];
+                        Ws&z = $(Ws&z).filter(&i,v{ v != was });
+                        W.y.tw[D.t] == was and delete W.y.tw[D.t]
                     }
-                    C.y.tv.>D.t.>D.y.cv = $D;
-                    C.y.tw.>D.t ||= $D;
-                    push @{s&z}, $D;
+                    W.y.tv[D.t][D.y.cv] = $D;
+                    W.y.tw[D.t] ||= $D;
+                    Ws&z.push(D);
                 }
             }
         }
-
-        # tw of 
-        my $ii = {};
-        each t,cv,C $tv {
-            $ii.>$t && die "$t comes again at $cv";
-            if (s&contrib =~ /,/) {
-                # wants to sort in to z above?
-                @{s&z} = sort {a.y.cv <=> b.y.cv || a.t cmp b.t} @{s&z}
+        
+        each of,W I {
+            # concatenated z for this W must be sorted
+            if (Ws&many_contrib) {
+                delete Ws&many_contrib;
+                Ws&z = Ws&z.sort(&a,b{
+                    return a.y.cv < b.y.cv ? -1 : a.y.cv > b.y.cv ? 1
+                    : a.t < b.t ? -1 : a.t > b.t ? 1
+                    : 0
+                });
             }
-            my $la;
-            for my $D (@{s&z}) {
-                $D = $hup->($D);
-                Ds&coded || sayre "Not coded: ".ki$D;
-                delete Ds&coded;
-                Dc&code = eval Dc&s;
-
-                die "Throcompile Ds&of D.y.cv: D.t:"
-                .ind('  ',$@)."\n\n D.c.s\n" if $@;
-                die "Not code: D.t D.y.cv: $@\n".ki $D if ref Dc&code ne 'CODE' && !Ds&subpeel;
-
-                if (!$la) {
-                    C.y.in = $D;
+            $la;
+            each iD Ws&z {
+                typeof Dc&code != 'function' and throw "no Dccode", W, D
+                if (!la) {
+                    W.y.in = D;
                 }
                 else {
-                    la.y.next = $D;
-                    D.y.prev = $la;
+                    la.y.next = D;
+                    D.y.prev = la;
                 }
-                $la = $D;
+                la = D;
             }
-            $ii.>$t = $C;
-        }}
+        }
         
-        a&I = ii;
+        a&I = I;
         a&have = have;
 
         
