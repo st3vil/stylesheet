@@ -104,11 +104,23 @@ NutMind: | # do as
     u j
     n \'of:eye'
     
-    # clasp u
-    # we can reflect
-    # 4s&NormalI/A.4.I is default if no u
-    # mixes I without Jing if possible
-    # < only elvising altering We things
+    # see JayTo for G&u enterer
+    # this is about the moment we realise our mind together
+    #  anything needing mind does a G&clusp whenever, must be async
+    # a mix of Normal with whatever may be entered
+    
+    # call our mind together
+    #   contained by A:clusping doing:
+    #     A:u for us&minds, doing A:u' for 4s&mind
+    # 
+    # the two levels of A:u both A.u=A themselves,
+    # the W waketion/searchpath should be more relaxed when only in A.u
+    #   but should wake up if we want to fork it...
+    #    
+    # A:u mixes I from the A:u's, without Jing if possible
+    #   the A:u's c&js method implants <script> tags,
+    #   < W listening to lv would be better,
+    #     but then how to hold the code so onerror can see the source?
     # < lots of I.i things only being on 5 so this has less to chew
     # < knowing I.i never needs to know order/y.next... unless stored
     clusp:
@@ -123,7 +135,6 @@ NutMind: | # do as
         $I;
         
         $A = G&Aye,'clusping',0;
-        A.clusping = A;
         A.1 = u;
         A.2 = J;
         
@@ -278,13 +289,14 @@ NutMind: | # do as
             
             # wake us
             Ys&N ||= [];
-            Ys&N.push(A.clusping);
+            Ys&N.push(A);
             
             # them
             a&z.push(Y);
         }
         # proceed to succeed
         A.cv = 0.8;
+    
     # A:u checks a&z=[A:u's]
     # u 8 checks itself,
     #  by u' 8 checking themselves
@@ -387,7 +399,7 @@ NutMind: | # do as
                     I[W.t] = W;
                 }
                 each iD z {
-                    # remove any earlier (a&z/u order matters) same thing
+                    # dedup (z and many-z/a&z/u order matters)
                     if (W.y.tv[D.t] && W.y.tv[D.t][D.y.cv]) {
                         $was = W.y.tv[D.t] && W.y.tv[D.t][D.y.cv];
                         $rz = [];
@@ -406,7 +418,7 @@ NutMind: | # do as
         }
         
         each of,W I {
-            # concatenated z for this W must be sorted
+            # concatenated zs for this W must be sorted
             if (Ws&many_contrib) {
                 delete Ws&many_contrib;
                 Ws&z = Ws&z.sort(&a,b{
@@ -1085,8 +1097,25 @@ NutC: | # make C
                 G&thro,Y
                 $ch = N.shift();
                 ch != Y and throw "each iter/N not in order";
+                Ys&N and ~continuate
             }
         }}
+    # an 1s&N happens to A, a&N brings back the process that went async
+    
+    # with an A for looking through the A?
+    # they build C of knowing about this
+    #   diff multiple A:n C
+    # the use case is:
+    #   A:n up< A:clusping - A:u - (A:u')
+    # getting that A:n to continue,
+    #  possibly also the A:u would like to do its work while async?
+    # 
+    # so it may muck around some more, basically looking for a:
+    # target: are they just A[A.t] == A but not clusping?
+
+    # for the other 
+    AndContinue:
+        # with you
     
     # C: collect chatter
     # create error, order its fixing
@@ -1114,13 +1143,15 @@ NutC: | # make C
     Tri:
         # becomes J, comes back
         $pin = 'Tri';
-        A.1.t != pin and return G&n,[pin,'',{W:1,on:s}];
+        if (A.1.t != pin) {
+            $D = G&n,[pin,'',{W:1,on:s}];
+            $Y = D.y.A;
+            Y.cv < 0.8 and ~waylay: D.t
+            return
+        }
         c&on and A.on = c&on;
         
-        # has very recent pin of itself,
-        #   or comes back async via 1s&N
-        #     which it must be in a thro to do
-        w = G&t,'w',pin;
+        $w = G&t,'w',pin;
         !(w && ws&now && G&time,ws&now,5) and w = null
         
         if (!w) {
@@ -1146,6 +1177,81 @@ NutC: | # make C
         ~Tri stuff:
         eval(wc&s);
         # stuff
+    
+    # way that can happen by itself,
+    #   without resyncing the A it was in, like G&way will
+    #  cb can be 
+    waylay: %acgt:t ar delay cb
+        typeof delay == 'function' and cb = delay; delay = 0;
+        if (delay) {
+            # wait and then way
+        }
+        # the callback that determines if now is the time
+        $cb2 = &t,ar{ 
+            
+        };
+        G&way,t,ar,cb2
+    
+    # fancy subroutine call
+    # simple keep downloading fresh code mechanism
+    #    async if downloading, uses cb or 1s&N=A && throw
+    #  t - name of a way
+    #  ar - hash of named arguments
+    #  cb - callback containing a sync G&way call 
+    #    if cb is &s{...}, give it the return value of the way
+    #    if cb is 'noop', do nothing, return 1 if way is ready
+    #  no cb 
+    #   (going async)
+    #   tries to resync the A that needed it
+    #   causing a J unprepared for what ways its way depends on,
+    #   to resolve one at a time as they occur,
+    #   finally downloading the whole codepath
+    way: %acgt:t ar cb
+        # has very recent pin of itself,
+        $w = typeof t == 'object' ? t : G&t,'w',t;
+        !(w && ws&now && G&time,ws&now,5) and w = null
+        
+        if (!w) {
+            $get = '/way/'+t;
+            $.ajax(get).done(&s,how,c{
+                how != 'success' and throw "Failed request: "+how, c;
+                $dige = c.getResponseHeader('Dige');
+                $w = G&Cye,[pin,1,{s:s},{of:'w',dige:dige}];
+                A.5.I ||= {};
+                $D = A.5.I.w = A.5.I.w || G&Cye,['w','',{},{z:[]}];
+                D.y ||= {};
+                D.y.tw ||= {};
+                D.y.tw[pin] = w;
+                ws&now = G&time;
+                
+                a&ready = 1;
+                ~w!: t
+                if (cb) {
+                    if (G&arfgunc,cb == "s") {
+                        # wants its return value with given ar...
+                        
+                    }
+                }
+            });
+            ~w?: t
+            if (cb) {
+                # we shall do that
+            }
+            else {
+                1s&N.push(A);
+            }
+        }
+    # figure out how a 
+    arfgunc:
+        typeof s != 'function' and return
+        return cb.toString().match(/^function \((.+?)\)/)[1]
+        
+        
+NutCode: |
+    u js
+    n \'of:om'
+    
+    
 Tri: | # a javascript pin
     # waddley
     G&n,['other',1,{s:"q3qq!"}];
