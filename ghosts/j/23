@@ -1228,7 +1228,6 @@ NutC: | # make C
         
 AndContinue: | # J-in stuff
     # like a female that demands J 6 action when sometime
-    ~AndTe
     # find all 1s&N, A with desire to thro
     
     # full of variables, schemes, like how much to regroup by J/net
@@ -1306,8 +1305,9 @@ AndContinue: | # J-in stuff
     
     $sum = [];
     each in needs {
-        sum.push(n.name);
+        sum.push(ns&name);
     }
+    sum = sum.join(',');
     ~Jin: sum
     
     # T a flow pauser/queue in here
@@ -1322,8 +1322,10 @@ AndContinue: | # J-in stuff
         $soN = ns&sip_oN = {}; # sip: N # Js&N future?
         each iY N {
             seen[Yc&sip] = Y;
+            
+            # TODO detect Y-y wander earlier, group same A:n
             $y = Y;
-            while (y && !yc&T) {
+            while (y && !yc&T && y.up) {
                 # climb up to something we can sequence
                 # would cT if it ever thro'd
                 # all items resonate
@@ -1339,11 +1341,23 @@ AndContinue: | # J-in stuff
             
             $oN = Ys&N;
             !(oN && oN.length) and continue
+            # get A backlinks every time around
+            oN = Ys&N = dedup_by_sip(oN);
+            # oN deduped but never tidied up?
+            #   want centralised A:u' to remember all the scattered A:u,
+            #    who can find where they are in Js, which would point
+            #      the desire to a s&mind of the Js&u
+            #      the A:u A.2 is J, A.1 is Js&u, which could be found...
+            #   A:u u to forget the passing clusping,
+            #   although maybe the last copy of it would be good dome resync clues
+            #   domes seem like A but structural of J
+            # keep if they a&retaiN?
             soN[Yc&sip] = oN;
         }
     }
     
     # delete things we did
+    # TODO make into a "drain thingses" thing
     each in needs {
         $J = ns&J;
         $N = [];
@@ -1361,15 +1375,27 @@ AndContinue: | # J-in stuff
         !soN and continue
         each sip,N soN {
             $Y = seen[sip];
+            $aliens = [];
             each iy N {
                 ~Jinmore: J.t, sa(Y), sa(y)
+                # Ys&N should drain sometimes...
+                # they could be ongoing wake-parent paths
+                # classify being, see above
+                !yc&T and aliens.push(i)
+                
                 Js&N.push(y)
+            }
+            # remove things this A doesn't permanently N to
+            each ai aliens {
+                Ys&N.splice(i,1)
             }
         }
     }
-        
-        
-        
+    
+    # that was an animation frame
+    # TODO measure time
+    # TODO get machine health
+    # TODO make/dedup comeback
 NutCode: | # om suvber
     u js
     n \'of:om'
