@@ -1062,6 +1062,7 @@ NutC: | # make C
     # T adjusts net
     
     #c A: run funnel
+    # the general J 8, starting from A.4
     Jin:
         A = G&Aye,'seeing';
         A.1.t != 'Four' and ~wherefour
@@ -1102,6 +1103,7 @@ NutC: | # make C
         }}
     # an 1s&N happens to A, a&N brings back the process that went async
     
+    
     # with an A for looking through the A?
     # they build C of knowing about this
     #   diff multiple A:n C
@@ -1117,6 +1119,13 @@ NutC: | # make C
     AndContinue:
         # with you
     
+    # < throw that bundles its arguments
+    #   like a G&c that blows up, from the perspective of the caller
+    
+    # < make G&c objecty, truncate, click items
+    #   even a J on a stable G...
+    
+    
     # C: collect chatter
     # create error, order its fixing
     Typ:
@@ -1129,6 +1138,8 @@ NutC: | # make C
         !G&datam,['anything'],"['*']" and throw "Isnt 2"
         !G&datam,[['']],"[['']]" and throw "Isnt 3"
         G&datam,[['']],"['']" and throw "Isnt 4"
+        ~WayLAy
+        G&waylay,'AndType',2;
         }
         
         G&u,['NutDung'];
@@ -1178,19 +1189,20 @@ NutC: | # make C
         eval(wc&s);
         # stuff
     
-    # way that can happen by itself,
-    #   without resyncing the A it was in, like G&way will
-    #  cb can be 
+    #c way that can happen by itself
     waylay: %acgt:t ar delay cb
+        typeof ar != 'object' and delay = ar; ar = {};
         typeof delay == 'function' and cb = delay; delay = 0;
+        cb ||= &s{};
         if (delay) {
             # wait and then way
+            # < expect download's tiny delay as well?
+            G&delay:delay,&{ G&waylay,t,ar,0,cb };
+            #~waylayter: t, delay
+            return
         }
-        # the callback that determines if now is the time
-        $cb2 = &t,ar{ 
-            
-        };
-        G&way,t,ar,cb2
+        #~waylaydo: t
+        G&way,t,ar,cb
     
     # fancy subroutine call
     # simple keep downloading fresh code mechanism
@@ -1202,51 +1214,75 @@ NutC: | # make C
     #    if cb is 'noop', do nothing, return 1 if way is ready
     #  no cb 
     #   (going async)
-    #   tries to resync the A that needed it
+    #   tries to resync the A that needed it via 1s&N
     #   causing a J unprepared for what ways its way depends on,
     #   to resolve one at a time as they occur,
     #   finally downloading the whole codepath
+    #  a cb of &{} should run the thing real soon if not immediately
+    #  no cb, as most way will be, will resync the J 6
+    #    so a way should know what ways you might run into inside it,
+    #    so resources can be loaded before J:6, which should sleep
+    #     and only happen when it needs to, in tiny ordered parts, etc.
     way: %acgt:t ar cb
-        # has very recent pin of itself,
         $w = typeof t == 'object' ? t : G&t,'w',t;
         !(w && ws&now && G&time,ws&now,5) and w = null
         
         if (!w) {
+            cb == 'noop' and cb = &{};
+            else
+            typeof cb == 'string' and throw "Cant go async: "+cb
+            
             $get = '/way/'+t;
             $.ajax(get).done(&s,how,c{
                 how != 'success' and throw "Failed request: "+how, c;
                 $dige = c.getResponseHeader('Dige');
-                $w = G&Cye,[pin,1,{s:s},{of:'w',dige:dige}];
+                $w = G&Cye,[t,1,{s:s},{of:'w',dige:dige}];
                 A.5.I ||= {};
                 $D = A.5.I.w = A.5.I.w || G&Cye,['w','',{},{z:[]}];
                 D.y ||= {};
                 D.y.tw ||= {};
-                D.y.tw[pin] = w;
+                D.y.tw[t] = w;
                 ws&now = G&time;
                 
                 a&ready = 1;
-                ~w!: t
+                #~w!: t
                 if (cb) {
                     if (G&arfgunc,cb == "s") {
                         # wants its return value with given ar...
-                        
+                        #~w cb s: t
+                        $s = G&way,t,ar,'already_async';
+                        cb(s);
+                    }
+                    else {
+                        # containing a sync G&way call
+                        # or a way to get the w back?
+                        #~w cb: t
+                        cb(t,ar,w);
                     }
                 }
             });
-            ~w?: t
-            if (cb) {
-                # we shall do that
-            }
-            else {
-                1s&N.push(A);
-            }
+            #~w?: t
+            !cb and G&TuneTimeMachine
+            return
         }
+        
+        # code is already JaBabz'd
+        # < CoArgulate for ar, put as knowable source file?
+        # < make it c.code and G&h for a B?
+        
+        eval(wc&s);
+        
+    
     # figure out how a 
     arfgunc:
         typeof s != 'function' and return
-        return cb.toString().match(/^function \((.+?)\)/)[1]
+        $m = s.toString().match(/^function \((.+?)\)/);
+        return m && m[1]
         
         
+AndType: | # stuff
+    # 
+    ~AndTe
 NutCode: |
     u js
     n \'of:om'
