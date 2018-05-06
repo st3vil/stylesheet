@@ -1220,53 +1220,130 @@ AndContinue: | # J-in stuff
     ~AndTe
     # find all 1s&N, A with desire to thro
     
-        # Four/Five should come first since cv=0.01
-        #   but just because they were entered first
-        $vtN = {}; # cv, W, their s&N
-        each tvJ 1s&Jtv {
-            $N = Js&N;
-            !(N && N.length) and continue;
-            vtN[v] ||= {};
-            vtN[v][J.t] = N;
-        }}
+    # da (de|gr) (c sip|$func)
+    $dedup_by_sip = &N{
+        $seen = {};
+        $M = [];
+        each is N {
+            !sc&sip and throw "Has no sip: "+i, s
+            seen[sc&sip] and continue
+            seen[sc&sip] = s;
+            M.push(s);
+        }
+        return M;
+    };
     
     # describe an A
+            # < compressed notation for where/what it is from this A
+            # and amongst these things
+            # and the A:n etc it's for/underneath,
+            #   even slowlaned N for the A:n and the A:u, rapido A:u',
+            #   made of A:u's having a&N of A:u which a&N the A:n
+            #   structure can be seen as directional,
+            #   the lower, less pointed to stuff works out first,
+            #   then we give attention to what was using it (a&N)
+            # then venn diagram of waiting-n >< busy-u
+    # return objects that stringify, or regroup
     $sa = &Y{
         
+        return Y.t
     };
     # describe an N
     $lim = &{};
     $squa = &{};
     
     
-    $NA = &N{
-        # make wording about it
-        # get the thing's .t together
-        $sum = '';
-        each vtN vtN {
-            $what = N.length;
-            if (what < 3) {
-                what = [];
-                each iY N {
-                    what.push(Y.t);
-                }
-                what = what.join(',');
-            }
-            sum += ' '+t+'('+what;
-        }}
-        ~Jin: sum
-    };
-    # N
     
-        each vtN vtN {
-            $oN = N.slice();
-            each iY oN {
-                G&thro,Y;
-                $ch = N.shift();
-                ch != Y and throw "each iter/N not in order";
-                Ys&N and ~continuate
+    # gather J with J&N
+    $Js = [];
+    # Four/Five should come first since cv=0.01
+    #   (or because they were entered first)
+    each tvJ 1s&Jtv {
+        $N = Js&N;
+        !(N && N.length) and continue;
+        Js.push(J);
+    }}
+    
+    # identify who and create a needs object
+    # Jin to Jin persist by J.t
+    1s&needs ||= {};
+    $needs = [];
+    each iJ Js {
+        # could care/prioritise dup A?
+        $N = dedup_by_sip(Js&N);
+        
+        # persist so ready=0 can be ttl'd,
+        $n = 1s&needs[J.t];
+        n ||= G&Cye,[J.t,''];
+        1s&needs[J.t] = n;
+        
+        # if ns&N, see what's different?
+        $what = [];
+        each iY N {
+            what.push(sa(Y));
+        }
+        ns&J = J;
+        ns&N = N;
+        ns&name = what.join(',');
+        needs.push(n);
+    }
+    
+    # order needs by elabourate infinity
+    
+    $sum = [];
+    each in needs {
+        sum.push(n.name);
+    }
+    ~Jin: sum
+    
+    # T a flow pauser/queue in here
+    # batch[time] = needs
+    # good for testing!
+    
+    #c thro'ing
+    $seen = {}; # sip
+    each in needs {
+        $J = ns&J;
+        $N = ns&N;
+        $soN = ns&sip_oN = {}; # sip: N # Js&N future?
+        each iY N {
+            seen[Yc&sip] = Y;
+            
+            # try wind it up with its own cv/ov
+            G&thro,Y;
+            # catch errors? could be the most normal place to
+            # notice success?
+            
+            $oN = Ys&N;
+            !(oN && oN.length) and continue
+            soN[Yc&sip] = oN;
+        }
+    }
+    
+    # delete things we did
+    each in needs {
+        $J = ns&J;
+        $N = [];
+        each iY Js&N {
+            seen[Yc&sip] and continue
+            N.push(Y);
+        }
+        Js&N = N;
+    }
+    
+    # insert things that emerged from doing
+    each in needs {
+        $J = ns&J;
+        $soN = ns&sip_oN;
+        !soN and continue
+        each sip,N soN {
+            $Y = seen[sip];
+            each iy N {
+                ~Jinmore: J.t, sa(Y), sa(y)
+                Js&N.push(y)
             }
-        }}
+        }
+    }
         
         
         
@@ -1283,6 +1360,7 @@ Tri: | # a javascript pin
     
     
 NutCore: | # doc universals, map room
+    return;
     u k
     # a dialect/personality for relationships
     # or boundary effects
