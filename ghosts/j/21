@@ -321,6 +321,27 @@ NutPhone: | # adapt to the universe
         s < 1 and return (s * 1000)+'ms';
         return s+'s';
     
+    
+    
+    # HUMAN MIND
+    
+    # understand one expanse, as C.y.cv is
+    #   fraction in 0-1, eg 333 -> 0.333
+    #  is cv=0 allowed?
+    sca: %acgt:s precision
+        s && s*1 != s and return
+        while (s >= 1)
+            s /= 10
+        return +s.toPrecision(precision || 4)
+    
+    # put decimal places
+    desca: %acgt:s precision
+        precision ||= 4;
+        $mul = '1e'+precision;
+        return (s * mul).toFixed() / mul
+    
+    
+    
     # JAVASCRIPT
     
     # get function args
@@ -341,21 +362,22 @@ NutPhone: | # adapt to the universe
         $('<h2 onclick="'+func+'">'+s+'</h2>')
             .appendTo('body')
     
-    # HUMAN MIND
-    
-    # understand one expanse, as C.y.cv is
-    #   fraction in 0-1, eg 333 -> 0.333
-    #  is cv=0 allowed?
-    sca: %acgt:s precision
-        s && s*1 != s and return
-        while (s >= 1)
-            s /= 10
-        return +s.toPrecision(precision || 4)
-    
-    # put decimal places
-    desca: %acgt:s precision
-        precision ||= 4;
-        $mul = '1e'+precision;
-        return (s * mul).toFixed() / mul
+    # #msgs console message
+    c: %acgt:s e
+        e ||= [];
+        var says = [];
+        $.each(e,&i,v{
+            typeof v === 'string' || typeof v === 'number' and says.push(v);
+            else {
+                says.push('%'+typeof v);
+            }
+        });
+        A[5].sc.log ||= [];
+        var log = A[5].sc.log;
+        log.unshift([s,e]);
+        G&lim,log,-9;
+        says.length and s = s+': '+says.join(' ');
+        $('#msgs').prepend(s+"\n");
+        
     
 
