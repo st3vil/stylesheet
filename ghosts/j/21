@@ -414,13 +414,12 @@ NutCons: | # arcade-era interaction, logging
             .appendTo('body')
     
     # #msgs console message
+    # with a leading ">34:bob" means 3:yellow, 4:60%, <bob>
+    # ... unicode? you have a palette handy?
+    # should work same system as throw, l.t should be SyntaxError etc.
     c: %acgt:s M
         M ||= [];
         $l = G&Cye,['',1,{},{M:M}];
-        if (typeof s == 'object') {
-            # thing from throw?
-            # list of strings starting with numbers for style
-        }
         l.t ||= s;
         ls&now = G&time;
         
@@ -430,10 +429,8 @@ NutCons: | # arcade-era interaction, logging
         G&lim,Ls&log,-9;
         # human readable
         $format = &s{
-            # with symb-numbers in the string... unicode? you have a palette handy?
-            # or leading numbers being styles, and having the s start in pieces
-            # should work same system as throw, l.t should be SyntaxError etc.
-            $num = /^>(\d+)?(?::(\w*))? ?/;
+            s = ''+s;
+            $num = /^>(\d+)?(?::(\w*))? */;
             $m = s.match(num);
             if (m) {
                 s = s.replace(num,'');
@@ -446,8 +443,7 @@ NutCons: | # arcade-era interaction, logging
                         style += "color:hsl("+(col*30)+", 90%, 90%);";
                     }
                     if (siz) {
-                        siz > 6 and siz *= 3;
-                        style += "font-size:"+(siz*10)+"%;";
+                        style += "font-size:"+(siz*15)+"%;";
                     }
                 }
                 $tag = m[2] || 'n';
