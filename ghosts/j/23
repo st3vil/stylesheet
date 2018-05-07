@@ -821,7 +821,7 @@ NutJaying: | # A sequence J
     # W 34 thawJ, operates c&pretend
     # e 36 tugs A=E for c&e
     
-    #c Jaying J/W/pi are now set up in the universal hemisphere
+    #c Jaying J/W/pi universal awakeness hemisphere
     # < doing some W bleed/wander tracking if !sJ
     #   plenty of sW get chewed in the process of displaying W
     # humming - sleepology - osc exports that door us here
@@ -883,12 +883,24 @@ NutJaying: | # A sequence J
         $ar = c&ar || {};
         $s = c&s;
         $M = c.M = [];
-        if (A&way == 'way') {
-            // Rw A&pin + $J:A.1 $y $M $s;
-        }
-        else {
-            G&h,A&pin,M
-        }
+        # if we make an Error can we rethrow it keeping its origin?
+        # catch use case:
+        #   the throw from G&TuneTimeMachine wants to abort pin/doming,
+        #   put this A:n into 1s&N, but A.1 isn't yet in A.4...
+        #   it wants to T.nose=6 with instant bail out of the pin...
+        # so lets share the Jup stasher
+        A&Jupstash = &{
+            !A&Jup and throw "Can't save self", A
+            A&Jup.sc.Jtv ||= {};
+            A&Jup.sc.Jtv[C.t] ||= {};
+            A&Jup.sc.Jtv[C.t][A&Jcv] = s&J;
+        };
+            if (A&way == 'way') {
+                // Rw A&pin + $J:A.1 $y $M $s;
+            }
+            else {
+                G&h,A&pin,M
+            }
         T.nose and return;
         
         A.1[2].c.imping and y.imp = 1
@@ -901,10 +913,8 @@ NutJaying: | # A sequence J
     # join moment to moment
     J 7:
         if (T.nose != '1') {
-            !A&Jup and throw "Can't save self", A
-            A&Jup.sc.Jtv ||= {};
-            A&Jup.sc.Jtv[C.t] ||= {};
-            A&Jup.sc.Jtv[C.t][A&Jcv] = s&J;
+            A&Jupstash();
+            delete A&Jupstash;
         }
         # T.N sets cv=6 and queues A in 1s&N, which 4 finds via Jtv
         T.nose == '6' and delete T.nose; return T.N = 6;
@@ -996,6 +1006,7 @@ NutC: | # make C
         J.1 = J.2 = J.3 = J.4 = J;
         $f = G&J,'Five';
         A.5 = J.5 = f.5 = f;
+        # call it put 1s&Jtv A.4.t 0.01 A.4
         1s&Jtv ||= {};
         1s&Jtv[A.4.t] ||= {};
         1s&Jtv[A.4.t][0.01] = A.4;
@@ -1103,32 +1114,7 @@ NutC: | # make C
         }
         c&on and A.on = c&on;
         
-        $w = G&t,'w',pin;
-        !(w && ws&now && G&time,ws&now,5) and w = null
-        
-        if (!w) {
-            $get = '/way/'+pin;
-            $.ajax(get).done(&s,how,c{
-                how != 'success' and throw "Failed request: "+how, c;
-                $dige = c.getResponseHeader('Dige');
-                $w = G&Cye,[pin,1,{s:s},{of:'w',dige:dige}];
-                A.5.I ||= {};
-                $D = A.5.I.w = A.5.I.w || G&Cye,['w','',{},{z:[]}];
-                D.y ||= {};
-                D.y.tw ||= {};
-                D.y.tw[pin] = w;
-                ws&now = G&time;
-                
-                a&ready = 1;
-                ~Tri ready:
-            });
-            ~Tri waits:
-            return T.nose = 6;
-        }
-        
-        ~Tri stuff:
-        eval(wc&s);
-        # stuff
+        G&way,pin;
     
     #c way that can happen by itself
     waylay: %acgt:t ar delay cb
