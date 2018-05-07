@@ -416,28 +416,66 @@ NutCons: | # arcade-era interaction, logging
     # #msgs console message
     c: %acgt:s M
         M ||= [];
-        $says = [];
-        $.each(e,&i,v{
-            typeof v === 'string' || typeof v === 'number' and says.push(v);
-            else {
-                says.push('%'+typeof v);
-            }
-        });
+        $l = G&Cye,['',1,{},{M:M}];
+        if (typeof s == 'object') {
+            # thing from throw?
+            # list of strings starting with numbers for style
+        }
+        l.t ||= s;
+        ls&now = G&time;
+        
         $L = A[4];
         Ls&log ||= [];
-        Ls&log.unshift([s,e]);
+        Ls&log.unshift(l);
         G&lim,Ls&log,-9;
-        says.length and s = s+': '+says.join(' ');
+        # human readable
+        $format = &s{
+            # with symb-numbers in the string... unicode? you have a palette handy?
+            # or leading numbers being styles, and having the s start in pieces
+            # should work same system as throw, l.t should be SyntaxError etc.
+            $num = /^>(\d+)?(?::(\w*))? ?/;
+            $m = s.match(num);
+            if (m) {
+                s = s.replace(num,'');
+                $style = '';
+                if (m[1]) {
+                    $col = m[1].substr(0,1);
+                    $siz = m[1].substr(1,1);
+                    if (col) {
+                        # 3 is yellow
+                        style += "color:hsl("+(col*30)+", 90%, 90%);";
+                    }
+                    if (siz) {
+                        siz > 6 and siz *= 3;
+                        style += "font-size:"+(siz*10)+"%;";
+                    }
+                }
+                $tag = m[2] || 'n';
+                s = '<'+tag+(style.length ? ' style="'+style+'"' : '')+'>'
+                    + s + '</'+tag+'>';
+            }
+            return s
+        };
+        
+        $says = [];
+        each iv M {
+            $say = typeof v == 'number' || typeof v == 'string' ? v 
+                : '%'+typeof v;
+            says.push(format(say));
+        }
+        says.length and s += ': '+says.join(' ');
+        
         $it =
-        $('#msgs').prepend("<m>"+s+"</m>\n").children()[0];
-        # and links? make J?
-        it.A = A;
-        # it.B = Gc&B
-        it.set = &t,s{ 
-            $el = $(it).find(t);
-            !el.length and el = null
+        $('#msgs').prepend("<m>"+format(s)+"</m>\n").children()[0];
+        # and links? make J? know #msgs?
+        ls&A = A;
+        # ls&B = Gc&B
+        it.log = l;
+        it.set = &t,s{
+            s = format(s);
+            $el = t == '$' ? it : $(it).find(t)[0];
+            el == it and s = el.innerHTML + s
             !el and throw "unknown set: "+t, it
-            el = el[0];
             el.innerHTML = s;
         };
         return it
