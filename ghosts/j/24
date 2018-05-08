@@ -150,7 +150,9 @@ NutThing: | # name of thing
             typeof cb == 'string' and throw "Cant go async: "+cb
             
             $get = '/way/'+t;
-            $.ajax(get).done(&s,how,c{
+            $is_done;
+            $done = &s,how,c{
+                is_done = 1;
                 how != 'success' and throw "Failed request: "+how, c;
                 $dige = c.getResponseHeader('Dige');
                 $w = G&Cye,[t,1,{s:s},{of:'w',dige:dige}];
@@ -177,7 +179,16 @@ NutThing: | # name of thing
                         cb(t,ar,w);
                     }
                 }
-            });
+            };
+            $r = $.ajax(get);
+            r.done(done);
+            $check = &{
+                is_done and return;
+                r.statusText != 'OK' and throw "Failed request: "+r.statusText
+                ~>57 waylo: t
+                done(r.responseText, 'success', r);
+            };
+            G&yl,150,check;
             #~w?: t
             !cb and G&TuneTimeMachine
             return
