@@ -173,7 +173,7 @@ NutThing: | # name of thing
                     else {
                         # containing a sync G&way call
                         # or a way to get the w back?
-                        #~w cb: t
+                        ~w cb: t
                         cb(t,ar,w);
                     }
                 }
@@ -365,9 +365,20 @@ NutText: | # om suvber, be codemirror of a chunkalism
     # s&e - elvisy, likes events, text, could be sliders, pads,
     #  something that emits c&e for itself
     
-    # el 333 to not put c&s straight in, something should eat it
+    # anything fragile and elvisable should have a dige on it,
+    # which becomes es&parent when submit,
+    # to know it's working off latest
+    # and so it can send patches and check they worked
+    # dig() in javascript?
+    e 2: %of:n
+        s&dige = c&s.length;
+    
+    # el 333 to not put c&s as .text, something should eat it
     e 2:
         a&noinnerText = 1;
+    # every element has an A
+    any 4: %any
+        A.on.A = A;
     e 6:
         $cm = A.b.cm;
         
@@ -386,7 +397,7 @@ NutText: | # om suvber, be codemirror of a chunkalism
             # a string starts or updates
             $was = A.b.givens;
             $is = cm.getValue();
-            if (was && is && was != is) {
+            if (was && is && was != is && is != c&s) {
                 ~>27 Merge: A.1.t, C.t
                 # look for a way to patch keeping both changes
                 # a was->is and a was->c&s,
@@ -397,32 +408,26 @@ NutText: | # om suvber, be codemirror of a chunkalism
             }
             cm.setValue(c&s);
             A.b.givens = c&s;
+            A.b.dige = s&dige;
         }
+        
+        # an e springs through here for its id
+        A.b.eintro = &e{
+            e.t ||= 'says';
+            ec&s = cm.getValue();
+            es&parent = A.b.dige;
+        };
         
         cm.refresh();
         G&yl:400,&{ cm.refresh() };
         
-        $sav = &ev,of,inn,ou{
-            console.log("Save haps "+C.t, ev,of,inn,ou);
-            G&elev,cm;
-        };
+        $sav = &{ G&gev };
         cm.setOption('extraKeys', {Esc:sav});
         cm.on('focus',function(){G.clof();G.keof();});
-        cm.on('blur',function(ev,of,inn){G.clon();G.keon();sav(ev,of,inn);});
+        cm.on('blur',function(ev,of,inn){G.clon();G.keon();sav();});
     
     #    $('#'+id).css('width','15em','max-height','70%','overflow','scroll');
     #   $('#'+id+' > .CodeMirror');//.css('height','auto');
-    
-    u j
-    n \'of:eye'
-    elev:
-        var cm = s;
-        var d = {};
-        G&entag,d,$(A.on);
-        A.b.jus = d.code = cm.getValue();
-        d.dig = $(A.on).attr('dig');
-        console.log("elev",d);
-        #G&socking,d;
     
 Tri: | # a javascript pin
     # waddley
@@ -431,7 +436,7 @@ Tri: | # a javascript pin
     G&clusp;
     
     
-    G&n,['d33ee',3,{s:'Intri'},{ed:1}];
+    G&n,['d33ee',3,{s:'Intri'},{e:1}];
     
     G&n,['other',1,{s:"steve!"},{jela:5}];
     
