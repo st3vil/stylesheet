@@ -413,22 +413,15 @@ NutCons: | # arcade-era interaction, logging
         $('<h2 onclick="'+func+'">'+s+'</h2>')
             .appendTo('body')
     
-    # #msgs console message
     # with a leading ">34:bob" means 3:yellow, 4:60%, <bob>
     # ... unicode? you have a palette handy?
     # should work same system as throw, l.t should be SyntaxError etc.
-    c: %acgt:s M
-        M ||= [];
-        $l = G&Cye,['',1,{},{M:M}];
-        l.t ||= s;
-        ls&now = G&time;
-        
-        $L = A[4];
-        Ls&log ||= [];
-        Ls&log.unshift(l);
-        G&lim,Ls&log,-9;
-        # human readable
-        $format = &s{
+    intag:
+        $M = [s];
+        if (typeof s == 'object') {
+            # TODO apply s[0] around s[*], ref s[n] and s[n] = G&intag,s[n]
+        }
+        s = M[0];
             s = ''+s;
             $num = /^>(\d+)?(?::(\w*))? */;
             $m = s.match(num);
@@ -451,7 +444,21 @@ NutCons: | # arcade-era interaction, logging
                     + s + '</'+tag+'>';
             }
             return s
-        };
+        
+    
+    # #msgs console message
+    c: %acgt:s M
+        M ||= [];
+        $l = G&Cye,['',1,{},{M:M}];
+        l.t ||= s;
+        ls&now = G&time;
+        
+        $L = A[4];
+        Ls&log ||= [];
+        Ls&log.unshift(l);
+        G&lim,Ls&log,-9;
+        # human readable
+        $format = &s{ return G&intag,s };
         
         $says = [];
         each iv M {
