@@ -128,16 +128,16 @@ EleOne: |
             # path from last A outwards
             $m = c&path_yon = [S];
             while (!S.A) {
+                !S.parentNode and break
                 S = S.parentNode;
-                !S and break
                 m.unshift(S)
             }
             # path through all A elements
             #   may be some elements (S) without .A?
             $m = c&path = [S];
             while (S && !(S.A && S.A.1 == A.4)) {
+                !S.parentNode and break
                 S = S.parentNode;
-                !S and break
                 m.unshift(S)
             }
             # makes it to <body> who .A = A:top, window.A, A.1 == A.4
@@ -190,24 +190,27 @@ EleOne: |
             each ik ks {
                 v = s[k];
                 $d = $.extend({},c);
-                d += 1;
+                d.d += 1;
                 $ke = '';
-                saykey and ke = k+':';
+                c.saykey and ke = k+':';
                 M.push(ke+ki(v,d));
             }
             $m = M.join(",");
             $strlim = c.lum * 10 + 5;
-            m.length > strlim + 10 and m = m.substr(0,strlim)+'..*'+M.length
+            #m.length > strlim + 10 and m = m.substr(0,strlim)+'..*'+M.length
             return m
         };
         
         $ki = &s,c{
-            c ||= {};
-            typeof c != 'object' and c = {dl:4};
+            c ||= {dl:4};
             c.d ||= 1;
-            c.d > 5 and throw "large ki";
+            c.d > 15 and throw "large ki";
             $lum = c.lum = c.dl - c.d;
             
+            if (s == null) {
+                return "null"
+            }
+            else
             if (typeof s == 'number' || typeof s == 'string') {
                 return "'"+s+"'";
             }
@@ -216,23 +219,24 @@ EleOne: |
                 !s.length and return '[]'
                 lum < 2 and return '[*'+s.length+']'
                 lum < 3 and return '['+li(s,c)+']'
+                # '
             }
             else
             if (s.constructor == Object) {
                 c.saykey = 1;
-                $ks = Object.keys({});
+                $ks = Object.keys(s);
                 !ks.length and return '{}'
-                ks = ['t','y','c','sc']; # idealism
                 $type = s.y ? s.y == s ? 'A' : 'C' : 'd';
                 type == 'A' && s.1 == s and type = 'J'
                 if (type != 'd') {
                     type == A and lum -= 1
                     lum < 2 and return '{'+type+':'+s.t+'}'
                     type == C and return s.t+' '+s.y.cv+li(s.c,c)+'%'+li(s.sc,c)
-                    c.ks = ks;
+                    c.ks = ['t','y','c','sc']; # idealism
                     return li(s,c)
                 }
                 else {
+                    lum < 2 and return '{*'+ks.length+'}'
                     return li(s,c)
                 }
                 
@@ -248,6 +252,8 @@ EleOne: |
         
         # #c get A:n
         
+        
+        ~>48 elvis: ki(C)
         console.log(s,C);
         
         $limit = 10;
