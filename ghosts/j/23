@@ -874,62 +874,7 @@ NutMind: | # do as, all difference
             # present N into A:u
             # another A.u
             
-ServeC: | # atomic get/set, remote magic powers
-    # W as <script> js include
-    get '/js/:t' => &c{
-        my $t = $c->param('t');
-        $t =~ s/\.js$//;
-        my $ver = $2 if $t =~ s/^(\w+)-(\w+)$/$1/;
-        my $C = G&Ct,[$t,'',{ver=>$ver}];
-        my $s = Rw NutServe $C;
-        $s || return $c->res->code(404), $c->render(text=>"Not found\n");
-        
-        my $loca = '/js/'.C.t.'-'.c&ver.'.js';
-        #$c->redirect_to($loca);
-        $c->res->headers->append(Location => $loca);
-        $c->render(text=>$s,format=>"js");
-    };
-    # hmm
-    get '/earer' => &c{
-        my $dat = $c->param('data');
-        #$dat = djson($dat);
-        my $s = G&Ct,[earer=>''=>{s=>$dat}];
-        my $el = [give=>''=>{s=>$s}];
-        my $W = [Wederr=>$el];
-        G&timer:0.1,&{ 4s&toy->({to=>[$W]}) };
-        $c->render(text=>"hmm\n");
-    };
-    # for a J that does things:
-    #  get doings
-    #  make doings out of the last elvis to whereever
-    #  do doings
-    #  save doings
-    # first persist thing
-    # all W, making ghost is over the line to nice
-    get '/do/:get' => &c{
-        if (my $get = $c->param('get')) {
-            my ($who,$does,$what) = $get =~ /^(\w+)'s (\w+) (\w+)$/;
-            #`tail G.t/p/$who`
-        }
-        else {
-            
-        }
-        $c->render(text=>"hmm\n");
-    };
-    # the way
-    # < Accept headers to get the various translations
-    get '/way/:way' => &c{
-        my $t = $c->param('way');
-        $t =~ s/\W+/-/g;
-        my $w = G&t,w=>$t;
-        $w || return $c->reply->not_found;
-        $c->res->headers->append(Dige => ws&dige);
-        my $s = a&wayjs.>w.t.>ws&dige ||= do {
-            Rw JaBabz $C:w;
-            wc&s
-        };
-        $c->render(text => $s,format=>"js");
-    };
+
 NutC: | # make C
     u j
     n \'of:eye'
