@@ -99,6 +99,7 @@ EleOne: |        # #c ki
             k and c.k = k; s = s[k];
             delete c.ks;
             $M = [];
+            $joiner = ',';
             if (s && typeof s == 'object') {
                 if (!ks) {
                     ks = [];
@@ -106,6 +107,7 @@ EleOne: |        # #c ki
                         ks.push(k);
                     }
                 }
+                $elem = 1;
                 each ik ks {
                     v = s[k]; # ]
                     $d = $.extend({},c);
@@ -114,11 +116,42 @@ EleOne: |        # #c ki
                     d.k = k;
                     $ke = '';
                     c.saykey and ke = k+':';
+                    
                     c.k == 'y' and d.d += 1;
                     $sa = ki(v,d);
-                    sa.drawn == 'type:t' && k.match(sa.type+'$') and ke = k+';'; sa = v.t
-                    M.push(ke+sa);
+                    
+                    elem && sa.drawn != 'html' and elem = 0;
+                    if (elem && sa.drawn == 'html') {
+                        # shorten paths in (or out)
+                        if (elem != 1) {
+                            if (!(v.parentNode == elem
+                                || elem.parentNode == v)) {
+                                elem = 0
+                            }
+                        }
+                        elem and elem = v;
+                    }
+                    if (sa.drawn == 'type:t') {
+                        # its own type part of the key
+                        k.match(sa.type+'$') and ke = k+';'; sa = v.t
+                        c.type == 'a' and sa.s = sa.s.replace(/^{|}$/g,'');
+                        
+                    }
+                    M.push([ke,sa]);
                 }
+                if (elem) {
+                    joiner = '^';
+                    each im M {
+                        sa = m[1];
+                        sa.s = sa.s.replace(/^\^|\^$/g,'');
+                        
+                    }
+                }
+                $N = [];
+                each im M {
+                    N.push(m[0]+m[1]);
+                }
+                M = N;
             }
             else {
                 $d = $.extend({},c);
@@ -126,7 +159,7 @@ EleOne: |        # #c ki
                 d.up = c;
                 M.push(ki(s,d));
             }
-            $m = M.join(",");
+            $m = M.join(joiner);
             $strlim = c.lum * 20 + 5;
             m.length > strlim + 10 and m = m.substr(0,strlim)+'..*'+M.length
             return m
@@ -156,6 +189,7 @@ EleOne: |        # #c ki
             }
             else
             if (s.constructor == Array) {
+                c.type = 'a';
                 !s.length and return '[]'
                 c.lum < 2 and return '[*'+s.length+']'
                 c.lum < 3 and return '['+li(s,c)+']'
