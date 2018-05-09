@@ -114,7 +114,10 @@ EleOne: |        # #c ki
                     d.k = k;
                     $ke = '';
                     c.saykey and ke = k+':';
-                    M.push(ke+ki(v,d));
+                    c.k == 'y' and d.d += 1;
+                    $sa = ki(v,d);
+                    sa.drawn == 'type:t' && k.match(sa.type+'$') and ke = k+';'; sa = v.t
+                    M.push(ke+sa);
                 }
             }
             else {
@@ -132,7 +135,16 @@ EleOne: |        # #c ki
             c ||= {dl:4};
             c.d ||= 1;
             c.d > 15 and throw "large ki";
-            $lum = c.lum = c.dl - c.d;
+            c.lum = c.dl - c.d;
+            delete c.saykey;
+            # turn c into string object, add knowing how it is drawn
+            $es = &s,drawn{
+                c.s = s;
+                drawn and c.drawn = drawn;
+                c.toString = &{ return this.s };
+                return c
+            };
+            
             
             if (s == null) {
                 return "n*ll"
@@ -145,8 +157,8 @@ EleOne: |        # #c ki
             else
             if (s.constructor == Array) {
                 !s.length and return '[]'
-                lum < 2 and return '[*'+s.length+']'
-                lum < 3 and return '['+li(s,c)+']'
+                c.lum < 2 and return '[*'+s.length+']'
+                c.lum < 3 and return '['+li(s,c)+']'
                 # '
             }
             else
@@ -156,9 +168,10 @@ EleOne: |        # #c ki
                 !ks.length and return '{}'
                 $type = s.y ? s.y == s ? 'A' : 'C' : 'd';
                 type == 'A' && s.1 == s and type = 'J'
+                c.type = type;
                 if (type != 'd') {
-                    type == A and lum -= 1
-                    lum < 2 and return '{'+type+':'+s.t+'}'
+                    type == A and c.lum -= 1
+                    c.lum < 2 and return es('{'+type+':'+s.t+'}','type:t')
                     if (type == 'C') {
                         return li(s,c,'t')+' '+li(s,c,'y')
                             +' '+li(s,c,'c')+' % '
@@ -168,14 +181,17 @@ EleOne: |        # #c ki
                     return '{'+li(s,c)+'}'
                 }
                 else {
-                    lum < 3 and return '{*'+ks.length+'}'
+                    c.lum < 3 and return '{*'+ks.length+'}'
                     return '{'+li(s,c)+'}'
                 }
                 
             }
             else
-            if (s.constructor && 0) {
-            
+            if (s.constructor+''.match(/^function HTML/)) {
+                $t = s.getAttribute('t');
+                t ||= s.tagName.toLowerCase();
+                return es('^'+t+"^",'html')
+                
             }
             else {
                 return "?"+s+"?"
@@ -233,36 +249,51 @@ EleOne: |        # #c ki
         # start looking at target
         if (s.target) {
             $S = s.target;
-            # anything with a t/cv, to make the usual us&p path
-            # path from last A outwards
-            $m = c&path_yon = [S];
+            # anything with a t/cv should make the usual us&p path
+            # path after the last A outwards, for the last A.1 to know
+            $m = c&path_yon = [];
+            !S.A and m.push(S);
             while (!S.A) {
                 !S.parentNode and break
                 S = S.parentNode;
                 m.unshift(S)
             }
-            # path through all A elements
-            #   may be some elements (S) without .A?
+            !m.length and delete c&path_yon
+            S.A and c&AS = S
+        }
+        
+        # if A found, start proper list from there up
+        if (c&AS) {
+            $S = c&AS;
+            delete c&AS;
+            # path through all elements on/between A, for A.3 to -> A.1
+            #   may be some elements S without .A?
+            # makes it to <body> who .A = A:top, window.A, A.1 == A.4
             $m = c&path = [S];
             while (S && !(S.A && S.A.1 == A.4)) {
                 !S.parentNode and break
                 S = S.parentNode;
                 m.unshift(S)
             }
-            # makes it to <body> who .A = A:top, window.A, A.1 == A.4
-            m[0] && !m[0].A and ~>77 NoA on first path: C
-            m[0] && m[0].A.1 != A.4 and ~>77 Didnt find 4 up: C
-            # reduce to unique Js
-            $m = c&Jat = [];
-            each iS c&path {
-                !S.A and continue
-                $la = m.slice(-1)[0];
-                la && la.1 == S.A.1 and continue
-                m.push(S.A.1)
-            }
         }
         
+        # path is elements, who might .A.1 = J
         if (c&path) {
+            # reduce to unique Js
+            $m = c&Jat = [];
+            $la;
+            each iS c&path {
+                !S.A and continue
+                $J = S.A.1;
+                J == la and continue
+                m.push(J)
+            }
+            !m.length and delete c&Jat
+            !c&Jat and ~>77 No Js, not even 4: ki(C)
+            
+            #m[0] && !m[0].A and ~>77 NoA on first path: ki(m), ki(c&path_yon)
+            #m[0] && m[0].A && m[0].A.1 != A.4 and ~>77 Didnt find 4 up: C
+            
             $S = c&path.slice(-1)[0];
             $Y = S.A;
             !Y and ~last had no A:
@@ -273,7 +304,10 @@ EleOne: |        # #c ki
             }
         }
         
+        # Jat path may have shape, A.2 != A.1.2, who knows
+        
         # C should now be interesting
+        C.t == c&type and delete c&type;
         
         $say = ['J:'];
         each iJ c&Jat {
