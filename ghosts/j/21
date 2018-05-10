@@ -288,7 +288,7 @@ NutTub: | # A tubeyness
         $per = A.t+'@'+A.cv;
         throw "async "+per+": "+s
     
-NutPhonics: | # practicalities
+NutPhonica: | # practicalities
     n NutSock
     n NutPhone
     n NutCons
@@ -474,14 +474,36 @@ NutCons: | # arcade-era interaction, logging
         # ls&B = Gc&B
         it.log = l;
         it.set = &t,s{
-            s = format(s);
+            s = format(s); #}
             $el = t == '$' ? it : $(it).find(t)[0];
             el == it and s = el.innerHTML + s
             !el and throw "unknown set: "+t, it
             el.innerHTML = s;
         };
         return it
+    
+    # keyjamming, lossy event surge control
+    # can tolerate notmany initially
+    jam: %acgt:Hz notmany
+        Hz ||= 5
+        $ms = 1000 / Hz;
         
+        $t = A.t;
+        $jams = 1s&jams = 1s&jams || {};
+        $jam = jams[t];
+        jam and return jam()
         
+        $times = 1;
+        $msg;
+        jams[t] = &{
+            times++ < notmany and return 0
+            if (!msg) { msg =
+                ~>38 jam: A.1.t, t, '>37:times', '>'+Hz+'Hz'
+            }
+            msg.set('times',times++);
+            return 1
+        };
+        G&yl:ms,&{ delete jams[t] };
+        return 0
     
 
