@@ -95,13 +95,14 @@ EleOne: |        # #c ki
         # ki leaves through here for singular squish factory,
         # optional c.keys
         $cvf = &cv{
-            m = cv+''.match(/^0\.(\d+)$/);
-            return m && m[1] || cv
+            m = (cv+'').match(/^0\.(\d+)$/);
+            return m && m.length ? m[1] : cv
         };
         $li = &s,c,k{
             $ks = c.ks;
+            $was = c;
             $c = $.extend({},c);
-            k and c.k = k; s = s[k];
+            k != null and c.k = k; s = s[k]; c.up = was;
             delete c.ks;
             $M = [];
             $joiner = ',';
@@ -114,6 +115,9 @@ EleOne: |        # #c ki
                 }
                 $elem = 1;
                 each ik ks {
+                    # could look at c.drawn but we're before/in the mouth of es()
+                    (c.type == 'A' || c.type == 'J') && c.k == 'y' && (k == 't' || k == 'y' || k == 'c' || k == 'sc') and continue
+                    
                     v = s[k]; # ]
                     $d = $.extend({},c);
                     d.d += 1;
@@ -125,7 +129,7 @@ EleOne: |        # #c ki
                     c.k == 'y' and d.d += 2;
                     $sa = ki(v,d);
                     
-                    c.k = 'y' && d.k == 'cv' && !sa.k and sa = cvf(sa); ke = '';
+                    c.k == 'y' && d.k == 'cv' && !sa.k and sa = cvf(sa); ke = '';
                     
                     elem && sa.drawn != 'html' and elem = 0;
                     if (elem && sa.drawn == 'html') {
@@ -150,6 +154,7 @@ EleOne: |        # #c ki
                     }
                     M.push([ke,sa]);
                 }
+                # #c whatjust 
                 if (elem) {
                     joiner = '^'; # conjoiner of inside elements
                     each im M {
@@ -165,8 +170,7 @@ EleOne: |        # #c ki
                     }
                 }
                 if (c.type == 'A' || c.type == 'J') {
-                    # bits in ks loop ^
-                    # && c.up && c.up.up && (c.up.up.type == 'A' || c.up.up.type == 'J')
+                    # bits in each ks ^
                     if (c.k == 'y') {
                         # the y of the A drawn tycsc
                         $L = [];
@@ -178,13 +182,10 @@ EleOne: |        # #c ki
                         $la;
                         each im M {
                             $sa = m[1];
+                            #typeof sa == 'string' and N.push(m); continue
                             if (typeof sa == 'string') {
-                                m[0] != 't:' and N.push(m);
-                                continue
                             }
-                            # ignore tycsc through the A.y=A
-                            sa.k == 't' || sa.k == 'y' || sa.k == 'c' || sa.k == 'sc' and continue
-                            sa.k == 'cv' and L.push(['',cvf(sa.v)+' ']); continue
+                            else
                             if (sa.k.match(/^\d+$/)) {
                                 la && la.s != sa.s and E.push([le,la]); la = 0
                                 le = la ?
@@ -194,9 +195,9 @@ EleOne: |        # #c ki
                                 la = sa;
                                 continue;
                             }
+                            sa.k == 'I' and continue;
                             N.push(m);
                         }
-                        console.log(s,C);
                         
                         la and E.push([le,la]);
                         
@@ -207,6 +208,7 @@ EleOne: |        # #c ki
                         M = N;
                     }
                 }
+                c.type == 'A' and console.log(M);
                 $N = [];
                 each im M {
                     # 'key:' label and its drawing, an overloaded object
@@ -290,12 +292,16 @@ EleOne: |        # #c ki
                 }
             }
             else
-            if (s.constructor+''.match(/^function HTML/)) {
+            if ((s.constructor+'').match(/^function HTML/)) {
                 $t = s.getAttribute && s.getAttribute('t');
                 t ||= s.tagName && s.tagName.toLowerCase();
                 t ||= s;
                 return es('^'+t+"^",'html')
                 
+            }
+            else
+            if (s.constructor == Function) {
+                return '&'+ G&arfgunc,s +'{*}';
             }
             else {
                 return "?"+s+"?"
