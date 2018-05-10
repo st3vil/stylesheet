@@ -312,7 +312,7 @@ NutServe: | # turns js W into a <script> with toc in C
         @codes;
     
     c&s = $s;
-        
+    
     return $C;
     
     
@@ -331,7 +331,7 @@ ServeC: | # atomic get/set, remote magic powers
         my $loca = '/js/'.C.t.'-'.c&ver.'.js';
         $c->res->headers->append(Ver => c&ver);
         $c->res->headers->append(Location => $loca);
-        $c->render(text=>"c&s",format=>"js");
+        $c->render(text=>decode_utf8("c&s"),format=>"js");
     };
     get '/js/:t' => &c{
         my $C = $c_to_tverC->($c);
@@ -378,7 +378,8 @@ ServeC: | # atomic get/set, remote magic powers
             Rw JaBabz $C:w;
             wc&s
         };
-        $c->render(text => $s,format=>"js");
+        $s =~ /^(.+?m\.replace(.+?))$/sgm && sayyl "Fuo:\n $1\n\n";
+        $c->render(text => decode_utf8($s),format=>"js");
     };
 StyleNut: | # unify NutMachine (newer) and Stylehut
     n Stylehut
