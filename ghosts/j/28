@@ -94,6 +94,10 @@ EleOne: |        # #c ki
     #
         # ki leaves through here for singular squish factory,
         # optional c.keys
+        $cvf = &cv{
+            m = cv+''.match(/^0\.(\d+)$/);
+            return m && m[1] || cv
+        };
         $li = &s,c,k{
             $ks = c.ks;
             $c = $.extend({},c);
@@ -118,8 +122,10 @@ EleOne: |        # #c ki
                     $ke = '';
                     c.saykey and ke = k+':';
                     
-                    c.k == 'y' and d.d += 1;
+                    c.k == 'y' and d.d += 2;
                     $sa = ki(v,d);
+                    
+                    c.k = 'y' && d.k == 'cv' && !sa.k and sa = cvf(sa); ke = '';
                     
                     elem && sa.drawn != 'html' and elem = 0;
                     if (elem && sa.drawn == 'html') {
@@ -137,7 +143,7 @@ EleOne: |        # #c ki
                         k.match(sa.type+'$') and ke = k+';'; sa = v.t
                         c.type == 'a' and sa.s = sa.s.replace(/^{|}$/g,'');
                     }
-                    if (sa.drawn == 'C') {
+                    if (sa.drawn == 'tycsc') {
                         # enclosed t y c sc
                         # smaller insides?
                         sa.s = '('+sa.s+')';
@@ -150,6 +156,55 @@ EleOne: |        # #c ki
                         sa = m[1];
                         sa.s = sa.s.replace(/^\^|\^$/g,'');
                         
+                    }
+                }
+                if (c.up && c.up.type == 'C' && c.k == 'y') {
+                    each im M {
+                        m[0] != 'cv:' and continue
+                        m[1] = cvf(m[1])
+                    }
+                }
+                if (c.type == 'A' || c.type == 'J') {
+                    # bits in ks loop ^
+                    # && c.up && c.up.up && (c.up.up.type == 'A' || c.up.up.type == 'J')
+                    if (c.k == 'y') {
+                        # the y of the A drawn tycsc
+                        $L = [];
+                        $E = [];
+                        $N = [];
+                        # last m[0] ke: label
+                        $le;
+                        # last m[1] sa thingstring
+                        $la;
+                        each im M {
+                            $sa = m[1];
+                            if (typeof sa == 'string') {
+                                m[0] != 't:' and N.push(m);
+                                continue
+                            }
+                            # ignore tycsc through the A.y=A
+                            sa.k == 't' || sa.k == 'y' || sa.k == 'c' || sa.k == 'sc' and continue
+                            sa.k == 'cv' and L.push(['',cvf(sa.v)+' ']); continue
+                            if (sa.k.match(/^\d+$/)) {
+                                la && la.s != sa.s and E.push([le,la]); la = 0
+                                le = la ?
+                                    le.replace(/(-\d+)?$/,'-'+sa.k)
+                                :
+                                    sa.k;
+                                la = sa;
+                                continue;
+                            }
+                            N.push(m);
+                        }
+                        console.log(s,C);
+                        
+                        la and E.push([le,la]);
+                        
+                        while (E.length)
+                            N.unshift(E.pop())
+                        while (L.length)
+                            N.unshift(L.pop())
+                        M = N;
                     }
                 }
                 $N = [];
@@ -218,24 +273,20 @@ EleOne: |        # #c ki
                 type == 'A' && s.1 == s and type = 'J'
                 c.type = type;
                 if (type != 'd') {
-                    type == 'A' and c.lum -= 2
+                    type == 'A' and c.lum -= 1
                     type == 'J' and c.lum -= 1
                     c.lum < 2 and return es('{'+type+':'+s.t+'}','type:t')
-                    if (type == 'C') {
-                        return es(
-                            li(s,c,'t')+' '+li(s,c,'y')
-                            +' '+li(s,c,'c')+' % '
-                            +li(s,c,'sc'),
-                            'C'
-                        )
-                            
-                    }
-                    c.ks = ['t','y','c','sc']; # idealism
-                    return '{'+li(s,c)+'}'
+                    # t y c sc mode, for a clean screen
+                    # A.on will be seen through A.y.on
+                    return es(
+                        li(s,c,'t')+' '+li(s,c,'y')
+                        +' '+li(s,c,'c')+' % '
+                        +li(s,c,'sc'),
+                        'tycsc')
                 }
                 else {
-                    c.lum < 3 and return '{*'+ks.length+'}'
-                    return '{'+li(s,c)+'}'
+                    c.lum < 3 and return es('{*'+ks.length+'}')
+                    return es('{'+li(s,c)+'}')
                 }
             }
             else
@@ -377,7 +428,6 @@ EleOne: |        # #c ki
         
         ~>68 news: ki(see)
         ~>78 ola: ki(A.up)
-        console.log(s,C);
         
         $limit = 10;
         $gp
