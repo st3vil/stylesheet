@@ -62,7 +62,12 @@ NutEl: | # be in
     # and finds its A.12223 (in reverse, path, and what to W)
     # to be able to
     ev 1: %any
-        G&way,'EleOne';
+        G&way,'EleVisAn',{},'noop';
+        G&way,'EleMento';
+    
+    # 
+    ev 2: %any
+        G&way,'EleVisAn'
     
     n \'of:e'
     # usu has an n of this J going on to make change happen in
@@ -90,7 +95,7 @@ NutEl: | # be in
     
     
     
-EleOne: |        # #c ki
+EleMento: |        # #c ki
     #
         # ki leaves through here for singular squish factory,
         # optional c.keys
@@ -325,10 +330,10 @@ EleOne: |        # #c ki
                 return "?"+s+"?"
             }
         };  
+        4s&ki = ki;
         
     #c find A, find J, find C
     # A may != the first A found up from event.target
-    4s&ki = ki;
     
         s = c&ev = A&ev;
         
@@ -379,6 +384,7 @@ EleOne: |        # #c ki
         # allow 3 exceptions per oscillation to 10Hz
         G&jam,10,3 and return
         
+        # TODO s (event) already has a nice s.path
         # start looking at target
         if (s.target) {
             $S = s.target;
@@ -420,6 +426,7 @@ EleOne: |        # #c ki
                 $J = S.A.1;
                 J == la and continue
                 m.push(J)
+                la = J;
             }
             !m.length and delete c&Jat
             !c&Jat and ~>77 No Js, not even 4: ki(C)
@@ -439,15 +446,11 @@ EleOne: |        # #c ki
         
         # Jat path may have shape, A.2 != A.1.2, who knows
         
-        
-        # #c get A:n
-        
         if (c&type == 'click' && s.clientX) {
             # relative to page? no pixel 0?
             c&coord = s.clientX +','+ s.clientY;
             # pageXOffset etc?
         }
-
         
         $tag = $(s.target);
         if (tag.val) {
@@ -456,11 +459,12 @@ EleOne: |        # #c ki
             C.t = 'input+'+C.t;
         }
         
-        ~>68 news: ki(C.c.s)
-        
-        
         # C should now be interesting
         C.t == c&type and delete c&type;
+        
+EleVisAn: | # event handler -> n someone
+        ~>68 news: ki(C.c.Jat)
+        
         
         
         ~>48 elvis: ki(C)
@@ -484,6 +488,8 @@ EleOne: |        # #c ki
                 ~>78 space:
             });
         }
+        
+        
         #A.t = 'e';
         #4s&N.push(A);
         
