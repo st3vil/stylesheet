@@ -260,7 +260,7 @@ EleOne: |        # #c ki
             $es = &s,drawn{
                 c.s = s;
                 drawn and c.drawn = drawn;
-                c.toString = &{ return this.s };
+                c.toString = &{ return ''+this.s };
                 c.d == 1 and return ''+c;
                 return c
             };
@@ -279,8 +279,7 @@ EleOne: |        # #c ki
                 c.type = 'a';
                 !s.length and return '[]'
                 c.lum < 2 and return '[*'+s.length+']'
-                c.lum < 3 and return '['+li(s,c)+']'
-                # '
+                return '['+li(s,c)+']'
             }
             else
             if (s.constructor == Object) {
@@ -288,6 +287,8 @@ EleOne: |        # #c ki
                 $ks = Object.keys(s);
                 !ks.length and return '{}'
                 $type = s.y ? s.y == s ? 'A' : 'C' : 'd';
+                !(s.c && s.sc && s.t != null) and type = 'd';
+                type == 'C' && ks.length > 4 and type = 'd';
                 type == 'A' && s.1 == s and type = 'J'
                 c.type = type;
                 if (type != 'd') {
@@ -306,6 +307,7 @@ EleOne: |        # #c ki
                     c.lum < 3 and return es('{*'+ks.length+'}')
                     return es('{'+li(s,c)+'}')
                 }
+                return ''+s
             }
             else
             if ((s.constructor+'').match(/^function HTML/)) {
@@ -344,6 +346,7 @@ EleOne: |        # #c ki
 
             c&key = String.fromCharCode(s.keyCode);
             c&which == 27 and c&key = 'esc'
+            c&which == 32 and c&key = 'space'
             c&key == "\r" and c&key = "\n"
         }
         
@@ -597,4 +600,81 @@ ElTakeNote: | # event that-ers
         h and G&$h,d
         T.letevent and h = 0;
         return h
+NutText: | # subverse valuar, for editables s&e
+    u js
+    # of html?
+    n \'of:om'
+    # 
+    # s&e - elvisy, likes events, text, could be sliders, pads,
+    #  something that emits c&e for itself
+    
+    # anything fragile and elvisable should have a dige on it,
+    # which becomes es&parent when submit,
+    # to know it's working off latest
+    # and so it can send patches and check they worked
+    # dig() in javascript?
+    e 2: %of:n
+        s&dige = c&s.length;
+    
+    # el 333 to not put c&s as .text, something should eat it
+    e 2:
+        a&noinnerText = 1;
+    # every element has an A
+    any 4: %any
+        A.on.A = A;
+    
+    # file:///home/s/shed/public/codemirror/demo/complete.html
+    e 6:
+        $cm = A.b.cm;
+        
+        $set = {mode:'perl',theme:'midnight',lineWrapping:true};
+        if (cm) {
+            each kv set {
+                cm.setOption(k,v)
+            }
+        }
+        else {
+            cm = CodeMirror(A.on, set);
+        }
+        A.b.cm = cm;
+        
+        if (c&s) {
+            # a string starts or updates
+            $was = A.b.givens;
+            $is = cm.getValue();
+            if (was && is && was != is && is != c&s) {
+                ~>27 Merge: A.1.t, C.t
+                # look for a way to patch keeping both changes
+                # a was->is and a was->c&s,
+                # pi about it,
+                # and give reset button, merge tool, but not lose any data:
+                # send to the G:oner
+                console.log("Merged off ",A.1.t,C.t,is);
+            }
+            cm.setValue(c&s);
+            A.b.givens = c&s;
+            A.b.dige = s&dige;
+        }
+        
+        # an e springs through here for its id
+        A.b.eintro = &e{
+            e.t = 'says';
+            ec&s = cm.getValue();
+            es&parent = A.b.dige;
+        };
+        
+        cm.refresh();
+        G&yl:400,&{ cm.refresh() };
+        
+        $sav = &{ G&gev };
+        cm.setOption('extraKeys', {
+            Esc: sav,
+            "Ctrl-Q": &cm{ cm.foldCode(cm.getCursor()); },
+        });
+        cm.on('focus',function(){G.clof();G.keof();});
+        cm.on('blur',function(ev,of,inn){G.clon();G.keon();sav();});
+    
+    #    $('#'+id).css('width','15em','max-height','70%','overflow','scroll');
+    #   $('#'+id+' > .CodeMirror');//.css('height','auto');
+    
 
