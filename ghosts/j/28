@@ -228,7 +228,6 @@ EleMento: |        # #c ki
                         M = N;
                     }
                 }
-                c.type == 'A' and console.log(M);
                 $N = [];
                 each im M {
                     # 'key:' label and its drawing, an overloaded object
@@ -337,6 +336,9 @@ EleMento: |        # #c ki
     
         s = c&ev = A&ev;
         
+        # allow 3 exceptions per oscillation to 10Hz
+        G&jam,10,3 and return
+        
         C.t = c&type = s.type;
         s&emotion = 3;
         
@@ -381,8 +383,21 @@ EleMento: |        # #c ki
             spec and c&spec = spec; # make into us&S, us&C etc?
         }
         
-        # allow 3 exceptions per oscillation to 10Hz
-        G&jam,10,3 and return
+        if (c&type == 'click' && s.clientX) {
+            # relative to page? no pixel 0?
+            c&coord = s.clientX +','+ s.clientY;
+            # pageXOffset etc?
+        }
+        
+        $tag = $(s.target);
+        if (tag.val && tag.val().length) {
+            $k = c&s != null ? 'val' : 's';
+            C.c[k] = tag.val();
+            C.t = 'input+'+C.t;
+        }
+        
+        # C should now be interesting
+        C.t == c&type and delete c&type;
         
         # TODO s (event) already has a nice s.path
         # start looking at target
@@ -446,28 +461,12 @@ EleMento: |        # #c ki
         
         # Jat path may have shape, A.2 != A.1.2, who knows
         
-        if (c&type == 'click' && s.clientX) {
-            # relative to page? no pixel 0?
-            c&coord = s.clientX +','+ s.clientY;
-            # pageXOffset etc?
-        }
-        
-        $tag = $(s.target);
-        if (tag.val) {
-            $k = c&s != null ? 'val' : 's';
-            C.c[k] = tag.val();
-            C.t = 'input+'+C.t;
-        }
-        
-        # C should now be interesting
-        C.t == c&type and delete c&type;
-        
 EleVisAn: | # event handler -> n someone
-        ~>68 news: ki(C.c.Jat)
+        ki = 4s&ki;
         
         
         
-        ~>48 elvis: ki(C)
+        ~>48 elvis3: ki(C)
         $az = G&Cye,['yo',5,{s:'lalala'},{re:'554',en:3}];
         
         $see = G&Cye,['tango',22,{e:C},{la:'hn',na:3,z:[az]}];
@@ -476,18 +475,26 @@ EleVisAn: | # event handler -> n someone
         
         
         # C -> e on a C for the A.3
-        
         $e = C;
+        if (0) {
         C = A&s = G&Cye,["Typ"];
         c&e = e;
+        }
         
-        e.t == 'A' and G&Jin
+        
+        e.t == 'A' and c&doi = 'Jin'
+        e.t == 'C' and c&doi = G&Typ
+        e.t == 'G' and c&doi = G&begoin
+        e.t == 'T' and c&doi = G&Tri
         
         if (ec&key == "\n") {
             [1,2,3,4,5].filter(&{
                 ~>78 space:
             });
         }
+        
+        c&doi and c&did = 'i'; return G&h,c&doi
+        
         
         
         #A.t = 'e';

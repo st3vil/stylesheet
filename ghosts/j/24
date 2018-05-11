@@ -182,13 +182,15 @@ NutThing: | # name of thing, outside I?
             };
             $r = $.ajax(get);
             r.done(done);
+            $checks = 5;
             $check = &{
                 is_done and return;
-                r.statusText != 'OK' and throw "Failed request: "+r.statusText
+                !r.statusText && checks-- > 0 and return G&yl,150,check;
+                r.statusText != 'OK' and throw "Weird ajaxtus: "+r.statusText
                 ~>57 waylo: t
                 done(r.responseText, 'success', r);
             };
-            G&yl,150,check;
+            check();
             #~w?: t
             !cb and G&TuneTimeMachine,'w:'+t
             return
@@ -209,6 +211,7 @@ NutThing: | # name of thing, outside I?
                 4s&namedcode[name] = wc&code;
             }
         }
+        cb == 'noop' and return
         
         return wc&code(A,C,G,T,ar);
     
