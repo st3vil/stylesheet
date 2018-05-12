@@ -193,8 +193,12 @@ AndContinue: | # Jin stuff
     $begins = G&time;
     $ki = 4s&ki;
     
+    # Y means other A, from outside itself
     # bring back A that went async (Y)
     # Js&N=[Y+] and then also Ys&N=[Y+]
+    #   getting attention to flow to what was using it
+    
+    # then venn diagram of waiting-n >< busy-u
     
     # a female J 8 introspector that demands J 6 action when ...
     
@@ -222,8 +226,10 @@ AndContinue: | # Jin stuff
     # < make G&c objecty, truncate, click items
     #   even a J on a stable G...
     
-    # dedupe/group operation:
-    # da (de|gr) (c sip|$func)
+    # < compressed notation for where/what it is from this A
+    
+    # < general dedupe/group operation:
+    #     da (de|gr) (c sip|$func)
     $dedup_by_sip = &N,seen{
         seen ||= {};
         $M = [];
@@ -235,26 +241,10 @@ AndContinue: | # Jin stuff
         }
         return M;
     };
-    
-    # describe an A
-            # < compressed notation for where/what it is from this A
-            # and amongst these things
-            # and the A:n etc it's for/underneath,
-            #   even slowlaned N for the A:n and the A:u, rapido A:u',
-            #   made of A:u's having a&N of A:u which a&N the A:n
-            #   structure can be seen as directional,
-            #   the lower, less pointed to stuff works out first,
-            #   then we give attention to what was using it (a&N)
-            # then venn diagram of waiting-n >< busy-u
-    # return objects that stringify, or regroup
+    # < use ki's es object so we can click into things
     $sa = &Y{
         return Y.t
     };
-    # describe an N
-    $lim = &{};
-    $squa = &{};
-    
-    
     
     # gather J with J&N
     $Js = [];
@@ -268,45 +258,28 @@ AndContinue: | # Jin stuff
     # J.t: [t,y,c,{J,N,name}]
     1s&needs ||= {};
     $needs = [];
+    $seen = {}; # sip: [Y+] to dedup A and relieve from Js&N later
     each iJ Js {
-        # could care/prioritise dup A?
-        $seen = {};
-        Js&N = dedup_by_sip(Js&N,seen);
-        $N = Js&N.slice();
-        
-        # persist so ready=0 can be ttl'd,
-        $n = 1s&needs[J.t];
-        n ||= G&Cye,[J.t,''];
-        1s&needs[J.t] = n;
-        
-        # if ns&N, see what's different?
-        $what = [];
-        ns&what ||= [];
-        each iY N {
-            $see = seen[Yc&sip];
-            see = see.length > 1 ? "*"+see.length : "";
-            what.push(sa(Y)+see);
-        }
-        ns&J = J;
-        ns&N = N;
-        ns&name = what.join(',');
+        # persist so ready=0 and feedback loops can be ttl'd,
+        $n = 1s&needs[J.t] = 1s&needs[J.t] || G&Cye,[J.t,''];
         needs.push(n);
+        
+        # could care/prioritise dup A?
+        ns&J = J;
+        ns&N = dedup_by_sip(Js&N,seen);
     }
     
-    
-    #c away order needs by elabourate infinity
+    # #c away order needs by elabourate infinity
     # all items resonate
-    # for A:s/osc in another G?
+    # simulate in A:s/osc in another G?
     
-    $seen = {}; # sip
+    $kiM = {};
     each in needs {
-        $J = ns&J;
-        $N = ns&N;
-        $M = [];
-        $kiM = {};
-        each iY N {
-            # things to relieve from Js&N later
-            seen[Yc&sip] = Y;
+        # add intel per Y
+        ns&M and ns&oM = ns&M;
+        ns&M = [];
+        each iY ns&N {
+            $m = G&Cye,[Y.t,'',{},{Y:Y}];
             
             if (!Yc&T) {
                 # A never G&thro, climb up to something we can sequence
@@ -314,73 +287,102 @@ AndContinue: | # Jin stuff
                 while (y && !yc&T && y.up) {
                     y = y.up;
                 }
-                ~>77 Yye: sa(Y), sa(y)
+                ms&Yfrom = Y;
+                m.t = y.t+"<-"+m.t;
                 Y = y
             }
+            ms&Y = Y;
+            ms&J = ns&J;
+            ms&n = n;
             
             # compress by the look of C
             if (Y.t == 'n') {
                 $s = ki(Yc&s);
                 kiM[s] ||= [];
-                kiM[s].push(Y);
+                kiM[s].push(m);
             }
             else {
-                M.push(Y);
+                ns&M.push(m);
             }
         }
-        # also puts A:n later
-        each sL kiM {
-            M.push(L[0]);
-            L.length != 1 and ~77 nC: 'x'+L.length, s
+    }
+    
+    # one C per unique C
+    # also puts A:n later
+    each sL kiM {
+        $m = L[0];
+        $n = ms&n;
+        ns&M.push(m);
+        L.length == 1 and continue
+        ms&Cdup = L.length;
+        each iy L {
+            # y: other m, see if same J
+            ys&J == ns&J and continue
+            ms&Joth ||= [];
+            ms&Joth.push(ys&J);
         }
-        ns&N = M;
     }
     
-    $sum = [];
+    # one Y per Y
+    # have already deduped by sip
     each in needs {
-        sum.push(ns&J.t+':'+ns&name);
+        each im ns&M {
+            $Y = ms&Y;
+            $L = seen[Yc&sip];
+            L.length > 1 and ms&Ydup = L.length;
+        }
     }
-    # capture element, put timestamp on
-    $it =
-    ~>3 Jin: ">55 "+ki(sum), '>:ms'
     
+    each in needs {
+        $J = ns&J;
+        ns&say = [">37 "+J.t];
+        $msay = [];
+        each im ns&M {
+            $s = m.t;
+            ms&Ydup and s += '*'+ms&Ydup;
+            ms&Cdup and s += '*C'+ms&Cdup;
+            if (ms&Joth) {
+                $Js = $(ms&Joth).map(&i,v{ return v.t }).join("+");
+                s += '+'+Js
+            }
+            msay.push(s);
+        }
+        ns&say.push(">65 "+msay.join(','));
+    }
+    
+    # title(s) of Jin, gets delta later
+    $it =
+    ~>3 Jin: '*'+needs.length, '>:ms'
+    each in needs {
+        G&c:'>4 Jin\'',ns&say
+    }
+    
+        
+    #c thro'ing
     # T a flow pauser/queue in here
     # batch[time] = needs
     # good for testing!
+    # catch errors? could be the most normal place to
+    # notice success?
     
-    #c thro'ing
-    $seen = {}; # sip
+    if (4s&batch) {
+        # etc? hash items iterate in order defined
+        # call the rest of this w ToThrow?
+    }
+    
     each in needs {
-        $J = ns&J;
-        $N = ns&N;
-        $soN = ns&sip_oN = {}; # sip: N # Js&N future?
-        each iY N {
-            seen[Yc&sip] = Y;
-            
+        each im ns&M {
+            Y = ms&Y;
             # try wind it up with its own cv/ov
             G&thro,Y;
-            # catch errors? could be the most normal place to
-            # notice success?
             
-            $oN = Ys&N;
-            !(oN && oN.length) and continue
-            # get A backlinks every time around
-            oN = Ys&N = dedup_by_sip(oN);
-            # oN deduped but never tidied up?
-            #   want centralised A:u' to remember all the scattered A:u,
-            #    who can find where they are in Js, which would point
-            #      the desire to a s&mind of the Js&u
-            #      the A:u A.2 is J, A.1 is Js&u, which could be found...
-            #   A:u u to forget the passing clusping,
-            #   although maybe the last copy of it would be good dome resync clues
-            #   domes seem like A but structural of J
-            # keep if they a&retaiN?
-            soN[Yc&sip] = oN;
+            # A then A
+            Ys&N && Ys&N.length and ms&YIN = [];
         }
     }
     
-    # delete things we did
-    # TODO make into a "drain thingses" thing
+    # Js&N: relieved of the seen
+    #  it may have been added to since it became ns&N
     each in needs {
         $J = ns&J;
         $N = [];
@@ -391,28 +393,53 @@ AndContinue: | # Jin stuff
         Js&N = N;
     }
     
-    # insert things that emerged from doing
+    # Ys&N: gives Js&N things that emerged from doing
     each in needs {
         $J = ns&J;
-        $soN = ns&sip_oN;
-        !soN and continue
-        each sip,N soN {
-            $Y = seen[sip];
-            $aliens = [];
-            each iy N {
-                ~Jinmore: J.t, ki(Y), ki(y)
-                # Ys&N should drain sometimes...
-                # they could be ongoing wake-parent paths
-                # classify being, see above
-                !yc&T and aliens.push(i)
-                
-                Js&N.push(y)
+        each im ns&M {
+            !ms&YIN and continue
+            $Y = ms&Y;
+            $N = [];
+            $yiin = {};
+            each iy Ys&N {
+                # this is a relation to others
+                # to whom attention should flow to
+                # they link each other repeatedly
+                #  they should persist the A, or this will flood
+                yiin[yc&sip] and continue
+                yiin[yc&sip] = y;
+                # Js&N to have
+                ms&YIN.push(y); 
+                # don't keep A without T (G&thro sets A&T)
+                #  we might want to anyway, or not even if so
+                # !A&T are probably transient A,
+                #  used to frame the action but not sequence it,
+                #  giving no direct way to resume it,
+                #  unless we A.up to find something we can sequence
+                # eg:
+                #  A:u' (A&T) wakes W where it's grouped:
+                #  A:u (A&T) groups W used by the:
+                #  A:clusping (!A&T), whose A:n above is retargeted
+                # but the A:clusping may not be there:
+                #  the A:u' live in 5s&mind, could indep. wake up:
+                #  the A:u on your 1s&minds, to try and reapply itself:
+                # if Ys&N, do that (eg A:clusping)
+                # or translate that energy to a wake-J deal,
+                #  perhaps knowing what dome that A:u serves
+                #   domes seem like A but structural of J
+                #  by the way G&clusp might work
+                !yc&T and continue
+                # Ys&N to keep
+                N.push(y);
             }
-            # remove things this A doesn't permanently N to
-            # so the A:u can't link to the A:n they do,
-            # because they go via A.clusping, which is alien (non thro A)
-            each ai aliens {
-                Ys&N.splice(i,1)
+            Ys&N = N;
+            $say = $(ms&YIN).map(&i,y{ return y.t }).join(',');
+            # }
+            ~>55 YIN: J.t+"'s", Y.t, say
+            
+            # if auto-YIN-next-Jin away:
+            each iy ms&YIN {
+                Js&N.push(y);
             }
         }
     }
