@@ -119,7 +119,6 @@ NutC: | # start C-ing
         $la = Gc&B;
         la = la.y.up;
         if (A.t == 'ev' || la.t != A.1.t) {
-            console.log("INstalled", G);
             $c = {W:1};
             $on = $('body > h2#'+la.t)[0];
             on and c.on = on
@@ -259,11 +258,11 @@ AndContinue: | # Jin stuff
         N && N.length and Js.push(J);
     }}
     
-    # identify who and create a needs object
-    # J.t: [t,y,c,{J,N,name}]
+    # persist a needs for each J
     1s&needs ||= {};
     $needs = [];
-    $seen = {}; # sip: [Y+] to dedup A and relieve from Js&N later
+    # sip = [Y+] to dedup A and relieve from Js&N later
+    $seen = {};
     each iJ Js {
         # persist so ready=0 and feedback loops can be ttl'd,
         $n = 1s&needs[J.t] = 1s&needs[J.t] || G&Cye,[J.t,''];
@@ -274,10 +273,13 @@ AndContinue: | # Jin stuff
         ns&N = dedup_by_sip(Js&N,seen);
     }
     
-    # #c away order needs by elabourate infinity
+    #c away to order needs by elabourate infinity
     # all items resonate
     # simulate in A:s/osc in another G?
     
+    # each need (n) has (sM) a bunch of matters,
+    # containing (sY) the A that came out of ns&Js&N
+    # it's free to move around and get complicated
     $kiM = {};
     each in needs {
         # add intel per Y
@@ -334,6 +336,11 @@ AndContinue: | # Jin stuff
         each im ns&M {
             $Y = ms&Y;
             $L = seen[Yc&sip];
+            if (!L) {
+                $f = ms&Yfrom;
+                !(f && seen[fc&sip]) and throw "Wherefrom?";
+                L = seen[fc&sip]
+            }
             L.length > 1 and ms&Ydup = L.length;
         }
     }
@@ -347,7 +354,7 @@ AndContinue: | # Jin stuff
             ms&Ydup and s += '*'+ms&Ydup;
             ms&Cdup and s += '*C'+ms&Cdup;
             if (ms&Joth) {
-                $Js = $(ms&Joth).map(&i,v{ return v.t }).join("+");
+                $Js = ms&Joth.map(&j{ return j }).join("+");
                 s += '+'+Js
             }
             msay.push(s);
@@ -438,9 +445,10 @@ AndContinue: | # Jin stuff
                 N.push(y);
             }
             Ys&N = N;
-            $say = $(ms&YIN).map(&i,y{ return y.t }).join(',');
+            $say = ms&YIN.map(&y{ return y.t }).join(',');
             # }
-            ~>55 YIN: J.t+"'s", Y.t, say
+            $src = '<-- '+Y.t+(Yc&s ? ' '+ki(Yc&s) : '');
+            ~>55 YIN: J.t+"'s", say, src
             
             # if auto-YIN-next-Jin away:
             each iy ms&YIN {
