@@ -408,7 +408,7 @@ EleMento: |        # #c ki
         # C should now be interesting
         C.t == c&type and delete c&type;
         
-        # TODO s (event) already has a nice s.path
+        #c TODO s (event) already has a nice s.path
         # start looking at target
         if (s.target) {
             $S = s.target;
@@ -498,6 +498,8 @@ EleVisAn: | # event handler -> n someone
         e.t == 'C' and c&doi = 'Typ'
         e.t == 'G' and c&doi = 'begoin'
         e.t == 'T' and c&doi = 'Tri'
+        
+        e.t == 'input+esc' and e.t = 'say'
         
         if (ec&key == "\n") {
             [1,2,3,4,5].filter(&{
@@ -668,7 +670,7 @@ NutText: | # subverse valuar, for editables s&e
             $was = A.b.givens;
             $is = cm.getValue();
             if (was && is && was != is && is != c&s) {
-                ~>27 Merge: A.1.t, C.t
+                ~>97 Merge: A.1.t, C.t
                 # look for a way to patch keeping both changes
                 # a was->is and a was->c&s,
                 # pi about it,
@@ -693,9 +695,21 @@ NutText: | # subverse valuar, for editables s&e
         
         $sav = &{ G&gev };
         cm.setOption('extraKeys', {
-            Esc: sav,
+            'Esc': sav,
+            # TODO doesn't work?
             "Ctrl-Q": &cm{ cm.foldCode(cm.getCursor()); },
         });
+        
+        # when markers can be used for these things:
+        # cm.setOption('lineNumbers',true);
+        # cm.setOption('foldGutter',true);
+        # cm.setOption('gutters',
+        #["CodeMirror-foldgutter"]);
+        
+        # TODO use/upload/download markers, fold with them
+        # have them able to be open or closed to the next marker of same dp..
+        # cm.foldCode(CodeMirror.Pos(21, 0));
+        
         cm.on('focus',function(){G.clof();G.keof();});
         cm.on('blur',function(ev,of,inn){G.clon();G.keon();sav();});
     
