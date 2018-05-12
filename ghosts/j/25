@@ -222,15 +222,16 @@ AndContinue: | # Jin stuff
     # < make G&c objecty, truncate, click items
     #   even a J on a stable G...
     
+    # dedupe/group operation:
     # da (de|gr) (c sip|$func)
-    $dedup_by_sip = &N{
-        $seen = {};
+    $dedup_by_sip = &N,seen{
+        seen ||= {};
         $M = [];
         each is N {
             !sc&sip and throw "Has no sip: "+i, s
-            seen[sc&sip] and continue
-            seen[sc&sip] = s;
-            M.push(s);
+            see = seen[sc&sip] = seen[sc&sip] || [];
+            see.push(s);
+            see.length == 1 and M.push(s);
         }
         return M;
     };
@@ -269,7 +270,9 @@ AndContinue: | # Jin stuff
     $needs = [];
     each iJ Js {
         # could care/prioritise dup A?
-        $N = dedup_by_sip(Js&N);
+        $seen = {};
+        Js&N = dedup_by_sip(Js&N,seen);
+        $N = Js&N.slice();
         
         # persist so ready=0 can be ttl'd,
         $n = 1s&needs[J.t];
@@ -278,8 +281,11 @@ AndContinue: | # Jin stuff
         
         # if ns&N, see what's different?
         $what = [];
+        ns&what ||= [];
         each iY N {
-            what.push(sa(Y));
+            $see = seen[Yc&sip];
+            see = see.length > 1 ? "*"+see.length : "";
+            what.push(sa(Y)+see);
         }
         ns&J = J;
         ns&N = N;
@@ -297,39 +303,46 @@ AndContinue: | # Jin stuff
         $J = ns&J;
         $N = ns&N;
         $M = [];
+        $kiM = {};
         each iY N {
             # things to relieve from Js&N later
             seen[Yc&sip] = Y;
             
-            # retarget
-            $y = Y;
-            while (y && !yc&T && y.up) {
-                # climb up to something we can sequence
-                # would cT if it ever thro'd
-                y = y.up;
+            if (!Yc&T) {
+                # A never G&thro, climb up to something we can sequence
+                $y = Y;
+                while (y && !yc&T && y.up) {
+                    y = y.up;
+                }
+                ~>77 Yye: sa(Y), sa(y)
+                Y = y
             }
-            y != Y and ~Yy: sa(Y), sa(y)
-            Y = y;
             
-            # diff multiple A:n C
+            # compress by the look of C
             if (Y.t == 'n') {
-                # TODO ki2 the C, equate things together and do once
-                #   when many otherwise same, elvising should be able to group
-                #   many A:n elvising may be able to do 1 A:n with many A:e
-                #     you might get that working later, stream processing items
+                $s = ki(Yc&s);
+                kiM[s] ||= [];
+                kiM[s].push(Y);
             }
-            
-            M.push(Y);
+            else {
+                M.push(Y);
+            }
         }
+        # also puts A:n later
+        each sL kiM {
+            M.push(L[0]);
+            L.length != 1 and ~77 nC: 'x'+L.length, s
+        }
+        ns&N = M;
     }
     
     $sum = [];
     each in needs {
-        sum.push(ns&name);
+        sum.push(ns&J.t+':'+ns&name);
     }
     # capture element, put timestamp on
     $it =
-    ~>3 Jin: ">54 "+ki(sum), '>:ms'
+    ~>3 Jin: ">55 "+ki(sum), '>:ms'
     
     # T a flow pauser/queue in here
     # batch[time] = needs
@@ -343,17 +356,6 @@ AndContinue: | # Jin stuff
         $soN = ns&sip_oN = {}; # sip: N # Js&N future?
         each iY N {
             seen[Yc&sip] = Y;
-            
-            # TODO detect Y-y wander earlier, group same A:n
-            $y = Y;
-            while (y && !yc&T && y.up) {
-                # climb up to something we can sequence
-                # would cT if it ever thro'd
-                # all items resonate
-                y = y.up;
-            }
-            y != Y and ~Yy: sa(Y), sa(y)
-            Y = y;
             
             # try wind it up with its own cv/ov
             G&thro,Y;
@@ -398,7 +400,7 @@ AndContinue: | # Jin stuff
             $Y = seen[sip];
             $aliens = [];
             each iy N {
-                ~Jinmore: J.t, sa(Y), sa(y)
+                ~Jinmore: J.t, ki(Y), ki(y)
                 # Ys&N should drain sometimes...
                 # they could be ongoing wake-parent paths
                 # classify being, see above
@@ -407,6 +409,8 @@ AndContinue: | # Jin stuff
                 Js&N.push(y)
             }
             # remove things this A doesn't permanently N to
+            # so the A:u can't link to the A:n they do,
+            # because they go via A.clusping, which is alien (non thro A)
             each ai aliens {
                 Ys&N.splice(i,1)
             }
