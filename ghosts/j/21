@@ -81,6 +81,7 @@ NutSea: | # line etc into C
             C.t = s[0];
             C.y = s[1];
             C.c = s[2];
+            s.length == 1 and C.c = {W:C.t}
             C.sc = s[3];
             typeof C.c  === 'string' and C.c =  G&peel,C.c
             typeof C.sc === 'string' and C.sc = G&peel,C.sc
@@ -89,17 +90,35 @@ NutSea: | # line etc into C
         
         !typeof C.t === 'string' and throw "Non string t: ", C;
         
+        C.c ||= {};
+        
+        C.sc ||= {};
+        
         if (typeof C.y == 'string' || typeof C.y == 'number') {
-            C.y * 1 != C.y and throw "Non number y left: ", C
+            $i = 1
+            while (C.y * 1 != C.y) {
+                i++ > 5 and throw "MAAANY";
+                # to W other than C.t? call extra parsers?
+                $t   = /^([a-z0-9\/]+)($|_)/i;
+                $pi = /^-([a-z0-9\/]+)($|_)/i;
+                if (C.y.match(t)) {
+                    c&W = C.y.match(t)[1];
+                    c&W == 'W' and c&W = C.t;
+                    C.y = C.y.replace(t,'');
+                }
+                else
+                if (C.y.match(pi)) {
+                    c&pi = C.y.match(pi)[1];
+                    C.y = C.y.replace(pi,'');
+                }
+                else { throw "Non number y left: "+4s&ki(C) }
+            }
             C.y = {cv: C.y };
         }
         C.y ||= {};
         C.y.cv < 0 and C.y.cv *= -1;
         C.y.cv > 1 and C.y.cv = G&sca,C.y.cv;
         
-        C.c ||= {};
-        
-        C.sc ||= {};
         return C;
     
     # utils/inlineables
