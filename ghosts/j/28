@@ -67,28 +67,47 @@ NutEl: | # be in
         G&way,'EleVisAn',{},'noop';
         G&way,'EleMento';
     
-    # events handled real fast,
-    # OR makes A:n to a found J to go make change happen in
-    #  and switches A.t to 'e', done with being an event,
-    #   build an A:n C to c&e this A:e C, and take over flow control
-    #  < ev or e can get lost/pointless/broke and should be helped
+    # events handled real fast, OR plan for A:n made
     ev 2: %any
         G&way,'EleVisAn';
+    
+    # A:n to a found J to go make change happen in
+    #  and switches A.t to 'e', done with being an event,
+    #   build an A:n C to c&e this A:e C, and take over flow control
+    
+    # make a new T for continuing
+    #  could T.seek.2=A:n?
+    ev 3: %any
+        $n = a&wouldn;
+        !n and return
+        A&T = $.extend({},T);
+        T.whack = 1;
+        A.t = 'e';
+        G&n,n;
         
+    #  < ev or e can get lost/pointless/broke and should be helped
+    # events may have to pile up to become meaningful?
+    ev 4: %any
+        ~broken event: C.t
     
     n \'of:e'
-    # has an n of this J going on to make change happen in
-    # or if coming from event rather than
+    # $E = A:e, $e = A:n's c&e
+    # stereo channel for J with e acting itself out somehow
+    # the A:e used to be A:ev, if it was from an event (starts at 2)
     ewalksin 1: %any
         ~eONE: C.t, s.t, A&sip
     
     # A:n c&e springs into consciousness
-    # A:e is tugged along with A:n/Jing
+    #  (or A:ev resumes itself as A:e, from an A:n contacting clickee)
+    # A:e is tugged along with A:n/Jing every 0.1
+    #  unless its waiting for event handlers to clarify
     e 2: %of:n
-        ~n-e: C.t, s.t
-        s.y.A ||= G&Aye,'e',2,{s:s};
-        A.e = s.y.A;
-        s.y.A.n = A;
+        $e = s;
+        # springs
+        ~ne: C.t, e.t
+        $E = e.y.A = e.y.A || G&Aye,'e',2,{s:e};
+        A.e = E;
+        E.n = A;
         G&thro,A.e,2;
     
     # look through handlers, or wait for clearer time...
@@ -342,6 +361,7 @@ EleMento: |        # #c ki
     # A may != the first A found up from event.target
     
         s = c&ev = A&ev;
+        C.y.A = A;
         
         # one A:ev per event
         if (4s&last_event == s) {
@@ -511,24 +531,14 @@ EleVisAn: | # event handler -> n someone
         }
         W[0] == A.4 and W.shift();
         
-        console.log(c&Jat);
         W.length > 1 and ~>9 Wnesting: ki(W)
         # Four listens to everything you say,
         # makes art as a way to store entropy
         !W.length and return
         W = W[0];
         
-        ~>18 to make: ki(W)
+        a&wouldn = [W.t,'W',{e:C}];
         
-        C.y.A = A;
-        A.t = 'e';
-        T.not = 1;
-        
-        # n adds to ground (on 4)
-        $l =
-        G&n,[W.t,'W',{e:C}];
-        
-        ~>18 receipt: ki(l)
         #A.t = 'e';
         #4s&N.push(A);
         
