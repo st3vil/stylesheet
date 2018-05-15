@@ -161,7 +161,8 @@ EleMento: |        # #c ki
                     c.k == 'y' and d.d += 2;
                     $sa = ki(v,d);
                     
-                    c.k == 'y' && d.k == 'cv' && !sa.k and sa = cvf(sa); ke = '';
+                    # a number on its own is the cv
+                    c.k == 'y' && d.k == 'cv' && sa.drawn == 'string' and sa.s = cvf(v); ke = '';
                     
                     elem && sa.drawn != 'html' and elem = 0;
                     if (elem && sa.drawn == 'html') {
@@ -197,46 +198,70 @@ EleMento: |        # #c ki
                 }
                 if (c.up && c.up.type == 'C' && c.k == 'y') {
                     each im M {
-                        m[0] != 'cv:' and continue
-                        m[1] = cvf(m[1])
+                        m[0] == 'cv:' and m[1] = cvf(m[1])
                     }
                 }
                 if (c.type == 'A' || c.type == 'J') {
                     # bits in each ks ^
                     if (c.k == 'y') {
-                        # the y of the A drawn tycsc
-                        $L = [];
-                        $E = [];
+                        # split out A.\d, points on wormhole slope
+                        $Jnet = {};
                         $N = [];
-                        # last m[0] ke: label
-                        $le;
-                        # last m[1] sa thingstring
-                        $la;
+                        $cvm;
                         each im M {
                             $sa = m[1];
-                            #typeof sa == 'string' and N.push(m); continue
-                            if (typeof sa == 'string') {
-                            }
-                            else
-                            if (sa.k.match(/^\d+$/)) {
-                                la && la.s != sa.s and E.push([le,la]); la = 0
-                                le = la ?
-                                    le.replace(/(-\d+)?$/,'-'+sa.k)
-                                :
-                                    sa.k;
-                                la = sa;
-                                continue;
-                            }
+                            # not es() intel object
+                            typeof sa == 'string' and N.push(m); continue
+                            # take out cv, prefix to Jnet
+                            sa.k == 'cv' and cvm = m; continue
+                            # take out Jnet numbers
+                            sa.k.match(/^\d+$/) and Jnet[sa.k] = sa; continue
+                            # we can see properties of string and undefined:
+                            # J.2 usually == J.up
+                            sa.k == 'up' && sa.v == c.v.2 and continue;
                             sa.k == 'I' and continue;
                             N.push(m);
                         }
-                        
-                        la and E.push([le,la]);
-                        
-                        while (E.length)
-                            N.unshift(E.pop())
-                        while (L.length)
-                            N.unshift(L.pop())
+                        # crunch them together implicitively
+                        $Jnek = Object.keys(Jnet);
+                        if (Jnek.length) {
+                            Jnek.sort();
+                            $E = [];
+                            $la;
+                            each in Jnek {
+                                $d = Jnet[n];
+                                d.type != 'J' and throw "JnetnotJ: "+ki(d)
+                                $l = la && Jnet[la.k];
+                                if (l) {
+                                    # same J takes highest number
+                                    l.v == d.v and E.pop()
+                                }
+                                if (n > 3) {
+                                    n == 4 && !E.length and E.push('1-4')
+                                    # leave off fqdn 4/5, if same as here
+                                    d.v == A[n] and continue
+                                }
+                                # dont say 2 if its 4 
+                                n == 2 && d.v == c.v.4 and continue
+                                # and if 1,3 etc is it
+                                d.v == c.v && d.v != c.v.4 and E.push(n); continue
+                                E.push(d);
+                                la = d;
+                            }
+                            $netname = [];
+                            each id E {
+                                typeof d != 'string' and d = d.v.t
+                                netname.push(d);
+                            }
+                            netname = netname.join('.');
+                            # cv can prefix a net name
+                            if (cvm) {
+                                netname = cvm[1] +'@'+ netname;
+                                cvm = null;
+                            }
+                            N.unshift(['',netname]);
+                        }
+                        cvm and N.unshift(cvm);
                         M = N;
                     }
                     else
@@ -287,6 +312,7 @@ EleMento: |        # #c ki
             c.d > 15 and throw "large ki";
             c.lum = c.dl - c.d;
             delete c.saykey;
+            c.v = s;
             # turn c into string object, add knowing how it is drawn
             $es = &s,drawn{
                 c.s = s;
@@ -302,8 +328,8 @@ EleMento: |        # #c ki
             }
             else
             if (typeof s == 'number' || typeof s == 'string') {
-                s+''.match(/^\w+$/) and return s;
-                return "'"+s+"'";
+                !(s+'').match(/^\w+$/) and s = "'"+s+"'";
+                return es(s,'string');
             }
             else
             if (s.constructor == Array) {
@@ -526,6 +552,7 @@ EleVisAn: | # event handler -> n someone
         c&doi and c&did = 'i'; return G&h,c&doi
         delete T.el;
         
+        
         !c&Jat and return;
         
         $Js = c&Jat.slice();
@@ -540,6 +567,9 @@ EleVisAn: | # event handler -> n someone
         # makes art as a way to store entropy
         !W.length and return
         W = W[0];
+        
+        ~>28 one: ki(W)
+        ~>28 Two: ki(A)
         
         a&wouldn = [W.t,'W',{e:C}];
         
