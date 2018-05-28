@@ -343,35 +343,44 @@ NutBung: | # getting W from I, D from B, and errorifics
     # when error
     # < communicate to thro if handley
     # generic linkage to source finding?
+    # TODO error object maker (er != string)
+    # via window.onerror, msg like "Uncaught "+er
+    # the throw async is an abort rather than error,
+    #   things should be tested to handle such things properly
+    #   domes should add checkpoints to abort to
+    # TODO make a devtools link? B stack crawler/playback?
     Ban: %acgt:msg url lineNo colNo er
-        $style = "font-size:156%,color:red";
-        # catch up innard
-        $mid = Math.random().toPrecision().match('\.(\\d+)')[1];
-        mid = 'id'+mid;
-        $fil = &s,append{
-            $lin = $('a#'+mid)[0];
-            append and s = lin.innerHTML + s
-            lin.innerHTML = s;
-        };
-        $say = msg+'<a id="'+mid+'" href="#" style="color:white">?<a>';
+        if (typeof er == 'string') {
+            if (er.match(/^async /)) {
+                G&c:'>9 '+er;
+                return
+            }
+        }
         
-        $W
-        $ver
+        msg.replace(/^Uncaught /,'');
+        $m = [
+            G&intag:'>97 !'
+            ,G&intag:'>75:Wtitle'
+            ,G&intag:'>9:Bangmsg '+msg
+            ,G&intag:'>4:subinfo ?'
+        ];
         
+        $it = G&c:m.join(' ');
+        console.log("er: ",msg,url,lineNo,er);
+        
+        # make sense of the resource
         $v = new URL(url);
         $src = v.pathname;
         $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
-        if (m) {
-            W = m[1];
-            ver = m[2];
-        }
-        $Wsay = '';
-        W and Wsay = W+': ';
-        $e = '<span style="'+style+'">! '+Wsay+say+'</span>';
-        G&c,e;
-        console.log("er: ",msg,url,lineNo,er);
         
-        !m and return fil(url);
+        if (!m) {
+            # other js resource
+            return it.set('subinfo', '?: '+url)
+        }
+        
+        # should be some A:u'
+        $W = m[1];
+        it.set('Wtitle',W);
         
         # get the lines, in the <script> already?
         $.ajax(src).done(&s,how,c{
@@ -396,15 +405,19 @@ NutBung: | # getting W from I, D from B, and errorifics
                 sub = fu[1]+cv+'/'+fu[3];
                 break
             }
-            sub ||= "see "+v;
-            fil(sub+": "+l);
+            sub ||= "?: "+src;
+            $m = [
+                G&intag:'>2:subtitle '+sub
+                ,G&intag:'>45:subline '+l
+            ];
+            it.set('subinfo', m.join(': '));
         });
         
         # check if current
         $.ajax('/js/'+W).done(&s,how,c{
             how != 'success' and throw "Ban faile: "+how, c;
             $rep = c.getResponseHeader('Location');
-            src != rep and fil("(old)",1);
+            src != rep and it.set('Wtitle',"(old)",1);
         });
         
         
