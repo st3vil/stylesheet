@@ -589,9 +589,9 @@ EleVisAn: | # event handler -> n someone
         e.y.ev = A;
         
         ec&key == 'A' and c&doi = 'Jin'
-        e.t == 'C' and c&doi = 'Typ'
-        e.t == 'G' and c&doi = 'begoin'
-        e.t == 'T' and c&doi = 'Tri'
+        ec&key == 'C' and c&doi = 'Typ'
+        ec&key == 'G' and c&doi = 'begoin'
+        ec&key == 'T' and c&doi = 'Tri'
         
         # satisfaction with the call/elvising?
         T.el = 1;
@@ -755,24 +755,27 @@ NutText: | # subverse valuar, for editables s&e
     # el 333 to not put c&s as .text, something should eat it
     e 2:
         a&noinnerText = 1;
+        if (s == '2') {
+            c&tag = 'input';
+            s&inv = 1;
+            s&textinput = 1;
+        }
+        else {
+            s&codemirror = 1;
+        }
+    
     # every element has an A
     any 4: %any
         A.on.A = A;
     
     # file:///home/s/shed/public/codemirror/demo/complete.html
-    e 6:
-        $cm = A.b.cm;
-        
-        $set = {mode:'perl',theme:'midnight',lineWrapping:true};
-        if (cm) {
-            each kv set {
-                cm.setOption(k,v)
-            }
-        }
-        else {
-            cm = CodeMirror(A.on, set);
-        }
-        A.b.cm = cm;
+    codemirror 6:
+        $cm = A.b.cm = A.b.cm || CodeMirror(
+            A.on,
+            {mode:'perl',theme:'midnight',lineWrapping:true}
+        );
+        # set options later:
+        # cm.setOption(k,v)
         
         if (c&s) {
             # a string starts or updates
@@ -826,4 +829,12 @@ NutText: | # subverse valuar, for editables s&e
     #    $('#'+id).css('width','15em','max-height','70%','overflow','scroll');
     #   $('#'+id+' > .CodeMirror');//.css('height','auto');
     
+    textinput 6:
+        if (c&s != null) {
+            v.value = c&s;
+        }
+        $el = $(A.on);
+        el.on('focus',function(){G.clof();G.keof();});
+        el.on('click',function(){G.clof();G.keof();});
+        el.on('blur',function(ev,of,inn){G.clon();G.keon();G&gev });
 
