@@ -98,10 +98,11 @@ NutC: | # start C-ing
     # the general J 8, starting from A.4
     Jin:
         A.1.t != 'Four' and ~wherefour
+        # toggle
+        s && s.t == 'S+A' and return G&waylay,'Jinloop';
         # thinking
         G&Jinthe,'reset_event_listeners';
         G&waylay,'AndContinue';
-    
     
     # C: collect chatter
     # create error, order its fixing
@@ -115,6 +116,23 @@ NutC: | # start C-ing
         A.1.t != 'Tri' and return G&n,['Tri'];
         
         G&way,A.1.t;
+    
+Jinloop: | # stub for a G&jamit, callback at given frequency forever
+    $el = $('h2#Jin');
+    if (1s&looping) {
+        delete 1s&looping;
+        el.text("A");
+    }
+    else {
+        el.text("A°");
+        $lo = 1s&looping = Math.random();
+        $op = &{
+            lo != 1s&looping and return
+            G&delay,0.5,op;
+            G&waylay,'AndContinue';
+        };
+        op();
+    }
     
 Typ: | # exact lounge
     # TO give at a glance a pretty good idea of where you are
