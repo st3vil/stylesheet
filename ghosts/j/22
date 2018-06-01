@@ -339,7 +339,7 @@ ServeC: | # atomic get/set, remote magic powers
         $c->res->headers->append(Location => $loca);
         $c->render(text=>decode_utf8("c&s")); # ,format=>"js"
     };
-    get '/js/:t' => &c{
+    get '/js/*t' => &c{
         my $C = $c_to_tverC->($c);
         Rw NutServe $C
             || return $c->reply->not_found;
@@ -362,7 +362,7 @@ ServeC: | # atomic get/set, remote magic powers
     #  save doings
     # first persist thing
     # all W, making ghost is over the line to nice
-    get '/do/:get' => &c{
+    get '/do/*get' => &c{
         if (my $get = $c->param('get')) {
             my ($who,$does,$what) = $get =~ /^(\w+)'s (\w+) (\w+)$/;
             #`tail G.t/p/$who`
@@ -374,7 +374,7 @@ ServeC: | # atomic get/set, remote magic powers
     };
     # the way
     # < Accept headers to get the various translations
-    get '/way/:way' => &c{
+    get '/way/*way' => &c{
         my $t = $c->param('way');
         $t =~ s/\W+/-/g;
         my $w = G&t,w=>$t;
