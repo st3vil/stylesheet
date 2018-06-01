@@ -83,7 +83,7 @@ NutEl: | # be in
     # events may have to pile up to become meaningful?
     # < G&vent for handling various uncertainties in various situations
     ev 4: %any
-        ~broken event: C.t
+        a&msg.set("state","no");
     
     
     #c A:n c&e springs into consciousness
@@ -566,7 +566,7 @@ EleMento: |        # #c ki
             !Y and ~last had no A:
             $giveth = Y.b && Y.b.eintro;
             if (giveth) {
-                ~asking: ki(Y)
+                #~asking: ki(Y)
                 giveth(C);
             }
         }
@@ -580,12 +580,21 @@ EleVisAn: | # event handler -> n someone
         # group meanings
         e.t == 'input+esc' and e.t = 'says'
         
+        # reorder hash, put lesser info later
+        $bor = ['ev','coord'];
+        each it bor {
+            $v = e.c[t];
+            delete e.c[t];
+            e.c[t] = v;
+        }
+        
         # simplify keypress
         $norm = /^[A-Z] A;ev ev:\{\*\d+},type:keydown,key:[A-Z],path:\[body],Jat:\[J:Four] % emotion:3$/;
         $el = ki(e);
         el.match(norm) and el = e.t;
         
-        ~>8 ev: el
+        a&msg =
+        ~>8 ev: '>15:state', el
         e.y.ev = A;
         
         # from NutText,
@@ -593,7 +602,7 @@ EleVisAn: | # event handler -> n someone
         # throws out events like click, keypress other than esc/enter
         if (c&noisyinput) {
             if (c&type != 'blur' && c&key != 'esc' && c&key != "\n") {
-                ~>3 evnoise:
+                a&msg.set("state","noise");
                 return T.not = 1;
             }
         }
@@ -619,6 +628,7 @@ EleVisAn: | # event handler -> n someone
         # become unsatisfied, seek handling in J
         delete T.el;
         
+        a&msg.set("state","Jing");
         !c&Jat and return;
         
         $Js = c&Jat.slice();
