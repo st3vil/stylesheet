@@ -17,14 +17,20 @@ NutConsciousness: |
         1s&drains ||= {};
         $d = 1s&drains[g.t] = 1s&drains[g.t] || G&Cye,g;
         $was = ds&z;
-        ds&z = $.unique(gs&z).filter(&C,i{
-            !C.t || !C.y || !C.c || !C.sc and throw "low on C: ", C
+        ds&z = [];
+        each iC gs&z {
+            # C-form complete enough
+            null == C.t || !C.y || !C.c || !C.sc and throw "nonC: "+4s&ki(C)
+            # not what is not
             $Y = C.y.A;
-            if (Y && (Yc&T.not || C.sc.not)) {
-                return 0
+            Y && (Yc&T.not || C.sc.not) and continue
+            # not what is already
+            $dup = 0;
+            each iD ds&z {
+                D == C and dup = 1
             }
-            return 1;
-        });
+            !dup and ds&z.push(C);
+        }
         $r = 1s&root;
         !r and throw "how to hold many"
         
@@ -89,7 +95,7 @@ NutConsciousness: |
         s&v ||= 0;
         $chsymb = '-'; # stillness?
         
-        # consequence change
+        #c consequence change
         s&lv ||= [];
         if (lv.length) {
             s&v++;
@@ -100,12 +106,13 @@ NutConsciousness: |
             each iD lv {
                 D.y.OC == r and lr = D
             }
-            # which may not be 
+            # which may not be
             lr ||= G&Cye,[r.t,{cv:r.y.cv,OC:r},{el:3}];
             # contains everything else
-            lrs&z = $(lv).filter(&i,D{
-                return D.y.OC != r
-            });
+            lrs&z = [];
+            each iD lv {
+                D.y.OC != r and lrs&z.push(D)
+            }
             s&lv.push(lr);
         }
         
