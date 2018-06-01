@@ -271,6 +271,10 @@ AndContinue: | # Jin stuff
     $begins = G&time;
     $ki = 4s&ki;
     
+    Gc&Continues ||= 1;
+    Gc&Continues++;
+    Gc&Continues > 33 and Gc&Continues = 0; G&waylay,'AndTidy';
+    
     # Y means other A, from outside itself
     # bring back A that went async (Y)
     # Js&N=[Y+] and then also Ys&N=[Y+]
@@ -546,4 +550,8 @@ AndContinue: | # Jin stuff
     $delta = G&time,begins;
     $si = delta > 20 ? '8' : delta > 10 ? '7' : '';
     it.set('ms', '>7'+si+' '+G&thime,delta );
+AndTidy: | # every 30-second jobs...
+    # for G&c, top-posting <m> under #msgs 
+    $m = $('body #msgs').children();
+    m.length > 90 and m.slice(90).remove();
 
