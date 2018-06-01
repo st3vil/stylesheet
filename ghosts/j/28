@@ -85,7 +85,6 @@ NutEl: | # be in
     ev 4: %any
         ~broken event: C.t
     
-    n \'of:n'
     
     #c A:n c&e springs into consciousness
     # A:e, tugged along with A:n/Jing every 0.1
@@ -94,6 +93,7 @@ NutEl: | # be in
     
     # if some retry-ish thing is happening?
     # Y && (Y.t != 'ev' || e.y.ev != Y) and throw "Interesting e A: "+4s&ki(e);
+    n \'of:n'
     e 2:
         $e = s;
         $Y = e.y.A;
@@ -444,8 +444,8 @@ EleMento: |        # #c ki
         }
         4s&last_event = s
         
-        # allow 3 exceptions per oscillation to 10Hz
-        G&jam,10,3 and return
+        # allow 3 exceptions to 10Hz
+        G&jam,10,3 and return T.not = 1;
         
         C.t = c&type = s.type;
         s&emotion = 3;
@@ -588,21 +588,36 @@ EleVisAn: | # event handler -> n someone
         ~>8 ev: el
         e.y.ev = A;
         
-        ec&key == 'A' and c&doi = 'Jin'
-        ec&key == 'C' and c&doi = 'Typ'
-        ec&key == 'G' and c&doi = 'begoin'
-        ec&key == 'T' and c&doi = 'Tri'
+        # from NutText,
+        # unless wanting to watch typing as it happens,
+        # throws out events like click, keypress other than esc/enter
+        if (c&noisyinput) {
+            if (c&type != 'blur' && c&key != 'esc' && c&key != "\n") {
+                ~>3 evnoise:
+                return T.not = 1;
+            }
+        }
         
         # satisfaction with the call/elvising?
         T.el = 1;
-        if (ec&key == "\n") {
-            return [1,2,3,4,5].filter(&{
-                ~>78 space:
-            });
+        
+        # body genera
+        if (ec&path && ec&path.length == 1) {
+            ec&key == 'A' and c&doi = 'Jin'
+            ec&key == 'C' and c&doi = 'Typ'
+            ec&key == 'G' and c&doi = 'begoin'
+            ec&key == 'T' and c&doi = 'Tri'
+        
+            if (ec&key == "\n") {
+                return [1,2,3,4,5].filter(&{
+                    ~>78 space:
+                });
+            }
         }
         c&doi and c&did = 'i'; return G&h,c&doi,e
-        delete T.el;
         
+        # become unsatisfied, seek handling in J
+        delete T.el;
         
         !c&Jat and return;
         
@@ -830,11 +845,16 @@ NutText: | # subverse valuar, for editables s&e
     #   $('#'+id+' > .CodeMirror');//.css('height','auto');
     
     textinput 6:
-        if (c&s != null) {
-            v.value = c&s;
-        }
-        $el = $(A.on);
-        el.on('focus',function(){G.clof();G.keof();});
-        el.on('click',function(){G.clof();G.keof();});
-        el.on('blur',function(ev,of,inn){G.clon();G.keon();G&gev });
+        c&s != null and A.on.value = c&s;
+        
+        # an e springs through here for its id
+        A.b.eintro = &e{
+            e.t = 'says';
+            # we default to ec&s $(A.on).val()
+            # unless wanting to watch typing as it happens,
+            # throws out events like click, keypress other than esc/enter
+            ec&noisyinput = 1;
+        };
+        
+        $(A.on).on('blur',function(ev,of,inn){G&gev });
 
