@@ -868,6 +868,10 @@ function inspectNode(object, objects, duplicatesIndexes) {
       index,
       length;
   
+  if (window.maxyamling && window.maxyamling < objects.length) {
+    throw new YAMLException("Too much to yaml");
+  }
+
   if (object !== null && typeof object === 'object') {
     index = objects.indexOf(object);
     if (index !== -1) {
