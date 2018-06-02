@@ -1,0 +1,361 @@
+NutLands: | # reading bay/el/Figures/1,2 and etc
+    u jc
+    n \'of:om'
+    
+    # s&lv spawns a c&lv within itself
+    lv 66: %nk:sc
+        G&om,[C.t,'',{lv:s},C.sc]
+    
+    # c&lv haps before/without el creating an element 
+    # G&nn manually to A.b self
+    # G&oms the lv at the same A.on
+    lv 17:
+        $b = A.b;
+        G&nn;
+        A.b.lv ||= {};
+        $lv = A.b.lv;
+        s&f and lv.f = s&f;
+        !lv.f and ~die~LVnof: C, lv
+        lv.haN ||= {};
+        A.b = b;
+        !c&seeks and c&seeks = [s];
+        t$
+        $.each(c&seeks, &i,v{
+            lv.haN[v] and return
+            t ||= v
+        });
+        if (t) {
+            $.ajax('shed/'+lv.f+'/h/'+t).done(&L{
+                !L.length and ~noL: lv.f, t
+                T.readinglv = lv.f+'/h/'+t;
+                $l = lv.haN[t] = G&readLines,L;
+                !l.length and ~nolinesin: t
+                l = l[l.length-1];
+                $h = ''
+                ls&parent and h = 'v '+ls&parent;
+                ~lvread: C.t, t, h
+                ls&parent and c&seeks.push(ls&parent);
+                G&yl:30,&{ G&throat,7 };
+            });
+            return T.not = '2';
+        }
+        // now from oldest to newest
+        c&seeks.reverse();
+        if (lv.ha) {
+            $is
+            $.each(c&seeks, &i,v{
+                lv.ha === v and is = 1;
+            });
+            while (is && c&seeks.length) {
+                while (c&seeks[0] === lv.ha) {
+                    c&seeks.shift();
+                    is = 0;
+                }
+                is and c&seeks.shift();
+            }
+        }
+        $ii = 0;
+        $wi = 0;
+        $ha;
+        $.each(c&seeks, &i,t{
+            ii++;
+            $N = lv.haN[t];
+            $.each(N, &i,v{
+                wi++;
+                G&om,v;
+            });
+            ha = t;
+        });
+        
+        $bumps = ii+'x'+wi;
+        ~wlv: C.t, s, lv.ha, bumps
+        ha and lv.ha = ha;
+        return T.not = 1;
+        
+        
+    
+    #c Lines - should Wunify remote file seeings
+    
+    n \'of:i'
+    u j
+    readLines:
+        $L = s.split("\n");
+        $oL = [];
+        $tot = L.length;
+        $N = [];
+        $stack = [];
+        $paniconce = 0;
+        
+        while (L.length) {
+        
+        $l = L.shift();
+        oL.push(l);
+        !l.length and continue
+        $lin = l.match(/^(\s*)(.*)$/);
+        $ind = lin[1];
+        $d = ind.length / 2;
+        l = lin[2];
+        $li = l.split("\t");
+        $t = li[0];
+        $y = li[1];
+        $c = li[2];
+        $sc = li[3];
+        $s = li[4];
+        
+        t.match(/^\W/) and t = $.parseJSON(t);
+        
+        y ||= 1
+        y = 1*('0.'+y);
+        
+        if (s && s.match(/^\W/)) {
+            s = $.parseJSON(s);
+        }
+        if (c && c.match('^"')) {
+            s = $.parseJSON(c);
+            c = {};
+        }
+        else if (c && c.match(/^\W/)) {
+            c = $.parseJSON(c)
+        }
+        else if (c) {
+            c = G&peel,c
+        }
+        else { c = {} }
+        
+        s and c.s = s;
+        
+        if (sc && sc.match(/^\W/)) {
+            sc = $.parseJSON(sc)
+        }
+        else if (sc) {
+            sc = G&peel,sc
+        }
+        else { sc = {} }
+        
+        $C = {t:t,y:{cv:y},c:c,sc:sc};
+        
+        $k
+        $v
+        $indenting = &{
+            !L.length and return;
+            $m = L[0].match("^"+ind+"  (\\w[\\w ]+):(?: (\\||.+))?$");
+            !m and return;
+            k = m[1];
+            v = m[2];
+            return 1;
+        };
+        while (indenting()) {
+            $string
+            if (v === '|') {
+                string = 1;
+                v = undefined;
+            }
+            v && v.match(/^\W/) and v = $.parseJSON(v)
+            L.shift();
+            k = k.split(' ');
+            $nk = k.shift();
+            $gk = k.join(' ');
+            if (!v) {
+                $s = [];
+                $one;
+                $blockquoting = &{
+                    !L.length and return;
+                    $m = L[0].match("^"+ind+"    (.*)$");
+                    !m and return;
+                    one = m[1];
+                    return 1;
+                }
+                while (blockquoting()) {
+                    s.push(one);
+                    L.shift();
+                }
+                v = s.join("\n");
+                //console.log("Loaded "+nk+gk+": "+v+'  Next: '+L[0]);
+                if (!string) {
+                    v = jsyaml.load(v);
+                }
+                else {
+                    !v.match(/\n$/) and v = v+"\n"
+                }
+            }
+            C[nk][gk] = v;
+        }
+        
+        d.toFixed() != d and ~fractionalind: d, C, T.readinglv
+        d = 1 * d.toFixed();
+        if (d > 0) {
+            $p
+            $dl = d;
+            while (dl--) {
+                p = stack[dl];
+                p and break
+            }
+            if (dl < d - 1) {
+                $few = oL.slice(-3);
+                if (! paniconce++)
+                    ~toomuchind: d, dl, T.readinglv, few
+                d = dl+1;
+            }
+            ps&z ||= [];
+            ps&z.push(C);
+            // tv/tw/in/next?
+            // a mass inCing
+        }
+        else {
+            N.push(C);
+        }
+        stack[d] = C;
+        while (stack[d+1])
+            stack.pop();
+        
+        }
+        return N
+        
+NutLine: | # C stringifies into tabby line
+    # for Beach to read
+    $C = $s if $s;
+    my $t = C.t;
+    my $y = C.y.cv;
+    $y =~ s/^0\.//;
+    
+    # aims for simplicity of notation for G&C, G&peel
+    # block quotes (BQ) big strings or data after the  line
+    # uses json for anything complicated
+    # z insides done by the process around this one Line
+    #  - they have the same indent as BQs
+    #    but their t should json or not look like BQ
+    
+    my $h; # hath
+    h.c  = { %{C.c ||{}} };
+    h.sc = { %{C.sc||{}} };
+    my $n = {}; # needs json
+    my $q = {}; # needs blockquote
+    
+    # check out how sayable the values on the line are
+    my $simp = &s{
+        $s =~ /^\w[\w\.\-\/]*$/s && $s !~ /\n$/ && length $s < 24
+    };
+    each nk,gk,v $h {
+        unless ($simp->($gk)) {
+            $n.>$nk.>$gk = $v;
+            next;
+        }
+        if (ref $v) {
+            if (G&oleak,$v,4 ) {
+                G&oleak,$v,24 && die "Leaky $nk $gk: ".ki $v;
+                # big enough to quote, simplifies remainder
+                $q.>$nk.>$gk = $v;
+            }
+            else {
+                # ref too small to quote, json hemisphere
+                $n.>$nk.>$gk = $v;
+            }
+        }
+        else {
+            if (length $v > 42 && $v =~ /\n/) {
+                # long enough to quote
+                $q.>$nk.>$gk = $v;
+            }
+            elsif ($simp->($v)) {
+                # decipherable to G&peel
+            }
+            else {
+                # midway to unwieldy
+                $n.>$nk.>$gk = $v;
+            }
+        }
+    }}
+    
+    # quote freaks, if just a few break the peelability of many
+    each nk,g $n { 
+        my $v = $h.>$nk;
+        next if !keys%$v;
+        next if grep{!$simp->($_)}keys %$g;
+        if (keys(%$g) / keys(%$v) < 0.3) {
+            $q.>$nk.>$_ = $h.>$nk.>$_ for keys %$g;
+        }
+    }
+    
+    # remove quoted things and their need of json from the line
+    each nk,gk,v $q {
+        delete $h.>$nk.>$gk;
+        delete $n.>$nk.>$gk;
+    }}
+    each nk,gks $n {
+        delete $n.>$nk if !%$gks; # all freaks got quoted
+    }
+    
+    # get a json encoded string
+    my $enj = &s{
+        $s = sjson[$s];
+        $s =~ s/^\[|\]$//sg;
+        $s
+    };
+    
+    # t can be messy
+    my $l = $simp->($t) ? $t : $enj->($t);
+    
+    # y.cv = 1 is implied
+    $l .= "\t".($y ne '1' ? $y : '');
+    
+    # throw it one way or another
+    for my $nk (qw'c sc') {
+        my $v = $h.>$nk;
+        if ($nk eq 'c' && 0 == keys %$v) {
+            # blank
+            $l .= "\t";
+        }
+        elsif ($nk eq 'c' && 1 == keys%$v && v.s) {
+            # t y "the s" sc
+            $l .= "\t".$enj->(v.s);
+        }
+        elsif ($n.>$nk) {
+            # t y {c} {sc}
+            $l .= "\t".$enj->($v);
+        }
+        elsif (keys %$v) {
+            # t y W:At et:3,se:te
+            my @k = sort keys %$v;
+            $l .= "\t".join",",map{ "$_:".$v.>$_ } @k;
+        }
+    }
+    
+    my @l;
+    #c add quoted things at the z indent
+    # < quoting with Line other N/C looking vals
+    each nk,gk,v $q {
+        my $k = "  $nk $gk:";
+        if (ref $v) {
+            # BQ yaml data
+            $v = Dump $v;
+            $v =~ s/^--- \n//s;
+            $v = join "\n", map{"    $_"}split"\n",$v;
+            $k .= "\n".$v;
+        }
+        elsif ($simp->($v)) {
+            # simple strings
+            # not confusible into 'Thing 2'
+            $k .= " $v";
+        }
+        elsif ($v !~ /\n$/) {
+            # BQ implies trailing \n
+            $k .= " ".$enj->($v);
+        }
+        else {
+            # BQ string
+            $k .= " |\n".join "\n", map{"    $_"}split"\n",$v;
+        }
+        push @l, $k
+    }}
+    
+    @l = sort @l;
+    my @large;
+    @l = grep{$_} map {
+        if (300 < length $_) {
+            push @large, $_;
+            undef
+        } else { $_ };
+    } @l;
+    $l = join "\n", $l, @l, @large;
+    
+    $l
