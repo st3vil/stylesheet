@@ -194,7 +194,9 @@ NutThing: | # name of thing, outside I?
                 D.y.tw ||= {};
                 D.y.tw[t] = w;
                 ws&now = G&time;
-                
+                # < check it compiles? but we don't know its args,
+                #   unless they are vaguely known by bumping into compile errors
+                #   awaiting better field recording (MelTest frontier of)
                 a&ready = 1;
                 #~w!: t
                 if (cb) {
@@ -229,11 +231,14 @@ NutThing: | # name of thing, outside I?
             return
         }
         
+        ar ||= {};
+        $args = G&ks,ar;
+        args != wc&code_args and delete wc&code;
         # code is already JaBabz'd
         # < CoArgulate for ar, put as knowable source file?
         # < make it c.code and G&h for a B?
         if (!wc&code) {
-            $name = 'w_'+w.t+'_'+ws&dige;
+            $name = 'w_'+w.t+'_'+ws&dige+'_'+args;
             name = name.replace(/\W+/g,'_');
             4s&namedcode ||= {};
             $code = 4s&namedcode[name];
@@ -241,13 +246,26 @@ NutThing: | # name of thing, outside I?
                 wc&code = code;
             }
             else {
-                eval('wc&code = function '+name+"(A,C,G,T,ar){\n"+wc&s+"}");
+                $tar = 'ar';
+                args and tar += ','+args;
+                eval('wc&code = function '+name+"(A,C,G,T,"+tar+"){\n"+wc&s+"}");
                 4s&namedcode[name] = wc&code;
             }
+            wc&code_args = args;
         }
         cb == 'noop' and return
+        $arm = [];
+        $ark = args.split(',');
+        each ik ark {
+            arm.push(k);
+        }
+        $so = ar[arm[0]];
+        $st = ar[arm[1]];
+        $sh = ar[arm[2]];
+        $sf = ar[arm[3]];
+        $si = ar[arm[4]];
         
-        return wc&code(A,C,G,T,ar);
+        return wc&code(A,C,G,T,ar,so,st,sh,sf,si);
     
         
 NutMelt: | # puddles of W
