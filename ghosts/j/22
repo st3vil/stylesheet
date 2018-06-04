@@ -229,10 +229,10 @@ NutServe: | # turns js W into a <script> with toc in C
     
     C.t && exists c&ver || die "C not like t/ver: ".ki$C;
     
-    # look in the javascript u stash
-    local A.6.t = 'je';
-    my $f = G&Locate_read,C.t;
-    $f || return;
+    # look in the javascript u stashes
+    my @search = qw'ju je';
+    look: local A.6.t = shift(@search) || return;
+    my $f = G&Locate_read,C.t || goto look;
     # storage dep
     my $l = "$f/1";
     my $li = readlink $l;
@@ -583,10 +583,12 @@ NutProcess: | # TODO 456 resonance
 NutErupts: | # TODO standards
     # c&e/J requests
     n NutEl
-    
     # 72 load/save
-    #   should be in Dung
+    #   should be in Dung (2 know)
     #n NutPlacement
+    
+    # split onto topleveldom
+    #n NutLands
     
     # 8 numbers
     #   nice ways above the tubing
