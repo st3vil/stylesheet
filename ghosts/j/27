@@ -219,159 +219,193 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
         return N
         
     #c toLines - C to string
+    # one C, possibly many lines
+    # < use from o that can conjoin the many C
+    # butfirst, oleak tests depth of data structure, true if bigger than d
+    # < limit depth not number of nodes, reuse the encoding?
+    oleak: %acgt:s d
+        $fail = 0;
+        $was = window.maxyamling;
+        window.maxyamling = d * 3;
+        try { jsyaml.safeDump(s) }
+        catch (e) {
+            window.maxyamling = was;
+            e.message != "Too much to yaml" and throw e
+            fail = 1;
+        }
+        window.maxyamling = was;
+        return fail
     toLines:
         s and C = s;
-        s = 4s&ki(C);
-        s = s.replace(/ % /, "\t");
-        return s
-    
-    0&&
-    non:
-        # for Beach to read
-        $C = $s if $s;
-        my $t = C.t;
-        my $y = C.y.cv;
+        $t = C.t;
+        $y = C.y.cv;
         $y =~ s/^0\.//;
-
-        # aims for simplicity of notation for G&C, G&peel
+        # aims for simplicity of notation for G&readLines, G&C, G&peel
         # block quotes (BQ) big strings or data after the  line
         # uses json for anything complicated
         # z insides done by the process around this one Line
         #  - they have the same indent as BQs
         #    but their t should json or not look like BQ
-
-        my $h; # hath
-        h.c  = { %{C.c ||{}} };
-        h.sc = { %{C.sc||{}} };
-        my $n = {}; # needs json
-        my $q = {}; # needs blockquote
+        # hath
+        $h = {};
+        h.c  = $.extend({},C.c||{});
+        h.sc = $.extend({},C.sc||{});
+        # needs json
+        $n = {};
+        # needs blockquote
+        $q = {};
 
         # check out how sayable the values on the line are
-        my $simp = &s{
-            $s =~ /^\w[\w\.\-\/]*$/s && $s !~ /\n$/ && length $s < 24
+        $simp = &s{
+            s = ''+s;
+            return s.match(/^\w[\w\.\-\/]*$/) && s.length < 24
         };
-        each nk,gk,v $h {
-            unless ($simp->($gk)) {
-                $n.>$nk.>$gk = $v;
-                next;
+        # inject 2sphere
+        $lod = &n,nk,gk,v{
+            n[nk] ||= {};
+            n[nk][gk] = v;
+        };
+        each nk,gk,v h {
+            unless (simp(gk)) {
+                lod(n,nk,gk,v);
+                continue
             }
-            if (ref $v) {
-                if (G&oleak,$v,4 ) {
-                    G&oleak,$v,24 && die "Leaky $nk $gk: ".ki $v;
+            if (typeof v != 'string') {
+                if (G&oleak,v,4 ) {
+                    G&oleak,v,24 and throw "Leaky "+nk+"."+gk+": ".4s&ki(v);
                     # big enough to quote, simplifies remainder
-                    $q.>$nk.>$gk = $v;
+                    lod(q,nk,gk,v);
                 }
                 else {
                     # ref too small to quote, json hemisphere
-                    $n.>$nk.>$gk = $v;
+                    lod(n,nk,gk,v);
                 }
             }
             else {
-                if (length $v > 42 && $v =~ /\n/) {
+                if (v.length > 42 && v.match(/\n/)) {
                     # long enough to quote
-                    $q.>$nk.>$gk = $v;
+                    lod(q,nk,gk,v);
                 }
-                elsif ($simp->($v)) {
+                elsif (simp(v)) {
                     # decipherable to G&peel
                 }
                 else {
                     # midway to unwieldy
-                    $n.>$nk.>$gk = $v;
+                    lod(n,nk,gk,v);
                 }
             }
         }}
 
         # quote freaks, if just a few break the peelability of many
-        each nk,g $n { 
-            my $v = $h.>$nk;
-            next if !keys%$v;
-            next if grep{!$simp->($_)}keys %$g;
-            if (keys(%$g) / keys(%$v) < 0.3) {
-                $q.>$nk.>$_ = $h.>$nk.>$_ for keys %$g;
+        each nk,g n { 
+            $v = h[nk];
+            !Object.keys(v).length and continue;
+            $complex_keys;
+            each ik g {
+                !simp(k) and complex_keys = 1;
+            }
+            complex_keys and continue;
+            
+            if (Object.keys(g).length / Object.keys(v).length < 0.3) {
+                each ik g {
+                    lod(q,nk,k,h[nk][k]);
+                }
             }
         }
 
         # remove quoted things and their need of json from the line
-        each nk,gk,v $q {
-            delete $h.>$nk.>$gk;
-            delete $n.>$nk.>$gk;
+        each nk,gk,v q {
+            delete h[nk][gk];
+            delete n[nk][gk];
         }}
-        each nk,gks $n {
-            delete $n.>$nk if !%$gks; # all freaks got quoted
+        each nk,gks n {
+            !Object.keys(gks).length and delete n[nk] # all freaks got quoted
         }
-
-        # get a json encoded string
-        my $enj = &s{
-            $s = sjson[$s];
-            $s =~ s/^\[|\]$//sg;
-            $s
+        #c toLines encodes bits
+        $enj = &s{
+            return JSON.stringify(s);
         };
 
         # t can be messy
-        my $l = $simp->($t) ? $t : $enj->($t);
+        $l = simp(t) ? t : enj(t);
 
         # y.cv = 1 is implied
-        $l .= "\t".($y ne '1' ? $y : '');
+        $l += "\t".(y != '1' ? y : '');
 
         # throw it one way or another
-        for my $nk (qw'c sc') {
-            my $v = $h.>$nk;
-            if ($nk eq 'c' && 0 == keys %$v) {
+        $hem = ['c','sc'];
+        each i,nk hem {
+            $v = h[nk];
+            if (nk == 'c' && 0 == Object.keys(v).length) {
                 # blank
-                $l .= "\t";
+                l += "\t";
             }
-            elsif ($nk eq 'c' && 1 == keys%$v && v.s) {
+            elsif (nk == 'c' && 1 == Object.keys(v).length && v.s) {
                 # t y "the s" sc
-                $l .= "\t".$enj->(v.s);
+                l += "\t".enj(v.s);
             }
-            elsif ($n.>$nk) {
+            elsif (n[nk]) {
                 # t y {c} {sc}
-                $l .= "\t".$enj->($v);
+                l += "\t".enj(v);
             }
-            elsif (keys %$v) {
+            elsif (Object.keys(v).length) {
                 # t y W:At et:3,se:te
-                my @k = sort keys %$v;
-                $l .= "\t".join",",map{ "$_:".$v.>$_ } @k;
+                $ks = [Object.keys(v).sort()];
+                $hs = [];
+                each ik ks {
+                    hs.push(k+':'+v[k]);
+                }
+                l += "\t".hs.join(",");
             }
         }
 
-        my @l;
-        #c writeLines indented bits
+        $L = [];
+        #c toLines indented bits
         # < quoting with Line other N/C looking vals
-        each nk,gk,v $q {
-            my $k = "  $nk $gk:";
-            if (ref $v) {
+        each nk,gk,v q {
+            $k = "  "+nk+" "+gk+":";
+            if (typeof v != 'string') {
                 # BQ yaml data
-                $v = Dump $v;
-                $v =~ s/^--- \n//s;
-                $v = join "\n", map{"    $_"}split"\n",$v;
-                $k .= "\n".$v;
+                $v = jsyaml.safeDump(v);
+                $vs = [];
+                v = v.split("\n");
+                each is v {
+                    vs.push("    "+s);
+                }
+                k += "\n"+vs.join("\n");
             }
-            elsif ($simp->($v)) {
+            else if (simp(v)) {
                 # simple strings
                 # not confusible into 'Thing 2'
-                $k .= " $v";
+                k += " "+v;
             }
-            elsif ($v !~ /\n$/) {
+            else if (!v.match(/\n$/)) {
                 # BQ implies trailing \n
-                $k .= " ".$enj->($v);
+                k += " "+enj(v);
             }
             else {
                 # BQ string
-                $k .= " |\n".join "\n", map{"    $_"}split"\n",$v;
+                $vs = [];
+                v = v.split("\n");
+                each is v {
+                    vs.push("    "+s);
+                }
+                k += " |\n"+vs.join("\n");
             }
-            push @l, $k
+            L.push(k);
         }}
-
-        @l = sort @l;
-        my @large;
-        @l = grep{$_} map {
-            if (300 < length $_) {
-                push @large, $_;
-                undef
-            } else { $_ };
-        } @l;
-        $l = join "\n", $l, @l, @large;
-
-        $l
+        
+        # extra lines (L) sorted, larger bits after smaller
+        L = L.sort();
+        $tidy = [];
+        $large = [];
+        each is L {
+            s.length > 300 ? large.push(s) : tidy.push(s)
+        }
+        l = [l];
+        tidy.length and l.push(tidy.join("\n"))
+        large.length and l.push(large.join("\n"))
+        l = l.join("\n");
+        
+        return l
 
