@@ -239,7 +239,7 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
         s and C = s;
         $t = C.t;
         $y = C.y.cv;
-        $y =~ s/^0\.//;
+         y = (y+'').replace(/^0\./,'') || '';
         # aims for simplicity of notation for G&readLines, G&C, G&peel
         # block quotes (BQ) big strings or data after the  line
         # uses json for anything complicated
@@ -266,7 +266,7 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
             n[nk][gk] = v;
         };
         each nk,gk,v h {
-            unless (simp(gk)) {
+            if (!simp(gk)) {
                 lod(n,nk,gk,v);
                 continue
             }
@@ -286,7 +286,7 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
                     # long enough to quote
                     lod(q,nk,gk,v);
                 }
-                elsif (simp(v)) {
+                else if (simp(v)) {
                     # decipherable to G&peel
                 }
                 else {
@@ -312,6 +312,8 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
                 }
             }
         }
+        
+        debugger;
 
         # remove quoted things and their need of json from the line
         each nk,gk,v q {
@@ -319,7 +321,8 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
             delete n[nk][gk];
         }}
         each nk,gks n {
-            !Object.keys(gks).length and delete n[nk] # all freaks got quoted
+            # all freaks got quoted:
+            !Object.keys(gks).length and delete n[nk]
         }
         #c toLines encodes bits
         $enj = &s{
@@ -330,7 +333,7 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
         $l = simp(t) ? t : enj(t);
 
         # y.cv = 1 is implied
-        $l += "\t".(y != '1' ? y : '');
+        l += "\t"+(y != '1' ? y : '');
 
         # throw it one way or another
         $hem = ['c','sc'];
@@ -340,22 +343,22 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
                 # blank
                 l += "\t";
             }
-            elsif (nk == 'c' && 1 == Object.keys(v).length && v.s) {
+            else if (nk == 'c' && 1 == Object.keys(v).length && v.s) {
                 # t y "the s" sc
-                l += "\t".enj(v.s);
+                l += "\t"+enj(v.s);
             }
-            elsif (n[nk]) {
+            else if (n[nk]) {
                 # t y {c} {sc}
-                l += "\t".enj(v);
+                l += "\t"+enj(v);
             }
-            elsif (Object.keys(v).length) {
+            else if (Object.keys(v).length) {
                 # t y W:At et:3,se:te
-                $ks = [Object.keys(v).sort()];
+                $ks = Object.keys(v).sort();
                 $hs = [];
                 each ik ks {
                     hs.push(k+':'+v[k]);
                 }
-                l += "\t".hs.join(",");
+                l += "\t"+hs.join(",");
             }
         }
 
