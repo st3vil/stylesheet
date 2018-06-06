@@ -207,6 +207,7 @@ Typ: | # exact lounge
         }
         
     $m = G&n:['M','-jod_7',{s:A,dl:4}];
+    #$m = G&n:['overflow:scroll','-jod_7',{s:A,dl:4}];
         
     1c&save = "lo";
     
@@ -319,12 +320,45 @@ Savior: | # big list of s that 1c&save somewhere
 W/save: |
     ~>79 saving: A.1.t, A.cv+'@'+A.n.cv, ss&v
     # 4s&ki(C,2), 4s&ki(e,2), 4s&ki(s,2)
+    # do e in order, incase later e get handled before waylaid e get handled
+    
+    
+    # [1,2,3].sort(function(a,b){ console.log(a+"+"+b) });
+
+    
     each iY 1s&N {
-        Y == A and continue;
-        ~>28 havN: 4s&ki(Y,2), 4s&ki(Y.c.s)
+        4s&batching and break
+        # sometimes A.n
+        Y.e and Y = Y.e
+        Y == A || Ac&s == Yc&s and continue
+        Y.cv >= 0.5 and continue
+        $D = Yc&s;
+        $S = Dc&s;
+        ~>28 queN: 4s&ki(Y,2), Ss&v
+        # Y wants to happen before A
+        #debugger;
+        G&TuneTimeMachine,'e-order';
     }
     G&m:M,[ss&title,'',{s:ss&top}];
     
+Noteve: |
+    sortysip:
+        my $so;$so = sub {
+            my ($i,@try) = @_;
+            my ($yk) = @try;
+            my ($c,$d) = (a.y->{$yk},b.y->{$yk});
+            $c && $d || return;
+            ($c,$d) = (c.c.ip,d.c.ip);
+            $c && $d || die "sort noy$yk ip";
+            unless (exists $c->[$i] || exists $d->[$i]) {
+                shift @try;
+                return $so->(0,@try) if @try;
+                die "ip sort ran out:\n  ".ki($a)."\n  ".ki($b);
+            }
+            $c->[$i] <=> $d->[$i]
+            || $so->($i+1,@try);
+        };
+        sort {$so->(0,@Me)} @$s;
 pi/jod: | # a js J, shows a J-shaped bit of data, to aspect serialising change
     # decide lummitry
     # chase detail
@@ -541,8 +575,8 @@ AndContinue: | # Jin stuff
     4s&batch.push(needs);
     G&lim,4s&batch,9;
     
-    
     each in needs {
+        ns&trouble = [];
         if (needs.length == 1) {
             $say = ns&say.slice();
             say.push('>:ms');
@@ -560,7 +594,15 @@ AndContinue: | # Jin stuff
                 continue
             }
             # try wind it up with its own cv/ov
-            G&thro,Y;
+            4s&batching = Y;
+            try {
+                G&thro,Y;
+            }
+            catch (e) {
+                ~>96 Jinbang: e
+                ns&trouble.push(Y);
+            }
+            delete 4s&batching;
             
             # A then A
             Ys&N && Ys&N.length and ms&YIN = [];
@@ -574,6 +616,9 @@ AndContinue: | # Jin stuff
         $N = [];
         each iY Js&N {
             seen[Yc&sip] and continue
+            N.push(Y);
+        }
+        each iY ns&trouble {
             N.push(Y);
         }
         Js&N = N;
