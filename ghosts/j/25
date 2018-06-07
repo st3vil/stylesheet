@@ -323,17 +323,25 @@ W/save: |
     # do e in order, incase later e get handled before waylaid e get handled
     
     
-    # [1,2,3].sort(function(a,b){ console.log(a+"+"+b) });
+    $sortsip;
+    sortsip = &l,r,i{
+        i ||= 0;
+        lc&ip[i] > rc&ip[i] and return 1
+        lc&ip[i] < rc&ip[i] and return 0
+        return sortsip(l,r,i+1)
+    };
 
     
     each iY 1s&N {
-        4s&batching and break
         # sometimes A.n
         Y.e and Y = Y.e
         Y == A || Ac&s == Yc&s and continue
         Y.cv >= 0.5 and continue
         $D = Yc&s;
         $S = Dc&s;
+        # sort = 1 if A should come before Y
+        #  break, assume later 1s&N are later
+        sortsip(Y,A) and continue
         ~>28 queN: 4s&ki(Y,2), Ss&v
         # Y wants to happen before A
         #debugger;
@@ -575,6 +583,7 @@ AndContinue: | # Jin stuff
     4s&batch.push(needs);
     G&lim,4s&batch,9;
     
+    $Ys = [];
     each in needs {
         ns&trouble = [];
         if (needs.length == 1) {
@@ -588,10 +597,28 @@ AndContinue: | # Jin stuff
         }
         each im ns&M {
             Y = ms&Y;
-
+            Ys.push(Y);
+        }
+    }
+    
+    $sortsip;
+    sortsip = &l,r,i{
+        i ||= 0;
+        lc&ip[i] == null and return 0;
+        rc&ip[i] == null and return 1;
+        lc&ip[i] > rc&ip[i] and return 1
+        lc&ip[i] < rc&ip[i] and return 0
+        return sortsip(l,r,i+1)
+    };
+    Ys = Ys.sort(function(l,r){return sortsip(l,r)});
+    
+    each iY Ys {
             if (!Yc&T) {
                 ~>9 Jin ignores YnoT: ki(Y)
                 continue
+            }
+            if (Y.4 != A.4) {
+                ~>9 Jin ignores non4: ki(Y)
             }
             # try wind it up with its own cv/ov
             4s&batching = Y;
@@ -600,10 +627,14 @@ AndContinue: | # Jin stuff
             }
             catch (e) {
                 ~>96 Jinbang: e
+                #throw e;
                 ns&trouble.push(Y);
             }
             delete 4s&batching;
-            
+    }
+    each in needs {
+        each im ns&M {
+            Y = ms&Y;
             # A then A
             Ys&N && Ys&N.length and ms&YIN = [];
         }
