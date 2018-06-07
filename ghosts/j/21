@@ -33,6 +33,7 @@ NutAye: | # A without tubeyness
             
             // trip A
         }
+        c && typeof c.t == 'string' && c.y && c.c && c.sc and A&s = c; c.y.A = A; c = null
         c and $.extend(A.c,c);
         sc and $.extend(A.sc,sc);
         
@@ -180,7 +181,16 @@ NutTub: | # A tubeyness
     # up to ov
     # T.N=2 or T.N.2=? sets A.cv = 2 and 1s&N queue
     thro: %acgt:ov sC
-        ov && typeof ov == 'object' and A = ov; ov = null;
+        if (ov && typeof ov == 'object') {
+            !(typeof ov.t == 'string' && ov.y && ov.c && ov.sc) and throw "given foreign object ov: "+4s&ki(ov)
+            if (ov.y != ov) {
+                !ov.y.A and throw "given C not yA"
+                A = ov.y.A;
+                A&s != ov and throw "given CyA not Acs=C"
+            }
+            else { A = ov }
+            ov = null;
+        }
         sC && typeof sC == 'number' and ov = sC; sC = null;
         $T = A&T = A&T || {};
         T.not and return
@@ -432,10 +442,13 @@ NutPhone: | # adapt to the universe
             c[k] = v;
         }
         return c
+    
     # ORDER
+    
+    # sort A by what happened first
     sortsip:
         $sortsip;
-        return = sortsip = &l,r,i{
+        return sortsip = &l,r,i{
         i ||= 0
         lc&ip[i] == null and return 0
         rc&ip[i] == null and return 1
