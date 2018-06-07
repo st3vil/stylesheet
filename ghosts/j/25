@@ -323,15 +323,6 @@ W/save: |
     # do e in order, incase later e get handled before waylaid e get handled
     
     
-    $sortsip;
-    sortsip = &l,r,i{
-        i ||= 0;
-        lc&ip[i] > rc&ip[i] and return 1
-        lc&ip[i] < rc&ip[i] and return 0
-        return sortsip(l,r,i+1)
-    };
-
-    
     each iY 1s&N {
         # sometimes A.n
         Y.e and Y = Y.e
@@ -341,7 +332,7 @@ W/save: |
         $S = Dc&s;
         # sort = 1 if A should come before Y
         #  break, assume later 1s&N are later
-        sortsip(Y,A) and continue
+        G&sortsip (Y,A) and continue
         ~>28 queN: 4s&ki(Y,2), Ss&v
         # Y wants to happen before A
         #debugger;
@@ -601,16 +592,7 @@ AndContinue: | # Jin stuff
         }
     }
     
-    $sortsip;
-    sortsip = &l,r,i{
-        i ||= 0;
-        lc&ip[i] == null and return 0;
-        rc&ip[i] == null and return 1;
-        lc&ip[i] > rc&ip[i] and return 1
-        lc&ip[i] < rc&ip[i] and return 0
-        return sortsip(l,r,i+1)
-    };
-    Ys = Ys.sort(function(l,r){return sortsip(l,r)});
+    Ys = Ys.sort(G&sortsip );
     
     each iY Ys {
             if (!Yc&T) {
