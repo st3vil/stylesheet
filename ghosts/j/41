@@ -137,6 +137,25 @@ JaBabz: | # make hutscript javascript
         $ope."G\&$c:$s,[$e];"
     }segm;
     
+    # chuck error: throw "Something", C 
+    #   throws new Error("Something"), its .tc=[C]
+    c&s =~ s{(^\s*(?!#)$nlp?)throw ("[^\n"]+")(, $nlp)?;?\s*$}{
+        my $ope = $1;
+        my $msg = $2;
+        my $tc = $3;
+        $msg =~ s/: ?"$/"/;
+        my $guts = "new Error($msg)";
+        if ($tc =~ s/^, //) {
+            $tc =~ s/;$//;
+            $guts = "{var er = $guts; er\.tc = [$tc]; throw er}";
+        }
+        else {
+            $guts = "throw $guts;";
+        }
+        $ope.$guts
+    }segm;
+    
+    
     # G&thing:args,"with space";
     c&s =~ s/($poing)\&(\$)?($poing)(:\S+[^\n;]+)(;)?/
         my ($on,$var,$p,$e,$t) = ($1,$2,$3,$4,$5);
@@ -168,7 +187,8 @@ JaBabz: | # make hutscript javascript
     # tiny sub maker, &raw,args{
     c&s =~ s/([^G&])&(\w*(,\w+)*)\{/$1function($2){/gm;
     
-    # TODO make it $thing or                                                                                                                                                                                                                                                                                          thing$ -> var thing; perl too
+    # TODO make it $thing -> var thing (perl too?)
+    
     c&s =~ s/^($nls)\$(\w+)(?:;)?\s*(=|$)/
         $1."var $2".($3 eq '=' ? ' =' : ';')/smeg;
     c&s =~ s/^($nls)(\w+)\$(?:;)?\s*(=|$)/
@@ -210,9 +230,9 @@ jst: | # test js babbler
             JN[J] = N;
         }}
         ~>3 Jin: sum, '>:ms'
-        $in =
-        ~>3 Jin: sum, '>:ms'
-        # etc
+        throw "Figures"
+        2 == 1 and throw "Miles", Y, "Or so"
+        throw "Because: ", figures, are, massive
     #
 
     Rw JaBabz;
@@ -269,6 +289,12 @@ jst: | # test js babbler
             JN[J] = N;
         }}
         G.h(A,C,G,T,"c",'>3 Jin',[sum, '>:ms']);
+        throw new Error("Figures")
+        if (2 == 1) {
+            {var er = new Error("Miles"); er.tc = [Y, "Or so"]; throw er}
+        }
+        {var er = new Error("Because"); er.tc = [figures, are, massive]; throw er}
+
 
 
 
