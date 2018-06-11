@@ -35,7 +35,7 @@ Typ: | # exact lounge
     
 Tri: | # travel
     G&jam and return T.not = 1;
-    G&n,['t',0.01,{s:A.1.t},{ab:1,fs:'200%',blr:'2px'}];
+    G&n,['t',0.01,{s:A.1.t},{ab:1,fs:'200%',blr:'2px',zi:-20}];
     1s&root.sc.dis = 'block';
     
     1s&ein ||= {};
@@ -84,32 +84,60 @@ Who: | # lis
     
     
 einclick: | # what any webby W can experience
-    G&E,'hC -1';
+    #G&E,'hC s&dos';
     # 
     # path (elements with .A) to hC (their .A.c.s's found in 1s&ss&top)
-    $FE = &s,d{ 
+    $E = &d{
+        $d = d.split(' ');
+        $s = d.shift();
+        if (s == 'hC') {
+            ec&hC || get_hC(e);
+            s = ec&hC;
+        }
+        else { throw "What data? "+s }
+        
+        !d.length and return s
+        d = d.join(' ');
+        return FE(s,d);
+    };
+    # grep/map, know structure
+    $FE = &s,d,l{ 
+        $m;
+        $p = &r{
+            if (d.match(r)) {
+                m = d.match(r);
+                m.shift();
+                d = d.replace(r,'');
+                return 1
+            }
+        };
+        
+        # calling it C means grep for
+        # < put selected values on limb if given
+        if (p(/^(C)\.(y|c|sc)\.(\w+) ?/)) {
+            $typology = m[0];
+            $nk = m[1];
+            $gk = m[2];
+            s = s.filter(&s{ return s && s[nk] && s[nk][gk] });
+        }
+        
+        # calling it s means grep for and move to
         # items replace with something that must be true
-        $mapfi = /^(s\.A\.c\.s) ?/;
-        if (d.match(mapfi)) {
-            $pat = d.match(mapfi)[1];
-            d = d.replace(mapfi,'');
-            
+        if (p(/^(s\.A\.c\.s) ?/)) {
             s = s.map(&s{ return s.A && s.A.c.s }).filter(&s{ return s });
         }
         
         # remove items until...
-        $since = /^(since) (yA1) (==) (A1) ?/;
-        if (d.match(since)) {
-            $pat = d.match(since)[1];
-            d = d.replace(since,'');
-            
+        if (p(/^(since) (yA1) (==) (A1) ?/)) {
             while (s.length) {
                 $z = s[0]; # ]
                 z.y.A && z.y.A && z.y.A.1 == A.1 and break;
-                debugger;
                 s.shift();
             }
         }
+        
+        d.length and throw "FE spec leftover: "+d
+        
         return s;
     };
     $get_hC = &e{
@@ -127,16 +155,44 @@ einclick: | # what any webby W can experience
             else {
                 $res = tv ? "404" : "notv";
                 ~>96 point: res, i+' in:', 4s&ki(path,3)
+                throw "Broken pointer";
                 break;
             }
         }
     };
-    get_hC(e);
-    ~Have the anteracto: A.1.t, 4s&ki(A,3), 4s&ki(A.up,3)
     
-    debugger;
-    1s&M.push("Anteract: "+4s&ki(C));
+    #debugger;
+    $D = E('hC s&dos').slice(-1)[0];
+    $dodos = &D{
+        !D || !Ds&dos and throw "no dos";
+        $w = Ds&dos;
+        w = w.split(':');
+        way = w.shift();
+        ar.m = w;
+        ~>3 dos: way
+        G&way,way,ar;
+    };
     
+    dodos(D);
+    #debugger;
+    1s&M.push("Anteract: "+4s&ki(C,3));
+    
+SwitchupEl: | # adjust css of elements
+    $find = m.shift();
+    $adjust = m.shift();
+    $property = m.shift();
+    $between = m.shift().split('/');
+    $el = $(find);
+    !el and throw "Nofind "+find;
+    $now = el[adjust](property);
+    $i = 0;
+    while (between[0] != now) {
+        between.push(between.shift());
+        i++ > between.length and throw "Didnt start with any of "+ki(between);
+    }
+    between.shift();
+    $next = between.shift();
+    el[adjust](property, next);
 t/JSTesti: | # test the JS bits
     # how does it work?
     # a bunch of timers?
