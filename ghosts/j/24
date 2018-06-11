@@ -381,19 +381,19 @@ NutBung: | # getting W from I, D from B, and errorifics
     #   domes should add checkpoints to abort to
     # TODO make a devtools link? B stack crawler/playback?
     Ban: %acgt:er msg url lineNo colNo
+        $B = Gc&B;
+        B = B.y.up;
         if (typeof er == 'string') {
             if (er.match(/^async /)) {
-                $B = Gc&B;
-                B = B.y.up;
                 # EXP all unhandled asyncs
                 #G&waylay,'checkov_async',{B:B}
                 G&c:'>9 '+er;
                 return
             }
+            msg ||= er;
         }
         
-        #
-        !msg and debugger;
+        msg ||= er.message;
         
         msg = msg.replace(/^Uncaught /,'');
         $m = [
@@ -406,6 +406,25 @@ NutBung: | # getting W from I, D from B, and errorifics
         $it = G&c:m.join(' ');
         console.log("er: ",msg,url,lineNo,er);
         
+        url and return G&Ban_url,it,er,msg,url,lineNo,colNo
+        
+        $w = Bs&way;
+        !w and return
+        it.set('Wtitle', 'w:'+w.t);
+        !er.stack and return;
+        $k = er.stack.split("\n");
+        k.shift();
+        $m = k[0].match(/<anonymous>:(\d+):(\d+)\)$/);
+        if (m) {
+            # wc&s without function() wrapper
+            # also lineNo starts from 1
+            $l = wc&s.split("\n")[m[1] - 1 - 1];
+            it.set('subinfo', l);
+        }
+        
+        
+    
+    Ban_url: %acgt:it er msg url lineNo colNo
         # make sense of the resource
         $v = new URL(url);
         $src = v.pathname;
