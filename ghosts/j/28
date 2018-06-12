@@ -11,6 +11,8 @@ NutEl: | # be in
     
     # G&e: see j/23 NutJayTo
     
+    # G&E: see j/28 NutFactorEase
+    
     u jc
     n \'of:ev'
     
@@ -766,17 +768,23 @@ NutFactorEase: | # make data moves (and e tools)
                 throw "Broken pointer"
             }
         }
+        return ec&hC
     
-    # grep/map, know structure
-    FE: %acgt:s d l
+    #c F FactorEase: grep/map, know structure
+    F: %acgt:s d l
         $m;
         $p = &r{
             m = d.match(r);
-            !m and return;
+            !m and return
             m.shift();
             d = d.replace(r,'');
             return 1
         };
+        $dstart = d;
+        $v;
+        
+        # all Array of items, assume the spec also de-arrays it
+        s.constructor == Object and s = [s];
         
         # calling it C means grep for
         # < put selected values on limb if given
@@ -784,7 +792,9 @@ NutFactorEase: | # make data moves (and e tools)
             $typology = m[0];
             $nk = m[1];
             $gk = m[2];
-            s = s.filter(&s{ return s && s[nk] && s[nk][gk] });
+            s = s.filter(&s{ 
+                s && s[nk] && s[nk][gk] != null and v = s[nk][gk]; return 1
+            });
         }
         
         # calling it s means grep for and move to
@@ -802,9 +812,32 @@ NutFactorEase: | # make data moves (and e tools)
             }
         }
         
-        # end of s being Array:
+        # Array of items -> item
+        
+        # last one
         if (p(/^-1 ?/)) {
             s = s.slice(-1)[0]
+        }
+        
+        # end of being item as collection of properties
+        
+        # peel:a:b:c given v=e:r:t:y gives {a:e,b:r,c:'t:y'}
+        if (p(/^peel:([\w:\@]+) ?/)) {
+            !v and throw "no value", dstart
+            # ref v could be done, eg C t:cs the center,
+            #   unless keys appear in sc
+            typeof v != 'string' and throw "value not string", dstart
+            $ar = {};
+            $spec = m[0].split(':');
+            $vars = v.split(':');
+            while (spec.length) {
+                $k = spec.shift();
+                $array = k.slice(0,1) == '@';
+                array and k = k.replace(/^\@/,'');
+                ar[k] = spec.length ? vars.shift() :
+                    array ? vars : vars.join(':');
+            }
+            s = ar
         }
         
         d.length and throw "FE spec leftover: "+d
