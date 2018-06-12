@@ -384,16 +384,16 @@ NutBung: | # getting W from I, D from B, and errorifics
         $B = Gc&B;
         B = B.y.up;
         if (typeof er == 'string') {
-            if (er.match(/^async /)) {
-                # EXP all unhandled asyncs
-                #G&waylay,'checkov_async',{B:B}
-                G&c:'>9 '+er;
-                return
-            }
             msg ||= er;
+            ~>9 throwstring: er+''
         }
-        
         msg ||= er.message;
+        if (msg.slice(0,5) == 'async') {
+            # test for unhandled asyncs
+            #G&waylay,'checkov_async',{B:B}
+            G&c:'>9 '+msg;
+            return
+        }
         
         msg = msg.replace(/^Uncaught /,'');
         $m = [
