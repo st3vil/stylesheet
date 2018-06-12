@@ -139,7 +139,8 @@ JaBabz: | # make hutscript javascript
     
     # chuck error: throw "Something", C 
     #   throws new Error("Something"), its .tc=[C]
-    c&s =~ s{(^\s*(?!#)$nlp?)throw ("[^\n"]+")(, $nlp)?;?\s*$}{
+    my $concatbit = qr/\+(?:\w+|"[^\n"]+")/;
+    c&s =~ s{(^\s*(?!#)$nlp?)throw ("[^\n"]+?"$concatbit*)(, $nlp)?;?\s*$}{
         my $ope = $1;
         my $msg = $2;
         my $tc = $3;
@@ -233,6 +234,7 @@ jst: | # test js babbler
         throw "Figures"
         2 == 1 and throw "Miles", Y, "Or so"
         throw "Because: ", figures, are, massive
+        throw "async "+per+": "+s
     #
 
     Rw JaBabz;
@@ -289,11 +291,12 @@ jst: | # test js babbler
             JN[J] = N;
         }}
         G.h(A,C,G,T,"c",'>3 Jin',[sum, '>:ms']);
-        throw new Error("Figures")
+        throw new Error("Figures");
         if (2 == 1) {
             {var er = new Error("Miles"); er.tc = [Y, "Or so"]; throw er}
         }
         {var er = new Error("Because"); er.tc = [figures, are, massive]; throw er}
+        throw new Error("async "+per+": "+s);
 
 
 
