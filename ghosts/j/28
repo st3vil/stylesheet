@@ -439,6 +439,7 @@ EleMento: | # find A/J/C as tossed in the elements
         !Object.keys(mo).length and delete c&mode;
         $spec = Object.keys(mo);
         spec = spec.join('+');
+        spec and a&spec = spec;
         
         # combine C.t = A, S+F, C+click, M+2+click
         # for typing into it with e.t...
@@ -451,10 +452,6 @@ EleMento: | # find A/J/C as tossed in the elements
             if (c&type == 'keydown') {
                 c&key.match(/[a-z0-9]/i) and C.t = c&key; delete c&which;
             }
-            spec and C.t = spec+'+'+C.t
-        }
-        else {
-            spec and c&spec = spec; # make into us&S, us&C etc?
         }
         
         if (c&type == 'click' && s.clientX) {
@@ -477,7 +474,7 @@ EleMento: | # find A/J/C as tossed in the elements
         # C should now be interesting
         C.t == c&type and delete c&type;
         
-        #c TODO s (event) already has a nice s.path
+        #c TODO s (event) already has a nice s.path (?)
         # start looking at target
         if (s.target) {
             $S = s.target;
@@ -545,6 +542,7 @@ EleVisAn: | # event handler -> n someone
         $e = C;
         # group meanings
         e.t == 'input+esc' and e.t = 'says'
+        a&spec and C.t = a&spec+'+'+C.t
         
         # reorder hash, put lesser info later
         $bor = ['ev','coord'];
@@ -617,118 +615,6 @@ EleVisAn: | # event handler -> n someone
         #4s&N.push(A);
         
     
-ElTakeNote: | # event that-ers
-    # not too fast (0.01s) (used to have a bung keyboard)
-    keyjam:
-        5s&keyjam and return 1;
-        5s&keyjam ||= 1;
-        5s&keyjamfor ||= 10;
-        G&yl:5s&keyjamfor,&{ 5s&keyjam = 0 };
-        return 0;
-    
-    # click handler, fires anywhere if G.clon()
-    # - G&entag .parent()s until W, makes path d.p = [[t,cv]+]
-    # - G&point locates the A/C and gets distracted if ...
-    # < onclick=A.sc.hands.$sip.click() finding way in
-    #    see G&doh/G&begin for rudiments
-    # < G&A,'e' handling it, picking up locales?
-    #   we T={} to avoid tainting the 5.T with com to G&point
-    cl: %acgt:ev
-        G&keyjam and return;
-        T$ = {};
-
-        var d = {};
-        G&dscam,d,ev;
-
-        d.x = ev.clientX;
-        d.y = ev.clientY;
-        d.pagex = window.pageXOffset;
-        d.pagey = window.pageYOffset;
-
-        var tag = $(ev.target);
-        tag.val and d.s = tag.val();
-
-        G&entag,d,tag;
-        d.W and 5s&lastW = d.W;
-        d.p and 5s&lastp = d.p;
-        
-        d.W and G&point,d and return;
-        
-        G&socking,d;
-    
-    ke: %acgt:ev
-        G&keyjam and return;
-        T$ = {};
-        
-        var d = {};
-        G&dscam,d,ev;
-        
-        d.which = ev.which;
-        d.which == 16 || d.which == 17 || d.which == 18 and return
-        
-        d.k = String.fromCharCode(ev.keyCode);
-        if (!d.W && 5s&lastW && 5s&ww[5s&lastW]) {
-            $W = 5s&ww[5s&lastW].W;
-            if (W.typeinto) {
-                d.W ||= 5s&lastW;
-                d.p ||= 5s&lastp;
-            }
-        }
-        
-        G&socking,d;
-    
-    # trace click up to the G
-    # whose tag is ww and id the W address
-    entag: %acgt:d tag
-          tag and d.name = tag.attr('name');
-          var p = [];
-          while (tag.length) {
-              var nam = tag.prop('tagName');
-              var t = tag.attr('t');
-              var cv = tag.attr('cv');
-              var id = tag.attr('id');
-              if (nam === 'WW') {
-                  d.W = id;
-                  break;
-              }
-              if (cv || t) {
-                  p.push([t,cv]);
-              }
-              tag = tag.parent();
-          }
-          d.p = p.reverse();
-    
-    # type/click typology
-    dscam: %acgt:d ev
-        d.type = ev.type;
-        d.S = 0+ev.shiftKey;
-        d.C = 0+ev.ctrlKey;
-        d.A = 0+ev.altKey;
-        d.M = 0+ev.metaKey;
-    
-    # lookup C for $d event from A.5
-    # can turn it local, return 1 to cancel sending
-    point: %acgt:d
-        W$ = 5s&ww[d.W];
-        !W and ~die~noW: d.W, d
-        !d.p and ~die~nodp: d
-        b$ = W.b;
-        got$ = [];
-        
-        $.each(d.p, &i,v{
-            t$ = v[0];
-            cv$ = v[1];
-            got.push(t,cv);
-            !(b.t[t] && b.t[t][cv]) and ~die~pointbroke: got.join(',')
-            b = b.t[t][cv];
-        });
-        A$ = b.A;
-        C$ = A&s;
-        h$ = s&point_h;
-        h and ~phand: h
-        h and G&$h,d
-        T.letevent and h = 0;
-        return h
 NutText: | # subverse valuar, for editables s&e
     u js
     # of html?
