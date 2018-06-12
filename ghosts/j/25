@@ -316,9 +316,15 @@ AndContinue: | # Jin stuff
     $seen = {};
     each iJ Js {
         # persist so ready=0 and feedback loops can be ttl'd,
-        delete 1s&needs[J.t]; # TODO
-        $n = 1s&needs[J.t] = 1s&needs[J.t] || G&Cye,[J.t,''];
+        #delete 1s&needs[J.t]; # TODO
+        $n = 1s&needs[J.t];
+        n && ns&J !== J and throw "Jinturning needs of J not current", J, n
+        n = 1s&needs[J.t] = n || G&Cye,[J.t,''];
         needs.push(n);
+        
+        # falling - s&N A list in, s&M understanding for that A, clobber
+        delete ns&was_trouble;
+        ns&trouble and ns&was_trouble = ns&trouble; delete ns&trouble;
         
         # could care/prioritise dup A?
         ns&J = J;
@@ -397,6 +403,7 @@ AndContinue: | # Jin stuff
         }
     }
     
+    # say what - how many points may have compressed
     each in needs {
         $J = ns&J;
         ns&say = [">37 "+J.t];
@@ -434,6 +441,7 @@ AndContinue: | # Jin stuff
     G&lim,4s&batch,9;
     
     $Ys = [];
+    $sipms = {};
     each in needs {
         ns&trouble = [];
         if (needs.length == 1) {
@@ -448,12 +456,18 @@ AndContinue: | # Jin stuff
         each im ns&M {
             Y = ms&Y;
             Ys.push(Y);
+            sipms[Yc&sip] = m;
         }
     }
     
     Ys = Ys.sort(G&sortsip );
     
     each iY Ys {
+        # the one-of-many needs of J
+        $m = sipms[Yc&sip];
+        # the needs of J
+        $n = ms&n;
+        
             if (!Yc&T) {
                 ~>9 Jin ignores YnoT: ki(Y)
                 continue
@@ -471,9 +485,13 @@ AndContinue: | # Jin stuff
                 #~>96 Jinbang: e
                 G&Ban,e;
                 4s&jinbug and debugger
-                #throw e;
                 
-                ns&trouble.push(Y);
+                if (ns&was_trouble && ns&was_trouble.indexOf(Y) != -1) {
+                    ~>96 Jinvingup:
+                }
+                else {
+                    ns&trouble.push(Y);
+                }
             }
             delete 4s&batching;
     }
