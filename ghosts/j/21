@@ -352,7 +352,6 @@ NutPhone: | # adapt to the universe
     # can tolerate notmany initially
     jam: %acgt:Hz notmany
         Hz ||= 5
-        $ms = 1000 / Hz;
         
         $t = A.t;
         $jams = 1s&jams = 1s&jams || {};
@@ -362,14 +361,14 @@ NutPhone: | # adapt to the universe
         $times = 1;
         $msg;
         jams[t] = &{
-            times++ < notmany and return 0
+            G&yl:1000,&{ times-- < 1 && delete jams[t] };
+            times++ < Hz and return 0
             if (!msg) { msg =
                 ~>38 jam: A.1.t, t, '>37:times', '>'+Hz+'Hz'
             }
-            msg.set('times',times++);
+            msg.set('times',times);
             return 1
         };
-        G&yl:ms,&{ delete jams[t] };
         return 0
     
     
