@@ -49,7 +49,6 @@ Tri: | # travel
     
     
     # waddley
-    G&u,['MelTest'];
     G&u,['NutText'];
     G&clusp;
     
@@ -69,14 +68,10 @@ Tri: | # travel
     
     
     # where latest ^ gets down
-    $src;
-    src = "$('body > nlaunchn')[0].A";
+    $src = "$('body > nlaunchn')[0].A";
     G&n,['Content',4,{s:src},{e:1}];
     
-    #G&n,['Who'];
-    if (1s&runput) {
-        G&n:['Wheer','-jod_6',{v:1s&runtime,s:1s&runput,dl:4}];
-    }
+    1s&runput and G&n:['Wheer','-jod_6',{v:1s&runtime,s:1s&runput,dl:4}];
     
     
     if (1s&M.length) {
@@ -87,10 +82,72 @@ Tri: | # travel
         }
     }
     
-    $j = G&n,['Launch','V'];
+Expect: | # pull results along
+    G&heading,'Hz:50';
+    G&u,['MelTest'];
+    G&clusp;
     
-    G&n,['something','-jod_287',{s:j},{fs:'60%',dos:"do/Launch",float:'right'}];
     
+    G&m,M,['FUN','',{s:'FUN'},{hue:'150deg'}];
+    G&m,M,['FUN','',{s:'FUN'},{hue:'120deg'}];
+    G&m,M,['FUN','',{s:'FUN'},{hue:'100deg'}];
+    
+    # when doming right, bails: return T.il = waiting condition
+    #   and the T rests on the crest of a wave
+    $til = &s{
+        G&n:['waits','',{s:"Waiting: "+s},{hue:'150deg'}];
+        G&m,M,['waits','',{s:s},{hue:'150deg'}];
+    };
+    
+    # pin sections/doming idea
+    1s&step ||= 1;
+    $osc_each_step = 1;
+    $S = &s{
+        typeof s != 'number' and throw "NaN",s;
+        s < 1s&step and return 0; # dont redo
+        s > 1s&step and return 0; # dont get ahead
+        if (A&didstep == s) {
+            # second loop of while, allow next step
+            1s&step++;
+            return 0
+        }
+        # draw each step for stuff flying by on the screen
+        # or to commit changes to test data (...)
+        A&bailstep == s and return 0;
+        osc_each_step and A&bailstep = s+1;
+        A&didstep = s;
+        return 1;
+    };
+    
+    $tr =
+    G&n:['testrun',1,{s:"J, with lv ("+1s&step+"/?)"},{dis:'block'}];
+    $loop = 1s&loop = Math.random();
+    G&yl:630,&{ A.4 == G.DNS[A.4.t] && loop == 1s&loop && G&e,[J.t] };
+    
+    while (S(1)) {
+        $j = G&n,['Launch','V'];
+        $L = j && js&J;
+        !L and return til('Jup');
+        Jc&L = L;
+
+        $F = Ls&child;
+        !F and return til('4s\&child: '+ki(L));
+        Jc&F = F;
+    }
+    while (S(2)) {
+        
+        G&n:['completion','-jod_6',{s:F,dl:4}];
+        
+    }
+    
+    while (S(3)) {
+        G&n:['completion','-jod_632',{s:L,dl:4}];
+    }
+    
+    
+    
+    trc&s = "J, with lv ("+1s&step+"/?)";
+    1s&step > 3 and delete 1s&loop;
 says/Tri: | # code is said
     $c = G&E:'hC -1';
     if (c.t == 'Name') {
@@ -114,8 +171,12 @@ says/Tri: | # code is said
     ~>3 says/Tri:
     
 do/Launch: |
-    e.t.indexOf('S') >= 0 and delete 4s&Jtv.Launch;
+    e.t.indexOf('S') >= 0 and delete 4s&Jtv.Launch; delete 4s&Jtv.Expect;
     G&e,['Launch'];
+    # shouldn't need the yl, e should catch (and G&Ban) errors (async)
+    # then Expect would complain when the thing doesn't show up,
+    #   it already points to where the thing should emerge from...
+    G&yl:30,&{ G&e,['Expect'] };
     T.ok = 1;
 do/Launcheen: | # toilet?
     # 
@@ -230,7 +291,7 @@ con/Jinloop: | # A continuously
         $lo = 4s&looping = Math.random();
         $op = &{
             lo != 4s&looping and return
-            G.DNS[A.4.t] != A.4 and G&c,"Loopoff:"+A.4.t+"-VS-"+G.DNS[A.4.t].t; return;
+            G.DNS[A.4.t] != A.4 and G&c,"Loopoff:"+A.4.t+"-VS-"+ki(G.DNS[A.4.t],2); return;
             G&delay,0.5,op;
             G&waylay,'AndContinue';
         };
@@ -336,7 +397,9 @@ NutTal: | # speak of W
     # n usual title in J6
     # should t s be a ki of the J?
     heading:
-        G&jam and throw "jamming", A.1;
+        $Hz = 5;
+        s == 'Hz:50' and Hz = 50; s = '';
+        G&jam,Hz and throw "jamming", A.1;
         
         $size = A.1 == A.3 ? "200" : "150";
         $n = G&n,['t',0.01,{s:A.1.t},{ab:1,blr:'2px',zi:-20}];
@@ -375,7 +438,7 @@ pi/jod: | # a js J, shows a J-shaped bit of data, to aspect serialising change
     # make assertions
     # code folding J
     # start a tree of -jod
-    
+    ys&hue = '20deg';
     # has several osc flavours changable without fully J-ing
     # holds markers into whatever data/code is being asked to be opened
     
