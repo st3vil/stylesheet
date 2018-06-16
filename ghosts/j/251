@@ -138,7 +138,7 @@ Launch: | # TODO never gets an A
     #debugger;
     
     # viewport, begins G/G&Four in element buildout:
-    G&n,['Inside',3,{Four:1},{height:'80%'}];
+    G&n,['Inside',3,{Four:6},{height:'80%'}];
     
     
 do/Lunch: |
@@ -148,7 +148,6 @@ do/Lunch: |
 Lunch: | # toplevel control/summary of a foodport (tests)
     G&heading;
     
-    1s&spec ||= {};
     # aspects, some of these can be switched on
     [ 
     G&n,['A',2,{s:'A'}] ,
@@ -157,15 +156,15 @@ Lunch: | # toplevel control/summary of a foodport (tests)
     G&n,['T',23,{s:'T'}]
     ].map(&c{
         cs&dos = 'do/Lunchust';
-        $sp = 1s&spec[c.t];
-        !sp and return
-        sp.enabled and cc&s += '°';
+        cs&doswaylay = 1;
+        c.t == "A" && 4s&looping and cc&s += '°';
+        c.t == "T" && 4s&ttl and cc&s += '°';
     });
     
     G&n:['Dosin',3,{s:'Lunch '+4s&uuid},{hue:'60deg'}];
     
 do/Lunchust: | # adjust/fire parameters ACGT
-    $adj = e.t.match(/^S\+/)
+    $adj = 1 && e.t.match(/^S\+/);
     if (c.t == 'A') {
         adj and G&waylay,'con/Jinloop',ar;
         else { G&waylay,'AndContinue' }
@@ -183,43 +182,54 @@ do/Lunchust: | # adjust/fire parameters ACGT
     else {
         throw "Nut a button", c
     }
+    ~>87 adj: c.t, ki(adj)
     !adj and T.ok = 1;
     
 con/VastTimeout: | # less asyncing by making G&t sure of cached things
-    $sp = 1s&spec[c.t] = 1s&spec[c.t] || {};
-    if (sp.enabled) {
-        delete sp.enabled;
+    if (4s&ttl) {
+        delete 4s&ttl;
         delete Gc&ttl;
     }
     else {
-        sp.enabled = 1;
+        4s&ttl = 3600;
         Gc&ttl = 3600;
     }
 con/Jinloop: | # A continuously
-    $sp = 1s&spec[c.t] = 1s&spec[c.t] || {};
-    if (sp.enabled) {
-        delete 1s&looping;
+    # would rather change OC s&on and tell s to pull
+    if (4s&looping) {
+        delete 4s&looping;
+        ~>5 Jinloop off:
     }
     else {
-        $lo = 1s&looping = Math.random();
+        $lo = 4s&looping = Math.random();
         $op = &{
-            lo != 1s&looping and return
+            lo != 4s&looping and return
             G.DNS[A.4.t] != A.4 and return;
             G&delay,0.5,op;
             G&waylay,'AndContinue';
         };
         op();
+        ~>5 Jinloop on:
     }
     
 NutIns: | # subverse valuar, for editables s&e
     u jc
     # of html?
     n \'of:om'
+    # starts a child process - rename to G at some point
+    #   see G&Four
+    # s is a runlevel
     Four 6:
         $Y = 1s&child = G&Four,C.t;
         $p = Ys&parent = A.1;
-        # should c:resyncin:20ms? doesn't have a clock running yet...
-        ps&subphone and ps&subphone(&acgt{ G&n,['Lunch'] });
+        # doesn't have a clock running yet...
+        # should n {C},{c:resyncin:20ms} and push the Jinloop button via e?
+        $startup = &acgt{
+            G&waylay,'con/Jinloop',{},0.001;
+            G&n,['Lunch'];
+        };
+        s >= 6 && ps&subphone and ps&subphone(startup);
+        # 
         
 Who: | # lis
     G&heading;
