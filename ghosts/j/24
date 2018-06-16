@@ -409,16 +409,23 @@ NutBung: | # getting W from I, D from B, and errorifics
         }
         
         $it = G&c:m.join(' ');
-        console.log("er: ",msg,url,lineNo,er);
-        
-        # TODO url/lineNo sometimes in the stack
-        url and return G&Ban_url,it,er,msg,url,lineNo,colNo
         
         $w = Bs&way;
+        $cat = er.catches; # places of rethrow
+        console.log("er: ",msg,url,lineNo,er,w,cat);
+        
+        url && w and console.log("Had url and w ^");
+        # TODO url/lineNo sometimes in the stack, but not here
+        url and return G&Ban_url,it,er,msg,url,lineNo,colNo
+        
         !w and return
         it.set('Wtitle', 'w:'+w.t);
-        !er.stack and return;
-        $k = er.stack.split("\n");
+        # may get restacked when rethrowing
+        #   if running chrome < 2012 ?
+        $stack = er.stack;
+        cat and stack = cat[0].stack;
+        !stack and return;
+        $k = stack.split("\n");
         k.shift();
         $m = k[0].match(/<anonymous>:(\d+):(\d+)\)$/);
         if (m) {

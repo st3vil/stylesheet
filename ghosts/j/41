@@ -139,6 +139,8 @@ JaBabz: | # make hutscript javascript
     
     # chuck error: throw "Something", C 
     #   throws new Error("Something"), its .tc=[C]
+    #     also handles concatenated bits for "Something":
+    my $varbits = qr/[\w\[\]\.]+/;
     my $concatbit = qr/\+(?:[\w\[\]\.]+|"[^\n"]+")/;
     c&s =~ s{(^\s*(?!#)$nlp?)throw ("[^\n"]+?"$concatbit*)(, ?$nlp)?;?\s*$}{
         my $ope = $1;
@@ -146,15 +148,30 @@ JaBabz: | # make hutscript javascript
         my $tc = $3;
         $msg =~ s/: ?"$/"/;
         my $guts = "new Error($msg)";
-        if ($tc =~ s/^, //) {
+        if ($tc =~ s/^, ?//) {
             $tc =~ s/;$//;
             $guts = "{var er = $guts; er\.tc = [$tc]; throw er}";
+            # "
         }
         else {
             $guts = "throw $guts;";
         }
         $ope.$guts
     }segm;
+    
+    # rechuck error: throw e, "inn"
+    #   pushes e.catches e.stack to e.stacks[],
+    #     chrome < 2012 restacks when rethrowing
+    #   
+    c&s =~ s{(^\s*(?!#)$nlp?)throw ($varbits)(, ?$nlp)?;?\s*$}{
+        my $ope = $1;
+        my $var = $2;
+        my $tc = $3;
+        my $guts = "($var\.catches = $var\.catches || [])";
+        $tc = $tc =~ s/^, ?// ? ",tc:[$tc]" : "";
+        $guts .= ".push({stack:$var\.stack$tc}); throw $var;"; # "
+        $guts
+    }smeg;
     
     
     # G&thing:args,"with space";
@@ -237,6 +254,7 @@ jst: | # test js babbler
         throw "Because: ", figures, are, massive
         throw "async "+per+": "+A.1.t
         throw "Give pi: ",C;
+        throw bah, "Inn"
     #
 
     Rw JaBabz;
@@ -299,7 +317,8 @@ jst: | # test js babbler
         }
         {var er = new Error("Because"); er.tc = [figures, are, massive]; throw er}
         throw new Error("async "+per+": "+A[1].t);
-        throw new Error("Give pi");
+        {var er = new Error("Give pi"); er.tc = [C]; throw er}
+        (bah.catches = bah.catches || []).push({stack:bah.stack,tc:["Inn"]}); throw bah;
 
 
 
