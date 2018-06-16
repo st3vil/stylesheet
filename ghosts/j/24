@@ -412,14 +412,6 @@ NutBung: | # getting W from I, D from B, and errorifics
         
         $w = Bs&way;
         $cat = er.catches; # places of rethrow
-        console.log("er: ",msg,url,lineNo,er,w,cat);
-        
-        url && w and console.log("Had url and w ^");
-        # TODO url/lineNo sometimes in the stack, but not here
-        url and return G&Ban_url,it,er,msg,url,lineNo,colNo
-        
-        !w and return
-        it.set('Wtitle', 'w:'+w.t);
         # may get restacked when rethrowing
         #   if running chrome < 2012 ?
         $stack = er.stack;
@@ -427,14 +419,32 @@ NutBung: | # getting W from I, D from B, and errorifics
         !stack and return;
         $k = stack.split("\n");
         k.shift();
-        $m = k[0].match(/<anonymous>:(\d+):(\d+)\)$/);
+        $end = k[0];
+        
+        console.log("er: ",msg,url,lineNo,er,w,cat,end);
+        
+        # anon sub if way
+        $m = end.match(/<anonymous>:(\d+):(\d+)\)$/);
         if (m) {
-            # wc&s without function() wrapper
-            # also lineNo starts from 1
+            url || !w and debugger;
+            it.set('Wtitle', 'w:'+w.t);
             $l = wc&s.split("\n")[m[1] - 1 - 1];
             it.set('subinfo', l);
+            return
         }
         
+        # a url if <script>
+        $m = end.match(/\] \((.+\/js\/.+):(\d+):(\d+)\)$/);
+        if (m) {
+            url = m[1];
+            lineNo = m[2];
+            colNo = m[3];
+            G&Ban_url,it,er,msg,url,lineNo,colNo;
+            return
+        }
+        
+        debugger;
+        ~92 Neither url or way:
         
     
     Ban_url: %acgt:it er msg url lineNo colNo
