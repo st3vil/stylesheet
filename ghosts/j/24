@@ -401,6 +401,7 @@ NutBung: | # getting W from I, D from B, and errorifics
             G&intag:'>97 !'
             ,G&intag:'>75:Wtitle'
             ,G&intag:'>9:Bangmsg '+msg
+            ,G&intag:'>8:weirdness'
             ,G&intag:'>4:subinfo ?'
         ];
         if (er.tc) {
@@ -420,27 +421,35 @@ NutBung: | # getting W from I, D from B, and errorifics
         $k = stack.split("\n");
         k.shift();
         $end = k[0];
-        
         console.log("er: ",msg,url,lineNo,er,w,cat,end);
+        $beyond = 0;
         
-        # anon sub if way
-        $m = end.match(/<anonymous>:(\d+):(\d+)\)$/);
-        if (m) {
-            url || !w and debugger;
-            it.set('Wtitle', 'w:'+w.t);
-            $l = wc&s.split("\n")[m[1] - 1 - 1];
-            it.set('subinfo', l);
-            return
-        }
-        
-        # a url if <script>
-        $m = end.match(/\] \((.+\/js\/.+):(\d+):(\d+)\)$/);
-        if (m) {
-            url = m[1];
-            lineNo = m[2];
-            colNo = m[3];
-            G&Ban_url,it,er,msg,url,lineNo,colNo;
-            return
+        while (k.length) {
+            end = k.shift();
+            
+            beyond and it.set('weirdness','+'+beyond);
+            
+            # anon sub if way
+            $m = end.match(/<anonymous>:(\d+):(\d+)\)$/);
+            if (m) {
+                url || !w and debugger;
+                it.set('Wtitle', 'w:'+w.t);
+                $l = wc&s.split("\n")[m[1] - 1 - 1];
+                it.set('subinfo', l);
+                return
+            }
+
+            # a url if <script>
+            $m = end.match(/\] \((.+\/js\/.+):(\d+):(\d+)\)$/);
+            if (m) {
+                url = m[1];
+                lineNo = m[2];
+                colNo = m[3];
+                G&Ban_url,it,er,msg,url,lineNo,colNo;
+                return
+            }
+            
+            beyond++;
         }
         
         debugger;
