@@ -92,6 +92,28 @@ Expect: | # pull results along
     G&m,M,['FUN','',{s:'FUN'},{hue:'120deg'}];
     G&m,M,['FUN','',{s:'FUN'},{hue:'100deg'}];
     
+    # subgroups for the ground
+    $doming = &t{
+        if (!t) { # resets
+            $h = A.ground;
+            hc&dome and A.ground = h.y.up;
+            return
+        }
+        1s&domes ||= {};
+        $h = 1s&domes[t];
+        if (h) { # redoing
+            A.ground = h;
+            hs&z = [];
+        }
+        else {
+            $h = 1s&domes[t] = G&Cye,[t,'',{dome:1},{z:[]}];
+            $g = A.ground;
+            gc&dome and g = g.y.up;
+            gc&dome and throw "many domes deep", A.ground
+            h.y.up = g;
+            A.ground = h;
+        }
+    };
     # when doming right, bails: return T.il = waiting condition
     #   and the T rests on the crest of a wave
     $til = &s{
@@ -105,7 +127,7 @@ Expect: | # pull results along
     1s&step ||= 1;
     1s&step_tries ||= 1;
     $osc_each_step = 1;
-    $S = &s{
+    $S = &s,d{
         typeof s != 'number' and throw "NaN",s;
         s < 1s&step and return 0; # dont redo
         s > 1s&step and return 0; # dont get ahead
@@ -120,6 +142,9 @@ Expect: | # pull results along
         osc_each_step and A&bailstep = s+1;
         1s&step_tries = 1;
         A&didstep = s;
+        $t = "Step "+s;
+        d and t += ": "+d;
+        doming(t);
         return 1;
     };
     
@@ -148,7 +173,7 @@ Expect: | # pull results along
         G&n:['3 (parent) complete','-jod_632',{s:L,dl:4}];
     }
     
-    
+    doming();
     
     trc&s = "J, with lv ("+1s&step+"/?)";
     1s&step > 3 and delete 1s&loop;
