@@ -1,0 +1,106 @@
+Expect: | # pull results along
+    G&heading,'Hz:50';
+    G&u,['MelTest'];
+    G&clusp;
+    
+    
+    G&m,M,['FUN','',{s:'FUN'},{hue:'150deg'}];
+    G&m,M,['FUN','',{s:'FUN'},{hue:'120deg'}];
+    G&m,M,['FUN','',{s:'FUN'},{hue:'100deg'}];
+    
+    # subgroups for the ground
+    $doming = &t{
+        if (!t) { # resets
+            $h = A.ground;
+            hc&dome and A.ground = h.y.up;
+            return
+        }
+        1s&domes ||= {};
+        $h = 1s&domes[t];
+        if (h) { # redoing
+            A.ground = h;
+            hs&z = [];
+        }
+        else {
+            $h = 1s&domes[t] = G&Cye,[t,'',{dome:1},{z:[]}];
+            $g = A.ground;
+            gc&dome and g = g.y.up;
+            gc&dome and throw "many domes deep", A.ground
+            h.y.up = g;
+            A.ground = h;
+        }
+    };
+    # when doming right, bails: return T.il = waiting condition
+    #   and the T rests on the crest of a wave
+    $til = &s{
+        $n = 
+        G&n:['waits','',{s:"Waiting: "+s},{hue:'150deg'}];
+        G&m,M,['waits','',{s:s},{hue:'150deg'}];
+        1s&step_tries++ > 3 and nc&s = "Gave up: "+s; delete 1s&loop;
+    };
+    
+    # pin sections/doming idea
+    1s&step ||= 1;
+    1s&step_tries ||= 1;
+    $osc_each_step = 1;
+    $S = &s,d{
+        typeof s != 'number' and throw "NaN",s;
+        s < 1s&step and return 0; # dont redo
+        s > 1s&step and return 0; # dont get ahead
+        if (A&didstep == s) {
+            # second loop of while, allow next step
+            1s&step++;
+            return 0
+        }
+        # draw each step for stuff flying by on the screen
+        # or to commit changes to test data (...)
+        A&bailstep == s and return 0;
+        osc_each_step and A&bailstep = s+1;
+        1s&step_tries = 1;
+        A&didstep = s;
+        $t = "Step "+s;
+        d and t += ": "+d;
+        #doming(t);
+        return 1;
+    };
+    
+    $tr =
+    G&n:['testrun',1,{s:"J, with lv ("+1s&step+"/?)"},{dis:'block'}];
+    $loop = 1s&loop = Math.random();
+    G&yl:630,&{ A.4 == G.DNS[A.4.t] && loop == 1s&loop && G&e,[J.t] };
+    
+    while (S(1)) {
+        $j = G&n,['Launch','V'];
+        $L = j && js&J;
+        !L and return til('Jup');
+        Jc&L = L;
+
+        $F = Ls&child;
+        !F and return til('4s\&child: '+ki(L));
+        Jc&F = F;
+    }
+    $L = Jc&L;
+    $F = Jc&F;
+    $don = &n{
+        $s = Fs&subphone;
+        !s and throw "Nosubphone", F
+        return s(&acgt{ return G&n,n }); #)
+    };
+    while (S(2)) {
+        $n = don(['t/LetsOsc']);
+        
+        G&n:['made W','-jod_3',{s:n}];
+        $Y = ny&A;
+        $ok = Y.cv >= 0.8;
+        G&n:['A complete','-jod_3',{is:ok?"OK":"Not OK: "+Y.cv}];
+        !ok and return til('n completes');
+    }
+    
+    while (S(3)) {
+        G&n:['3 (parent) complete','-jod_632',{s:L,dl:4}];
+    }
+    
+    doming();
+    
+    trc&s = "J, with lv ("+1s&step+"/?)";
+    1s&step > 1 and delete 1s&loop;
