@@ -8,13 +8,18 @@ Expect: | # pull results along
     G&m,M,['FUN','',{s:'FUN'},{hue:'120deg'}];
     G&m,M,['FUN','',{s:'FUN'},{hue:'100deg'}];
     # subgroups for the ground
+    # < osc flattens them out
     $doming = &t{
-        if (!t) {
-            # resets
-            $h = A.ground;
-            hc&dome and A.ground = h.y.up;
-            return
-        }
+        # < take over grounds&z so A.ground can A out?
+        #   or so A always finish what they started with?
+        # resets
+        $g = A.ground;
+        gc&dome and g = g.y.up;
+        gc&dome and throw "many domes deep", A.ground
+        A.ground = g;
+        !t and return;
+        
+        1s&domeseq ||= [];
         1s&domes ||= {};
         $h = 1s&domes[t];
         if (h) {
@@ -23,14 +28,24 @@ Expect: | # pull results along
         }
         else {
             $h = 1s&domes[t] = G&Cye,[t,'',{dome:1},{z:[]}];
-            $g = A.ground;
-            gc&dome and g = g.y.up;
-            gc&dome and throw "many domes deep", A.ground
+            1s&domeseq.push(h);
             h.y.up = g;
+        }
+        if (!A&domedup) {
+            A&domedup = 1;
+            # add all the domes to the ground in this order
+            each id 1s&domeseq {
+                gs&z.push(d);
+            }
+            ~>65 Redomed: 1s&domeseq.length
+        }
+        else {
+            ~>65 Addome: t
+            gs&z.indexOf(h) < 0 and gs&z.push(h);
         }
         A.ground = h;
     };
-    
+    # lo.indexOf(4); lo.splice(3)
 
     # when doming right, bails: return T.il = waiting condition
     #   and the T rests on the crest of a wave
@@ -64,10 +79,15 @@ Expect: | # pull results along
         $t = "Step "+s;
         d and t += ": "+d;
         ~>54 Expecting: t
-        #doming(t);
+        doming(t);
         return 1;
     };
     
+    #c steps
+    # < async n can catch up
+     #     as extra dp to the step, which should line up with test data
+    
+    # < thing that waits at each place, gives you assertion factories
 
     $tr =
     G&n:['testrun',1,{s:"J, with lv ("+1s&step+"/?)"},{dis:'block'}];
