@@ -13,10 +13,17 @@ NutDung: | # things and use
     
 Shovel: | # run/mind the remote thing updatory
     G&heading;
+    G&u,['NutIns'];
+    G&clusp;
     #
     $mind = 4s&mind; 
     $way = A.5.I.w;
     
+    $l = G&ind:way,&s{ return G&toLines,s };
+    
+    G&n:["Instead",15,{s:ki(l)},{hue:'139deg',ws:'pre'}]
+    
+    G&n:["Instead",2,{s:" 2  2 88   3  43 3   3    3 76   8 76   5 5  7 6"},{hue:'49deg',ws:'pre'}]
     
     
     
@@ -33,17 +40,18 @@ NutIns: | # subverse valuar, for editables s&e
     ind: %acgt:s y d
         $D = s;
         # setup
+        d ||= {};
         if (!d.refs) {
             d.refs = []; # all things
             d.refid = {}; # those indices to d
         }
+        y ||= &s{ return s }
         if (typeof y == 'string') {
-            y == 'ki' and y = &s{ ki(s) }
+            y == 'ki' and y = &s{ return ki(s) }
             else { 
                 throw "ind y named", y
             }
         }
-        y ||= &s{ return s }
         
         # dedupe (s always an Object)
         $ri = d.refs.indexOf(s);
@@ -58,7 +66,7 @@ NutIns: | # subverse valuar, for editables s&e
             return;
         }
         # depth limit vs depth
-        d.dl && d.dl < d.d && return;
+        d.dl && d.dl < d.d and return;
         
         if (d.hup) {
             # fills matched C.c with info about where it is
@@ -70,7 +78,7 @@ NutIns: | # subverse valuar, for editables s&e
         
         $dd = &d{
             d = $.extend({},d);
-            d.path = d.path.slice();
+            d.path = (d.path||[]).slice();
             return d
         };
         d = dd(d);
@@ -137,7 +145,7 @@ NutIns: | # subverse valuar, for editables s&e
         
         out = out.filter(&s{ return 1 && s });
         !out.length and return
-        $retrefs = out.filter(&s{ typeof s != 'string' });
+        $retrefs = out.filter(&s{ return typeof s != 'string' });
         
         if (d.d == 1 && !retrefs) {
             d.wantarray and return out
