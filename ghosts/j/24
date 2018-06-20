@@ -68,24 +68,28 @@ NutIns: | # subverse valuar, for editables s&e
             s.y.D = D;
         }
         
-        d = $.extend({},d)
+        $dd = &d{
+            d = $.extend({},d);
+            d.path = d.path.slice();
+            return d
+        };
+        d = dd(d);
         d.s = s;
-        d.path = d.path.slice();
         d.path.push(s.t+' '+s.y.cv);
         d.ind == null and d.ind = '  ';
         # ^ accumulates on every depth's return of a string
         d.d ||= 0;
         d.d++;
         $out = [];
-        $cbret;
-        
-        d.cbfirst and cbret = y(s,d)
-        d.not and return
-        d.nofurther and return cbret
-        
+        $one;
         $my = [];
+        
+        d.cbfirst and one = y(s,d)
+        d.not and return
+        d.nofurther and return one
+        
         # )
-        # the two ways to go deep, should both? will dedup
+        #c the two ways to go deep, should both? will dedup
         if (ss&z) {
             $z = ss&z.filter(&s{ return 1 && s });
             d.zort and d.zort(z,s,d);
@@ -98,7 +102,7 @@ NutIns: | # subverse valuar, for editables s&e
             out.push( G&ind,s.y.in,y,d );
         }
         
-        out.filter(&s{ return 1 && s }).map(&s{
+        out = out.filter(&s{ return 1 && s }).map(&s{
             if (typeof s == 'string')
                 return s.split("\n").map(&s{d.ind+s}).join("\n")
             
@@ -115,33 +119,46 @@ NutIns: | # subverse valuar, for editables s&e
                         sc&inside = d.path;
                     }
                 }
+                my.push(s);
             }
             return s
         });
         
-        if (my $next = !d.nonext && s.y.next) {
-            my $d = {%$d};
-            d.path = [@{d.path||[]}];
-            pop @{d.path};
-            push @out, G&ind,$next,$y,{%$d,d=>d.d-1};
+        if (s.y.next && !d.nonext) {
+            $od = dd(d);
+            od.path.pop();
+            od.d--;
+            out.push( G&ind,s.y.next,y,od );
         }
         
-        $S = $y->($s,$d) if !d.cbfirst;
-        return if d.not;
-        unshift @out, $S;
+        !d.cbfirst and one = y(s,d)
+        d.not and return
+        out.unshift(one);
         
-        @out = grep{$_} @out;
-        return () if !@out;
+        out = out.filter(&s{ return 1 && s });
+        !out.length and return
+        $retrefs = out.filter(&s{ typeof s != 'string' });
         
-        if (d.d == 1 && !grep{ref}@out) {
-            @out = grep{defined} @out;
-            wantarray ? @out : join "\n", @out;
+        if (d.d == 1 && !retrefs) {
+            d.wantarray and return out
+            return out.join("\n");
         }
-        else { # an $N?
-            S.sc.z = $my if @$my && ref $S eq 'HASH';
-            return grep{$_} @out;
+        else {
+            # an N with insidenesses, has been organised, located...
+            # put insides (s&z,yin) in a z on the outside
+            my.length && typeof one == Object and ones&z = my
+            # return every C in N, each G&ind leaves [] to dissolve
+            $flat = [];
+            each is out {
+                s.constructor != Array and flat.push(s); continue
+                each IS s {
+                    flat.push(S);
+                }
+            }
+            return flat
         }
         
+    #c c&Four, c&G
     u jc
     # of html?
     n \'of:om'
