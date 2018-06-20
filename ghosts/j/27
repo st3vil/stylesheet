@@ -256,9 +256,14 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
         $q = {};
 
         # check out how sayable the values on the line are
+        # for c/sc as peelable, 
+        # < we can know thing:thing:thing
+        #   means thing = 'thing:thing'
+        $peelok = /^[\w\.\-%\/:]+$/;
+        $nameok = /^\w[\w\.\-%\/]*$/;
         $simp = &s{
             s = ''+s;
-            return s.match(/^\w[\w\.\-\/]*$/) && s.length < 24
+            return s.match(nameok) && s.length < 24
         };
         # inject 2sphere
         $lod = &n,nk,gk,v{
@@ -270,7 +275,7 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
                 lod(n,nk,gk,v);
                 continue
             }
-            if (typeof v != 'string') {
+            if (typeof v != 'string' && typeof v != 'number') {
                 if (G&oleak,v,4 ) {
                     G&oleak,v,24 and throw "Leaky "+nk+"."+gk+": "+ki(v);
                     # big enough to quote, simplifies remainder
@@ -286,7 +291,7 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
                     # long enough to quote
                     lod(q,nk,gk,v);
                 }
-                else if (simp(v)) {
+                else if ((v+'').match(peelok)) {
                     # decipherable to G&peel
                 }
                 else {
@@ -346,15 +351,17 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
                 l += "\t"+enj(v.s);
             }
             else if (n[nk]) {
-                # t y {c} {sc}
+                # json bits: t y {W:"At"} {et:3,se:"te",ra:1}
                 l += "\t"+enj(v);
             }
             else if (Object.keys(v).length) {
-                # t y W:At et:3,se:te
+                # G&peel bits: t y W:At et:3,se:te,ra
                 $ks = Object.keys(v).sort();
                 $hs = [];
                 each ik ks {
-                    hs.push(k+':'+v[k]);
+                    $set = k;
+                    v[k] != '1' and set += ':'+v[k]
+                    hs.push(set);
                 }
                 l += "\t"+hs.join(",");
             }
