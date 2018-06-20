@@ -25,8 +25,7 @@ Shovel: | # run/mind the remote thing updatory
     
     #
 NutIns: | # subverse valuar, for editables s&e
-    u i
-    
+    u j
     # traverse! sweep into G&F
     # climb in/next/z of $s with a sub $y
     # returns big flat (Cora) list of the sub's returns
@@ -71,46 +70,54 @@ NutIns: | # subverse valuar, for editables s&e
         
         d = $.extend({},d)
         d.s = s;
-        my $d = {%{$d||{}}};
-        d.path = [@{d.path||[]}, "s.t s.y.cv"];
-        d.ind = '  ' if !defined d.ind;
-        # ^ accumulates on every depth's return
+        d.path = d.path.slice();
+        d.path.push(s.t+' '+s.y.cv);
+        d.ind == null and d.ind = '  ';
+        # ^ accumulates on every depth's return of a string
+        d.d ||= 0;
         d.d++;
-        my @out;
-        my $S; # cb return
+        $out = [];
+        $cbret;
         
-        $S = $y->($s,$d) if d.cbfirst;
-        return if d.not;
-        return $S if d.nofurther;
+        d.cbfirst and cbret = y(s,d)
+        d.not and return
+        d.nofurther and return cbret
         
-        my $my = [];
-        {
-        local d.last = $s;
-        # the two ways to go deep, should both?
-        if (my $z = ss&z) {
-            @$z = grep{defined} @$z;
-            d.zort && d.zort->($z,$s,$d);
-            push @out, map{ G&ind,$_,$y,$d } @$z;
+        $my = [];
+        # )
+        # the two ways to go deep, should both? will dedup
+        if (ss&z) {
+            $z = ss&z.filter(&s{ return 1 && s });
+            d.zort and d.zort(z,s,d);
+            each iD z {
+                out.push( G&ind,D,y,d );
+            }
         }
-        if (my $in = s.y.in) {
-            push @out, G&ind,$in,$y,$d;
+        
+        if (s.y.in) {
+            out.push( G&ind,s.y.in,y,d );
         }
-        @out = map {
-            ! ref$_ ? join "\n", map {d.ind."$_"} split "\n", $_ :
-            ref $_ eq 'HASH' ? do{
-                if (!d.noind) {
-                    if (!_.c.ind) {
-                        _.c.ind = d.d;
-                        _.c.inds = join'', (d.ind) x d.d;
-                        push @$my, $_;
-                    };
-                    unshift @{_.c.inside||=[]},s.t;
+        
+        out.filter(&s{ return 1 && s }).map(&s{
+            if (typeof s == 'string')
+                return s.split("\n").map(&s{d.ind+s}).join("\n")
+            
+            if (typeof s.constructor == Object) {
+                if (d.infolate) {
+                    if (!sc&ind) {
+                        # (once) write where things are
+                        # on the things themselves
+                        sc&ind = d.d;
+                        sc&inds = '';
+                        $i = 1; # d.d==1 not here, d.d==2 inds '  '
+                        while (i++ < d.d)
+                            sc&inds += '  ';
+                        sc&inside = d.path;
+                    }
                 }
-                $_
-            } :
-            $_
-        } grep {defined} @out;
-        }
+            }
+            return s
+        });
         
         if (my $next = !d.nonext && s.y.next) {
             my $d = {%$d};
