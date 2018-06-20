@@ -19,9 +19,17 @@ Shovel: | # run/mind the remote thing updatory
     $mind = 4s&mind; 
     $way = A.5.I.w;
     
-    $l = G&ind:way,&s{ return G&toLines,s };
+    $cb = &s{
+        try {
+            return G&toLines,s
+        }
+        catch (er) {
+            return ki(s,2)+"   !! "+er
+        }
+    };
+    $l = G&ind,way,cb;
     
-    G&n:["Instead",15,{s:ki(l)},{hue:'139deg',ws:'pre'}]
+    G&n:["Instead",15,{s:l.join("\n")},{hue:'139deg',ws:'pre'}]
     
     G&n:["Instead",2,{s:" 2  2 88   3  43 3   3    3 76   8 76   5 5  7 6"},{hue:'49deg',ws:'pre'}]
     
@@ -33,6 +41,8 @@ Shovel: | # run/mind the remote thing updatory
     #
 NutIns: | # subverse valuar, for editables s&e
     u j
+    # a functional guide to o
+    #  produces a big Z, or N of all atoms (C), even those inside others
     # traverse! sweep into G&F
     # climb in/next/z of $s with a sub $y
     # returns big flat (Cora) list of the sub's returns
@@ -71,7 +81,7 @@ NutIns: | # subverse valuar, for editables s&e
         if (d.hup) {
             # fills matched C.c with info about where it is
             # < a separate object, a map to the result of the map this is
-            d.infolate == null and d.infolate = 1;
+            #d.infolate == null and d.infolate = 1;
             s = G&Cye,s;
             s.y.D = D;
         }
@@ -97,7 +107,8 @@ NutIns: | # subverse valuar, for editables s&e
         d.nofurther and return one
         
         # )
-        #c the two ways to go deep, should both? will dedup
+        #c the ways to go deep, should be all? will dedup
+        # user throws something on any way
         if (ss&z) {
             $z = ss&z.filter(&s{ return 1 && s });
             d.zort and d.zort(z,s,d);
@@ -108,6 +119,18 @@ NutIns: | # subverse valuar, for editables s&e
         
         if (s.y.in) {
             out.push( G&ind,s.y.in,y,d );
+        }
+        
+        if (s.y.tw) {
+            each tD s.y.tw {
+                out.push( G&ind,D,y,d );
+            }
+        }
+        
+        if (s.y.tv) {
+            each tvD s.y.tv {
+                out.push( G&ind,D,y,d );
+            }}
         }
         
         out = out.filter(&s{ return 1 && s }).map(&s{
@@ -643,7 +666,7 @@ NutBung: | # getting W from I, D from B, and errorifics
             beyond++;
         }
         
-        debugger;
+        #debugger;
         ~92 Neither url or way:
         
     #c /js/ reverse engineering
