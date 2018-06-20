@@ -15,7 +15,7 @@ Shovel: | # run/mind the remote thing updatory
     G&heading;
     #
     $mind = 4s&mind; 
-    $way = 5.I.w;
+    $way = A.5.I.w;
     
     
     
@@ -28,8 +28,113 @@ NutIns: | # subverse valuar, for editables s&e
     u i
     
     # traverse! sweep into G&F
-    ind:
-        # 
+    # climb in/next/z of $s with a sub $y
+    # returns big flat (Cora) list of the sub's returns
+    # $y ||= &Cd{ $C }
+    ind: %acgt:s y d
+        $D = s;
+        # setup
+        if (!d.refs) {
+            d.refs = []; # all things
+            d.refid = {}; # those indices to d
+        }
+        if (typeof y == 'string') {
+            y == 'ki' and y = &s{ ki(s) }
+            else { 
+                throw "ind y named", y
+            }
+        }
+        y ||= &s{ return s }
+        
+        # dedupe (s always an Object)
+        $ri = d.refs.indexOf(s);
+        if (ri < 0) {
+            ri = d.refs.push(s) - 1;
+            d.refid ||= {};
+            d.refid[ri] = d;
+        }
+        else {
+            $od = d.refid[ri];
+            # dupe seeing very interesting for -jod
+            return;
+        }
+        # depth limit vs depth
+        d.dl && d.dl < d.d && return;
+        
+        if (d.hup) {
+            # fills matched C.c with info about where it is
+            # < a separate object, a map to the result of the map this is
+            d.infolate == null and d.infolate = 1;
+            s = G&Cye,s;
+            s.y.D = D;
+        }
+        
+        d = $.extend({},d)
+        d.s = s;
+        my $d = {%{$d||{}}};
+        d.path = [@{d.path||[]}, "s.t s.y.cv"];
+        d.ind = '  ' if !defined d.ind;
+        # ^ accumulates on every depth's return
+        d.d++;
+        my @out;
+        my $S; # cb return
+        
+        $S = $y->($s,$d) if d.cbfirst;
+        return if d.not;
+        return $S if d.nofurther;
+        
+        my $my = [];
+        {
+        local d.last = $s;
+        # the two ways to go deep, should both?
+        if (my $z = ss&z) {
+            @$z = grep{defined} @$z;
+            d.zort && d.zort->($z,$s,$d);
+            push @out, map{ G&ind,$_,$y,$d } @$z;
+        }
+        if (my $in = s.y.in) {
+            push @out, G&ind,$in,$y,$d;
+        }
+        @out = map {
+            ! ref$_ ? join "\n", map {d.ind."$_"} split "\n", $_ :
+            ref $_ eq 'HASH' ? do{
+                if (!d.noind) {
+                    if (!_.c.ind) {
+                        _.c.ind = d.d;
+                        _.c.inds = join'', (d.ind) x d.d;
+                        push @$my, $_;
+                    };
+                    unshift @{_.c.inside||=[]},s.t;
+                }
+                $_
+            } :
+            $_
+        } grep {defined} @out;
+        }
+        
+        if (my $next = !d.nonext && s.y.next) {
+            my $d = {%$d};
+            d.path = [@{d.path||[]}];
+            pop @{d.path};
+            push @out, G&ind,$next,$y,{%$d,d=>d.d-1};
+        }
+        
+        $S = $y->($s,$d) if !d.cbfirst;
+        return if d.not;
+        unshift @out, $S;
+        
+        @out = grep{$_} @out;
+        return () if !@out;
+        
+        if (d.d == 1 && !grep{ref}@out) {
+            @out = grep{defined} @out;
+            wantarray ? @out : join "\n", @out;
+        }
+        else { # an $N?
+            S.sc.z = $my if @$my && ref $S eq 'HASH';
+            return grep{$_} @out;
+        }
+        
     u jc
     # of html?
     n \'of:om'
