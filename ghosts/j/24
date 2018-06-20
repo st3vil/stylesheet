@@ -18,18 +18,47 @@ Shovel: | # run/mind the remote thing updatory
     #
     $mind = 4s&mind; 
     $way = A.5.I.w;
+    $Tri = A.4.sc.Jtv.Tri[0.1];
     
+    $compress = &s{
+        $mute = {c:['code'],sc:[]};
+        each nk,gks mute {
+            $he = s[nk];
+            $out = [];
+            each i,gk gks {
+                null !== he[gk] and out.push(k); delete he[gk]; continue
+                # data should be limited somehow...
+            }
+            # say that it is muted, eg c&mc = 'muted Cc keys'
+            #  in a thing that could pretend to be a hash for simplicity...
+            if (out.length) {
+                $ou = 'm' + nk.slice(0,1);
+                # join any there already?
+                $was = s.c[ou];
+                was and was.split(' ').map(&s{ out.push(s) });
+                was = {};
+                out.map(&s{ was[s] = 1 });
+                s.c[ou] = Object.keys(was).sort().join(' ');
+            }
+        }
+        # ^ or: sc&code and delete sc&code; sc&mc = 'code';
+    };
     $cb = &s{
         try {
+            compress(s);
+            #return ki(s,2);
             return G&toLines,s
         }
         catch (er) {
+            #debugger;
             return ki(s,2)+"   !! "+er
         }
     };
-    $l = G&ind,way,cb;
     
-    G&n:["Instead",15,{s:l.join("\n")},{hue:'139deg',ws:'pre'}]
+    $x = Tri.sc.s.sc.top;
+    $l = G&ind,x,cb,{hup:1,dl:3};
+    
+    G&n:["Inst3ad",15,{s:ki(l)},{hue:'139deg',ws:'pre'}]
     
     G&n:["Instead",2,{s:" 2  2 88   3  43 3   3    3 76   8 76   5 5  7 6"},{hue:'49deg',ws:'pre'}]
     
@@ -168,7 +197,7 @@ NutIns: | # subverse valuar, for editables s&e
         
         out = out.filter(&s{ return 1 && s });
         !out.length and return
-        $retrefs = out.filter(&s{ return typeof s != 'string' });
+        $retrefs = out.filter(&s{ return typeof s != 'string' }).length > 0;
         
         if (d.d == 1 && !retrefs) {
             d.wantarray and return out

@@ -170,7 +170,7 @@ JaBabz: | # make hutscript javascript
         my $guts = "($var\.catches = $var\.catches || [])";
         $tc = $tc =~ s/^, ?// ? ",tc:[$tc]" : "";
         $guts .= ".push({stack:$var\.stack$tc}); throw $var;"; # "
-        $guts
+        $ope.$guts
     }smeg;
     
     
@@ -255,6 +255,7 @@ jst: | # test js babbler
         throw "async "+per+": "+A.1.t
         throw "Give pi: ",C;
         throw bah, "Inn"
+            er.message != "Too much to yaml" and throw er
     #
 
     Rw JaBabz;
@@ -319,6 +320,10 @@ jst: | # test js babbler
         throw new Error("async "+per+": "+A[1].t);
         {var er = new Error("Give pi"); er.tc = [C]; throw er}
         (bah.catches = bah.catches || []).push({stack:bah.stack,tc:["Inn"]}); throw bah;
+            if (er.message != "Too much to yaml") {
+                (er.catches = er.catches || []).push({stack:er.stack}); throw er;
+            }
+
 
 
 
