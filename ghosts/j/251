@@ -231,8 +231,8 @@ Lunch: | # toplevel control/summary of a foodport (tests)
     ].map(&c{
         cs&dos = 'do/Lunchust';
         cs&doswaylay = 1;
-        c.t == "A" && 4s&looping and cc&s += '°';
-        c.t == "T" && 4s&ttl and cc&s += '°';
+        c.t == "A" && 4c&Jinlooping and cc&s += '°';
+        c.t == "T" && 4c&ttl and cc&s += '°';
     });
     
     G&n:['Dosin',3,{s:'Lunch '+4s&uuid},{hue:'60deg'}];
@@ -260,24 +260,24 @@ do/Lunchust: | # adjust/fire parameters ACGT
     !adj and T.ok = 1;
     
 con/VastTimeout: | # less asyncing by making G&t sure of cached things
-    if (4s&ttl) {
-        delete 4s&ttl;
+    if (4c&ttl) {
+        delete 4c&ttl;
         delete Gc&ttl;
     }
     else {
-        4s&ttl = 3600;
+        4c&ttl = 3600;
         Gc&ttl = 3600;
     }
 con/Jinloop: | # A continuously
     # would rather change OC s&on and tell s to pull
-    if (4s&looping) {
-        delete 4s&looping;
+    if (4c&Jinlooping) {
+        delete 4c&Jinlooping;
         ~>5 Jinloop off:
     }
     else {
-        $lo = 4s&looping = Math.random();
+        $lo = 4c&Jinlooping = Math.random();
         $op = &{
-            lo != 4s&looping and return
+            lo != 4c&Jinlooping and return
             G.DNS[A.4.t] != A.4 and G&c,"Loopoff:"+A.4.t+"-VS-"+ki(G.DNS[A.4.t],2); return;
             G&delay,0.5,op;
             G&waylay,'AndContinue';
