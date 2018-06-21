@@ -173,6 +173,42 @@ JaBabz: | # make hutscript javascript
         $ope.$guts
     }smeg;
     
+    #c n groundula
+    
+    # n thing -jod_33 s:var hue:'490deg'
+    # c/sc get wrapped with {}
+    # or:
+    # n thing -jod_33 s:string %hue:490deg,note:$note+btw
+    # and c/sc become G&peel bits, $note+ becomes "+note+"
+    c&s =~ s{(^\s*)(n|u|m) (\$)?("[^\n"]+"|\S*)(?: (\$)?([-\w]*))?(?: (\S+))?(?: (%)?(\S+))?$}{
+        my $ope = $1;
+        my $mode = $2;
+        my $tvar = $3;
+        my $t = $4;
+        my $yvar = $5;
+        my $y = $6;
+        my $c = $7;
+        my $scvar = $8;
+        my $sc = $9;
+        $t = '"'.$t.'"' if !$tvar;
+        $y = '"'.$y.'"' if !$yvar;
+        if ($scvar) {
+            for ($c, $sc) {
+                s/\$(\w+)(\+|$)/"+$1+"/sg;
+                s/^|$/"/sg;
+                s/^(.*)$/"G\&"."peel,".$1." ";/smeg
+            }
+        }
+        else {
+            $c = "{$c}";
+            $sc = "{$sc}";
+        }
+        my $guts = "G&".$mode.":";
+        $guts .= "M," if $mode eq 'm';
+        $guts .= "[$t,$y,$c,$sc]";
+        $guts =~ s/,"",{},{}]$/]/;
+        $ope.$guts.';'
+    }smeg;
     
     # G&thing:args,"with space";
     c&s =~ s/($poing)\&(\$)?($poing)(:\S+[^\n;]+)(;)?/
@@ -258,6 +294,9 @@ jst: | # test js babbler
         throw "Give pi: ",C;
         throw bah, "Inn"
             er.message != "Too much to yaml" and throw er
+        n thing -jod_33 s:var hue:'490deg'
+        n thing  s:string %hue:490deg,note:$note+btw
+        u Matter
     #
 
     Rw JaBabz;
@@ -325,6 +364,9 @@ jst: | # test js babbler
             if (er.message != "Too much to yaml") {
                 (er.catches = er.catches || []).push({stack:er.stack}); throw er;
             }
+        G.h(A,C,G,T,"n",["thing","-jod_33",{s:var},{hue:'490deg'}]);
+        G.h(A,C,G,T,"n",["thing","",G.h(A,C,G,T,'peel',"s:string") ,G.h(A,C,G,T,'peel',"hue:490deg,note:"+note+"btw") ]);
+        G.h(A,C,G,T,"u",["Matter"]);
 
 
 
