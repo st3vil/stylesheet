@@ -180,7 +180,8 @@ JaBabz: | # make hutscript javascript
     # or:
     # n thing -jod_33 s:string %hue:490deg,note:$note+btw
     # and c/sc become G&peel bits, $note+ becomes "+note+"
-    c&s =~ s{(^\s*)(n|u|m) (\$)?("[^\n"]+"|\S*)(?: (\$)?([-\w]*))?(?: (\S+))?(?: (%)?(\S+))?$}{
+    # < can't hangle % in the c section
+    c&s =~ s{(^\s*)(n|u|m) (\$)?("[^\n"]+"|\S*)(?: (\$)?([-\w]*))?(?: ([^\n]*?))?(?: (%)?([^\n]*?))?$}{
         my $ope = $1;
         my $mode = $2;
         my $tvar = $3;
@@ -297,6 +298,8 @@ jst: | # test js babbler
         n thing -jod_33 s:var hue:'490deg'
         n thing  s:string %hue:490deg,note:$note+btw
         u Matter
+        $spacey = " 2  2 88  333333338 76   5 5  7 6";
+        n Instead 2 s:$spacey %hue:49deg,ws:pre
     #
 
     Rw JaBabz;
@@ -367,6 +370,9 @@ jst: | # test js babbler
         G.h(A,C,G,T,"n",["thing","-jod_33",{s:var},{hue:'490deg'}]);
         G.h(A,C,G,T,"n",["thing","",G.h(A,C,G,T,'peel',"s:string") ,G.h(A,C,G,T,'peel',"hue:490deg,note:"+note+"btw") ]);
         G.h(A,C,G,T,"u",["Matter"]);
+        var spacey = " 2  2 88  333333338 76   5 5  7 6";
+        G.h(A,C,G,T,"n",["Instead","2",G.h(A,C,G,T,'peel',"s:"+spacey+"") ,G.h(A,C,G,T,'peel',"hue:49deg,ws:pre") ]);
+
 
 
 
