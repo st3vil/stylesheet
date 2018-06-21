@@ -183,6 +183,7 @@ JaBabz: | # make hutscript javascript
     #   and c $s:object,$up:ob will make json (wrapped with {})
     #   greediness of c/sc regarding % needs tuning
     #     be nice to have spaces in c, editor could easily step over all this
+    my $blankycsc = '"",{},{}';
     c&s =~ s{(^\s*)(n|u|m) (\$)?("[^\n"]+"|\S*)(?: (\$)?([-\w]*))?(?: ([^\n]*?))?(?: (%)?([^\n]*?))?$}{
         my $ope = $1;
         my $mode = $2;
@@ -215,7 +216,7 @@ JaBabz: | # make hutscript javascript
         my $guts = "G&".$mode.":";
         $guts .= "M," if $mode eq 'm';
         $guts .= "[$t,$y,$c,$sc]";
-        $guts =~ s/,"",{},{}]$/]/;
+        $guts =~ s/,\Q$blankycsc\E]$/]/;
         $ope.$guts.';'
     }smeg;
     
