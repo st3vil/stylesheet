@@ -55,9 +55,10 @@ Tri: | # travel
     # navigation/breadcrumb
     # < click to reposition/wake
     # < leave what you didn't interact with
-    G&n,['other',1,{s:"Ge"},{jela:15,dos:"SwitchupEl:4msgs:css:overflow:hidden/scroll"}];
-    G&n,['something',15,{s:"La"},{fs:'170%',hs:'345',dos:"do/Launch"}];
-    G&n,['something',17,{s:"Yu"},{fs:'150%',hs:'345',dos:"do/Launch"}];
+    n other 1 s:Ge %jela:5,dos:SwitchupEl:4msgs:css:overflow:hidden/scroll
+    n rm 11 s:rm %jela:5,dos:SwitchupEl:4on:W:leftbehind:slideUp
+    n something 15 s:La %fs:170%,hs:345,dos:do/Launch
+    n something 17 s:Yu %fs:150%,hs:345,dos:do/Launch
     
     # the name, renamable
     G&n,['Name',3,{s:"Steve"},{e:2}];
@@ -300,22 +301,45 @@ einclick: | # what any webby W can experience s&dos
     #1s&M.push("Anteract: "+4s&ki(C,3));
     
 SwitchupEl: | # tweak Elemental bitology
+    # eg dos:"SwitchupEl:4msgs:css:overflow:hidden/scroll"
     $find = m.shift();
+    find == '4on' and find = A.4.on;
+    else
     find.slice(0,1) == '4' and find = A.4.sc[find.slice(1)]
-    $adjust = m.shift();
-    $property = m.shift();
-    $between = m.shift().split('/');
     $el = $(find);
     !el and throw "Nofind "+find;
-    $now = el[adjust](property);
-    $i = 0;
-    while (between[0] != now) {
-        between.push(between.shift());
-        i++ > between.length and throw "Didnt start with any of "+ki(between);
+    if (m[0] == 'W') {
+        m.shift();
+        el = $(el.children().get().filter(&s{
+            return s.A && s.A.3 && s.A.3 == s.A.1
+        }))
     }
-    between.shift();
-    $next = between.shift();
-    el[adjust](property, next);
+    if (m[0] == 'leftbehind') {
+        m.shift();
+        el = $(el.get().filter(&s{
+            $F = s.A && s.A.4;
+            return !F || G.DNS[F.t] == F ? 0 : 1
+        }))
+    }
+    
+    $adjust = m.shift();
+    $property = m.shift();
+    $between = m.shift();
+    if (between) {
+        between = between.split('/');
+        $now = el[adjust](property);
+        $i = 0;
+        while (between[0] != now) {
+            between.push(between.shift());
+            i++ > between.length and throw "Didnt start with any of "+ki(between);
+        }
+        between.shift();
+        $next = between.shift();
+        el[adjust](property, next);
+    }
+    else {
+        property ? el[adjust](property) : el[adjust]()
+    }
 t/JSTesti: | # test the JS bits
     # how does it work?
     # a bunch of timers?
