@@ -14,6 +14,7 @@ NutDung: | # things and use
 Shovel: | # run/mind the remote thing updatory
     G&heading;
     G&u,['MelTest'];
+    G&u,['NutIns'];
     G&clusp;
     #
     $mind = 4s&mind; 
@@ -22,50 +23,6 @@ Shovel: | # run/mind the remote thing updatory
     
     
     
-    # < G&Compress - an embryonic composited sub, like thro
-    $compress = &s{
-        # the other things are around, also via y.{tw,tv,in} etc
-        delete ss&z;
-        
-        # various things shouldn't be let out
-        # y.* disappears, wormholing only cv
-        # see j/7 K
-        #   used to mute any ref not gk =~ /x$/
-        $mute = {c:['code'],sc:[]};
-        # this just does: sc&code and delete sc&code; sc&mc = 'code';
-        each nk,gks mute {
-            $he = s[nk];
-            $muted = {};
-            each i,gk gks {
-                null == he[gk] and continue;
-                mu[gk] = 1;
-                delete he[gk];
-                # data should be limited somehow...
-            }
-            # say that it is muted, eg c&mc = 'muted Cc keys'
-            #  in a thing that could pretend to be a hash for simplicity...
-            if (muted.length) {
-                $ou = 'm' + nk.slice(0,1);
-                $was = s.c[ou];
-                if (was) {
-                    was = G&peel:was,{sep:' '};
-                    $.extend(muted, was);
-                }
-                s.c[ou] = G&depeel:muted,{sep:' '};
-            }
-        }
-    };
-    $cb = &s{
-        try {
-            compress(s);
-            #return ki(s,2);
-            return G&toLines,s
-        }
-        catch (er) {
-            #debugger;
-            return ki(s,2)+"   !! "+er
-        }
-    };
     
     $x = Tri.sc.s.sc.top;
     $l = G&ind,x,cb,{hup:1,dl:2};
@@ -94,7 +51,134 @@ Shovel: | # run/mind the remote thing updatory
     # G&S like G&F but for serialising apart? (1-5 even)
     # G&U like G&F but for reflecting together?
     # TODO and a tool for W difference
-NutIns: | # c&Four, c&G
+NutIns: | # new stuff
+    n \'of:eye'
+    u j
+    
+    # make string, able to leave program memory
+    #  s=C, with insides
+    #   G&ind makes clone.y.D = origin, but no .y.tw etc.
+    #   G&Compress tidies it up
+    #   G&toLines makes one string, no y but cv
+    Serialise:
+        $ers = [];
+        $cb = &s,d{
+            try {
+                G&Compress,s;
+                return G&toLines,s
+            }
+            catch (er) {
+                ers.push(d,s,er);
+                return ki(s,2)+"   !! "+er
+            }
+        };
+        $l = G&ind,s,cb,{hup:1};
+        ers.length and throw "unserial", ers
+        return l
+    
+    # various things shouldn't be let out
+    # something else (G&toLines) makes y.* disappears, wormholing only cv
+    # < an embryonic composited sub, like thro
+    # see j/7 K
+    #   used to mute any ref not gk =~ /x$/
+    Compress:
+        # the other things are around, also via y.{tw,tv,in} etc
+        delete ss&z;
+        
+        $mute = {c:['code'],sc:[]};
+        # this just does: sc&code and delete sc&code; sc&mc = 'code';
+        each nk,gks mute {
+            $he = s[nk];
+            $muted = {};
+            each i,gk gks {
+                null == he[gk] and continue;
+                mu[gk] = 1;
+                delete he[gk];
+                # data should be limited somehow...
+            }
+            # say that it is muted, eg c&mc = 'muted Cc keys'
+            #  in a thing that could pretend to be a hash for simplicity...
+            if (muted.length) {
+                $ou = 'm' + nk.slice(0,1);
+                $was = s.c[ou];
+                if (was) {
+                    was = G&peel:was,{sep:' '};
+                    $.extend(muted, was);
+                }
+                s.c[ou] = G&depeel:muted,{sep:' '};
+            }
+        }
+    
+    #c newthing
+    # gets I/c&of/C.t 
+    
+    # G&t,'e'        -> I/e
+    #    - return an entire personality
+    
+    # G&t,'i','peel' -> I/i/peel
+    #     - returns that thing (what G&peel does) of the i personality
+    
+    # and things that fit here defiantly
+    # given s=C it can use more smarts, async
+    
+    #   I/W/Expectation - gives s&top of saved W
+    #     there is a list of them floating around,
+    #     as:
+    #         codehost
+    #           Expectation c&W:W ...
+    #           ...
+    #     they each may have s&I,
+    #       which G&t is usually selecting from the general availability of
+    
+    #   I/js/Expectisma - gives s&I from that W, with code via <script>
+    
+    #    I/w/Expect - returns the one w/Expect thing, not a W
+    #        < it must be in some I/W/*/$w
+    #      have an index (w/way/$w) to use for now
+    
+    # these might exist in A.1-5.I.?.?, so use that
+    
+    # otherwise the latter three (of=W,js,w) can become async
+    #  resourcing quests needing question time
+    
+    ting: %acgt:s t
+        $C = {};
+        if (typeof s == 'object') {
+            C = s;
+            s = c&of;
+            t and throw "C and t";
+            t = C.t;
+        }
+        else {
+            C.t = null == t ? '' : t;
+            C.y = {};
+            C.c = {of:s};
+            c&of || throw "Gt without an of";
+            C.sc = {};
+        }
+        
+        # < do as old G&t does, A.1-5.I are trusted to be current
+        $D = G&t,c&of,C.t;
+        D and return D;
+        
+        # otherwise more articulation of this call's context's ability to async
+        (c&of == 'js' || c&of == 'W' || c&of == 'w') and return
+        
+        # automatically mirror C in 5s&things.c&of.$t?
+        #  tracking what things we think we know from outside
+        #   the 4s&mind (A:u') has ttl and a&N back to users (A:u)
+        #   the 5s&I.w.$way has ttl too, but shouldn't
+        # could the 5s&thing, for each c&of/t,
+        # be things to G&t again to compute ghostliness
+        # and linking attention back to A.3s,
+        #   maybe s&G thing like an I thing, but with minimal info
+        #   that pools upward through J, s, domes, even individual C
+    
+    # rebuild tcp
+    question:
+        # retry, expire
+        
+    #c c&Four, c&G
     u jc
     # of html? needs to give innard an element to be in
     # could do a kind of bootup osc for one thing...
@@ -228,8 +312,7 @@ NutThing: | # name of thing, outside I?
     #   if cW:
     #     look in storage, figure where to put it
     t: %acgt:s t
-        $c;
-        typeof s == 'object' and c = s; s = c.of
+        typeof s == 'object' and throw "Nevers";
         $D;
         for (var n = 1; n <= 5; n++) {
             $Y = A[n];
@@ -239,40 +322,11 @@ NutThing: | # name of thing, outside I?
             # container/personality/embryo
             D = I[s];
             # thing/step/nodule/item
-            D && t and D = D.y.tw[t];
+            D && t != null and D = D.y.tw[t];
             D and break
         }
-        !D and s == 'js' and return G&t_js,c,t
         return D;
     
-    # gets I/c&of/C.t 
-    #   I/e - 
-    #   I/W/Expectation - thaws s&top of saved W
-    #     there is a list of them floating around,
-    #      you should have most important bits
-    #   I/js/Expectisma - gives s&I from that W, with code via <script>
-    #    I/w/Expect - returns the one w/Expect thing, not a W
-    #        < it must be in some I/W/*/$w
-    #      have an index (w/way/$w) to use for now
-    # for of=js the t is of the container, 
-    ting: %acgt:s t
-        if (typeof s == 'object') {
-            c = s;
-            s = c.of
-        }
-        if (c) {
-            s = s || cc&of;
-        }
-        # things get
-    
-    # W:js $t means cW:js titled t, which is what we deal here...
-    #  resourcing quests needing question time
-    #   need you to follow them through
-    t_js: %acgt:s t
-    
-    # if G&t of:js t=NutMachine turns up nothing,
-    # it can use the /js/ meaniture, storing the resultant thing
-    # into 5s&things.js.
     #c waylay can happen by itself
     waylay: %acgt:t ar delay cb
         typeof ar != 'object' and delay = ar; ar = {};
@@ -307,6 +361,7 @@ NutThing: | # name of thing, outside I?
     #    so a way should know what ways you might run into inside it,
     #    so resources can be loaded before J:6, which should sleep
     #     and only happen when it needs to, in tiny ordered parts, etc.
+    # < assume w without s&now live forever?
     way: %acgt:t ar cb
         $w = typeof t == 'object' ? t : G&t,'w',t;
         $ttl = 4c&ttl || 5;
