@@ -204,7 +204,7 @@ JaBabz: | # make hutscript javascript
                     s/$/}/sg;
                     next;
                 }
-                s/\$(\w+)(\+|$)/"+$1+"/sg;
+                s/\$([^\s\+]+)(\+|$)/"+$1+"/sg;
                 s/^|$/"/sg;
                 s/^(.*)$/"G\&"."peel,".$1." ";/smeg
             }
@@ -215,13 +215,16 @@ JaBabz: | # make hutscript javascript
         }
         my $guts = "G&".$mode.":";
         $guts .= "M," if $mode eq 'm';
-        $guts .= "[$t,$y,$c,$sc]";
-        $guts =~ s/,\Q$blankycsc\E]$/]/;
+        my $arg = "[$t,$y,$c,$sc]";
+        $arg = "$t" if
+            $arg =~ s/,\Q$blankycsc\E]$/]/ && $tvar;
+        $guts .= $arg;
         $ope.$guts.';'
     }smeg;
+    #return
     
     # G&thing:args,"with space";
-    c&s =~ s/($poing)\&(\$)?($poing)(:\S+[^\n;]+)(;)?/
+    c&s =~ s/($poing)\&(\$)?($poing)(:[^\n;]+)(;)?/
         my ($on,$var,$p,$e,$t) = ($1,$2,$3,$4,$5);
         $e =~ s{^:}{,};
         ($on,my$in) = ("G\.h",'A,C,G,T,')
@@ -311,6 +314,8 @@ jst: | # test js babbler
         n Instead 2 s:$spacey %hue:49deg,ws:pre
         n Instead 2 $s:object,ano:'thng',$va:ery %hue:$lat+deg,ws:pre
         m = d.match(r);
+        n $p
+        G&e:l
     #
 
     Rw JaBabz;
@@ -385,7 +390,8 @@ jst: | # test js babbler
         G.h(A,C,G,T,"n",["Instead","2",G.h(A,C,G,T,'peel',"s:"+spacey+"") ,G.h(A,C,G,T,'peel',"hue:49deg,ws:pre") ]);
         G.h(A,C,G,T,"n",["Instead","2",{s:object,ano:'thng',va:ery},G.h(A,C,G,T,'peel',"hue:"+lat+"deg,ws:pre") ]);
         m = d.match(r);
-
+        G.h(A,C,G,T,"n",p);
+        G.h(A,C,G,T,"e",l)
 
 
 
