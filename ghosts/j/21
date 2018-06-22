@@ -436,10 +436,11 @@ NutPhone: | # adapt to the universe
         $m = s.split(d.sep || ',');
         each in m {
             n = n.split(d.hie || ':');
-            $k = n[0];
-            $v = n[1];
-            v && v.match(/^-?\d+\.\d+$/) and v = v * 1
-            v == null and v = 1
+            $k = n.shift();
+            $v = n.length == 1 ? n[0]
+                : n.length > 1 ? n.join(d.hie || ':')
+                : 1;
+            v && typeof v == 'string' && v.match(/^-?\d+\.\d+$/) and v = v * 1
             c[k] = v;
         }
         return c
