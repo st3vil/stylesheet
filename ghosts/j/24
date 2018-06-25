@@ -407,7 +407,7 @@ NutIns: | # new stuff
     # D the item
     quest_w: %acgt:t ar cb
         $Q = G&Cye,[t,'',{of:'w'}];
-        Qc&ready = &P,s,c{
+        Qc&ready = &{
             # Jin should accept this A again
             # < never set to 0, might speed it up if...
             a&ready = 1;
@@ -426,7 +426,7 @@ NutIns: | # new stuff
                 cb(t,ar,w);
             }
         };
-        Qc&async = &P{
+        Qc&async = &{
             cb == 'noop' and cb = &{}
             else
             typeof cb == 'string' and throw "Cant go async: "+cb
@@ -440,21 +440,22 @@ NutIns: | # new stuff
         return w
         
     #c quest js
-    quest_js:
-        a&I = {};
+    quest_js: %acgt:t
         $Q = G&Cye,[t,'',{of:'js'}];
-        Qc&ready = &P,s,c{
+        Qc&ready = &{
             A.cv = 0.4;
             # Jin should accept this A again
             # < never set to 0, might speed it up if...
             a&ready = 1;
         };
-        Qc&async = &P{
+        Qc&async = &{
             a&ready = 0;
             4s&N.push(A);
             T.not = 1;
         };
         $W = G&t,Q;
+        #a&I = Ws&I;
+        #a&v = Ws&v;
         return W
     
     #c c&Four, c&G
