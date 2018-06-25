@@ -236,14 +236,12 @@ NutIns: | # new stuff
         $type = in[c&of];
         $thing = type[C.t] || {};
         c&p and throw "pointers diffract where thing must be from"
-        $Pin = &P{
-        };
         $found;
         # P coming from the first location... unless something
         each pP thing {
             c&p && c&p != p and continue
-            found and throw "many pointers for thing"
-            found = P;
+            found and throw "many points of thing", thing
+            found = P
         }
         P = found;
         # is our cache too old
@@ -252,12 +250,110 @@ NutIns: | # new stuff
             Pc&ttl_mult and ttl *= Pc&ttl_mult;
             Ps&now && G&time,Ps&now,ttl and P = null
         }
-        # do we know
+        #c do we know
         if (!P) {
-        
-        
-        
+            $get; # how to ask
+            $got; # response to P/c&s
+            if (c&of == 'w') {
+                get = '/way/'+C.t;
+                got = &P,s,c{
+                    $w = G&Cye,[C.t,1];
+                    wc&s = s;
+                    ws&of = 'w';
+                    # hash of the source, compiled in s
+                    ws&dige = c.getResponseHeader('Dige');
+                    Pc&s = w;
+                };
+            }
+            if (c&of == 'js') {
+                get = '/js/'+C.t;
+                # T would put this c&v to wind back from bugs
+                c&v and get += '-'+c&v;
+                got = &P,s,c{
+                    $src = c.getResponseHeader('Location');
+                    $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
+                    $W = m[1];
+                    $ver = m[2];
+                    $W = G&Cye,[W,1];
+                    $I = Ws&I = {};
+                    Ps&v = Ws&v = ver;
+                    Pc&s = W;
+                    # js doesn't communicate much of the W 9, or anything not in I
+                    
+                    # move usual after-got() act to after this callback
+                    $ready = c&ready;
+                    delete c&ready;
+
+                    $callback = &script,e{
+                        # D & C in here refer to the of & the of/t
+                        # < check for errors from that script?
+                        $tocfunc = W.t+'_'+Ws&v;
+                        !window[tocfunc] and throw "Notocfunc: "+tocfunc;
+                        $toc = window[tocfunc]();
+                        $D;
+                        each il toc {
+                            $ind = v[0];
+                            $C = G&Cye,[v[1],v[2],v[3],v[4]];
+                            if (ind == '') {
+                                D = I[t] = C;
+                                D.y.tw = {};
+                                D.y.tv = {};
+                                Ds&z ||= [];
+                            }
+                            else if (ind == '  ') {
+                                D.t != s&js and throw "Csjs not last D", C, D;
+                                c&code = window[s&name];
+                                typeof c&code != 'function' and throw "Cccode not function", C, D;
+                                # grow I
+                                D.y.tv[C.t] ||= {};
+                                D.y.tv[C.t][C.y.cv] = C;
+                                D.y.tw[C.t] = C;
+                                $l = Ds&z.slice(-1);
+                                l[0] and l[0].y.next = C;
+                                Ds&z.push(C);
+                                D.y.in ||= C;
+                                if (D.t === 'i' && (C.t === 'h' || C.t === 't')) {
+                                    G[C.t] = c&code;
+                                }
+                            }
+                            else {
+                                throw "deep C: "+W+"/"+t, v
+                            }
+                        }
+                        
+                        ready();
+                    };
+
+                    $have = $('body script[src="'+src+'"]');
+                    have.length and return callback();
+                    G&add_script,src,callback;
+                };
+            }
+            if (c&of == 'W') {
+                get = '/W/'+C.t;
+                got = &P,s,c{
+                    throw "Got W: ", s
+                };
+            }
+            # default to throw/1s&N to go async
+            c&async ||= &{ G&TuneTimeMachine,c&of+':'+t };
+            
+            $done = &s,c{
+                # every pulling happened now
+                Ps&now = G&time;
+                # specific stuff moves from the response to P and Pc&s
+                got(P,s,c);
+                # specific continuation
+                c&ready and c&ready()
+            };
+            G&question,get,done;
+            
+            c&async and c&async()
         }
+            
+            
+        
+        #c stash
         if (P) {
             # hang ourselves on Ps&out?
             # copy P to your s&in
@@ -272,12 +368,6 @@ NutIns: | # new stuff
             # return the answer
             return Pc&s;
         }
-        
-        $quest = "quest_"+c&of;
-        return G&h,quest;
-        # otherwise more articulation of this call's context's ability to async
-        
-        throw "Asingjnife "+c&of+":"+C.t;
         # automatically mirror C in 5s&things.c&of.$t?
         #  tracking what things we think we know from outside
         #   the 4s&mind (A:u') has ttl and a&N back to users (A:u)
@@ -288,54 +378,16 @@ NutIns: | # new stuff
         #   maybe s&G thing like an I thing, but with minimal info
         #   that pools upward through J, s, domes, even individual C
     
-    #c way question as C
-    # P import state
-    # D the item
-    quest_w:
-        $in = 5s&in;
-        !in and throw "No customs";
-        
-        $ttl = 4c&ttl || 5;
-        !(w && ws&now && G&time,ws&now,ttl) and w = null
-        
-        if (!w) {
-            cb == 'noop' and cb = &{};
-            else
-            typeof cb == 'string' and throw "Cant go async: "+cb
-            
-            $get = '/way/'+t;
-            $is_done;
+    #c rebuild tcp
+    # < get or ws
+    question: %acgt:get cb
+        $is_done;
             $done = &s,how,c{
                 is_done = 1;
                 how != 'success' and throw "Failed request: "+how, c;
-                $dige = c.getResponseHeader('Dige');
-                $w = G&Cye,[t,1,{s:s},{of:'w',dige:dige}];
-                A.5.I ||= {};
-                $D = A.5.I.w = A.5.I.w || G&Cye,['w','',{},{z:[]}];
-                D.y ||= {};
-                D.y.tw ||= {};
-                D.y.tw[t] = w;
-                ws&now = G&time;
-                # < check it compiles? but we don't know its args,
-                #   unless they are vaguely known by bumping into compile errors
-                #   awaiting better field recording (MelTest frontier of)
-                a&ready = 1;
-                #~w!: t
-                if (cb) {
-                    if (G&arfgunc,cb == "s") {
-                        # wants its return value with given ar...
-                        #~w cb s: t
-                        $s = G&way,t,ar,'already_async';
-                        cb(s);
-                    }
-                    else {
-                        # containing a sync G&way call
-                        # or a way to get the w back?
-                        #~w cb: t
-                        cb(t,ar,w);
-                    }
-                }
+                cb(s,c)
             };
+            
             $r = $.ajax(get);
             r.done(done);
             $checks = 5;
@@ -348,16 +400,62 @@ NutIns: | # new stuff
                 done(r.responseText, 'success', r);
             };
             check();
-            #~w?: t
-            !cb and G&TuneTimeMachine,'w:'+t
-            return
-        }
-        
-    
-    # rebuild tcp
-    question:
         # retry, expire
+    #c way question as C
+    # P import state
+    # D the item
+    quest_w: %acgt:t ar cb
+        $Q = G&Cye,[t,'',{of:'w'}];
+        Qc&ready = &P,s,c{
+            # Jin should accept this A again
+            # < never set to 0, might speed it up if...
+            a&ready = 1;
+            # so wait for it...
+            !cb and return
+            if (G&arfgunc,cb == "s") {
+                # way randomly happens, give return value to cb
+                # without A lining up around it (it may do so itself)
+                # see G&waylay for use case as delayed call
+                $s = G&way,t,ar,'already_async';
+                cb(s);
+            }
+            else {
+                # containing a sync G&way call
+                # or a way to get the context revisted?
+                cb(t,ar,w);
+            }
+        };
+        Qc&async = &P{
+            cb == 'noop' and cb = &{}:
+            else
+            typeof cb == 'string' and throw "Cant go async: "+cb
+            
+            # Jin should avoid this A for a while
+            a&ready = 0;
+            # and throw/abort if no callback
+            !cb and G&TuneTimeMachine,'w:'+t
+        };
+        $w = G&t,Q;
+        return w
         
+    #c quest js
+    quest_js:
+        a&I = {};
+        $Q = G&Cye,[t,'',{of:'js'}];
+        Qc&ready = &P,s,c{
+            A.cv = 0.4;
+            # Jin should accept this A again
+            # < never set to 0, might speed it up if...
+            a&ready = 1;
+        };
+        Qc&async = &P{
+            a&ready = 0;
+            4s&N.push(A);
+            T.not = 1;
+        };
+        $W = G&t,Q;
+        return W
+    
     #c c&Four, c&G
     u jc
     # of html? needs to give innard an element to be in
