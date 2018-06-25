@@ -257,10 +257,10 @@ JaBabz: | # make hutscript javascript
     c&s =~ s/([^G&])&acgt\{/$1function(A,C,G,T){/gm;
     c&s =~ s/([^G&])&(\w*(,\w+)*)\{/$1function($2){/gm;
     
-    # TODO make it $thing -> var thing (perl too?)
-    
-    c&s =~ s/^($nls)\$(\w+)(?:;)?\s*(=|$)/
-        $1."var $2".($3 eq '=' ? ' =' : ';')/smeg;
+    # $thing -> var thing
+    c&s =~ s/^($nls)\$(\w+)(;)?(\s*=|\s*\/\/|$)/
+        $1."var $2".$3.($4||';')/smeg;
+    # GONER thing$ -> var thing (would perl alright tho...)
     c&s =~ s/^($nls)(\w+)\$(?:;)?\s*(=|$)/
         $1."var $2".($3 eq '=' ? ' =' : ';')/smeg;
 jst: | # test js babbler
@@ -316,6 +316,7 @@ jst: | # test js babbler
         m = d.match(r);
         n $p
         G&e:l
+        $get; # gottening
     #
 
     Rw JaBabz;
@@ -392,6 +393,7 @@ jst: | # test js babbler
         m = d.match(r);
         G.h(A,C,G,T,"n",p);
         G.h(A,C,G,T,"e",l)
+        var get; // gottening
 
 
 
