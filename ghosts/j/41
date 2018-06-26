@@ -184,7 +184,7 @@ JaBabz: | # make hutscript javascript
     #   greediness of c/sc regarding % needs tuning
     #     be nice to have spaces in c, editor could easily step over all this
     my $blankycsc = '"",{},{}';
-    c&s =~ s{(^\s*)(n|u|m) (\$)?("[^\n"]+"|\w+\S*)(?: (\$)?([-\w]*))?(?: ([^\n]*?))?(?: (%)?([^\n]*?))?$}{
+    c&s =~ s{(^\s*|return )(n|u|m) (\$)?("[^\n"]+"|\w+\S*)(?: (\$)?([-\w]*))?(?: ([^\n]*?))?(?: (%)?([^\n]*?))?$}{
         my $ope = $1;
         my $mode = $2;
         my $tvar = $3;
@@ -317,7 +317,8 @@ jst: | # test js babbler
         n $p
         G&e:l
         $get; # gottening
-    #
+        1 and return n waits
+    #c answers
 
     Rw JaBabz;
     
@@ -394,6 +395,9 @@ jst: | # test js babbler
         G.h(A,C,G,T,"n",p);
         G.h(A,C,G,T,"e",l)
         var get; // gottening
+        if (1) {
+            return G.h(A,C,G,T,"n",["waits"]);
+        }
 
 
 
