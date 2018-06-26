@@ -30,12 +30,12 @@ Shovel: | # run/mind the remote thing updatory
     n try"+1s&step+" 4
     
     try {
-        $re = G&ting,'w','ShoveLattice';
+        $re = G&quest_w,'w','ShoveLattice';
         tc&s = re;
     }
     catch(er) {
         ts&er = er.message;
-        throw er
+        #throw er
     }
     
     m $t.t -jod_4 $s:t %hue:1$1s&step+9deg,ws:pre,dis:block
@@ -253,6 +253,7 @@ NutIns: | # new stuff
         }
         #c do we know
         if (!P) {
+            P = type[C.t][''] = G&Cye,[C.t,C.y.cv,{of:c&of},{}];
             $get; # how to ask
             $got; # response to P/c&s
             if (c&of == 'w') {
@@ -381,27 +382,25 @@ NutIns: | # new stuff
     
     #c rebuild tcp
     # < get or ws
+    # retry, expire
+    # c == r
     question: %acgt:get cb
         $is_done;
-            $done = &s,how,c{
-                is_done = 1;
-                how != 'success' and throw "Failed request: "+how, c;
-                cb(s,c)
-            };
+        $r = $.ajax(get);
+        $done = &s,how,c{
+            is_done = 1;
+            r.status != '200' and throw "ques: "+r.status+": "+get, r
+            cb(s,c)
+        };
+        r.done(done);
             
-            $r = $.ajax(get);
-            r.done(done);
             $checks = 5;
             $check = &{
-                is_done and return;
-                !r.statusText && checks-- > 0 and return G&yl,150,check;
-                r.statusText == 'Not Found' and throw "No way: "+t
-                r.statusText != 'OK' and throw "Weird ajaxtus: "+r.statusText
-                #~>57 waylo: t
-                done(r.responseText, 'success', r);
+                is_done and return
+                !r.status && checks-- > 0 and return G&yl,150,check
+                done(r.responseText, 'maybe', r)
             };
             check();
-        # retry, expire
     #c way question as C
     # P import state
     # D the item
@@ -436,7 +435,7 @@ NutIns: | # new stuff
             # and throw/abort if no callback
             !cb and G&TuneTimeMachine,'w:'+t
         };
-        $w = G&t,Q;
+        $w = G&ting,Q;
         return w
         
     #c quest js
@@ -453,7 +452,7 @@ NutIns: | # new stuff
             4s&N.push(A);
             T.not = 1;
         };
-        $W = G&t,Q;
+        $W = G&ting,Q;
         #a&I = Ws&I;
         #a&v = Ws&v;
         return W
