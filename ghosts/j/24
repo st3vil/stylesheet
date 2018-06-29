@@ -24,7 +24,11 @@ Ch: | # swim channel
     $s = js&s;
     !s and return n waits 1 s:waits %
     each il ss&lv {
+        $l;
+        try {
         $l = G&Serialise,l;
+        }
+        catch (er) { l = "Error: "+er+": "+ki(l) }
         $n =
         n toL 15 $s:l %hue:1$i+9deg,ws:pre,dis:block,ma:1em
         n.y.cv += 0.015 * i;
@@ -52,8 +56,22 @@ Shovel: | # run/mind the remote thing updatory
     $mind = 4s&mind; 
     $way = A.5.I.w;
     
-    n mind -jod $s:mind,dl:5 %
-    n way -jod $s:way %
+    
+    n mind -h1
+    
+    $N = [];
+    each tY mind {
+        N.push(Yc&s);
+    }
+    each in N {
+        m $i+"mind" -jod $s:n,dl:4 %
+    }
+    
+    n $i+"minds" -jod $s:M,dl:4 %
+    
+    n way -h1
+    
+    n way -jod_04 $s:way %
     
     #G&way,'t/t_wayttl',ar;
     
@@ -62,6 +80,14 @@ Shovel: | # run/mind the remote thing updatory
     # G&S like G&F but for serialising apart? (1-5 even)
     # G&U like G&F but for reflecting together?
     # TODO and a tool for W difference
+pi/h1: |
+    $s = c&s || C.t;
+    delete c&s;
+    $n = G&n,['t',0.01,{s:s},{blr:'2px',zi:-20}];
+    $size = A.1 == A.3 ? "200" : "150";
+    ns&fs = size+'%';
+    ns&mt = '-0.5em';
+    ns&dis = 'block';
 t/t_wayttl: |
     G&heading;
     G&u,['NutIns'];
@@ -136,6 +162,10 @@ NutIns: | # new stuff
         # the other things are around, also via y.{tw,tv,in} etc
         delete ss&z;
         
+        # especially if pi
+        typeof sc&s == 'object' and delete sc&s
+        delete ss&J
+        
         $mute = {c:['code'],sc:[]};
         # this just does: sc&code and delete sc&code; sc&mc = 'code';
         each nk,gks mute {
@@ -143,7 +173,7 @@ NutIns: | # new stuff
             $muted = {};
             each i,gk gks {
                 null == he[gk] and continue;
-                mu[gk] = 1;
+                muted[gk] = 1;
                 delete he[gk];
                 # data should be limited somehow...
             }
@@ -954,6 +984,7 @@ NutBung: | # getting W from I, D from B, and errorifics
         console.log("er: ",msg,url,lineNo,er,w,cat,end);
         url && location.href == url and url = null
         $beyond = 0;
+        G.er = er;
         
         while (k.length) {
             end = k.shift();
