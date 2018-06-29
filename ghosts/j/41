@@ -127,7 +127,9 @@ JaBabz: | # make hutscript javascript
     #
     #c other
     # (~hifnotc)?~com message: list, of, interestings
-    c&s =~ s{(^|\{|and |return ) *~(?:(\w+)~)?(\$?>?[\w]+(?:$nlp?:)?)(?: ($nlp))?;?$}{
+    
+    my $lnlp = qr/[^\n;]+/;
+    c&s =~ s{(; |^|\{|and |return ) *~(?:(\w+)~)?(\$?>?[\w]+(?:$lnlp?:)?)(?: ($lnlp)?)?(;|$)}{
         my $ope = $1;
         my$c=$2||'c';
         my$s=$3;
@@ -322,6 +324,7 @@ jst: | # test js babbler
         $get; # gottening
         1 and return n waits
         !j and return n waits 1 s:waits %
+        c&dow and c&did = 'w'; ~dow: ; return G&waylay,c&dow,har
     # too far away:
     # n something 15 s:Shovel Ch %fs:170%,hs:345,dos:do/Launch
     #c answers
@@ -403,6 +406,12 @@ jst: | # test js babbler
         var get; // gottening
         if (1) {
             return G.h(A,C,G,T,"n",["waits"]);
+        }
+        if (!j) {
+            return G.h(A,C,G,T,"n",["waits","1",G.h(A,C,G,T,'peel',"s:waits") ]);
+        }
+        if (C.c.dow) {
+            C.c.did = 'w'; G.h(A,C,G,T,"c",'dow',[]); return G.h(A,C,G,T,'waylay',C.c.dow,har)
         }
 
 
