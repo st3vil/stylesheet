@@ -198,6 +198,7 @@ JaBabz: | # make hutscript javascript
         $y = '"'.$y.'"' if !$yvar;
         if ($scvar) {
             for ($c, $sc) {
+                !$_ and next;
                 if ($_ eq $c && /^\$\w+:\w+/) {
                     s/\$(\w+):(\w+)( )?/"$1:$2".(defined $3 ? ",":"")/seg;
                     s/^/{/sg;
@@ -215,7 +216,9 @@ JaBabz: | # make hutscript javascript
         }
         my $guts = "G&".$mode.":";
         $guts .= "M," if $mode eq 'm';
-        my $arg = "[$t,$y,$c,$sc]";
+        my $arg = "[$t,$y,$c";
+        $arg .= ",$sc" if $sc;
+        $arg .= "]";
         $arg = "$t" if
             $arg =~ s/,\Q$blankycsc\E]$/]/ && $tvar;
         $guts .= $arg;
@@ -318,6 +321,7 @@ jst: | # test js babbler
         G&e:l
         $get; # gottening
         1 and return n waits
+        !j and return n waits 1 s:waits %
     # too far away:
     # n something 15 s:Shovel Ch %fs:170%,hs:345,dos:do/Launch
     #c answers
