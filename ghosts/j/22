@@ -221,8 +221,8 @@ Wederr: |
     
     
 
-NutServe: | # turns js W into a <script> with toc in C
-    delete G.way.NutServe;
+get/js: | # turns W of js into a <script> with toc function,  in C
+    delete G.way->{'get/js'};
     
     C.t && exists c&ver || die "C not like t/ver: ".ki$C;
     
@@ -336,10 +336,11 @@ ServeC: | # atomic get/set, remote magic powers
         $c->res->headers->append(Location => $loca);
         $c->render(text=>decode_utf8("c&s")); # ,format=>"js"
     };
+    
     # 4s&mind
     get '/js/*t' => &c{
         my $C = $c_to_tverC->($c);
-        Rw NutServe $C
+        Rw get/js $C
             || return $c->reply->not_found;
         $tver_headers->($C,$c);
     };
@@ -353,7 +354,7 @@ ServeC: | # atomic get/set, remote magic powers
         $c->res->headers->append(Dige => ws&dige);
         
         my $babv = readlink("wormhole/digway/JaBabz");
-        a&wayjs = {} if a&babv != $babv;
+        a&wayjs = {} if a&babv ne $babv;
         a&babv = $babv;
         
         my $s = a&wayjs.>w.t.>ws&dige ||= do {
