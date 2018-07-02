@@ -40,11 +40,32 @@ j/res/Teev: | # string t,s for N
         # if any insides \W, throw if empty t?
         $en
         each is ts {
-            s.match(/^\w+$/) and en = ts
+            !s.match(/^[\/\w]+$/) and en = ts
         }
-        en and M.push(enj(en)) continue
+        en and M.push(enj(en)); continue
         M.push(ts.join("\t"));
-    } 
+    }
+    return M.join("\t");
+j/dej/Teev: | # N C t,s for s 
+    # slightly toLines, for t and y
+    $N = [];
+    s = s.split("\t");
+    while (s.length) {
+        $k = s.shift();
+        $v;
+        if (k.match(/^\W/)) {
+            k = dej(k);
+            k.length != 2 and throw "Funny: "+k, s
+            k = k[0];
+            v = k[1];
+        }
+        else {
+            v = s.shift();
+        }
+        N.push( G&Cye,[k,'',{s:v}] );
+    }
+    return N
+
 Spade: | # serve Shovel, bulk version checks
     # to allow stream/trust ghost happenings
     # say
@@ -121,8 +142,6 @@ Shovel: | # run/mind the remote thing updatory
     n way -h1
     n way -jod_04 $s:de.w %
     
-    
-    
     each tN de {
         $i =
         e $t 1
@@ -141,7 +160,10 @@ Shovel: | # run/mind the remote thing updatory
         m $t  $s:l %hue:150deg,ws:pre,ma:1em
     }
     
+    $w = de.w.map(&C{ return G&Cye,[C.t,'',{s:s&dige}] });
+    $ts = G&way,'j/res/Teev',{N:w};
     
+    n wayts -jod_04 $s:ts %
     
     
     
@@ -154,6 +176,16 @@ Shovel: | # run/mind the remote thing updatory
     # G&S like G&F but for serialising apart? (1-5 even)
     # G&U like G&F but for reflecting together?
     # TODO and a tool for W difference
+pi/Cod: |
+    ys&dis = 'block';
+    G&n,['t',0.01,{s:C.t},{hue:'60deg'}];
+    
+    c&v and G&n,['v',0.02,{s:c&v},{hue:'80deg'}];
+    
+    
+    G&n,['Thing',3,{s:ki(c&s,c&dl||3)}];
+
+    #
 pi/h1: |
     $s = c&s || C.t;
     delete c&s;
@@ -212,14 +244,18 @@ NutIns: | # new stuff
     Serialise: %acgt:s comp
         $ers = [];
         $cb = &s,d{
+            $part = "Compress";
             try {
                 G&Compress,s;
-                comp && comp(s);
+                part = 'comp';
+                comp && comp(s,d);
+                d.not and return
+                part = 'toLines';
                 return G&toLines,s
             }
             catch (er) {
-                ers.push([d,s,er]);
-                return ki(s,2)+"   !! "+er
+                ers.push([part,d,s,er]);
+                return ki(s,2)+"   !"+part+"! "+er
             }
         };
         $l = G&ind,s,cb,{hup:1};
