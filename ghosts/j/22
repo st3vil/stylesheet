@@ -224,7 +224,8 @@ Wederr: |
 get/js: | # turns W of js into a <script> with toc function,  in C
     delete G.way->{'get/js'};
     
-    C.t && exists c&ver || die "C not like t/ver: ".ki$C;
+    # < check form of t, maybe ver, nothing else
+    C.t || die "C not t: ".ki$C;
     
     # look in the javascript u stashes
     my @search = qw'ju je';
@@ -361,7 +362,7 @@ ServeC: | # atomic get/set, remote magic powers
             Rw JaBabz $C:w;
             wc&s
         };
-        $s =~ /^(.+?m\.replace(.+?))$/sgm && sayyl "Fuo:\n $1\n\n";
+        #$s =~ /^(.+?m\.replace(.+?))$/sgm && sayyl "Fuo:\n $1\n\n";
         $c->render(text => decode_utf8($s));
     };
     

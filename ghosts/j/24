@@ -33,20 +33,21 @@ Ch: | # swim channel
         n toL 15 $s:l %hue:1$i+9deg,ws:pre,dis:block,ma:1em
         n.y.cv += 0.015 * i;
     }
-j/res/Teev: | # string t,s for N
+j/en/Teev: | # string t,s for N
     $M = [];
     each iC N {
         $ts = [C.t,c&s];
         # if any insides \W, throw if empty t?
         $en
         each is ts {
+            !s and debugger;
             !s.match(/^[\/\w]+$/) and en = ts
         }
         en and M.push(enj(en)); continue
         M.push(ts.join("\t"));
     }
     return M.join("\t");
-j/dej/Teev: | # N C t,s for s 
+j/de/Teev: | # N C t,s for s 
     # slightly toLines, for t and y
     $N = [];
     s = s.split("\t");
@@ -65,42 +66,67 @@ j/dej/Teev: | # N C t,s for s
         N.push( G&Cye,[k,'',{s:v}] );
     }
     return N
-
-Spade: | # serve Shovel, bulk version checks
+p/en/Teev: | # string t,s for N
+    return join "\t", map{
+        my $ts = [_.t,_c&s]; 
+        # if any insides \W, throw if empty t?
+        grep{ !/^[\/\w]+$/ }@$ts ? sjson $ts : join "\t", @$ts
+    }@$N;
+p/de/Teev: | # N C t,s for s 
+    # slightly toLines, for t and y
+    my $N = [];
+    $s = [split "\t", $s];
+    while (@$s) {
+        my $k = shift @$s;
+        my $v;
+        if ($k =~ /^\W/) {
+            $k = djson($k);
+            @$k != 2 && die "Funny: @$k";
+            ($k,$v) = @$k;
+        }
+        else {
+            $v = shift @$s;
+        }
+        push @$N, G&Ct,[$k,'',{s=>$v}]
+    }
+    return $N
+Spade: | # serve Shovel, bulk version checkings
     # to allow stream/trust ghost happenings
-    # say
+    # say what is changed only
     # u allows transport as <script src=/js/$t>, usually
     #   can insist on being a J "present", T "ing", G "host"
     #  implies k:v resolutions of itselves to be t:s&v or so
-    get '/Shovel/u' => &c{
-        
-        my $C = G&Ct,[$t,'',{ver=>$ver}];
-        c&head = 1;
-        
-        my $de 
-        my $C = $c_to_tverC->($c);
-        Rw get/js $C
-            || return $c->reply->not_found;
-        $tver_headers->($C,$c);
-    };
-    # 4s&waythe way
-    # < Accept headers to get the various translations
-    get '/way/*way' => &c{
-        my $t = $c->param('way');
-        $t =~ s/\W+/-/g;
-        my $w = G&t,w=>$t;
-        $w || return $c->reply->not_found;
-        $c->res->headers->append(Dige => ws&dige);
-        
-        my $babv = readlink("wormhole/digway/JaBabz");
-        a&wayjs = {} if a&babv ne $babv;
-        a&babv = $babv;
-        
-        my $s = a&wayjs.>w.t.>ws&dige ||= do {
-            Rw JaBabz $C:w;
-            wc&s
-        };
-        $s =~ /^(.+?m\.replace(.+?))$/sgm && sayyl "Fuo:\n $1\n\n";
+    get 'Spade' => &c{
+        my $r = {};
+        if (my $s = $c->param('u')) {
+            my $N = Rw p/de/Teev $s;
+            for my $D (@$N) {
+                my $C = G&Ct,[D.t,'',{head=>1}];
+                my $R = Rw get/js $C;
+                # see G
+                Rs&ver eq Dc&s && next;
+                push @{r.u ||= []}, G&Ct,[D.t,'',{s=>Rs&ver}];
+            }
+        }
+        if (my $s = $c->param('w')) {
+            my $N = Rw p/de/Teev $s;
+            for my $D (@$N) {
+                my $t = D.t;
+                $t =~ s/\W+/-/g;
+                my $w = G&t,w=>$t;
+                # could give them a dig for JaBabz...
+                #  Normal could have it
+                ws&dige eq Dc&s && next;
+                push @{r.w ||= []}, G&Ct,[D.t,'',{s=>ws&dige}];
+            }
+        }
+        my $s = join "\n", grep{$_} map {
+            my $v = $r.>$_;
+            if ($v) {
+                "$_: ".
+                Rw Rw p/en/Teev $s;
+            }
+        }sort keys %$r;
         $c->render(text => decode_utf8($s));
     };
     
@@ -113,6 +139,10 @@ Shovel: | # run/mind the remote thing updatory
     #ys&over = 'scroll';
     
     #G&way,'t/t_wayttl',ar;
+    
+    # has phases of stuff
+    # advertised domes, to blow away/sum/src-check as well
+    if (!1s&que) {
     
     # two types of G-sod
     $de = {w:[],u:[]};
@@ -160,10 +190,49 @@ Shovel: | # run/mind the remote thing updatory
         m $t  $s:l %hue:150deg,ws:pre,ma:1em
     }
     
-    $w = de.w.map(&C{ return G&Cye,[C.t,'',{s:s&dige}] });
-    $ts = G&way,'j/res/Teev',{N:w};
+    $q = {};
+    each tN de {
+        q[t] = N.map(&C{
+            $s = t == 'w' ? s&dige : s&v;
+            return G&Cye,[C.t,'',{s:s}]
+        });
+        q[t] = G&way,'j/en/Teev',{N:q[t]};
+    }
     
-    n wayts -jod_04 $s:ts %
+    # ki could almost encode all this...
+    n wayts -jod_04 $s:q,dl:14 %
+    
+    1s&que = q;
+    }
+    
+    $q = 1s&que;
+    
+    1s&ein.pasa = &acgts{
+        throw "It workj: "+ki(c&s);
+        1s&pasa = c&s;
+    };
+    if (!1s&pasa) {
+        $get = {url:'Spade',data:q};
+        $done = &s,c{
+            $r = {arr:3};
+            s = s.split("\n");
+            $lt = /^(\w+): /;
+            each iz s {
+                z.length == 0 and continue
+                $m = z.match(lt);
+                !m and throw "Invalid pasam: "+ki(s)
+                $t = m[1];
+                z = z.replace(lt, '');
+                r[t] = G&way,'j/de/Teev',{s:z};
+            }
+            $e = G&Cye,['pasa',''];
+            e Shovel  e:e,s:r
+        };
+        G&question,get,done
+    }
+    else {
+        n pasa -jod_05 $s:1s&pasa,dl:14 %
+    }
     
     
     
