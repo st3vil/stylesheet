@@ -33,6 +33,56 @@ Ch: | # swim channel
         n toL 15 $s:l %hue:1$i+9deg,ws:pre,dis:block,ma:1em
         n.y.cv += 0.015 * i;
     }
+j/res/Teev: | # string t,s for N
+    $M = [];
+    each iC N {
+        $ts = [C.t,c&s];
+        # if any insides \W, throw if empty t?
+        $en
+        each is ts {
+            s.match(/^\w+$/) and en = ts
+        }
+        en and M.push(enj(en)) continue
+        M.push(ts.join("\t"));
+    } 
+Spade: | # serve Shovel, bulk version checks
+    # to allow stream/trust ghost happenings
+    # say
+    # u allows transport as <script src=/js/$t>, usually
+    #   can insist on being a J "present", T "ing", G "host"
+    #  implies k:v resolutions of itselves to be t:s&v or so
+    get '/Shovel/u' => &c{
+        
+        my $C = G&Ct,[$t,'',{ver=>$ver}];
+        c&head = 1;
+        
+        my $de 
+        my $C = $c_to_tverC->($c);
+        Rw get/js $C
+            || return $c->reply->not_found;
+        $tver_headers->($C,$c);
+    };
+    # 4s&waythe way
+    # < Accept headers to get the various translations
+    get '/way/*way' => &c{
+        my $t = $c->param('way');
+        $t =~ s/\W+/-/g;
+        my $w = G&t,w=>$t;
+        $w || return $c->reply->not_found;
+        $c->res->headers->append(Dige => ws&dige);
+        
+        my $babv = readlink("wormhole/digway/JaBabz");
+        a&wayjs = {} if a&babv ne $babv;
+        a&babv = $babv;
+        
+        my $s = a&wayjs.>w.t.>ws&dige ||= do {
+            Rw JaBabz $C:w;
+            wc&s
+        };
+        $s =~ /^(.+?m\.replace(.+?))$/sgm && sayyl "Fuo:\n $1\n\n";
+        $c->render(text => decode_utf8($s));
+    };
+    
 Shovel: | # run/mind the remote thing updatory
     G&heading;
     G&u,['MelTest'];
@@ -43,8 +93,7 @@ Shovel: | # run/mind the remote thing updatory
     
     #G&way,'t/t_wayttl',ar;
     
-    #return;
-    #
+    # two types of G-sod
     $de = {w:[],u:[]};
     each tY 4s&mind {
         $n = Yc&s;
@@ -53,22 +102,24 @@ Shovel: | # run/mind the remote thing updatory
         
         de.u.push(n);
         
-        m $i+"mind"  $s:ki(n) %
-        m $i+"mindaye"  $s:ki(n.y.A) %hue:50deg,ml:1
+        #m $t+"mind"  $s:ki(n) %
+        #m $t+"mindaye"  $s:ki(n.y.A) %hue:50deg,ml:1
     }
+    
     $way = A.5.I.w;
-    
-    n $i+"minds" -jod $s:M,dl:4 %
-    
-    
-    n way -h1
-    
+    !way and throw "w where?"
     each tC way.y.tw {
         de.w.push(C);
         
-        m $t+"way" $s:ki(C.sc,4) %hue:250deg
+        #m $t+"way" $s:ki(C.sc,4) %hue:250deg
     }
     
+    
+    n minds -h1
+    n minds -jod $s:de.u %
+    
+    n way -h1
+    n way -jod_04 $s:de.w %
     
     
     
@@ -76,21 +127,25 @@ Shovel: | # run/mind the remote thing updatory
         $i =
         e $t 1
         is&z = N;
+        
+        $comp = &C{
+            c&s and c&s = c&s.length;
+        };
         try {
-        $l = G&Serialise,i;
+            $l = G&Serialise,i,comp;
         }
-        catch (er) { l = "Error: "+er+": "+ki(i) }
-        
+        catch (er) {
+            l = "Error: "+er+": "+ki(i)
+        }
         #t == 'w' and continue
-        
         m $t  $s:l %hue:150deg,ws:pre,ma:1em
     }
     
     
     
-    M.map(&s{ ss&dis = 'block' });
     
-    n way -jod_04 $s:way %
+    
+    M.map(&s{ ss&dis = 'block' });
     
     
     
@@ -154,11 +209,12 @@ NutIns: | # new stuff
     #   G&ind makes clone.y.D = origin, but no .y.tw etc.
     #   G&Compress tidies it up
     #   G&toLines makes one string, no y but cv
-    Serialise:
+    Serialise: %acgt:s comp
         $ers = [];
         $cb = &s,d{
             try {
                 G&Compress,s;
+                comp && comp(s);
                 return G&toLines,s
             }
             catch (er) {
