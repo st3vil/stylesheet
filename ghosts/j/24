@@ -15,6 +15,7 @@ Ch: | # swim channel
     G&heading,'Hz:50';
     G&u,['NutIns'];
     G&clusp;
+    # fact cheque #
         
     # F thing that blocks: #!
     $n =
@@ -63,14 +64,26 @@ j/de/Teev: | # N C t,s for s
         else {
             v = s.shift();
         }
-        N.push( G&Cye,[k,'',{s:v}] );
+        $d = G&Cye,[k,''];
+        N.push(d);
+        null == v and continue;
+        if (ar.to == 'cv') {
+            d.y.cv = v || 1;
+            while (d.y.cv >= 1) {
+                d.y.cv *= 0.1
+            }
+        }
+        else { dc&s = v }
     }
     return N
 p/en/Teev: | # string t,s for N
     return join "\t", map{
         my $ts = [_.t,_c&s]; 
         # if any insides \W, throw if empty t?
-        grep{ !/^[\/\w]+$/ }@$ts ? sjson $ts : join "\t", @$ts
+        my $whack = 
+        grep{ !/^[\/\w]+$/ }@$ts;
+        $whack && sayyl "Was whack: ".wdump 2, $ts;
+        $whack ? sjson $ts : join "\t", @$ts
     }@$N;
 p/de/Teev: | # N C t,s for s 
     # slightly toLines, for t and y
@@ -120,13 +133,15 @@ Spade: | # serve Shovel, bulk version checkings
                 push @{r.w ||= []}, G&Ct,[D.t,'',{s=>ws&dige}];
             }
         }
+        1 && saybl "Javo: ".wdump 4, $r;
         my $s = join "\n", grep{$_} map {
             my $v = $r.>$_;
             if ($v) {
                 "$_: ".
-                Rw Rw p/en/Teev $s;
+                Rw p/en/Teev $N:v;
             }
         }sort keys %$r;
+        $s ||= "OK";
         $c->render(text => decode_utf8($s));
     };
     
@@ -139,10 +154,10 @@ Shovel: | # run/mind the remote thing updatory
     #ys&over = 'scroll';
     
     #G&way,'t/t_wayttl',ar;
-    
+    #
     # has phases of stuff
     # advertised domes, to blow away/sum/src-check as well
-    if (!1s&que) {
+    if (1 || !1s&que) {
     
     # two types of G-sod
     $de = {w:[],u:[]};
@@ -156,6 +171,7 @@ Shovel: | # run/mind the remote thing updatory
         #m $t+"mind"  $s:ki(n) %
         #m $t+"mindaye"  $s:ki(n.y.A) %hue:50deg,ml:1
     }
+    ### # 
     
     $way = A.5.I.w;
     !way and throw "w where?"
@@ -170,7 +186,7 @@ Shovel: | # run/mind the remote thing updatory
     n minds -jod $s:de.u %
     
     n way -h1
-    n way -jod_04 $s:de.w %
+    n way -jod_04 $s:de.w %fs:25%
     
     each tN de {
         $i =
@@ -187,7 +203,7 @@ Shovel: | # run/mind the remote thing updatory
             l = "Error: "+er+": "+ki(i)
         }
         #t == 'w' and continue
-        m $t  $s:l %hue:150deg,ws:pre,ma:1em
+        m $t  $s:l %hue:150deg,ws:pre,ma:1em,fs:22%
     }
     
     $q = {};
@@ -208,13 +224,15 @@ Shovel: | # run/mind the remote thing updatory
     $q = 1s&que;
     
     1s&ein.pasa = &acgts{
-        throw "It workj: "+ki(c&s);
+        #throw "It workj: "+ki(c&s);
+        ~Passad: ki(c&s)
         1s&pasa = c&s;
     };
-    if (!1s&pasa) {
+    if (1 || !1s&pasa) {
         $get = {url:'Spade',data:q};
         $done = &s,c{
             $r = {arr:3};
+            s == 'OK' and s = '';
             s = s.split("\n");
             $lt = /^(\w+): /;
             each iz s {
@@ -225,6 +243,7 @@ Shovel: | # run/mind the remote thing updatory
                 z = z.replace(lt, '');
                 r[t] = G&way,'j/de/Teev',{s:z};
             }
+            #1s&pasa = r;
             $e = G&Cye,['pasa',''];
             e Shovel  e:e,s:r
         };

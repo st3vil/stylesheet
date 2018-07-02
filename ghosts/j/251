@@ -12,6 +12,24 @@ Cluts: | # ore - the matrial
     # land upon body,
     # balance neuron attention
     # into time, around tasks
+NutReady: | # on startup, after NutGravy (after G&Four)
+    # start the thing, we will leave/async via e
+    e Tri
+    # whenever that finishes, click it
+    $done = &{
+        $e = G&Cye,['click','',{p:'rm'}];
+        G&e,['Tri'],e;
+    };
+    G&yl,390,done;
+    
+    $done = &{
+        $e = G&Cye,['click','',{p:'first'}];
+        G&e,['Tri'],e;
+    };
+    G&yl,390,done;
+    # turn on the all-retry
+    !4c&Jinlooping and G&waylay,'con/Jinloop';
+    ~Lovely:
 Typ: | # exact lounge
     # TO give at a glance a pretty good idea of where you are
     # in the colour code of
@@ -57,7 +75,7 @@ Tri: | # travel
     # < leave what you didn't interact with
     n other 1 s:Ge %jela:5,dos:SwitchupEl:4msgs:css:overflow:hidden/scroll
     n rm 11 s:rm %jela:5,dos:SwitchupEl:4on:W:leftbehind:slideUp
-    n something 15 s:Shovel-Ch %fs:170%,hs:345,dow:do/Launch
+    n first 15 s:Shovel-Ch %fs:170%,hs:345,dow:do/Launch
     n something 17 s:Launch-Expect %fs:150%,hs:345,dow:do/Launch
     
     # the name, renamable
@@ -308,8 +326,40 @@ Who: | # lis
 dosclick: | # what any webby W can experience s&dos, does s
     #G&E,'hC s&dos';
     # 
-    #debugger;
+    
+    $s = 1s&s;
+    !s and G&TuneTimeMachine,'nosyet'
+    
+    if (ec&p) {
+        if (typeof ec&p == 'string') {
+            ec&p = G&way,'j/de/Teev',{s:ec&p,to:'cv'}
+        }
+        if (!ec&path) {
+            $t = ss&top;
+            ec&path = [t];
+            each ip ec&p {
+                p.t == t.t && p.y.cv == t.y.cv and continue;
+                $v = t.y.tv && t.y.tv[p.t];
+                if (p.y.cv) {
+                    v = v[p.y.cv]
+                }
+                else {
+                    $pos = Object.keys(v);
+                    pos.length != 1 and throw "moret "+i+":",v,ec&p
+                    v = v[pos[0]];
+                }
+                !v and throw "No point "+i+": "+ki(ec&p)
+                ec&path.push(v);
+            }
+            ec&path = ec&path.map(&s{
+                !s.y.A and throw "no A to lie path";
+                return {A:s.y.A};
+            });
+        }
+    }
+    
     $D = G&E:'hC s&dos -1';
+    
     if (D) {
         $ar = G&F:D,'s&dos peel:way:@m';
         ~>3 dos: ar.way, ki(D.sc,4)
@@ -319,7 +369,7 @@ dosclick: | # what any webby W can experience s&dos, does s
         return T.el = 1;
     }
     else {
-        
+        #debugger;
     }
     #debugger;
     #1s&M.push("Anteract: "+4s&ki(C,3));
@@ -364,6 +414,7 @@ SwitchupEl: | # tweak Elemental bitology
     else {
         property ? el[adjust](property) : el[adjust]()
     }
+    ~>Switched: ki(el.get()), property, next
 t/JSTesti: | # test the JS bits
     # how does it work?
     # a bunch of timers?
