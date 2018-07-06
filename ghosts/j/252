@@ -4,6 +4,11 @@ Expect: | # pull results along
     G&u,['MelTest'];
     G&clusp;
     
+    # to be intent on:
+    #   domes in order, until done
+    #   not redoing earlier work, per dome
+    #   computing dependencies emanating from other domes,
+    #   they leave a sub that produces ground
     
     G&m,M,['FUN','',{s:'FUN'},{hue:'150deg'}];
     G&m,M,['FUN','',{s:'FUN'},{hue:'120deg'}];
@@ -17,35 +22,35 @@ Expect: | # pull results along
         $g = A.ground;
         gc&dome and g = g.y.up;
         gc&dome and throw "many domes deep", A.ground
+        A&groundling ||= g;
+        A&groundling != g and ~>grounddiff: ki(g), ki(A&groundling)
         A.ground = g;
-        !t and return;
-        
-        1s&domeseq ||= [];
-        1s&domes ||= {};
-        $h = 1s&domes[t];
-        if (h) {
-            # redoing
-            hs&z = [];
-        }
-        else {
-            $h = 1s&domes[t] = G&Cye,[t,'',{dome:1},{z:[]}];
-            1s&domeseq.push(h);
-            h.y.up = g;
-        }
-        if (!gc&domedup) {
-            gc&domedup = 1;
+        if (1s&domes && !gc&domed) {
             # add all the domes to the ground in this order
             each id 1s&domeseq {
                 gs&z.push(d);
             }
-            #~>65 Redomed: 1s&domeseq.length
+            gc&domed = 1;
         }
+        # coda, after domes
+        !t and return;
+        
+        # g ground, h hovering carpets
+        1s&domeseq ||= [];
+        1s&domes ||= {};
+        $h = 1s&domes[t];
+        # repeat or reveal
+        h and hs&z = [];
         else {
-            #~>65 Addome: t
-            gs&z.indexOf(h) < 0 and gs&z.push(h);
+            h = 1s&domes[t] = G&Cye,[t,'',{dome:1},{z:[]}];
+            1s&domeseq.push(h);
+            gs&z.push(h);
         }
+        # under the ground
+        h.y.up = g;
+        
         A.ground = h;
-        G&n,["dome:"+t,'',{s:t},{fs:'120%',hue:'200deg',dis:'block'}];
+        G&n:["dome "+t,'',{s:t},{fs:'120%',hue:'200deg',dis:'block'}];
     };
     # lo.indexOf(4); lo.splice(3)
 
@@ -78,7 +83,7 @@ Expect: | # pull results along
         A&bailstep == s and return 0;
         osc_each_step and A&bailstep = s+1;
         A&didstep = s;
-        $t = "Step "+s;
+        $t = s;
         d and t += ": "+d;
         #~>54 Expecting: t
         doming(t);
@@ -113,6 +118,9 @@ Expect: | # pull results along
         $F = Ls&child;
         !F and return til('4s\&child: '+ki(L,2));
         Jc&F = F;
+        
+        n haveLaunch 1 $s:ki(L,3) %
+        n haveFour 1 $s:ki(F,3) %dis:block
     }
     $L = Jc&L;
     $F = Jc&F;
@@ -127,7 +135,7 @@ Expect: | # pull results along
         G&n:['made W','-jod_3',{s:n}];
         $Y = n.y.A;
         $ok = Y.cv >= 0.8;
-        G&n:['A complete','-jod_3',{is:ok?"OK":"Not OK: "+Y.cv}];
+        G&n:['A complete','-jod_3',{s:ok?"OK":"Not OK: "+Y.cv}];
         !ok and return til('n completes');
     }
     
