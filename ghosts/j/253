@@ -168,7 +168,7 @@ Shovel: | # run/mind the remote thing updatory
     
     
         n question -jod_05 $s:1s&question,dl:214 %fs:40%
-        n answer -jod_05 $s:1s&answer,dl:214 %
+        n answer -jod_05 $s:1s&answer,dl:214 %fs:70%
     
     n refresh 5 s:re %dos:do/Shovel
     n update 5 s:up %dos:do/Shovel
@@ -194,13 +194,12 @@ do/Shovel: |
         delete 1s&answer;
     }
     else {
-        $de = 1s&ghosts_tz;
         $cv = 7 + G&desca,Math.random();
         1s&updater = G&Cye,['update',cv,{pi:'updater'}];
     }
     
     #
-pi/updater: | # the process of update many via async
+pi/updater: | # mind updates many, async
     # similar to/uses NutMinds
     $an = 3s&answer;
     !an and throw "Need answer"
@@ -242,7 +241,7 @@ pi/updater: | # the process of update many via async
                 $t_w = &t{
                 $C = G&Cye,[t,'',{W:'w'}];
                 $Y = G&Aye,'wu',0,{s:C};
-                Ys&ready = '?';
+                Ys&ready = 0;
                 z.push(Y);
                 
                 # to make sure it updates:
@@ -250,22 +249,22 @@ pi/updater: | # the process of update many via async
                 $w = G&t,'w',t;
                 #  sabotage the way G&way trusts it
                 ws&now = 0;
+                # so we can talk about the wrong thing
+                Yc&s = w;
                 
                 # < G& should treat cb consistently sync
                 #   only cb='noop' avoids doing the way
                 #   cb!=&s{} should cb instead, assuming it G&ways
                 #   cb=&s{} should s = return value of way
                 $cb = &{
-                    #$Y = 1s&updates.filter(&s{
-                    #    return sc&s.t == t
-                    #})[0];
                     Ys&ready = 1;
                     Y.cv = 0.8;
-                    #debugger;
-                    # lies
                     $w = G&t,'w',t;
+                    Yc&s = w;
+                    # lies
                     ws&now = G&time + 3600;
-                    ~>48 wdone: C.t, w.t, Y.c.s.t
+                    Ys&sabotagi = 1;
+                    ~>48 wdone: C.t, ki(w)
                     
                 };
                 G&way,t,{},cb;
@@ -280,6 +279,9 @@ pi/updater: | # the process of update many via async
     1s&updates = z;
     }
     
+    # < unifying ws&now and us&now, will happen in s&in
+    # < things pinned to their version able to leave
+    
         $not;
         # check u' 8
         each iY 1s&updates {
@@ -287,15 +289,30 @@ pi/updater: | # the process of update many via async
             # winds back to 3 if not
             Yc&T and G&thro,Y,8;
             $n = Yc&s;
-            $s = ki(Y,2)+" "+n.t+"  %ready:"+Ys&ready;
+            
+            $verbit = Y.t == 'u' ? ',v:'+ns&v : ',dige:'+ns&dige;
+            #+'  ->'+ki(n);
+            
+            if (Y.t == 'u') {
+            # should have a reliable way to hang hooks on an A...
+            # when u' get to 8, lie about expiry date
+            # much like w does above, but we catch u here, while "in"
+            # (their ttl last 2x as long anyway)
+                # lies
+                !Ys&sabotagi and Ys&now = G&time + 3600;
+                Ys&sabotagi = 1;
+            }
+            
+            
+            $s = ki(Y,2)+" "+n.t+"  %ready:"+Ys&ready+verbit;
             $t = i+"thji";
-            m $t  $s:s %dis:block
+            m $t  $s:s %dis:block,fs:70%
             Y.cv < 0.8 and 4s&N.push(Y); not = 1;
         }
         if (not)
             m waits 1 s:waits %
         if (!not)
-            m ready 1 s:ready %fs:300%
+            m ready 1 s:redy %fs:300%
 Q/Ghosts: | # check t:ver ghost versions
     1s&ein.answer = &acgts{
         ~Passad: ki(s)
@@ -379,7 +396,7 @@ S/Ghosts: | # wave at bits to extract ghost version
             l = "Error: "+er+": "+ki(i)
         }
         #t == 'w' and continue
-        m $t  $s:l %hue:150deg,ws:pre,ma:1em,fs:22%
+        m $t 77 $s:l %hue:150deg,ws:pre,ma:1em,fs:22%
     }
     }
     
