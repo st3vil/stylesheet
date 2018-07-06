@@ -148,7 +148,7 @@ Shovel: | # run/mind the remote thing updatory
     
     if (!1s&question) {
         # scan inbound culture
-        #ar.drawing = 1;
+        ar.drawing = 1;
         G&way,'S/Ghosts',ar;
         if ('faulty') {
             each ts 1s&question {
@@ -205,8 +205,10 @@ pi/updater: | # the process of update many via async
     $an = 3s&answer;
     !an and throw "Need answer"
     1s&answer != an and delete 1s&updates;
+    1s&answer = an;
     
     if (!1s&updates) {
+    ~>39 Generating update:
     $z = []; # to be 8
     each pN an {
         each in N {
@@ -237,9 +239,38 @@ pi/updater: | # the process of update many via async
             }
             else
             if (p == 'w') {
-                $C = G&Cye,[t,'',{W:'w'}
+                $t_w = &t{
+                $C = G&Cye,[t,'',{W:'w'}];
                 $Y = G&Aye,'wu',0,{s:C};
+                Ys&ready = '?';
+                z.push(Y);
                 
+                # to make sure it updates:
+                #  grab via this no-async t
+                $w = G&t,'w',t;
+                #  sabotage the way G&way trusts it
+                ws&now = 0;
+                
+                # < G& should treat cb consistently sync
+                #   only cb='noop' avoids doing the way
+                #   cb!=&s{} should cb instead, assuming it G&ways
+                #   cb=&s{} should s = return value of way
+                $cb = &{
+                    #$Y = 1s&updates.filter(&s{
+                    #    return sc&s.t == t
+                    #})[0];
+                    Ys&ready = 1;
+                    Y.cv = 0.8;
+                    #debugger;
+                    # lies
+                    $w = G&t,'w',t;
+                    ws&now = G&time + 3600;
+                    ~>48 wdone: C.t, w.t, Y.c.s.t
+                    
+                };
+                G&way,t,{},cb;
+                };
+                t_w(t);
             }
             else {
                 throw "What type", p
@@ -254,14 +285,17 @@ pi/updater: | # the process of update many via async
         each iY 1s&updates {
             # u' 8 checks the linkage/version on some object
             # winds back to 3 if not
-            G&thro,Y,8;
-            $s = ki(Y,2)+"  ready:"+Ys&ready;
+            Yc&T and G&thro,Y,8;
+            $n = Yc&s;
+            $s = ki(Y,2)+" "+n.t+"  %ready:"+Ys&ready;
             $t = i+"thji";
             m $t  $s:s %dis:block
             Y.cv < 0.8 and 4s&N.push(Y); not = 1;
         }
         if (not)
             m waits 1 s:waits %
+        if (!not)
+            m ready 1 s:ready %fs:300%
 Q/Ghosts: | # check t:ver ghost versions
     1s&ein.answer = &acgts{
         ~Passad: ki(s)
@@ -349,12 +383,9 @@ S/Ghosts: | # wave at bits to extract ghost version
     }
     }
     
-    $q = {}; # type:(t,v)+
-    $g = {}; # type:t+
+    $q = {}; # type: string (t,v)+
     each tN de {
         q[t] = N.map(&C{
-            g[t] ||= [];
-            g[t].push(C.t);
             $s = t == 'w' ? s&dige : s&v;
             return G&Cye,[C.t,'',{s:s}]
         });
@@ -369,7 +400,6 @@ S/Ghosts: | # wave at bits to extract ghost version
     1s&ghost_tz = de;
     # type: t v( t v)* string packed name + versioning, de/Teev
     1s&question = q;
-    1s&ghosts = g;
     return q
 pi/Cod: |
     ys&dis = 'block';
