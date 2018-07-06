@@ -422,13 +422,22 @@ NutJaying: | # A sequences J
     #     they could renegotiate space over time that way tho
     M 2:
         !c&M.length and delete c&M; return
-        # cursor to thro, give them yA
-        !A&iM and A&iM = 0; c&M.map(&n{ G&Aye,'n',0,n });
+        if (!A&iM) {
+            # cursor to thro
+            A&iM = 0;
+            $cv = 0.300;
+            c&M.map(&n{
+                # give yA
+                G&Aye,'n',0,n;
+                # suggest y.cv
+                !n.y.cv and n.y.cv = cv; cv += 0.001;
+            });
+        }
         A&tow = &ov{
             while (c&M[A&iM]) {
                 $n = c&M[A&iM];
                 $Y = n.y.A;
-                ~>3 catchuppy: A.1.t, n.t, Y.cv, ov
+                #~>3 catchuppy: A.1.t, n.t, Y.cv, ov
                 G&thro,Y,ov;
                 # advance to next n if that worked
                 A&iM++;
