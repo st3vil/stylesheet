@@ -39,6 +39,7 @@ j/en/Teev: | # string t,s for N
 j/de/Teev: | # N C t,s for s 
     # slightly toLines, for t and y
     $N = [];
+    #!s.split and return N
     s = s.split("\t");
     while (s.length) {
         $k = s.shift();
@@ -145,13 +146,15 @@ Shovel: | # run/mind the remote thing updatory
     # has phases of stuff
     # advertised domes, to blow away/sum/src-check as well
     
-    # scan inbound culture
-    ar.drawing = 1;
-    G&way,'S/Ghosts',ar;
-    if ('faulty') {
-        each ts 1s&question {
-            $v = 1s&question[t] = s.replace(/\t(\w)/,'\t?')
-            #~The: t, v.slice(0,33)
+    if (!1s&question) {
+        # scan inbound culture
+        #ar.drawing = 1;
+        G&way,'S/Ghosts',ar;
+        if ('faulty') {
+            each ts 1s&question {
+                $v = 1s&question[t] = s.replace(/\t(\w)/,'\t?')
+                #~The: t, v.slice(0,33)
+            }
         }
     }
     
@@ -161,13 +164,16 @@ Shovel: | # run/mind the remote thing updatory
     #   a slight o (that s might use) of the question dome's things
     #     will give way
     # come back with change
-    !A&mish and G&way,'Q/Ghosts',ar; A&mish = 1;
+    !1s&answer && !A&mish and G&way,'Q/Ghosts',ar; A&mish = 1;
     
     
         n question -jod_05 $s:1s&question,dl:214 %fs:40%
         n answer -jod_05 $s:1s&answer,dl:214 %
     
+    n refresh 5 s:re %dos:do/Shovel
+    n update 5 s:up %dos:do/Shovel
     
+    1s&updater and G&n,1s&updater
     
     M.map(&s{ ss&dis = 'block' });
     
@@ -178,6 +184,80 @@ Shovel: | # run/mind the remote thing updatory
     # G&S like G&F but for serialising apart? (1-5 even)
     # G&U like G&F but for reflecting together?
     # TODO and a tool for W difference
+do/Shovel: |
+    ~>49 Dosh: cc&s
+    if (c.t == 'refresh') {
+        # < call it T.el = 'refresh', for action
+        #   and T.ok = 'refresh' for sleep
+        ~>49 do refresh: A.1.t
+        delete 1s&question;
+        delete 1s&answer;
+    }
+    else {
+        $de = 1s&ghosts_tz;
+        $cv = 7 + G&desca,Math.random();
+        1s&updater = G&Cye,['update',cv,{pi:'updater'}];
+    }
+    
+    #
+pi/updater: | # the process of update many via async
+    # similar to/uses NutMinds
+    $an = 3s&answer;
+    !an and throw "Need answer"
+    1s&answer != an and delete 1s&updates;
+    
+    if (!1s&updates) {
+    $z = []; # to be 8
+    each pN an {
+        each in N {
+            $t = n.t;
+            
+            if (p == 'u') {
+                # A:u's may resync
+                4s&mind ||= {};
+                $Y = 4s&mind[t];
+
+                if (!Y) {
+                    throw "Updating nonexisting mind", t
+                    $C = G&Cye,[n.t,''];
+                    # being stylehut means javascript
+                    !c&I and c&W = 'javascript';
+                    Y = G&Aye,'u',2,{s:C};
+                }
+
+                # shelve
+                4s&mind[t] = Y;
+
+                # wake us when it completes
+                #Ys&N ||= [];
+                #Ys&N.push(A);
+
+                # them
+                z.push(Y);
+            }
+            else
+            if (p == 'w') {
+                
+            }
+            else {
+                throw "What type", p
+            }
+        }
+    }
+    1s&updates = z;
+    }
+    
+        $not;
+        # check u' 8
+        each iY 1s&updates {
+            # u' 8 checks the linkage/version on some object
+            # winds back to 3 if not
+            G&thro,Y,8;
+            $s = ki(Y,2)+"  ready:"+a&ready;
+            $t = i+"thji";
+            m $t  $s:s %dis:block
+            Y.cv < 0.8 and 4s&N.push(Y); not = 1;
+        }
 Q/Ghosts: | # check t:ver ghost versions
     1s&ein.answer = &acgts{
         ~Passad: ki(s)
@@ -185,11 +265,13 @@ Q/Ghosts: | # check t:ver ghost versions
         #G&e,[A.1.t]
     };
     # need this later, async in done() forgets to answer
+    # makes a s.split not function error?
     G&way,'j/de/Teev',{},'noop';
     
     $get = {url:'Spade',data:1s&question};
 
     $done = &s,c{
+        ~>79 Q/Ghosts answer: A.1.t, s.length
         $r = {};
         s == 'OK' and s = '';
         s = s.split("\n");
@@ -205,7 +287,6 @@ Q/Ghosts: | # check t:ver ghost versions
         #1s&answer = r;
         # elvising it Js
         $e = G&Cye,['answer','',{s:r}];
-        #~>79 Q/Ghosts answer: A.1.t
         G&e,['Shovel'],e
     };
     #~>79 Q/Ghosts asking: A.1.t
@@ -264,9 +345,12 @@ S/Ghosts: | # wave at bits to extract ghost version
     }
     }
     
-    $q = {};
+    $q = {}; # type:(t,v)+
+    $g = {}; # type:t+
     each tN de {
         q[t] = N.map(&C{
+            g[t] ||= [];
+            g[t].push(C.t);
             $s = t == 'w' ? s&dige : s&v;
             return G&Cye,[C.t,'',{s:s}]
         });
@@ -281,6 +365,7 @@ S/Ghosts: | # wave at bits to extract ghost version
     1s&ghost_tz = de;
     # type: t v( t v)* string packed name + versioning, de/Teev
     1s&question = q;
+    1s&ghosts = g;
     return q
 pi/Cod: |
     ys&dis = 'block';
@@ -695,6 +780,7 @@ NutIns: | # new stuff
         $is_done;
         $r = $.ajax(get);
         $done = &s,how,c{
+            is_done and return
             is_done = 1;
             r.status != '200' and throw "ques: "+r.status+": "+get, r
             cb(s,c)
@@ -786,3 +872,4 @@ NutIns: | # new stuff
         s >= 6 && ps&subphone and ps&subphone(startup);
         # 
         
+
