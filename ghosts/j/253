@@ -142,14 +142,25 @@ Shovel: | # mind remote things
     G&u,['NutIns'];
     G&clusp;
     ys&mah = '10em';
+    # names to prepare
     1s&ein.ready = &acgts{
-        1s&question = s
+        1s&question = s;
+        delete 1s&answer;
     };
-    1s&ein.describe = &acgts{
+    # name the state of mind
+    1s&ein.refresh = &acgts{
         delete 1s&question;
-        # to get a new question (state of mind)
+        delete 1s&answer;
     };
-    G&S
+    # download name changes
+    1s&ein.update = &acgts{
+        $cv = 7 + G&desca,Math.random();
+        1s&updater = G&Cye,['update',cv,{pi:'updater'}];
+    };
+    
+    #
+
+    G&S;
     #ys&over = 'scroll';
     #G&way,'t/t_wayttl',ar;
     
@@ -161,6 +172,7 @@ Shovel: | # mind remote things
         # scan inbound culture
         ar.drawing = 1;
         G&way,'S/Ghosts',ar;
+        
         if ('faulty') {
             each ts 1s&question {
                 $v = 1s&question[t] = s.replace(/\t(\w)/,'\t?')
@@ -175,14 +187,16 @@ Shovel: | # mind remote things
     #   a slight o (that s might use) of the question dome's things
     #     will give way
     # come back with change
-    !1s&answer && !A&mish and G&way,'Q/Ghosts',ar; A&mish = 1;
-    
+    if (!1s&answer && !A&mish) {
+        G&way,'Q/Ghosts',ar;
+        A&mish = 1;
+    }
     
         n question -jod_05 $s:1s&question,dl:214 %fs:40%
         n answer -jod_05 $s:1s&answer,dl:214 %fs:70%
     
-    n refresh 5 s:re %dos:do/Shovel
-    n update 5 s:up %dos:do/Shovel
+    n refresh 5 s:re %doe
+    n update 5 s:up %doe
     
     1s&updater and G&n,1s&updater
     
@@ -195,21 +209,6 @@ Shovel: | # mind remote things
     # G&S like G&F but for serialising apart? (1-5 even)
     # G&U like G&F but for reflecting together?
     # TODO and a tool for W difference
-do/Shovel: |
-    ~>49 Dosh: cc&s
-    if (c.t == 'refresh') {
-        # < call it T.el = 'refresh', for action
-        #   and T.ok = 'refresh' for sleep
-        ~>49 do refresh: A.1.t
-        delete 1s&question;
-        delete 1s&answer;
-    }
-    else {
-        $cv = 7 + G&desca,Math.random();
-        1s&updater = G&Cye,['update',cv,{pi:'updater'}];
-    }
-    
-    #
 pi/updater: | # mind updates many, async
     # similar to/uses NutMinds
     $an = 3s&answer;
