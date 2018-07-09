@@ -143,7 +143,7 @@ Shovel: | # mind remote things
     G&u,['NutIns'];
     G&clusp;
     ys&mah = '10em';
-    
+    # #
     # take given names
     1s&ein.ready = &acgts{
         1s&question = s;
@@ -239,17 +239,26 @@ pi/updater: | # mind updates many, async
     # similar to/uses NutMinds
     $an = 3s&answer;
     !an and throw "Need answer"
-    c&fully and an = 1s&question
+    c&fully and an = 3s&question
     1s&answer != an and delete 1s&updates;
     1s&answer = an;
     
     if (!1s&updates) {
     ~>39 Generating update:
     $z = []; # to be 8
+    $al = 1s&already = {};
     each pN an {
+        # build index of answer
+        # an = question when inhaling names
+        $sw = 3s&answer[p];
+        $tw = {};
+        each in sw {
+            tw[n.t] = n;
+        }
+        # track things we had already:
+        $already = al[p] = [];
         each in N {
             $t = n.t;
-            
             if (p == 'u') {
                 # A:u's may resync
                 4s&mind ||= {};
@@ -261,6 +270,13 @@ pi/updater: | # mind updates many, async
                     # being stylehut means javascript
                     !c&I and c&W = 'javascript';
                     Y = G&Aye,'u',2,{s:C};
+                }
+                else {
+                    # had, not answered for, ver as questioned
+                    if (!tw[n.t] && Ys&v == nc&s) {
+                        already.push(n.t);
+                        continue
+                    }
                 }
 
                 # shelve
@@ -275,21 +291,35 @@ pi/updater: | # mind updates many, async
             }
             else
             if (p == 'w') {
-                $t_w = &t{
+                $lies = &w{
+                    # make way last ages without check
+                    ws&now = G&time + 3600;
+                };
+                # get thing
+                $w = G&t,'w',t;
+                # is it already?
+                if (w) {
+                    # and not answered for, ver as questioned
+                    if (!tw[n.t] && ws&dige == nc&s) {
+                        lies(w);
+                        already.push(n.t);
+                        continue
+                    }
+                    # make sure it updates
+                    ws&now = 1;
+                }
                 $C = G&Cye,[t,'',{W:'w'}];
                 $Y = G&Aye,'wu',0,{s:C};
                 Ys&ready = 0;
                 z.push(Y);
                 
-                # if there, make sure it updates:
-                $w = G&t,'w',t;
                 if (w) {
-                    #  sabotage the way G&way trusts it
-                    ws&now = 0;
                     # so we can talk about the wrong thing
                     Yc&s = w;
                 }
                 
+                # sub to isolate the many variables of t
+                $t_w = &Y,t{
                 # < G& should treat cb consistently sync
                 #   only cb='noop' avoids doing the way
                 #   cb!=&s{} should cb instead, assuming it G&ways
@@ -298,16 +328,14 @@ pi/updater: | # mind updates many, async
                     Ys&ready = 1;
                     Y.cv = 0.8;
                     $w = G&t,'w',t;
+                    lies(w);
                     Yc&s = w;
-                    # lies
-                    ws&now = G&time + 3600;
-                    Ys&sabotagi = 1;
                     ~>48 wdone: C.t, ki(w)
                     
                 };
                 G&way,t,{},cb;
                 };
-                t_w(t);
+                t_w(Y,t);
             }
             else {
                 throw "What type", p
@@ -316,10 +344,13 @@ pi/updater: | # mind updates many, async
     }
     1s&updates = z;
     }
-    
+    #c show update !
     # < unifying ws&now and us&now, will happen in s&in
     # < things pinned to their version able to leave
+    if (1s&already)
+        n already -jod $s:1s&already,dl:4 %
     
+    # watch A
         $not;
         # check u' 8
         each iY 1s&updates {
@@ -329,22 +360,21 @@ pi/updater: | # mind updates many, async
             $n = Yc&s;
             
             $verbit = Y.t == 'u' ? ',v:'+ns&v : ',dige:'+ns&dige;
-            #+'  ->'+ki(n);
             
             if (Y.t == 'u') {
             # should have a reliable way to hang hooks on an A...
             # when u' get to 8, lie about expiry date
             # much like w does above, but we catch u here, while "in"
             # (their ttl last 2x as long anyway)
-                # lies
+                # lies3
                 !Ys&sabotagi and Ys&now = G&time + 3600;
                 Ys&sabotagi = 1;
             }
             
-            
             $s = ki(Y,2)+" "+n.t+"  %ready:"+Ys&ready+verbit;
             $t = i+"thji";
             m $t  $s:s %dis:block,fs:70%
+            #m $t  $s:ki(n,4) %dis:block,hue:100deg,fs:60%
             Y.cv < 0.8 and 4s&N.push(Y); not = 1;
         }
         if (not)
