@@ -155,12 +155,56 @@ Expect: | # pull results along
     trc&s = "J, with lv ("+A&didstep+"/?)";
     1s&step > 3 and delete 1s&loop;
 Wade: | # serve /W/$t to Revisit
+    # defines one place get/set name scheme
     any '/W/*W' => &c{
         my $t = $c->param('W');
         my $s = $c->param('s');
         # read t, write if s
+        # all there
+        $t = "W/$t";
+        # safety
+        $t =~ /([^\w\/-]+)/ && return
+            $c->render(text=>sjson(
+                {er=>"illegal t[".pos()."] char: $1 in '$t'"}
+            ));
+        # and you can't use the name 1
+        my $f = "$t/1";
         
-        $c->render(text=>"hmm '$t'\n");
+        # returns json:
+        my $re = {ok=>1};
+        # or ?
+        #$c->render(text=>decode_utf8("c&s")); # ,format=>"js"
+        
+        # if setting
+        if (defined $s) {
+            if (!length $s) {
+                `rm $t/1`;
+                re.ok = 'deleted';
+            }
+            else {
+                # the whole name is directory
+                -d $t || `mkdir -p $t`;
+                my $new = !-f $f;
+                # we journal! can't trust anything
+                write_file("$f\.1",$s);
+                `mv $f\.1 $f`;
+                # < (notify nearby others, who )+
+                re.ok = 'wrote';
+                $s = '';
+            }
+        }
+        else {
+            if (-f $f) {
+                $s = read_file($f);
+                re.ok = 'found';
+            }
+            else {
+                re.ok = 0;
+                re.er = 'not found'
+            }
+        }
+        re.s = $s if length $s;
+        $c->render(text=>sjson($re));
     };
 Revisit: | # pull/push test data
     G&heading,'Hz:50';
@@ -177,7 +221,28 @@ Revisit: | # pull/push test data
     
     n laluce -jod $s:1s&questi %
     n obj -jod $s:1s&obj %
+    
+    $n =
+    n Bystand V
+    n = ns&J;
+    !n and return;
+    
+    
+    
     # 
+Bystand: |
+    G&heading,'Hz:50';
+    G&u,['NutIns'];
+    G&clusp;
+    ys&maw = '50%';
+    
+    while (M.length < 35) {
+        $fs = M.length * 5;
+        $hue = fs * 20;
+        $s = 'isle of joy';
+        m guil  $s:s %fs:$fs+%,hue:$hue+deg
+    }
+    
 t/LetsOsc: |
     G&heading;
     G&n,["figuar",2,{s:"R930000"}];

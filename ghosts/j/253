@@ -586,6 +586,7 @@ NutIns: | # new stuff
         delete ss&z;
         
         # especially if pi
+        ss&J and delete sc&s;
         typeof sc&s == 'object' and delete sc&s
         delete ss&J
         
@@ -835,12 +836,33 @@ NutIns: | # new stuff
             }
             if (c&of == 'W') {
                 get = {url:'/W/'+C.t};
-                if (c&s) {
+                if (c&s != null) {
                     get.type = 'post';
                     get.data = {s:c&s};
                 }
                 got = &P,s,c{
-                    Pc&s = s;
+                    $r = dej(s);
+                    if (r.ok) {
+                        s = '';
+                        r.ok == 'found' and s = r.s
+                        else
+                        r.ok == 'wrote' and s = c&s
+                        else
+                        r.ok == 'deleted' and s = ''
+                        else {
+                            throw "other kind of ok",r.ok
+                        }
+                        if (s) {
+                            s = G&readLines,r.s;
+                            s.length != 1 and throw "Weird tW lines", r.s
+                            s = s[0];
+                        }
+                        Pc&s = s
+                    }
+                    else {
+                        r.er != 'not found' and throw "tW er", r.er
+                        Pc&s = null
+                    }
                 };
             }
             
