@@ -221,17 +221,23 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
     #c toLines - C to string
     # one C, possibly many lines
     # < use from o that can conjoin the many C
-    # but first, oleak tests depth of data structure, true if bigger than d
+    # but first, oleak tests depth of data structure
+    #   true if more than d * 3 nodes
+    #   true if l and encoded
     # < limit depth not number of nodes, reuse the encoding?
-    oleak: %acgt:s d
+    oleak: %acgt:s d l
         $fail = 0;
         $was = window.maxyamling;
         window.maxyamling = d * 3;
-        try { jsyaml.safeDump(s) }
+        $code;
+        try { code = jsyaml.safeDump(s) }
         catch (er) {
             window.maxyamling = was;
             er.message != "Too much to yaml" and throw er
             fail = 1;
+        }
+        if (l && code && code.length > l) {
+            fail = 'large-ish'
         }
         window.maxyamling = was;
         return fail
@@ -275,7 +281,8 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
                 continue
             }
             if (typeof v != 'string' && typeof v != 'number') {
-                if (G&oleak,v,4 ) {
+                # is > 4*3 nodes or encodes to > 42 chars
+                if (G&oleak,v,4,42 ) {
                     G&oleak,v,24 and throw "Leaky "+nk+"."+gk+": "+ki(v);
                     # big enough to quote, simplifies remainder
                     lod(q,nk,gk,v);
