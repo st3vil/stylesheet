@@ -1,21 +1,46 @@
 
-Expect: | # pull results along
-    G&heading,'Hz:50';
-    G&u,['MelTest'];
-    G&clusp;
+Doming: | # in the place in the place
+    # future, uses G&S to do everything,
+    # and pass clues to what is on the w,
+    # so we have more options...
     
-    # to be intent on:
-    #   domes in order, until done
-    #   not redoing earlier work, per dome
-    #   computing dependencies emanating from other domes,
-    #   they leave a sub that produces ground
+    # doming as sections of the pin
+    #  - being steps of activity, isolating repeatables
+    #  - being acts coded for s to invoke
+    #   to be steps in the activity, or too-much-something, changed-something, etc
+    # all feeding through to each other.
+    #   Cs&in explains where things came from in a dome-dome way
+    # < finished domes can do their G&s o while in J6,
+    #   to wake/sleep later domes if reaction
+    # an effect processing. your
+    1s&step ||= 1;
+    1s&step_tries ||= 1;
+    1s&osc_each_step
+    $S = &s,d{
+        typeof s != 'number' and throw "NaN",s;
+        s < 1s&step and return 0; # dont redo
+        s > 1s&step and return 0; # dont get ahead
+        if (A&didstep == s) {
+            # second loop of while, allow next step
+            1s&step_tries = 1;
+            1s&step++;
+            return 0
+        }
+        # draw each step for stuff flying by on the screen
+        # or to commit changes to test data (...)
+        A&bailstep == s and return 0;
+        osc_each_step and A&bailstep = s+1;
+        A&didstep = s;
+        $t = s;
+        d and t += ": "+d;
+        #~>59 Expecting: t
+        doming(t);
+        return 1;
+    };
     
-    G&m,M,['FUN','',{s:'FUN'},{hue:'150deg'}];
-    G&m,M,['FUN','',{s:'FUN'},{hue:'120deg'}];
-    G&m,M,['FUN','',{s:'FUN'},{hue:'100deg'}];
     # subgroups for the ground
-    # < osc flattens them out
-    $doming = &t{
+    # osc flattens them out
+    A&doming = &t{
         # < take over grounds&z so A.ground can A out?
         #   or so A always finish what they started with?
         # resets
@@ -52,10 +77,11 @@ Expect: | # pull results along
         A.ground = h;
         G&n:["dome "+t,'',{s:'- '+t},{fs:'120%',hue:'200deg',dis:'block'}];
     };
-    # lo.indexOf(4); lo.splice(3)
-
+    
+    # explain the jam,
     # when doming right, bails: return T.il = waiting condition
-    #   and the T rests on the crest of a wave
+    #   and the T rests on the crest of a wave,
+    #   catching anything anomalous
     $til = &s{
         $n = 
         G&n:['waits','',{s:"Waiting: "+s},{hue:'150deg'}];
@@ -64,33 +90,25 @@ Expect: | # pull results along
         ~>54 Til: s
     };
     
-    # pin sections/doming idea
-    1s&step ||= 1;
-    1s&step_tries ||= 1;
-    $osc_each_step = 1;
-    $S = &s,d{
-        typeof s != 'number' and throw "NaN",s;
-        s < 1s&step and return 0; # dont redo
-        s > 1s&step and return 0; # dont get ahead
-        if (A&didstep == s) {
-            # second loop of while, allow next step
-            1s&step_tries = 1;
-            1s&step++;
-            return 0
-        }
-        # draw each step for stuff flying by on the screen
-        # or to commit changes to test data (...)
-        A&bailstep == s and return 0;
-        osc_each_step and A&bailstep = s+1;
-        A&didstep = s;
-        $t = s;
-        d and t += ": "+d;
-        #~>59 Expecting: t
-        doming(t);
-        return 1;
-    };
     
-    #c steps
+    
+Expect: | # pull results along
+    G&heading,'Hz:50';
+    G&u,['MelTest'];
+    G&clusp;
+    
+    # to be intent on:
+    #   domes in order, until done
+    #   not redoing earlier work, per dome
+    #   computing dependencies emanating from other domes,
+    #   they leave a sub that produces ground
+    
+    G&m,M,['FUN','',{s:'FUN'},{hue:'150deg'}];
+    G&m,M,['FUN','',{s:'FUN'},{hue:'120deg'}];
+    G&m,M,['FUN','',{s:'FUN'},{hue:'100deg'}];
+
+    
+    # steps
     # < async n can catch up
      #     as extra dp to the step, which should line up with test data
     
