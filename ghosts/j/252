@@ -13,32 +13,62 @@ Doming: | # in the place in the place
     # < finished domes can do their G&s o while in J6,
     #   to wake/sleep later domes if reaction
     # an effect processing. your
+    
+    # J has step state
+    #   thus your A joins onto doming progress, see A&doming
+    #   and the history not redone but outdone, at the J level
     1s&step ||= 1;
+    # A&til stops retrying
     1s&step_tries ||= 1;
-    1s&osc_each_step
-    $S = &s,d{
-        typeof s != 'number' and throw "NaN",s;
+    1s&osc_each_step = 1;
+    
+    $total = 1s&steps || '?';
+    $tr =
+    n testrun 1  %dis:block
+    $title = &{
+        trc&s = "("+1s&step+"/"+total+")"
+    };
+    title();
+    
+    $loop = 1s&loop = Math.random();
+    G&yl:1400,&{ A.4 == G.DNS[A.4.t] && loop == 1s&loop && G&e,[A.1.t] };
+    
+    A&S = &s,d{
+        if (typeof s != 'number') {
+            # any? if something?
+            throw "NaN",s;
+        }
+        else { # implies sequence/steps
+            if (s == 0) { # end/non-step, done each time unless throw/return
+                # de-dome, only thing resurrecting domes
+                A&doming();
+                title();
+                1s&step > 3 and delete 1s&loop;
+            }
+        }
         s < 1s&step and return 0; # dont redo
         s > 1s&step and return 0; # dont get ahead
-        if (A&didstep == s) {
-            # second loop of while, allow next step
+        if (A&current_step == s) {
+            # second loop of the same while, allow next step
             1s&step_tries = 1;
             1s&step++;
             return 0
         }
-        # draw each step for stuff flying by on the screen
-        # or to commit changes to test data (...)
-        A&bailstep == s and return 0;
-        osc_each_step and A&bailstep = s+1;
-        A&didstep = s;
+        # bail the first time if osc between
+        if (1s&osc_each_step) {
+            A&bailstep == s and return 0;
+            A&bailstep = s+1;
+        }
+        # A has attempts to do a step
+        A&current_step = s;
         $t = s;
         d and t += ": "+d;
         #~>59 Expecting: t
-        doming(t);
+        A&doming(t);
         return 1;
     };
     
-    # subgroups for the ground
+    #c subgrounds
     # osc flattens them out
     A&doming = &t{
         # < take over grounds&z so A.ground can A out?
@@ -82,7 +112,7 @@ Doming: | # in the place in the place
     # when doming right, bails: return T.il = waiting condition
     #   and the T rests on the crest of a wave,
     #   catching anything anomalous
-    $til = &s{
+    A&til = &s{
         $n = 
         G&n:['waits','',{s:"Waiting: "+s},{hue:'150deg'}];
         G&m,M,['waits','',{s:s},{hue:'150deg'}];
@@ -97,6 +127,9 @@ Expect: | # pull results along
     G&u,['MelTest'];
     G&clusp;
     
+    1s&steps = 3;
+    G&way,'Doming',ar;
+    
     # to be intent on:
     #   domes in order, until done
     #   not redoing earlier work, per dome
@@ -106,7 +139,6 @@ Expect: | # pull results along
     G&m,M,['FUN','',{s:'FUN'},{hue:'150deg'}];
     G&m,M,['FUN','',{s:'FUN'},{hue:'120deg'}];
     G&m,M,['FUN','',{s:'FUN'},{hue:'100deg'}];
-
     
     # steps
     # < async n can catch up
@@ -114,11 +146,6 @@ Expect: | # pull results along
     
     # < thing that waits at each place, gives you assertion factories
 
-    $tr =
-    G&n:['testrun',1,{s:"J, with lv ("+1s&step+"/?)"},{dis:'block'}];
-    $loop = 1s&loop = Math.random();
-    G&yl:1430,&{ A.4 == G.DNS[A.4.t] && loop == 1s&loop && G&e,[J.t] };
-    
     # o Shovel prep mind
     #    to minimise async-ness...
     #    test varied for interesting results
@@ -133,10 +160,10 @@ Expect: | # pull results along
     #   or a s&mind packed string...
     
     
-    while (S(1,"Launch")) {
+    while (A&S(1,"Launch")) {
         $j = G&n,['Launch','V'];
         $L = j && js&J;
-        !L and return til('Jup');
+        !L and return A&til('Jup');
         Jc&L = L;
 
         $F = Ls&child;
@@ -153,7 +180,7 @@ Expect: | # pull results along
         !s and throw "Nosubphone", L
         return s(&acgt{ return G&e,n }); #)
     };
-    while (S(2)) {
+    while (A&S(2)) {
         $n = don(['t/LetsOsc']);
         
         n immediaW 3 $s:ki(n,3) %dis:block
@@ -164,14 +191,11 @@ Expect: | # pull results along
         !ok and return til('n completes');
     }
     
-    while (S(3)) {
+    while (A&S(3)) {
         G&n:['3 (parent) complete','-jod_632',{s:L,dl:2}];
     }
     
-    doming();
-    
-    trc&s = "J, with lv ("+A&didstep+"/?)";
-    1s&step > 3 and delete 1s&loop;
+    A&S(0);
 Wade: | # serve /W/$t to Revisit
     # defines one place get/set name scheme
     any '/W/*W' => &c{
