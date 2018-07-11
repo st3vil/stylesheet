@@ -403,7 +403,15 @@ NutJaying: | # A sequences J
             A&Jup.sc.Jtv[C.t][A&Jcv] = s&J;
         };
         
-        G&way,A&pin,ar;
+        
+        try {
+            G&way,A&pin,ar;
+        }
+        catch (er) {
+            $waits = (er.message || er).match(/^waits/);
+            !waits and throw er, "pin:"+A&pin
+            # waits means progress halted abruptly
+        }
         
         delete y.c; delete y.sc;
         T.nose and return;
