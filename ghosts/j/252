@@ -26,24 +26,29 @@ Doming: | # in the place in the place
     $tr =
     n testrun 1  %dis:block
     $title = &{
-        trc&s = "("+1s&step+"/"+total+")"
+        $step = 1s&step > total ? total : 1s&step;
+        trc&s = "("+step+"/"+total+")"
     };
     title();
     
+    # < a way to set neediness of a J
+    # known Jc? 
     $loop = 1s&loop = Math.random();
     G&yl:1400,&{ A.4 == G.DNS[A.4.t] && loop == 1s&loop && G&e,[A.1.t] };
     
     A&S = &s,d{
         if (typeof s != 'number') {
-            # any? if something?
+            # any? named? data joint roller? for/if something?
             throw "NaN",s;
         }
         else { # implies sequence/steps
-            if (s == 0) { # end/non-step, done each time unless throw/return
-                # de-dome, only thing resurrecting domes
+            if (s == 0) {
+                # end/non-step, done each time unless throw/return
+                # de-dome, only thing resurrecting domes once steps complete
                 A&doming();
                 title();
-                1s&step > 3 and delete 1s&loop;
+                1s&step > total and delete 1s&loop;
+                return 1
             }
         }
         s < 1s&step and return 0; # dont redo
@@ -59,6 +64,8 @@ Doming: | # in the place in the place
             A&bailstep == s and return 0;
             A&bailstep = s+1;
         }
+        # totals should be accurate when not coded
+        1s&step > total and ~Sextra steps: 1s&step+'/'+total
         # A has attempts to do a step
         A&current_step = s;
         $t = s;
@@ -161,13 +168,14 @@ Expect: | # pull results along
     
     
     while (A&S(1,"Launch")) {
+        
         $j = G&n,['Launch','V'];
         $L = j && js&J;
         !L and return A&til('Jup');
         Jc&L = L;
 
         $F = Ls&child;
-        !F and return til('4s\&child: '+ki(L,2));
+        !F and return A&til('4s\&child: '+ki(L,2));
         Jc&F = F;
         
         n haveLaunch 1 $s:ki(L,3) %
@@ -180,8 +188,16 @@ Expect: | # pull results along
         !s and throw "Nosubphone", L
         return s(&acgt{ return G&e,n }); #)
     };
+    $Y = F.up;
+    $a = &C{
+        $y = A;
+        A = Y;
+        $r = typeof C == 'function' ? C(A,C,G,T) : G&e,C;
+        A = y;
+        return r
+    };
     while (A&S(2)) {
-        $n = don(['t/LetsOsc']);
+        $n = a(['t/LetsOsc']);
         
         n immediaW 3 $s:ki(n,3) %dis:block
         G&n:['made W','-jod_3',{s:n}];
@@ -192,6 +208,8 @@ Expect: | # pull results along
     }
     
     while (A&S(3)) {
+        $n = a(['Bystand']);
+        n see_here 3 s:gloo %fs:300%
         G&n:['3 (parent) complete','-jod_632',{s:L,dl:2}];
     }
     
