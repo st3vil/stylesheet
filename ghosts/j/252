@@ -1,13 +1,24 @@
 
 Doming: | # in the place in the place
-    # future, uses G&S to do everything,
-    # and pass clues to what is on the w,
-    # so we have more options...
+    # see Expect
+    # doming: manage way to the future,
+    #   by being other to it
+    # as chunks separated by: S $number? $title?
+    #   the w should know about them
+    #   and be minimal and max intelligible
+    
+    # to be intent on:
+    #   domes in order, until done
+    #   not redoing earlier work, per dome
+    # < computing dependencies emanating from other domes,
+    #   keeping a watch function running, etc.
+    # ! no support for m/$M
     
     # doming as sections of the pin
     #  - being steps of activity, isolating repeatables
     #  - being acts coded for s to invoke
     #   to be steps in the activity, or too-much-something, changed-something, etc
+    
     # all feeding through to each other.
     #   Cs&in explains where things came from in a dome-dome way
     # < finished domes can do their G&s o while in J6,
@@ -42,8 +53,7 @@ Doming: | # in the place in the place
     #   catching anything anomalous
     A&til = &s{
         $n = 
-        G&n:['waits','',{s:"Waiting: "+s},{hue:'150deg'}];
-        G&m,M,['waits','',{s:s},{hue:'150deg'}];
+        n waits  s:"waits-"+s hue:'150deg'
         1s&step_tries++ > 3 and nc&s = "Gave up: "+s; delete 1s&loop;
         ~>54 Til: s
     };
@@ -82,7 +92,7 @@ Doming: | # in the place in the place
         A&current_step = s;
         $t = s;
         d and t += ": "+d;
-        #~>59 Expecting: t
+        ~>59 Expecting: t
         A&doming(t);
         return 1;
     };
@@ -129,29 +139,23 @@ Doming: | # in the place in the place
     
     
     
-Expect: | # pull results along
+Expect: | # pull results along, and
+    #G&way,'pi/jod',{},'noop';
+    
     G&heading,'Hz:50';
     G&u,['MelTest'];
     G&clusp;
     
     1s&steps = 3;
     G&way,'Doming',ar;
+    # sane-wait after dome/step for n A to complete, then osc
     
-    # to be intent on:
-    #   domes in order, until done
-    #   not redoing earlier work, per dome
-    #   computing dependencies emanating from other domes,
-    #   they leave a sub that produces ground
-    
-    G&m,M,['FUN','',{s:'FUN'},{hue:'150deg'}];
-    G&m,M,['FUN','',{s:'FUN'},{hue:'120deg'}];
-    G&m,M,['FUN','',{s:'FUN'},{hue:'100deg'}];
-    
-    # steps
     # < async n can catch up
      #     as extra dp to the step, which should line up with test data
     
-    # < thing that waits at each place, gives you assertion factories
+    # < thing that waits at each place,
+    #     could see Jin carriage move
+    #   gives you assertion factories
 
     # o Shovel prep mind
     #    to minimise async-ness...
@@ -166,23 +170,36 @@ Expect: | # pull results along
     #   makes a big 5, in the 1-5 filesystem
     #   or a s&mind packed string...
     
-    
-    while (A&S(1,"Launch")) {
+    while (A&S(1,"Revisit/Launch")) {
+        # 
+        #$j =
+        # however we start this thing
+        # will async us with Launch
+        #n Launch
+        # so now it must be ready, but not sayable
+        #j.sc.not = 1;
         
-        $j = G&n,['Launch','V'];
+        $j =
+        e Launch
+        #$j = G&n,['Launch','V'];
+        n Launch 2 $s:ki(j) %
         $L = j && js&J;
-        !L and return A&til('Jup');
+        !L and return A&til('J9');
         Jc&L = L;
+        
+        # Ups
 
         $F = Ls&child;
-        !F and return A&til('4s\&child: '+ki(L,2));
+        !F and return A&til('Jdown, Jup: '+ki(L,2));
         Jc&F = F;
         
-        n haveLaunch 1 $s:ki(L,3) %
-        n haveFour 1 $s:ki(F,3) %dis:block
+        n haveLaunch -jod $s:ki(L,3) %
+        n haveFour -jod $s:ki(F,3) %dis:block
+        n itsipi 1 $s:F.c.ipi %dis:block
     }
     $L = Jc&L;
     $F = Jc&F;
+    !F || !F.up and return A&til('no Fup: '+ki(F,2));
     $Y = F.up;
     $a = &C{
         $y = A;
@@ -208,7 +225,7 @@ Expect: | # pull results along
         $Y = n.y.A;
         $ok = Y.cv >= 0.8;
         G&n:['A complete','-jod_3',{s:ok?"OK":"Not OK: "+Y.cv}];
-        !ok and return til('n completes');
+        !ok and return A&til('n completes');
     }
     
     while (A&S(3)) {
@@ -275,6 +292,7 @@ Wade: | # serve /W/$t to Revisit
 Revisit: | # pull/push test data around test run
     G&heading,'Hz:50';
     G&u,['NutIns'];
+    G&u,['NutText'];
     G&clusp;
     # 1s&obj is the last:
     $t = 't/ExpectArt';
@@ -363,7 +381,12 @@ Revisit: | # pull/push test data around test run
     n = ns&s;
     !n and return
     
-    # ns&top... may be given s&dige by anyone encoding it,
+    # ns&top...
+    #   can be given a toLines encoding by anyone wanting it
+    #   stylehouse uses lv.y.toLines = G&toLines
+    #   acquires y&toLines = s
+    #   or y&L = A:o that did the toLines, which everyone trusts
+    #   may be given s&dige by anyone encoding it,
     #   supposedly dige implies toLines
     # assumed to encode as 
     $r = ns&top;
@@ -382,7 +405,7 @@ Revisit: | # pull/push test data around test run
     }
     
     $l = G&Serialise,r;
-    n serialout $s:l %ws:pre,hue:50deg,fs:15%
+    n serialout $s:l %ws:pre,hue:50deg,fs:43%,e
     
     if (save) {
         $Q = G&Cye,[t,'',{of:'W',s:l}];
