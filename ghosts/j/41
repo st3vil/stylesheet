@@ -51,6 +51,9 @@ JaBabz: | # make hutscript javascript
     c&s =~ s/\b(\w+)A&(\w+)\b/A\.$1\.c\.$2/g;
     c&s =~ s/\b(\w+)a&(\w+)\b/A\.$1\.sc\.$2/g;
     
+    # &Thing -> 1s&Thing
+    
+    
     # 3s&do -> A.3.sc.do
     c&s =~ s/\b(\d)(s|c)&(\w+)\b/"A[$1].".($2 eq 's' ? 'sc' : 'c').".$3"/smeg;
     # make upA&thing -> A.up.c.thing
@@ -248,9 +251,8 @@ JaBabz: | # make hutscript javascript
     /smge;
     
     # true or assign
-    c&s =~ s/^($nls)($nlp) \|\|\= ($nlp)(;)?$/$1if (!$2) {
-    $1    $2 = $3
-    $1}/gm;
+    c&s =~ s/^($nls)($nlp) \|\|\= ($nlp)(;)?$/$1$2 = $2 || $3$4/gm;
+    
     # left-hand if
     c&s =~ s/^($nls)([^\n]+?) and ($nlp)(;)?$/$1if ($2) {
     $1    $3
@@ -263,7 +265,7 @@ JaBabz: | # make hutscript javascript
     c&s =~ s/([^G&])&(\w*(,\w+)*)\{/$1function($2){/gm;
     
     # $thing -> var thing
-    c&s =~ s/^($nls)\$(\w+)(;)?(\s*=|\s*\/\/|$)/
+    c&s =~ s/^($nls)\$(\w+)(;+)?(\s*=|\s*\/\/|$)/
         $1."var $2".$3.($4||';')/smeg;
     # GONER thing$ -> var thing (would perl alright tho...)
     c&s =~ s/^($nls)(\w+)\$(?:;)?\s*(=|$)/
@@ -326,6 +328,9 @@ jst: | # test js babbler
         !j and return n waits 1 s:waits %
         c&dow and c&did = 'w'; ~dow: ; return G&waylay,c&dow,har
         if (e.t.match(/^C/)) { # show/hide
+        &Launch ||=
+        e Launch
+        $v;
     # too far away:
     # n something 15 s:Shovel Ch %fs:170%,hs:345,dos:do/Launch
     #c answers
@@ -345,10 +350,8 @@ jst: | # test js babbler
         var s = function(c){ that.it.is };
         G.h(A,C,G,T,"c",'rasunify',[re.length]);
         G.h(A,C,G,T,"dothis",'fourly',[f]);
-            if (!C.sc.attr.title) {
-                C.sc.attr.title = C.t+' '+C.y.cv;
-            }
-        
+            C.sc.attr.title = C.sc.attr.title || C.t+' '+C.y.cv;
+
         G.h(A,C,G,T,"wide","several ticks");
         G.h(A,C,G,T,some,4,56-3, (28 / A[5].sc.e))
         A[5].sc.log = [];
@@ -415,12 +418,8 @@ jst: | # test js babbler
             C.c.did = 'w'; G.h(A,C,G,T,"c",'dow',[]); return G.h(A,C,G,T,'waylay',C.c.dow,har)
         }
         if (e.t.match(/^C/)) { // show/hide
-
-
-
-
-
-
+        &Launch ||=
+        G.h(A,C,G,T,"e",["Launch"]);
     # 
     c&s eq $good && return saygr "jst good";
     saygr "Result: ".length(c&s)." vs ".length($good), c&s;
