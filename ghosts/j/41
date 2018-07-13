@@ -51,7 +51,9 @@ JaBabz: | # make hutscript javascript
     c&s =~ s/\b(\w+)A&(\w+)\b/A\.$1\.c\.$2/g;
     c&s =~ s/\b(\w+)a&(\w+)\b/A\.$1\.sc\.$2/g;
     
-    # &Thing -> 1s&Thing
+    # @Thing -> 1s&Thing
+    0 &&
+    c&s =~ s/(?<!\w)\@(\w+)\b/1s\&$1/g;
     
     
     # 3s&do -> A.3.sc.do
@@ -87,9 +89,6 @@ JaBabz: | # make hutscript javascript
     c&s =~ s/\bs&(\w+)\b/C\.sc\.$1/g;
     c&s =~ s/\bC&(\w+)\b/C\.sc\.$1/g;
     c&s =~ s/\bc&(\w+)\b/C\.c\.$1/g;
-    
-    # goner?
-    c&s =~ s/^t\&([^\s;]+)(;)?/!G\&t,$1 and return;/gm;
     
     #c each
             # each etc $data {    into:
@@ -251,7 +250,7 @@ JaBabz: | # make hutscript javascript
     /smge;
     
     # true or assign
-    c&s =~ s/^($nls)($nlp) \|\|\= ($nlp)(;)?$/$1$2 = $2 || $3$4/gm;
+    c&s =~ s/^($nls)($nlp) \|\|\=(?: ($nlp)(;)?|\s*)$/$1$2 = $2 || $3$4/gm;
     
     # left-hand if
     c&s =~ s/^($nls)([^\n]+?) and ($nlp)(;)?$/$1if ($2) {
@@ -265,6 +264,7 @@ JaBabz: | # make hutscript javascript
     c&s =~ s/([^G&])&(\w*(,\w+)*)\{/$1function($2){/gm;
     
     # $thing -> var thing
+    #  doesn't see '$get # vardescript', see # -> //
     c&s =~ s/^($nls)\$(\w+)(;|\s*=|\s*\/\/|$)/
         $1."var $2".($3||';')/smeg;
     
@@ -330,14 +330,16 @@ jst: | # test js babbler
         !j and return n waits 1 s:waits %
         c&dow and c&did = 'w'; ~dow: ; return G&waylay,c&dow,har
         if (e.t.match(/^C/)) { # show/hide
-        &Launch ||=
-        e Launch
         $v;
         $v
         $te = vol;
         te ||= vol;
+        $ve =
+        1s&Casa ||=
     # too far away:
     # n something 15 s:Shovel Ch %fs:170%,hs:345,dos:do/Launch
+    #    @Launch ||=
+    #    e Launch
     #c answers
 
     Rw JaBabz;
@@ -423,12 +425,13 @@ jst: | # test js babbler
             C.c.did = 'w'; G.h(A,C,G,T,"c",'dow',[]); return G.h(A,C,G,T,'waylay',C.c.dow,har)
         }
         if (e.t.match(/^C/)) { // show/hide
-        &Launch ||=
-        G.h(A,C,G,T,"e",["Launch"]);
         var v;
         var v;
         var te = vol;
         te = te || vol;
+        var ve =
+        A[1].sc.Casa = A[1].sc.Casa || 
+
 
     # 
     c&s eq $good && return saygr "jst good";
