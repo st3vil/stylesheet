@@ -56,22 +56,28 @@ Doming: | # in the place in the place
     
     #   and the T rests on the crest of a wave,
     #   catching anything anomalous
-    A&til = &s{
-        A&waitings ||= [];
+    A&waitscv = 0.3001;
+    A&waitings = [];
+    A&til = &s,t{
         A&waitings.push(s);
-        s = "waits:\n"+A&waitings.join("\n");
-        $n = 
-        A&waitn ||=
-        n waits   %hue:1506eg,dis:block,ws:pre
+        #s = "waits:\n"+A&waitings.join("\n");
+        if (t) {
+            # looks like -an titles about to turn up
+            G&n,['waitst',A&waitscv,{s:t},'hue:80deg']
+        }
+        $n =
+        G&n,['waits',A&waitscv,{s:t},'hue:150deg,ws:pre']
+        A&waitscv += 0.0001;
         nc&s = s;
         if (1s&step_tries++ > 6) {
             nc&s = "Gave up: "+s;
             delete 1s&loop;
         }
-        ~>54 Til: s
+        nc&s += "\n";
+        #~>54 Til: s
     };
     A&beready = &{
-        if (A&waitings) {
+        if (A&waitings.length) {
             throw "waits on step", A&waitings
         }
     }
@@ -263,13 +269,12 @@ Expect: | # pull results along, and
                 pic.pi ||= pi;
                 pic.s ||= n;
                 G&n,[t,2,pic];
-                ~think done: ki(wai), pi, ki(n)
             }
         }
         !wai.length and return
         # test how long these things take
         Y and Y.4.sc.N.push(Y);
-        A&til('Ccom '+t+'('+wai.join(',')+') '+ki(n,2));
+        A&til('Ccom ('+wai.join(',')+') '+ki(n,2), t);
     };
     
     #c startup
@@ -290,8 +295,6 @@ Expect: | # pull results along, and
         G&e,['Revisit'],['get','',{s:1s&testname}];
         waits(r,'answers');
         
-        waits(rc&s,'answer')
-        
         A&beready();
         
         #!F and return A&til('Launch no child')
@@ -305,12 +308,16 @@ Expect: | # pull results along, and
             # and parallel, etc
             delete 4s&Jtv['Launch'];
             delete 1s&Launch;
+            1s&step_tries = 1;
             A&til('child old: '+Fc&ipi);
         }
         
     }
     
     while (A&S(2)) {
+        waits(rc&s,'answer');
+        
+        
         $n = a(['t/LetsOsc']);
         
         n immediaW 3 $s:ki(n,3) %dis:block
