@@ -52,9 +52,15 @@ Doming: | # in the place in the place
     #   and the T rests on the crest of a wave,
     #   catching anything anomalous
     A&til = &s{
+        A&waitings ||= [];
+        A&waitings.push(s);
+        s = 'waits: '+A&waitings.join("\n");
         $n = 
-        n waits  s:"waits-"+s hue:'150deg'
-        1s&step_tries++ > 3 and nc&s = "Gave up: "+s; delete 1s&loop;
+        n waits  $s:s %hue:150deg,dis:block,ws:pre
+        if (1s&step_tries++ > 3) {
+            nc&s = "Gave up: "+s;
+            delete 1s&loop;
+        }
         ~>54 Til: s
     };
     
@@ -77,6 +83,9 @@ Doming: | # in the place in the place
         s > 1s&step and return 0; # dont get ahead
         if (A&current_step == s) {
             # second loop of the same while, allow next step
+            if (A&waitings) {
+                throw "waits on step", A&waitings
+            }
             1s&step_tries = 1;
             1s&step++;
             return 0
@@ -170,49 +179,93 @@ Expect: | # pull results along, and
     #   makes a big 5, in the 1-5 filesystem
     #   or a s&mind packed string...
     
+    # 1s&inA is the child 4's .up:
+    #   A:atop, where events/everything starts
+    
+    # the usual elvising into the play
+    $a = &C,e{
+        $y = A;
+        !1s&inA and throw "child 4's .up A not ready";
+        A = 1s&inA;
+        $r = typeof C == 'function' ? C(A,C,G,T) : G&e,C,e;
+        A = y;
+        return r
+    };
+    # prototype for waiting/drawing important n
+    $waits = &n,pi{
+        $wai = [];
+        $is = n.y == n ? n.1 == n ? 'J' : 'A' : 'C';
+        $Y;
+        if (is == 'C') {
+            Y = n.y.A;
+            if (Y) {
+                Y.t == 'e' and Y = Y.n; n = Yc&s
+                Y.t == 'n' && Y.cv < 0.8 and wai.push('n<8')
+            }
+        }
+        if (!wai.length) {
+            # complete
+            !pi and return
+            # with pi, go further
+            $t = pi;
+            pi = 'an';
+            # may: '-piform test description'
+            if (t.slice(0,1) == '-') {
+                t = t.split(' ');
+                pi = t.shift().slice(1);
+                t = t.join(' ');
+            }
+            # make sure J & s turned up (they must have if A.cv = 8
+            if (ns&W) {
+                $j = ns&J;
+                !j and wai.push('sJ');
+                !js&s and wai.push('s');
+            }
+            # if it looks done, make this pi about it,
+            #   which can async further, usually just describe the object a bit
+            #   only A&til exhausts try-system
+            if (!wai.length) {
+                G&n,[t,2,{pi:pi,s:n}];
+                #,{async:1};
+                ~think done: ki(wai), pi, ki(n)
+            }
+        }
+        !wai.length and return
+        # and return
+        # test how long these things take
+        Y.4.sc.N.push(Y);
+        A&til('Ccom ('+wai.join(',')+') '+ki(n,2));
+    };
+    
     while (A&S(1,"Revisit/Launch")) {
-        # environment dealer
+        ~>58 intothelaunch:
         $j =
         1s&Launch ||=
         e Launch
-        $sj = ki(j);
         
-        n Launch 2 $s:ki(sj.drawn) %
+        waits(j,'environment dealer');
+        
+        #debugger;
         
         $L = j && js&J;
         !L and return A&til('J9');
         Jc&L = L;
         
         # Ups
-
+        
+        # 
         $F = Ls&child;
         !F and return A&til('Jdown, Jup: '+ki(L,2));
-        Jc&F = F;
+        $Y = 1s&inA = F.up;
+        !Y and throw "No Fup?", F
+        Y.t != 'atop' and throw "Y (Fup) not t:atop", Y
         
         n haveLaunch -jod $s:ki(L,3) %
         n haveFour -jod $s:ki(F,3) %dis:block
-        n itsipi 1 $s:F.c.ipi %dis:block
+        $see = 'ipi: '+F.c.ipi;
+        n itsipi 1 $s:see %dis:block
     }
-    $L = Jc&L;
-    $F = Jc&F;
-    !F || !F.up and return A&til('no Fup: '+ki(F,2));
-    $Y = F.up;
-    $a = &C{
-        $y = A;
-        A = Y;
-        $r = typeof C == 'function' ? C(A,C,G,T) : G&e,C;
-        A = y;
-        return r
-    };
-    $waits = &n{
-        $Y = n.y.A;
-        Y.t == 'e' and Y = Y.n; n = Yc&s;
-        Y.cv >= 0.8 and return
-        # test how long these things take
-        Y.4.sc.N.push(Y);
-        A&til('Ccom');
-        throw "waits: Ccom", n
-    };
+    
     while (A&S(2)) {
         $n = a(['t/LetsOsc']);
         
