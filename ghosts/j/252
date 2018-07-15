@@ -120,17 +120,25 @@ Doming: | # in the place in the place
         $notes = [];
         # C sanity
         if (is == 'C') {
-            $isC = typeof n == 'object' && null != n.t || !n.y || !n.c || !n.sc and throw "nonC", n
-            !C
+            $isC = typeof n == 'object' && n.t != null && n.y && n.c && n.sc;
+            # can allow nonC (data)
+            if (pi.slice(0,3) == '!C ') {
+                is = 'd';
+                pi = pi.slice(3);
+            }
+            else {
+                !isC and throw "nonC", n
+            }
         }
         if (is == 'C') {
             Y = n.y.A;
             if (Y) {
                 # given an e, use the n
                 Y.t == 'e' and Y = Y.n; n = Yc&s
-                # n wind up 8, unless something
+                # n wind up 8, unless negated/otherwise completed
                 if (Y.t == 'n' && Y.cv < 0.8) {
                     if (Yc&T && Yc&T.leaves) {
+                        # e may be 9 anyway. suppose either >= 87
                         notes.push("e"+
                             !Y.e ? '?' :
                             Y.e.cv == 0.9 ? '@9' :
@@ -191,12 +199,12 @@ Doming: | # in the place in the place
     
     
     
-    #c S
+    #c Step
     A&S = &s,d{
         # any? named? data joint roller? for/if something?
         typeof s != 'number' and throw "NaN",s;
         
-        ~>93 Step: s, 1s&step, A&current_step
+        #~>93 Step: s, 1s&step, A&current_step
         A&beready;
         
         # satisfaction, when total is unknown || known
@@ -422,23 +430,8 @@ Expect: | # pull results along, and
         waits(sh,'shovelshrink');
         waits(sh.y.A.e,'shovel-e',{dl:4});
         b();
-        debugger;
-        ~>48 hEIR
-        waits(sh.y.A.e.c.T,'!C shovel-e-T',{dl:4});
+        waits(sh.y.A.e.c.T,'!C shovel-e-T',{dl:3});
         #n shovel-e -an s:sh.e,dl:4
-    }
-    A&S(0);
-    return;
-    
-    if (0) {
-        $n = a(['t/LetsOsc']);
-        
-        n immediaW 3 $s:ki(n,3) %dis:block
-        G&n:['made W','-jod_3',{s:n}];
-        $Y = n.y.A;
-        $ok = Y.cv >= 0.8;
-        G&n:['A complete','-jod_3',{s:ok?"OK":"Not OK: "+Y.cv}];
-        !ok and return A&til('n completes');
     }
     
     while (A&S(4)) {
