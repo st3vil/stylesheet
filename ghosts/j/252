@@ -85,8 +85,24 @@ Doming: | # in the place in the place
         # any? named? data joint roller? for/if something?
         typeof s != 'number' and throw "NaN",s;
         
-        # the numbery S,
-        # implies sequence/steps
+        ~>93 Step: s, 1s&step, A&current_step
+        A&beready;
+        
+        # satisfaction, when total is unknown || known
+        if (s == 0 && !A&current_step
+            || 1s&step > total) {
+            if (total) {
+                # check just one further?
+            }
+            if (!1s&nearly_finished) {
+                1s&nearly_finished = 1;
+            }
+            else {
+                delete 1s&nearly_finished;
+                1s&finished = 1;
+            }
+        }
+        
         if (s == 0) {
             # end/non-step, done each time unless throw/return
             # de-dome, only thing resurrecting domes once steps complete
@@ -94,9 +110,8 @@ Doming: | # in the place in the place
             title();
             return 1
         }
-        
         # finished
-        1s&step > total and delete 1s&loop; return 0;
+        1s&finished and delete 1s&loop; return 0;
         
         s < 1s&step and return 0; # dont redo
         s > 1s&step and return 0; # dont get ahead
@@ -173,7 +188,7 @@ Expect: | # pull results along, and
     
     1s&empathy = 3;
     
-    1s&steps = 3;
+    1s&steps = 4;
     1s&testname = 't/ExpectArt';
     
     G&way,'Doming',ar;
@@ -207,8 +222,8 @@ Expect: | # pull results along, and
     # the usual elvising into the play
     $a = &C,e{
         $y = A;
-        !1s&inA and throw "child 4's .up A not ready";
-        A = 1s&inA;
+        !1s&Y and throw "child 4's .up A not ready";
+        A = 1s&Y;
         $r = typeof C == 'function' ? C(A,C,G,T) : G&e,C,e;
         A = y;
         return r
@@ -225,12 +240,25 @@ Expect: | # pull results along, and
             wai.push('n*ll')
         }
         is && !n and debugger;
+        $notes = [];
         if (is == 'C') {
             typeof n != 'object' || null == n.t || !n.y || !n.c || !n.sc and throw "nonC", n
             Y = n.y.A;
             if (Y) {
                 Y.t == 'e' and Y = Y.n; n = Yc&s
-                Y.t == 'n' && Y.cv < 0.8 and wai.push('n<8')
+                if (Y.t == 'n' && Y.cv < 0.8) {
+                    if (Yc&T && Yc&T.leaves) {
+                        notes.push("e"+
+                            !Y.e ? '?' :
+                            Y.e.cv == 0.9 ? '@9' :
+                            '@'+Y.e.cv+'<9'
+                        );
+                    }
+                    else {
+                        Yc&T && Yc&T.not and notes.push('not')
+                        wai.push('n<8')
+                    }
+                }
             }
         }
         $t = '?';
@@ -268,6 +296,7 @@ Expect: | # pull results along, and
                 typeof pic == 'string' and pic = G&peel,pic;
                 pic.pi ||= pi;
                 pic.s ||= n;
+                pic.notes = notes;
                 G&n,[t,2,pic];
             }
         }
@@ -302,7 +331,7 @@ Expect: | # pull results along, and
         A&beready();
         
         #!F and return A&til('Launch no child')
-        $Y = 1s&inA = F.up;
+        $Y = 1s&Y = F.up;
         !Y and throw "No Fup?", F
         Y.t != 'atop' and throw "Y (Fup) not t:atop", Y
         
@@ -335,16 +364,23 @@ Expect: | # pull results along, and
             $j = rs&J;
             j = js&s;
             j = js&top;
-            $up = j.y.tw.updating;
-            !up and return A&til('updating...','mindin');
-            up = ups&J;
-            up = ups&s;
-            up = ups&top;
-            $ready = up.y.tw.ready;
+            $u = j.y.tw.updating;
+            !u and return A&til('updating...','mindin');
+            waits(u,'Shovel->updating');
+            u = us&J;
+            #waits(u,'updating J');
+            u = us&s;
+            waits(u,'updating s');
+            u = us&top;
+            waits(u,'updating top');
+            ~here:
+            A&beready();
+            $ready = u.y.tw.ready;
+            
             !ready and return A&til('updating...ready','mindin');
             # and that it's for the thing we sent
             $j = ready.y.A.1;
-            js&answer != u and return A&til('readied different')
+            js&answer != ws&u and delete 1s&Ready; return A&til('readied different')
         }
         else {
             n mindup -an t:non %
@@ -354,16 +390,10 @@ Expect: | # pull results along, and
     while (A&S(3)) {
         #1s&step_tries = 1;
         $sh =
-        #1s&Sh ||=
+        1s&Sh ||=
         a(['Shovel'],['C+click','',{p:'t'}]);
         waits(sh,'shovelshrink');
-        
-        $e = shc&e;
-        n shove -an s:e,dl:4
-        each is ec&hC {
-            n shove_hC"+i+" -an s:s,dl:4
-        }
-        A&til("somthing");
+        n shovel-e -an s:sh.e,dl:4
     }
     
     if (0) {
@@ -378,9 +408,17 @@ Expect: | # pull results along, and
     }
     
     while (A&S(4)) {
-        $n = waits(a(['Bystand']));
+        $n =
+        1s&Bystand ||=
+        a(['Bystand']);
+        waits(n,'bystander');
         n see_here 3 s:gloo %fs:300%
-        G&n:['3 (parent) complete','-jod_632',{s:L,dl:2}];
+        ~>99 ByTHeWay:
+        $Y = 1s&Y;
+        waits(Y,'tested 4');
+        A&beready();
+        G&n:['tested 4sN settles','-jod_632',{s:Ys&N,dl:2}];
+        !Ys&N || Ys&N.length and A&til('settling');
     }
     
     A&S(0);
@@ -396,6 +434,7 @@ pi/an: | # show anything, more assertive than jod
     }
     
     $s = c&s;
+    # pointing/climbing
     if (c&p) {
         c&p == 'sJ' and s = ss&J;
         else {
@@ -403,18 +442,24 @@ pi/an: | # show anything, more assertive than jod
         }
         n nav 2 $s:c&p+":" %hue:240deg,fs:80%
     }
+    # splatting
     $s = ki(s,c&dl||3);
+    # sculpture/modula
     $stwo;
     $m = s.match(/^(\w+) (.+)$/);
     if (m)
         s = m[1];
     
+    # the thing itself
     n s 3 $s:s %
     
+    # its ideas
     if (m) {
         n s 31 $s:m[2] %fs:70%,sat:0.6
     }
     
+    if (c&notes && c&notes.length)
+        n note 4 $s:c&notes.join(',') %wc:pre,fs:70%,sat:0.6,hue:160deg
     
     
     
