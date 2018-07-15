@@ -44,8 +44,18 @@ Doming: | # in the place in the place
     
     # < a way to set neediness of a J
     # known Jc? 
+    $time = 254;
     $loop = 1s&loop = Math.random();
-    G&yl:254,&{ A.4 == G.DNS[A.4.t] && loop == 1s&loop && G&e,[A.1.t] };
+    $call = &{
+        # we still exist, this loop is the loop
+        !(A.4 == G.DNS[A.4.t] && loop == 1s&loop) and return
+        # once last A:n is finished
+        A.cv < 0.8 and ~>68 loopexp, waitcv: A.4.t, A.cv
+        A.cv < 0.8 and G&yl:time,call
+        # get attention
+        G&e,[A.1.t]
+    };
+    G&yl:time,call;
     
     # explain the jam,
     #   clumped as a todolist at the earliest complainer
@@ -80,7 +90,108 @@ Doming: | # in the place in the place
         if (A&waitings.length) {
             throw "waits on step", A&waitings
         }
-    }
+    };
+    
+    #c a, waits
+    # 1s&Y is the child 4's .up:
+    #   A:atop, where events/everything starts
+    
+    # the usual elvising into the play
+    A&a = &C,e{
+        $y = A;
+        !1s&Y and throw "child 4's .up A not ready";
+        A = 1s&Y;
+        $r = typeof C == 'function' ? C(A,C,G,T) : G&e,C,e;
+        A = y;
+        return r
+    };
+    # prototype for waiting/drawing important n
+    A&waits = &n,pi,pic{
+        $wai = [];
+        $is;
+        $Y;
+        if (n) {
+            is = n.y == n ? n.1 == n ? 'J' : 'A' : 'C';
+        }
+        else {
+            wai.push('n*ll')
+        }
+        is && !n and debugger;
+        $notes = [];
+        # C sanity
+        if (is == 'C') {
+            $isC = typeof n == 'object' && null != n.t || !n.y || !n.c || !n.sc and throw "nonC", n
+            !C
+        }
+        if (is == 'C') {
+            Y = n.y.A;
+            if (Y) {
+                # given an e, use the n
+                Y.t == 'e' and Y = Y.n; n = Yc&s
+                # n wind up 8, unless something
+                if (Y.t == 'n' && Y.cv < 0.8) {
+                    if (Yc&T && Yc&T.leaves) {
+                        notes.push("e"+
+                            !Y.e ? '?' :
+                            Y.e.cv == 0.9 ? '@9' :
+                            '@'+Y.e.cv+'<9'
+                        );
+                    }
+                    else {
+                        Yc&T && Yc&T.not and notes.push('not')
+                        wai.push('n<8')
+                    }
+                }
+            }
+        }
+        $t = '?';
+        if (pi) {
+            t = pi;
+            pi = 'an';
+            # may: '-piform test description'
+            if (t.slice(0,1) == '-') {
+                t = t.split(' ');
+                pi = t.shift().slice(1);
+                t = t.join(' ');
+            }
+        }
+        # general resting states:
+        # if A is cv==ov, if J is !1s&N.length
+        # if C, yA>=8 && s&Js&s
+        if (!wai.length) {
+            # complete
+            !pi and return
+            # with pi, go further
+            # make sure J & s turned up (they must have if A.cv = 8
+            if (is == 'C' && (nc&W || nc&pi || nc&J || ns&J)) {
+                $j = ns&J;
+                !j and wai.push('sJ');
+                !js&s and wai.push('s');
+            }
+            if (is == 'J' && ns&N && ns&N.length) {
+                wai.push('JsN');
+            }
+            # if it looks done, make this pi about it,
+            #   which can async further, usually just describe the object a bit
+            #   only A&til exhausts try-system
+            if (!wai.length) {
+                pic ||= {};
+                typeof pic == 'string' and pic = G&peel,pic;
+                pic.pi ||= pi;
+                pic.s ||= n;
+                pic.notes = notes;
+                G&n,[t,2,pic];
+            }
+        }
+        !wai.length and return
+        # test how long these things take
+        Y and Y.4.sc.N.push(Y);
+        A&til('Ccom ('+wai.join(',')+') '+ki(n,2), t);
+    };
+    
+    
+    
+    #c S
     A&S = &s,d{
         # any? named? data joint roller? for/if something?
         typeof s != 'number' and throw "NaN",s;
@@ -181,23 +292,15 @@ Doming: | # in the place in the place
     
     
 Expect: | # pull results along, and
-    #G&way,'pi/jod',{},'noop';
+    # the missing routine of IT workflow
     G&heading,'Hz:50';
     G&u,['MelTest'];
     G&clusp;
     
-    1s&empathy = 3;
-    
-    1s&steps = 4;
-    1s&testname = 't/ExpectArt';
-    
-    G&way,'Doming',ar;
-    A&async = 1;
-    
     # sane-wait after dome/step for n A to complete, then osc
     
-    # < async n can catch up
-     #     as extra dp to the step, which should line up with test data
+    # have the big-ok step as extra dp to the osc version,
+    #   which should line up with test data
     
     # < thing that waits at each place,
     #     could see Jin carriage move
@@ -216,97 +319,20 @@ Expect: | # pull results along, and
     #   makes a big 5, in the 1-5 filesystem
     #   or a s&mind packed string...
     
-    # 1s&inA is the child 4's .up:
-    #   A:atop, where events/everything starts
+    G&way,'Doming',ar;
+    A&async = 1;
+    # interacts with Doming
+    $a = A&a;
+    $waits = A&waits;
+    $w = waits;
+    $b = A&beready;
     
-    # the usual elvising into the play
-    $a = &C,e{
-        $y = A;
-        !1s&Y and throw "child 4's .up A not ready";
-        A = 1s&Y;
-        $r = typeof C == 'function' ? C(A,C,G,T) : G&e,C,e;
-        A = y;
-        return r
-    };
-    # prototype for waiting/drawing important n
-    $waits = &n,pi,pic{
-        $wai = [];
-        $is;
-        $Y;
-        if (n) {
-            is = n.y == n ? n.1 == n ? 'J' : 'A' : 'C';
-        }
-        else {
-            wai.push('n*ll')
-        }
-        is && !n and debugger;
-        $notes = [];
-        if (is == 'C') {
-            typeof n != 'object' || null == n.t || !n.y || !n.c || !n.sc and throw "nonC", n
-            Y = n.y.A;
-            if (Y) {
-                Y.t == 'e' and Y = Y.n; n = Yc&s
-                if (Y.t == 'n' && Y.cv < 0.8) {
-                    if (Yc&T && Yc&T.leaves) {
-                        notes.push("e"+
-                            !Y.e ? '?' :
-                            Y.e.cv == 0.9 ? '@9' :
-                            '@'+Y.e.cv+'<9'
-                        );
-                    }
-                    else {
-                        Yc&T && Yc&T.not and notes.push('not')
-                        wai.push('n<8')
-                    }
-                }
-            }
-        }
-        $t = '?';
-        if (pi) {
-            t = pi;
-            pi = 'an';
-            # may: '-piform test description'
-            if (t.slice(0,1) == '-') {
-                t = t.split(' ');
-                pi = t.shift().slice(1);
-                t = t.join(' ');
-            }
-        }
-        # general resting states:
-        # if A is cv==ov, if J is !1s&N.length
-        # if C, yA>=8 && s&Js&s
-        if (!wai.length) {
-            # complete
-            !pi and return
-            # with pi, go further
-            # make sure J & s turned up (they must have if A.cv = 8
-            if (is == 'C' && (nc&W || nc&pi || nc&J || ns&J)) {
-                $j = ns&J;
-                !j and wai.push('sJ');
-                !js&s and wai.push('s');
-            }
-            if (is == 'J' && ns&N && ns&N.length) {
-                wai.push('JsN');
-            }
-            # if it looks done, make this pi about it,
-            #   which can async further, usually just describe the object a bit
-            #   only A&til exhausts try-system
-            if (!wai.length) {
-                pic ||= {};
-                typeof pic == 'string' and pic = G&peel,pic;
-                pic.pi ||= pi;
-                pic.s ||= n;
-                pic.notes = notes;
-                G&n,[t,2,pic];
-            }
-        }
-        !wai.length and return
-        # test how long these things take
-        Y and Y.4.sc.N.push(Y);
-        A&til('Ccom ('+wai.join(',')+') '+ki(n,2), t);
-    };
+    #c beginning
+    1s&empathy = 3;
     
-    #c startup
+    1s&steps = 4;
+    1s&testname = 't/ExpectArt';
+    
     while (A&S(1,"Revisit/Launch")) {
         # < stashing A:n on 1s&* should keep them awake
         $j =
@@ -387,15 +413,22 @@ Expect: | # pull results along, and
         }
     }
     
+    #c middle
     while (A&S(3)) {
         #1s&step_tries = 1;
         $sh =
         1s&Sh ||=
         a(['Shovel'],['C+click','',{p:'t'}]);
         waits(sh,'shovelshrink');
-        waits(sh.y.A.e,'shovel-e');
+        waits(sh.y.A.e,'shovel-e',{dl:4});
+        b();
+        debugger;
+        ~>48 hEIR
+        waits(sh.y.A.e.c.T,'!C shovel-e-T',{dl:4});
         #n shovel-e -an s:sh.e,dl:4
     }
+    A&S(0);
+    return;
     
     if (0) {
         $n = a(['t/LetsOsc']);
