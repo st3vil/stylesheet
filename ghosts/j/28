@@ -379,7 +379,20 @@ NutGravy: | # non-I routines
         $ki = &s,c{
             c && typeof c != 'object' and c = {dl:c};
             c ||= {dl:4};
-            c.d ||= 1;
+            if (!c.d) {
+                c.d ||= 1;
+                # if 4.32, shrink de-dl by 2 at d=3
+                # to get a big top full of small items
+                # should balance itself
+                $detail = c.dl - c.dl.toFixed();
+                if (detail) {
+                    detail = (detail+'').split('').slice(2);
+                    detail[1] ||= 2;
+                    c.ritard ||= {};
+                    c.ritard[detail[0]] = detail[1];
+                }
+            }
+            c.ritard && c.ritard[c.d] and c.dl -= c.ritard[c.d]
             c.d > 15 and throw "large ki";
             c.lum = c.dl - c.d;
             delete c.saykey;
