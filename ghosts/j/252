@@ -334,7 +334,7 @@ Ventur: | # pull up beside results
     G&clusp;
     
     1s&steps = '?';
-    1s&testname = 't/ExpectArt';
+    1s&testname = 't/Explude';
     
     G&way,'Doming',ar;
     A&async = 1;
@@ -358,6 +358,12 @@ Ventur: | # pull up beside results
         n question -jod $s:js&question,dl:6 %
         n quested -jod $s:js&quested,dl:6 %
         n answer -jod $s:js&answer,dl:6 %
+        
+        $uu = js&quested;
+        $save =
+        1s&Revists ||=
+        G&e,['Revisit'],['set','',{J:A.1,u:uu,s:1s&testname,was:1s&Answer}];
+        b(save,'revist');
     }
     A&S(0);
 Expect: | # pull results along, and
@@ -543,7 +549,6 @@ Expect: | # pull results along, and
         !js&N || js&N.length and A&til('settling');
         
         # look at who we are again
-        
         $w = 1s&Answer;
         $u = ws&u;
         
@@ -555,8 +560,18 @@ Expect: | # pull results along, and
         R = Rs&J;
         $uu = Rs&quested;
         
+        $save =
+        1s&Revists ||=
+        G&e,['Revisit'],['set','',{J:A.1,u:uu,s:1s&testname,was:1s&Answer}];
+        b(save,'revist');
+        continue;
+        # mind tested before and now
         n started 5 $s:ki(u) %dis:block,hue:50deg
         n started 6 $s:ki(uu) %dis:block
+        
+        # tested mind that is now out of date
+        $an = Rs&answer;
+        n reanswer 6 $s:ki(an) %dis:block
     }
     
     A&S(0);
@@ -625,74 +640,39 @@ pi/jod: | # a js J, shows a J-shaped bit of data, to aspect serialising change
     
     
     G&n,['Thing',3,{s:ki(c&s,c&dl||3)}];
-Wade: | # serve /W/$t to Revisit
-    # defines one place get/set name scheme
-    any '/W/*W' => &c{
-        my $t = $c->param('W');
-        my $s = $c->param('s');
-        # read t, write if s
-        # all there
-        $t = "W/$t";
-        # safety
-        $t =~ /([^\w\/-]+)/ && return
-            $c->render(text=>sjson(
-                {er=>"illegal t[".pos()."] char: $1 in '$t'"}
-            ));
-        # and you can't use the name 1
-        my $f = "$t/1";
-        
-        # returns json:
-        my $re = {ok=>1};
-        # or ?
-        #$c->render(text=>decode_utf8("c&s")); # ,format=>"js"
-        
-        # if setting
-        if (defined $s) {
-            if (!length $s) {
-                `rm $t/1`;
-                re.ok = 'deleted';
-            }
-            else {
-                # the whole name is directory
-                -d $t || `mkdir -p $t`;
-                my $new = !-f $f;
-                $s = "$s\n" if $s !~ /\n$/;
-                # we journal! can't trust anything
-                write_file("$f\.1",$s);
-                `mv $f\.1 $f`;
-                # < (notify nearby others, who )+
-                re.ok = 'updated';
-                re.ok = 'created' if $new;
-                $s = '';
-            }
-        }
-        else {
-            if (-f $f) {
-                $s = read_file($f);
-                re.ok = 'found';
-            }
-            else {
-                re.ok = 0;
-                re.er = 'not found'
-            }
-        }
-        re.s = $s if length $s;
-        $c->render(text=>sjson($re));
-    };
+
+
 Revisit: | # pull/push test data around test run
     G&heading,'Hz:50';
     G&u,['NutIns'];
     G&u,['NutText'];
     G&clusp;
-    
+    1s&M ||= [];
     1s&ein.get = &acgts{
         $Q = G&Cye,[s,'',{of:'W'}];
         c&s = 
         G&ting,Q;
     };
+    # < -pi matching event handlers, so we can give an object
+    1s&ein.set = &acgts{
+        $e = c&e;
+        $v = G&Cye,[ec&s,'-visit'];
+        vc&was = ec&was; # from get^
+        vc&j = ec&J; # to picture
+        vc&u = ec&u; # mind to attach 9s&u
+        1s&M.push(v)
+    };
     G&S;
     
+    # ag similar Cs
+    each in 1s&M {
+        i > 0 and nc&dolater = 1;
+        m $n
+    }
+    
     n maj 3 s:Mah\njor\nka %dis:block,ws:pre
+    
+    
     return;
     # 1s&obj is the last:
     $t = 't/ExpectArt';
@@ -784,6 +764,14 @@ Revisit: | # pull/push test data around test run
     n obj -jod $s:1s&obj %
     
     # 
+pi/visit: | # work up diff
+    G&heading;
+    c&dolater and return G&n,['dolater',1,{s:'dolater'}];
+    
+    
+    #debugger;
+    n fi -jod $s:C.c,dl:8.24 %
+    
 Bystand: |
     G&heading,'Hz:50';
     G&u,['NutIns'];
