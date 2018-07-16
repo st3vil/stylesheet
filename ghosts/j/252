@@ -76,7 +76,7 @@ Doming: | # in the place in the place
             G&n,['waitst',A&waitscv,{s:t},'hue:80deg']
         }
         $n =
-        G&n,['waits',A&waitscv,{s:t},'hue:150deg,ws:pre']
+        G&n,['waits',A&waitscv,{s:s},'hue:150deg,ws:pre']
         A&waitscv += 0.0001;
         nc&s = s;
         if (1s&step_tries++ > 16) {
@@ -86,7 +86,11 @@ Doming: | # in the place in the place
         nc&s += "\n";
         #~>54 Til: s
     };
-    A&beready = &{
+    # can proxy A&waits(), and then:
+    # async if waiting for anything
+    A&beready = &n,pi,pic{
+        n || pi and A&waits(n,pi,pic)
+        
         if (A&waitings.length) {
             throw "waits on step", A&waitings
         }
@@ -139,11 +143,11 @@ Doming: | # in the place in the place
                 if (Y.t == 'n' && Y.cv < 0.8) {
                     if (Yc&T && Yc&T.leaves) {
                         # e may be 9 anyway. suppose either >= 87
-                        notes.push("e"+
+                        notes.push("e"+(
                             !Y.e ? '?' :
                             Y.e.cv == 0.9 ? '@9' :
                             '@'+Y.e.cv+'<9'
-                        );
+                        ));
                     }
                     else {
                         Yc&T && Yc&T.not and notes.push('not')
@@ -199,7 +203,7 @@ Doming: | # in the place in the place
     
     
     
-    #c Step
+    #c S-tep
     A&S = &s,d{
         # any? named? data joint roller? for/if something?
         typeof s != 'number' and throw "NaN",s;
@@ -257,7 +261,7 @@ Doming: | # in the place in the place
         return 1;
     };
     
-    #c subgrounds
+    #c doming: subgrounds
     # osc flattens them out
     A&doming = &t{
         # < take over grounds&z so A.ground can A out?
@@ -380,6 +384,37 @@ Expect: | # pull results along, and
         }
     }
     
+    # wants to become views of data materialising,
+    # as we go in
+    # to wait for progress when the path dries up
+    # should have lots of pointers, check low level,
+    # simplifies to just n/Thing, or n/Thing 0.3
+    # a 2-hash climb in, across the landscape of J:
+    #   ns&Js&ss&topy&tv[?][?]
+    # assume into the top
+    
+    $intv = &n,desc,t,cv{
+        $j = ns&J;
+        !j and return A&til('get sJ',desc);
+        $s = js&s;
+        !s and return A&til('get sJss',desc);
+        $top = ss&top;
+        !top and return A&til('get sJssstop',desc);
+        $tv = top.y.tv;
+        !tv and return A&til('notv: '+ki(top,3),desc);
+        $u = tv[t];
+        !u and return A&til('notv/t: '+t,desc);
+        cv and u = u[cv]
+        else { # as tw
+            $k = Object.keys(u);
+            k.length > 1 and return A&til("Ambig-tw: "+t+" among: "+ki(u),desc);
+            k.length == 1 and u = u[k[0]];
+        }
+        !u and return A&til('notv/t/cv: '+t+'/'+cv,desc);
+        A&waits(u,desc);
+        return u
+    };
+    
     while (A&S(2)) {
         # < want to ready the tester and the tested
         # our test W may look like an Expect and a Thing
@@ -389,30 +424,19 @@ Expect: | # pull results along, and
         $w = 1s&Answer;
         $u = ws&u;
         if (u) {
-            $r =
+            $R =
             1s&Ready ||=
             a(['Shovel'],['ready','',{s:u}]);
-            waits(r,'mindup');
-            A&beready();
-            # r elvis completion, but also:
-            $j = rs&J;
-            j = js&s;
-            j = js&top;
-            $u = j.y.tw.updating;
-            !u and return A&til('updating...','mindin');
-            waits(u,'Shovel->updating');
-            u = us&J;
-            #waits(u,'updating J');
-            u = us&s;
-            waits(u,'updating s');
-            u = us&top;
-            waits(u,'updating top');
-            A&beready();
-            $ready = u.y.tw.ready;
+            b(R,'mindup');
             
-            !ready and return A&til('updating...ready','mindin');
+            $u = intv(R,'mind updating','updating');
+            b();
+            
+            $r = intv(u,'mind ready','ready');
+            b();
+            
             # and that it's for the thing we sent
-            $j = ready.y.A.1;
+            $j = r.y.A.1;
             js&answer != ws&u and delete 1s&Ready; return A&til('readied different')
             
             # then minimise Shovel
@@ -420,9 +444,8 @@ Expect: | # pull results along, and
             1s&Sh ||=
             a(['Shovel'],['C+click','',{p:'t'}]);
             waits(sh,'shovelshrink');
-            waits(sh.y.A.e,'shovel-e',{dl:4});
-            b();
-            waits(sh.y.A.e.c.T,'!C shovel-e-T',{dl:3});
+            b(sh.y.A.e,'shovel-e',{dl:4});
+            b(sh.y.A.e.c.T,'!C shovel-e-T',{dl:4.12});
         }
         else {
             n mindup -an t:non %
@@ -730,7 +753,7 @@ Bystand: |
         m guil  $s:s %fs:$fs+%,hue:$hue+deg,blr:3px
     }
     n lat  s:'Severa'
-    G&s;
+    #G&s;
     n More  s:'twoit'
     
 t/LetsOsc: |
