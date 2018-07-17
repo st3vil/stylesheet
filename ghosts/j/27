@@ -2,8 +2,14 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
     u jc
     n \'of:om'
     
+    #c < Cc&lv as separate (async) bits of tree
+    #   as Hut used to say Thing clv:Thing/348sjd329 over the websocket
+    #   and Hut would GET the file, decode, om here
     # this stuff shouldn't need to be said,
-    # tree reader
+    # A:tree-reader would have its own intent about where items should be
+    #   eg s&W !s&z refers to a name in 4
+    #   and s&W s&z is content for the name, of which I is a 1-sphere
+    #   and s&J (s&pi implies) implies it be fetched from $Wt/6/$Ct
     
     # s&lv spawns a c&lv within itself
     0 &&
@@ -79,10 +85,78 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
         
         
     
-    #c readLines - string to Cs
-    
+    #c around line making: Serialise many, Compress one
     n \'of:eye'
     u j
+    
+    # make string, able to leave program memory
+    #  s=C, with insides
+    #   G&ind makes clone.y.D = origin, but no .y.tw etc.
+    #   G&Compress tidies it up
+    #   G&toLines makes one string, no y but cv
+    Serialise: %acgt:s comp
+        !s and throw "undef"
+        $ers = [];
+        $cb = &s,d{
+            $part = "Compress";
+            try {
+                G&Compress,s;
+                part = 'comp';
+                comp && comp(s,d);
+                d.not and return
+                part = 'toLines';
+                return G&toLines,s
+            }
+            catch (er) {
+                ers.push([part,d,s,er]);
+                return ki(s,2)+"   !"+part+"! "+er
+            }
+        };
+        $l = G&ind,s,cb,{hup:1};
+        #ers.length and throw "unserial", ers
+        return l
+    
+    # various things shouldn't be let out
+    # something else (G&toLines) makes y.* disappears, wormholing only cv
+    # < an embryonic composited sub, like thro, 
+    # < the opposite, collected from n and something else...
+    # < use the d (state from G&ind) to make links for duplicated objects
+    # see j/7 K
+    #   used to mute any ref not gk =~ /x$/
+    Compress: %acgt:s d
+        # the other things are around, also via y.{tw,tv,in} etc
+        delete ss&z;
+        
+        # especially if pi
+        ss&J and delete sc&s;
+        typeof sc&s == 'object' and delete sc&s
+        delete ss&J
+        
+        $mute = {c:['code'],sc:[]};
+        # this just does: sc&code and delete sc&code; sc&mc = 'code';
+        each nk,gks mute {
+            $he = s[nk];
+            $muted = {};
+            each i,gk gks {
+                null == he[gk] and continue;
+                muted[gk] = 1;
+                delete he[gk];
+                # data should be limited somehow...
+            }
+            # say that it is muted, eg c&mc = 'muted Cc keys'
+            #  in a thing that could pretend to be a hash for simplicity...
+            if (muted.length) {
+                $ou = 'm' + nk.slice(0,1);
+                $was = s.c[ou];
+                if (was) {
+                    was = G&peel:was,{sep:' '};
+                    $.extend(muted, was);
+                }
+                s.c[ou] = G&depeel:muted,{sep:' '};
+            }
+        }
+    
+    #c readLines - string to Cs
     readLines:
         $L = s.split("\n");
         $oL = [];
