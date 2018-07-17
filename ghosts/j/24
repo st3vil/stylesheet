@@ -524,11 +524,12 @@ checkov_async: |
 
 Wade: | # serve /W/$t to G&t
     # defines one place get/set name scheme
-    my $cache = {};
+    
     any '/W/*W' => &c{
         my $t = $c->param('W');
         my $s = $c->param('s');
         my $patch = $c->param('patch') && die "know patch";
+        my $cache = G.Wache ||= {};
         
         # read t, write if s
         # all there
@@ -550,6 +551,8 @@ Wade: | # serve /W/$t to G&t
             if ($pa && $pa ne $cache.>$f ) {
                 re.er = 'not ffwd';
                 # could give out tree since...
+                $s = '';
+                # re.dige = $cache.>$f ;
             }
             elsif (!length $s) {
                 `rm $t/1`;
@@ -914,7 +917,12 @@ NutIns: | # new stuff
                         Pc&s = s
                     }
                     else {
-                        r.er == 'not ffwd' and c&rebase && c&rebase(); throw "not ffwd", r
+                        if (r.er == 'not ffwd') {
+                            c&rebase and c&rebase()
+                            else {
+                                throw "not ffwd: "+C.t, r
+                            }
+                        }
                         else
                         r.er != 'not found' and throw "tW er", r.er
                         Pc&s = null
