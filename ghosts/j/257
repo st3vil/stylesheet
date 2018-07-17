@@ -1,57 +1,4 @@
-Wade: | # serve /W/$t to Revisit
-    # defines one place get/set name scheme
-    any '/W/*W' => &c{
-        my $t = $c->param('W');
-        my $s = $c->param('s');
-        # read t, write if s
-        # all there
-        $t = "W/$t";
-        # safety
-        $t =~ /([^\w\/-]+)/ && return
-            $c->render(text=>sjson(
-                {er=>"illegal t[".pos()."] char: $1 in '$t'"}
-            ));
-        # and you can't use the name 1
-        my $f = "$t/1";
-        
-        # returns json:
-        my $re = {ok=>1};
-        # or ?
-        #$c->render(text=>decode_utf8("c&s")); # ,format=>"js"
-        
-        # if setting
-        if (defined $s) {
-            if (!length $s) {
-                `rm $t/1`;
-                re.ok = 'deleted';
-            }
-            else {
-                # the whole name is directory
-                -d $t || `mkdir -p $t`;
-                my $new = !-f $f;
-                $s = "$s\n" if $s !~ /\n$/;
-                # we journal! can't trust anything
-                write_file("$f\.1",$s);
-                `mv $f\.1 $f`;
-                # < (notify nearby others, who )+
-                re.ok = 'updated';
-                re.ok = 'created' if $new;
-                $s = '';
-            }
-        }
-        else {
-            if (-f $f) {
-                $s = read_file($f);
-                re.ok = 'found';
-            }
-            else {
-                re.ok = 0;
-                re.er = 'not found'
-            }
-        }
-        re.s = $s if length $s;
-        $c->render(text=>sjson($re));
-    };
+
 Ventur: | # pull up beside results
     G&heading,'Hz:50';
     G&u,['MelTest'];
@@ -81,12 +28,14 @@ Ventur: | # pull up beside results
         $w = rc&s;
         b(w,'answer');
         1s&Answer = w;
+        1s&Quest = rc&Q;
+        n Quest -jod $s:1s&Quest %
     }
     
     # becomes a matter for the Gagregator,
     # external forces (G&t set, may have to merge)
     #  carry it away, like the end of Fat Old Sun
-    while (A&S(2,"Push")) {
+    while (A&S(2,"Scan")) {
         $R =
         1s&MindStarted ||=
         a(['Shovel'],['refresh','']);
@@ -96,17 +45,33 @@ Ventur: | # pull up beside results
         b(js&question,'!C question');
         b(js&answer,'!C answer');
         n questiona -jod $s:js&question,dl:6 %
-        n questeda -jod $s:js&quested,dl:6 %
         n answera -jod $s:js&answer,dl:6 %
         
-        $uu = js&quested;
+        1s&Afteru = js&quested;
+        n Afteru -jod $s:js&quested,dl:6 %
         
+    }
+        
+    while (A&S(3,"Push")) {
+        # get Revisit to Serialise us and apply patch via G&t:
+        $c = {};
+        # the $Wt
+        c.s = 1s&testname;
+        # G&t question that got an object we are now replacing
+        c.Q = 1s&Quest;
+        # this J
+        c.J = A.1;
+        # Shovel's idea of u (ghost deps), 
+        c.u = 1s&Afteru;
+        #  
         $save =
         1s&Revists ||=
-        G&e,['Revisit'],['set','',{J:A.1,u:uu,s:1s&testname,was:1s&Answer}];
+        G&e,['Revisit'],['set','',c];
         
         b(1s&Answer,'thans');
         b(save,'revist');
+        
+        n QuestAgain -jod $s:1s&Quest %
     }
     A&S(0);
 Revisit: | # pull/push test data around test run - outside J, all done mode
@@ -116,7 +81,7 @@ Revisit: | # pull/push test data around test run - outside J, all done mode
     G&clusp;
     1s&M ||= [];
     1s&ein.get = &acgts{
-        $Q = G&Cye,[s,'',{of:'W'}];
+        $Q = c&Q = G&Cye,[s,'',{of:'W'}];
         c&s = 
         G&ting,Q;
     };
@@ -124,7 +89,7 @@ Revisit: | # pull/push test data around test run - outside J, all done mode
     1s&ein.set = &acgts{
         $e = c&e;
         $v = G&Cye,[ec&s,'-visit'];
-        vc&was = ec&was; # from get^
+        vc&Q = ec&Q; # from get^
         vc&j = ec&J; # to picture
         vc&u = ec&u; # mind to attach 9s&u
         1s&M.push(v)
@@ -145,7 +110,7 @@ pi/visit: | # work up diff
     
     $j = c&j;
     $u = c&u;
-    $w = c&was;
+    $Q = c&Q;
     
     if (!1s&String) {
         $s = js&s;
@@ -159,11 +124,11 @@ pi/visit: | # work up diff
     n fi -jod $s:C.c,dl:6.12 %
     n tac 2 s:tac %hue:200,fs:200%,dos:do/cWrite
     # if different
-    if (!w) {
+    if (!Q) {
           n str -jod $s:1s&String %dis:block,ws:pre,fs:40%
     }
     else {
-          n was -jod $s:w %dis:block,ws:pre,fs:40%
+          n was -jod $s:Q,dl:8.23 %dis:block,ws:pre,fs:40%
           n str -jod $s:1s&String %dis:block,ws:pre,fs:40%
         #$d = diff(s,"Vlapitutic Vowels",{chunk:'word'});
         #n loz 1 $s:d,ht:1 %dis:block,hue:80deg

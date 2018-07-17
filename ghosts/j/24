@@ -522,6 +522,71 @@ NutBung: | # getting W from I, D from B, and errorifics
 checkov_async: |
     console.log("Investigate: ",B);
 
+Wade: | # serve /W/$t to G&t
+    # defines one place get/set name scheme
+    $cache = {};
+    any '/W/*W' => &c{
+        my $t = $c->param('W');
+        my $s = $c->param('s');
+        # read t, write if s
+        # all there
+        $t = "W/$t";
+        # char safety
+        $t =~ /([^\w\/-]+)/ && return
+            $c->render(text=>sjson(
+                {er=>"illegal t[".pos()."] char: $1 in '$t'"}
+            ));
+        # and you can't use the name 1
+        my $f = "$t/1";
+        
+        # returns json:
+        my $re = {ok=>0};
+        
+        if (defined $s) {
+            # optional safety - must replace such dige
+            my $pa = $c->param('parent');
+            if ($pa && $pa ne $cache.>$f ) {
+                re.er = 'not ffwd';
+            }
+            elsif (!length $s) {
+                `rm $t/1`;
+                re.ok = 'deleted';
+            }
+            else {
+                # the whole name is directory
+                -d $t || `mkdir -p $t`;
+                my $new = !-f $f;
+                $s = "$s\n" if $s !~ /\n$/;
+                # we journal! can't trust anything
+                write_file("$f\.1",$s);
+                `mv $f\.1 $f`;
+                # < (notify nearby others, who )+
+                re.ok = 'updated';
+                re.ok = 'created' if $new;
+                $s = '';
+            }
+        }
+        else {
+            if (-f $f) {
+                $s = read_file($f);
+                re.ok = 'found';
+            }
+            else {
+                re.er = 'not found'
+            }
+        }
+        if (length $s) {
+            # it should have a dig
+            my $dig = slm(12,dig(s));
+            $cache.>$f = $dig;
+            $c->res->headers->append(Dige => $dig);
+            # if they know its hash, assume they don't need the string again
+            if (my $ha = $c->param('have')) {
+                delete re.s if grep {$_ eq $dig} split "\t", $ha
+            }
+        }
+        $c->render(text=>sjson($re));
+    };
 NutIns: | # new stuff
     u j
     n \'of:eye'
@@ -639,7 +704,7 @@ NutIns: | # new stuff
         #       spreading out to the users... is all-ahead-bendix
         # 5s&in -> 1s&in -> ss&in -> rs&in
         
-        #c LUM
+        #c have the thing?
         # lets forget s&out until s pages and data surfs
         # and forget s&in hoisting
         # just clone 5s&in..P into 3s&in..P, let chaos clean up
@@ -652,7 +717,10 @@ NutIns: | # new stuff
         $thing = type[C.t] = type[C.t] || {};
         c&p and throw "pointers diffract where thing must be from"
         
-        #s&P and throw "quest sP: specific pull/push"
+        # G&t,[Wt,,$s] sets
+        #  could be A:s? take up its string channel
+        $saying = c&s != null;
+        # s&P may be the thing it must replace if reusing Pull request to Push
         
         $found;
         # P coming from the first location... unless something
@@ -663,16 +731,20 @@ NutIns: | # new stuff
         }
         P = found;
         # is our cache too old
+        $p = P; # may be able to check s&dige or so...
         if (P) {
             $ttl = 4c&ttl || 5;
             Pc&ttl_mult and ttl *= Pc&ttl_mult;
             Ps&now && !G&time,Ps&now,ttl and P = null
         }
-        #c do we know
-        if (!P) {
+        # formulate question or statement
+        if (!P || saying) {
             P = G&Cye,[C.t,C.y.cv,{of:c&of},{}];
             $get; # how to ask
             $got; # response to P/c&s
+            
+            # they may have their own ways to use dige/v, p/P/s&P
+            #c w|js
             if (c&of == 'w') {
                 get = '/way/'+C.t;
                 got = &P,s,c{
@@ -688,6 +760,7 @@ NutIns: | # new stuff
                 get = '/js/'+C.t;
                 # T would put this c&v to wind back from bugs
                 c&v and get += '-'+c&v;
+                # < check dige/download if different in one request
                 got = &P,s,c{
                     $src = c.getResponseHeader('Location');
                     $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
@@ -748,11 +821,42 @@ NutIns: | # new stuff
                     G&add_script,src,callback;
                 };
             }
+            #c of=W
             if (c&of == 'W') {
                 get = {url:'/W/'+C.t};
-                if (!s&P && c&s != null) {
+                $d = get.data = {};
+                # the first "can you hold on to..."
+                if (s&P) {
+                    # if G&ting,thesameC again
+                }
+                if (p) {
+                    # the P disqualified
+                }
+                if (c&s) {
+                    # wants to write
+                    # must be replacing s&P
+                }
+                else {
+                    # read
+                    # have: s&P - a pull, this question has been answered before
+                    #  and now it's 
+                    if (s&P) {
+                        # the pull, check same dige
+                        # same dige could also come from
+                    }
+                }
+                if (saying) {
+                    # wants to write
                     get.type = 'post';
-                    get.data = {s:c&s};
+                    # Core scuttle boundary, Q -> get/W
+                    null != c&s and d.s = c&s;
+                    null != c&patch and d.patch = c&patch;
+                    # if we should be careful about what we replace
+                    d.patch && !s&P and throw "Pull before you Push a patch"
+                    s&P and d.parent = s&P.sc.dige;
+                    # must be replacing s&P
+                    # this could be the 
+                    
                 }
                 got = &P,s,c{
                     $r = dej(s);
@@ -772,6 +876,7 @@ NutIns: | # new stuff
                             $N = G&readLines,s;
                             N.length != 1 and throw "Weird tW lines", s
                             s = N[0];
+                            s.y.P = 
                         }
                         Pc&s = s
                     }
@@ -782,6 +887,7 @@ NutIns: | # new stuff
                 };
             }
             
+            #c ask,return
             $done = &s,c{
                 # every pulling happened now
                 Ps&now = G&time;
@@ -806,7 +912,7 @@ NutIns: | # new stuff
             
             
         
-        #c stash
+        # stash
         if (P) {
             # hang ourselves on Ps&out?
             # copy P to your s&in
@@ -934,3 +1040,4 @@ NutIns: | # new stuff
         s >= 6 && ps&subphone and ps&subphone(startup);
         # 
         
+
