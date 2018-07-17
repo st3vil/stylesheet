@@ -68,6 +68,12 @@ Doming: | # in the place in the place
     title();
     
     # < a way to set neediness of a J
+    # < faster when steps complete, slower when nothing changes
+    # learn timings?
+    # or unify callbacks
+    #   know in-time and out-time
+    # /invent timetravel
+    #   s/\s//g instructions
     # known Jc? 
     $time = 254;
     $loop = 1s&loop = Math.random();
@@ -411,8 +417,12 @@ Expect: | # pull results along, and
         G&e,['Revisit'],['get','',{s:1s&testname}];
         waits(r,'answers');
         
+        $Q = rc&Q;
+        waits(Q,'Quest');
+        1s&Quest = Q;
+        
         $w = rc&s;
-        waits(w,'answer');
+        waits(w,'Answer');
         1s&Answer = w;
         
         b();
@@ -543,20 +553,25 @@ Expect: | # pull results along, and
         a(['Shovel'],['refresh','']);
         b(R,'minddown');
         R = Rs&J;
-        $uu = Rs&quested;
+        b(Rs&question,'!C question');
+        b(Rs&answer,'!C answer');
         
+        !1s&Quest and throw "No Quest";
+        # get Revisit to Serialise us and apply patch via G&t:
+        $c = {};
+        # the $Wt
+        c.s = 1s&testname;
+        # G&t question that got an object we are now replacing
+        c.Q = 1s&Quest;
+        # this J
+        c.J = A.1;
+        # Shovel's idea of u (ghost deps), 
+        c.u = Rs&quested;
+        #  
         $save =
         1s&Revists ||=
-        G&e,['Revisit'],['set','',{J:A.1,u:uu,s:1s&testname,was:1s&Answer}];
-        b(save,'revist');
-        continue;
-        # mind tested before and now
-        n started 5 $s:ki(u) %dis:block,hue:50deg
-        n started 6 $s:ki(uu) %dis:block
+        G&e,['Revisit'],['set','',c];
         
-        # tested mind that is now out of date
-        $an = Rs&answer;
-        n reanswer 6 $s:ki(an) %dis:block
     }
     
     A&S(0);
