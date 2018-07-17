@@ -528,6 +528,8 @@ Wade: | # serve /W/$t to G&t
     any '/W/*W' => &c{
         my $t = $c->param('W');
         my $s = $c->param('s');
+        my $patch = $c->param('patch') && die "know patch";
+        
         # read t, write if s
         # all there
         $t = "W/$t";
@@ -547,6 +549,7 @@ Wade: | # serve /W/$t to G&t
             my $pa = $c->param('parent');
             if ($pa && $pa ne $cache.>$f ) {
                 re.er = 'not ffwd';
+                # could give out tree since...
             }
             elsif (!length $s) {
                 `rm $t/1`;
@@ -579,7 +582,7 @@ Wade: | # serve /W/$t to G&t
             # it should have a dig
             my $dig = slm(12,dig(s));
             $cache.>$f = $dig;
-            $c->res->headers->append(Dige => $dig);
+            re.dige = $dig;
             # if they know its hash, assume they don't need the string again
             if (my $ha = $c->param('have')) {
                 delete re.s if grep {$_ eq $dig} split "\t", $ha
@@ -719,6 +722,7 @@ NutIns: | # new stuff
         
         # G&t,[Wt,,$s] sets
         #  could be A:s? take up its string channel
+        #   as string, not the decoded Pc&s object (that is returned)
         $saying = c&s != null;
         # s&P may be the thing it must replace if reusing Pull request to Push
         
@@ -848,18 +852,45 @@ NutIns: | # new stuff
                 if (saying) {
                     # wants to write
                     get.type = 'post';
+                    
                     # Core scuttle boundary, Q -> get/W
                     null != c&s and d.s = c&s;
                     null != c&patch and d.patch = c&patch;
+                    
                     # if we should be careful about what we replace
                     d.patch && !s&P and throw "Pull before you Push a patch"
+                    # the old P
                     s&P and d.parent = s&P.sc.dige;
-                    # must be replacing s&P
-                    # this could be the 
-                    
+                    # the new P
+                    Ps&dige = dig(c&s);
+                    Pc&String = c&s;
                 }
+                
+                # dige we have floating around
+                d.have = [];
+                # p the possibly out of date
+                # Qs&P from before
+                # P the new pull, what will be...
+                $poss = [p, s&P, P]
+                    .filter(&p{ return p && pc&String && ps&dige })
+                    .filter(&p{ return d.have.push(ps&dige) });
+                !d.have.length and delete d.have
+                else { d.have = d.have.join("\t") }
+                
                 got = &P,s,c{
                     $r = dej(s);
+                    if (r.dige) {
+                        # variance in perl/js dig()?
+                        Ps&dige && Ps&dige != r.dige and debugger;
+                        Ps&dige = r.dige;
+                        # dige without s if it's cached here
+                        if (null == r.s) {
+                            each ip poss {
+                                ps&dige == r.dige and r.s = pc&String
+                            }
+                            !r.s and throw "get/W implied we know", r, P
+                        }
+                    }
                     if (r.ok) {
                         s = '';
                         r.ok == 'created' and s = c&s
@@ -872,15 +903,18 @@ NutIns: | # new stuff
                         else {
                             throw "other kind of ok",r.ok
                         }
+                        Pc&String = s;
                         if (s) {
                             $N = G&readLines,s;
                             N.length != 1 and throw "Weird tW lines", s
                             s = N[0];
-                            s.y.P = 
+                            s.y.P = P;
                         }
                         Pc&s = s
                     }
                     else {
+                        r.er == 'not ffwd' and c&rebase && c&rebase(); throw "not ffwd", r
+                        else
                         r.er != 'not found' and throw "tW er", r.er
                         Pc&s = null
                     }
@@ -903,8 +937,7 @@ NutIns: | # new stuff
             };
             G&question,get,done;
             
-            c&async and c&async();
-            c&async and throw "async didnt async"
+            c&async and c&async(); throw "async didnt async"
             # returning undef (later) means nothing found
             # could c&l = netslopes (above 5) to look up... lumit
             G&TuneTimeMachine,c&of+':'+t
