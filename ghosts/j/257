@@ -52,7 +52,63 @@ Wade: | # serve /W/$t to Revisit
         re.s = $s if length $s;
         $c->render(text=>sjson($re));
     };
-
+Ventur: | # pull up beside results
+    G&heading,'Hz:50';
+    G&u,['MelTest'];
+    G&clusp;
+    
+    1s&steps = '?';
+    1s&testname = 't/Explude';
+    
+    G&way,'Doming',ar;
+    A&async = 1;
+    # interacts with Doming
+    $a = A&a;
+    $waits = A&waits;
+    $w = waits;
+    $b = A&beready;
+    
+    1s&Y = A.4.up;
+    
+    
+    while (A&S(1,"Pull")) {
+        # pull test data from Revisit
+        $r =
+        1s&Revisit ||=
+        G&e,['Revisit'],['get','',{s:1s&testname}];
+        waits(r,'answers');
+        
+        $w = rc&s;
+        b(w,'answer');
+        1s&Answer = w;
+    }
+    
+    # becomes a matter for the Gagregator,
+    # external forces (G&t set, may have to merge)
+    #  carry it away, like the end of Fat Old Sun
+    while (A&S(2,"Push")) {
+        $R =
+        1s&MindStarted ||=
+        a(['Shovel'],['refresh','']);
+        b(R,'mindup');
+        $j = Rs&J;
+        b(j,'theJ',{dl:4});
+        b(js&question,'!C question');
+        b(js&answer,'!C answer');
+        n questiona -jod $s:js&question,dl:6 %
+        n questeda -jod $s:js&quested,dl:6 %
+        n answera -jod $s:js&answer,dl:6 %
+        
+        $uu = js&quested;
+        
+        $save =
+        1s&Revists ||=
+        G&e,['Revisit'],['set','',{J:A.1,u:uu,s:1s&testname,was:1s&Answer}];
+        
+        b(1s&Answer,'thans');
+        b(save,'revist');
+    }
+    A&S(0);
 Revisit: | # pull/push test data around test run
     G&heading,'Hz:50';
     G&u,['NutIns'];
@@ -89,6 +145,7 @@ pi/visit: | # work up diff
     
     $j = c&j;
     $u = c&u;
+    $w = c&was;
     
     if (!1s&String) {
         $s = js&s;
@@ -102,7 +159,17 @@ pi/visit: | # work up diff
     n fi -jod $s:C.c,dl:6.12 %
     n tac 2 s:tac %hue:200,fs:200%,dos:do/cWrite
     # if different
-    n str -jod $s:1s&String %dis:block,ws:pre,fs:40%
+    if (!w) {
+          n str -jod $s:1s&String %dis:block,ws:pre,fs:40%
+    }
+    else {
+          n was -jod $s:w %dis:block,ws:pre,fs:40%
+          n str -jod $s:1s&String %dis:block,ws:pre,fs:40%
+        #$d = diff(s,"Vlapitutic Vowels",{chunk:'word'});
+        #n loz 1 $s:d,ht:1 %dis:block,hue:80deg
+    }
+    
+    
     
     if (1c&Write) {
         $Q =

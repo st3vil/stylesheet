@@ -206,9 +206,34 @@ NutGravy: | # non-I routines
         c.chunk == 'word' and dmp.diff_cleanupEfficiency(d)
         # or letters at a time, nice and noisy
         
-        $ds = dmp.diff_prettyHtml(d);
+        $ds = window.diff_prettyHtml(d);
         
         return ds;
+    };
+    window.diff_prettyHtml = &diffs{
+        $html = [];
+        $pattern_amp = /&/g;
+        $pattern_lt = /</g;
+        $pattern_gt = />/g;
+        $pattern_para = /\n/g;
+        for (var x = 0; x < diffs.length; x++) {
+          var op = diffs[x][0];    // Operation (insert, delete, equal)
+          var data = diffs[x][1];  // Text of change.
+          var text = data.replace(pattern_amp, '&').replace(pattern_lt, '<')
+              .replace(pattern_gt, '>').replace(pattern_para, '¶<br>');
+          switch (op) {
+            case DIFF_INSERT:
+              html[x] = '<ins style="background:#333;">' + text + '</ins>';
+              break;
+            case DIFF_DELETE:
+              html[x] = '<del style="background:#333;">' + text + '</del>';
+              break;
+            case DIFF_EQUAL:
+              html[x] = '<span>' + text + '</span>';
+              break;
+          }
+        }
+        return html.join('');
     };
     
     
