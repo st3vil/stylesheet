@@ -189,6 +189,28 @@ NutGravy: | # non-I routines
         return sha256(s).slice(0,12)
     };
     
+    window.dmp = new diff_match_patch();
+    window.diff = &s,S,c{
+        c ||= {};
+        $dmp = window.dmp;
+        dmp.Diff_Timeout = 1; # second
+        dmp.Diff_EditCost = 4;
+
+        $ms_start = (new Date()).getTime();
+        $d = dmp.diff_main(s, S);
+        $ms_end = (new Date()).getTime();
+        
+        # idealise the size of the groups coming/going
+        c.chunk ||= 'word';
+        c.chunk == 'line' and dmp.diff_cleanupSemantic(d)
+        c.chunk == 'word' and dmp.diff_cleanupEfficiency(d)
+        # or letters at a time, nice and noisy
+        
+        $ds = dmp.diff_prettyHtml(d);
+        
+        return ds;
+    };
+    
     
     #c ki leaves through here for singular squish factory,
         # optional c.keys
