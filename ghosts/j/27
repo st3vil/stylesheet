@@ -494,3 +494,75 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
         
         return l
 
+j/en/Teev: | # string t,s for N
+    $M = [];
+    each iC N {
+        $ts = [C.t,c&s];
+        # if any insides \W, throw if empty t?
+        $en
+        each is ts {
+            !s and debugger;
+            !s.match(/^[\/\w]+$/) and en = ts
+        }
+        en and M.push(enj(en)); continue
+        M.push(ts.join("\t"));
+    }
+    return M.join("\t");
+j/de/Teev: | # N C t,s for s 
+    # slightly toLines, for t and y
+    $N = [];
+    # TODO way sometimes gets c&code_args = 's' but c&code = acgtar?
+    !s.split and s = ar.s;
+    s = s.split("\t");
+    while (s.length) {
+        $k = s.shift();
+        $v;
+        if (k.match(/^\W/)) {
+            k = dej(k);
+            k.length != 2 and throw "Funny: "+k, s
+            k = k[0];
+            v = k[1];
+        }
+        else {
+            v = s.shift();
+        }
+        $d = G&Cye,[k,''];
+        N.push(d);
+        null == v and continue;
+        if (ar.to == 'cv') {
+            d.y.cv = v || 1;
+            while (d.y.cv >= 1) {
+                d.y.cv *= 0.1
+            }
+        }
+        else { dc&s = v }
+    }
+    return N
+p/en/Teev: | # string t,s for N
+    return join "\t", map{
+        my $ts = [_.t,_c&s]; 
+        # if any insides \W, throw if empty t?
+        my $whack = 
+        grep{ !/^[\/\w]+$/ }@$ts;
+        $whack && sayyl "Was whack: ".wdump 2, $ts;
+        $whack ? sjson $ts : join "\t", @$ts
+    }@$N;
+p/de/Teev: | # N C t,s for s 
+    # slightly toLines, for t and y
+    my $N = [];
+    $s = [split "\t", $s];
+    while (@$s) {
+        my $k = shift @$s;
+        my $v;
+        if ($k =~ /^\W/) {
+            $k = djson($k);
+            @$k != 2 && die "Funny: @$k";
+            ($k,$v) = @$k;
+        }
+        else {
+            $v = shift @$s;
+        }
+        push @$N, G&Ct,[$k,'',{s=>$v}]
+    }
+    return $N
+
