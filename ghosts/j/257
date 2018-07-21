@@ -183,14 +183,11 @@ pi/visit: | # work up diff
     
     
 pi/diff: |
-    $d = ki(T,6.24);
     G&heading;
     ys&ws = 'pre';
-    ys&fs = '60%';
+    ys&fs = '75%';
     ys&wb = 'break-word';
     ys&hue = '80deg';
-    
-    n twas -jod_2 $s:d %
     
     c&s == c&was &&
         n same 1 s:= %fs:1999%,ab:1,blr:8px,opa:0.5,lh:40%
@@ -214,16 +211,77 @@ pi/diff: |
             n.t == 'new' and ms&hue = '265deg';
             n.t == 'gone' and ms&hue = '111deg';
             ms&hue and continue
-            
+            $s = mc&s;
+            s.length < 40 and continue
+            if (!s.match(/\n/)) {
+                ms&shortfor = s;
+                mc&s = s.slice(0,20)+" ... "+s.slice(-20);
+            }
+            else {
+                $L = s.split("\n");
+                $las = L.pop();
+                L = L.map(&s{ return s+"\n" });
+                las != '' and L.push(las);
+                $w = []; # to be
+                # fold d>2 into d=2
+                $shallow = /^  /;
+                $deep = /^    /;
+                $la;
+                each il L {
+                    # not 3 lines near a change
+                    if (i > 3 && i < L.length - 3) {
+                        if (l.match(deep)) {
+                            !la and throw "no la";
+                            $sh =
+                            las&shortfor ||= [];
+                            sh.push(l);
+                            continue;
+                        }
+                    }
+                    w.push(l);
+                    if (l.match(shallow)) {
+                        la =
+                        m $m.t  $s:w.join("") %
+                        w = [];
+                    }
+                }
+                mc&s = w.join("");
+            }
+        }
+        each in M {
+            ns&hue and continue
+            # shortened inside lines
+            $text = ns&shortfor;
+            !text and continue
+            # falsify a heading, 't y ... +n':
+            $m = nc&s.match(/^(  \S[^\t]*\t[^\t]*\t)/);
+            if (m) {
+                text.unshift(nc&s);
+                nc&s = m[1] + " ... +"+(text.length-1);
+            }
+            else { # never misses? 
+                nc&s += "\n  ... +"+text.length;
+            }
+            nc&s += "\n";
+            ns&shortfor = text.join("");
+            ns&fs = '80%';
+            #nc&s += "\n";
+           # nc&s += "\nsays:\n"+ns&shortfor;
+            ns&dow = 'do/Swaps';
         }
         return M;
     };
     
+    $B = Gc&B;
+    $w = Bs&way;
+    
+    1s&Compway != w and delete 1s&Comp;
     1s&CompN != N and delete 1s&Comp;
     1s&Comp ||= comp(N);
     1s&CompN = N;
+    1s&Compway = w;
     
-    1s&Comp.map(&s{ M.push(s) });
+    1s&Comp.map(&s{ G&m,M,s });
     
     
     delete c&was;
@@ -238,6 +296,10 @@ do/cup: |
     $j = c.y.A.1;
     j.c[k] ||= 0;
     j.c[k]++;
+do/Swaps: |
+    $on = c.y.A.on;
+    $v = on.innerText == cc&s ? cs&shortfor : cc&s;
+    $(on).text(v);
 Savior: | # big list of s that 1c&save somewhere - inside J, progressive scan mode
     G&heading
     1s&ein.save = {w:'W/save'};
