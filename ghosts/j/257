@@ -183,29 +183,48 @@ pi/visit: | # work up diff
     
     
 pi/diff: |
+    $d = ki(T,6.24);
     G&heading;
     ys&ws = 'pre';
     ys&fs = '60%';
     ys&wb = 'break-word';
     ys&hue = '80deg';
     
+    n twas -jod_2 $s:d %
+    
     c&s == c&was &&
         n same 1 s:= %fs:1999%,ab:1,blr:8px,opa:0.5,lh:40%
     
-    $digs = dig(c&was)+dig(c&s);
-    # and make this sensitive to any parameters feeding diff()
+    $c = {chunk:'word'};
+    # switch chunk: word/line
+    
+    $digs = dig(c&was)+dig(c&s)+dig(ki(c));
     1s&Digs != digs and delete 1s&Diff; 
     1s&Digs = digs;
     
-    $N = 1s&Diff ||= diff(c&was,c&s,{chunk:'word'});
     
-    each in N {
-        $m =
-        m bit  $s:nc&s %
-        m.t = n.t+" bit";
-        n.t == 'new' and ms&hue = '40deg';
-        n.t == 'gone' and ms&hue = '274deg';
-    }
+    $N = 1s&Diff ||= diff(c&was,c&s,c);
+    
+    $comp = &N{
+        $M = [];
+        each in N {
+            $m =
+            m bit  $s:nc&s %
+            m.t = n.t+" bit";
+            n.t == 'new' and ms&hue = '265deg';
+            n.t == 'gone' and ms&hue = '111deg';
+            ms&hue and continue
+            
+        }
+        return M;
+    };
+    
+    1s&CompN != N and delete 1s&Comp;
+    1s&Comp ||= comp(N);
+    1s&CompN = N;
+    
+    1s&Comp.map(&s{ M.push(s) });
+    
     
     delete c&was;
     
