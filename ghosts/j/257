@@ -149,27 +149,28 @@ pi/visit: | # work up diff
         1s&String = G&Serialise,r,co;
     }
     
+    # the stuff we came from
     n fi -jod $s:C.c,dl:6.12 %
     
     n Write 2 s:tac %hue:200,fs:200%,dos:do/cup
     n String 2 s:re %hue:200,fs:180%,dos:do/cup
-    if (js&s != 1s&Seens) {
+    js&s != 1s&Seens &&
         n Stringout 2 s:oud %hue:230,dos:do/cup
-    }
+    
+    # ^ pathway to Write, first look at diff
+    # < commit message? git it?
+    
+    # keep track of thing pictured, be able to wind up
+    $P = Qs&P;
     
     # if different
     if (!Q) {
-          n str -jod $s:1s&String %dis:block,ws:pre,fs:40%
+        n str -jod $s:1s&String %dis:block,ws:pre,fs:40%
     }
     else {
-          $P = Qs&P;
-          if (Pc&String == 1s&String)
-              n same 1 s:= %fs:1999%,ab:1,blr:8px,opa:0.5,lh:40%
-          
-          $d = diff(Pc&String,1s&String,{chunk:'word'});
-          
-          n loz 1 $s:d,ht:1 %dis:block,co:#1cf,ws:pre,width:200%,fs:40%,wb:break-word
-          #n str -jod $s:1s&String %dis:block,ws:pre,fs:40%
+        
+        n diff -diff s:1s&String,was:Pc&String
+        
     }
     
     
@@ -183,6 +184,23 @@ pi/visit: | # work up diff
     }
     
     
+pi/diff: |
+    G&heading;
+    
+    c&s == c&was &&
+        n same 1 s:= %fs:1999%,ab:1,blr:8px,opa:0.5,lh:40%
+    
+    $digs = dig(c&was)+dig(c&s);
+    # and make this sensitive to any parameters feeding diff()
+    1s&Digs != digs and delete 1s&Diff;
+    1s&Digs = digs;
+    
+    1s&Diff ||= diff(c&was,c&s,{chunk:'word'});
+    
+    $n =
+    n loz 1 $s:1s&Diff,ht:1 %dis:block,ws:pre,fs:40%,wb:break-word
+    ns&co = '#1cf';
+          #n str -jod $s:1s&String %dis:block,ws:pre,fs:40%
 do/cup: |
     $k = c.t;
     $j = c.y.A.1;
