@@ -168,9 +168,7 @@ pi/visit: | # work up diff
         n str -jod $s:1s&String %dis:block,ws:pre,fs:40%
     }
     else {
-        
         n diff -diff s:1s&String,was:Pc&String
-        
     }
     
     
@@ -186,19 +184,30 @@ pi/visit: | # work up diff
     
 pi/diff: |
     G&heading;
+    ys&ws = 'pre';
+    ys&fs = '40%';
+    ys&wb = 'break-word';
     
     c&s == c&was &&
         n same 1 s:= %fs:1999%,ab:1,blr:8px,opa:0.5,lh:40%
     
     $digs = dig(c&was)+dig(c&s);
     # and make this sensitive to any parameters feeding diff()
-    1s&Digs != digs and delete 1s&Diff;
+    1s&Digs != digs and delete 1s&Diff; 
     1s&Digs = digs;
     
-    1s&Diff ||= diff(c&was,c&s,{chunk:'word'});
+    $N = 1s&Diff ||= diff(c&was,c&s,{chunk:'word'});
+    
+    each in N {
+        $m =
+        m bit  $s:nc&s
+        n.t == 'gone' and ns&co = '#622'
+        n.t == 'new' and ns&co = '#622'
+        
+    }
     
     $n =
-    n loz 1 $s:1s&Diff,ht:1 %dis:block,ws:pre,fs:40%,wb:break-word
+    n loz 1 $s:1s&Diff,ht:1 %dis:block
     ns&co = '#1cf';
           #n str -jod $s:1s&String %dis:block,ws:pre,fs:40%
 do/cup: |
