@@ -193,6 +193,7 @@ pi/diff: |
         n same 1 s:= %fs:1999%,ab:1,blr:8px,opa:0.5,lh:40%
     
     $c = {chunk:'word'};
+    c.fold = 1;
     # switch chunk: word/line
     
     $digs = dig(c&was)+dig(c&s)+dig(ki(c));
@@ -211,6 +212,7 @@ pi/diff: |
             n.t == 'new' and ms&hue = '265deg';
             n.t == 'gone' and ms&hue = '111deg';
             ms&hue and continue
+            !c.fold and continue
             $s = mc&s;
             s.length < 40 and continue
             if (!s.match(/\n/)) {
@@ -227,9 +229,12 @@ pi/diff: |
                 $shallow = /^  /;
                 $deep = /^    /;
                 $la;
+                $finalN = i*1+1 == N.length;
+                $firstN = i == 0;
                 each il L {
                     # not 3 lines near a change
-                    if (i > 3 && i < L.length - 3) {
+                    if ((firstN || i > 3) &&
+                        (finalN || i < L.length - 3)) {
                         if (l.match(deep)) {
                             !la and throw "no la";
                             $sh =
@@ -265,8 +270,7 @@ pi/diff: |
             nc&s += "\n";
             ns&shortfor = text.join("");
             ns&fs = '80%';
-            #nc&s += "\n";
-           # nc&s += "\nsays:\n"+ns&shortfor;
+            ns&bri = 0.6;
             ns&dow = 'do/Swaps';
         }
         return M;
