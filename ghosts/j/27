@@ -140,19 +140,26 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
         delete ss&J
         
         $mute = {c:['code'],sc:[]};
+        $unmuted_objects = [Object,Array];
         # this just does: sc&code and delete sc&code; sc&mc = 'code';
         each nk,gks mute {
             $he = s[nk];
             $muted = {};
-            each i,gk gks {
-                null == he[gk] and continue;
-                muted[gk] = 1;
-                delete he[gk];
+            each gk,v he {
+                gks[gk] and muted[gk] = 1; continue
                 # data should be limited somehow...
+                typeof v != 'object' and continue
+                unmuted_objects.indexOf(v.constructor) >= 0 and continue
+                # name of v.constructor
+                muted[gk] = G&arfgunc,v || 1;
+                
+            }
+            each gk,reason muted {
+                delete he[gk]
             }
             # say that it is muted, eg c&mc = 'muted Cc keys'
             #  in a thing that could pretend to be a hash for simplicity...
-            if (muted.length) {
+            if (Object.keys(muted)) {
                 $ou = 'm' + nk.slice(0,1);
                 $was = s.c[ou];
                 if (was) {

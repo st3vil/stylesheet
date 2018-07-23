@@ -396,10 +396,16 @@ NutPhone: | # adapt to the universe
     # JAVASCRIPT
     
     # get function args
+    # OR name of typeof=object
     arfgunc:
+        $reg = /^function (\w*)\((.*?)\)/;
+        if (typeof s == 'object') {
+            $m = s.constructor.toString().match(reg);
+            return m && m[1]
+        }
         typeof s != 'function' and return
-        $m = s.toString().match(/^function \((.+?)\)/);
-        return m && m[1]
+        $m = s.toString().match(reg);
+        return m && m[2]
     
     # limit list, calling callback for each removal
     lim: %acgt:s lim cb

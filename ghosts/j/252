@@ -38,6 +38,10 @@ Doming: | # in the place in the place
     # inflecting in rhythms what things have or could have
     # it's an interdimensional hole we're building a door over.
     
+    #    running the show (s) and coming back via loop
+    
+    #   and the T rests on the crest of a wave,
+    #   catching anything anomalous
     
     # then use this history:
     #$l = G&Serialise,1s&obj;
@@ -58,6 +62,15 @@ Doming: | # in the place in the place
     1s&step_tries ||= 1;
     1s&osc_each_step = 1;
     
+    # A&waitings may be full, slow cb if it is same?
+    
+    if (A&current_step) {
+        # we must be a resync, not a loop
+        
+        # or S will think it's while loop 2 instead of 1
+        delete A&current_step;
+    }
+    
     $total = 1s&steps || '?';
     $tr =
     n testrun 1  %dis:block
@@ -75,8 +88,7 @@ Doming: | # in the place in the place
     # /invent timetravel
     #   s/\s//g instructions
     # known Jc? 
-    $time = 254;
-    $loop = 1s&loop = Math.random();
+    $loop;
     $call = &{
         # we still exist, this loop is the loop
         !(A.4 == G.DNS[A.4.t] && loop == 1s&loop) and return
@@ -86,17 +98,18 @@ Doming: | # in the place in the place
         # get attention
         G&e,[A.1.t]
     };
-    G&yl:time,call;
+    $comeback = &time{
+        loop = 1s&loop = Math.random();
+        G&yl:time,call;
+    };
+    # to be adjusted, replacing itself
+    $time = 256;
+    comeback(time);
     
-    # explain the jam,
-    #   clumped as a todolist at the earliest complainer
-    # doesn't yet bail,
-    #  supposing steps should/can run all the way through, then wait
-    #   tho `return G&til` in pin would leave there and wait
-    #    running the show (s) and coming back via loop
+    # state progresses, pieces of jam are waited on + explained:
     
-    #   and the T rests on the crest of a wave,
-    #   catching anything anomalous
+    # pile up complaints, a jam
+    #  will not finish step, but it may continue until A&beready
     A&waitscv = 0.3001;
     A&waitings = [];
     A&til = &s,t{
@@ -117,11 +130,13 @@ Doming: | # in the place in the place
         nc&s += "\n";
         #~>54 Til: s
     };
+    # EXIT
     # can proxy A&waits(), and then:
     # async if waiting for anything
     A&beready = &n,pi,pic{
         n || pi and A&waits(n,pi,pic)
         
+        comeback(444);
         if (A&waitings.length) {
             throw "waits on step", A&waitings
         }
@@ -240,7 +255,7 @@ Doming: | # in the place in the place
         typeof s != 'number' and throw "NaN",s;
         $sa =
         ~>93 Step: s, 1s&step, A&current_step, '>38:glib do'
-        say = &s{ sa.set('glib',sa) };
+        say = &s{ sa.set('glib',s) };
         A&beready;
         
         # satisfaction, when total is unknown || known
@@ -454,7 +469,7 @@ Expect: | # pull results along, and
     #   ns&Js&ss&topy&tv[?][?]
     # assume into the top
     
-    $intv = &n,desc,t,cv{
+    $intv = &n,desc,t,cv,pic{
         $j = ns&J;
         !j and return A&til('get sJ',desc);
         $s = js&s;
@@ -472,7 +487,7 @@ Expect: | # pull results along, and
             k.length == 1 and u = u[k[0]];
         }
         !u and return A&til('notv/t/cv: '+t+'/'+cv,desc);
-        A&waits(u,desc);
+        A&waits(u,desc,pic);
         return u
     };
     
@@ -492,7 +507,9 @@ Expect: | # pull results along, and
             a(['Shovel'],['ready','',{s:u}]);
             b(R,'mindup');
             
-            $u = intv(R,'mind updating','updating');
+            $u = intv(R,'mind updating','updating',0,
+                # -an hides noise
+                {smudge:/^\d+/});
             b();
             
             $r = intv(u,'mind ready','ready');
@@ -608,6 +625,7 @@ pi/an: | # show anything, more assertive than jod
     
     # its ideas
     if (m) {
+        c&smudge and m[2] = m[2].replace(c&smudge,c&smudge+'');
         n s 31 $s:m[2] %fs:70%,sat:0.6
     }
     
