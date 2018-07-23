@@ -54,7 +54,7 @@ Doming: | # in the place in the place
     
     # J wants the n waited on, as they stagger out into life
     
-    # J has step state
+    #c J has step state
     #   thus your A joins onto doming progress, see A&doming
     #   and the history not redone but outdone, at the J level
     1s&step ||= 1;
@@ -111,6 +111,7 @@ Doming: | # in the place in the place
     # pile up complaints, a jam
     #  will not finish step, but it may continue until A&beready
     A&waitscv = 0.3001;
+    A&were_waiting = A&waitings && A&waitings.length;
     A&waitings = [];
     A&til = &s,t{
         A&waitings.push(s);
@@ -136,8 +137,8 @@ Doming: | # in the place in the place
     A&beready = &n,pi,pic{
         n || pi and A&waits(n,pi,pic)
         
-        comeback(444);
         if (A&waitings.length) {
+            A&were_waiting and comeback(time*3);
             throw "waits on step", A&waitings
         }
     };
@@ -658,10 +659,6 @@ pi/jod: | # a js J, shows a J-shaped bit of data, to aspect serialising change
     
     
     G&n,['Thing',3,{s:ki(c&s,c&dl||3)}];
-
-
-
-
 Bystand: |
     G&heading,'Hz:50';
     G&u,['NutIns'];
