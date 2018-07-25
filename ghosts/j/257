@@ -125,6 +125,14 @@ pi/visit: | # work up diff
     $u = c&u;
     $Q = c&Q;
     
+    # keep track of thing pictured, be able to wind up
+    n J -jod $s:j,dl:6.13 %
+    $s = js&s;
+    n s -jod $s:s,dl:6.13 %
+    # branch
+    $P = Qs&P;
+    n P1 -jod $s:P,dl:6.14 %
+    
     # big photo
     if (!1s&String || 1c&String) {
         1c&String = 0;
@@ -151,39 +159,40 @@ pi/visit: | # work up diff
         1s&String = G&Serialise,r,co,{cbfirst:1};
     }
     
-    # the stuff we came from
-    n fi -jod $s:C.c,dl:6.12 %
-    
     $wr =
-    n Write 2 s:tac %hue:200,fs:200%,dos:do/cup
-    n String 2 s:re %hue:200,fs:180%,dos:do/cup
+    m Write 2 s:tac %hue:200,fs:200%,dos:do/cup
+    m String 2 s:re %hue:200,fs:180%,dos:do/cup
     js&s != 1s&Seens &&
-        n Stringout 2 s:oud %hue:230,dos:do/cup
+        m Stringout 2 s:oud %hue:230,dos:do/cup
     
     # ^ pathway to Write, first look at diff
     # < commit message? git it?
-    
-    # keep track of thing pictured, be able to wind up
-    $P = Qs&P;
     
     # if different
     if (!Q) {
         n str -jod $s:1s&String %dis:block,ws:pre,fs:40%
     }
-    else {
-        n diff -diff s:1s&String,was:Pc&String
-    }
-    
-    
-    
+    else
     if (1c&Write) {
+        1c&Write = 0;
         $Q =
         1s&questi ||=
         G&Cye,[C.t,'',{of:'W',s:1s&String}];
         1s&obj ||= [ G&ting,Q ];
-        n right -jod $s:Q,dl:6.12 %
-        wrs&bri = 0.4;
     }
+    else {
+        m diff -diff s:1s&String,was:Pc&String
+    }
+    
+        $Q =
+        1s&questi;
+        n left -jod $s:Q,dl:6.12 %
+        !Q and return;
+        wrs&bri = 0.4;
+        n P2 -jod $s:Qs&P,dl:6.12 %
+        n obj -jod $s:1s&obj,dl:6.12 %
+    
+    
     
     
 pi/diff: | # will be a huge industry
@@ -260,7 +269,7 @@ pi/diff: | # will be a huge industry
                 }
                 mc&s = w.join("");
             }
-        }
+        } 
         each in M {
             ns&hue and continue
             # shortened inside lines
@@ -304,8 +313,6 @@ pi/diff: | # will be a huge industry
     n loz 1 $s:1s&Diff,ht:1 %dis:block
     ns&co = '#1cf';
           #n str -jod $s:1s&String %dis:block,ws:pre,fs:40%
-
-
 Savior: | # big list of s that 1c&save somewhere - inside J, progressive scan mode
     G&heading
     1s&ein.save = {w:'W/save'};
