@@ -168,20 +168,22 @@ pi/visit: | # work up diff
     # ^ pathway to Write, first look at diff
     # < commit message? git it?
     
-    # if different
-    if (!Q) {
-        n str -jod $s:1s&String %dis:block,ws:pre,fs:40%
-    }
-    else
+    # always Q, even if new, it was looked up and Qs&Pc&s == null
+    !Q and throw "NoQ, not gitting somewhere?"
+    $P = Qs&P;
+    if (Pc&s == null)
+        n nos 3 s:neu! %hue:400deg,fs:130%
+    
+    
+    m diff -diff s:1s&String,was:Pc&String
+    
+    
     if (1c&Write) {
         1c&Write = 0;
         $Q =
         1s&questi ||=
         G&Cye,[C.t,'',{of:'W',s:1s&String}];
         1s&obj ||= [ G&ting,Q ];
-    }
-    else {
-        m diff -diff s:1s&String,was:Pc&String
     }
     
         $Q =
@@ -209,10 +211,11 @@ pi/diff: | # will be a huge industry
      c.fold = 1;
     # switch chunk: word/line
     
+    #debugger;
+    c&was ||= '';
     $digs = dig(c&was)+dig(c&s)+dig(ki(c));
     1s&Digs != digs and delete 1s&Diff; 
     1s&Digs = digs;
-    
     
     $N = 1s&Diff ||= diff(c&was,c&s,c);
     
