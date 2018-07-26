@@ -248,6 +248,37 @@ Doming: | # in the place in the place
         A&til('Ccom ('+wai.join(',')+') '+ki(n,2), t);
     };
     
+    #c climbs/maps
+    # wants to become views of data materialising,
+    # as we go in
+    # to wait for progress when the path dries up
+    # should have lots of pointers, check low level,
+    # simplifies to just n/Thing, or n/Thing 0.3
+    # a 2-hash climb in, across the landscape of J:
+    #   ns&Js&ss&topy&tv[?][?]
+    # assume into the top
+    
+    A&intv = &n,desc,t,cv,pic{
+        $j = ns&J;
+        !j and return A&til('get sJ',desc);
+        $s = js&s;
+        !s and return A&til('get sJss',desc);
+        $top = ss&top;
+        !top and return A&til('get sJssstop',desc);
+        $tv = top.y.tv;
+        !tv and return A&til('notv: '+ki(top,3),desc);
+        $u = tv[t];
+        !u and return A&til('notv/t: '+t,desc);
+        cv and u = u[cv]
+        else { # as tw
+            $k = Object.keys(u);
+            k.length > 1 and return A&til("Ambig-tw: "+t+" among: "+ki(u),desc);
+            k.length == 1 and u = u[k[0]];
+        }
+        !u and return A&til('notv/t/cv: '+t+'/'+cv,desc);
+        A&waits(u,desc,pic);
+        return u
+    };
     
     
     #c S-tep
@@ -474,37 +505,6 @@ Expect: | # pull results along, and
         }
     }
     
-    # wants to become views of data materialising,
-    # as we go in
-    # to wait for progress when the path dries up
-    # should have lots of pointers, check low level,
-    # simplifies to just n/Thing, or n/Thing 0.3
-    # a 2-hash climb in, across the landscape of J:
-    #   ns&Js&ss&topy&tv[?][?]
-    # assume into the top
-    
-    $intv = &n,desc,t,cv,pic{
-        $j = ns&J;
-        !j and return A&til('get sJ',desc);
-        $s = js&s;
-        !s and return A&til('get sJss',desc);
-        $top = ss&top;
-        !top and return A&til('get sJssstop',desc);
-        $tv = top.y.tv;
-        !tv and return A&til('notv: '+ki(top,3),desc);
-        $u = tv[t];
-        !u and return A&til('notv/t: '+t,desc);
-        cv and u = u[cv]
-        else { # as tw
-            $k = Object.keys(u);
-            k.length > 1 and return A&til("Ambig-tw: "+t+" among: "+ki(u),desc);
-            k.length == 1 and u = u[k[0]];
-        }
-        !u and return A&til('notv/t/cv: '+t+'/'+cv,desc);
-        A&waits(u,desc,pic);
-        return u
-    };
-    
     while (A&S(2)) {
         # Revisit gives Answer, the test data
         #  W Expect holding W t/Thing
@@ -521,12 +521,12 @@ Expect: | # pull results along, and
             a(['Shovel'],['ready','',{s:u}]);
             b(R,'mindup');
             
-            $u = intv(R,'mind updating','updating',0,
+            $u = A&intv(R,'mind updating','updating',0,
                 # -an hides noise
                 {smudge:/^\d+/});
             b();
             
-            $r = intv(u,'mind ready','ready');
+            $r = A&intv(u,'mind ready','ready');
             1s&retriMindready ||= 1;
             !r && 1s&retriMindready++ > 2 and a(['Shovel']);
             b();
@@ -583,7 +583,6 @@ Expect: | # pull results along, and
         b(Rs&answer,'!C answer');
         $qd = Rs&quested;
         qd.u && qd.w || A&til('Shovel quested no w/u');
-        b(Rs&quested,'!C questye',{dl:4});
         
         !1s&Quest and throw "No Quest";
         # get Revisit to Serialise us and apply patch via G&t:
