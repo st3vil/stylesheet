@@ -303,7 +303,7 @@ JaBabz: | # make hutscript javascript
     #   ground plop vs. pin progress
     
     my $wsnotnl = qr/[ \t]/;
-    my $anS = qr/^$wsnotnl*S($wsnotnl*| [^\n]+)$/m;
+    my $anS = qr/^$wsnotnl*S($wsnotnl*| \w[^\n]*)$/m;
     my $GandS = "G"."&"."S";
     if (c&s =~ $anS) {
         my @l = split /\n/, c&s;
@@ -332,10 +332,10 @@ JaBabz: | # make hutscript javascript
         push @l, '}';
         c&s = join "\n",@l;
     }
-    
     # G&thing:args,"with space";
     c&s =~ s/($poing)\&(\$)?($poing)(:[^\n;]+)(;|\) ?\{\s*$|\s*$)/
         my ($on,$var,$p,$e,$t) = ($1,$2,$3,$4,$5);
+        $t = $1 if $e =~ s{(\) ?\{)$}{};
         $e =~ s{^:}{,};
         ($on,my$in) = ("G\.h",'A,C,G,T,')
             if $on eq 'G';
@@ -378,6 +378,7 @@ jst: | # test js babbler
         knuckles$;
         ~$knuckles: fav, ours
         //etc
+        S fouring
         # etc
         Ys&nope = 1;
         loa&ayer = 3;
@@ -416,6 +417,7 @@ jst: | # test js babbler
         $v
         $te = vol;
         te ||= vol;
+        S 4
         $ve =
         1s&Casa ||=
         n scA -jod_3 $s:Y,dl:2
@@ -442,7 +444,7 @@ jst: | # test js babbler
         G.h(A,C,G,T,"dothis",'fourly',[f]);
             C.sc.attr.title = C.sc.attr.title || C.t+' '+C.y.cv;
 
-        S
+        while (G.h(A,C,G,T,'S')) {
         G.h(A,C,G,T,"wide","several ticks");
         G.h(A,C,G,T,some,4,56-3, (28 / A[5].sc.e))
         A[5].sc.log = [];
@@ -456,6 +458,7 @@ jst: | # test js babbler
         var knuckles;
         G.h(A,C,G,T,"c",knuckles,[fav, ours]);
         //etc
+        } while (G.h(A,C,G,T,"S","fouring")) {
         // etc
         Y.sc.nope = 1;
         A.lo.sc.ayer = 3;
@@ -496,7 +499,7 @@ jst: | # test js babbler
         G.h(A,C,G,T,"n",["Instead","2",G.h(A,C,G,T,'peel',"s:"+spacey+"") ,G.h(A,C,G,T,'peel',"hue:49deg,ws:pre") ]);
         G.h(A,C,G,T,"n",["Instead","2",{s:object,ano:'thng',va:ery,er:li},G.h(A,C,G,T,'peel',"hue:"+lat+"deg,ws:pre") ]);
         m = d.match(r);
-        S
+        } while (G.h(A,C,G,T,"S",3,"Vaticules")) {
         G.h(A,C,G,T,"n",p);
         G.h(A,C,G,T,"e",l)
         var get; // gottening
@@ -514,14 +517,16 @@ jst: | # test js babbler
         var v;
         var te = vol;
         te = te || vol;
+        } while (G.h(A,C,G,T,"S",4)) {
         var ve =
         A[1].sc.Casa = A[1].sc.Casa || 
         G.h(A,C,G,T,"n",["scA","-jod_3",{s:Y,dl:2},{}]);
         // etc
-        S
+        } while (G.h(A,C,G,T,'S')) {
+        }
     
     #c testily 
-    if (1) {
+    if (0) {
     c&s = <<'';
         la
         tomi
@@ -541,8 +546,11 @@ jst: | # test js babbler
     
     # 
     c&s eq $good && return saygr "jst good";
+    
     saygr "Result: ".length(c&s)." vs ".length($good), c&s;
+    
     !length $good and return;
+    
     my ($l,$r) = map {[split "\n", $_]} c&s, $good;
     my $miss; # show gaps
     for my $ls (@$l) {
