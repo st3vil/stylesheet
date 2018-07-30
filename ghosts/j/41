@@ -177,6 +177,7 @@ JaBabz: | # make hutscript javascript
         $ope.$guts
     }smeg;
     
+
     #c n groundula
     
     # n thing -jod_33 s:var hue:'490deg'
@@ -243,12 +244,6 @@ JaBabz: | # make hutscript javascript
         $s
     /smge;
     
-    # G&thing,args && without space
-    c&s =~ s/($poing)\&(\$)?($poing)(,[^\s;]+)?(;)?/
-        my $t = $2 ? "$3" : "'$3'";
-        my $h = $1 eq 'G' ? ".h(A,C,G,T,$t" : "\[$t\](A,C,G,T";
-        $1.$h."$4)$5"
-    /smge;
     
     # true or assign
     c&s =~ s/^($nls)($nlp) \|\|\=(?: ($nlp)(;)?|\s*)$/$1$2 = $2 || $3$4/gm;
@@ -273,6 +268,28 @@ JaBabz: | # make hutscript javascript
     # still in Hut
     c&s =~ s/^($nls)(\w+)\$(?:;)?\s*(=|$)/
         $1."var $2".($3 eq '=' ? ' =' : ';')/smeg;
+    
+    
+    #c S domagic
+    my $wsnotnl = qr/[ \t]/;
+    my $anS = qr/^$wsnotnl*S($wsnotnl*| [^\n]+)$/m;
+    if (c&s =~ $anS) {
+        my @l = split /(?=$anS)/, c&s;
+        @l = map {
+            '-a'.$_.'-'
+        } @l;
+        c&s = join '',@l;
+    }
+    
+
+    
+    # G&thing,args && without space
+    c&s =~ s/($poing)\&(\$)?($poing)(,[^\s;]+)?(;)?/
+        my $t = $2 ? "$3" : "'$3'";
+        my $h = $1 eq 'G' ? ".h(A,C,G,T,$t" : "\[$t\](A,C,G,T";
+        $1.$h."$4)$5"
+    /smge;
+    
 jst: | # test js babbler
     c&s = <<'';
         !G&Time,'rasunify',700,s and return
@@ -287,6 +304,7 @@ jst: | # test js babbler
         ~dothis~fourly: f
             C&attr.title ||= C.t+' '+C.y.cv;
             
+        S
         G&wide:"several ticks";
         G&$some:4,56-3, (28 / A.5.sc.e)
         5s&log = [];
@@ -324,6 +342,7 @@ jst: | # test js babbler
         n Instead 2 s:$spacey %hue:49deg,ws:pre
         n Instead 2 $s:object,ano:'thng',$va:ery,er:li %hue:$lat+deg,ws:pre
         m = d.match(r);
+        S
         n $p
         G&e:l
         $get; # gottening
@@ -339,14 +358,13 @@ jst: | # test js babbler
         1s&Casa ||=
         n scA -jod_3 $s:Y,dl:2
         # etc
+        S
     # too far away:
     # n something 15 s:Shovel Ch %fs:170%,hs:345,dos:do/Launch
     #    @Launch ||=
     #    e Launch
     #c answers
 
-    Rw JaBabz;
-    
     my $good = <<'';
         if (!G.h(A,C,G,T,'Time','rasunify',700,s)) {
             return
@@ -362,6 +380,7 @@ jst: | # test js babbler
         G.h(A,C,G,T,"dothis",'fourly',[f]);
             C.sc.attr.title = C.sc.attr.title || C.t+' '+C.y.cv;
 
+        S
         G.h(A,C,G,T,"wide","several ticks");
         G.h(A,C,G,T,some,4,56-3, (28 / A[5].sc.e))
         A[5].sc.log = [];
@@ -415,6 +434,7 @@ jst: | # test js babbler
         G.h(A,C,G,T,"n",["Instead","2",G.h(A,C,G,T,'peel',"s:"+spacey+"") ,G.h(A,C,G,T,'peel',"hue:49deg,ws:pre") ]);
         G.h(A,C,G,T,"n",["Instead","2",{s:object,ano:'thng',va:ery,er:li},G.h(A,C,G,T,'peel',"hue:"+lat+"deg,ws:pre") ]);
         m = d.match(r);
+        S
         G.h(A,C,G,T,"n",p);
         G.h(A,C,G,T,"e",l)
         var get; // gottening
@@ -436,8 +456,12 @@ jst: | # test js babbler
         A[1].sc.Casa = A[1].sc.Casa || 
         G.h(A,C,G,T,"n",["scA","-jod_3",{s:Y,dl:2},{}]);
         // etc
+        S
 
-
+    
+    
+    Rw JaBabz;
+    
     # 
     c&s eq $good && return saygr "jst good";
     saygr "Result: ".length(c&s)." vs ".length($good), c&s;
