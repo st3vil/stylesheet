@@ -232,18 +232,6 @@ JaBabz: | # make hutscript javascript
     }smeg;
     #return
     
-    # G&thing:args,"with space";
-    c&s =~ s/($poing)\&(\$)?($poing)(:[^\n;]+)(;)?/
-        my ($on,$var,$p,$e,$t) = ($1,$2,$3,$4,$5);
-        $e =~ s{^:}{,};
-        ($on,my$in) = ("G\.h",'A,C,G,T,')
-            if $on eq 'G';
-        $p = "\"$p\"" unless $var;
-        my $s = $on."($in$p$e)$t";
-        $s = '$'.$s if $on !~ m{\.};
-        $s
-    /smge;
-    
     
     # true or assign
     c&s =~ s/^($nls)($nlp) \|\|\=(?: ($nlp)(;)?|\s*)$/$1$2 = $2 || $3$4/gm;
@@ -271,17 +259,91 @@ JaBabz: | # make hutscript javascript
     
     
     #c S domagic
+    # supposedly these can be named and/or numbered,
+    # presenting special cases and linear thought patterns,
+    # such as responding to a situation, as s ideally will
+    # and doing a sequence of steps for a test or so,
+    # where the J is returning to itself
+    # trying to progress domes each time,
+    # some could be in parallel too...
+    # or be gated by subroutines that
+    #   (without the J infrastructure)
+    # assess whether the situation has changed,
+    #   eg has the nyA moved/aged...
+    
+    # we may want to index/toc the Sections, on the w
+    # and assign sequence numbers? leave it to humans
+    
+    # the G&S should use A&S if present, as set up by:
+    
+    #   w/Doming - a sequential operati
+    
+    # wants redesigning to operate shuntable thought processess:
+    #   w/Duning - compressed sands of time
+    #     specifics on "most of it sleeps" realities,
+    #     something to build Matu on
+    # and allow J's universals to eminate from the dome it's up to
+    # so that phases of the story can be told, shunted back to
+    # providing 
+    
+    # G&S otherwise gives a moment to introspect
+    #   after the head of the pin
+    #     when elvis would have more info if creating the J
+    # 
+    
+    # and then every a cachable wave of your data is grounded
+    #   so each dome can be A:o'd to a point, to figure sleep
+    #   then probably presents everything to G&s, as objects
+    #   that are almost definitely asleep, or this bit awake, etc
+    
+    # anyway these are controlling chunks around them with whiles
+    # var is function scoped, let is nowhere yet but won't work here
+    # also, every n is like a chunk of S,
+    # happening through a diferent interface:
+    #   ground plop vs. pin progress
+    
     my $wsnotnl = qr/[ \t]/;
     my $anS = qr/^$wsnotnl*S($wsnotnl*| [^\n]+)$/m;
+    my $GandS = "G"."&"."S";
     if (c&s =~ $anS) {
-        my @l = split /(?=$anS)/, c&s;
+        my @l = split /\n/, c&s;
+        my $firstS = 1;
         @l = map {
-            '-a'.$_.'-'
+            if (/$anS/) {
+                my $args = $1;
+                $args =~ s/^\s+|\s+$//g;
+                my $num = $1 if $args =~ s/^(\d+(?:\.\d+)?)\s*//;
+                if ($args) {
+                    # puts $concat+ bits into string?
+                    $args =~ s/\$([^\s\+]+)(\+|$)/"+$1+"/sg;
+                    $args = "\"$args\"";
+                }
+                $args = join',',grep{length}$num,$args;
+                my $call = join':',grep{length}$GandS,$args;
+                my $con = $firstS ? "" : "} ";
+                $firstS = 0;
+                $con .= "while (".$call.") {";
+                $con
+            }
+            else {
+                $_
+            }
         } @l;
-        c&s = join '',@l;
+        push @l, '}';
+        c&s = join "\n",@l;
     }
     
-
+    # G&thing:args,"with space";
+    c&s =~ s/($poing)\&(\$)?($poing)(:[^\n;]+)(;|\) ?\{\s*$|\s*$)/
+        my ($on,$var,$p,$e,$t) = ($1,$2,$3,$4,$5);
+        $e =~ s{^:}{,};
+        ($on,my$in) = ("G\.h",'A,C,G,T,')
+            if $on eq 'G';
+        $p = "\"$p\"" unless $var;
+        my $s = $on."($in$p$e)$t";
+        $s = '$'.$s if $on !~ m{\.};
+        $s
+    /smge;
     
     # G&thing,args && without space
     c&s =~ s/($poing)\&(\$)?($poing)(,[^\s;]+)?(;)?/
@@ -342,7 +404,7 @@ jst: | # test js babbler
         n Instead 2 s:$spacey %hue:49deg,ws:pre
         n Instead 2 $s:object,ano:'thng',$va:ery,er:li %hue:$lat+deg,ws:pre
         m = d.match(r);
-        S
+        S 3 Vaticules
         n $p
         G&e:l
         $get; # gottening
@@ -457,14 +519,30 @@ jst: | # test js babbler
         G.h(A,C,G,T,"n",["scA","-jod_3",{s:Y,dl:2},{}]);
         // etc
         S
-
     
+    #c testily 
+    if (1) {
+    c&s = <<'';
+        la
+        tomi
+        S
+        comback
+        S 1
+        throwfo
+        
+        S 2 ffe $W+ runs
+        vatica
+        S
+    
+    $good = "";
+    }
     
     Rw JaBabz;
     
     # 
     c&s eq $good && return saygr "jst good";
     saygr "Result: ".length(c&s)." vs ".length($good), c&s;
+    !length $good and return;
     my ($l,$r) = map {[split "\n", $_]} c&s, $good;
     my $miss; # show gaps
     for my $ls (@$l) {
