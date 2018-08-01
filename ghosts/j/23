@@ -439,17 +439,24 @@ NutJaying: | # A sequences J
     M 2:
         !c&M.length and delete c&M; return
         if (!A&iM) {
-            # cursor to thro
+            # cursor to resync to the same one
             A&iM = 0;
             $cv = 0.300;
+            # ground to set order
+            $g = A.ground;
+            !g and return;
+            gs&z ||= [];
             c&M.map(&n{
                 # give yA
                 G&Aye,'n',0,n;
+                gs&z.push(n);
                 n.y.cv and return
                 # suggest y.cv of 30i+
                 n.y.cv = G&desca,cv,8;
                 cv += 0.001;
             });
+            # keep placement but figure
+            c&reverse and c&M.reverse();
         }
         A&tow = &ov{
             while (c&M[A&iM]) {
