@@ -273,15 +273,21 @@ JaBabz: | # make hutscript javascript
                 my $args = $1;
                 $args =~ s/^\s+|\s+$//g;
                 my $num = $1 if $args =~ s/^(\d+(?:\.\d+)?)\s*//;
+                my $sets;
                 if ($args) {
-                    # puts $concat+ bits into string?
-                    $args =~ s/\$([^\s\+]+)(\+|$)/"+$1+"/sg;
+                    # title contains '$N' to while (N = ...)
+                    # title loses '$'
+                    $args =~ s/\$([^\s\+]+)(\+|$)/$sets = $1/seg;
                     $args = "\"$args\"";
                 }
                 $args = join',',grep{length}$num,$args;
                 my $call = join':',grep{length}$GandS,$args;
                 my $con = $firstS ? "" : "} ";
                 $firstS = 0;
+                if ($sets) {
+                    $call = "$sets = $call";
+                    $con .= "var $sets; ";
+                }
                 $con .= "while (".$call.") {";
                 $con
             }
@@ -494,6 +500,8 @@ jst: | # test js babbler
         G.h(A,C,G,T,"n",["scA","-jod_3",{s:Y,dl:2},{}]);
         // etc
         } while (G.h(A,C,G,T,'S')) {
+        if (k == 'r.c.M') { // changes everywhere?
+        } var N; while (N = G.h(A,C,G,T,"S","as last N")) {
         }
     
     #c testily 
