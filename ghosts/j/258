@@ -291,10 +291,18 @@ pi/ABf: | # Dune of things s&A and s&B
     # s = data
     # d = [pa,th], puts at that path
     # d = {path:[pa,th],dup:&s{}}
-    # 
+    # does a single weld, usually C-C
+    # carbon joint, some language in each place?
+    # ignores the next/last/in/up wiring, let o do once sorted
+    #   when it gives a kind of gravity,
+    #   linearity to the stage that may not ever be there
     $input = &s,d,v{
         if (typeof d == 'string') {
-            d == 'tv' and d = {t:d,our:['y','tv'],path:[v.t,v.y.cv],also:['tw','z']}
+            # z at i level may mean tv, but not here since exponent of tv
+            #d == 'z' and d = 'tv';
+            d == 'tv' and d = {t:d,our:['y','tv'],path:[v.t,v.y.cv],usu:1}
+            d == 'tw' and d = {t:d,our:['y','tw'],path:[v.t],usu:1}
+            d == 'z' and d = {t:d,our:['sc',d]}
             else {
                 throw "intelligise", d
             }
@@ -307,78 +315,80 @@ pi/ABf: | # Dune of things s&A and s&B
         # now 3 deals with what really shall be and how we shall create it
         
         if (d.constructor == Array) {
-            d = {path:d};
+            d = {path:d,usu:1};
+        }
+        if (d.usu) {
+            d.t == 'tv' and d.also ||= ['tw','z']
             # this should be available as around or after method call..
             # or "the usual" that the actual d.dup works with or without
             d.dup = &x{
                 # link duped things, new thing gets v.y.$to
                 $from;
                 $to;
-                # make 
+                # make similar index to z to hold dupes, in order
+                # as s&z grep !in tv might reveal
                 $dupz;
                 
                 # revision of an item
-                d.t == 'tv' and from = 'later'; to = 'earlier';
+                d.t == 'tv' and from = 'later'; to = 'earlier'; dupz = 1;
                 # revision of name, moving through items
-                d.t == 'tw' and from = 'begins'; to = 'continues';
+                d.t == 'tw' and from = 'begins'; to = 'continues'; dupz = 1;
                 # stuff moves through words
                 # these schema should be drawn out
                 # become keywords to io
                 # io will just work
                 
-                # tv gets you everything named and spaced,
-                #  by linking to the one you are about to replace
-                if (d.t == 'tv') {
-                    # they're going to want to rename begins/starts
-                    # the whole lot, probably.
-                    # but C on indented lines will always mean it.
-                    
-                    # tv replaces with new thing
-                    # tv always replaces with new thing, but links 
-                    # if the thing is first in a bunch of dups, climb to the end
-                    if (x.y.begins || d.keep_first) {
+                if (from || to) {
+                    # which way is it going: new val stays, new val joins the queue
+                    $backwards = from && x.y[from] || d.keep_first; #]
+                    if (backwards) {
+                        !from and throw "can't go backwards with no from?"
+                        # ^ unless use in telling things that missed the spot who beat them
                         !d.keep_first and throw "protocol changed"
+                        # we could -1 y&dup_tv index maybe?
+                        # or add y&most_$from to the end of the linked list
+                        # this should magnify into a huge democratic space for ...
+                        # space for 'space for ...'
+                        # or follow links:
+                        $X = x;
                         # < all while loops should have some limit, spec learned
                         #   badge earned. all code is is bestowment.
-                        $X = x;
-                        while (X.y.begins) {
-                            X = X.y.begins;
+                        $i == 100;
+                        while (X.y[from]) {
+                            i-- < 4 and throw "ixhaust"
+                            X = X.y[from];
                         }
                         # now last in the trail:
-                        X.y.later = v;
-                        v.y.earlier = X;
+                        X.y[from] = v;
+                        to and v.y[to] = X;
+                        # so tv stays something, but .y.later = v extends forever
                     }
                     else {
-                        # x begins as v, v starts x
-                        x.y.begins = v;
-                        v.y.starts = x;
+                        from and x.y[from] = v;
+                        to and v.y[to] = x;
+                        # now tv sets us.
                     }
                 }
                 
-                d.t == 'tw' and x.y.fronts = v; v.y.backs = x;
-                
-                # universal duplicates
-                # make this_dup, index as this but to [] of items at the point
+                # make tv_dup, index as tv but to [] of items at the point
                 # the minter will care about such things, T clutter, minor errors, noise
-                $dupok = d.t=='tw' || d.t=='tv';
-                if (d.our && d.t == 'tw' && d.) {
-                    # create a universal dup object, same 
-                    $our = d.our.slice();
-                    $gk = our.pop();
-                    our.push(gk+'_dup');
-                    input(s,{t:'z',our:our,path:d.path.slice()},v);
+                if (dupz) {
+                    !d.our and throw "housing not given"
+                    $p = {t:'z'};
+                    p.our = d.our.slice();
+                    $gk = p.our.pop();
+                    p.our.push(gk+'_dup');
+                    p.path = d.path.slice();
+                    # dup should include the one already there
+                    p.zefault = [x];
+                    input(s,p,v);
                 }
-                
-                $front = d.t == 'tv' ? 'fronts'
-                x.y.fronts = v;
-                v.y.backs = v;
-                
                 # return 1 to abort,
                 # but we (as eg tv) shall go on to tw and z even dups
                 # no information lost!
             };
         }
-        # container different? may A?
+        #c climb container different? may A?
         # section of o, defined into several places... houses
         # this is the most high speed bit, copying bunches of C,
         # with a little lingeme sensitivity loaded in on the d,
@@ -392,20 +402,20 @@ pi/ABf: | # Dune of things s&A and s&B
         $O;
         each ip path {
             $x = S[p];
+            d.our && i+1 == d.our.length and O = x
             i+1 >= path.length and continue
             d.path_type and throw "index has types";
             # hash usual
             x == null and x = S[p] = {}
             typeof x != 'object' and throw "index broken"
-            d.our && i+1 >= d.our.length and O = x
             S = x;
         }
         
-        # x now = S[p]
-        # S[p] will = v
+        # x = S[p] now
+        # S[p] = v soon
         # except if this is just another pool of stuff to add into:
         if (d.t == 'z') {
-            x == null and x = S[p] = [];
+            x == null and x = S[p] = d.zefault || [];
             x.constructor != Array and throw "z broken"
             #$xi = x.indexOf(v);
             # exact object ^, also could be claiming a tv had already (up at tv)
@@ -417,28 +427,38 @@ pi/ABf: | # Dune of things s&A and s&B
             # < z_dup: handled on the o end, as z things not in tv, and tv_dup
             x.push(v);
         }
-        # but may already be:
-        if (x != null) {
-            # already there
-            x == v and return
-            # something else, dup 1 to cancel the go
-            d.dup and d.dup(x) and return
+        else {
+            # set thing to thing
+            if (x != null) {
+                # already
+                x == v and return
+                # something else, dup returns 1 to cancel the go
+                d.dup and d.dup(x) and return
+            }
+            !d.keep_first and S[p] = v;
         }
         
-        
-        
-        # d.dup what was already there
+        # seeds with seed pouches
         if (d.also) {
             each in d.also {
-                n == 'tw' and input(s,'tw'
+                n == 'tw' and input(s,'tw',v)
+                else
+                n == 'z' and input(s,'z',v)
+                else {
+                    throw "What else", n
+                }
             }
         }
-        # z wants to replace x sometimes
         
+        # returns?
     };
     # input somewhere
     $i = &s,v{
         v.constructor == Array and v = G&Cye,v
+        # talking of a J universal
+        $uni = 'guess';
+        
+        $
         input(s,'tv',v);
         
         s.y.tv ||= {};
