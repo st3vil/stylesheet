@@ -294,20 +294,47 @@ pi/ABf: | # Dune of things s&A and s&B
     # 
     $input = &s,d,v{
         if (typeof d == 'string') {
-            d == 'tv' and d = {t:d,our:['y','tv'],p:[v.t,v.y.cv],also:['tw','z']}
+            d == 'tv' and d = {t:d,our:['y','tv'],path:[v.t,v.y.cv],also:['tw','z']}
             else {
                 throw "intelligise", d
             }
         }
+        # after the intelligising,
+        # d.reintel and return d # having what we know about this index
+        # so something can retype/repurpose that data model
+        # kind of 2.
+        
+        # now 3 deals with what really shall be and how we shall create it
+        
         if (d.constructor == Array) {
             d = {path:d};
             # this should be available as around or after method call..
             # or "the usual" that the actual d.dup works with or without
             d.dup = &x{
-                # link duped things
+                # link duped things, new thing gets v.y.$to
+                $from;
+                $to;
+                # make 
+                $dupz;
+                
+                # revision of an item
+                d.t == 'tv' and from = 'later'; to = 'earlier';
+                # revision of name, moving through items
+                d.t == 'tw' and from = 'begins'; to = 'continues';
+                # stuff moves through words
+                # these schema should be drawn out
+                # become keywords to io
+                # io will just work
+                
                 # tv gets you everything named and spaced,
                 #  by linking to the one you are about to replace
                 if (d.t == 'tv') {
+                    # they're going to want to rename begins/starts
+                    # the whole lot, probably.
+                    # but C on indented lines will always mean it.
+                    
+                    # tv replaces with new thing
+                    # tv always replaces with new thing, but links 
                     # if the thing is first in a bunch of dups, climb to the end
                     if (x.y.begins || d.keep_first) {
                         !d.keep_first and throw "protocol changed"
@@ -318,28 +345,29 @@ pi/ABf: | # Dune of things s&A and s&B
                             X = X.y.begins;
                         }
                         # now last in the trail:
-                        X.y.begins = v;
-                        v.y.starts = X;
+                        X.y.later = v;
+                        v.y.earlier = X;
                     }
                     else {
+                        # x begins as v, v starts x
                         x.y.begins = v;
                         v.y.starts = x;
                     }
                 }
                 
+                d.t == 'tw' and x.y.fronts = v; v.y.backs = x;
+                
                 # universal duplicates
                 # make this_dup, index as this but to [] of items at the point
                 # the minter will care about such things, T clutter, minor errors, noise
-                if (d.our) {
+                $dupok = d.t=='tw' || d.t=='tv';
+                if (d.our && d.t == 'tw' && d.) {
                     # create a universal dup object, same 
                     $our = d.our.slice();
                     $gk = our.pop();
-                    
-                    input(s,{t:'z',
-                    }
-                    x.y.begins = v; v.y.contin = x;
-                # tw gets you everything with that name
-                d.t == 'tw' and x.y.fronts = v; v.y.backs = x;
+                    our.push(gk+'_dup');
+                    input(s,{t:'z',our:our,path:d.path.slice()},v);
+                }
                 
                 $front = d.t == 'tv' ? 'fronts'
                 x.y.fronts = v;
@@ -358,22 +386,37 @@ pi/ABf: | # Dune of things s&A and s&B
         
         # index is: ours (nk/gk) points of index/space, to the value
         $path = d.our || [];
-        d.p and d.p.map(&p{ path.push(p) });
+        d.path and d.path.map(&p{ path.push(p) });
         
         $S = s;
         $O;
-        each ip d.p {
+        each ip path {
             $x = S[p];
-            i+1 >= d.p.length and continue
-            d.ptypes and throw "index has types";
+            i+1 >= path.length and continue
+            d.path_type and throw "index has types";
             # hash usual
             x == null and x = S[p] = {}
-            typeof x != 'object' and throw "index broken";
+            typeof x != 'object' and throw "index broken"
             d.our && i+1 >= d.our.length and O = x
             S = x;
         }
         
+        # x now = S[p]
         # S[p] will = v
+        # except if this is just another pool of stuff to add into:
+        if (d.t == 'z') {
+            x == null and x = S[p] = [];
+            x.constructor != Array and throw "z broken"
+            #$xi = x.indexOf(v);
+            # exact object ^, also could be claiming a tv had already (up at tv)
+            # we shall start simply adding on, mentioning things more than once, etc
+            # no information lost!
+            # except the time of day, which is easy to find
+            # dups constitute weirdness that should be cleaned up...
+            #   before the system with it in goes production
+            # < z_dup: handled on the o end, as z things not in tv, and tv_dup
+            x.push(v);
+        }
         # but may already be:
         if (x != null) {
             # already there
@@ -381,6 +424,8 @@ pi/ABf: | # Dune of things s&A and s&B
             # something else, dup 1 to cancel the go
             d.dup and d.dup(x) and return
         }
+        
+        
         
         # d.dup what was already there
         if (d.also) {
