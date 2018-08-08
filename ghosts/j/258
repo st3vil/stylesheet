@@ -612,7 +612,7 @@ t/iooia: |
                 # toy: a name-only sketch of C
                 # sheer spacer, made for a C
                 #   eg where desired.t == wanted.t
-                p(/^#/) and pa.isvar = 1; pa.toy = 1;
+                p(/^#/) and pa.isvar = 1; pa.relative = 1;
                 
                 # C itself for path bit got from var
                 p(/^\$/) and pa.isvar = 1
@@ -621,41 +621,31 @@ t/iooia: |
                 
                 pa.t == '*' and pa.glob = 1;
                 
+                # value of here from a:
+                if (pa.isvar) { # variable/bind param
+                    !vars.length and throw "Not enough vars", pa.t, pa, d
+                    pa.v = vars.shift();
+                }
+                else
+                if (pa.glob) {} # anything
+                else { # bareword
+                    pa.v = G&Cye,[pa.t,1]
+                    # words are the lumber of the algorithm
+                    pa.word = pa.spacer = 1;
+                }
+                # namespaceness of something
+                if (pa.relative) {
+                    pa.o_v = pa.v;
+                    pa.v = G&Cye,[pa.v.t,1];
+                    # relative spacers hold a name for something
+                    pa.spacer = 1;
+                }
+                
                 d.path.push(pa);
             }
             parse = outer;
         }
         parse and throw "Unparsed", parse
-        #c path
-        each i,pa d.path {
-            if (pa.ark) {
-                # very important, captures value, per iteration
-            }
-            
-            # value of here from a variable or a bareword
-            if (pa.isvar) {
-                !vars.length and throw "Not enough vars", pa.t, pa, d
-                pa.v = vars.shift();
-            }
-            else
-            if (pa.glob) {
-                # anything
-            }
-            else {
-                # bareword = C.t of spacer
-                pa.v = G&Cye,[pa.t,1]
-                # words are the lumber of the algorithm
-                pa.word = pa.spacer = 1;
-            }
-            
-            if (pa.toy) {
-                # spacer named v.t - takes its name only
-                pa.o_v = pa.v;
-                pa.v = G&Cye,[pa.v.t,1];
-                # relative spacers hold a name for something
-                pa.relative = pa.spacer = 1;
-            }
-        }
         
         if (d.fromo) {
             # parse that talk too, to use up vars
@@ -663,9 +653,7 @@ t/iooia: |
         }
         
         vars.length and throw "Too many vars", vars
-        
-        # climbs in referring to vals got iterating?
-        # cases so far needn't
+        # maps, greps, sorts
         
         # so now we have a path:
         # i: make it so
