@@ -287,7 +287,16 @@ pi/ABf: | # Dune of things s&A and s&B
     #  S titles can use this to define iterators
     # operation of returning results from traversal,
     #   or advancing the A:o of the C, as in dome calm
-    $o = &s,d{
+    
+    # o may ventually look like n,
+    #   and n may eventually have blockquotes hanging on after it,
+    #   even T things, grabbing whatever on/over/into Aing thereinout
+    $o = &talk,vars,cs{
+        $talk = s;
+        $vars = d;
+        
+    };
+    $output = &s,d,v{
         
     };
     
@@ -494,22 +503,6 @@ pi/ABf: | # Dune of things s&A and s&B
     # yes, o shall be able to do this, as if 
     $se = F(s,'*');
     
-    
-    # random o asides:
-    # check way used vs now
-    for my $w (@{rs.w||[]}) {
-        my $y = G&wops,w.t;
-        if (ws&dige ne ys&dige) {
-            # w/$w/$W
-            my $r = tr.w ||= G&Ct,[w=>1];
-            
-            my $t = G&Ct,[w.t=>1]; # way difference
-            ts&dige = ys&dige;
-            ts&z = [$nex->(w.y.in)]; # affected W
-            _s&dige_was = ws&dige for @{ts&z};
-            push @{rs&z||=[]}, $t;
-        }
-    }
     
     
     
@@ -787,11 +780,169 @@ Fly: |
     1s&empathy = 4;
     1s&Gro ||= [];
     
+    #c parsetalk
+    # parse to replace, captures in m
+    $parse;
+        $m;
+        $p = &r{
+            m = parse.match(r);
+            !m and return
+            m.shift();
+            parse = parse.replace(r,'');
+            return 1
+        };
+        
+    # random o asides:
+    # check way used vs now
+    #for my $w (@{rs.w||[]}) {
+    #    my $y = G&wops,w.t;
+    #    if (ws&dige ne ys&dige) {
+    #        # w/$w/$W
+    #        my $r = tr.w ||= G&Ct,[w=>1];
+    #        
+    #        my $t = G&Ct,[w.t=>1]; # way difference
+    #        ts&dige = ys&dige;
+    #        ts&z = [$nex->(w.y.in)]; # affected W
+    #        _s&dige_was = ws&dige for @{ts&z};
+    #        push @{rs&z||=[]}, $t;
+    #    }
+    #}
+    # means:
+    # o w/*:w
+    # if problem with $w:
+    #   i trouble/w:r/#w:t
+    #   ts&dige = supposedtobe
+    #   i $t o $w/*
+    
+    # so 'i $t' tv's each 'o $w/*:W', like 'i $t $W'+
+    
+    
+    # to return s/d/v, what we are doing...
+    # the o d will be... more infinite
+    # and bareword means create/read a spacer: C.t=bareword
+    # and #la means derive a spacer from la: C.t=la.t
+    $parsetalk = &talk,vars{
+        $d = {};
+        parse = talk;
+        # do i ... for o ...
+        p(/ o (.+)$/) and d.fromo = m[0]
+        # absorb the o lop ^
+        talk = parse; 
+        
+        # Babz shall do:
+        $params = [];
+        d.path = []; # pa+
+        while (p(/^(\S+)\s*/)) {
+            $path = m[0].split('/');
+            $outer = parse;
+            each in path {
+                parse = n;
+                $pa = {};
+                
+                # set var from path bit
+                p(/:(\w*)$/) and pa.ark = m[0] || 1
+                
+                # get path bit/value of here from a variable:
+                # t-only/squish/shaded clone of C, or
+                # C itself
+                # when o the C will match itself/navigate onwards
+                # or i will input that squished C,
+                #   and/or ark/return,
+                #   and/or climb past it and input more stuff...
+                
+                # toy: a name-only sketch of C
+                # sheer spacer, made for a C
+                #   eg where desired.t == wanted.t
+                p(/^#/) and pa.isvar = 1; pa.toy = 1;
+                
+                # C itself for path bit got from var
+                p(/^\$/) and pa.isvar = 1
+                
+                pa.t = parse;
+                
+                pa.t == '*' and pa.glob = 1;
+                
+                d.path.push(pa);
+            }
+            parse = outer;
+        }
+        parse and throw "Unparsed", parse
+        #c path
+        d.o_vars = vars.slice();
+        each i,pa d.path {
+            if (pa.ark) {
+                # very important, captures value, per iteration
+            }
+            
+            # value of here from a variable or a bareword
+            if (pa.isvar) {
+                !vars.length and throw "Not enough vars", pa.t, pa, d
+                pa.v = vars.shift();
+            }
+            else
+            if (pa.glob) {
+                # anything
+            }
+            else {
+                # bareword = C.t of spacer
+                pa.v = G&Cye,[pa.t,1]
+                # words are the lumber of the algorithm
+                pa.word = pa.spacer = 1;
+            }
+            
+            if (pa.toy) {
+                # spacer named v.t - takes its name only
+                pa.o_v = pa.v;
+                pa.v = G&Cye,[pa.v.t,1];
+                # relative spacers hold a name for something
+                pa.relative = pa.spacer = 1;
+            }
+        }
+        
+        if (d.fromo) {
+            # parse that talk too, check vars splits nicely
+            d.oach = parsetalk(d.fromo,vars);
+        }
+        
+        # check 
+        vars.length and debugger;
+        #; throw "Too many vars", vars
+        
+        # climbs in referring to vals got iterating?
+        # cases so far needn't
+        
+        # so now we have a path:
+        # i: make it so
+        # o: read it out
+        return d
+    };
+    
+    #c test-parsetalk
+    
+    $ca = &talk,cetia{
+        debugger;
+        $vars = cetia ? cetia.split(' ').map(&s{ return G&Cye,[s] }) : [];
+        $d = parsetalk(talk,vars);
+        m talk  $s:d
+    };
+    ca('w/*:w');
+    ca('trouble/w:r/#w:t','weeee');
+    ca('$t o $w/*','tea weas');
+    # from the story of -respec:
+    # o w/*:w
+    # if problem with $w:
+    #   i trouble/w:r/#w:t
+    #   ts&dige = supposedtobe
+    #   i $t o $w/*
+    
+    
+    if (0) {
     each tvJ 4s&Jtv {
         m $t $s:J
     }}
     each in 1s&Gro {
         m $n
+    }
     }
     each in M {
         nc&pi = 'fod';
