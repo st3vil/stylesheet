@@ -353,13 +353,13 @@ iooia: | # F > i/o > input/output
             parse = parse.replace(r,'');
             return 1
         };
-        
+    
+    $ta = G.tiestowe = [];
+    
     $varguessbab = &s{
         # line = 'i '+s
         parse = s;
         $h = {vars:[],arks:[]};
-        $vars = [];
-        $arks = [];
         while (p(/^(\S+)\s*/)) {
             $path = m[0].split('/');
             $outer = parse;
@@ -371,7 +371,7 @@ iooia: | # F > i/o > input/output
                 p(/^\$/) and pa.isvar = 1
                 pa.t = parse;
                 pa.isvar and h.vars.push(pa.t);
-                pa.ark and h.arks.push(pa.t);
+                pa.ark and h.arks.push(pa.ark);
             }
             parse = outer
         }
@@ -379,12 +379,15 @@ iooia: | # F > i/o > input/output
             n.match(/\W+/) and throw "wobbyly "+t+" varnameinterpretation: "+n, s;
         }}
         $cod = [];
+        h.arks.length == 1 and cod.push('var '+h.arks[0]+' = '); h.arks = [];
         h.arks.length and cod.push('var ar = ')
         cod.push('io.i('+enj(s)+',[');
         h.vars.length and cod.push(h.vars.join(','))
         cod.push(']);');
         h.arks.length and h.arks.map(&s{ cod.push(' var '+s+' = ar.'+s+';') });
-        return cod.join('');
+        cod = cod.join('');
+        ta.push([s,cod]);
+        return cod
     };
     
     # to return s/d/v, what we are doing...
