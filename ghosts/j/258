@@ -273,8 +273,8 @@ pi/ABf: | # Dune of things s&A and s&B
     
     #n te 01 $s:cev %hue:-90
     #n abf -jod $s:s
-    
-    
+    $io = G&way,'iooia';
+    $F = io.F;
 
     # yes, o shall be able to do this, as if 
     $se = F(s,'*');
@@ -354,7 +354,38 @@ iooia: | # F > i/o > input/output
             return 1
         };
         
-    
+    $varguessbab = &s{
+        # line = 'i '+s
+        parse = s;
+        $h = {vars:[],arks:[]};
+        $vars = [];
+        $arks = [];
+        while (p(/^(\S+)\s*/)) {
+            $path = m[0].split('/');
+            $outer = parse;
+            each in path {
+                parse = n;
+                $pa = {};
+                p(/:(\w*)$/) and pa.ark = m[0] || 1
+                p(/^#/) and pa.isvar = 1;
+                p(/^\$/) and pa.isvar = 1
+                pa.t = parse;
+                pa.isvar and h.vars.push(pa.t);
+                pa.ark and h.arks.push(pa.t);
+            }
+            parse = outer
+        }
+        each tin h {
+            n.match(/\W+/) and throw "wobbyly "+t+" varnameinterpretation: "+n, s;
+        }}
+        $cod = [];
+        h.arks.length and cod.push('var ar = ')
+        cod.push('io.i('+enj(s)+',[');
+        h.vars.length and cod.push(h.vars.join(','))
+        cod.push(']);');
+        h.arks.length and h.arks.map(&s{ cod.push(' var '+s+' = ar.'+s+';') });
+        return cod.join('');
+    };
     
     # to return s/d/v, what we are doing...
     # the o d will be... more infinite
@@ -367,6 +398,9 @@ iooia: | # F > i/o > input/output
         p(/ o (.+)$/) and d.fromo = m[0]
         # absorb the o lop ^
         talk = parse; 
+        
+        d.vargs = varguessbab(talk);
+        parse = talk;
         
         # Babz shall do vars
         d.path = []; # pa+
@@ -921,6 +955,9 @@ TripDeck: | # note vortex, bakes patterns into info
     #A.ontula = [];
 Fly: |
     G&heading;
+    G&way,'t/iooia',ar;
+    return;
+    
     1s&empathy = 4;
     1s&Gro ||= [];
     
