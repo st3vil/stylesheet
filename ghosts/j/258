@@ -396,8 +396,8 @@ iooia: | # F > i/o > input/output
     
     # < unless it names a universal (1s&bareword) or so,
     #   then use that. inner lingosanctum.
-    $parsetalk = &talk,vars{
-        $d = {};
+    $parsetalk = &talk,vars,d{
+        d ||= {};
         parse = talk;
         # do i ... for o ...
         p(/ o (.+)$/) and d.fromo = m[0]
@@ -491,9 +491,9 @@ iooia: | # F > i/o > input/output
     # the o d will be... more infinite
     #   particularly grep/sort/map
     #  tal being apply
-    $o = &talk,vars,cs{
-        $talk = s;
-        $vars = d;
+    $o = &talk,vars,d{
+        d ||= {};
+        parsetalk(talk,vars,d);
         
     };
     $output = &s,d,v{
@@ -505,6 +505,27 @@ iooia: | # F > i/o > input/output
                 throw "intelligise", d
             }
         }
+        
+        # climb index
+        # d.ours ['nk','gk'], gets to the thing at the end of this thing
+        # +
+        # d.path ['Winning','0.1'] points of index, to the value
+        # not the same d.path (or d) of i/o, is a lower level, manyer
+        $path = d.our || [];
+        d.path and d.path.map(&p{ path.push(p) });
+        
+        each ip path {
+            $x = S[p];
+            # the last bit of our space: the universal
+            d.our && i+1 == d.our.length and d.on_our = x
+            i+1 >= path.length and continue
+            d.path_type and throw "index has types";
+            # hash usual
+            x == null and x = S[p] = {}
+            typeof x != 'object' and throw "index broken"
+            S = x;
+        }
+        
     };
     
     #c i_ somewhere someway somestuff
@@ -512,12 +533,9 @@ iooia: | # F > i/o > input/output
     
     # shall we use a talky Babz'd params-implied-by-$ thing?
     # or just put thing on thing arguments?
-    $i = &talk,vs,cs{
-        # values will always be hash?
-        each iv vs {
-            v.constructor == Array and v = vs[i] = G&Cye,v
-        }
-        $d = {};
+    $i = &talk,vars,d{
+        d ||= {};
+        parsetalk(talk,vars,d);
         
         # talk:
         #   'universal keyworded-by $thing'
@@ -535,6 +553,8 @@ iooia: | # F > i/o > input/output
         $v = C;
         # something indefinite trying to climb into a ground and become s
         # is a tiny unit of cobsciousness
+        # anyway, d.path=pa+, become steps of:
+        #  climb tv with v
         each in d.path {
             $v = n.v;
             input(s,'tv',v);
@@ -668,16 +688,18 @@ iooia: | # F > i/o > input/output
         # with a little lingeme sensitivity loaded in on the d,
         # which is a lunk for A, C, T rivering the reverberate of revision
         
-        # index is: ours (nk/gk) points of index/space, to the value
+        # climb index
+        # d.ours ['nk','gk'], gets to the thing at the end of this thing
+        # +
+        # d.path ['Winning','0.1'] points of index, to the value
+        # not the same d.path (or d) of i/o, is a lower level, manyer
         $path = d.our || [];
         d.path and d.path.map(&p{ path.push(p) });
         
-        $S = s;
-        $O;
         each ip path {
             $x = S[p];
             # the last bit of our space: the universal
-            d.our && i+1 == d.our.length and O = x
+            d.our && i+1 == d.our.length and d.on_our = x
             i+1 >= path.length and continue
             d.path_type and throw "index has types";
             # hash usual
@@ -734,8 +756,7 @@ t/iooia: |
     $io = G&way,'iooia';
     
     # Domes:
-    # S test-parsetalk
-    
+    # S parsetalk
     $a = &t,talk,cetia{
         $vars = cetia ? cetia.split(' ').map(&s{ return G&Cye,[s] }) : [];
         $d = io.parsetalk(talk,vars);
@@ -751,6 +772,19 @@ t/iooia: |
     #   ts&dige = supposedtobe
     #   i $t o $w/*
     
+    
+    # S i/o
+    $d = G&Cye,['blag','1',{s:'gakl'}];
+    $o = G&Cye,['blag','2',{s:'gakel'}];
+    # bothered writing this?
+    # i $d/$o
+    # maybe we want 'd>o'
+    # magnetics want to... ranking, raking...
+    # for sorting the junkdrifts of culture
+    $N = io.i('$d/$o',[d,o]);
+    $oN = io.o('$d/*',[d]);
+    m enN -fod $s:N,dl:14
+    m ouN -fod $s:oN,dl:14
     # so 'i $t' tv's each 'o $w/*:W', like 'i $t $W'+
     # < do d.oach
     
