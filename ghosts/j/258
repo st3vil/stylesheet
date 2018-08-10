@@ -363,6 +363,7 @@ iooia: | # F > i/o > input/output
     $ta = G.tiestowe = [];
     
     # compile time
+    # see j/41/jababio
     # params added as columns are named with /^[$#]/
     # vars set or made available somewhere, per column, per row...
     # saving much typing!
@@ -378,39 +379,6 @@ iooia: | # F > i/o > input/output
     #  S can do io and then be iterating
     #  Babz setting vars inside from T
     
-    $varguessbab = &s{
-        # line = 'i '+s
-        parse = s;
-        $h = {vars:[],arks:[]};
-        while (p(/^(\S+)\s*/)) {
-            $path = m[0].split('/');
-            $outer = parse;
-            each in path {
-                parse = n;
-                $pa = {};
-                p(/:(\w*)$/) and pa.ark = m[0] || 1
-                p(/^#/) and pa.isvar = 1;
-                p(/^\$/) and pa.isvar = 1
-                pa.t = parse;
-                pa.isvar and h.vars.push(pa.t);
-                pa.ark and h.arks.push(pa.ark);
-            }
-            parse = outer
-        }
-        each tin h {
-            n.match(/\W+/) and throw "wobbyly "+t+" varnameinterpretation: "+n, s;
-        }}
-        $cod = [];
-        h.arks.length == 1 and cod.push('var '+h.arks[0]+' = '); h.arks = [];
-        h.arks.length and cod.push('var ar = ')
-        cod.push('io.i('+enj(s)+',[');
-        h.vars.length and cod.push(h.vars.join(','))
-        cod.push(']);');
-        h.arks.length and h.arks.map(&s{ cod.push(' var '+s+' = ar.'+s+';') });
-        cod = cod.join('');
-        ta.push([s,cod]);
-        return cod
-    };
     
     # kind of a sql?
     # and bareword means create/read a spacer: C.t=bareword
@@ -420,6 +388,7 @@ iooia: | # F > i/o > input/output
     # there must be more
     # the o d will be... more infinite
     #   particularly grep/sort/map
+    #  tal being apply
     $parsetalk = &talk,vars{
         $d = {};
         parse = talk;
