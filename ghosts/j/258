@@ -366,10 +366,10 @@ iooia: | # F > i/o > input/output
     # see j/41/jababio
     # the string is basically a branch/path 
     #   params give values to columns, named with /^[$#]/
-    #   vars return or made available somewhere, per column, per row...
+    #   params return or made available somewhere, per column, per row...
     # saving much typing!
     
-    # can't really bab 1 line to many to set vars
+    # can't really bab 1 line to many to set params
     # must return N
     #   it's what's expected? (at io (not F?))
     # and put iterator interface on T...
@@ -378,7 +378,7 @@ iooia: | # F > i/o > input/output
     
     # but in an S:
     #  S can do io and then be iterating
-    #  Babz setting vars inside from T
+    #  Babz setting params inside from T
     
     
     # general branch lingo
@@ -396,7 +396,7 @@ iooia: | # F > i/o > input/output
     
     # < unless it names a universal (1s&bareword) or so,
     #   then use that. inner lingosanctum.
-    $parsetalk = &talk,vars,d{
+    $parsetalk = &talk,params,d{
         d ||= {};
         parse = talk;
         # do i ... for o ...
@@ -404,7 +404,7 @@ iooia: | # F > i/o > input/output
         # absorb the o lop ^
         talk = parse; 
         
-        # Babz shall do vars, see 'compile time' ^
+        # Babz shall do params, see 'compile time' ^
         d.path = []; # pa+
         while (p(/^(\S+)\s*/)) {
             $path = m[0].split('/');
@@ -427,19 +427,19 @@ iooia: | # F > i/o > input/output
                 # toy: a name-only sketch of C
                 # sheer spacer, made for a C
                 #   eg where desired.t == wanted.t
-                p(/^#/) and pa.isvar = 1; pa.relative = 1;
+                p(/^#/) and pa.isparam = 1; pa.relative = 1;
                 
-                # C itself for path bit got from var
-                p(/^\$/) and pa.isvar = 1
+                # C itself for path bit got from param
+                p(/^\$/) and pa.isparam = 1
                 
                 pa.t = parse;
                 
                 pa.t == '*' and pa.glob = 1;
                 
                 # value of here from a:
-                if (pa.isvar) { # variable/bind param
-                    !vars.length and throw "Not enough vars", pa.t, pa, d
-                    pa.v = vars.shift();
+                if (pa.isparam) { # variable/bind param
+                    !params.length and throw "Not enough params", pa.t, pa, d
+                    pa.v = params.shift();
                 }
                 else
                 if (pa.glob) {} # anything
@@ -463,11 +463,11 @@ iooia: | # F > i/o > input/output
         parse and throw "Unparsed", parse
         
         if (d.fromo) {
-            # parse that talk too, to use up vars
-            d.oach = parsetalk(d.fromo,vars);
+            # parse that talk too, to use up params
+            d.oach = parsetalk(d.fromo,params);
         }
         
-        vars.length and throw "Too many vars", vars
+        params.length and throw "Too many params", params
         # maps, greps, sorts
         
         # so now we have a path:
@@ -491,9 +491,9 @@ iooia: | # F > i/o > input/output
     # the o d will be... more infinite
     #   particularly grep/sort/map
     #  tal being apply
-    $o = &talk,vars,d{
+    $o = &talk,params,d{
         d ||= {};
-        parsetalk(talk,vars,d);
+        parsetalk(talk,params,d);
         
     };
     $output = &s,d,v{
@@ -533,9 +533,9 @@ iooia: | # F > i/o > input/output
     
     # shall we use a talky Babz'd params-implied-by-$ thing?
     # or just put thing on thing arguments?
-    $i = &talk,vars,d{
+    $i = &talk,params,d{
         d ||= {};
-        parsetalk(talk,vars,d);
+        parsetalk(talk,params,d);
         
         # talk:
         #   'universal keyworded-by $thing'
@@ -758,8 +758,8 @@ t/iooia: |
     # Domes:
     # S parsetalk
     $a = &t,talk,cetia{
-        $vars = cetia ? cetia.split(' ').map(&s{ return G&Cye,[s] }) : [];
-        $d = io.parsetalk(talk,vars);
+        $params = cetia ? cetia.split(' ').map(&s{ return G&Cye,[s] }) : [];
+        $d = io.parsetalk(talk,params);
         m talk  $s:d
     };
     a('i','w/*:w');
