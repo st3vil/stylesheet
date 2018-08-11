@@ -209,12 +209,12 @@ iooia: | # F > i/o > input/output
             $pa = d.path[p.i];
             
             if (!q) {
-                i > 0 and throw "no q, notfirst"
+                p.i > 0 and throw "no q, notfirst"
                 if (pa.glob || pa.spacer) {
-                    # implies we're already on something
+                    # has an implied starting point
                     p.i--;
                     !A.r and throw "unreal beginning, no Ar"
-                    d.shiftzero  = 1;
+                    d.shiftzero = 1;
                     p.found = [A.r];
                 }
                 else {
@@ -235,17 +235,23 @@ iooia: | # F > i/o > input/output
                     !p.row and throw "Nowhere"
                     $s = p.row.slice(-1)[0]; # or p.i?
                     !s and throw "doing empty"
+                    
+                    # what should be:
+                    $v = pa.v;
+                    !v and throw "null pav?"
 
+                    # via
                     $D = {asa:'tv'};
                     # to diversify...
                     pa.glob and D.meta = ['*','*'];
                     
                     # 6, only the last column
+                    A.debug and debugger;
                     p.found = output(s,D,v);
                 }
             }
             
-            # and so we can perceive incomplete rows
+            #c and so we can perceive incomplete rows
             # merge onto every row - after return/in more loop?
             
             if (!p.row) {
@@ -273,7 +279,7 @@ iooia: | # F > i/o > input/output
             }
             
             # multiply rows to the right
-            $more = d.path[i+1];
+            $more = d.path[p.i+1];
             if (more) {
                 # get more of it, per already
                 # each old row gets at least a []
@@ -655,9 +661,9 @@ t/iooia: |
     A.r = G&Cye,['iooia',9,{M:[]}];
     $now = a('o','w/*:w');
     
-    debugger;
     $iw = a('i','w:r/#w:t','weeee');
     
+    A.debug = 1;
     $aw = a('o','w/*:w');
     
     
