@@ -392,6 +392,7 @@ iooia: | # F > i/o > input/output
         
         # talk:
         #   'universal keyworded-by $thing'
+        # find these things... barewords we have around?
         # usually a J universal like N,M,1,9, etc.
         # and somethinging to it:
         # talk='N $by', param=[$by]
@@ -399,33 +400,38 @@ iooia: | # F > i/o > input/output
         #      or M 1's A:n's r's cM  # just the people around you
         #   should kinda m:N $by,
         #   but with the o kind of universal awareness, not A:n
-        #   params would be 
-        # 
-        
-        each i,pa d.path {
-        
-        
-        
-        # how to find these things... barewords we have around?
-        # N means A.3.r.N
         # but simply as possible, until real use cased:
         # - make sure this is so!
         # as opposed to o:
         # o how is this?
-        # the engineer and the life
-        
-        # default place is A.r?
-        $s = A.r;
-        # default placement is tv?
-        $d = 'tv';
-        # default v is C?
-        $v = C;
-        # something indefinite trying to climb into a ground and become s
-        # is a tiny unit of cobsciousness
-        # anyway, d.path=pa+, become steps of:
-        #  climb tv with v
-            $v = n.v;
-            input(s,'tv',v);
+        # 
+        $row; # see 'crazy'
+        $s; # last object
+        each i,pa d.path {
+            if (i == 0) {
+                !pa.v and throw "null beginning"
+                pa.spacer and throw "unreal beginning, use A.r?"
+                row = [pa.v];
+                continue
+            }
+            # formulate output()
+            $D = {asa:'tv'};
+            
+            # when v is mere space identity, use what is found
+            pa.spacer and D.spacer = 1
+            # and when should existing objects be replaced,
+            #   but indexes copied to the new one?
+            #   seems like s's buzz.
+            
+            # what is:
+            $s = row.slice(-1)[0];
+            !s and throw "null step?"
+            !s and row.push(null); continue;
+            # what should be:
+            $v = pa.v;
+            !v and throw "null pav?"
+            $r = input(s,D,v);
+            row.push(r);
         }
     };
     
@@ -583,14 +589,11 @@ iooia: | # F > i/o > input/output
         else {
             # set thing to thing
             if (x != null) {
-                # already
-                x == v and return v
-                # something else, dup returns 1 to cancel the go
-                d.dup and d.dup(x) and return x
+                # already, noop?
+                d.spacer || x == v and return x
+                d.dup && d.dup(x) and return x
             }
-            # unless this i's pa is 
             S[p] = v;
-            !d.keep_first and S[p] = v;
         }
         
         # seeds with seed pouches
