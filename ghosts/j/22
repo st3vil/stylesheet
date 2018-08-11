@@ -587,21 +587,22 @@ iooia: | # F > i/o > input/output
         each ip path {
             i *= 1;
             $x = S[p];
+            x && typeof x != 'object' and throw "index broken"
             # the last bit of our space: the universal
             #   could be something trascendant
             #   like being a thing with hooks, more our until path...
             d.our && i == d.our.length and d.on_our = x
-            # hash usual
-            x == null and x = S[p] = {}
-            typeof x != 'object' and throw "index broken"
             # done, leave S on second to last thing
             i+1 == path.length and continue
+            # hash usual
+            x == null and x = S[p] = {}
             S = x;
         }
         
-        # S[p] is now x
-        # S[p] soon gets v
+        # S[p] may now = x
+        # S[p] soon will = v
         if (d.t == 'z') {
+            # or include it
             x == null and x = S[p] = d.zefault || [];
             x.constructor != Array and throw "z broken"
             #$xi = x.indexOf(v);
