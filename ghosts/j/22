@@ -207,6 +207,7 @@ iooia: | # F > i/o > input/output
             p ||= {};
             p.i ||= q ? q.i+1 : 0;
             $pa = d.path[p.i];
+            !pa and throw "No pattern!: "+p.i
             
             if (!q) {
                 p.i > 0 and throw "no q, notfirst"
@@ -238,15 +239,15 @@ iooia: | # F > i/o > input/output
                     
                     # what should be:
                     $v = pa.v;
-                    !v and throw "null pav?"
 
                     # via
                     $D = {asa:'tv'};
                     # to diversify...
                     pa.glob and D.meta = ['*','*'];
+                    else
+                    !v and throw "null pav?"
                     
                     # 6, only the last column
-                    A.debug and debugger;
                     p.found = output(s,D,v);
                 }
             }
@@ -278,6 +279,8 @@ iooia: | # F > i/o > input/output
                 });
             }
             
+            
+            
             # multiply rows to the right
             $more = d.path[p.i+1];
             if (more) {
@@ -288,6 +291,7 @@ iooia: | # F > i/o > input/output
                 # returns rows with yonders
                 each i,row p.rows {
                     $r = col(p,{row:row});
+                    
                     !r and throw "rowing nothing"
                     # rows stay once lost, missing columns
                     !r.length and throw "not one row"
@@ -309,10 +313,12 @@ iooia: | # F > i/o > input/output
         # and/or ind-like N, maybe ioN goes:
         #   [r,[1,[1a,1b],2,3,[3a]]
         # deepest atoms for starters:
+        
+        # take off columns not in the formula (A.r)
+        d.shiftzero and rows.map(&row{ row.shift() });
+        
         $last_column = rows.map(&row{ return row.slice(-1)[0] })
             .filter(&s{ return s });
-        # take off things not in the formula (A.r)
-        d.shiftzero and last_column.shift();
 
         return last_column;
         # < ark, setup iterator
@@ -320,6 +326,8 @@ iooia: | # F > i/o > input/output
     };
     #c output
     $knowing = &d,v{
+        # glob tv wants to make some path
+        v ||= {t:'*',y:{cv:'*'}};
         # a subtype, reenters at the end:
         d.asa and $other = d; d = other.asa;
         # types
@@ -355,8 +363,9 @@ iooia: | # F > i/o > input/output
             $k = path[i];
             $pm = i >= mi && d.meta && d.meta[i-mi];
             $rows = [];
+            A.debug and debugger;
             each ri,row d.rows {
-                $S = row[i-1];
+                $S = row.slice(-1)[0];
                 if (S == null) {
                     row.push(null);
                     rows.push(row);
@@ -374,7 +383,11 @@ iooia: | # F > i/o > input/output
                     }
                 }
                 else { # exactly what path[i] says
-                    typeof k != 'string' and throw "nonstringstep"
+                    # but when to cast it first? never I spose.
+                    $ok = typeof k == 'string'
+                        || typeof k == 'number';
+                    !ok and debugger
+                    !ok and throw "nonstringstep"
                     ks = [k];
                 }
                 # < to sort, know fractional cv,
@@ -383,7 +396,7 @@ iooia: | # F > i/o > input/output
                 #   misspellings, round until found,
                 #   using z a sorted z to scope up a cv faster...
                 #   even resurrecting a J that looks similar
-                each ik ks {
+                each ik,k ks {
                     $x = S[k];
                     # extend row
                     $ro = row.slice();
@@ -392,8 +405,14 @@ iooia: | # F > i/o > input/output
                 }
             }
             d.rows = rows;
+            # and add column:
+            i++;
         }
-        $last_column = d.rows.map(&row{ return row.slice(-1) })
+        # take off columns not in the formula (A.r)
+        d.shiftzero and d.rows.map(&row{ row.shift() });
+        
+        $last_column = d.rows
+            .map(&row{ return row.slice(-1)[0] })
             .filter(&s{ return s });
         return last_column
     };
@@ -503,7 +522,8 @@ iooia: | # F > i/o > input/output
         #    if tv, overwritings become linked lists
         if (d.usu) {
             if (d.t == 'tv') {
-                d.also ||= ['tw','z']
+                # when not debugging:
+                #d.also ||= ['tw','z']
             }
             # this should be available as around or after method call..
             # or "the usual" that the actual d.dup works with or without
@@ -653,7 +673,9 @@ t/iooia: |
     # Domes:
     # S parsetalk
     $a = &t,talk,cetia{
-        $params = cetia ? cetia.split(' ').map(&s{ return G&Cye,[s] }) : [];
+        $params = cetia ? cetia.split(' ')
+            .map(&s{ return G&Cye,[s] })
+          : [];
         $d = io[t](talk,params);
         m talk  $s:d
         return d
@@ -663,8 +685,9 @@ t/iooia: |
     
     $iw = a('i','w:r/#w:t','weeee');
     
-    A.debug = 1;
+    #A.debug = 1;
     $aw = a('o','w/*:w');
+    #debugger;
     
     
     #a('i','w:r/#w:t','well');
