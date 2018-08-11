@@ -38,6 +38,8 @@ TripDeck: | # note vortex, bakes patterns into info
 iooia: | # F > i/o > input/output
     # these will all be G&F, G&o, G&i...
     
+                    # round until found
+    
     # other possible types of thisness:
     # - G&s for writing notes for itself
     #   using traces left by i/oing etc nearby
@@ -308,57 +310,66 @@ iooia: | # F > i/o > input/output
     };
     $output = &s,d,v{
         styles(d);
-        # climb index
-        # d.ours ['nk','gk'], gets to the thing at the end of this thing
-        # +
-        # d.path ['Winning','0.1'] points of index, to the value
-        # not the same d.path (or d) of i/o, is a lower level, manyer
+        # path =
+        #  our - reaches from thing to its universal (nk,gk)
+        # + path - into index (t,cv)
+        # not the same d.path (or d) of i/o
+        #   is a lower level, manyer
+        # meta applies to non-our path only.
         $path = d.our || [];
         $mi = path.length;
         d.path and d.path.map(&p{ path.push(p) });
         
-        # make path_meta
-        
         # we only need to capture the endmost atoms at this low level
-        # < rows is S in input... 
+        # < rows is S in input... could insert multiple times if crazy
         d.rows = [[s]]; 
         # flow
         $i = 0;
         while (path[i]) {
-            $p = path[i];
+            $k = path[i];
             $pm = i >= mi && d.meta && d.meta[i-mi];
             $rows = [];
-            each i,row d.rows {
-                $S = row[i-1]
-                # grep z by tv? to use its order,
-                # the order defined is as z is for now
+            each ri,row d.rows {
+                $S = row[i-1];
+                if (S == null) {
+                    row.push(null);
+                    rows.push(row);
+                    i++;
+                    continue
+                }
                 $ks;
-                # for WHERE k=v to be k>5, k~re
-                if (pm && pm == '*') {
-                    ks = Object.keys(S)
+                if (pm) { # loose match, may many
+                    # use z order? grep by tv?
+                    # in the order they were set
+                    pm == '*' and ks = Object.keys(S)
+                    else {
+                        # for WHERE k=v to be k>5, k~re
+                        throw "meta",pm
+                    }
                 }
-                else {
-                    ks = 'p'
+                else { # exactly what path[i] says
+                    typeof k != 'string' and throw "nonstringstep"
+                    ks = [k];
                 }
+                # < to sort, know fractional cv,
+                #   with freaks, histograms, history
+                # < if !x we could try as if 1=='',
+                #   misspellings, round until found,
+                #   using z a sorted z to scope up a cv faster...
+                #   even resurrecting a J that looks similar
                 each ik ks {
-                    x = S[k];
-                    row = row.slice();
-                    row.push(x);
-                    
+                    $x = S[k];
+                    # extend row
+                    $ro = row.slice();
+                    ro.push(x);
+                    rows.push(ro);
                 }
             }
-            # the last bit of our space: the universal
-            # transcendance might happen here
-            d.our && i+1 == d.our.length and d.on_our = x
-            # search over
-            i+1 >= path.length and continue
-            d.path_type and throw "index has types";
-            # hash usuality
-            x == null and x = S[p] = {}
-            typeof x != 'object' and throw "index broken"
-            S = x;
+            d.rows = rows;
         }
-        
+        $last_column = d.rows.map(&row{ return row.slice(-1) })
+            .filter(&s{ return s });
+        return last_column
     };
     
     #c i_ somewhere someway somestuff
