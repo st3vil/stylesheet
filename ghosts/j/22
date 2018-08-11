@@ -229,7 +229,7 @@ iooia: | # F > i/o > input/output
 
                     $D = {asa:'tv'};
                     # to diversify...
-                    pa.glob and D.path_meta = '*';
+                    pa.glob and D.meta = ['*','*'];
                     
                     # 6
                     p.found = output(s,D,v);
@@ -314,25 +314,44 @@ iooia: | # F > i/o > input/output
         # d.path ['Winning','0.1'] points of index, to the value
         # not the same d.path (or d) of i/o, is a lower level, manyer
         $path = d.our || [];
+        $mi = path.length;
         d.path and d.path.map(&p{ path.push(p) });
         
         # make path_meta
         
         # we only need to capture the endmost atoms at this low level
-        $rows = [];
+        # < rows is S in input... 
+        d.rows = [[s]]; 
         # flow
-        $col = &i,p{
-            $m = d.path_meta
-        
-        each ip path {
-            $x = S[p];
+        $i = 0;
+        while (path[i]) {
+            $p = path[i];
+            $pm = i >= mi && d.meta && d.meta[i-mi];
+            $rows = [];
+            each i,row d.rows {
+                $S = row[i-1]
+                # grep z by tv? to use its order,
+                # the order defined is as z is for now
+                $ks;
+                # for WHERE k=v to be k>5, k~re
+                if (pm && pm == '*') {
+                    ks = Object.keys(S)
+                }
+                else {
+                    ks = 'p'
+                }
+                each ik ks {
+                    x = S[k];
+                    row = row.slice();
+                    row.push(x);
+                    
+                }
+            }
             # the last bit of our space: the universal
             # transcendance might happen here
             d.our && i+1 == d.our.length and d.on_our = x
             # search over
             i+1 >= path.length and continue
-            # for WHERE k=v to be k>5, k~re
-            $d.path_meta
             d.path_type and throw "index has types";
             # hash usuality
             x == null and x = S[p] = {}
