@@ -233,7 +233,7 @@ iooia: | # F > i/o > input/output
                     # to diversify...
                     pa.glob and D.meta = ['*','*'];
                     
-                    # 6
+                    # 6, only the last column
                     p.found = output(s,D,v);
                 }
             }
@@ -301,15 +301,19 @@ iooia: | # F > i/o > input/output
         throw "End"
     };
     #c output
-    $styles = &d{
+    $knowing = &d,v{
+        # a subtype, reenters at the end:
         d.asa and $other = d; d = other.asa;
-        d == 'tv' and d = {t:d,our:['y','tv'],path:[v.t,v.y.cv],usu:1}
+        # types
+        d == 'tv' and d = {t:d,our:['y','tv'],usu:1}; d.path = [v.t,v.y.cv];
+        
         typeof d == 'string' and throw "intelligise", d, other
+        
         other and $.extend(d,other);
         return d
     };
     $output = &s,d,v{
-        styles(d);
+        knowing(d,v);
         # path =
         #  our - reaches from thing to its universal (nk,gk)
         # + path - into index (t,cv)
