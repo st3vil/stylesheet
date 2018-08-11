@@ -198,10 +198,13 @@ iooia: | # F > i/o > input/output
     # lingo shape glue session
     $o = &talk,params,d{
         d ||= {};
+        
         parsetalk(talk,params,d);
-        $col = &i,q,p{
-            $pa = d.path[i];
+        
+        $col = &q,p{
             p ||= {};
+            p.i ||= q ? q.i+1 : 0;
+            $pa = d.path[p.i];
             
             if (!q) {
                 i > 0 and throw "no q, notfirst"
@@ -220,7 +223,9 @@ iooia: | # F > i/o > input/output
                 }
                 else {
                     # onward
-                    $s = p.s;
+                    !p.row and throw "Nowhere"
+                    $s = p.row.slice(-1)[0]; # or p.i?
+                    !s and throw "doing empty"
 
                     $D = {asa:'tv'};
                     # to diversify...
@@ -231,65 +236,69 @@ iooia: | # F > i/o > input/output
                 }
             }
             
-            # contrived so empty can hold space in p.cols
             # and so we can perceive incomplete rows
+            # merge onto every row - after return/in more loop?
             
-            # p.rows = q.rows + p.found
-            p.rows = [p.found.slice()];
-            if (q && q.rows) {
-                # add on other columns
-                each i,cols q.rows {
-                    cols = cols.slice();
-                    # duplicate out
-                    cols.push( # #######
-                }
+            if (!p.row) {
+                # starts - rows = [[r]]
+                !p.found and throw "no row or found"
+                p.rows = p.found.map(&s{ return [s] });
+                # then forever more:
+                #   rows appended to multiplicitly to the right
+                #   cols added to for q.cols
+            }
+            # adds column + some number of rows...
+            elsif (!p.found.length) {
+                # empty - full of null
+                row.push(null);
+                p.rows = [row];
+            }
+            else {
+                # new column of many - duplicate this row out
+                p.rows = p.found.map(&s{
+                    row = row.slice();
+                    row.push(s);
+                    return row
+                });
             }
             
             # multiply rows to the right
-            $ne = d.path[i+1];
-            if (ne) {
-                if (!p.found.length) {
-                    p.rows = p.rows.splice;
-                    p.rows 
-                }
+            $more = d.path[i+1];
+            if (more) {
                 # get more of it, per already
                 # each old row gets at least a []
-                $sworp = [];
-                # for each last depth of values
+                $rows = [];
+                # each row from row[-1] goes forth,
+                # returns rows with yonders
                 each i,row p.rows {
-                    $s = row.slice(-1);
-                    $r = col(i+1,p,{s:s});
-                    !r and throw "col nothing"
-                    each iv r {
-                        $row = row.slice();
-                        
-                        sworp.push()
-                    }
+                    $r = col(p,{row:row});
+                    !r and throw "rowing nothing"
+                    # rows stay once lost, missing columns
+                    !r.length and throw "not one row"
+                    r.map(&row{ rows.push(row) })
                 }
-                p.rows = sworp;
+                p.rows = rows;
             }
-            return p.cols
-        };
-        $rows = col(0);
-        if (1) {
-            # rows multiply as deeper atoms many
-            # [r,1,1a]
-            # [r,1,1b]
-            # deepest atoms for starters:
-            $last_column = rows.map(&s{ s.slice(-1) })
-        }
-        else { # after starters:
-            # we could also stack z, probably better
-            # could look for gaps, etc
-            # or colums:
-            # - [[r]]
-            # - [[1,2,3]]
-            # - [[1a,1b],[],[]]
             
-            # or a mirror C set, like G&ind does
-        }
+            return p.rows
+        };
+        $rows = col();
+        # reduce or sprout iterator
+        # rows multiply as deeper atoms many
+        # - [r,1,1a]
+        # - [r,1,1b]
+        # - [r.2,null]
+        # - [r,3,3a]
+        # or a mirror C set, like G&ind does
+        # and/or ind-like N, maybe ioN goes:
+        #   [r,[1,[1a,1b],2,3,[3a]]
+        # deepest atoms for starters:
+        $last_column = rows.map(&row{ return row.slice(-1) })
+            .filter(&s{ return s });
+        return last_column;
         throw "End"
     };
+    #c output
     $styles = &d{
         d.asa and $other = d; d = other.asa;
         d == 'tv' and d = {t:d,our:['y','tv'],path:[v.t,v.y.cv],usu:1}
@@ -299,11 +308,6 @@ iooia: | # F > i/o > input/output
     };
     $output = &s,d,v{
         styles(d);
-        if (typeof d == 'string') {
-            # z at i level may mean tv, but not here since exponent of tv
-            #d == 'z' and d = 'tv';
-        }
-        
         # climb index
         # d.ours ['nk','gk'], gets to the thing at the end of this thing
         # +
