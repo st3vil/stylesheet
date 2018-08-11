@@ -200,8 +200,8 @@ iooia: | # F > i/o > input/output
     # lingo shape glue session
     $o = &talk,params,d{
         d ||= {};
-        
         parsetalk(talk,params,d);
+        !d.path and throw "no path"
         
         $col = &q,p{
             p ||= {};
@@ -305,7 +305,11 @@ iooia: | # F > i/o > input/output
         # a subtype, reenters at the end:
         d.asa and $other = d; d = other.asa;
         # types
-        d == 'tv' and d = {t:d,our:['y','tv'],usu:1}; d.path = [v.t,v.y.cv];
+        d == 'tv' and d = {t:d,our:['y','tv'],path:[v.t,v.y.cv],usu:1};
+        d == 'tw' and d = {t:d,our:['y','tw'],path:[v.t],usu:1}
+        d == 'z' and d = {t:d,our:['sc','z']}
+        # sheer bunch of keys
+        d.constructor == Array and d = {path:d,usu:1}
         
         typeof d == 'string' and throw "intelligise", d, other
         
@@ -313,9 +317,9 @@ iooia: | # F > i/o > input/output
         return d
     };
     $output = &s,d,v{
-        knowing(d,v);
+        d = knowing(d,v);
         # path =
-        #  our - reaches from thing to its universal (nk,gk)
+        #   our  - reaches from thing to its universal (nk,gk)
         # + path - into index (t,cv)
         # not the same d.path (or d) of i/o
         #   is a lower level, manyer
@@ -384,6 +388,7 @@ iooia: | # F > i/o > input/output
     $i = &talk,params,d{
         d ||= {};
         parsetalk(talk,params,d);
+        !d.path and throw "no path"
         
         # talk:
         #   'universal keyworded-by $thing'
@@ -449,24 +454,11 @@ iooia: | # F > i/o > input/output
     #   when it gives a kind of gravity,
     #   linearity to the stage that may not ever be there
     $input = &s,d,v{
-        if (typeof d == 'string') {
-            # z at i level may mean tv, but not here since exponent of tv
-            #d == 'z' and d = 'tv';
-            d == 'tv' and d = {t:d,our:['y','tv'],path:[v.t,v.y.cv],usu:1}
-            d == 'tw' and d = {t:d,our:['y','tw'],path:[v.t],usu:1}
-            d == 'z' and d = {t:d,our:['sc',d]}
-            else {
-                throw "intelligise", d
-            }
-        }
-        # after the intelligising,
-        # d.reintel and return d # having what we know about this index
-        # so something can retype/repurpose that data model
-        # kind of 2.
+        d = knowing(d,v);
+        # return d here to extract what we know, kind of 2
         
         # now 3 deals with what really shall be and how we shall create it
-        # sheer bunch of keys:
-        d.constructor == Array and d = {path:d,usu:1}
+        
         # apply the usual behaviour:
         #  - when duplicate, overwrite
         #    if tv, overwritings become linked lists
@@ -558,9 +550,10 @@ iooia: | # F > i/o > input/output
         each ip path {
             $x = S[p];
             # the last bit of our space: the universal
+            #   could be something trascendant
             d.our && i+1 == d.our.length and d.on_our = x
+            # done
             i+1 >= path.length and continue
-            d.path_type and throw "index has types";
             # hash usual
             x == null and x = S[p] = {}
             typeof x != 'object' and throw "index broken"
