@@ -210,11 +210,18 @@ iooia: | # F > i/o > input/output
             
             if (!q) {
                 i > 0 and throw "no q, notfirst"
-                pa.glob and throw "globfirst"
-                pa.word and throw "wordfirst"
-                !pa.v and throw "nofirst"
-                # begins space
-                p.found = [pa.v];
+                if (pa.glob || pa.spacer) {
+                    # implies we're already on something
+                    p.i--;
+                    !A.r and throw "unreal beginning, no Ar"
+                    d.shiftzero  = 1;
+                    p.found = [A.r];
+                }
+                else {
+                    !pa.v and throw "nofirst"
+                    # begins space
+                    p.found = [pa.v];
+                }
             }
             else {
                 p.up = q;
@@ -253,15 +260,15 @@ iooia: | # F > i/o > input/output
             else
             if (!p.found.length) {
                 # empty - full of null
-                row.push(null);
-                p.rows = [row];
+                p.row.push(null);
+                p.rows = [p.row];
             }
             else {
                 # new column of many - duplicate this row out
                 p.rows = p.found.map(&s{
-                    row = row.slice();
-                    row.push(s);
-                    return row
+                    ro = p.row.slice();
+                    ro.push(s);
+                    return ro
                 });
             }
             
@@ -278,7 +285,7 @@ iooia: | # F > i/o > input/output
                     !r and throw "rowing nothing"
                     # rows stay once lost, missing columns
                     !r.length and throw "not one row"
-                    r.map(&row{ rows.push(row) })
+                    r.map(&ro{ rows.push(ro) })
                 }
                 p.rows = rows;
             }
@@ -296,9 +303,13 @@ iooia: | # F > i/o > input/output
         # and/or ind-like N, maybe ioN goes:
         #   [r,[1,[1a,1b],2,3,[3a]]
         # deepest atoms for starters:
-        $last_column = rows.map(&row{ return row.slice(-1) })
+        $last_column = rows.map(&row{ return row.slice(-1)[0] })
             .filter(&s{ return s });
+        # take off things not in the formula (A.r)
+        d.shiftzero and last_column.shift();
+
         return last_column;
+        # < ark, setup iterator
         throw "End"
     };
     #c output
@@ -407,13 +418,19 @@ iooia: | # F > i/o > input/output
         # o how is this?
         # 
         $row; # see 'crazy'
-        $s; # last object
+        # row may > path?
         each i,pa d.path {
             if (i == 0) {
                 !pa.v and throw "null beginning"
-                pa.spacer and throw "unreal beginning, use A.r?"
-                row = [pa.v];
-                continue
+                if (pa.spacer) {
+                    !A.r and throw "unreal beginning, no Ar"
+                    d.shiftzero = 1;
+                    row = [A.r]
+                }
+                else {
+                    row = [pa.v]
+                    continue
+                }
             }
             # formulate output()
             $D = {asa:'tv'};
@@ -424,7 +441,7 @@ iooia: | # F > i/o > input/output
             #   but indexes copied to the new one?
             #   seems like s's buzz.
             
-            # what is:
+            # what is - may be longer than path
             $s = row.slice(-1)[0];
             !s and throw "null step?"
             !s and row.push(null); continue;
@@ -434,6 +451,11 @@ iooia: | # F > i/o > input/output
             $r = input(s,D,v);
             row.push(r);
         }
+        # take off things not in the formula (A.r)
+        d.shiftzero and row.shift();
+        # have to return singularly?
+        return row.slice(-1)[0];
+        # < ark
     };
     
     
@@ -474,7 +496,9 @@ iooia: | # F > i/o > input/output
         #  - when duplicate, overwrite
         #    if tv, overwritings become linked lists
         if (d.usu) {
-            d.t == 'tv' and d.also ||= ['tw','z']
+            if (d.t == 'tv') {
+                d.also ||= ['tw','z']
+            }
             # this should be available as around or after method call..
             # or "the usual" that the actual d.dup works with or without
             d.dup = &x{
@@ -556,19 +580,22 @@ iooia: | # F > i/o > input/output
         # +
         # d.path ['Winning','0.1'] points of index, to the value
         # not the same d.path (or d) of i/o, is a lower level, manyer
-        $path = d.our || [];
+        $path = (d.our||[]).slice();
         d.path and d.path.map(&p{ path.push(p) });
         
+        $S = s;
         each ip path {
+            i *= 1;
             $x = S[p];
             # the last bit of our space: the universal
             #   could be something trascendant
-            d.our && i+1 == d.our.length and d.on_our = x
-            # done
-            i+1 >= path.length and continue
+            #   like being a thing with hooks, more our until path...
+            d.our && i == d.our.length and d.on_our = x
             # hash usual
             x == null and x = S[p] = {}
             typeof x != 'object' and throw "index broken"
+            # done, leave S on second to last thing
+            i+1 == path.length and continue
             S = x;
         }
         
@@ -620,13 +647,24 @@ t/iooia: |
     # S parsetalk
     $a = &t,talk,cetia{
         $params = cetia ? cetia.split(' ').map(&s{ return G&Cye,[s] }) : [];
-        $d = io.parsetalk(talk,params);
+        $d = io[t](talk,params);
         m talk  $s:d
+        return d
     };
-    a('i','w/*:w');
-    a('i','trouble/w:r/#w:t','weeee');
-    a('i','$t o $w/*','tea weas');
-    # from the story of -respec:
+    A.r = G&Cye,['iooia',9,{M:[]}];
+    $now = a('o','w/*:w');
+    
+    debugger;
+    $iw = a('i','w:r/#w:t','weeee');
+    
+    $aw = a('o','w/*:w');
+    
+    
+    #a('i','w:r/#w:t','well');
+    #a('i','trouble/w:r/#w:t','weeee');
+    #a('i','$t o $w/*','tea weas');
+    
+    # ^ from the story of -respec:
     # o w/*:w
     # if problem with $w:
     #   i trouble/w:r/#w:t
@@ -635,6 +673,7 @@ t/iooia: |
     
     
     # S i/o
+    if (0) {
     $d = G&Cye,['blag','1',{s:'gakl'}];
     $o = G&Cye,['blag','2',{s:'gakel'}];
     # bothered writing this?
@@ -648,7 +687,7 @@ t/iooia: |
     m ouN -fod $s:oN,dl:14
     # so 'i $t' tv's each 'o $w/*:W', like 'i $t $W'+
     # < do d.oach
-    
+    }
     
     # everytime dome:
     # perhaps not by being last but by being named
@@ -786,7 +825,7 @@ Duning: | # avalanche of activatuio
         return 1;
     };
     
-    #c < shared with Doming:
+    #c A&doming like Doming:
     # For Duning:
     #  may not ground all domes,
     #  they may be ephemera, even error/message channels
@@ -846,7 +885,10 @@ Duning: | # avalanche of activatuio
         return h;
     };
     
-
+StayToSleep: | # gentleness scan
+    # 
+t/BuildACastle: | # test Duning and io
+    # ones
 Fly: |
     G&heading;
     G&way,'t/iooia',ar;
