@@ -394,9 +394,13 @@ iooia: | # F > i/o > input/output
         #   'universal keyworded-by $thing'
         # usually a J universal like N,M,1,9, etc.
         # and somethinging to it:
-        # talk of 'N $by' should kinda m:N $by,
+        # talk='N $by', param=[$by]
+        #   N means 3's A:n's r's cM, # caveful of atoms
+        #      or M 1's A:n's r's cM  # just the people around you
+        #   should kinda m:N $by,
         #   but with the o kind of universal awareness, not A:n
-        #   params would be [$by]
+        #   params would be 
+        # 
         
         each i,pa d.path {
         
@@ -528,7 +532,8 @@ iooia: | # F > i/o > input/output
                     p.zefault = [x];
                     input(s,p,v);
                 }
-                # return 1 to abort,
+                
+                d.keep_first and return 1
                 # but we (as eg tv) shall go on to tw and z even dups
                 # no information lost!
             };
@@ -560,9 +565,8 @@ iooia: | # F > i/o > input/output
             S = x;
         }
         
-        # x = S[p] now
-        # S[p] = v soon
-        # except if this is just another pool of stuff to add into:
+        # S[p] is now x
+        # S[p] soon gets v
         if (d.t == 'z') {
             x == null and x = S[p] = d.zefault || [];
             x.constructor != Array and throw "z broken"
@@ -580,10 +584,12 @@ iooia: | # F > i/o > input/output
             # set thing to thing
             if (x != null) {
                 # already
-                x == v and return
+                x == v and return v
                 # something else, dup returns 1 to cancel the go
-                d.dup and d.dup(x) and return
+                d.dup and d.dup(x) and return x
             }
+            # unless this i's pa is 
+            S[p] = v;
             !d.keep_first and S[p] = v;
         }
         
@@ -598,10 +604,9 @@ iooia: | # F > i/o > input/output
                 }
             }
         }
-        
-        # returns?
+        return v
     };
-    #c and return
+    #c iover
     return {F:F,i:i,o:o,input:input,output:output,parsetalk:parsetalk}
 t/iooia: |
     G&heading;
