@@ -66,7 +66,10 @@ Doming: | # in the place in the place
     1s&step ||= 1;
     # A&til stops retrying
     1s&step_tries ||= 1;
+    # S -> s -> S -> s...
     1s&osc_each_step = 1;
+    # stop loop if nothing is happening
+    #1s&osc_still_deloop = 10;
     
     # A&waitings may be full, slow cb if it is same?
     
@@ -95,12 +98,27 @@ Doming: | # in the place in the place
     #   s/\s//g instructions
     # known Jc? 
     $loop;
+    
     $call = &{
         # we still exist, this loop is the loop
         !(A.4 == G.DNS[A.4.t] && loop == 1s&loop) and return
-        # once last A:n is finished
+        
+        # extend til previous A:n is finished
         A.cv < 0.8 and ~>68 loopexp, waitcv: A.4.t, A.cv
-        A.cv < 0.8 and G&yl:time,call
+        A.cv < 0.8 and return G&yl:time,call
+        
+        # and not if no change to s for some time
+        $de = 1s&osc_still_deloop;
+        if (de && 1s&s) {
+            $times =
+            1s&osc_still_deloop_dat ||= {};
+            # these ^
+            times.s != 1s&s and times.i = 0;
+            times.s = 1s&s;
+            times.s++;
+            times.s > de and return
+        }
+        
         # get attention
         G&e,[A.1.t]
     };
