@@ -179,6 +179,105 @@ iooia: | # F > i/o > input/output
         return d
     };
     
+    #c knowables
+    $knowing = &d,v{
+        # glob tv wants to make some path
+        v ||= {t:'*',y:{cv:'*'}};
+        # a subtype, reenters at the end:
+        d.asa and $other = d; d = other.asa;
+        # types
+        d == 'tv' and d = {t:d,our:['y','tv'],path:[v.t,v.y.cv],usu:1};
+        d == 'tw' and d = {t:d,our:['y','tw'],path:[v.t],usu:1}
+        d == 'z' and d = {t:d,our:['sc','z']}
+        # sheer bunch of keys
+        d.constructor == Array and d = {path:d,usu:1}
+        
+        typeof d == 'string' and throw "intelligise", d, other
+        
+        other and ex(d,other);
+        
+        # apply the usual behaviour:
+        #  - when duplicate, overwrite
+        #    if tv, overwritings become linked lists
+        if (d.usu) {
+            if (d.t == 'tv') {
+                # when not debugging:
+                #d.also ||= ['tw','z']
+            }
+            d.dup = usu_dup;
+        }
+        return d
+    };
+    # this should be available as around or after method call..
+    # or "the usual" that the actual d.dup works with or without
+    $usu_dup = &x{
+                # can link duped things, new thing gets v.y.$to
+                # as in, newthing.y.earlier = oldthing
+                $from;
+                $to;
+                # make similar index to z to hold dupes, in order
+                # as s&z grep !in tv might reveal
+                $dupz;
+                
+                # revision of an item
+                d.t == 'tv' and from = 'later'; to = 'earlier'; dupz = 1;
+                # revision of name, moving through items
+                d.t == 'tw' and from = 'begins'; to = 'continues'; dupz = 1;
+                # stuff moves through words
+                # these schema should be drawn out
+                # become keywords to io
+                # io will just work
+                
+                if (from || to) {
+                    # which way is it going: new val stays, new val joins the queue
+                    $backwards = from && x.y[from] || d.keep_first; #]
+                    if (backwards) {
+                        !from and throw "can't go backwards with no from?"
+                        # ^ unless use in telling things that missed the spot who beat them
+                        !d.keep_first and throw "protocol changed"
+                        # we could -1 y&dup_tv index maybe?
+                        # or add y&most_$from to the end of the linked list
+                        # this should magnify into a huge democratic space for ...
+                        # space for 'space for ...'
+                        # or follow links:
+                        $X = x;
+                        # < all while loops should have some limit, spec learned
+                        #   badge earned. all code is is bestowment.
+                        $i = 100;
+                        while (X.y[from]) {
+                            i-- < 4 and throw "ixhaust"
+                            X = X.y[from];
+                        }
+                        # now last in the trail:
+                        X.y[from] = v;
+                        to and v.y[to] = X;
+                        # so tv stays something, but .y.later = v extends forever
+                    }
+                    else {
+                        from and x.y[from] = v;
+                        to and v.y[to] = x;
+                        # now tv sets us.
+                    }
+                }
+                
+                # make tv_dup, index as tv but to [] of items at the point
+                # the minter will care about such things, T clutter, minor errors, noise
+                if (dupz) {
+                    !d.our and throw "housing not given"
+                    $p = {t:'z'};
+                    p.our = d.our.slice();
+                    $gk = p.our.pop();
+                    p.our.push(gk+'_dup');
+                    p.path = d.path.slice();
+                    # dup should include the one already there
+                    p.zefault = [x];
+                    input(s,p,v);
+                }
+                
+                d.keep_first and return 1
+                # but we (as eg tv) shall go on to tw and z even dups
+                # no information lost!
+    }
     #c _o sketches use for A:o:
     # o gets you what you wanted from an intelligised pile
     #   midsection of o is the midsection of n
@@ -322,23 +421,6 @@ iooia: | # F > i/o > input/output
         throw "End"
     };
     #c output
-    $knowing = &d,v{
-        # glob tv wants to make some path
-        v ||= {t:'*',y:{cv:'*'}};
-        # a subtype, reenters at the end:
-        d.asa and $other = d; d = other.asa;
-        # types
-        d == 'tv' and d = {t:d,our:['y','tv'],path:[v.t,v.y.cv],usu:1};
-        d == 'tw' and d = {t:d,our:['y','tw'],path:[v.t],usu:1}
-        d == 'z' and d = {t:d,our:['sc','z']}
-        # sheer bunch of keys
-        d.constructor == Array and d = {path:d,usu:1}
-        
-        typeof d == 'string' and throw "intelligise", d, other
-        
-        other and $.extend(d,other);
-        return d
-    };
     $output = &s,d,v{
         d = knowing(d,v);
         # path =
@@ -481,15 +563,18 @@ iooia: | # F > i/o > input/output
     };
     
     
-    #c incput see,
+    #c input see,
     # fills in an index with a value
-    # total definition of z/tv wiring, which should be one of a few...
-    #   < index/join types curated nearby
+    # total definition of z/tv indexes, which should be one of a few...
+    # along with the z/tv positioning system, there's an element of
+    #   wiring or linked lists via y&in, y&up, y&next, y&prev,
+    #   left out for code volume
+    # < index/join types should be curated nearby
     #   proto hard-coded...
     # tv:
-    #    lots of C via tv can hold anything, just stretched out.
+    #    lots of C via tvs can hold anything, just stretched out.
     #      maybe if you're database you want to know things.
-    #    < in exact mode should keep z sorted
+    #    < in exact mode should keep z sorted,  overwrite tv
     #    < in soft mode should not overwrite (el=1)
     #    
     # non-tv index/join types:
@@ -514,85 +599,7 @@ iooia: | # F > i/o > input/output
         
         # now 3 deals with what really shall be and how we shall create it
         
-        # apply the usual behaviour:
-        #  - when duplicate, overwrite
-        #    if tv, overwritings become linked lists
-        if (d.usu) {
-            if (d.t == 'tv') {
-                # when not debugging:
-                #d.also ||= ['tw','z']
-            }
-            # this should be available as around or after method call..
-            # or "the usual" that the actual d.dup works with or without
-            d.dup = &x{
-                # link duped things, new thing gets v.y.$to
-                $from;
-                $to;
-                # make similar index to z to hold dupes, in order
-                # as s&z grep !in tv might reveal
-                $dupz;
-                
-                # revision of an item
-                d.t == 'tv' and from = 'later'; to = 'earlier'; dupz = 1;
-                # revision of name, moving through items
-                d.t == 'tw' and from = 'begins'; to = 'continues'; dupz = 1;
-                # stuff moves through words
-                # these schema should be drawn out
-                # become keywords to io
-                # io will just work
-                
-                if (from || to) {
-                    # which way is it going: new val stays, new val joins the queue
-                    $backwards = from && x.y[from] || d.keep_first; #]
-                    if (backwards) {
-                        !from and throw "can't go backwards with no from?"
-                        # ^ unless use in telling things that missed the spot who beat them
-                        !d.keep_first and throw "protocol changed"
-                        # we could -1 y&dup_tv index maybe?
-                        # or add y&most_$from to the end of the linked list
-                        # this should magnify into a huge democratic space for ...
-                        # space for 'space for ...'
-                        # or follow links:
-                        $X = x;
-                        # < all while loops should have some limit, spec learned
-                        #   badge earned. all code is is bestowment.
-                        $i = 100;
-                        while (X.y[from]) {
-                            i-- < 4 and throw "ixhaust"
-                            X = X.y[from];
-                        }
-                        # now last in the trail:
-                        X.y[from] = v;
-                        to and v.y[to] = X;
-                        # so tv stays something, but .y.later = v extends forever
-                    }
-                    else {
-                        from and x.y[from] = v;
-                        to and v.y[to] = x;
-                        # now tv sets us.
-                    }
-                }
-                
-                # make tv_dup, index as tv but to [] of items at the point
-                # the minter will care about such things, T clutter, minor errors, noise
-                if (dupz) {
-                    !d.our and throw "housing not given"
-                    $p = {t:'z'};
-                    p.our = d.our.slice();
-                    $gk = p.our.pop();
-                    p.our.push(gk+'_dup');
-                    p.path = d.path.slice();
-                    # dup should include the one already there
-                    p.zefault = [x];
-                    input(s,p,v);
-                }
-                
-                d.keep_first and return 1
-                # but we (as eg tv) shall go on to tw and z even dups
-                # no information lost!
-            };
-        }
-        #c climb container different? may A?
+        # climb container different? may A?
         # section of o, defined into several places... houses
         # this is the most high speed bit, copying bunches of C,
         # with a little lingeme sensitivity loaded in on the d,
@@ -769,7 +776,6 @@ t/iooia: |
     
     $N = M.slice();
     n M -fod $s:N %hue:160deg
-    
     
 Duning: | # avalanche of activatuio
     # S as steps of transformations, some linear?
