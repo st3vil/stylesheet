@@ -203,6 +203,51 @@ JaBabz: | # make hutscript javascript
     c&s =~ s/\bC&(\w+)\b/C\.sc\.$1/g;
     c&s =~ s/\bc&(\w+)\b/C\.c\.$1/g;
     
+    # 
+    #c io
+    #
+    my $varguessbab = &t,s{ #}}
+        my $talk = $s;
+        # line = 'i '+s
+        my $h = {vars=>[],arks=>[]};
+        while ($s =~ s/^(\S+)\s*//) {
+            my $path = [split '/', $1];
+            for (@$path) {
+                my $pa = {};
+                # returning
+                pa.ark = $1 || 1 if s/:(\w*)$//;
+                # parameters in
+                pa.isvar = 1 if s/^#//;
+                pa.isvar = 1 if s/^\$//;
+                pa.t = $_;
+                pa.isvar && push @{h.vars}, pa.t;
+                pa.ark && push @{h.arks}, pa.ark;
+            }
+        }
+        each tin $h {
+            $n =~ /\W+/ && die "wobbyly $t varnameinterpretation: $n", $s;
+        }}
+        my $cod = [];
+        if (@{h.arks} == 1) {
+            push @$cod, 'var '.h.arks[0].' = ';
+            h.arks = [];
+        }
+        push @$cod, 'var ar = ' if @{h.arks};
+        
+        (my $vus = sjson([$talk])) =~ s/^\[|\]$//g;
+        push @$cod, "io\.$t($vus,[";
+        
+        push @$cod, join ',', @{h.vars} if @{h.vars};
+        
+        push @$cod, ']);';
+        push @$cod, ' var '.$_.' = ar.'.$_.';' for @{h.arks};
+        $cod = join '', @$cod;
+        #push @$ta, [$talk,$cod];
+        return $cod
+    };
+    c&s =~ s{(^\s*|return )(i|o) ([\w\$\#]+[^\n]*[^\n;]+)$}{ "$1 ".$varguessbab->($2,$3) }smeg;
+     
+        
     #c each
             # each etc $data {    into:
             # while (my ($e,$tv) = each %$data) {
@@ -303,6 +348,11 @@ JaBabz: | # make hutscript javascript
     #   and c $s:object,$up:ob will make json (wrapped with {})
     #   greediness of c/sc regarding % needs tuning
     #     be nice to have spaces in c, editor could easily step over all this
+    # < C like this, but fits after { or =
+    # < n:r yabbada to $r = G&n,['yabbada','W']
+    #   viz. this Babz decides when [t] means cW:t
+    #   and sets a variable to the C created
+    # also u:thing so that $thing becomes that object in the mind
     my $blankycsc = '"",{},{}';
     c&s =~ s{(^\s*|return )(n|u|m|e) (\$)?("[^\n"]+"|\w+\S*)(?: (\$)?([-\w]*))?(?: ([^\n]*?))?(?: (%)?([^\n]*?))?$}{
         my $ope = $1;
@@ -505,6 +555,13 @@ jst: | # test js babbler
         if (k == 'rc&M') { # changes everywhere?
         S as last $N
             d.dup and d.dup(x) and return
+        i latiurau/$d
+        o latic:yon/$d/*:mil/#lala:gl
+        =pod
+
+        wanga
+
+        =cut
     
     
     # too far away:
@@ -622,6 +679,11 @@ jst: | # test js babbler
                     return
                 }
             }
+         io.i("latiurau/$d",[d]);
+         var ar = io.o("latic:yon/$d/*:mil/#lala:gl",[d,lala]); var yon = ar.yon; var mil = ar.mil; var gl = ar.gl;
+        // 
+        // 
+        // wanga
         }
         
     
