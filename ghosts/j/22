@@ -359,6 +359,7 @@ iooia: | # F > i/o > input/output
                 # starts - rows = [[r]]
                 !p.found and throw "no row or found"
                 p.rows = p.found.map(&s{ return [s] });
+                p.nz = p.found.slice();
             }
             # adds column + may multiply rows
             else
@@ -366,6 +367,7 @@ iooia: | # F > i/o > input/output
                 # empty - full of null
                 p.row.push(null);
                 p.rows = [p.row];
+                # p.nz shapely enough to nothing when nothing
             }
             else {
                 # new column of many - duplicate this row out
@@ -374,8 +376,10 @@ iooia: | # F > i/o > input/output
                     ro.push(s);
                     return ro
                 });
+                # q.nz absorbs inners after loop
+                p.nz = p.found.slice();
             }
-            
+            delete p.nz;
             
             
             # rows grow to the right
@@ -384,8 +388,9 @@ iooia: | # F > i/o > input/output
             if (more) {
                 $rows = [];
                 each i,row p.rows {
-                    $r = col(p,{row:row});
+                    $b = col(p,{row:row});
                     
+                    $r = b.rows;
                     !r and throw "rowing nothing"
                     # keeps pushing null once lost
                     !r.length and throw "not one row"
@@ -394,9 +399,10 @@ iooia: | # F > i/o > input/output
                 p.rows = rows;
             }
             
-            return p.rows
+            return p
         };
-        $rows = col();
+        $p = col();
+        $rows = p.rows;
         # reduce or sprout iterator
         # rows multiply as deeper atoms many
         # - [r,1,1a]
