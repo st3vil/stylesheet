@@ -389,6 +389,14 @@ iooia: | # F > i/o > input/output
                 each i,row p.rows {
                     $b = col(p,{row:row});
                     
+                    if (b.nz) {
+                        # ...s... -> ...s, [s's many]...
+                        $s = row.slice(-1)[0];
+                        $i = p.nz.indexOf(s);
+                        i < 0 and throw "manying row[-1] not in p.nz", s, p.nz
+                        p.nz.splice(i+1,0,b.nz);
+                    }
+                    
                     $r = b.rows;
                     !r and throw "rowing nothing"
                     # keeps pushing null once lost
