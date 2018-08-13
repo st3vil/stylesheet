@@ -110,6 +110,9 @@ iooia: | # F > i/o > input/output
         # Babz shall do params, see 'compile time' ^
         d.path = []; # pa+
         while (p(/^(\S+)\s*/)) {
+            # < '{}:m' -> params contains a &acgts{ map/grep/sort }
+            #   with implicit return lastline
+            #   whose value becomes a column
             $path = m[0].split('/');
             $outer = parse;
             each in path {
@@ -171,11 +174,6 @@ iooia: | # F > i/o > input/output
         }
         
         params.length and throw "Too many params", params
-        # maps, greps, sorts
-        
-        # so now we have a path:
-        # i: make it so
-        # o: read it out
         return d
     };
     
@@ -321,6 +319,10 @@ iooia: | # F > i/o > input/output
                     !pa.v and throw "nofirst"
                     # begins space
                     p.found = [pa.v];
+                    if (d.path.length == 1) {
+                        # o $thing implies o $thing/*
+                        d.path.push({t:'*',glob:1});
+                    }
                 }
             }
             else {
@@ -358,11 +360,8 @@ iooia: | # F > i/o > input/output
                 # starts - rows = [[r]]
                 !p.found and throw "no row or found"
                 p.rows = p.found.map(&s{ return [s] });
-                # then forever more:
-                #   rows appended to multiplicitly to the right
-                #   cols added to for q.cols
             }
-            # adds column + some number of rows...
+            # adds column + may multiply rows
             else
             if (!p.found.length) {
                 # empty - full of null
