@@ -418,8 +418,8 @@ iooia: | # F > i/o > input/output
         # - [r.2,null]
         # - [r,3,3a]
         # or a mirror C set, like G&ind does
-        # and/or ind-like N, maybe ioN goes:
-        #   [r,[1,[1a,1b],2,3,[3a]]
+        # and/or ind-like N, p.nz goes:
+        #   [r,[1,[1a,1b],2,3,[3a]]]
         # deepest atoms for starters:
         
         $last_column = rows.map(&row{ return row.slice(-1)[0] })
@@ -688,22 +688,77 @@ iooia: | # F > i/o > input/output
     };
     
     #c io.nz
-    # converts to iteration, or so
+    # converts p.rows to iteration or whatever
     $nz = &d{
         d ||= T.o;
         !d and throw "Can't find osel"
-        !d.p.nz and throw "o p no nz";
-        # d.path
+        # takes over from o
+        $t = ex({},d);
         
-        $t = {};
-        t.d = d;
+        # name columns
+        t.arks = {};
+        each i,pa d.path {
+            pa.ark and t.arks[i] = pa.ark
+        }
+        # arks ||= {-1:s}
+        # < Babz S io must know this
+        if (!Object.keys(t.arks).length)
+            t.arks[t.path.length - 1] = 's';
+        
         t.i = 0;
-        t.path = d.path;
-        t.nz = d.p.nz;
+        # iterate per row
         t.more = &{
-            # but returns {ar}?
-            return t.nz[t.i++]
+            $ar = {};
+            while (1) {
+                t.row = t.p.rows[t.i++];
+                !t.row and return
+                # only for complete rows
+                !t.partial && t.row.slice(-1)[0] == null and continue
+                break
+            }
+            each ik t.arks {
+                ar[k] = t.row[i];
+            }
+            # single value
+            if (Object.keys(t.arks).length == 1)
+                return ar[k]
+            # hash of values
+            return ar
         };
+        # do callback per item, with depth...
+        t.ind = &cb{
+            debugger;
+            t.indstr ||= '  ';
+            # recurse into p.nz?
+            # < just like the idea of nz apparently,
+            $la = [];
+            $N = [];
+            each i,row t.p.rows {
+                t.row = row;
+                # only for parents with children
+                !t.partial && t.row.slice(-1)[0] == null and continue
+                each dv row {
+                    v == null and continue
+                    # same as last row, still at depth
+                    la[d] == v and continue
+                    t.d = d;
+                    $s = cb(v,t);
+                    s == null and continue;
+                    if (typeof s == 'string') {
+                        $ind = '';
+                        each id,v row {
+                            id == d and break
+                            ind += t.indstr
+                        }
+                        s = ind+s
+                    }
+                    N.push(s);
+                }
+                la = row;
+            }
+            return N
+        }
+        
         return t;
     };
     
@@ -838,6 +893,11 @@ t/iooia: |
     # and thus... get its nz
     
     $t = io.nz();
+    $ar;
+    #debugger;
+    while (ar = t.more()) {
+        m calledit  $s:ar,dl:3
+    }
     m iterator  $s:t,d:8.22 %fs:120%
     
     $n = G&Cye,['upsulat','1',{s:'gakl'}];
@@ -847,11 +907,11 @@ t/iooia: |
     #c Monday
     =Monday' for all of them together:
     
+      mere exercise
       nz - nz=[(C,nz?)*]
         array-indented C, as a format to build like d.rows
-    <   or having the p instead, being our grasp on the C
-          p should be C, c&s = C/target.
-          y-er them up according to the new gravity cast on it.
+        just like the idea, no immediate use.
+        why make data look more like indented Lines?
       
       io.nz - convert it to whatever,
           esp [A,B,C]+, so :arks can be mapped on
@@ -859,6 +919,7 @@ t/iooia: |
         G&ind used to do N=[(C|s)+],
           adding indent if returning strings
     
+    Join i-o:
       T.o - last i/o`s iterator state
         to join an i from an o 
         use it somehow?
@@ -866,10 +927,19 @@ t/iooia: |
             S o $thing/*
         ...doesnt
             o $thing
-        imply $thing/*?
-        shall s be the default ark?
+        imply $thing/*
+        s be the default ark
         
-        aslo:
+      
+      i for o implies:
+        for the last column returned:
+          an extra step in the path 
+        else
+          the vars coming from o can be used in the i:
+             as @whur or @lamb below:
+      
+      Functions:
+        also:
             i $d/@whur/@lamb { s&fat && "laughter" }:whur o $lambs/*
         which:
           greps (by default?) and assigns value to whur
@@ -879,14 +949,6 @@ t/iooia: |
         if no :arks in an i, uses last column,
         :whur ends up on the i tuple (nz?)
           
-      
-      i for o implies:
-        for the last column returned:
-          an extra step in the path 
-        else
-          the vars coming from o are used in the i:
-             as @whur or @lamb above
-      
       
       and i`s usual singularity is now a multitude,
       should be iterator source as well, for the inserted things
@@ -920,7 +982,14 @@ t/iooia: |
       
       other stuff:
         function for #things spacer creation...
+          is really mutating an object,
+            creating a pointer to the origin
           could make loose matches too...
+      
+        p should be C, c&s = C/target, etc
+        p being our grasp on the C got
+          they offer an alternative positioning system,
+            according to the new gravity cast on it.
       
       
       other stuff:
@@ -962,6 +1031,10 @@ t/iooia: |
     
     
     S 7 strange formats
+    
+    m todo  s:todo
+    
+    S 8 functions
     
     m todo  s:todo
     
