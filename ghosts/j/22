@@ -426,7 +426,7 @@ iooia: | # F > i/o > input/output
             .filter(&s{ return s });
 
         A.debug and debugger;
-        
+        T.o = d;
         return last_column;
         # < ark, setup iterator
         throw "End"
@@ -686,8 +686,30 @@ iooia: | # F > i/o > input/output
         }
         return v
     };
+    
+    #c io.nz
+    # converts to iteration, or so
+    $nz = &d{
+        d ||= T.o;
+        !d and throw "Can't find osel"
+        !d.p.nz and throw "o p no nz";
+        # d.path
+        
+        $t = {};
+        t.d = d;
+        t.i = 0;
+        t.path = d.path;
+        t.nz = d.p.nz;
+        t.more = &{
+            # but returns {ar}?
+            return t.nz[t.i++]
+        };
+        return t;
+    };
+    
+    
     #c iover
-    return {F:F,i:i,o:o,input:input,output:output,parsetalk:parsetalk}
+    return {F:F,i:i,o:o,input:input,output:output,parsetalk:parsetalk,nz:nz}
 t/iooia: |
     G&heading;
     $io = G&way,'iooia';
@@ -815,6 +837,8 @@ t/iooia: |
     a('o','$d/*/*',[d],1);
     # and thus... get its nz
     
+    $t = io.nz();
+    m iterator  $s:t %fs:120%
     
     $n = G&Cye,['upsulat','1',{s:'gakl'}];
     i $n:an o $d/*
@@ -824,17 +848,17 @@ t/iooia: |
     
       nz - nz=[(C,nz?)*]
         array-indented C, as a format to build like d.rows
-        or having the p instead, being our grasp on the C
+    <   or having the p instead, being our grasp on the C
           p should be C, c&s = C/target.
           y-er them up according to the new gravity cast on it.
       
-      inz - convert it to whatever,
+      io.nz - convert it to whatever,
           esp [A,B,C]+, so :arks can be mapped on
         even [C+] and [p+], for the last column
         G&ind used to do N=[(C|s)+],
           adding indent if returning strings
     
-      T.at - last i/o`s iterator state
+      T.o - last i/o`s iterator state
         to join an i from an o 
         use it somehow?
         so S can Duning with it:
@@ -872,7 +896,7 @@ t/iooia: |
         turns into iterator... hmm
         we could ask for an iterator:
           it flows $W $i
-        T.at should link each other,
+        T.o should link each other,
         so the right bunch of variables can be found
         
         and do we think we are done when:
@@ -885,7 +909,7 @@ t/iooia: |
           async or so should persist until it has really done that thing
         
         but basically, get an iterator object
-        for the last T.at
+        for the last T.o
         put it in a while loop yourself
         or use Duning S most of the time
       
