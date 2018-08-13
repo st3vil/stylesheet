@@ -309,20 +309,19 @@ iooia: | # F > i/o > input/output
             if (!q) {
                 p.i > 0 and throw "no q, notfirst"
                 if (pa.glob || pa.spacer) {
-                    # has an implied starting point
-                    p.i--;
+                    # implies
                     !A.r and throw "unreal beginning, no Ar"
-                    d.shiftzero = 1;
-                    p.found = [A.r];
+                    # < may refer to a 1s&word? 
+                    $pa = {t:'start',implicit:1,v:A.r};
+                    d.path.unshift(pa);
+                    # should leave out of rows, being implied
                 }
-                else {
-                    !pa.v and throw "nofirst"
-                    # begins space
-                    p.found = [pa.v];
-                    if (d.path.length == 1) {
-                        # o $thing implies o $thing/*
-                        d.path.push({t:'*',glob:1});
-                    }
+                !pa.v and throw "nofirst"
+                # begins space
+                p.found = [pa.v];
+                if (d.path.length == 1) {
+                    # o $thing implies o $thing/*
+                    d.path.push({t:'*',glob:1});
                 }
             }
             else {
@@ -408,9 +407,6 @@ iooia: | # F > i/o > input/output
         # and/or ind-like N, maybe ioN goes:
         #   [r,[1,[1a,1b],2,3,[3a]]
         # deepest atoms for starters:
-        
-        # take off columns not in the formula (A.r)
-        d.shiftzero and rows.map(&row{ row.shift() });
         
         $last_column = rows.map(&row{ return row.slice(-1)[0] })
             .filter(&s{ return s });
@@ -521,18 +517,23 @@ iooia: | # F > i/o > input/output
         # 
         $row; # see 'crazy'
         # row may > path?
-        each i,pa d.path {
-            if (i == 0) {
+        # path should grow with it,
+        #   unless they're really wandery globs, then you'd know...
+        $i = 0;
+        while (d.path[i]) {
+            $pa = d.path[i];
+            if (i++ == 0) {
                 !pa.v and throw "null beginning"
                 if (pa.spacer) {
+                    # implies
                     !A.r and throw "unreal beginning, no Ar"
-                    d.shiftzero = 1;
-                    row = [A.r]
+                    # < may refer to a 1s&word? 
+                    $pa = {t:'start',implicit:1,v:A.r};
+                    d.path.unshift(pa);
+                    # should leave out of rows, being implied
                 }
-                else {
-                    row = [pa.v]
-                    continue
-                }
+                row = [pa.v];
+                continue
             }
             # formulate output()
             $D = {asa:'tv'};
@@ -550,11 +551,13 @@ iooia: | # F > i/o > input/output
             # what should be:
             $v = pa.v;
             !v and throw "input null?"
+            
             $r = input(s,D,v);
+            
             row.push(r);
         }
         # take off things not in the formula (A.r)
-        d.shiftzero and row.shift();
+        
         # have to return singularly?
         A.debug and debugger;
         return row.slice(-1)[0];
