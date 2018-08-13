@@ -170,7 +170,7 @@ iooia: | # F > i/o > input/output
         
         if (d.fromo) {
             # parse that talk too, to use up params
-            d.oach = parsetalk(d.fromo,params);
+            d.plumb = parsetalk(d.fromo,params);
         }
         
         params.length and throw "Too many params", params
@@ -276,30 +276,25 @@ iooia: | # F > i/o > input/output
                 # but we (as eg tv) shall go on to tw and z even dups
                 # no information lost!
     }
-    #c _o sketches use for A:o:
-    # o gets you what you wanted from an intelligised pile
-    #   midsection of o is the midsection of n
-    #  S titles can use this to define iterators
-    # operation of returning results from traversal,
-    #   or advancing the A:o of the C, as in dome calmness check
-    
-    # o may ventually look like n,
-    #   and n may eventually have blockquotes hanging on after it,
-    #   even T things, grabbing whatever on/over/into Aing thereinout
-    
-    # hmmm. music collection will be lived by o,
-    # QMS would be in a quarantine
-    
-    # there must be more
-    # the o d will be... more infinite
-    #   particularly grep/sort/map
-    #  tal being apply
-    # lingo shape glue session
-    $o = &talk,params,d{
+
+    #c rowing: travel d.path for i/o hooks
+    $rowing = &talk,params,d,h{
+        # reduce or sprout iterator
+        # rows multiply as deeper atoms many
+        # - [r,1,1a]
+        # - [r,1,1b]
+        # - [r.2,null]
+        # - [r,3,3a]
+        # < or a mirror C set, like G&ind/G&o does
+        # < find us for ind-like N, p.nz goes:
+        #   [r,[1,[1a,1b],2,3,[3a]]]
+        # < talk could be d already, if compiling enough
         d ||= {};
         parsetalk(talk,params,d);
         !d.path and throw "no path"
         
+        h.first ||= &{};
+        h.found ||= &{};
         $col = &q,p{
             p ||= {};
             p.i ||= q ? q.i+1 : 0;
@@ -307,22 +302,8 @@ iooia: | # F > i/o > input/output
             !pa and throw "No pattern!: "+p.i
             
             if (!q) {
-                p.i > 0 and throw "no q, notfirst"
-                if (pa.glob || pa.spacer) {
-                    # implies
-                    !A.r and throw "unreal beginning, no Ar"
-                    # < may refer to a 1s&word? 
-                    $pa = {t:'start',implicit:1,v:A.r};
-                    d.path.unshift(pa);
-                    # should leave out of rows, being implied
-                }
-                !pa.v and throw "nofirst"
-                # begins space
-                p.found = [pa.v];
-                if (d.path.length == 1) {
-                    # o $thing implies o $thing/*
-                    d.path.push({t:'*',glob:1});
-                }
+                h.first(d,p,pa);
+                p.found ||= [pa.v];
             }
             else {
                 p.up = q;
@@ -343,16 +324,15 @@ iooia: | # F > i/o > input/output
                     # via
                     $D = {asa:'tv'};
                     # to diversify...
-                    pa.glob and D.meta = ['*','*'];
+                    pa.glob and D.meta = ['*','*']; d.sok=0;
                     else
                     !v and throw "null pav?"
                     
-                    # 6, only the last column
-                    p.found = output(s,D,v);
+                    # make more rows
+                    h.found(d,p,pa,s,D,v);
                 }
             }
             
-            #c and so we can perceive incomplete rows
             # merge onto every row - after return/in more loop?
             
             if (!p.row) {
@@ -380,56 +360,92 @@ iooia: | # F > i/o > input/output
                 p.nz = p.found.slice();
             }
             
-            
             # rows grow to the right
-            # < go width first
-            $more = d.path[p.i+1];
-            if (more) {
-                $rows = [];
-                each i,row p.rows {
-                    $b = col(p,{row:row});
+            # < go width first? ps&z
+            
+            !d.path[p.i+1] and return p
+            
+            # an expanding map
+            $rows = [];
+            each i,row p.rows {
+                $b = col(p,{row:row});
                     
-                    if (b.nz) {
-                        # ...s... -> ...s, [s's many]...
-                        $s = row.slice(-1)[0];
-                        $i = p.nz.indexOf(s);
-                        i < 0 and throw "manying row[-1] not in p.nz", s, p.nz
-                        p.nz.splice(i+1,0,b.nz);
-                    }
-                    
-                    $r = b.rows;
-                    !r and throw "rowing nothing"
-                    # keeps pushing null once lost
-                    !r.length and throw "not one row"
-                    r.map(&ro{ rows.push(ro) })
+                if (b.nz) {
+                    # ...s... -> ...s, [s's many]...
+                    $s = row.slice(-1)[0];
+                    $i = p.nz.indexOf(s);
+                    i < 0 and throw "manying row[-1] not in p.nz", s, p.nz
+                    p.nz.splice(i+1,0,b.nz);
                 }
-                p.rows = rows;
+                
+                $r = b.rows;
+                !r and throw "rowing nothing"
+                # keeps pushing null once lost
+                !r.length and throw "not one row"
+                r.map(&ro{ rows.push(ro) })
             }
+            p.rows = rows;
             
             return p
         };
-        $p = col();
-        d.p = p;
-        $rows = p.rows;
-        # reduce or sprout iterator
-        # rows multiply as deeper atoms many
-        # - [r,1,1a]
-        # - [r,1,1b]
-        # - [r.2,null]
-        # - [r,3,3a]
-        # or a mirror C set, like G&ind does
-        # and/or ind-like N, p.nz goes:
-        #   [r,[1,[1a,1b],2,3,[3a]]]
-        # deepest atoms for starters:
+        $p = d.p = col();
+        T.o = d;
         
-        $last_column = rows.map(&row{ return row.slice(-1)[0] })
+        # deepest atoms:
+        $rows = p.rows;
+        $ss = rows.map(&row{ return row.slice(-1)[0] })
             .filter(&s{ return s });
 
-        A.debug and debugger;
-        T.o = d;
-        return last_column;
-        # < ark, setup iterator
-        throw "End"
+        A.debug and debugger
+        d.sok && ss.length == 1 and return ss[0]
+        return ss
+    };
+    
+    #c _o sketches use for A:o:
+    # o gets you what you wanted from an intelligised pile
+    #   midsection of o is the midsection of n
+    #  S titles can use this to define iterators
+    # operation of returning results from traversal,
+    #   or advancing the A:o of the C, as in dome calmness check
+    
+    # o may ventually look like n,
+    #   and n may eventually have blockquotes hanging on after it,
+    #   even T things, grabbing whatever on/over/into Aing thereinout
+    
+    # hmmm. music collection will be lived by o,
+    # QMS would be in a quarantine
+    
+
+    # there must be more
+    # the o d will be... more infinite
+    #   particularly grep/sort/map
+    #  tal being apply
+    # lingo shape glue session
+    $o = &talk,params,d{
+        return rowing(talk,params,d,{
+            first: &d,p,pa{
+                p.i > 0 and throw "no q, notfirst"
+                if (pa.glob || pa.spacer) {
+                    # implies
+                    !A.r and throw "unreal beginning, no Ar"
+                    # < may refer to a 1s&word? 
+                    $pa = {t:'start',implicit:1,v:A.r};
+                    d.path.unshift(pa);
+                    # should leave out of rows, being implied
+                }
+                !pa.v and throw "nofirst"
+                # begins space
+                p.found = [pa.v];
+                if (d.path.length == 1) {
+                    # o $thing implies o $thing/*
+                    d.path.push({t:'*',glob:1});
+                }
+            },
+            found: &d,p,pa,s,D,v{
+                # 6, only the last column
+                p.found = output(s,D,v);
+            },
+        })
     };
     #c output
     $output = &s,d,v{
@@ -508,7 +524,6 @@ iooia: | # F > i/o > input/output
     
     #c i_ somewhere someway somestuff
     # the dot of the i is somestuff, index the space, trunk way etc.
-    
     # shall we use a talky Babz'd params-implied-by-$ thing?
     # or just put thing on thing arguments?
     $i = &talk,params,d{
@@ -566,7 +581,7 @@ iooia: | # F > i/o > input/output
             !s and row.push(null); continue;
             # what should be:
             $v = pa.v;
-            !v and throw "input null?"
+            !v and throw "input null to delete?"
             
             $r = input(s,D,v);
             
@@ -676,9 +691,7 @@ iooia: | # F > i/o > input/output
         # multiple angles of have
         if (d.also) {
             each in d.also {
-                n == 'tw' and input(s,'tw',v)
-                else
-                n == 'z' and input(s,'z',v)
+                typeof n == 'string' and input(s,n,v)
                 else {
                     throw "What else", n
                 }
@@ -691,7 +704,7 @@ iooia: | # F > i/o > input/output
     # converts p.rows to iteration or whatever
     $nz = &d{
         d ||= T.o;
-        !d and throw "Can't find osel"
+        !d and throw "Can't find T.o"
         # takes over from o
         $t = ex({},d);
         
@@ -1340,9 +1353,9 @@ pi/fod: | # a js J, shows a J-shaped bit of data, to aspect serialising change
             m psomething -fod $s:s,d:3,dl:7
         }
     }
-    if (es.oach) {
-        $p = es.oach;
-        delete es.oach;
+    if (es.plumb) {
+        $p = es.plumb;
+        delete es.plumb;
         m oach -fod $s:p,d:3,dl:7
     }
     
