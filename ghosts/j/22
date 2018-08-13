@@ -103,7 +103,7 @@ iooia: | # F > i/o > input/output
         d ||= {};
         parse = talk;
         # do i ... for o ...
-        p(/ o (.+)$/) and d.fromo = m[0]
+        p(/ o (.+)$/) and d.plumb = m[0]
         # absorb the o lop ^
         talk = parse; 
         
@@ -168,10 +168,8 @@ iooia: | # F > i/o > input/output
         }
         parse and throw "Unparsed", parse
         
-        if (d.fromo) {
-            # parse that talk too, to use up params
-            d.plumb = parsetalk(d.fromo,params);
-        }
+        # others, use up params
+        d.plumb and d.plumb = parsetalk(d.plumb,params)
         
         params.length and throw "Too many params", params
         return d
@@ -208,7 +206,7 @@ iooia: | # F > i/o > input/output
     };
     # this should be available as around or after method call..
     # or "the usual" that the actual d.dup works with or without
-    $usu_dup = &x{
+    $usu_dup = &d,x,v{
                 # can link duped things, new thing gets v.y.$to
                 # as in, newthing.y.earlier = oldthing
                 $from;
@@ -276,7 +274,6 @@ iooia: | # F > i/o > input/output
                 # but we (as eg tv) shall go on to tw and z even dups
                 # no information lost!
     }
-
     #c rowing: travel d.path for i/o hooks
     $rowing = &talk,params,d,h{
         # reduce or sprout iterator
@@ -293,6 +290,7 @@ iooia: | # F > i/o > input/output
         parsetalk(talk,params,d);
         !d.path and throw "no path"
         
+        h.returns and d.sok = 1
         h.first ||= &{};
         h.found ||= &{};
         $col = &q,p{
@@ -302,6 +300,17 @@ iooia: | # F > i/o > input/output
             !pa and throw "No pattern!: "+p.i
             
             if (!q) {
+                p.i > 0 and throw "no q, notfirst"
+                if (pa.glob || pa.spacer) {
+                    # implies
+                    !A.r and throw "unreal beginning, no Ar"
+                    # < may refer to a 1s&word? 
+                    pa = {t:'start',implicit:1,v:A.r};
+                    d.path.unshift(pa);
+                    # should leave out of rows, being implied
+                }
+                !pa.v and throw "nofirst"
+                
                 h.first(d,p,pa);
                 p.found ||= [pa.v];
             }
@@ -321,9 +330,10 @@ iooia: | # F > i/o > input/output
                     # what should be:
                     $v = pa.v;
 
-                    # via
+                    # to the bits
                     $D = {asa:'tv'};
                     # to diversify...
+                    pa.spacer and D.spacer = 1;
                     pa.glob and D.meta = ['*','*']; d.sok=0;
                     else
                     !v and throw "null pav?"
@@ -333,7 +343,7 @@ iooia: | # F > i/o > input/output
                 }
             }
             
-            # merge onto every row - after return/in more loop?
+            #c merge onto every row - after return/in more loop?
             
             if (!p.row) {
                 # starts - rows = [[r]]
@@ -397,7 +407,8 @@ iooia: | # F > i/o > input/output
             .filter(&s{ return s });
 
         A.debug and debugger
-        d.sok && ss.length == 1 and return ss[0]
+        d.sok && ss.length <= 1 and return ss[0]
+        h.returns and debugger; #throw "Wanted to return s",ss,d
         return ss
     };
     
@@ -424,18 +435,7 @@ iooia: | # F > i/o > input/output
     $o = &talk,params,d{
         return rowing(talk,params,d,{
             first: &d,p,pa{
-                p.i > 0 and throw "no q, notfirst"
-                if (pa.glob || pa.spacer) {
-                    # implies
-                    !A.r and throw "unreal beginning, no Ar"
-                    # < may refer to a 1s&word? 
-                    $pa = {t:'start',implicit:1,v:A.r};
-                    d.path.unshift(pa);
-                    # should leave out of rows, being implied
-                }
                 !pa.v and throw "nofirst"
-                # begins space
-                p.found = [pa.v];
                 if (d.path.length == 1) {
                     # o $thing implies o $thing/*
                     d.path.push({t:'*',glob:1});
@@ -514,7 +514,6 @@ iooia: | # F > i/o > input/output
             i++;
         }
         # take off columns not in the formula (A.r)
-        d.shiftzero and d.rows.map(&row{ row.shift() });
         
         $last_column = d.rows
             .map(&row{ return row.slice(-1)[0] })
@@ -527,10 +526,6 @@ iooia: | # F > i/o > input/output
     # shall we use a talky Babz'd params-implied-by-$ thing?
     # or just put thing on thing arguments?
     $i = &talk,params,d{
-        d ||= {};
-        parsetalk(talk,params,d);
-        !d.path and throw "no path"
-        
         # talk:
         #   'universal keyworded-by $thing'
         # find these things... barewords we have around?
@@ -550,49 +545,22 @@ iooia: | # F > i/o > input/output
         # row may > path?
         # path should grow with it,
         #   unless they're really wandery globs, then you'd know...
-        $i = 0;
-        while (d.path[i]) {
-            $pa = d.path[i];
-            if (i++ == 0) {
-                !pa.v and throw "null beginning"
-                if (pa.spacer) {
-                    # implies
-                    !A.r and throw "unreal beginning, no Ar"
-                    # < may refer to a 1s&word? 
-                    $pa = {t:'start',implicit:1,v:A.r};
-                    d.path.unshift(pa);
-                    # should leave out of rows, being implied
-                }
-                row = [pa.v];
-                continue
-            }
-            # formulate output()
-            $D = {asa:'tv'};
-            
-            # when v is mere space identity, use what is found
-            pa.spacer and D.spacer = 1
-            # and when should existing objects be replaced,
-            #   but indexes copied to the new one?
-            #   seems like s's buzz.
-            
-            # what is - may be longer than path
-            $s = row.slice(-1)[0];
-            !s and throw "null step?"
-            !s and row.push(null); continue;
-            # what should be:
-            $v = pa.v;
-            !v and throw "input null to delete?"
-            
-            $r = input(s,D,v);
-            
-            row.push(r);
-        }
-        # take off things not in the formula (A.r)
         
-        # have to return singularly?
-        A.debug and debugger;
-        return row.slice(-1)[0];
-        # < ark
+        
+        return rowing(talk,params,d,{
+            found: &d,p,pa,s,D,v{
+                # what should be
+                # space to it gets filled in with hash
+                # and when should existing objects be replaced,
+                #   but indexes etc copied to the new one?
+                #   upstream changes joining local modulation
+                #   seems like s's buzz.
+                
+                # < input null to delete?
+                p.found = [input(s,D,v)]
+            },
+            returns: 1
+        })
     };
     
     
@@ -680,10 +648,11 @@ iooia: | # F > i/o > input/output
         }
         else {
             # set thing to thing
+            A.debug and debugger;
             if (x != null) {
                 # already, noop?
                 d.spacer || x == v and return x
-                d.dup && d.dup(x) and return x
+                d.dup && d.dup(d,x,v) and return x
             }
             S[p] = v;
         }
@@ -833,8 +802,9 @@ t/iooia: |
     $iw = a('i','w:r/#w:t','weeee');
     
     $aw = a('o','w/*:w');
-    
+    #A.debug = 1;
     $iw = a('i','w:r/#w:t','walso');
+    #A.debug = 0;
     $aw = a('o','w/*:w');
     
     #A.debug = 1;
