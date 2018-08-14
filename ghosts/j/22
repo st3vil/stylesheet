@@ -127,7 +127,7 @@ iooia: | # F > i/o > input/output
                 p(/:(\w*)$/) and pa.ark = m[0] || 1
                 # and use each of them
                 p(/^@/) and pa.sark = 1
-                # can be i $i/@#dee o $o/*:dee
+                # can be i $i/@#dee/$fings o $o/*:dee
                 #   to copy spacers
                 
                 # get path bit/value of here from a variable:
@@ -318,39 +318,36 @@ iooia: | # F > i/o > input/output
             d.is != 'i' and throw "plumb to not i"
             io[b.is](b);
             $t = io.nz();
-            # their rows's arks we sark from
+            # pa.sark and pa.v = their rows's ark
+            # their (o's) rows are stitched in to ours
             #  < sarkumulative grouping... instruct a vals=[],valis=[]
-            #   
-                
-                # next p {row,pa} 
-                #  must multiply:
-                # their (o's) rows are stitched in to ours
-                # at each sark point of path,
-                # diverge pa for each row of pa.v they have
-                #$ss = b.p.rows.map(&row{ return row.slice(-1)[0] })
-                #    .filter(&s{ return s });
-                
+            # next p {row,pa} 
+            #  must multiply: 
             
-            # t.arks = {};
-            $sarks = {}; # sarky pa by path i
+            #  can be i $i/@#dee o $o/*:dee
+            #   to copy spacers
+             
+            # or i $d/* o $o/*
+            # to get each *
+            $sarks = {}; # path[i] = pa that .sark
             each i,pa (d.path) {
                 !pa.sark and continue
                 sarks[i] = pa;
             }
             # i $d/* o $o/*   implies   i $d/*/@s o $o/*:s
-            !Object.keys(sarks).length and d.path.push({sark:1,t:'s'})
+            if (!Object.keys(sarks).length)
+                pa = {sark:1,t:'s'}; sarks[d.path.push(pa)-1] = pa;
+            # that operation may be compilable from something like io ^
             
-                # can be i $i/@#dee o $o/*:dee
-                #   to copy spacers
-            
-                # or i $d/* o $o/*
-                # to get each *
-                
-            # P = [p], p.row = row, p.pa may = {} instead of a d.path
+            # P = [p], p.row = our row
+            # p.pa may = {} instead of their looking in d.path itself,
+            #   which we may be splitting up so that each:
+            # p.pa.v can diverge with their rows
             h.Pmod = &d,p,P{
                 !P[0].row and throw "must be iterating the p.rows"
                 P.length > 1 and throw "already multiplying row?"
                 # if next bit of path is
+                #debugger;
                 $pa = sarks[p.i+1];
                 !pa and return P
                 # remember last sark thing
@@ -393,11 +390,12 @@ iooia: | # F > i/o > input/output
                         $v = r[coli];
                         $vi = vals.indexOf(v);
                         if (vi == -1) {
-                            vi = vals.push(v);
+                            vi = vals.push(v)-1;
                             valis[vi] = [];
                         }
                         valis[vi].push(r);
                     }
+                    pa.plumbiplied = vals.length;
                     
                     # multiply b by possible vals
                     $B = b;
@@ -405,10 +403,13 @@ iooia: | # F > i/o > input/output
                         b = ex({},B);
                         b.pa ||= d.path[b.i];
                         b.pa = ex({},b.pa);
+                        # b.row needn't clone?
                         
                         b.pa.v = v;
+                        $rows = 
                         b.pa.rows = valis[i];
                         !v and throw "nullish v! for rows",b.pa.rows
+                        ~>78 plumba: ki(b.row), ki(v,3)
                         R.push(b)
                     }
                 }
@@ -646,28 +647,81 @@ iooia: | # F > i/o > input/output
         if (!Object.keys(t.arks).length)
             t.arks[t.path.length - 1] = 's';
         
+        t.oned = Object.keys(t.arks).length == 1;
+        each ik t.arks {
+            t.oned = k;
+        }
+        
+        t.arky = ex({},t.arks);
+        if (!t.arkimp) {
+            # add anything else we can name but wasn't asked for
+            t.arkimp = {}; # tarky not in tarks
+            each i,pa t.path {
+                t.arky[pa.t] || pa.ark and continue
+                pa.t.match(/\W/) and continue
+                t.arky[i] = pa.t;
+                t.arkimp[pa.t] = i;
+            }
+        }
+        
         # iterate per row
         t.i = 0;
-        t.more = &{
-            $ar = {};
+        $pull = &{
+            $row;
             while (1) {
-                t.row = t.p.rows[t.i++];
-                !t.row and return
+                row = t.p.rows[t.i++];
+                !row and return
                 # only for complete rows
-                !t.partial && t.row.slice(-1)[0] == null and continue
+                !t.partial && row.slice(-1)[0] == null and continue
                 break
             }
-            each ik t.arks {
+            return row
+        };
+        # grouping ar[k]=[v+] for implied names
+        $parkar = &be{
+            $ar = {};
+            t.row = t.next || pull();
+            !t.row and return
+            delete t.next;
+            each ik t.arky {
                 ar[k] = t.row[i];
             }
-            # single value
-            if (Object.keys(t.arks).length == 1)
-                return ar[k]
+            if (!t.ungrouped && !be) {
+                # to group by, make sure enough of it changes
+                # i #Con:/@#G:/@W o $mag/*:G/*:W
+                # should iter for every Con and G
+                #  with W=[W+] read ahead
+                $first = 1;
+                while (1) {
+                    # get next one...
+                    $be = parkar(1);
+                    !be and break
+                    $diff = 0;
+                    each ik t.arks {
+                        be[k] != ar[k] and diff = 1
+                    }
+                    diff and t.next = be; break
+                    each ik t.arkimp {
+                        first and ar[k] = [ar[k]]
+                        ar[k].push(be[k]);
+                    }
+                    first = 0
+                }
+            }
+            return ar
+        }
+        #
+        t.more = &{
+            $ar = parkar();
+            !ar and return
             # hash of values
+            t.ar and t.prev = t.ar
+            t.ar = ar;
+            t.oned and return ar[t.oned]
             return ar
         };
         
-        # do callback per item, with depth...
+        #c do callback per item, with depth...
         t.ind = &cb{
             t.indstr ||= '  ';
             # recurse into p.nz?
@@ -1158,9 +1212,10 @@ t/iooia: |
     # < solve this... if ark is singularly defined we could return it?
     #   and if many we could return them as whole columns...
     #   and only return last column when no arking
-    m lish_var  $s:lish
+    m lish_var -jod $s:lish
     
     $t = io.nz();
+    
     $s = t.ind(&s,t{ return ki(s) }).join("\n");
     m inded  $s:s %hue:80deg,ws:pre,dis:block
     
@@ -1178,17 +1233,20 @@ t/iooia: |
     $n = G&Cye,['upsulat','1',{s:'gakl'}];
     i $n:an o $d/*
     # i can set vars... use T.o if you unsure of 1/+ness
-    m andasio_varset  $s:an
-    
-    if (0) {
-    o $an/*/*
     $t = io.nz();
-    m therowsofan  $s:t.p.rows
+    m andasio_To  $s:T.o
+    m andasio_varset  $s:an
+    m andasio_tmore_once  $s:t.more()
+    m andasio_tar  $s:t.ar
+    m andasio_tmore_twice  $s:t.more()
+    
+    o $n/*/*
+    $t = io.nz();
+    m therowsofan  $s:t.p.rows,dl:8.16
     
     t.partial = 1;
     $s = t.ind(&s,t{ return ki(s) }).join("\n");
     m indy  $s:s %hue:120deg,ws:pre,dis:block
-    }
     
     # S
     S 7 domeration
@@ -1481,7 +1539,7 @@ pi/fod: | # a js J, shows a J-shaped bit of data, to aspect serialising change
     if (es.plumb) {
         $p = es.plumb;
         delete es.plumb;
-        m oach -fod $s:p,d:3,dl:7
+        m plumb -fod $s:p,d:3,dl:7
     }
     
     
