@@ -50,6 +50,7 @@ iooia: | # F > i/o > input/output
     # F is a culture of grasping syntax on top of o
     # formula
     $F = &s,d{ return G&way,'PseudoF',{s:s,d:d} };
+    $io = {}; # a bunch
     
     #c parsetalk
     # parse out bits into m
@@ -103,7 +104,10 @@ iooia: | # F > i/o > input/output
         d ||= {};
         parse = talk;
         # do i ... for o ...
-        p(/ o (.+)$/) and d.plumb = m[0]
+        p(/ ((i|o) .+)$/) and d.plumb = m[0]
+        # plumbed bit gets parsed after its downstream,
+        #   but runs before, so know what:
+        p(/^(i|o) /) and d.is = m[0]
         # absorb the o lop ^
         talk = parse; 
         
@@ -121,6 +125,10 @@ iooia: | # F > i/o > input/output
                 
                 # set var from path bit
                 p(/:(\w*)$/) and pa.ark = m[0] || 1
+                # and use each of them
+                p(/^@/) and pa.sark = 1
+                # can be i $i/@#dee o $o/*:dee
+                #   to copy spacers
                 
                 # get path bit/value of here from a variable:
                 # t-only/squish/shaded clone of C, or
@@ -129,11 +137,10 @@ iooia: | # F > i/o > input/output
                 # or i will input that squished C,
                 #   and/or ark/return,
                 #   and/or climb past it and input more stuff...
-                
-                # toy: a name-only sketch of C
                 # sheer spacer, made for a C
                 #   eg where desired.t == wanted.t
                 p(/^#/) and pa.isparam = 1; pa.relative = 1;
+                pa.sark and delete pa.isparam;
                 
                 # C itself for path bit got from param
                 p(/^\$/) and pa.isparam = 1
@@ -149,6 +156,8 @@ iooia: | # F > i/o > input/output
                 }
                 else
                 if (pa.glob) {} # anything
+                else
+                if (pa.sark) {} # name of a column in d.plumb...
                 else { # bareword
                     pa.v = G&Cye,[pa.t,1]
                     # words are the lumber of the algorithm
@@ -285,10 +294,60 @@ iooia: | # F > i/o > input/output
         # < or a mirror C set, like G&ind/G&o does
         # < find us for ind-like N, p.nz goes:
         #   [r,[1,[1a,1b],2,3,[3a]]]
-        # < talk could be d already, if compiling enough
-        d ||= {};
-        parsetalk(talk,params,d);
+        
+        # being plumbed somewhere
+        if (typeof talk == 'object') {
+            # d already, if compiling enough (sjson(parsetalk()))
+            # or we are plumbed in to something that parsed our talk
+            params && params.length and throw "talkref + params";
+            d and throw "talkref + d";
+            d = talk
+        }
+        else {
+            d ||= {};
+            parsetalk(talk,params,d);
+        }
         !d.path and throw "no path"
+        h.is && !d.is and d.is = h.is
+        
+        # plumb from somewhere
+        if (d.plumb) {
+            $b = d.plumb;
+            !b.is and throw "no plumb.is, i/o?"
+            b.is != 'o' and throw "plumb not o"
+            d.is != 'i' and throw "plumb to not i"
+            h.first and throw "h.first hook in use"
+            io[b.is](b);
+            $t = io.nz();
+            
+            # t.arks = {};
+            $sarks = {};
+            each i,pa (d.path) {
+                !pa.sark and continue
+                sarks[i] = pa;
+            }
+            # i $d/* o $o/*   implies   i $d/*/@s o $o/*:s
+            !Object.keys(sarks).length and d.path.push({sark:1,t:'s'})
+            
+            if (0) {
+                # can be i $i/@#dee o $o/*:dee
+                #   to copy spacers
+            
+                # or i $d/* o $o/*
+                # to get each *
+            
+                $coli = t.arks[pa.t];
+                coli == null and throw "no find column for",pa.t,t.arks
+            
+            
+            # want to jump in row ti
+            h.first = &d,p,pa{
+                $ss = b.p.rows.map(&row{ return row.slice(-1)[0] })
+                    .filter(&s{ return s });
+                p.found = ss;
+            };
+            }
+        }
         
         h.returns and d.sok = 1
         h.first ||= &{};
@@ -309,7 +368,7 @@ iooia: | # F > i/o > input/output
                     d.path.unshift(pa);
                     # should leave out of rows, being implied
                 }
-                !pa.v and throw "nofirst"
+                !pa.v and debugger; #throw "nofirst"
                 
                 h.first(d,p,pa);
                 p.found ||= [pa.v];
@@ -336,7 +395,10 @@ iooia: | # F > i/o > input/output
                     pa.spacer and D.spacer = 1;
                     pa.glob and D.meta = ['*','*']; d.sok=0;
                     else
-                    !v and throw "null pav?"
+                    pa.sark and // should have been figured by now?
+                    # cos we want to input each thing via pa.v...
+                    else
+                    !v and debugger; #throw "null pav?"
                     
                     # make more rows
                     h.found(d,p,pa,s,D,v);
@@ -378,6 +440,7 @@ iooia: | # F > i/o > input/output
             # an expanding map
             $rows = [];
             each i,row p.rows {
+                # WAS
                 $b = col(p,{row:row});
                     
                 if (b.nz) {
@@ -408,7 +471,7 @@ iooia: | # F > i/o > input/output
 
         A.debug and debugger
         d.sok && ss.length <= 1 and return ss[0]
-        h.returns and debugger; #throw "Wanted to return s",ss,d
+        #h.returns and debugger; #throw "Wanted to return s",ss,d
         return ss
     };
     
@@ -416,7 +479,7 @@ iooia: | # F > i/o > input/output
     # the dot of the i is somestuff, index the space, trunk way etc.
     # shall we use a talky Babz'd params-implied-by-$ thing?
     # or just put thing on thing arguments?
-    $i = &talk,params,d{
+    $i = io.i = &talk,params,d{
         # talk:
         #   'universal keyworded-by $thing'
         # find these things... barewords we have around?
@@ -450,7 +513,8 @@ iooia: | # F > i/o > input/output
                 # < input null to delete?
                 p.found = [input(s,D,v)]
             },
-            returns: 1
+            returns: 1,
+            is: 'i',
         })
     };
     
@@ -475,7 +539,7 @@ iooia: | # F > i/o > input/output
     #   particularly grep/sort/map
     #  tal being apply
     # lingo shape glue session
-    $o = &talk,params,d{
+    $o = io.o = &talk,params,d{
         return rowing(talk,params,d,{
             first: &d,p,pa{
                 !pa.v and throw "nofirst"
@@ -488,6 +552,7 @@ iooia: | # F > i/o > input/output
                 # 6, only the last column
                 p.found = output(s,D,v);
             },
+            is: 'o',
         })
     };
     #c io.nz
@@ -746,7 +811,9 @@ iooia: | # F > i/o > input/output
     };
     
     #c iover
-    return {F:F,i:i,o:o,input:input,output:output,parsetalk:parsetalk,nz:nz}
+    io = ex(io,{F:F,i:i,o:o,input:input,output:output,parsetalk:parsetalk,nz:nz});
+    return io
+    
 t/iooia: |
     G&heading;
     $io = G&way,'iooia';
@@ -911,6 +978,11 @@ t/iooia: |
           the vars coming from o can be used in the i:
              as @whur or @lamb below:
       
+       that i $d/pock o $w/*
+       once at $d/pock, add path to each thing
+         pa.multi = [column] to multiply rows by
+      
+      
       Functions:
         also:
             i $d/@whur/@lamb { s&fat && "laughter" }:whur o $lambs/*
@@ -1027,7 +1099,16 @@ t/iooia: |
     
     $n = G&Cye,['upsulat','1',{s:'gakl'}];
     i $n:an o $d/*
+    # i can set vars... use T.o if you unsure of 1/+ness
     m andasio_varset  $s:an
+    
+    o $an/*/*
+    $t = io.nz();
+    m therowsofan  $s:t.p.rows
+    
+    t.partial = 1;
+    $s = t.ind(&s,t{ return ki(s) }).join("\n");
+    m indy  $s:s %hue:120deg,ws:pre,dis:block
     
     
     # S
