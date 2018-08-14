@@ -310,18 +310,29 @@ iooia: | # F > i/o > input/output
         !d.path and throw "no path"
         h.is && !d.is and d.is = h.is
         
-        # plumb from somewhere
+        #c plumb from somewhere
         if (d.plumb) {
             $b = d.plumb;
             !b.is and throw "no plumb.is, i/o?"
             b.is != 'o' and throw "plumb not o"
             d.is != 'i' and throw "plumb to not i"
-            h.first and throw "h.first hook in use"
             io[b.is](b);
             $t = io.nz();
+            # their rows's arks we sark from
+            #  < sarkumulative grouping... instruct a vals=[],valis=[]
+            #   
+                
+                # next p {row,pa} 
+                #  must multiply:
+                # their (o's) rows are stitched in to ours
+                # at each sark point of path,
+                # diverge pa for each row of pa.v they have
+                #$ss = b.p.rows.map(&row{ return row.slice(-1)[0] })
+                #    .filter(&s{ return s });
+                
             
             # t.arks = {};
-            $sarks = {};
+            $sarks = {}; # sarky pa by path i
             each i,pa (d.path) {
                 !pa.sark and continue
                 sarks[i] = pa;
@@ -329,24 +340,81 @@ iooia: | # F > i/o > input/output
             # i $d/* o $o/*   implies   i $d/*/@s o $o/*:s
             !Object.keys(sarks).length and d.path.push({sark:1,t:'s'})
             
-            if (0) {
                 # can be i $i/@#dee o $o/*:dee
                 #   to copy spacers
             
                 # or i $d/* o $o/*
                 # to get each *
-            
-                $coli = t.arks[pa.t];
-                coli == null and throw "no find column for",pa.t,t.arks
-            
-            
-            # want to jump in row ti
-            h.first = &d,p,pa{
-                $ss = b.p.rows.map(&row{ return row.slice(-1)[0] })
-                    .filter(&s{ return s });
-                p.found = ss;
+                
+            # P = [p], p.row = row, p.pa may = {} instead of a d.path
+            h.Pmod = &d,p,P{
+                !P[0].row and throw "must be iterating the p.rows"
+                P.length > 1 and throw "already multiplying row?"
+                # if next bit of path is
+                $pa = sarks[p.i+1];
+                !pa and return P
+                # remember last sark thing
+                $la;
+                $pS = p;
+                while (pS && !la) {
+                    pS.pa && pS.sark and la = pS
+                    else
+                    pS.sark and throw "sark above not pa", pS
+                    pS = pS.up
+                }
+                $R = [];
+                each ib P {
+                    # our next bit of path
+                    b.i ||= p.i+1;
+                    # get multiplicity
+                    $rows;
+                    if (la) {
+                        !b.row[la.i] and throw "our row misses the last sark", b.row, la.i
+                        !la.pa.rows and throw "last pa.sark didn't set pa.rows", la
+                        # just their rows this row at that point dove into
+                        rows = la.pa.rows
+                    }
+                    else {
+                        # all they say
+                        rows = t.p.rows;
+                        # complete rows
+                        if (!d.partial)
+                            rows = rows.filter(&row{ return row.slice(-1)[0] })
+                    }
+                    
+                    # uniq objects on their sark column
+                    $coli = t.arks[pa.t];
+                    coli == null && pa.t == 's' and coli = t.path.length-1
+                    coli == null and throw "no find column for",pa.t,t.arks
+                    # for f(y)/[y+]
+                    $vals = [];
+                    $valis = {};
+                    each ir rows {
+                        $v = r[coli];
+                        $vi = vals.indexOf(v);
+                        if (vi == -1) {
+                            vi = vals.push(v);
+                            valis[vi] = [];
+                        }
+                        valis[vi].push(r);
+                    }
+                    
+                    # multiply b by possible vals
+                    $B = b;
+                    each iv vals {
+                        b = ex({},B);
+                        b.pa ||= d.path[b.i];
+                        b.pa = ex({},b.pa);
+                        
+                        b.pa.v = v;
+                        b.pa.rows = valis[i];
+                        !v and throw "nullish v! for rows",b.pa.rows
+                        R.push(b)
+                    }
+                }
+                
+                return R
             };
-            }
         }
         
         h.returns and d.sok = 1
@@ -355,7 +423,7 @@ iooia: | # F > i/o > input/output
         $col = &q,p{
             p ||= {};
             p.i ||= q ? q.i+1 : 0;
-            $pa = d.path[p.i];
+            $pa = p.pa || d.path[p.i];
             !pa and throw "No pattern!: "+p.i
             
             if (!q) {
@@ -440,22 +508,27 @@ iooia: | # F > i/o > input/output
             # an expanding map
             $rows = [];
             each i,row p.rows {
-                # WAS
-                $b = col(p,{row:row});
-                    
-                if (b.nz) {
-                    # ...s... -> ...s, [s's many]...
-                    $s = row.slice(-1)[0];
-                    $i = p.nz.indexOf(s);
-                    i < 0 and throw "manying row[-1] not in p.nz", s, p.nz
-                    p.nz.splice(i+1,0,b.nz);
+                $P = [{row:row}];
+                if (h.Pmod) {
+                    P = h.Pmod(d,p,P);
                 }
-                
-                $r = b.rows;
-                !r and throw "rowing nothing"
-                # keeps pushing null once lost
-                !r.length and throw "not one row"
-                r.map(&ro{ rows.push(ro) })
+                each ib P {
+                    $b = col(p,b);
+
+                    if (b.nz) {
+                        # ...s... -> ...s, [s's many]...
+                        $s = b.row.slice(-1)[0];
+                        $i = p.nz.indexOf(s);
+                        i < 0 and throw "manying row[-1] not in p.nz", s, p.nz
+                        p.nz.splice(i+1,0,b.nz);
+                    }
+
+                    $r = b.rows;
+                    !r and throw "rowing nothing"
+                    # keeps pushing null once lost
+                    !r.length and throw "not one row"
+                    r.map(&ro{ rows.push(ro) })
+                }
             }
             p.rows = rows;
             
@@ -543,7 +616,7 @@ iooia: | # F > i/o > input/output
         return rowing(talk,params,d,{
             first: &d,p,pa{
                 !pa.v and throw "nofirst"
-                if (d.path.length == 1) {
+                if (d.path.length == 1) { # <  && pa.isparam
                     # o $thing implies o $thing/*
                     d.path.push({t:'*',glob:1});
                 }
@@ -812,7 +885,7 @@ iooia: | # F > i/o > input/output
     
     #c iover
     io = ex(io,{F:F,i:i,o:o,input:input,output:output,parsetalk:parsetalk,nz:nz});
-    return io
+    return io;
     
 t/iooia: |
     G&heading;
