@@ -95,79 +95,13 @@ jababio: | # for iooia
          - - $w/*
            - 'io.o("$w/*",[w]);'
     
+    # can be done here?
+    #i $d/@whur/@lamb { s&fat && "laughter" }:whur { fai(C,s); s&ok = 1; s&depth * 3 } o $lambs/*
+    
+    
     my $brackin;
     $brackin = qr/\{[^\}\{]*$brackin?[^\}\{]*\}/;
-    my $varguessbab = &t,s{ #}}
-        my $talk = $s;
-        # talk is all the i is without the i
-        my $cod = [];
-        my $h = {vars=>[],arks=>[]};
-        my $defunc;$defunc = &{
-            $s =~ s/^s+//s;
-            if ($s =~ /^\{/) {
-                h.bail = "not even" unless $s =~ /^$brackin/;
-                $s =~ s/^($brackin)(:(\S+)|) ?//;
-                my $whole = $1;
-                my $withname = $2;
-                my $name = $3;
-                my $code = $whole;
-                $code =~ s/^{ *| *\} *$//g;
-                $code = [split ";", $code];
-                # return last expression
-                if ($code->[-1] !~ /return/) {
-                    my $expr = pop @$code;
-                    $expr =~ s/^\s+//;
-                    push @$code, " return $expr"
-                }
-                $code = join ";", @$code;
-                $code = "&acgts"."{ $code }";
-                push @{h.vars}, $code;
-                $talk =~ s/\Q$whole$withname\E/{$name}/s
-                    || push @$cod, "no replacing: $whole";
-                push @$cod, "Would $name: $code\n"
-                    ."  onward: ".slim(20,$s)."\n";
-                
-                # and again
-                $defunc->();
-            }
-        };
-        $defunc->();
-        while ($s =~ s/^(\S+)\s*//) {
-            my $path = [split '/', $1];
-            for (@$path) {
-                my $pa = {};
-                # returning
-                pa.ark = $1 || 1 if s/:(\w*)$//;
-                # parameters in
-                pa.isvar = 1 if s/^#//;
-                pa.isvar = 1 if s/^\$//;
-                pa.t = $_;
-                pa.isvar && push @{h.vars}, pa.t;
-                pa.ark && push @{h.arks}, pa.ark;
-            }
-            $defunc->();
-        }
-        return "Bailed: h.bail" if h.bail;
-        each tin $h {
-            $n =~ /\W+/ && die "wobbyly $t varnameinterpretation: $n", $s;
-        }}
-        if (@{h.arks} == 1) {
-            push @$cod, 'var '.h.arks[0].' = ';
-            h.arks = [];
-        }
-        push @$cod, 'var ar = ' if @{h.arks};
-        
-        (my $vus = sjson([$talk])) =~ s/^\[|\]$//g;
-        push @$cod, "io\.$t($vus,[";
-        
-        push @$cod, join ',', @{h.vars} if @{h.vars};
-        
-        push @$cod, ']);';
-        push @$cod, ' var '.$_.' = ar.'.$_.';' for @{h.arks};
-        $cod = join '', @$cod;
-        push @$ta, [$talk,$cod];
-        return $cod
-    };
+    my $varguessbab = Rw JaBabz $ta;
     # runner
     my $ca = &t,talk,cetia{
         my $fromo = $1 if $talk =~ s/ o (.+)$//;
@@ -275,7 +209,19 @@ JaBabz: | # make hutscript javascript
                 my $withname = $2;
                 my $name = $3;
                 my $code = $whole;
-                $code =~ s/^{ *| *\} *$//g;
+                $code =~ s/\s+$//;
+                $code =~ s/^\{|\}$//g;
+                if ($code =~ /^(\w+)(?::(.+))?$/) {
+                    my $prerolled_function = $1;
+                    # which will peel/parse
+                    my $subtalk = $2;
+                    # < turn "la $inter " into "la ".$inter." "
+                    # < sjson string
+                    push @{h.vars}, '"'.$subtalk.'"';
+                    $talk =~ s/$whole/{$prerolled_function}/;
+                    # continue
+                    return $defunc->();
+                }
                 $code = [split ";", $code];
                 # return last expression
                 if ($code->[-1] !~ /return/) {
@@ -286,10 +232,13 @@ JaBabz: | # make hutscript javascript
                 $code = join ";", @$code;
                 $code = "&acgts"."{ $code }";
                 push @{h.vars}, $code;
-                $talk =~ s/\Q$whole$withname\E/{$name}/s
+                # its var is a function, its talk is anything else about it
+                my $now = "{}";
+                $now .= ":$name" if $name;
+                $talk =~ s/\Q$whole$withname\E/$now/s
                     || push @$cod, "no replacing: $whole";
-                push @$cod, "Would $name: $code\n"
-                    ."  onward: ".slim(20,$s)."\n";
+                #push @$cod, "Would $name: $code\n"
+                #    ."  onward: ".slim(20,$s)."\n";
                 
                 # and again
                 $defunc->();
@@ -332,7 +281,7 @@ JaBabz: | # make hutscript javascript
         ar.ta and push @{ar.ta}, [$talk,$cod];
         return $cod
     };
-    
+    return $varguessbab if ar.ta;
     c&s =~ s{(^\s*|return )(i|o) ([\w\$\#]+[^\n]*[^\n;]+)$}{ "$1 ".$varguessbab->($2,$3) }smeg;
      
         
@@ -650,7 +599,8 @@ jst: | # test js babbler
         wanga
 
         =cut
-        i $d/@whur/@lamb { s&fat && "laughter" }:whur { fai(C,s); s&ok = 1; s&depth * 3 } o $lambs/*
+        i $d/@whur/@lamb { s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s&depth * 3 } o $lambs/*
+        i $d/@whur {dehydrate:5}:whur ye,C- {notch} y o $lambs/*
     
     
     # too far away:
@@ -773,6 +723,8 @@ jst: | # test js babbler
         // 
         // 
         // wanga
+         io.i("$d/@whur/@lamb {}:whur y {} o $lambs/*",[d,function(A,C,G,T,s){  return C.sc.fat && "laughter"  },function(A,C,G,T,s){  fai(C,s); C.sc.ok = 1; return C.sc.depth * 3  },lambs]);
+         io.i("$d/@whur {dehydrate}:whur ye,C- {notch} y o $lambs/*",[d,"5","",lambs]);
         }
         
     

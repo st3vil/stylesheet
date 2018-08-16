@@ -152,12 +152,24 @@ iooia: | # F > i/o > input/output
             #   whose value becomes a column
             $path = m[0].split('/');
             $outer = parse;
+            $pa;
+            $dpa = &setpav{
+                if (pa.setpav) { # variable/bind param
+                    !params.length and throw "Not enough params", pa.t, pa, d
+                    pa.v = params.shift();
+                }
+                d.path.push(pa)
+            };
             each in path {
                 parse = n;
-                $pa = {};
+                pa = {};
                 
+                #c clone C
+                p(/^y(\S*)$/) and pa.separation = m[0]||1; dpa(); continue
                 # set var from path bit
                 p(/:(\w*)$/) and pa.ark = m[0] || 1
+                # function
+                p(/^\{(\w+)?\}$/) and pa.doof = m[0]||1; dpa(1); continue
                 # and use each of them
                 p(/^@/) and pa.sark = 1
                 # can be i $i/@#dee/$fings o $o/*:dee
@@ -203,12 +215,32 @@ iooia: | # F > i/o > input/output
                     # relative spacers hold a name for something
                     pa.spacer = 1;
                 }
-                
-                d.path.push(pa);
+                dpa();
             }
             parse = outer;
         }
         parse and throw "Unparsed", parse
+        each i,pa d.path {
+            if (pa.separation) {
+                $mode = pa.separation;
+                mode == '1' and mode = 'C';
+                mode = mode.split(',');
+                pa.yto = mode[0];
+                pa.yfrom = mode[0];
+            }
+            if (pa.doof) {
+                $known = pa.doof;
+                if (known == '1') {
+                    typeof pa.v != 'function' and throw "expecting doof",pa
+                    # doof(acgts) each thing, or so
+                }
+                else {
+                    typeof pa.v != 'string' and throw "expecting doofstring",pa
+                    # get thing to peel it already?
+                    # then these d can be compiled in
+                }
+            }
+        }
         
         # others, use up params
         d.plumb and d.plumb = parsetalk(d.plumb,params)
@@ -261,6 +293,9 @@ iooia: | # F > i/o > input/output
                 d.t == 'tv' and from = 'later'; to = 'earlier'; dupz = 1;
                 # revision of name, moving through items
                 d.t == 'tw' and from = 'begins'; to = 'continues'; dupz = 1;
+                # < first relative thing keeps its position in tw
+                # < check new/old position in z, to inform who takes tw
+                #   hmmm, a flappy edge to the arrangement
                 # stuff moves through words
                 # these schema should be drawn out
                 # become keywords to io
@@ -370,7 +405,7 @@ iooia: | # F > i/o > input/output
             # i $d/* o $o/*   implies   i $d/*/@s o $o/*:s
             if (!Object.keys(sarks).length)
                 pa = {sark:1,t:'s'}; sarks[d.path.push(pa)-1] = pa;
-            # that operation may be compilable from something like io ^
+            # < other: io-ish syntax/tool for such operations ^
             
             # P = [p], p.row = our row
             # p.pa may = {} instead of their looking in d.path itself,
@@ -450,6 +485,69 @@ iooia: | # F > i/o > input/output
                 return R
             };
         }
+        =func #c source
+        =q[
+         see if there's functions anywhere
+         they are a separate logic to the pointy path
+         < mix up as much as you want
+         
+         have a right to left flow, assigney
+           i {funclast} pointy/path {funcfirst} o ...
+         usu.
+         
+         funclast - map/grep everything selected
+             wants to be fed ar per row...
+           should use and generate an iterator,
+           rows look the same + the column it defines...
+           < or multiply if that's its game
+         
+         funcfirst - map/grep d.plumb,
+             or be a function making rows
+            do that via T? see via T
+            should happen before descent into the d.path
+              since values maybe sarked (@name) from what it does
+            
+            
+         
+         
+         via T:
+            like Swim things, they say:
+              understand this name, then you look it up
+                and figure out how to work it
+              Core describes Knowables, like how to:
+                input/output such index
+                where/what/how it's going
+                  where as in something in s should consume it
+                  pretend to be a column or iterator
+                  or it's rows/columns being added/replaced/removed
+              T percolate out like errors/warnings if they are too unknown
+                 may have a part to it specifying where,
+                    like swim is to-cv
+        
+          y*/separation is like a function,
+          must rerow to represent any rearrangement
+          so each thing throws up a new iterator
+          
+          but they all start in the path, so may:
+            lastfunc sees starting row, goes out,
+              comes back with rows, does its thing, returns rows...
+            firstfunc must operate first!
+        ]
+        =cut
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        # so that path may get full of functions...
+        # y and {} operate basically the same
+        # p.row passes through
+        
         #c beginning
         h.returns and d.sok = 1
         h.first ||= &{};
