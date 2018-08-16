@@ -359,7 +359,7 @@ iooia: | # F > i/o > input/output
         # give d.path = [pa,{t.path}],
         #   so our iterator/extrafunccolumn
         $ar;
-        $rows; # t.p.rows? 
+        $rows;
         # our d.path should be theirs + d.
         while (ar = t.more()) {
             # pa is whatever it is
@@ -427,33 +427,27 @@ iooia: | # F > i/o > input/output
             # pa.sark and pa.v = their rows's ark
             # their (o's) rows are stitched in to ours
             #  < sarkumulative grouping... instruct a vals=[],valis=[]
-            # next p {row,pa} 
-            #  must multiply: 
             
             #  can be i $i/@#dee o $o/*:dee
             #   to copy spacers
-            
-            $sarks = {}; # path[i] = pa that .sark
-            each i,pa (d.path) {
-                !pa.sark and continue
-                sarks[i] = pa;
-            }
+            # i $d   implies   i $d/*  ?
             # i $d/* o $o/*   implies   i $d/*/@s o $o/*:s
-            if (!Object.keys(sarks).length)
-                pa = {sark:1,t:'s'}; sarks[d.path.push(pa)-1] = pa;
+            # so give i the thing saying build such-and-such:
+            if (!d.path.filter(&s{ return s.sark }).length)
+                d.path.push({sark:1,t:'s'})
             # < other: io-ish syntax/tool for such operations ^
             
             # P = [p], p.row = our row
-            # p.pa may = {} instead of their looking in d.path itself,
-            #   which we may be splitting up so that each:
-            # p.pa.v can diverge with their rows
+            # p.pa be diverged from the one in d.path itself,
+            #   so to split their pa.v (value entering/space identity)
             h.Pmod = &d,p,P{
                 !P[0].row and throw "must be iterating the p.rows"
                 P.length > 1 and throw "already multiplying row?"
                 # if next bit of path is sarky
-                $pa = sarks[p.i+1];
-                !pa and return P
-                # remember last sark thing
+                $pa = d.path[p.i+1];
+                !pa.sark and return P
+                # ^ is the P[0].pa also
+                # last sark thing has more rows
                 $la;
                 $pS = p;
                 while (pS && !la) {
@@ -464,9 +458,7 @@ iooia: | # F > i/o > input/output
                 }
                 $R = [];
                 each ib P {
-                    # our next bit of path
-                    b.i ||= p.i+1;
-                    # get multiplicity
+                    # inject multiplicity into directions taken on the path
                     $rows;
                     if (la) {
                         !la.pa and throw "last sarking p without pa",la
@@ -477,17 +469,22 @@ iooia: | # F > i/o > input/output
                     }
                     else {
                         # all they say
-                        rows = t.p.rows;
+                        rows = t.rows;
                         # complete rows
                         if (!d.partial)
                             rows = rows.filter(&row{ return row.slice(-1)[0] })
                     }
                     
-                    # uniq objects on their sark column
+                    # locate sark as ark of theirs
+                    # column number, for in d.path/p.row (G/W)
                     $coli = t.arks[pa.t];
                     coli == null && pa.t == 's' and coli = t.path.length-1
+                    # < if it's 'lamb' and they have 'lambs/*',
+                    #   suppose s is a lamb
                     coli == null and throw "no find column for",pa.t,t.arks
-                    # for f(y)/[y+]
+                    
+                    # uniq the arked column's values
+                    # group rows, put b.pa.rows for next regroup inward
                     $vals = [];
                     $valis = {};
                     each ir rows {
@@ -506,14 +503,14 @@ iooia: | # F > i/o > input/output
                     each iv vals {
                         b = ex({},B);
                         b.pa ||= d.path[b.i];
-                        b.pa = ex({},b.pa);
+                        b.pa = ex({},B.pa);
                         # b.row needn't clone?
                         
                         b.pa.v = v;
                         $rows = 
                         b.pa.rows = valis[i];
                         !v and throw "nullish v! for rows",b.pa.rows
-                        ~>78 plumba: ki(b.row), ki(v,3)
+                        #~>78 plumba: ki(b.row), ki(v,3)
                         R.push(b)
                     }
                 }
@@ -676,10 +673,16 @@ iooia: | # F > i/o > input/output
             #c end - an expanding map
             $rows = [];
             each i,row p.rows {
-                $P = [{row:row}];
-                if (h.Pmod) {
-                    P = h.Pmod(d,p,P);
-                }
+                # our next bit of path
+                $b = {};
+                b.i ||= p.i+1;
+                b.row = row;
+                b.pa = d.path[b.i];
+                
+                # can go down a path in multiple directions
+                $P = [b];
+                h.Pmod and P = h.Pmod(d,p,P)
+                
                 each ib P {
                     $b = col(p,b);
 
@@ -703,8 +706,7 @@ iooia: | # F > i/o > input/output
             return p
         };
         $p = d.p = col();
-        # < nz() need not know p
-        #d.rows = p.rows;
+        d.rows = p.rows;
         T.o = d;
         
         # find any lastfuncs
@@ -727,7 +729,7 @@ iooia: | # F > i/o > input/output
         }
         
         # deepest atoms:
-        $rows = T.o.rows || d.p.rows;
+        $rows = T.o.rows;
         $ss = rows.map(&row{ return row.slice(-1)[0] })
             .filter(&s{ return s });
 
@@ -857,7 +859,7 @@ iooia: | # F > i/o > input/output
         $pull = &{
             $row;
             while (1) {
-                row = t.p.rows[t.i++];
+                row = t.rows[t.i++];
                 !row and return
                 # only for complete rows
                 !t.partial && row.slice(-1)[0] == null and continue
@@ -909,14 +911,14 @@ iooia: | # F > i/o > input/output
             return ar
         };
         
-        #c do callback per item, with depth...
+        #c ind: callback per item, flat list with depth...
         t.ind = &cb{
             t.indstr ||= '  ';
             # recurse into p.nz?
             # < just like the idea of nz apparently,
             $la = [];
             $N = [];
-            each i,row t.p.rows {
+            each i,row t.rows {
                 t.row = row;
                 # only for parents with children
                 !t.partial && t.row.slice(-1)[0] == null and continue
