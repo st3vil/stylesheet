@@ -227,6 +227,7 @@ iooia: | # F > i/o > input/output
                 mode = mode.split(',');
                 pa.yto = mode[0];
                 pa.yfrom = mode[0];
+                pa.doof = 'separation';
             }
             if (pa.doof) {
                 $known = pa.doof;
@@ -351,7 +352,23 @@ iooia: | # F > i/o > input/output
                 # but we (as eg tv) shall go on to tw and z even dups
                 # no information lost!
     }
+    #c doof: pour iterator through function, making another iterator
+    io.doof = &t,pa{
+        $d = {};
+        # give d.path = [pa,{t.path}],
+        #   so our iterator/extrafunccolumn
+        $ar;
+        $rows; # t.p.rows? 
+        # our d.path should be theirs + d.
+        while (ar = t.more()) {
+            # pa is whatever it is
+            # load up rows
+        }
+        return io.nz()
+    };
+    
     #c rowing: travel d.path for i/o hooks
+    # < able to async, when A:o things
     $rowing = &talk,params,d,h{
         # reduce or sprout iterator
         # rows multiply as deeper atoms many
@@ -379,13 +396,32 @@ iooia: | # F > i/o > input/output
         h.is && !d.is and d.is = h.is
         
         #c plumb from somewhere
-        if (d.plumb) {
+        if (d.plumb && !d.plumb.more) {
             $b = d.plumb;
             !b.is and throw "no plumb.is, i/o?"
             b.is != 'o' and throw "plumb not o"
             d.is != 'i' and throw "plumb to not i"
+            # make the call
             io[b.is](b);
-            $t = io.nz();
+            # have the iterator
+            T.plumb = io.nz();
+        }
+        # find any firstfuncs
+        # d.plumb replaces itself
+        # these remain in path,
+        # so we can ark their return
+        $i = d.path.length-1;
+        while (d.path[i]) {
+            $pa = d.path[i];
+            # < support for mid-path doofing
+            #   could decide what to put after finding options for where
+            !pa.doof and break
+            # new iterator replaces old, so we can pipeline?
+            d.plumb = io.doof(d.plumb,pa);
+            i--;
+        }
+        # plumb rowmuddler
+        if (d.plumb) {
             # pa.sark and pa.v = their rows's ark
             # their (o's) rows are stitched in to ours
             #  < sarkumulative grouping... instruct a vals=[],valis=[]
@@ -394,9 +430,7 @@ iooia: | # F > i/o > input/output
             
             #  can be i $i/@#dee o $o/*:dee
             #   to copy spacers
-             
-            # or i $d/* o $o/*
-            # to get each *
+            
             $sarks = {}; # path[i] = pa that .sark
             each i,pa (d.path) {
                 !pa.sark and continue
@@ -414,8 +448,7 @@ iooia: | # F > i/o > input/output
             h.Pmod = &d,p,P{
                 !P[0].row and throw "must be iterating the p.rows"
                 P.length > 1 and throw "already multiplying row?"
-                # if next bit of path is
-                #debugger;
+                # if next bit of path is sarky
                 $pa = sarks[p.i+1];
                 !pa and return P
                 # remember last sark thing
@@ -667,10 +700,30 @@ iooia: | # F > i/o > input/output
             return p
         };
         $p = d.p = col();
+        # < nz() need not know p
+        #d.rows = p.rows;
         T.o = d;
         
+        # find any lastfuncs
+        $i = 0;
+        $lastfuncs = [];
+        while (d.path[i]) {
+            $pa = d.path[i];
+            # < support for mid-path doofing
+            #   could decide what to put after finding options for where
+            !pa.doof and break
+            lastfuncs.push(pa)
+            i++;
+        }
+        if (lastfuncs.length) {
+            each i,pa lastfuncs {
+                # new iterator replaces old, so we can pipeline?
+                T.o = io.doof(T.o,pa)
+            }
+        }
+        
         # deepest atoms:
-        $rows = p.rows;
+        $rows = T.o.rows || d.p.rows;
         $ss = rows.map(&row{ return row.slice(-1)[0] })
             .filter(&s{ return s });
 
