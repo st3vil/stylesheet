@@ -93,12 +93,45 @@ jababio: | # for iooia
          - - $t
            - 'io.i("$t",[t]);'
          - - $w/*
-           - 'io.i("$w/*",[w]);'
+           - 'io.o("$w/*",[w]);'
     
-    my $varguessbab = &s{
+    my $brackin;
+    $brackin = qr/\{[^\}\{]*$brackin?[^\}\{]*\}/;
+    my $varguessbab = &t,s{ #}}
         my $talk = $s;
-        # line = 'i '+s
+        # talk is all the i is without the i
+        my $cod = [];
         my $h = {vars=>[],arks=>[]};
+        my $defunc;$defunc = &{
+            $s =~ s/^s+//s;
+            if ($s =~ /^\{/) {
+                h.bail = "not even" unless $s =~ /^$brackin/;
+                $s =~ s/^($brackin)(:(\S+)|) ?//;
+                my $whole = $1;
+                my $withname = $2;
+                my $name = $3;
+                my $code = $whole;
+                $code =~ s/^{ *| *\} *$//g;
+                $code = [split ";", $code];
+                # return last expression
+                if ($code->[-1] !~ /return/) {
+                    my $expr = pop @$code;
+                    $expr =~ s/^\s+//;
+                    push @$code, " return $expr"
+                }
+                $code = join ";", @$code;
+                $code = "&acgts"."{ $code }";
+                push @{h.vars}, $code;
+                $talk =~ s/\Q$whole$withname\E/{$name}/s
+                    || push @$cod, "no replacing: $whole";
+                push @$cod, "Would $name: $code\n"
+                    ."  onward: ".slim(20,$s)."\n";
+                
+                # and again
+                $defunc->();
+            }
+        };
+        $defunc->();
         while ($s =~ s/^(\S+)\s*//) {
             my $path = [split '/', $1];
             for (@$path) {
@@ -112,11 +145,12 @@ jababio: | # for iooia
                 pa.isvar && push @{h.vars}, pa.t;
                 pa.ark && push @{h.arks}, pa.ark;
             }
+            $defunc->();
         }
+        return "Bailed: h.bail" if h.bail;
         each tin $h {
             $n =~ /\W+/ && die "wobbyly $t varnameinterpretation: $n", $s;
         }}
-        my $cod = [];
         if (@{h.arks} == 1) {
             push @$cod, 'var '.h.arks[0].' = ';
             h.arks = [];
@@ -124,7 +158,7 @@ jababio: | # for iooia
         push @$cod, 'var ar = ' if @{h.arks};
         
         (my $vus = sjson([$talk])) =~ s/^\[|\]$//g;
-        push @$cod, 'io'.'.i('.$vus.',[';
+        push @$cod, "io\.$t($vus,[";
         
         push @$cod, join ',', @{h.vars} if @{h.vars};
         
@@ -135,18 +169,33 @@ jababio: | # for iooia
         return $cod
     };
     # runner
-    my $ca = &talk,cetia{
+    my $ca = &t,talk,cetia{
         my $fromo = $1 if $talk =~ s/ o (.+)$//;
         
-        $varguessbab->($talk);
-        $varguessbab->($fromo) if $fromo;
+        $varguessbab->($t,$talk);
+        $varguessbab->('o',$fromo) if $fromo;
     };
-    $ca->('w/*:w');
-    $ca->('trouble/w:r/#w:t','weeee');
-    $ca->('$t o $w/*','tea weas');
+    $ca->('i','w/*:w');
+    $ca->('i','trouble/w:r/#w:t','weeee');
+    $ca->('i','$t o $w/*','tea weas');
     
-    sayyl Dump($ta);
-    saygr $exp
+    my $ex = Load($exp);
+    my $i = 1;
+    while (@$ta || @$ex) {
+        my $t = Dump(shift @$ta);
+        my $e = Dump(shift @$ex);
+        if ($t eq $e) {
+            saygr "ok $i";
+        }
+        else {
+            sayre "not ok $i - Expected:";
+            saybl $e;
+            sayre "Got:";
+            saygr $t;
+        }
+        $i++;
+    }
+    @$ta || @$ex && sayre "Extra data: ".Dump({got=>$ta,exp=>$ex});
     
 JaBabz: | # make hutscript javascript
     my $poing = qr/\w+(?:\.\w+)?/;
@@ -210,10 +259,43 @@ JaBabz: | # make hutscript javascript
     # 
     #c io
     #
+    my $brackin;
+    $brackin = qr/\{[^\}\{]*$brackin?[^\}\{]*\}/;
     my $varguessbab = &t,s{ #}}
         my $talk = $s;
-        # line = 'i '+s
+        # talk is all the i is without the i
+        my $cod = [];
         my $h = {vars=>[],arks=>[]};
+        my $defunc;$defunc = &{
+            $s =~ s/^s+//s;
+            if ($s =~ /^\{/) {
+                h.bail = "not even" unless $s =~ /^$brackin/;
+                $s =~ s/^($brackin)(:(\S+)|) ?//;
+                my $whole = $1;
+                my $withname = $2;
+                my $name = $3;
+                my $code = $whole;
+                $code =~ s/^{ *| *\} *$//g;
+                $code = [split ";", $code];
+                # return last expression
+                if ($code->[-1] !~ /return/) {
+                    my $expr = pop @$code;
+                    $expr =~ s/^\s+//;
+                    push @$code, " return $expr"
+                }
+                $code = join ";", @$code;
+                $code = "&acgts"."{ $code }";
+                push @{h.vars}, $code;
+                $talk =~ s/\Q$whole$withname\E/{$name}/s
+                    || push @$cod, "no replacing: $whole";
+                push @$cod, "Would $name: $code\n"
+                    ."  onward: ".slim(20,$s)."\n";
+                
+                # and again
+                $defunc->();
+            }
+        };
+        $defunc->();
         while ($s =~ s/^(\S+)\s*//) {
             my $path = [split '/', $1];
             for (@$path) {
@@ -227,11 +309,12 @@ JaBabz: | # make hutscript javascript
                 pa.isvar && push @{h.vars}, pa.t;
                 pa.ark && push @{h.arks}, pa.ark;
             }
+            $defunc->();
         }
+        return "Bailed: h.bail" if h.bail;
         each tin $h {
             $n =~ /\W+/ && die "wobbyly $t varnameinterpretation: $n", $s;
         }}
-        my $cod = [];
         if (@{h.arks} == 1) {
             push @$cod, 'var '.h.arks[0].' = ';
             h.arks = [];
@@ -246,9 +329,10 @@ JaBabz: | # make hutscript javascript
         push @$cod, ']);';
         push @$cod, ' var '.$_.' = ar.'.$_.';' for @{h.arks};
         $cod = join '', @$cod;
-        #push @$ta, [$talk,$cod];
+        ar.ta and push @{ar.ta}, [$talk,$cod];
         return $cod
     };
+    
     c&s =~ s{(^\s*|return )(i|o) ([\w\$\#]+[^\n]*[^\n;]+)$}{ "$1 ".$varguessbab->($2,$3) }smeg;
      
         
@@ -566,6 +650,7 @@ jst: | # test js babbler
         wanga
 
         =cut
+        i $d/@whur/@lamb { s&fat && "laughter" }:whur { fai(C,s); s&ok = 1; s&depth * 3 } o $lambs/*
     
     
     # too far away:
