@@ -232,8 +232,9 @@ pi/diff: | # will be a huge industry
     
     $N = 1s&Diff ||= diff(c&was,c&s,c);
     
-    $comp = &N{
+    $comp = &N,shallow{
         $M = [];
+        shallow ||= /^(  +)/;
         each in N {
             $m =
             m bit  $s:nc&s %
@@ -255,9 +256,9 @@ pi/diff: | # will be a huge industry
                 L = L.map(&s{ return s+"\n" });
                 las != '' and L.push(las);
                 $w = []; # to be
-                # fold d>2 into d=2
-                $shallow = /^(  +)/;
-                $deep = /^    /;
+                # fold ind level
+                # deep is shallow+1, when shallow bit grouper found
+                $deep;
                 $la;
                 $finalN = i*1+1 == N.length;
                 $firstN = i == 0;
@@ -265,7 +266,7 @@ pi/diff: | # will be a huge industry
                     # not 3 lines near a change
                     if ((firstN || i > 1) &&
                         (finalN || i < L.length - 3)) {
-                        if (l.match(deep)) {
+                        if (deep && l.match(deep)) {
                             !la and throw "no la";
                             $sh =
                             las&shortfor ||= [];
@@ -287,7 +288,7 @@ pi/diff: | # will be a huge industry
             }
         } 
         each in M {
-            ns&hue and continue
+            ns&hue || ns&bri and continue
             # shortened inside lines
             $text = ns&shortfor;
             !text and continue
@@ -310,12 +311,27 @@ pi/diff: | # will be a huge industry
         return M;
     };
     
+    
     $B = Gc&B;
     $w = Bs&way;
     
     1s&Compway != w and delete 1s&Comp;
     1s&CompN != N and delete 1s&Comp;
-    1s&Comp ||= comp(N);
+    if (!1s&Comp) {
+        $m = comp(N);
+        if (0) { # < applying tighter grouping
+        # datamodel weird, totally breaks it,
+        $fatpocket = m.filter(&C{
+            !s&shortfor and return
+            s&shortfor.length < 1000 and return
+            c&s += s&shortfor;
+            delete s&shortfor;
+            return 1
+        });
+        fatpocket.length and m = comp(m)
+        }
+        1s&Comp = m;
+    }
     1s&CompN = N;
     1s&Compway = w;
     
