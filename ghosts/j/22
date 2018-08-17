@@ -1062,7 +1062,7 @@ iooia: | # F > i/o > input/output
         # not the same d.path (or d) of i/o
         #   is a lower level, manyer
         # meta applies to non-our path only.
-        $path = d.our || [];
+        $path = (d.our || []).slice();
         $mi = path.length;
         d.path and d.path.map(&p{ path.push(p) });
         
@@ -1077,6 +1077,18 @@ iooia: | # F > i/o > input/output
             $rows = [];
             each ri,row d.rows {
                 $S = row.slice(-1)[0];
+                if (0 && i == mi && S == null && s.sc && ss&z) {
+                    d.our.join('') != 'ytv' and throw "have ss&z, null our thing, but what is dour?", d.our.join('')
+                    # we got to y.tv, but it seems to use z instead
+                    # A:o used to mix all attachment methods together...
+                    # suppose this is fine:
+                    $tv = s.y.tv = {};
+                    each in ss&z {
+                        tv[n.t] ||= {};
+                        tv[n.t][n.y.cv] = n;
+                    }
+                    S = tv;
+                }
                 if (S == null) {
                     row.push(null);
                     rows.push(row);
@@ -1494,7 +1506,13 @@ t/iooiata: | # chetur
     $t = io.nz();
     m therowsofan  $s:t.p.rows,dl:8.16
     t.partial = 1;
-    $s = t.ind(&s,t{ return G&toLines,s }).join("\n");
+    $s = t.ind(&s,t{
+        !(s.t && s.y.cv) and debugger;
+        $z = ss&z; delete ss&z;
+        $line = G&toLines,s;
+        z and ss&z = z;
+        return line
+        }).join("\n");
     m indy  $s:s %hue:120deg,ws:pre,dis:block
     
     $a = &t,talk,params{
