@@ -153,8 +153,8 @@ iooia: | # F > i/o > input/output
             $path = m[0].split('/');
             $outer = parse;
             $pa;
-            $dpa = &setpav{
-                if (pa.setpav) { # variable/bind param
+            $dpa = &eatparam{
+                if (eatparam) { # bind param to path bit
                     !params.length and throw "Not enough params", pa.t, pa, d
                     pa.v = params.shift();
                 }
@@ -241,7 +241,6 @@ iooia: | # F > i/o > input/output
                     # then these d can be compiled in
                 }
             }
-            pa.doof and throw "Doofing already",pa;
         }
         
         # others, use up params
@@ -355,17 +354,68 @@ iooia: | # F > i/o > input/output
     }
     #c doof: pour iterator through function, making another iterator
     io.doof = &t,pa{
+        # take iterator
+        !t.more and t = io.nz(t)
+        #debugger;
+        # copy schema + column for func return
         $d = {};
-        # give d.path = [pa,{t.path}],
-        #   so our iterator/extrafunccolumn
-        $ar;
-        $rows;
-        # our d.path should be theirs + d.
-        while (ar = t.more()) {
-            # pa is whatever it is
-            # load up rows
+        d.path = t.path.slice();
+        d.path.unshift(pa);
+        # how to operate
+        $h = {};
+        # iterations vote [with r, for/against row]+
+        $inc = [];
+        $exc = [];
+        if ('grepping or mapping') {
+            if ('uni') { # que objects, rhythm >= to rows
+                t.partial = 1;
+                $cb = pa.v;
+                typeof cb != 'function' and throw "Not function", pa
+                t.ind(&s,t{
+                    # C the item, s the iterator, to them
+                    $isC = s && typeof s == 'object'
+                        && s.t != null && s.y && s.c && s.sc;
+                    !isC and throw "doof-grep-ind got !C s",s,t.row;
+                    
+                    $r = cb(A,s,G,T,t);
+                    
+                    $to = r ? inc : exc;
+                    t.row.indexOf(s) < 0 and throw "s not in trow?",s,t.row
+                    to.push([r,t.row]);
+                });
+            }
+            else {
+                throw "wants rows or the/other arks";
+                # changing path/arks means another iterator?
+                # or we just change em, t = nz(t)
+            }
         }
-        return io.nz()
+        else {
+            throw "mapping, doing, regrouping, who knows"
+        }
+        # inc-ings vs exc-ings
+        # to dedupe itering objects on the same row
+        # anyone says yes
+        # < we could tally results a bit
+        #   before deciding how we are operating
+        #     if they all seem boolean
+        # < maybe they should pick the best one along the row?
+        #   ie if we're looking for music, the live streams deep
+        #     within the music collection should win
+        # < the comp for attention
+        d.rows = [];
+        $la;
+        each i,rr inc {
+            $r = rr[0];
+            $row = rr[1];
+            row == la and continue
+            !r and continue
+            row = row.slice();
+            row.unshift(r);
+            d.rows.push(row);
+            la = row;
+        }
+        return io.nz(d)
     };
     
     #c rowing: travel d.path for i/o hooks
@@ -585,14 +635,24 @@ iooia: | # F > i/o > input/output
         h.returns and d.sok = 1
         h.first ||= &{};
         h.found ||= &{};
+        $first = 1;
         $col = &q,p{
             p ||= {};
             p.i ||= q ? q.i+1 : 0;
             $pa = p.pa || d.path[p.i];
             !pa and throw "No pattern!: "+p.i
             
-            if (!q) {
-                p.i > 0 and throw "no q, notfirst"
+            if (pa.doof) {
+                # lastfuncs at beginning of path
+                #  - happen just before this io returns
+                # firstfuncs at end of path
+                #  - happen before we started, are now d.plumb
+                # suppose we continue with row as our rows, etc.
+                p.found = [1];
+            }
+            else
+            if (first) {
+                first = 0;
                 if (pa.glob || pa.spacer) {
                     # implies
                     !A.r and throw "unreal beginning, no Ar"
@@ -735,6 +795,7 @@ iooia: | # F > i/o > input/output
 
         A.debug and debugger
         d.sok && ss.length <= 1 and return ss[0]
+        delete d.sok;
         #h.returns and debugger; #throw "Wanted to return s",ss,d
         return ss
     };
@@ -847,6 +908,7 @@ iooia: | # F > i/o > input/output
             # add anything else we can name but wasn't asked for
             t.arkimp = {}; # tarky not in tarks
             each i,pa t.path {
+                !pa.t and continue
                 t.arky[pa.t] || pa.ark and continue
                 pa.t.match(/\W/) and continue
                 t.arky[i] = pa.t;
@@ -924,6 +986,8 @@ iooia: | # F > i/o > input/output
                 !t.partial && t.row.slice(-1)[0] == null and continue
                 each dv row {
                     v == null and continue
+                    $pa = t.path[d];
+                    pa.doof and continue
                     # same as last row, still at depth
                     la[d] == v and continue
                     t.d = d;
@@ -1486,11 +1550,11 @@ t/iooia: |
         nc&dl ||= 12;
     }
     
-t/iooiata: | # chetur
+t/iooiata: | # func really
     G&heading;
     $io = G&way,'iooia';
     
-    G&way,'Doming',ar;
+    #G&way,'Doming',ar;
     S 1 LOvely
     $start = 
       "upsulat\t\ts:gakl\n"
@@ -1502,21 +1566,30 @@ t/iooiata: | # chetur
      +"  vou\n";
     $d = 1s&dee = G&readLines,start [0];
     
-    o $d/*/*
-    $t = io.nz();
-    m therowsofan  $s:t.p.rows,dl:8.16
-    t.partial = 1;
-    $s = t.ind(&s,t{
-        return G&toLines,s
-    }).join("\n");
-    m indy  $s:s %hue:120deg,ws:pre,dis:block
-    
     $a = &t,talk,params{
-        $d = {};
-        io[t](talk,params||[],d);
-        m $talk  $s:d
+        if (t) {
+            $d = {};
+            io[t](talk,params||[],d);
+        }
+        $t = io.nz();
+        m $talk  $s:t,dl:9.26
+        
+        t.partial = 1;
+        $s = t.ind(&s,t{
+            return G&toLines,s
+        }).join("\n");
+        m indy  $s:s %hue:120deg,ws:pre,dis:block
+        
+        t.p = 'usual';
         return d
     };
+    
+    a('o','$d/*/*',[d]);
+    
+    o { Object.keys(C.sc).length } $d/*/*
+    a(0,'funclast grep by sc length');
+    
+    
     
     #a('$d
     
