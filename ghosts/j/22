@@ -164,12 +164,12 @@ iooia: | # F > i/o > input/output
                 parse = n;
                 pa = {};
                 
-                #c clone C
-                p(/^y(\S*)$/) and pa.separation = m[0]||1; dpa(); continue
-                # set var from path bit
+                #c set var from path bit
                 p(/:(\w*)$/) and pa.ark = m[0] || 1
                 # function
                 p(/^\{(\w+)?\}$/) and pa.doof = m[0]||1; dpa(1); continue
+                # clone C
+                p(/^y(\S*)$/) and pa.separation = m[0]||1; dpa(); continue
                 # and use each of them
                 p(/^@/) and pa.sark = 1
                 # can be i $i/@#dee/$fings o $o/*:dee
@@ -353,9 +353,13 @@ iooia: | # F > i/o > input/output
                 # no information lost!
     }
     #c doof: pour iterator through function, making another iterator
-    io.doof = &t,pa{
+    # is a join from the rows already, but pretending its not
+    # adds a column for return value
+    io.doof = &D,t,pa{
         # take iterator
         !t.more and t = io.nz(t)
+        # happens like/around clonings
+        pa.separation and return io.separation(D,t,pa)
         # copy schema + column for func return
         $d = {};
         d.path = t.path.slice();
@@ -435,13 +439,7 @@ iooia: | # F > i/o > input/output
         $la;
         each i,r inc {
             d.returns.push(r.r);
-            $oi = d.objects.indexOf(r.s);
-            oi < 0 and d.objects.push(r.s)
-            else {
-                $obr =
-                d.obirows[oi] ||= [];
-                
-            }
+            d.objects.push(r.s);
             r.row == la and continue
             !r.r and continue
             la = r.row;
@@ -455,6 +453,18 @@ iooia: | # F > i/o > input/output
         return io.nz(d)
     };
     
+    #c separation
+    # pa is from a path consuming this t
+    # for d
+    io.separation = &D,t,pa{
+        # arks in t going to d must be cloned
+        $d = {};
+        # < move much t.path alteration earlier
+        d.path = t.path.slice();
+        # wired new.y.$to
+        pa.yto and neu.y[pa.yto] = old
+        pa.yfrom and old.y[pa.yfrom] = neu
+    };
     #c rowing: travel d.path for i/o hooks
     # < able to async, when A:o things
     $rowing = &talk,params,d,h{
@@ -505,7 +515,7 @@ iooia: | # F > i/o > input/output
             #   could decide what to put after finding options for where
             !pa.doof and break
             # new iterator replaces old, so we can pipeline?
-            d.plumb = io.doof(d.plumb,pa);
+            d.plumb = io.doof(d,d.plumb,pa);
             i--;
         }
         # plumb rowmuddler
@@ -821,7 +831,7 @@ iooia: | # F > i/o > input/output
             lastfuncs.reverse();
             each i,pa lastfuncs {
                 # new iterator replaces old, so we can pipeline?
-                T.o = io.doof(T.o,pa)
+                T.o = io.doof(d,T.o,pa)
             }
         }
         
@@ -1630,7 +1640,9 @@ t/iooiata: | # func really
     o { Object.keys(C.sc).length }:tings $d/*/*
     a(0,'funclast grep by sc length');
     
-    
+    # check:
+    # {}:ting $d/*:ting # should have 1 ting column
+    # searching for @names
     
     #a('$d
     
