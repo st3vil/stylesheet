@@ -366,108 +366,7 @@ iooia: | # F > i/o > input/output
         return d
     };
     
-    #c knowables
-    io.knowing = &d,v{
-        # glob tv wants to make some path
-        v ||= {t:'*',y:{cv:'*'}};
-        # a subtype, reenters at the end:
-        d.asa and $other = d; d = other.asa;
-        # types
-        d == 'tv' and d = {t:d,our:['y','tv'],path:[v.t,v.y.cv],usu:1};
-        d == 'tw' and d = {t:d,our:['y','tw'],path:[v.t],usu:1}
-        d == 'z' and d = {t:d,our:['sc','z']}
-        # sheer bunch of keys
-        d.constructor == Array and d = {path:d,usu:1}
-        
-        typeof d == 'string' and throw "intelligise", d, other
-        
-        other and ex(d,other);
-        
-        # apply the usual behaviour:
-        #  - when duplicate, overwrite
-        #    if tv, overwritings become linked lists
-        if (d.usu) {
-            if (d.t == 'tv') {
-                # when not debugging:
-                #d.also ||= ['tw','z']
-            }
-            d.dup = io.usu_dup;
-        }
-        return d
-    };
-    # this should be available as around or after method call..
-    # or "the usual" that the actual d.dup works with or without
-    io.usu_dup = &d,x,v{
-                # can link duped things, new thing gets v.y.$to
-                # as in, newthing.y.earlier = oldthing
-                $from;
-                $to;
-                # make similar index to z to hold dupes, in order
-                # as s&z grep !in tv might reveal
-                $dupz;
-                
-                # revision of an item
-                d.t == 'tv' and from = 'later'; to = 'earlier'; dupz = 1;
-                # revision of name, moving through items
-                d.t == 'tw' and from = 'begins'; to = 'continues'; dupz = 1;
-                # < first relative thing keeps its position in tw
-                # < check new/old position in z, to inform who takes tw
-                #   hmmm, a flappy edge to the arrangement
-                # stuff moves through words
-                # these schema should be drawn out
-                # become keywords to io
-                # io will just work
-                
-                if (from || to) {
-                    # which way is it going: new val stays, new val joins the queue
-                    $backwards = from && x.y[from] || d.keep_first; #]
-                    if (backwards) {
-                        !from and throw "can't go backwards with no from?"
-                        # ^ unless use in telling things that missed the spot who beat them
-                        !d.keep_first and throw "protocol changed"
-                        # we could -1 y&dup_tv index maybe?
-                        # or add y&most_$from to the end of the linked list
-                        # this should magnify into a huge democratic space for ...
-                        # space for 'space for ...'
-                        # or follow links:
-                        $X = x;
-                        # < all while loops should have some limit, spec learned
-                        #   badge earned. all code is is bestowment.
-                        $i = 100;
-                        while (X.y[from]) {
-                            i-- < 4 and throw "ixhaust"
-                            X = X.y[from];
-                        }
-                        # now last in the trail:
-                        X.y[from] = v;
-                        to and v.y[to] = X;
-                        # so tv stays something, but .y.later = v extends forever
-                    }
-                    else {
-                        from and x.y[from] = v;
-                        to and v.y[to] = x;
-                        # now tv sets us.
-                    }
-                }
-                
-                # make tv_dup, index as tv but to [] of items at the point
-                # the minter will care about such things, T clutter, minor errors, noise
-                if (dupz) {
-                    !d.our and throw "housing not given"
-                    $p = {t:'z'};
-                    p.our = d.our.slice();
-                    $gk = p.our.pop();
-                    p.our.push(gk+'_dup');
-                    p.path = d.path.slice();
-                    # dup should include the one already there
-                    p.zefault = [x];
-                    io.input(s,p,v);
-                }
-                
-                d.keep_first and return 1
-                # but we (as eg tv) shall go on to tw and z even dups
-                # no information lost!
-    }
+
     #c doof: pour iterator through function, making another iterator
     # is a join from the rows already, but pretending its not
     # adds a column for return value
@@ -567,7 +466,7 @@ iooia: | # F > i/o > input/output
         return io.nz(d)
     };
     
-    #c separation
+    #c separation - cloning process
     # pa is from a D.path consuming this t
     # happens as a firstfunc
     io.separation = &D,t,ya{
@@ -965,80 +864,8 @@ iooia: | # F > i/o > input/output
         return ss
     };
     
-    #c i_ somewhere someway somestuff
-    # the dot of the i is somestuff, index the space, trunk way etc.
-    # shall we use a talky Babz'd params-implied-by-$ thing?
-    # or just put thing on thing arguments?
-    io.i = &talk,params,d{
-        # talk:
-        #   'universal keyworded-by $thing'
-        # find these things... barewords we have around?
-        # usually a J universal like N,M,1,9, etc.
-        # and somethinging to it:
-        # talk='N $by', param=[$by]
-        #   N means 3's A:n's r's cM, # caveful of atoms
-        #      or M 1's A:n's r's cM  # just the people around you
-        #   should kinda m:N $by,
-        #   but with the o kind of universal awareness, not A:n
-        # but simply as possible, until real use cased:
-        # - make sure this is so!
-        # as opposed to o:
-        # o how is this?
-        # 
-        $row; # see 'crazy'
-        # row may > path?
-        # path should grow with it,
-        #   unless they're really wandery globs, then you'd know...
-        
-        
-        return io.rowing(talk,params,d,{
-            found: &d,p,pa,s,D,v{
-                # what should be
-                # space to it gets filled in with hash
-                # and when should existing objects be replaced,
-                #   but indexes etc copied to the new one?
-                #   upstream changes joining local modulation
-                #   seems like s's buzz.
-                
-                # < input null to delete?
-                p.found = [io.input(s,D,v)]
-            },
-            returns: 1,
-            is: 'i',
-        })
-    };
-    
-    
-    #c _o sketches use for A:o:
-    # o gets you what you wanted from an intelligised pile
-    #   midsection of o is the midsection of n
-    #  S titles can use this to define iterators
-    # operation of returning results from traversal,
-    #   or advancing the A:o of the C, as in dome calmness check
-    
-    # o may ventually look like n,
-    #   and n may eventually have blockquotes hanging on after it,
-    #   even T things, grabbing whatever on/over/into Aing thereinout
-    
-    # hmmm. music collection will be lived by o,
-    # QMS would be in a quarantine
-    
 
-    # there must be more
-    # the o d will be... more infinite
-    #   particularly grep/sort/map
-    #  tal being apply
-    # lingo shape glue session
-    io.o = &talk,params,d{
-        return io.rowing(talk,params,d,{
-            found: &d,p,pa,s,D,v{
-                # 6, only the last column
-                p.found = io.output(s,D,v);
-            },
-            is: 'o',
-        })
-    };
-    #c io.nz
+    #c nz
     # converts p.rows to iteration or whatever
     io.nz = &d{
         d ||= T.o;
@@ -1172,6 +999,81 @@ iooia: | # F > i/o > input/output
     };
     
     
+    #c io
+    # modes of rowing awareness
+    
+    # i: somewhere someway somestuff
+    # the dot of the i is somestuff, index the space, trunk way etc.
+    # shall we use a talky Babz'd params-implied-by-$ thing? yes
+    io.i = &talk,params,d{
+        # talk:
+        #   'universal keyworded-by $thing'
+        # find these things... barewords we have around?
+        # usually a J universal like N,M,1,9, etc.
+        # and somethinging to it:
+        # talk='N $by', param=[$by]
+        #   N means 3's A:n's r's cM, # caveful of atoms
+        #      or M 1's A:n's r's cM  # just the people around you
+        # < should kinda m:N $by,
+        #   but with the o kind of universal awareness, not A:n
+        # but simply as possible:
+        # - make sure this is so!
+        # as opposed to o:
+        # o how is this?
+        
+        # < wandery globs, must grow rows, path?
+        #     see separation + invent the talk for
+        # < sometimes (to doof many times in one row)
+        #   need a cell that corresponds to the other cells,
+        #   but not much
+        
+        return io.rowing(talk,params,d,{
+            found: &d,p,pa,s,D,v{
+                # what should be
+                # space to it gets filled in with hash
+                # and when should existing objects be replaced,
+                #   but indexes etc copied to the new one?
+                #   upstream changes joining local modulation
+                #   seems like s's buzz.
+                
+                # < input null to delete?
+                p.found = [io.input(s,D,v)]
+            },
+            returns: 1,
+            is: 'i',
+        })
+    };
+    
+    
+    # o sketches use for A:o:
+    # o gets you what you wanted from an intelligised pile
+    #   midsection of o is the midsection of n
+    #  S titles can use this to define iterators
+    # operation of returning results from traversal,
+    #   or advancing the A:o of the C, as in dome calmness check
+    
+    # o may ventually look like n,
+    #   and n may eventually have blockquotes hanging on after it,
+    #   even T things, grabbing whatever on/over/into Aing thereinout
+    
+    # hmmm. music collection will be lived by o,
+    # QMS would be in a quarantine
+    
+
+    # there must be more
+    # the o d will be... more infinite
+    #   particularly grep/sort/map
+    #  tal being apply
+    # lingo shape glue session
+    io.o = &talk,params,d{
+        return io.rowing(talk,params,d,{
+            found: &d,p,pa,s,D,v{
+                # 6, only the last column
+                p.found = io.output(s,D,v);
+            },
+            is: 'o',
+        })
+    };
     #c input see,
     # fills in an index with a value
     # total definition of z/tv indexes, which should be one of a few...
@@ -1362,7 +1264,109 @@ iooia: | # F > i/o > input/output
             .filter(&s{ return s });
         return last_column
     };
-    
+    #c knowables
+    io.knowing = &d,v{
+        # glob tv wants to make some path
+        v ||= {t:'*',y:{cv:'*'}};
+        # a subtype, reenters at the end:
+        d.asa and $other = d; d = other.asa;
+        # types
+        d == 'tv' and d = {t:d,our:['y','tv'],path:[v.t,v.y.cv],usu:1};
+        d == 'tw' and d = {t:d,our:['y','tw'],path:[v.t],usu:1}
+        d == 'z' and d = {t:d,our:['sc','z']}
+        # sheer bunch of keys
+        d.constructor == Array and d = {path:d,usu:1}
+        
+        typeof d == 'string' and throw "intelligise", d, other
+        
+        other and ex(d,other);
+        
+        # apply the usual behaviour:
+        #  - when duplicate, overwrite
+        #    if tv, overwritings become linked lists
+        if (d.usu) {
+            if (d.t == 'tv') {
+                # when not debugging:
+                #d.also ||= ['tw','z']
+            }
+            d.dup = io.usu_dup;
+        }
+        return d
+    };
+    # this should be available as around or after method call..
+    # or "the usual" that the actual d.dup works with or without
+    io.usu_dup = &d,x,v{
+                # can link duped things, new thing gets v.y.$to
+                # as in, newthing.y.earlier = oldthing
+                $from;
+                $to;
+                # make similar index to z to hold dupes, in order
+                # as s&z grep !in tv might reveal
+                $dupz;
+                
+                # revision of an item
+                d.t == 'tv' and from = 'later'; to = 'earlier'; dupz = 1;
+                # revision of name, moving through items
+                d.t == 'tw' and from = 'begins'; to = 'continues'; dupz = 1;
+                # < first relative thing keeps its position in tw
+                # < check new/old position in z, to inform who takes tw
+                #   hmmm, a flappy edge to the arrangement
+                # stuff moves through words
+                # these schema should be drawn out
+                # become keywords to io
+                # io will just work
+                
+                if (from || to) {
+                    # which way is it going: new val stays, new val joins the queue
+                    $backwards = from && x.y[from] || d.keep_first; #]
+                    if (backwards) {
+                        !from and throw "can't go backwards with no from?"
+                        # ^ unless use in telling things that missed the spot who beat them
+                        !d.keep_first and throw "protocol changed"
+                        # we could -1 y&dup_tv index maybe?
+                        # or add y&most_$from to the end of the linked list
+                        # this should magnify into a huge democratic space for ...
+                        # space for 'space for ...'
+                        # or follow links:
+                        $X = x;
+                        # < all while loops should have some limit, spec learned
+                        #   badge earned. all code is is bestowment.
+                        $i = 100;
+                        while (X.y[from]) {
+                            i-- < 4 and throw "ixhaust"
+                            X = X.y[from];
+                        }
+                        # now last in the trail:
+                        X.y[from] = v;
+                        to and v.y[to] = X;
+                        # so tv stays something, but .y.later = v extends forever
+                    }
+                    else {
+                        from and x.y[from] = v;
+                        to and v.y[to] = x;
+                        # now tv sets us.
+                    }
+                }
+                
+                # make tv_dup, index as tv but to [] of items at the point
+                # the minter will care about such things, T clutter, minor errors, noise
+                if (dupz) {
+                    !d.our and throw "housing not given"
+                    $p = {t:'z'};
+                    p.our = d.our.slice();
+                    $gk = p.our.pop();
+                    p.our.push(gk+'_dup');
+                    p.path = d.path.slice();
+                    # dup should include the one already there
+                    p.zefault = [x];
+                    io.input(s,p,v);
+                }
+                
+                d.keep_first and return 1
+                # but we (as eg tv) shall go on to tw and z even dups
+                # no information lost!
+    };
+
     return io
     
 t/iooia: |
