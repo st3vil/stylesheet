@@ -274,7 +274,15 @@ iooia: | # F > i/o > input/output
             if (pa.separation) {
                 $mode = pa.separation;
                 mode == '1' and mode = 'C';
-                mode = mode.split(',');
+                parse = mode;
+                # which ark specifically (usu all/sarked)
+                while (p(/^(\w+):/))
+                     (pa.arkfor ||= []).push(m[0])
+                # how to clone depth
+                p(/\,$/) and pa.yshallow = 1;
+                p(/\.$/) and pa.yalone = 1;
+                # can yer through time, 'y' implies new.y.C = old
+                mode = parse.split(',');
                 pa.yto = mode[0];
                 pa.yfrom = mode[0];
                 pa.doof = 'separation';
@@ -294,7 +302,7 @@ iooia: | # F > i/o > input/output
             !pa.doof && !fi and fi = pa
         }
         
-        # 3 implications create path
+        #c 3 implications create path
         
         # o word   implies   o A.r/word
         if (fi) {
@@ -334,7 +342,16 @@ iooia: | # F > i/o > input/output
             # < other: io-ish syntax/tool these such operations ^
         }
         else {
-            
+            if (d.is == 'o') {
+                # o ... y   implies   o y ...
+                $i = 10;
+                while (1) {
+                    i-- < 1 and throw "many y..."
+                    $pa = d.path.slice(-1)[0];
+                    !pa.separation and break
+                    d.path.push(d.path.pop());
+                }
+            }
         }
         # < without plumbing, i $d would do nothing?
         
@@ -503,7 +520,7 @@ iooia: | # F > i/o > input/output
             }
         }
         else {
-            throw "mapping, doing, regrouping, who knows"
+            throw "mapping, doing, regrouping, signal gen, who knows"
         }
         # inc-ings vs exc-ings
         # to dedupe itering objects on the same row,
@@ -553,43 +570,94 @@ iooia: | # F > i/o > input/output
     #c separation
     # pa is from a D.path consuming this t
     # happens as a firstfunc
-    io.separation = &D,t,pa{
+    io.separation = &D,t,ya{
         # another iterator
         $d = {};
-        # arks in t going to d must be cloned
+        # which should have clones
         $sarks = {};
-        each i,Dpa D.path {
-            pa.ark and t.arks[i] = pa.ark
+        each i,Pa D.path {
+            Pa.sark and sarks[i] = Pa.t
         }
-        # occasionally will run without a t,
-        if (!Object.keys(sarks).length) {
-            # no sarks (column inter links)
-            # plumbing ensures something sarks
-            # for i, y mean to operate on non-first pa.v
-            
-            # for o, y means to clone outgoing fields
-            # doesn't matter which 
-            # could mean to get things back...
+        !Object.keys(sarks).length and sarks = null
+        
+        if (!t) {
+            # funcfirst y, D.plumb would be t
+            D.plumb and throw "funcfirst y !t D.plumb"
+            if (D.is == 'o') {
+                # is alias for funclast y, in parsetalk
+                throw "o funcfirst y"
+            }
+            else {
+                $first = 1;
+                each i,Pa D.path {
+                    Pa.doof and continue
+                    first and first = 0; continue
+                    !io.isC(pa.v) and continue
+                    pa.v = io.separate(pa.v,Pa,Pa,ya)
+                }
+            }
+            # remain !D.plumb
+            return null
         }
-        d.path = t.path.slice();
+        
+        d.path = t.path.map(&s{ return ex({},s) });
         d.rows = t.rows.slice();
         each i,row d.rows {
             row = d.rows[i] = row.slice();
             each is row {
-                $pa = d.path = 
+                $pa = t.path[i];
+                $Pa = d.path[i];
+                if (sarks) {
+                    # only those
+                    # we could know how separatey things want to be,
+                    # see "universals can want attention"
+                    # see also "no find ark/column" for when they ...
+                    $Di = sarks.indexOf(pa.ark || pa.t);
+                    Di < 0 and continue
+                    # also now Pa can be the sarksumer,
+                    # not just iterator's path bit here
+                    Pa = D.path[Di]
+                }
+                if (ya.arkfor) {
+                    # only those for this y
+                    ya.arkfor.indexOf(pa.ark || pa.t) < 0 and continue
+                }
+                row[i] = io.separate(s,Pa,pa,ya)
+            }
         }
-        # wired new.y.$to
+        
+        return io.nz(d)
     };
     # could get complicated soon...
     # universals can want attention here
-    io.separate = &s,pa{
-        pa ||= {};
+    io.separate = &s,Pa,pa,ya{
+        # Pa - io going to's path bit
+        # pa - io coming from's path bit
+        # ya - the .separation path bit
+        ya ||= {};
         $old = s;
         
         neu = G&Cye,old;
         
-        pa.yto and neu.y[pa.yto] = old
-        pa.yfrom and old.y[pa.yfrom] = neu
+        # < what to do with its innards
+        if (ya.yshallow) { # y,
+            # only the top clones, keeps all innards
+            #   whether path includes their depths or not
+        }
+        else
+        if (ya.yalone) { # y.
+            # disconnect innards
+            # < elabourate input()
+        }
+        else { # y
+            # clone everything
+            # < T to wander more endlessly
+            # path of 10 
+            # t.partial
+        }
+        
+        ya.yto and neu.y[ya.yto] = old
+        ya.yfrom and old.y[ya.yfrom] = neu
         
         return neu
     };
@@ -698,7 +766,7 @@ iooia: | # F > i/o > input/output
                     coli == null && pa.t == 's' and coli = t.path.length-1
                     # < if it's 'lamb' and they have 'lambs/*',
                     #   suppose s is a lamb
-                    coli == null and throw "no find column for",pa.t,t.arks
+                    coli == null and throw "no find ark/column for",pa.t,t.arks
                     
                     # uniq the arked column's values
                     # group rows, put b.pa.rows for next regroup inward
