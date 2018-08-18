@@ -951,16 +951,14 @@ iooia: | # F > i/o > input/output
         }
         
         t.arky = ex({},t.arks);
-        if (!t.arkimp) {
-            # add anything else we can name but wasn't asked for
-            t.arkimp = {}; # tarky not in tarks
-            each i,pa t.path {
-                !pa.t and continue
-                t.arky[pa.t] || pa.ark and continue
-                pa.t.match(/\W/) and continue
-                t.arky[i] = pa.t;
-                t.arkimp[pa.t] = i;
-            }
+        # add anything else we can name but wasn't asked for
+        t.nonarks = {}; # tarky not in tarks
+        each i,pa t.path {
+            !pa.t and continue
+            t.arky[pa.t] || pa.ark and continue
+            pa.t.match(/\W/) and continue
+            t.arky[i] = pa.t;
+            t.nonarks[pa.t] = i;
         }
         
         # iterate per row
@@ -1001,7 +999,7 @@ iooia: | # F > i/o > input/output
                         be[k] != ar[k] and diff = 1
                     }
                     diff and t.next = be; break
-                    each ik t.arkimp {
+                    each ik t.nonarks {
                         # or accumulate nonarked things
                         first and ar[k] = [ar[k]]
                         ar[k].push(be[k]);
