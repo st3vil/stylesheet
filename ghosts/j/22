@@ -220,6 +220,9 @@ iooia: | # F > i/o > input/output
             parse = outer;
         }
         parse and throw "Unparsed", parse
+        
+        # 2
+        $fi;
         each i,pa d.path {
             if (pa.separation) {
                 $mode = pa.separation;
@@ -241,12 +244,52 @@ iooia: | # F > i/o > input/output
                     # then these d can be compiled in
                 }
             }
+            !pa.doof && !fi and fi = pa
         }
         
-        # others, use up params
+        # 3 implications create path
+        
+        # o word   implies   o A.r/word
+        if (fi) {
+            # first non-doofer
+            if (fi.glob || fi.spacer) {
+                # seems to have something to look at already
+                !A.r and throw "unreal beginning, no Ar"
+                # < may refer to a 1s&word?
+                #   Babz must collect & maybe deposit them all somewhere
+                #     would make good autodoc
+                #   and so Domes and other tatters of process can be
+                #   undef'd after a point, or to some sense....
+                pa = {t:'r',implicit:1,v:A.r};
+                d.path.splice(d.path.indexOf(fi),0,pa);
+                # should leave out of rows, being implied?
+            }
+        }
+        
+        # o $d   implies   o $d/*
+        if (d.is == 'o') {
+            !fi and throw "no one?"
+            if (d.path.length == 1 && fi.isparam)
+                d.path.push({t:'*',glob:1})
+        }
+        
+        # i $d o $o   implies   i $d/@s o $o/*:s
+        if (d.plumb) {
+            # < i $i/@#dee o $o/*:dee   to copy spacers
+            if (!d.path.filter(&s{ return s.sark }).length)
+                d.path.push({sark:1,t:'s'})
+            # < other: io-ish syntax/tool for such operations ^
+        }
+        # < without plumbing, i $d would do nothing?
+        
+        
+        # 6/8 others, use up params
         d.plumb and d.plumb = parsetalk(d.plumb,params)
         
+        # 7/8 sanity on dials, exact traction
         params.length and throw "Too many params", params
+        
+        # 8/9
         return d
     };
     
@@ -488,10 +531,10 @@ iooia: | # F > i/o > input/output
         }
         else {
             d ||= {};
+            h.is && !d.is and d.is = h.is
             parsetalk(talk,params,d);
         }
         !d.path and throw "no path"
-        h.is && !d.is and d.is = h.is
         
         #c plumb from somewhere
         if (d.plumb && !d.plumb.more) {
@@ -514,6 +557,7 @@ iooia: | # F > i/o > input/output
             # < support for mid-path doofing
             #   could decide what to put after finding options for where
             !pa.doof and break
+            !d.plumb and throw "firstfunc but no plumbing",pa
             # new iterator replaces old, so we can pipeline?
             d.plumb = io.doof(d,d.plumb,pa);
             i--;
@@ -524,15 +568,6 @@ iooia: | # F > i/o > input/output
             # pa.sark and pa.v = their rows's ark
             # their (o's) rows are stitched in to ours
             #  < sarkumulative grouping... instruct a vals=[],valis=[]
-            
-            #  can be i $i/@#dee o $o/*:dee
-            #   to copy spacers
-            # i $d   implies   i $d/*  ?
-            # i $d/* o $o/*   implies   i $d/*/@s o $o/*:s
-            # so give i the thing saying build such-and-such:
-            if (!d.path.filter(&s{ return s.sark }).length)
-                d.path.push({sark:1,t:'s'})
-            # < other: io-ish syntax/tool for such operations ^
             
             # P = [p], p.row = our row
             # p.pa be diverged from the one in d.path itself,
@@ -700,14 +735,6 @@ iooia: | # F > i/o > input/output
             else
             if (first) {
                 first = 0;
-                if (pa.glob || pa.spacer) {
-                    # implies
-                    !A.r and throw "unreal beginning, no Ar"
-                    # < may refer to a 1s&word? 
-                    pa = {t:'start',implicit:1,v:A.r};
-                    d.path.unshift(pa);
-                    # should leave out of rows, being implied
-                }
                 !pa.v and debugger; #throw "nofirst"
                 
                 h.first(d,p,pa);
@@ -913,13 +940,6 @@ iooia: | # F > i/o > input/output
     # lingo shape glue session
     $o = io.o = &talk,params,d{
         return rowing(talk,params,d,{
-            first: &d,p,pa{
-                !pa.v and throw "nofirst"
-                if (d.path.length == 1) { # <  && pa.isparam
-                    # o $thing implies o $thing/*
-                    d.path.push({t:'*',glob:1});
-                }
-            },
             found: &d,p,pa,s,D,v{
                 # 6, only the last column
                 p.found = output(s,D,v);
@@ -1341,7 +1361,7 @@ t/iooia: |
     
     #c iteration
     S 4 iteration
-    n ble 8 s:bmung %fs:600%,dis:block
+    n ble 8 s:iteration %fs:600%,dis:block
     # so 'i $t' tv's each 'o $w/*:W', like 'i $t $W'+
     $d = G&Cye,['upsulat','1',{s:'gakl'}];
     'doofica latico matri vou'.split(' ').map(&s{
