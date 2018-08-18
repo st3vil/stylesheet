@@ -356,16 +356,22 @@ iooia: | # F > i/o > input/output
     io.doof = &t,pa{
         # take iterator
         !t.more and t = io.nz(t)
-        #debugger;
         # copy schema + column for func return
         $d = {};
         d.path = t.path.slice();
-        d.path.unshift(pa);
+        # it may be for what defines it (lastfunc)
+        $funci = d.path.indexOf(pa);
+        funci < 0 and d.path.unshift(pa);
         # how to operate
         $h = {};
-        # iterations vote [with r, for/against row]+
+        # iterations vote for/against row and a cell: {
+        #   r: func return value
+        #   row: in t.rows[t.i]
+        #   s: in .row[i/t.d], the one unique object, the cell
+        #   i: t.d (depth) or t.path[i], the column
         $inc = [];
         $exc = [];
+        $doofings = []; # everything
         if ('grepping or mapping') {
             if ('uni') { # que objects, rhythm >= to rows
                 t.partial = 1;
@@ -376,12 +382,17 @@ iooia: | # F > i/o > input/output
                     $isC = s && typeof s == 'object'
                         && s.t != null && s.y && s.c && s.sc;
                     !isC and throw "doof-grep-ind got !C s",s,t.row;
-                    
                     $r = cb(A,s,G,T,t);
                     
-                    $to = r ? inc : exc;
                     t.row.indexOf(s) < 0 and throw "s not in trow?",s,t.row
-                    to.push([r,t.row]);
+                    $doofing = {
+                        r: r,
+                        row: t.row,
+                        s: s,
+                        i: t.d,
+                    };
+                    doofings.push(doofing);
+                    (r ? inc : exc).push(doofing)
                 });
             }
             else {
@@ -394,7 +405,22 @@ iooia: | # F > i/o > input/output
             throw "mapping, doing, regrouping, who knows"
         }
         # inc-ings vs exc-ings
-        # to dedupe itering objects on the same row
+        # to dedupe itering objects on the same row,
+        # < pick the row that describes more matches at once?
+        #     to avoid talking about stuff that didn't match?
+        # < nonfirst objects on a row lose their return value,
+        #     since we only have one doof column for it
+        #     shapeliness problem
+        #   assume they will use d.objects and d.returns
+        #   
+        #   < rowing itself should use input/output
+        #     so any shapeliness problem can escalate and solve itself:
+        #     nonfirst objects return values:
+        #       could have column types,
+        #       make the doof an array referring to other columns?
+        #      so it can get really complicated,
+        #      methods for schema/data
+        #      ways of partitioning problems and stats near
         # anyone says yes
         # < we could tally results a bit
         #   before deciding how we are operating
@@ -403,17 +429,28 @@ iooia: | # F > i/o > input/output
         #   ie if we're looking for music, the live streams deep
         #     within the music collection should win
         # < the comp for attention
+        d.objects = [];
         d.rows = [];
+        d.returns = [];
         $la;
-        each i,rr inc {
-            $r = rr[0];
-            $row = rr[1];
-            row == la and continue
-            !r and continue
-            row = row.slice();
-            row.unshift(r);
+        each i,r inc {
+            d.returns.push(r.r);
+            $oi = d.objects.indexOf(r.s);
+            oi < 0 and d.objects.push(r.s)
+            else {
+                $obr =
+                d.obirows[oi] ||= [];
+                
+            }
+            r.row == la and continue
+            !r.r and continue
+            la = r.row;
+            $row = la.slice();
+            funci < 0 and row.unshift(r.r)
+            else {
+                row[funci] = r.r
+            }
             d.rows.push(row);
-            la = row;
         }
         return io.nz(d)
     };
@@ -950,10 +987,12 @@ iooia: | # F > i/o > input/output
                     !be and break
                     $diff = 0;
                     each ik t.arks {
+                        # if arked things change
                         be[k] != ar[k] and diff = 1
                     }
                     diff and t.next = be; break
                     each ik t.arkimp {
+                        # or accumulate nonarked things
                         first and ar[k] = [ar[k]]
                         ar[k].push(be[k]);
                     }
@@ -961,7 +1000,7 @@ iooia: | # F > i/o > input/output
                 }
             }
             return ar
-        }
+        };
         #
         t.more = &{
             $ar = parkar();
@@ -984,19 +1023,21 @@ iooia: | # F > i/o > input/output
                 t.row = row;
                 # only for parents with children
                 !t.partial && t.row.slice(-1)[0] == null and continue
+                $unreal_depth = 0;
                 each dv row {
                     v == null and continue
                     $pa = t.path[d];
-                    pa.doof and continue
+                    pa.doof and unreal_depth++; continue
                     # same as last row, still at depth
                     la[d] == v and continue
+                    # < t.d should probably be as row/path i...
                     t.d = d;
                     $s = cb(v,t);
                     s == null and continue;
                     if (typeof s == 'string') {
                         $ind = '';
                         each id,v row {
-                            id == d and break
+                            id == d-unreal_depth and break
                             ind += t.indstr
                         }
                         s = ind+s
@@ -1586,7 +1627,7 @@ t/iooiata: | # func really
     
     a('o','$d/*/*',[d]);
     
-    o { Object.keys(C.sc).length } $d/*/*
+    o { Object.keys(C.sc).length }:tings $d/*/*
     a(0,'funclast grep by sc length');
     
     
