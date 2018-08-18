@@ -69,19 +69,55 @@ TripDeck: | # note vortex, bakes patterns into info
     A.r.y.A.ontula = [];
     #A.ontula = [];
 iooia: | # F > i/o > input/output
-    # these will all be G&F, G&o, G&i...
+    =these will all be G&F, G&o, G&i...
     
-                    # round until found
+    =head1 round until found
     
-    # other possible types of thisness:
-    # - G&s for writing notes for itself
-    #   using traces left by i/oing etc nearby
-    #   doing crazy implicit templating
-    #   throwing universal weight around
-    #  also s is where situations are strategised on
+     other possible types of thisness:
+     - G&s for writing notes for itself
+       using traces left by i/oing etc nearby
+       doing crazy implicit templating
+       throwing universal weight around
+      also s is where situations are strategised on
     
-    # F is a culture of grasping syntax on top of o
-    # formula
+    =q[
+         see if there's functions anywhere
+         they are a separate logic to the pointy path
+         < mix up as much as you want
+         
+         have a right to left flow, assigney
+           i {funclast} pointy/path {funcfirst} o ...
+         usu.
+         
+         functions map/grep
+         < making rows
+           do that via T? see via T
+         should happen before descent into the d.path
+           since values maybe sarked (@name) from what it does
+         
+         via T:
+            like Swim things, they say:
+              understand this name, then you look it up
+                and figure out how to work it
+              Core describes Knowables, like how to:
+                input/output such index
+                where/what/how it's going
+                  where as in something in s should consume it
+                  pretend to be a column or iterator
+                  or it's rows/columns being added/replaced/removed
+              T percolate out like errors/warnings if they are too unknown
+                 may have a part to it specifying where,
+                    like swim is to-cv
+        
+          y*/separation is like a function,
+          must rerow to represent any rearrangement
+          so each thing throws up a new iterator
+          
+    F is a culture of grasping syntax on top of o
+    data formulae
+    
+    ]
+    =cut
     $F = &s,d{ return G&way,'PseudoF',{s:s,d:d} };
     $io = {}; # a bunch
     
@@ -133,7 +169,7 @@ iooia: | # F > i/o > input/output
     
     # < unless it names a universal (1s&bareword) or so,
     #   then use that. inner lingosanctum.
-    $parsetalk = &talk,params,d{
+    io.parsetalk = &talk,params,d{
         d ||= {};
         parse = talk;
         # do i ... for o ...
@@ -284,7 +320,7 @@ iooia: | # F > i/o > input/output
         
         
         # 6/8 others, use up params
-        d.plumb and d.plumb = parsetalk(d.plumb,params)
+        d.plumb and d.plumb = io.parsetalk(d.plumb,params)
         
         # 7/8 sanity on dials, exact traction
         params.length and throw "Too many params", params
@@ -294,7 +330,7 @@ iooia: | # F > i/o > input/output
     };
     
     #c knowables
-    $knowing = &d,v{
+    io.knowing = &d,v{
         # glob tv wants to make some path
         v ||= {t:'*',y:{cv:'*'}};
         # a subtype, reenters at the end:
@@ -318,13 +354,13 @@ iooia: | # F > i/o > input/output
                 # when not debugging:
                 #d.also ||= ['tw','z']
             }
-            d.dup = usu_dup;
+            d.dup = io.usu_dup;
         }
         return d
     };
     # this should be available as around or after method call..
     # or "the usual" that the actual d.dup works with or without
-    $usu_dup = &d,x,v{
+    io.usu_dup = &d,x,v{
                 # can link duped things, new thing gets v.y.$to
                 # as in, newthing.y.earlier = oldthing
                 $from;
@@ -388,7 +424,7 @@ iooia: | # F > i/o > input/output
                     p.path = d.path.slice();
                     # dup should include the one already there
                     p.zefault = [x];
-                    input(s,p,v);
+                    io.input(s,p,v);
                 }
                 
                 d.keep_first and return 1
@@ -510,7 +546,7 @@ iooia: | # F > i/o > input/output
     };
     #c rowing: travel d.path for i/o hooks
     # < able to async, when A:o things
-    $rowing = &talk,params,d,h{
+    io.rowing = &talk,params,d,h{
         # reduce or sprout iterator
         # rows multiply as deeper atoms many
         # - [r,1,1a]
@@ -523,7 +559,7 @@ iooia: | # F > i/o > input/output
         
         # being plumbed somewhere
         if (typeof talk == 'object') {
-            # d already, if compiling enough (sjson(parsetalk()))
+            # d already, if compiling enough (sjson(io.parsetalk()))
             # or we are plumbed in to something that parsed our talk
             params && params.length and throw "talkref + params";
             d and throw "talkref + d";
@@ -532,7 +568,7 @@ iooia: | # F > i/o > input/output
         else {
             d ||= {};
             h.is && !d.is and d.is = h.is
-            parsetalk(talk,params,d);
+            io.parsetalk(talk,params,d);
         }
         !d.path and throw "no path"
         
@@ -650,68 +686,6 @@ iooia: | # F > i/o > input/output
                 return R
             };
         }
-        =func #c source
-        =q[
-         see if there's functions anywhere
-         they are a separate logic to the pointy path
-         < mix up as much as you want
-         
-         have a right to left flow, assigney
-           i {funclast} pointy/path {funcfirst} o ...
-         usu.
-         
-         funclast - map/grep everything selected
-             wants to be fed ar per row...
-           should use and generate an iterator,
-           rows look the same + the column it defines...
-           < or multiply if that's its game
-         
-         funcfirst - map/grep d.plumb,
-             or be a function making rows
-            do that via T? see via T
-            should happen before descent into the d.path
-              since values maybe sarked (@name) from what it does
-            
-            
-         
-         
-         via T:
-            like Swim things, they say:
-              understand this name, then you look it up
-                and figure out how to work it
-              Core describes Knowables, like how to:
-                input/output such index
-                where/what/how it's going
-                  where as in something in s should consume it
-                  pretend to be a column or iterator
-                  or it's rows/columns being added/replaced/removed
-              T percolate out like errors/warnings if they are too unknown
-                 may have a part to it specifying where,
-                    like swim is to-cv
-        
-          y*/separation is like a function,
-          must rerow to represent any rearrangement
-          so each thing throws up a new iterator
-          
-          but they all start in the path, so may:
-            lastfunc sees starting row, goes out,
-              comes back with rows, does its thing, returns rows...
-            firstfunc must operate first!
-        ]
-        =cut
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        # so that path may get full of functions...
-        # y and {} operate basically the same
-        # p.row passes through
         
         #c beginning
         h.returns and d.sok = 1
@@ -878,7 +852,7 @@ iooia: | # F > i/o > input/output
     # the dot of the i is somestuff, index the space, trunk way etc.
     # shall we use a talky Babz'd params-implied-by-$ thing?
     # or just put thing on thing arguments?
-    $i = io.i = &talk,params,d{
+    io.i = &talk,params,d{
         # talk:
         #   'universal keyworded-by $thing'
         # find these things... barewords we have around?
@@ -900,7 +874,7 @@ iooia: | # F > i/o > input/output
         #   unless they're really wandery globs, then you'd know...
         
         
-        return rowing(talk,params,d,{
+        return io.rowing(talk,params,d,{
             found: &d,p,pa,s,D,v{
                 # what should be
                 # space to it gets filled in with hash
@@ -910,7 +884,7 @@ iooia: | # F > i/o > input/output
                 #   seems like s's buzz.
                 
                 # < input null to delete?
-                p.found = [input(s,D,v)]
+                p.found = [io.input(s,D,v)]
             },
             returns: 1,
             is: 'i',
@@ -938,18 +912,18 @@ iooia: | # F > i/o > input/output
     #   particularly grep/sort/map
     #  tal being apply
     # lingo shape glue session
-    $o = io.o = &talk,params,d{
-        return rowing(talk,params,d,{
+    io.o = &talk,params,d{
+        return io.rowing(talk,params,d,{
             found: &d,p,pa,s,D,v{
                 # 6, only the last column
-                p.found = output(s,D,v);
+                p.found = io.output(s,D,v);
             },
             is: 'o',
         })
     };
     #c io.nz
     # converts p.rows to iteration or whatever
-    $nz = &d{
+    io.nz = &d{
         d ||= T.o;
         !d and throw "Can't find T.o"
         # takes over from o
@@ -1111,8 +1085,8 @@ iooia: | # F > i/o > input/output
     # ignores the next/last/in/up wiring, let o do once sorted
     #   when it gives a kind of gravity,
     #   linearity to the stage that may not ever be there
-    $input = &s,d,v{
-        d = knowing(d,v);
+    io.input = &s,d,v{
+        d = io.knowing(d,v);
         # return d here to extract what we know, kind of 2
         
         # now 3 deals with what really shall be and how we shall create it
@@ -1177,7 +1151,7 @@ iooia: | # F > i/o > input/output
         # multiple angles of have
         if (d.also) {
             each in d.also {
-                typeof n == 'string' and input(s,n,v)
+                typeof n == 'string' and io.input(s,n,v)
                 else {
                     throw "What else", n
                 }
@@ -1187,8 +1161,8 @@ iooia: | # F > i/o > input/output
     };
     
     #c output
-    $output = &s,d,v{
-        d = knowing(d,v);
+    io.output = &s,d,v{
+        d = io.knowing(d,v);
         # path =
         #   our  - reaches from thing to its universal (nk,gk)
         # + path - into index (t,cv)
@@ -1272,9 +1246,7 @@ iooia: | # F > i/o > input/output
         return last_column
     };
     
-    #c iover
-    io = ex(io,{F:F,i:i,o:o,input:input,output:output,parsetalk:parsetalk,nz:nz});
-    return io;
+    return io
     
 t/iooia: |
     G&heading;
