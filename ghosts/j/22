@@ -109,17 +109,28 @@ iooia: | # F > i/o > input/output
                  may have a part to it specifying where,
                     like swim is to-cv
         
+        <
           y*/separation is like a function,
           must rerow to represent any rearrangement
           so each thing throws up a new iterator
+          link them?
           
     F is a culture of grasping syntax on top of o
     data formulae
     
     ]
     =cut
-    $F = &s,d{ return G&way,'PseudoF',{s:s,d:d} };
     $io = {}; # a bunch
+    
+    # a limb
+    io.F = &s,d{ return G&way,'PseudoF',{s:s,d:d,io:io} };
+    
+    # the base datatype
+    # see also G&datam and C
+    io.isC = &s{
+        return s && typeof s == 'object'
+            && s.t != null && s.y && s.c && s.sc
+    }
     
     #c parsetalk
     # parse out bits into m
@@ -314,7 +325,16 @@ iooia: | # F > i/o > input/output
             # < i $i/@#dee o $o/*:dee   to copy spacers
             if (!d.path.filter(&s{ return s.sark }).length)
                 d.path.push({sark:1,t:'s'})
-            # < other: io-ish syntax/tool for such operations ^
+            # or, if d.plumb (iterator) has no ark:s
+            #   < use path[-1] (default in d.plumb's h.Pmod's coli)
+            #     should be here, where language sorts itself out
+            # or if we have arks that don't exists over there:
+            #   < find @lamb in $lambs/*
+            #   
+            # < other: io-ish syntax/tool these such operations ^
+        }
+        else {
+            
         }
         # < without plumbing, i $d would do nothing?
         
@@ -462,9 +482,7 @@ iooia: | # F > i/o > input/output
                 typeof cb != 'function' and throw "Not function", pa
                 t.ind(&s,t{
                     # C the item, s the iterator, to them
-                    $isC = s && typeof s == 'object'
-                        && s.t != null && s.y && s.c && s.sc;
-                    !isC and throw "doof-grep-ind got !C s",s,t.row;
+                    !io.isC(s) and throw "doof-grep-ind got !C s",s,t.row;
                     $r = cb(A,s,G,T,t);
                     
                     t.row.indexOf(s) < 0 and throw "s not in trow?",s,t.row
@@ -533,16 +551,47 @@ iooia: | # F > i/o > input/output
     };
     
     #c separation
-    # pa is from a path consuming this t
-    # for d
+    # pa is from a D.path consuming this t
+    # happens as a firstfunc
     io.separation = &D,t,pa{
-        # arks in t going to d must be cloned
+        # another iterator
         $d = {};
-        # < move much t.path alteration earlier
+        # arks in t going to d must be cloned
+        $sarks = {};
+        each i,Dpa D.path {
+            pa.ark and t.arks[i] = pa.ark
+        }
+        # occasionally will run without a t,
+        if (!Object.keys(sarks).length) {
+            # no sarks (column inter links)
+            # plumbing ensures something sarks
+            # for i, y mean to operate on non-first pa.v
+            
+            # for o, y means to clone outgoing fields
+            # doesn't matter which 
+            # could mean to get things back...
+        }
         d.path = t.path.slice();
+        d.rows = t.rows.slice();
+        each i,row d.rows {
+            row = d.rows[i] = row.slice();
+            each is row {
+                $pa = d.path = 
+        }
         # wired new.y.$to
+    };
+    # could get complicated soon...
+    # universals can want attention here
+    io.separate = &s,pa{
+        pa ||= {};
+        $old = s;
+        
+        neu = G&Cye,old;
+        
         pa.yto and neu.y[pa.yto] = old
         pa.yfrom and old.y[pa.yfrom] = neu
+        
+        return neu
     };
     #c rowing: travel d.path for i/o hooks
     # < able to async, when A:o things
@@ -593,7 +642,7 @@ iooia: | # F > i/o > input/output
             # < support for mid-path doofing
             #   could decide what to put after finding options for where
             !pa.doof and break
-            !d.plumb and throw "firstfunc but no plumbing",pa
+            !d.plumb && !pa.separation and throw "firstfunc !y no plumb",pa
             # new iterator replaces old, so we can pipeline?
             d.plumb = io.doof(d,d.plumb,pa);
             i--;
