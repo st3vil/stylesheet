@@ -205,7 +205,8 @@ JaBabz: | # make hutscript javascript
         my $h = {vars=>[],arks=>[]};
         my $defunc;$defunc = &{
             $s =~ s/^s+//s;
-            if ($s =~ /^\{/) {
+            if ($s =~ s/^((\w+:)*)\{/\{/s) {
+                my $arkfor = $1;
                 h.bail = "not even" unless $s =~ /^$brackin/;
                 $s =~ s/^($brackin)(:(\S+)|) ?//;
                 my $whole = $1;
@@ -221,7 +222,8 @@ JaBabz: | # make hutscript javascript
                     # < turn "la $inter " into "la ".$inter." "
                     # < sjson string
                     push @{h.vars}, '"'.$subtalk.'"';
-                    $talk =~ s/$whole/{$prerolled_function}/;
+                    my $now = $arkfor."{$prerolled_function}";
+                    $talk =~ s/\Q$whole\E/$now/;
                     # continue
                     return $defunc->();
                 }
@@ -236,7 +238,7 @@ JaBabz: | # make hutscript javascript
                 $code = "&acgts"."{ $code }";
                 push @{h.vars}, $code;
                 # its var is a function, its talk is anything else about it
-                my $now = "{}";
+                my $now = $arkfor."{}";
                 $now .= ":$name" if $name;
                 $talk =~ s/\Q$whole$withname\E/$now/s
                     || push @$cod, "no replacing: $whole";
@@ -607,6 +609,7 @@ jst: | # test js babbler
         =cut
         i $d/@whur/@lamb { s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s&depth * 3 } o $lambs/*
         i $d/@whur {dehydrate:5}:whur ye,C- {notch} y o $lambs/*
+        i $d/@la/@dio la:{s&i++;1} dio:y o $ohp/*:la/#loc/da/*:dio
         o { Object.keys(C.sc).length } $d/*/*
         (pa.arkfor ||= []).push(m[0])
     
@@ -733,6 +736,7 @@ jst: | # test js babbler
         // wanga
         io.i("$d/@whur/@lamb {}:whur y {} o $lambs/*",[d,function(A,C,G,T,s){  return C.sc.fat && "laughter"  },function(A,C,G,T,s){  fai(C,s); C.sc.ok = 1; return C.sc.depth * 3  },lambs]);
         io.i("$d/@whur {dehydrate}:whur ye,C- {notch} y o $lambs/*",[d,"5","",lambs]);
+        var ar = io.i("$d/@la/@dio la:la:{} dio:y o $ohp/*:la/#loc/da/*:dio",[d,function(A,C,G,T,s){ C.sc.i++; return 1 },ohp,loc]); var y = ar.y; var la = ar.la; var dio = ar.dio;
         io.o("{} $d/*/*",[function(A,C,G,T,s){  return Object.keys(C.sc).length  },d]);
         (pa.arkfor = pa.arkfor || []).push(m[0])
         }

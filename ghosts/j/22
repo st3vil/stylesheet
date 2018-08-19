@@ -213,10 +213,14 @@ iooia: | # F > i/o > input/output
                 
                 #c set var from path bit
                 p(/:(\w*)$/) and pa.ark = m[0] || 1
+                # which ark specifically (usu all/sarked) to doof
+                while (p(/^(\w+):/))
+                     (pa.arkfor ||= []).push(m[0])
                 # function
-                p(/^\{(\w+)?\}$/) and pa.doof = m[0]||1; dpa(1); continue
+                p(/^((\w+:)*)\{(\w+)?\}$/) and pa.doof = m[0]||1; dpa(1); continue
                 # clone C
-                p(/^y(\S*)$/) and pa.separation = m[0]||1; dpa(); continue
+                p(/^((\w+:)*)y(\S*)$/) and pa.separation = m[0]||1; dpa(); continue
+                pa.arkfor and throw "arkfor non-doof"
                 # and use each of them
                 p(/^@/) and pa.sark = 1
                 # can be i $i/@#dee/$fings o $o/*:dee
@@ -276,9 +280,6 @@ iooia: | # F > i/o > input/output
                 $mode = pa.separation;
                 mode == '1' and mode = 'C';
                 parse = mode;
-                # which ark specifically (usu all/sarked)
-                while (p(/^(\w+):/))
-                     (pa.arkfor ||= []).push(m[0])
                 # how to clone depth
                 p(/\,$/) and pa.yshallow = 1;
                 p(/\.$/) and pa.yalone = 1;
@@ -404,9 +405,14 @@ iooia: | # F > i/o > input/output
                 t.ind(&s,t{
                     # C the item, s the iterator, to them
                     !io.isC(s) and throw "doof-grep-ind got !C s",s,t.row;
+                    t.row.indexOf(s) < 0 and throw "s not in trow?",s,t.row
+                    if (pa.arkfor) {
+                        # only those for this y
+                        pa.arkfor.indexOf(pa.ark || pa.t) < 0 and return
+                    }
+                    
                     $r = cb(A,s,G,T,t);
                     
-                    t.row.indexOf(s) < 0 and throw "s not in trow?",s,t.row
                     $doofing = {
                         r: r,
                         row: t.row,
@@ -1787,8 +1793,27 @@ t/iooiata: | # func really
     
     S 2 change cee & see
     
+    $o = G&Cye,['fall'];
+    # < #@class bareword from non C (C.t = the string?
+    #     or A:o map it in c&s and draw cartoon for C.t)
+    #   making C hold weirdness
+    $va = &C{
+        $j = C.t.match(/o/);
+        j and return G&Cye:["heard of "+C.t,4]
+    };
+    A.debug = 1;
+    i $o/@class/@doop va:{ va(C) }:class o 1s&cee/*:va/*:doop
     
+    a(0,'funcfirst changes');
     
+    =pod
+        i $d/@whur/@lamb { s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s&depth * 3 } o $lambs/*
+        i $d/@whur {dehydrate:5}:whur ye,C- {notch} y o $lambs/*
+        i $d/@la/@dio la:{s&i++;1} dio:y o $ohp/*:la/#loc/da/*:dio
+        o { Object.keys(C.sc).length } $d/*/*
+        (pa.arkfor ||= []).push(m[0])
+    =cut
+
     # < nz/somethingin finds toplevels
     # < hierarchy from flat tools in io
     #     you'd be building them on top probably...
