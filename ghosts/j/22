@@ -285,7 +285,7 @@ iooia: | # F > i/o > input/output
                 # can yer through time, 'y' implies new.y.C = old
                 mode = parse.split(',');
                 pa.yto = mode[0];
-                pa.yfrom = mode[0];
+                pa.yfrom = mode[1];
                 pa.doof = 'separation';
             }
             if (pa.doof) {
@@ -295,7 +295,8 @@ iooia: | # F > i/o > input/output
                     # doof(acgts) each thing, or so
                 }
                 else {
-                    typeof pa.v != 'string' and throw "expecting doofstring",pa
+                    typeof known != 'string' and throw "expecting doofstring",pa
+                    !io[known] and throw "dont have doofer io."+known
                     # get thing to peel it already?
                     # then these d can be compiled in
                 }
@@ -373,8 +374,14 @@ iooia: | # F > i/o > input/output
     io.doof = &D,t,pa{
         # take iterator
         !t.more and t = io.nz(t)
-        # happens like/around clonings
-        pa.separation and return io.separation(D,t,pa)
+        if (pa.doof == '1') {
+            $cb = pa.v;
+            typeof cb != 'function' and throw "Not function", pa
+        }
+        else {
+            # eg separation, must return a t (post-nz())
+            return io[pa.doof](D,t,pa)    
+        }
         # copy schema + column for func return
         $d = {};
         d.path = t.path.slice();
@@ -394,8 +401,6 @@ iooia: | # F > i/o > input/output
         if ('grepping or mapping') {
             if ('uni') { # que objects, rhythm >= to rows
                 t.partial = 1;
-                $cb = pa.v;
-                typeof cb != 'function' and throw "Not function", pa
                 t.ind(&s,t{
                     # C the item, s the iterator, to them
                     !io.isC(s) and throw "doof-grep-ind got !C s",s,t.row;
@@ -521,6 +526,10 @@ iooia: | # F > i/o > input/output
                     # only those for this y
                     ya.arkfor.indexOf(pa.ark || pa.t) < 0 and continue
                 }
+                # < separate other things,
+                #   even indexes themselves,
+                #     with a reroot-changed-hashes scheme like git
+                !io.isC(pa.v) and continue
                 row[i] = io.separate(s,Pa,pa,ya)
             }
         }
@@ -536,7 +545,7 @@ iooia: | # F > i/o > input/output
         ya ||= {};
         $old = s;
         
-        neu = G&Cye,old;
+        $neu = G&Cye,old;
         
         # < what to do with its innards
         if (ya.yshallow) { # y,
@@ -1751,8 +1760,22 @@ t/iooiata: | # func really
     o { Object.keys(C.sc).length }:tings $d/*/*
     a(0,'funclast grep by sc length');
     $t = io.nz();
-    debugger;
-    m apull  $s:t.more()
+    t.partial = 1;
+    t.ungrouped = 1;
+    while (t.more()) {
+        m apull  $s:t.ar,dl:4
+    }
+    
+    o { C.t = C.t.split('').reverse().join(''); 1 }:tings yD,o. $d/*/*
+    a(0,'funclast map tchange after separation, yD,o');
+    $t = io.nz();
+    t.partial = 1;
+    t.ungrouped = 1;
+    while (t.more()) {
+        m apull  $s:t.ar,dl:4
+    }
+    
+    
     # check:
     # {}:ting $d/*:ting # should have 1 ting column
     # searching for @names
