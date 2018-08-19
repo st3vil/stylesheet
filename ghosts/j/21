@@ -491,31 +491,30 @@ NutCons: | # arcade-era interaction, logging
             # TODO apply s[0] around s[*], ref s[n] and s[n] = G&intag,s[n]
         }
         s = M[0];
-            s = ''+s;
-            $num = /^>(\d+)?(?::(\w*))? */;
-            $m = s.match(num);
-            if (m) {
-                s = s.replace(num,'');
-                $style = '';
-                if (m[1]) {
-                    $col = m[1].substr(0,1);
-                    $siz = m[1].substr(1,1);
-                    if (col) {
-                        # 0 red, 3 yellow, 6 blue, 9 purple
-                        # the 2-3 and 5-6 is hard to discern
-                        $lig = col == 3 || col == 6 ? '30' : '60';
-                        style += "color:hsl("+(col*30)+", 90%, "+lig+"%);";
-                    }
-                    if (siz) {
-                        style += "font-size:"+(siz*15)+"%;";
-                    }
+        s = ''+s;
+        $num = /^>(\d+)?(?::(\w*))? */;
+        $m = s.match(num);
+        if (m) {
+            s = s.replace(num,'');
+            $style = '';
+            if (m[1]) {
+                $col = m[1].substr(0,1);
+                $siz = m[1].substr(1,1);
+                if (col) {
+                    # 0 red, 3 yellow, 6 blue, 9 purple
+                    # the 2-3 and 5-6 is hard to discern
+                    $lig = col == 3 || col == 6 ? '30' : '60';
+                    style += "color:hsl("+(col*30)+", 90%, "+lig+"%);";
                 }
-                $tag = m[2] || 'n';
-                s = '<'+tag+(style.length ? ' style="'+style+'"' : '')+'>'
-                    + s + '</'+tag+'>';
+                if (siz) {
+                    style += "font-size:"+(siz*15)+"%;";
+                }
             }
-            return s
-        
+            $tag = m[2] || 'n';
+            s = '<'+tag+(style.length ? ' style="'+style+'"' : '')+'>'
+                + s + '</'+tag+'>';
+        }
+        return s
     
     # #msgs console message
     c: %acgt:s M
