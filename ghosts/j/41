@@ -204,9 +204,9 @@ JaBabz: | # make hutscript javascript
         my $cod = [];
         my $h = {vars=>[],arks=>[]};
         my $defunc;$defunc = &{
-            $s =~ s/^s+//s;
+            $s =~ s/^\s+//s;
             if ($s =~ s/^((\w+:)*)\{/\{/s) {
-                my $arkfor = $1;
+                my $arkfor = $1; # not in $whole, can forget
                 h.bail = "not even" unless $s =~ /^$brackin/;
                 $s =~ s/^($brackin)(:(\S+)|) ?//;
                 my $whole = $1;
@@ -222,7 +222,7 @@ JaBabz: | # make hutscript javascript
                     # < turn "la $inter " into "la ".$inter." "
                     # < sjson string
                     push @{h.vars}, '"'.$subtalk.'"';
-                    my $now = $arkfor."{$prerolled_function}";
+                    my $now = "{$prerolled_function}";
                     $talk =~ s/\Q$whole\E/$now/;
                     # continue
                     return $defunc->();
@@ -238,7 +238,7 @@ JaBabz: | # make hutscript javascript
                 $code = "&acgts"."{ $code }";
                 push @{h.vars}, $code;
                 # its var is a function, its talk is anything else about it
-                my $now = $arkfor."{}";
+                my $now = "{}";
                 $now .= ":$name" if $name;
                 $talk =~ s/\Q$whole$withname\E/$now/s
                     || push @$cod, "no replacing: $whole";
@@ -249,20 +249,33 @@ JaBabz: | # make hutscript javascript
                 $defunc->();
             }
         };
+        my $after_first_pathy_thing;
+        # since that redefines columns
+        # assume @things, #things, $things, anything:things are for var/ar unpack
         $defunc->();
         while ($s =~ s/^(\S+)\s*//) {
             my $path = [split '/', $1];
             for (@$path) {
                 my $pa = {};
+                # waving (and so we dont see :y)
+                #   and this avoids latic:yon/... in paths...
+                pa.arkfor = $1 if @$path == 1 && s/^((\w+:)+)y(\w|$)/y$3/;
                 # returning
                 pa.ark = $1 || 1 if s/:(\w*)$//;
                 # parameters in
+                pa.issark = 1 if s/^@//;
                 pa.isvar = 1 if s/^#//;
                 pa.isvar = 1 if s/^\$//;
                 pa.t = $_;
                 pa.isvar && push @{h.vars}, pa.t;
-                pa.ark && push @{h.arks}, pa.ark;
+                # not barewords or spacers :unless
+                # but anything @plumbed
+                pa.ark = pa.t if pa.ark eq '1';
+                !$after_first_pathy_thing
+                    && (pa.ark || pa.issark) &&
+                        push @{h.arks}, pa.ark || pa.t;
             }
+            $after_first_pathy_thing = 1 if @$path > 1;
             $defunc->();
         }
         return "Bailed: h.bail" if h.bail;
@@ -612,6 +625,7 @@ jst: | # test js babbler
         i $d/@la/@dio la:{s&i++;1} dio:y o $ohp/*:la/#loc/da/*:dio
         o { Object.keys(C.sc).length } $d/*/*
         (pa.arkfor ||= []).push(m[0])
+        i $o/@class/@doop va:{ va(C) }:class o 1s&cee/*:va/*:doop
     
     
     # too far away:
@@ -734,11 +748,12 @@ jst: | # test js babbler
         // 
         // 
         // wanga
-        io.i("$d/@whur/@lamb {}:whur y {} o $lambs/*",[d,function(A,C,G,T,s){  return C.sc.fat && "laughter"  },function(A,C,G,T,s){  fai(C,s); C.sc.ok = 1; return C.sc.depth * 3  },lambs]);
-        io.i("$d/@whur {dehydrate}:whur ye,C- {notch} y o $lambs/*",[d,"5","",lambs]);
-        var ar = io.i("$d/@la/@dio la:la:{} dio:y o $ohp/*:la/#loc/da/*:dio",[d,function(A,C,G,T,s){ C.sc.i++; return 1 },ohp,loc]); var y = ar.y; var la = ar.la; var dio = ar.dio;
+        var ar = io.i("$d/@whur/@lamb {}:whur y {} o $lambs/*",[d,function(A,C,G,T,s){  return C.sc.fat && "laughter"  },function(A,C,G,T,s){  fai(C,s); C.sc.ok = 1; return C.sc.depth * 3  },lambs]); var whur = ar.whur; var lamb = ar.lamb;
+        var whur = io.i("$d/@whur {dehydrate}:whur ye,C- {notch} y o $lambs/*",[d,"5","",lambs]);
+        var ar = io.i("$d/@la/@dio la:{} dio:y o $ohp/*:la/#loc/da/*:dio",[d,function(A,C,G,T,s){ C.sc.i++; return 1 },ohp,loc]); var la = ar.la; var dio = ar.dio;
         io.o("{} $d/*/*",[function(A,C,G,T,s){  return Object.keys(C.sc).length  },d]);
         (pa.arkfor = pa.arkfor || []).push(m[0])
+        var ar = io.i("$o/@class/@doop va:{}:class o A[1].sc.cee/*:va/*:doop",[o,function(A,C,G,T,s){  return va(C)  }]); var class = ar.class; var doop = ar.doop;
         }
         
     
