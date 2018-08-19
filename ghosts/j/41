@@ -267,7 +267,22 @@ JaBabz: | # make hutscript javascript
                 pa.isvar = 1 if s/^#//;
                 pa.isvar = 1 if s/^\$//;
                 pa.t = $_;
-                pa.isvar && push @{h.vars}, pa.t;
+                my $varnamung;
+                if (pa.t =~ /\w[\[\.]\w/) {
+                    # A[1].sc.cee named cee
+                    # < could be pointing to anything
+                    #   into datatype (date/time/style?) aspects
+                    #   to/through/with functions
+                    #   at such rhythms, intro such dimension
+                    $varnamung = pa.t;
+                    my $name = '$'.$1 if pa.t =~ /^\w[\w\[\]\.]+?(\w+)$/;
+                    !$name && die "Cant de-qualify name: pa.t    in $talk";
+                    $talk =~ s/\Q$varnamung\E/$name/sg
+                        || die "Cant find pa.t    in $talk";
+                    pa.t = $name;
+                    pa.isvar = 1;
+                }
+                pa.isvar && push @{h.vars}, $varnamung || pa.t;
                 # not barewords or spacers :unless
                 # but anything @plumbed
                 pa.ark = pa.t if pa.ark eq '1';
@@ -753,7 +768,7 @@ jst: | # test js babbler
         var ar = io.i("$d/@la/@dio la:{} dio:y o $ohp/*:la/#loc/da/*:dio",[d,function(A,C,G,T,s){ C.sc.i++; return 1 },ohp,loc]); var la = ar.la; var dio = ar.dio;
         io.o("{} $d/*/*",[function(A,C,G,T,s){  return Object.keys(C.sc).length  },d]);
         (pa.arkfor = pa.arkfor || []).push(m[0])
-        var ar = io.i("$o/@class/@doop va:{}:class o A[1].sc.cee/*:va/*:doop",[o,function(A,C,G,T,s){  return va(C)  }]); var class = ar.class; var doop = ar.doop;
+        var ar = io.i("$o/@class/@doop va:{}:class o $cee/*:va/*:doop",[o,function(A,C,G,T,s){  return va(C)  },A[1].sc.cee]); var class = ar.class; var doop = ar.doop;
         }
         
     

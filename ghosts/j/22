@@ -405,10 +405,12 @@ iooia: | # F > i/o > input/output
                 t.ind(&s,t{
                     # C the item, s the iterator, to them
                     !io.isC(s) and throw "doof-grep-ind got !C s",s,t.row;
-                    t.row.indexOf(s) < 0 and throw "s not in trow?",s,t.row
+                    $si = t.row.indexOf(s);
+                    si < 0 and throw "s not in trow?",s,t.row
+                    $sa = t.path[si];
                     if (pa.arkfor) {
                         # only those for this y
-                        pa.arkfor.indexOf(pa.ark || pa.t) < 0 and return
+                        pa.arkfor.indexOf(sa.ark || sa.t) < 0 and return
                     }
                     
                     $r = cb(A,s,G,T,t);
@@ -692,6 +694,7 @@ iooia: | # F > i/o > input/output
                     #   suppose s is a lamb
                     coli == null and throw "no find ark/column for",pa.t,t.arks
                     
+                    A.debug and debugger
                     # uniq the arked column's values
                     # group rows, put b.pa.rows for next regroup inward
                     $vals = [];
@@ -766,7 +769,7 @@ iooia: | # F > i/o > input/output
                     # onward
                     !p.row and throw "Nowhere"
                     $s = p.row.slice(-1)[0]; # or p.i?
-                    !s and throw "doing empty"
+                    !s and debugger; throw "doing empty"
                     
                     # what should be:
                     $v = pa.v;
@@ -1755,6 +1758,16 @@ t/iooiata: | # func really
         t.p = 'usual';
         return d
     };
+    $nz = &show{
+        $t = io.nz();
+        t.partial = 1;
+        t.ungrouped = 1;
+        while (show && t.more()) {
+            m apull  $s:t.ar,dl:8.26
+            m srow  $s:t.row,dl:8.26
+        }
+        return t
+    };
     S 1 make a dee, replicate to cee
     $start = 
       "upsulat\t\ts:gakl\n"
@@ -1770,9 +1783,7 @@ t/iooiata: | # func really
     
     o { Object.keys(C.sc).length }:tings $d/*/*
     a(0,'funclast grep by sc length');
-    $t = io.nz();
-    t.partial = 1;
-    t.ungrouped = 1;
+    $t = nz();
     while (t.more()) {
         m apull  $s:t.ar,dl:4
         m srow  $s:t.row,dl:6
@@ -1780,9 +1791,7 @@ t/iooiata: | # func really
     
     o { C.t = C.t.split('').reverse().join(''); 1 }:tings yD,o. $d:cee/*/*
     a(0,'funclast map tchange after separation, yD,o');
-    $t = io.nz();
-    t.partial = 1;
-    t.ungrouped = 1;
+    $t = nz();
     while (t.more()) {
         1s&cee && t.ar.cee != 1s&cee and throw "cee (toplevel) irregular"
         1s&cee = t.ar.cee;
@@ -1796,24 +1805,55 @@ t/iooiata: | # func really
     # < #@class bareword from non C (C.t = the string?
     #     or A:o map it in c&s and draw cartoon for C.t)
     #   making C hold weirdness
-    $va = &C{
-        $j = C.t.match(/o/);
+    $flav = /o/;
+    $vat = &C{
+        $j = C.t.match(flav);
         j and return G&Cye:["heard of "+C.t,4]
     };
-    A.debug = 1;
-    debugger;
-    i $o/@klass/@doop va:{ va(C) }:klass o 1s&cee/*:va/*:doop
+    
+    !1s&cee and throw "NOcee"
+    #i $o/@klass/@doop va:{ va(C) }:klass 
+    #A.debug = 1;
+    o va:{ vat(C) }:klass 1s&cee/*:va/*:doop
+    a(0,'only hear of va things having o');
+    $t = nz(1);
+    o { vat(C) }:klass 1s&cee/*:va/*:doop
+    a(0,'hear of things having o');
+    
+    
+    #debugger;
+    i $o/@klass/@doop va:{ vat(C) }:klass o 1s&cee/*:va/*:doop
+    a(0,'cant i without full path');
+    $t = nz();
+    
+    
+    $o = G&Cye,['fall'];
+    flav = /t/;
+    i $o/@klass/@doop va:{ vat(C) }:klass o 1s&cee/*:va/*:doop
+    a(0,'can i with full path, but only one doop matches...');
+    # < load up all the doops?
+    # > ar.klass == 1, in t.arky twice?
+    $t = nz();
+    #debugger;
     # < 1s&cee -> cee in talk
     
-    a(0,'funcfirst changes');
+    $o = G&Cye,['fall'];
+    flav = /i/;
+    #A.debug = 1;
+    i $o/@klass/@doop doop:{ vat(C) }:klass o 1s&cee/*:va/*:doop
+    a(0,'can i with full path');
+    # < load up all the doops?
+    # > ar.klass == 1, in t.arky twice?
+    # < diy debug wedge, big words of code
+    o $o/*/*/*
+    a(0,'see o');
+    $t = nz();
     
     =pod check out ar returnings
         i $d/@whur/@lamb { s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s&depth * 3 } o $lambs/*
         i $d/@whur {dehydrate:5}:whur ye,C- {notch} y o $lambs/*
         i $d/@la/@dio la:{s&i++;1} dio:y o $ohp/*:la/#loc/da/*:dio
         o { Object.keys(C.sc).length } $d/*/*
-        (pa.arkfor ||= []).push(m[0])
-        i $o/@class/@doop va:{ va(C) }:class o 1s&cee/*:va/*:doop
     
     =cut 
 
