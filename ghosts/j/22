@@ -484,11 +484,10 @@ iooia: | # F > i/o > input/output
         # another iterator
         $d = {};
         # which should have clones
-        $sarks = {};
+        $sarks = [];
         each i,Pa D.path {
             Pa.sark and sarks[i] = Pa.t
         }
-        !Object.keys(sarks).length and sarks = null
         
         if (!t) {
             # funcfirst y, D.plumb would be t
@@ -517,7 +516,7 @@ iooia: | # F > i/o > input/output
             each is row {
                 $pa = t.path[i];
                 $Pa = d.path[i];
-                if (sarks) {
+                if (sarks.length) {
                     # only those
                     # we could know how separatey things want to be,
                     # see "universals can want attention"
@@ -687,7 +686,7 @@ iooia: | # F > i/o > input/output
                     
                     # locate sark as ark of theirs
                     # column number, for in d.path/p.row (G/W)
-                    $coli = t.arks[pa.t];
+                    $coli = t.arks.indexOf(pa.t);
                     coli == null && pa.t == 's' and coli = t.path.length-1
                     # < if it's 'lamb' and they have 'lambs/*',
                     #   suppose s is a lamb
@@ -897,8 +896,8 @@ iooia: | # F > i/o > input/output
         # takes over from o
         $t = ex({},d);
         
-        # name columns
-        t.arks = {};
+        # name columns [i: name]
+        t.arks = [];
         each i,pa d.path {
             pa.ark and t.arks[i] = pa.ark
         }
@@ -907,12 +906,12 @@ iooia: | # F > i/o > input/output
         if (!Object.keys(t.arks).length)
             t.arks[t.path.length - 1] = 's';
         
-        t.oned = Object.keys(t.arks).length == 1;
+        t.oned = t.arks.length == 1;
         each ik t.arks {
             t.oned = k;
         }
         
-        t.arky = ex({},t.arks);
+        t.arky = t.arks.slice();
         # add anything else we can name but wasn't asked for
         t.nonarks = {}; # tarky not in tarks
         each i,pa t.path {
@@ -920,7 +919,7 @@ iooia: | # F > i/o > input/output
             t.arky[pa.t] || pa.ark and continue
             pa.t.match(/\W/) and continue
             t.arky[i] = pa.t;
-            t.nonarks[pa.t] = i;
+            t.nonarks[i] = pa.t;
         }
         
         # iterate per row
@@ -1802,6 +1801,7 @@ t/iooiata: | # func really
         j and return G&Cye:["heard of "+C.t,4]
     };
     A.debug = 1;
+    debugger;
     i $o/@class/@doop va:{ va(C) }:class o 1s&cee/*:va/*:doop
     
     a(0,'funcfirst changes');
