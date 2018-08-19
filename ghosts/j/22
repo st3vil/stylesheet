@@ -504,7 +504,7 @@ iooia: | # F > i/o > input/output
             return null
         }
         
-        d.path = t.path.map(&s{ return ex({},s) });
+        d.path = t.path.slice();
         d.rows = t.rows.slice();
         each i,row d.rows {
             row = d.rows[i] = row.slice();
@@ -543,9 +543,20 @@ iooia: | # F > i/o > input/output
         # pa - io coming from's path bit
         # ya - the .separation path bit
         ya ||= {};
+        ya.olds ||= [];
+        ya.neus ||= [];
         $old = s;
+        $neu; # may already be:
+        $oi = ya.olds.indexOf(old);
+        oi < 0 and oi = ya.olds.push(old)-1;
+        else {
+            $neu = ya.neus[oi];
+            !neu and throw "olds/neus confuse"
+            return neu
+        }
         
         $neu = G&Cye,old;
+        ya.neus.push(neu)-1 != oi and throw "olds/neus differ"
         
         # < what to do with its innards
         if (ya.yshallow) { # y,
@@ -865,15 +876,13 @@ iooia: | # F > i/o > input/output
         $rows = T.o.rows;
         $ss = rows.map(&row{ return row.slice(-1)[0] })
             .filter(&s{ return s });
-
-        A.debug and debugger
+        
         d.sok && ss.length <= 1 and return ss[0]
         delete d.sok;
         #h.returns and debugger; #throw "Wanted to return s",ss,d
         return ss
     };
     
-
     #c nz
     # converts p.rows to iteration or whatever
     io.nz = &d{
@@ -1167,7 +1176,6 @@ iooia: | # F > i/o > input/output
         }
         else {
             # set thing to thing
-            A.debug and debugger;
             if (x != null) {
                 # already, noop?
                 d.spacer || x == v and return x
@@ -1730,14 +1738,12 @@ t/iooiata: | # func really
      +"    Viog\t34\n"
      +"  vou\n";
     $d = 1s&dee = G&readLines,start [0];
-    
+    $show = {};
     $a = &t,talk,params{
-        if (t) {
-            $d = {};
-            io[t](talk,params||[],d);
-        }
+        t && io[t](talk,params||[],{})
         $t = io.nz();
         m thistest  $s:talk %fs:160%,hue:120deg,ws:pre,dis:block
+        show.t &&
         m iter  $s:t,dl:9.26
         
         t.partial = 1;
@@ -1754,7 +1760,7 @@ t/iooiata: | # func really
         t.p = 'usual';
         return d
     };
-    
+    show.t = 1;
     a('o','$d/*/*',[d]);
     
     o { Object.keys(C.sc).length }:tings $d/*/*
@@ -1764,15 +1770,18 @@ t/iooiata: | # func really
     t.ungrouped = 1;
     while (t.more()) {
         m apull  $s:t.ar,dl:4
+        m srow  $s:t.row,dl:6
     }
     
+    A.debug = 1;
     o { C.t = C.t.split('').reverse().join(''); 1 }:tings yD,o. $d/*/*
     a(0,'funclast map tchange after separation, yD,o');
     $t = io.nz();
     t.partial = 1;
     t.ungrouped = 1;
     while (t.more()) {
-        m apull  $s:t.ar,dl:4
+        m apull  $s:t.ar,dl:8.26
+        m srow  $s:t.row,dl:8.26
     }
     
     
