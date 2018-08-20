@@ -213,7 +213,8 @@ iooia: | # F > i/o > input/output
                 parse = n;
                 pa = {};
                 
-                #c clone C
+                #c grasp tokens
+                # y clones C
                 if (p(/^((\w+:)*)y(\S*?)(:\w+)?$/,'03'))
                     pa.separation = m[2] || 1;
                 # set var/name column from path bit
@@ -240,7 +241,7 @@ iooia: | # F > i/o > input/output
                 #   and/or climb past it and input more stuff...
                 # sheer spacer, made for a C
                 #   eg where desired.t == wanted.t
-                p(/^#/) and pa.isparam = 1; pa.relative = 1;
+                p(/^(\w+)?#/) and pa.isparam = 1; pa.relative = m[0] || 1;
                 pa.sark and delete pa.isparam;
                 
                 # C itself for path bit got from param
@@ -532,6 +533,7 @@ iooia: | # F > i/o > input/output
             each is row {
                 $pa = t.path[i];
                 $Pa = d.path[i];
+                #A.debug and debugger;
                 if (ya.arkfor) {
                     # only those - arkfor keyed by sark in D path, not t/d path
                     ya.arkfor.indexOf(pa.ark || pa.t) < 0 and continue
@@ -539,13 +541,13 @@ iooia: | # F > i/o > input/output
                 # < separate other things,
                 #   even indexes themselves,
                 #     with a reroot-changed-hashes scheme like git
-                !io.isC(pa.v) and continue
-                row[i] = io.separate(s,Pa,pa,ya)
+                !io.isC(s) and continue
+                row[i] = io.separate(s,Pa,pa,ya);
                 (ya.separated ||= []).push(s)
             }
         }
         
-        A.debug and debugger;
+        #A.debug and debugger;
         return io.nz(d)
     };
     # could get complicated soon...
@@ -699,7 +701,7 @@ iooia: | # F > i/o > input/output
                     #   suppose s is a lamb
                     coli == null and throw "no find ark/column for",pa.t,t.arks
                     
-                    A.debug && p.i > 1 and debugger
+                    #A.debug && p.i > 1 and debugger
                     # uniq the arked column's values
                     # group rows, put b.pa.rows for next regroup inward
                     $vals = [];
@@ -1743,6 +1745,10 @@ t/iooiata: | # func really
     G&way,'Doming',ar;
     $show = {};
     $a = &t,talk,params{
+        if (t == 'bug') {
+            m bugreport  $s:talk %fs:120%,hue:170deg,ws:pre,dis:block
+            return;
+        }
         t && io[t](talk,params||[],{})
         $t = io.nz();
         m thistest  $s:talk %fs:160%,hue:120deg,ws:pre,dis:block
@@ -1845,23 +1851,46 @@ t/iooiata: | # func really
     
     $o = G&Cye,['fall'];
     flav = /i/;
-    A.debug = 1;
+    #A.debug = 1;
     i $o/@klass/oooo/@doop doop:{ vat(C) }:klass doop:y:doop o 1s&cee/*:va/*:doop
     a(0,'can i with full path, some separa');
-    $t = nz();
-    A.debug = 0;
-    #debugger;
+    a('bug',"returns two ventures into 'heard of'"
+        +" because two identical (but !=) @klasses happen, o ends up with one");
+    #$t = nz();
+    #A.debug = 0;
+    
     # load up all the doops but returns klass/doop
     #   as well as klass/oooo/doop, looks like doing things twice
     # > ar.klass == 1, in t.arky twice?
     # < diy debug wedge, big words of code
     o $o/*/*/*:dof
-    a(0,'see o');
+    a(0,'o ends up with one goiV');
+    
+    # lets try and circumvent that bug
+    $o = G&Cye,['fall'];
+    flav = /i/;
+    #A.debug = 1;
+    i $o/@#klass/oooo/@doop doop:{ vat(C) }:klass doop:y:doop o 1s&cee/*:va/*:doop
+    a(0,'can i with full path, some separa');
+    a('bug',"returns two ventures into 'heard of'"
+        +" because two identical (but !=) @klasses happen, o ends up with one");
+    #$t = nz();
+    #A.debug = 0;
+    
+    # load up all the doops but returns klass/doop
+    #   as well as klass/oooo/doop, looks like doing things twice
+    # > ar.klass == 1, in t.arky twice?
+    # < diy debug wedge, big words of code
+    o $o/*/*/*:dof
+    debugger;
+    a(0,'o ends up with one goiV');
     $t = nz();
     while (t.more()) {
         $dof = t.ar.dof;
         dofs&seen = 'overino';
     }
+    o $o/*/*/*
+    a(0,'see o');
     o 1s&cee/*/*/*
     a(0,'see cee');
     o $o/*/*/*:dof
