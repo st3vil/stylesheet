@@ -268,9 +268,6 @@ iooia: | # F > i/o > input/output
                 }
                 # namespaceness of something
                 if (pa.relative) {
-                    pa.o_v = pa.v;
-                    pa.v = G&Cye,[pa.v.t,1];
-                    # relative spacers hold a name for something
                     pa.spacer = 1;
                 }
                 dpa();
@@ -751,7 +748,15 @@ iooia: | # F > i/o > input/output
             $pa = p.pa || d.path[p.i];
             !pa and throw "No pattern!: "+p.i
             
-            if (pa.doof) {
+            if (pa.relative) {
+                # relative spacers use the t+cv (space) of something
+                # < are likely to not replace?
+                pa.vorig = pa.v;
+                !io.isC(pa.v) and throw "not C relative pav",pa,pa.v
+                pa.v = G&Cye,[pa.v.t,1];
+            }
+            
+            if (pa.doof) { # not a real step
                 # lastfuncs at beginning of path
                 #  - happen just before this io returns
                 # firstfuncs at end of path
@@ -897,7 +902,7 @@ iooia: | # F > i/o > input/output
         
         #d.sok && ss.length <= 1 and return ss[0]
         delete d.sok;
-        #h.returns and debugger; #throw "Wanted to return s",ss,d
+        T.o.talk = talk;
         return ss
     };
     
@@ -1744,14 +1749,24 @@ t/iooiata: | # func really
     
     G&way,'Doming',ar;
     $show = {};
+    show.talk = 1;
     $a = &t,talk,params{
+        if (t === '' && !talk) {
+            m space   %fs:120%,hue:170deg,width:100%,height:3em,dis:block
+            return
+        }
         if (t == 'bug') {
-            m bugreport  $s:talk %fs:120%,hue:170deg,ws:pre,dis:block
+            m bugreport  $s:talk %fs:120%,hue:170deg,dis:block
             return;
         }
         t && io[t](talk,params||[],{})
         $t = io.nz();
-        m thistest  $s:talk %fs:160%,hue:120deg,ws:pre,dis:block
+        
+        show.talk &&
+        m talk  $s:t.talk %fs:130%,hue:-40deg,dis:block,float:right,mw:50%
+        
+        m thistest  $s:talk %fs:160%,hue:120deg,dis:block
+        
         show.t &&
         m iter  $s:t,dl:9.26
         
@@ -1811,6 +1826,7 @@ t/iooiata: | # func really
         m srow  $s:t.row,dl:8.26
     }
     
+    #c
     S 2 change cee & see
     
     $o = G&Cye,['fall'];
@@ -1864,7 +1880,7 @@ t/iooiata: | # func really
     # > ar.klass == 1, in t.arky twice?
     # < diy debug wedge, big words of code
     o $o/*/*/*:dof
-    a(0,'o ends up with one goiV');
+    a(0,'o ends up with one pair of goiV');
     
     # lets try and circumvent that bug
     $o = G&Cye,['fall'];
@@ -1872,8 +1888,7 @@ t/iooiata: | # func really
     #A.debug = 1;
     i $o/@#klass/oooo/@doop doop:{ vat(C) }:klass doop:y:doop o 1s&cee/*:va/*:doop
     a(0,'can i with full path, some separa');
-    a('bug',"returns two ventures into 'heard of'"
-        +" because two identical (but !=) @klasses happen, o ends up with one");
+    a('bug',"still branching too much... examine with tools later");
     #$t = nz();
     #A.debug = 0;
     
@@ -1882,8 +1897,7 @@ t/iooiata: | # func really
     # > ar.klass == 1, in t.arky twice?
     # < diy debug wedge, big words of code
     o $o/*/*/*:dof
-    debugger;
-    a(0,'o ends up with one goiV');
+    a(0,'o ends up with one pair of goiV');
     $t = nz();
     while (t.more()) {
         $dof = t.ar.dof;
@@ -1895,6 +1909,8 @@ t/iooiata: | # func really
     a(0,'see cee');
     o $o/*/*/*:dof
     a(0,'see o again');
+    #
+    
     
     =pod check out ar returnings
         i $d/@whur/@lamb { s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s&depth * 3 } o $lambs/*
