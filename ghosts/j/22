@@ -136,11 +136,13 @@ iooia: | # F > i/o > input/output
     # parse out bits into m
     $parse;
         $m;
-        $p = &r{
+        $p = &r,place{
             m = parse.match(r);
             !m and return
             m.shift();
-            parse = parse.replace(r,'');
+            place and place = place.split('').map(&i{ return m[i] }).join('');
+            else { place = '' }
+            parse = parse.replace(r,place);
             return 1
         };
     
@@ -211,18 +213,21 @@ iooia: | # F > i/o > input/output
                 parse = n;
                 pa = {};
                 
-                #c set var from path bit
+                #c clone C
+                if (p(/^((\w+:)*)y(\S*?)(:\w+)?$/,'03'))
+                    pa.separation = m[2] || 1;
+                # set var/name column from path bit
                 p(/:(\w*)$/) and pa.ark = m[0] || 1
                 # which ark specifically (usu all/sarked) to doof
                 while (p(/^(\w+):/))
                      (pa.arkfor ||= []).push(m[0])
                 # function
                 p(/^((\w+:)*)\{(\w+)?\}$/) and pa.doof = m[0]||1; dpa(1); continue
-                # clone C
-                p(/^((\w+:)*)y(\S*)$/) and pa.separation = m[0]||1; dpa(); continue
+                pa.separation and dpa(); continue
                 pa.arkfor and throw "arkfor non-doof"
                 # and use each of them
-                p(/^@/) and pa.sark = 1
+                #   name moves to new position (ark)
+                p(/^@/) and pa.sark = 1; pa.ark ||= 1;
                 # can be i $i/@#dee/$fings o $o/*:dee
                 #   to copy spacers
                 
@@ -485,12 +490,21 @@ iooia: | # F > i/o > input/output
     io.separation = &D,t,ya{
         # another iterator
         $d = {};
+        d.plumb = t;
+        d.separation = 1;
         # which should have clones
-        $sarks = [];
-        each i,Pa D.path {
-            Pa.sark and sarks[i] = Pa.t
+        # we could know how separatey things want to be,
+        # see "universals can want attention"
+        # see also "no find ark/column" for when they ...
+        if (!ya.arkfor) {
+            # defaults to stuff @heading Downstream
+            ya.arkfor = [];
+            each i,Pa D.path {
+                Pa.sark and ya.arkfor[i] = Pa.t
+            }
         }
         
+        #A.debug and debugger;
         if (!t) {
             # funcfirst y, D.plumb would be t
             D.plumb and throw "funcfirst y !t D.plumb"
@@ -518,19 +532,8 @@ iooia: | # F > i/o > input/output
             each is row {
                 $pa = t.path[i];
                 $Pa = d.path[i];
-                if (sarks.length) {
-                    # only those
-                    # we could know how separatey things want to be,
-                    # see "universals can want attention"
-                    # see also "no find ark/column" for when they ...
-                    $Di = sarks.indexOf(pa.ark || pa.t);
-                    Di < 0 and continue
-                    # also now Pa can be the sarksumer,
-                    # not just iterator's path bit here
-                    Pa = D.path[Di]
-                }
                 if (ya.arkfor) {
-                    # only those for this y
+                    # only those - arkfor keyed by sark in D path, not t/d path
                     ya.arkfor.indexOf(pa.ark || pa.t) < 0 and continue
                 }
                 # < separate other things,
@@ -538,9 +541,11 @@ iooia: | # F > i/o > input/output
                 #     with a reroot-changed-hashes scheme like git
                 !io.isC(pa.v) and continue
                 row[i] = io.separate(s,Pa,pa,ya)
+                (ya.separated ||= []).push(s)
             }
         }
         
+        A.debug and debugger;
         return io.nz(d)
     };
     # could get complicated soon...
@@ -694,7 +699,7 @@ iooia: | # F > i/o > input/output
                     #   suppose s is a lamb
                     coli == null and throw "no find ark/column for",pa.t,t.arks
                     
-                    A.debug and debugger
+                    A.debug && p.i > 1 and debugger
                     # uniq the arked column's values
                     # group rows, put b.pa.rows for next regroup inward
                     $vals = [];
@@ -708,7 +713,7 @@ iooia: | # F > i/o > input/output
                         }
                         valis[vi].push(r);
                     }
-                    pa.plumbiplied = vals.length;
+                    b.plumbiplied = vals.length;
                     
                     # multiply b by possible vals
                     $B = b;
@@ -721,11 +726,13 @@ iooia: | # F > i/o > input/output
                         b.pa.v = v;
                         $rows = 
                         b.pa.rows = valis[i];
-                        !v and throw "nullish v! for rows",b.pa.rows
+                        !v and debugger;
+                        #throw "nullish v! for rows",b.pa.rows
                         #~>78 plumba: ki(b.row), ki(v,3)
                         R.push(b)
                     }
                 }
+                p.plumbiplies = R.length;
                 
                 return R
             };
@@ -837,6 +844,7 @@ iooia: | # F > i/o > input/output
                 
                 each ib P {
                     $b = col(p,b);
+                    (p.pond ||= []).push(b);
 
                     if (b.nz) {
                         # ...s... -> ...s, [s's many]...
@@ -902,17 +910,14 @@ iooia: | # F > i/o > input/output
         # name columns [i: name]
         t.arks = [];
         each i,pa d.path {
-            pa.ark and t.arks[i] = pa.ark
+            pa.ark and t.arks[i] = pa.ark;
         }
         # arks ||= {-1:s}
         # < Babz S io must know this
         if (!Object.keys(t.arks).length)
             t.arks[t.path.length - 1] = 's';
         
-        t.oned = t.arks.length == 1;
-        each ik t.arks {
-            t.oned = k;
-        }
+        t.arks.length == 1 and t.oned = t.arks.slice(-1)[0]
         
         t.arky = t.arks.slice();
         # add anything else we can name but wasn't asked for
@@ -1745,6 +1750,7 @@ t/iooiata: | # func really
         m iter  $s:t,dl:9.26
         
         t.partial = 1;
+        #A.debug and debugger
         $s = t.ind(&s,t{
             $text = G&toLines,s;
             # highlight objects that really matched
@@ -1839,15 +1845,27 @@ t/iooiata: | # func really
     
     $o = G&Cye,['fall'];
     flav = /i/;
-    #A.debug = 1;
-    i $o/@klass/@doop doop:{ vat(C) }:klass o 1s&cee/*:va/*:doop
-    a(0,'can i with full path');
-    # < load up all the doops?
+    A.debug = 1;
+    i $o/@klass/oooo/@doop doop:{ vat(C) }:klass doop:y:doop o 1s&cee/*:va/*:doop
+    a(0,'can i with full path, some separa');
+    $t = nz();
+    A.debug = 0;
+    #debugger;
+    # load up all the doops but returns klass/doop
+    #   as well as klass/oooo/doop, looks like doing things twice
     # > ar.klass == 1, in t.arky twice?
     # < diy debug wedge, big words of code
-    o $o/*/*/*
+    o $o/*/*/*:dof
     a(0,'see o');
     $t = nz();
+    while (t.more()) {
+        $dof = t.ar.dof;
+        dofs&seen = 'overino';
+    }
+    o 1s&cee/*/*/*
+    a(0,'see cee');
+    o $o/*/*/*:dof
+    a(0,'see o again');
     
     =pod check out ar returnings
         i $d/@whur/@lamb { s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s&depth * 3 } o $lambs/*
