@@ -1048,7 +1048,8 @@ iooia: | # F > i/o > input/output
             t.ar and t.prev = t.ar
             t.ar = ar;
             #t.oned and return ar[t.oned]
-            return ar
+            t.sc = t.ar;
+            return t;
         };
         
         #c ind: callback per item, flat list with depth...
@@ -1577,7 +1578,7 @@ t/iooia: |
     a('o','$d/*/*',[d],1);
     $t = io.nz();
     $ar; while (ar = t.more()) {
-        m calledit  $s:ar,dl:5
+        m calledit  $s:ar.sc,dl:5
     }
     m iterator  $s:t,d:8.22 %fs:120%
     
@@ -1587,7 +1588,7 @@ t/iooia: |
     a('o','$d/*:dui/*:s',[d],1);
     $t = io.nz();
     $ar; while (ar = t.more()) {
-        m calledit  $s:ar,dl:5
+        m calledit  $s:ar.sc,dl:5
     }
     m anotherator  $s:t,d:8.22 %fs:120%
     
@@ -1659,8 +1660,7 @@ t/iooia: |
         knowing the protocol space to a delete is nice
         and operating work-isolatingly from a big sleeping set
       
-      
-      iteration:
+      #c on iteration:
         basically, get an iterator object:
           $t = io.nz()
         setup from T.o, the last i/o $d
@@ -1708,17 +1708,32 @@ t/iooia: |
           as welding a long seam, its only a liquid for a little stretch
       
       other stuff:
-      < specialise #things spacer creation...
-          is mutating an object,
-            creating a pointer to the origin
-            a wave from itself
-          could do loose matches too...
+      < specialise #things spacer creation (with a doof)
+        what about loose matches?
+          low levels want to take callback/expression?
+          and how to steer the search nearby,
+            or use datetime to seek when it was
+            or where else in the schema it might have disappeared to
+            if O knows when it disappeared?
       
-        p could be C, etc, is more shapely and langholdey than rows
+        p could be C, etc,
+          is more shapely and langholdey than rows
           they offer an alternative positioning system,
             according to the new gravity cast on it.
         and turn into A:o, a self-similar data-holding foam
-        p could become o@3 compatible via this open method
+        p could become o@3 compatible
+        
+        p could become aware of what's around what they're aware of,
+          and then -od fields of data that show when stuff isn't on the screen changes
+        
+        d has now a sc for sc[k] = v (ar) when iterating,
+          and before iteration begins is ar[k] = [v+] for unique and true v
+        could be some kind of A:o then.
+        they will have to handle travelling between representation modes
+        A:o awakening is a process of walking through A&insides, A&clones
+        
+        this one is sc that is like ar[k] = v 
+        before iteration begins its ar[k] = [v+]
         
       < write d>o instead of i $d/$o?
          magnetics want to... ranking, raking...
@@ -1765,9 +1780,9 @@ t/iooia: |
     $t = io.nz();
     m andasio_To  $s:T.o
     m andasio_varset  $s:an
-    m andasio_tmore_once  $s:t.more()
+    m andasio_tmore_once  $s:t.more().sc
     m andasio_tar  $s:t.ar
-    m andasio_tmore_twice  $s:t.more()
+    m andasio_tmore_twice  $s:t.more().sc
     
     o $n/*/*
     $t = io.nz();
@@ -1856,7 +1871,7 @@ t/iooiata: | # func really
         t.partial = 1;
         t.ungrouped = 1;
         while (show && t.more()) {
-            m apull  $s:t.ar,dl:8.26
+            m apull  $s:t.sc,dl:8.26
             m srow  $s:t.row,dl:8.26
         }
         return t
@@ -1878,7 +1893,7 @@ t/iooiata: | # func really
     a(0,'funclast grep by sc length');
     $t = nz();
     while (t.more()) {
-        m apull  $s:t.ar,dl:4
+        m apull  $s:t.sc,dl:4
         m srow  $s:t.row,dl:6
     }
     
@@ -1886,9 +1901,9 @@ t/iooiata: | # func really
     a(0,'funclast map tchange after separation, yD,o');
     $t = nz();
     while (t.more()) {
-        1s&cee && t.ar.cee != 1s&cee and throw "cee (toplevel) irregular"
-        1s&cee = t.ar.cee;
-        m apull  $s:t.ar,dl:8.26
+        1s&cee && t.sc.cee != 1s&cee and throw "cee (toplevel) irregular"
+        1s&cee = t.sc.cee;
+        m apull  $s:t.sc,dl:8.26
         m srow  $s:t.row,dl:8.26
     }
     
@@ -1966,7 +1981,7 @@ t/iooiata: | # func really
     a(0,'o ends up with one pair of goiV');
     $t = nz();
     while (t.more()) {
-        $dof = t.ar.dof;
+        $dof = ts&dof;
         dofs&seen = 'overino';
     }
     
@@ -1981,7 +1996,7 @@ t/iooiata: | # func really
     # make some more messes
     # < somewhere, someone wants to do this:
     #i $o/bolo/@ump/@dat dat:ysource,destiny zom:{ C.t.match(/oo/) }:dat zom:{ C.t.match(/al$/) }:ump o 1s&cee/*:zom
-    #   needing doof to put the C in place of what match returns, to be @dat/@ump
+    #   needing doof to put the C in place of what match returns
     #   things unbounding, jumping through hoops, rebounding
     #  usually mean to not ark the function
     $seen = [];
@@ -1999,7 +2014,7 @@ t/iooiata: | # func really
     
     =pod check out ar returnings
         i $d/@whur/@lamb { s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s&depth * 3 } o $lambs/*
-        i $d/@whur {dehydrate:5}:whur ye,C- {notch} y o $lambs/*
+        i $d/@whur {dehydrate:5}:whur ye,C. {notch} y o $lambs/*
         i $d/@la/@dio la:{s&i++;1} dio:y o $ohp/*:la/#loc/da/*:dio
         o { Object.keys(C.sc).length } $d/*/*
     
@@ -2030,7 +2045,6 @@ t/iooiata: | # func really
         ns&dos = 'grow';
         nc&dl ||= 12;
     }
-
 StayToSleep: | # gentleness scan
     # 
 t/BuildACastle: | # test Duning and io
