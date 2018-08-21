@@ -1793,10 +1793,18 @@ t/iooiata: | # func really
         #A.debug and debugger
         $s = t.ind(&s,t{
             $text = G&toLines,s;
-            # highlight objects that really matched
-            #   chucking rows with any object on matching
-            # iterate objects if that's all you want
-            t.objects && t.objects.indexOf(s) >= 0 and text = G&intag:'>1 '+text
+            if (t.objects && t.objects.indexOf(s) >= 0) {
+                # highlight t.objects (that doof matched)
+                # < chucking rows with any object on matching
+                # iterate objects if that's all you want
+                text = G&intag:'>1 '+text
+            }
+            if (show.yind) {
+                # attach y, which hides most first
+                $say = ki(s.y,6.24);
+                say = say.replace(/^\{|\}$/g,'');
+                text += "\t"+G&intag:'>3 '+say;
+            }
             return text;
         }).join("\n");
         m inds  $s:s,ht:1 %hue:120deg,ws:pre,dis:block
@@ -1923,6 +1931,8 @@ t/iooiata: | # func really
         $dof = t.ar.dof;
         dofs&seen = 'overino';
     }
+    
+    show.yind = 1;
     o $o/*/*/*
     a(0,'see o');
     o 1s&cee/*/*/*
