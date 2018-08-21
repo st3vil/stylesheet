@@ -738,7 +738,6 @@ iooia: | # F > i/o > input/output
         }
         
         #c beginning
-        h.returns and d.sok = 1
         h.first ||= &{};
         h.found ||= &{};
         $first = 1;
@@ -792,7 +791,7 @@ iooia: | # F > i/o > input/output
                     $D = {asa:'tv'};
                     # to diversify...
                     pa.spacer and D.spacer = 1;
-                    pa.glob and D.meta = ['*','*']; d.sok=0;
+                    pa.glob and D.meta = ['*','*']
                     else
                     pa.sark and // should have been figured by now?
                     # cos we want to input each thing via pa.v...
@@ -890,20 +889,17 @@ iooia: | # F > i/o > input/output
         if (lastfuncs.length) {
             lastfuncs.reverse();
             each i,pa lastfuncs {
-                # new iterator replaces old, so we can pipeline?
+                # new iterator replaces old
                 T.o = io.doof(d,T.o,pa)
             }
         }
         
-        # deepest atoms:
+        # returns deepest atoms
         $rows = T.o.rows;
-        $ss = rows.map(&row{ return row.slice(-1)[0] })
+        T.o.talk = talk;
+        return rows.map(&row{ return row.slice(-1)[0] })
             .filter(&s{ return s });
         
-        #d.sok && ss.length <= 1 and return ss[0]
-        delete d.sok;
-        T.o.talk = talk;
-        return ss
     };
     
     #c nz
@@ -936,14 +932,19 @@ iooia: | # F > i/o > input/output
             t.arky[i] = pa.t;
             t.nonarks[i] = pa.t;
         }
+        # edge case: implicit thing should cede 'r' to ark
+        #   else it is counted early
         
         # iterate per row
-        t.i = 0;
+        t.i = null;
         $pull = &{
             $row;
             while (1) {
-                row = t.rows[t.i++];
+                # t.i -> i starts null -> 0, then 0 -> 1, 1 -> 2
+                $i = t.i == null ? 0 : t.i+1;
+                row = t.rows[i];
                 !row and return
+                t.i = i;
                 # only for complete rows
                 !t.partial && row.slice(-1)[0] == null and continue
                 break
@@ -952,13 +953,21 @@ iooia: | # F > i/o > input/output
         };
         # grouping ar[k]=[v+] for implied names
         $parkar = &be{
-            $ar = {};
-            t.row = t.next || pull();
-            !t.row and return
-            delete t.next;
-            each ik t.arky {
-                ar[k] = t.row[i];
+            $ar = t.next; delete t.next;
+            if (ar) {
+                t.i = t.next_i; delete t.next_i;
+                t.row = t.next_row; delete t.next_row;
             }
+            else {
+                t.row = pull();
+                !t.row and return
+                ar = {};
+                each ik t.arky {
+                    ar[k] = t.row[i];
+                }
+            }
+            $ti = t.i;
+            $trow = t.row;
             if (!t.ungrouped && !be) {
                 # to group by, make sure enough of it changes
                 # i #Con:/@#G:/@W o $mag/*:G/*:W
@@ -974,7 +983,12 @@ iooia: | # F > i/o > input/output
                         # if arked things change
                         be[k] != ar[k] and diff = 1
                     }
-                    diff and t.next = be; break
+                    if (diff) {
+                        t.next_i = t.i;
+                        t.next_row = t.row;
+                        t.next_row = be;
+                        break
+                    }
                     each ik t.nonarks {
                         # or accumulate nonarked things
                         first and ar[k] = [ar[k]]
@@ -983,6 +997,8 @@ iooia: | # F > i/o > input/output
                     first = 0
                 }
             }
+            t.i = ti;
+            t.row = trow;
             return ar
         };
         #
@@ -1077,7 +1093,6 @@ iooia: | # F > i/o > input/output
                 # < input null to delete?
                 p.found = [io.input(s,D,v)]
             },
-            returns: 1,
             is: 'i',
         })
     };
@@ -1502,7 +1517,7 @@ t/iooia: |
     a('o','$d/*',[d],1);
     
     a('o','$d',[d],1);
-    
+    debugger;
     #$r =
     o $d/*:r
     
@@ -1845,6 +1860,7 @@ t/iooiata: | # func really
     #A.debug = 1;
     o va:{ vat(C) }:klass 1s&cee/*:va/*:doop
     a(0,'only hear of va things having o');
+    debugger;
     $t = nz(1);
     o { vat(C) }:klass 1s&cee/*:va/*:doop
     a(0,'hear of things having o');
