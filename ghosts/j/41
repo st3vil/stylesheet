@@ -239,7 +239,10 @@ JaBabz: | # make hutscript javascript
                 push @{h.vars}, $code;
                 # its var is a function, its talk is anything else about it
                 my $now = "{}";
-                $now .= ":$name" if $name;
+                if ($name) {
+                    $now .= ":$name";
+                    push @{h.arks}, $name;
+                }
                 $talk =~ s/\Q$whole$withname\E/$now/s
                     || push @$cod, "no replacing: $whole";
                 #push @$cod, "Would $name: $code\n"
@@ -298,11 +301,8 @@ JaBabz: | # make hutscript javascript
         each tin $h {
             $n =~ /\W+/ && die "wobbyly $t varnameinterpretation: $n", $s;
         }}
-        if (@{h.arks} == 1) {
-            push @$cod, 'var '.h.arks[0].' = ';
-            h.arks = [];
-        }
-        push @$cod, 'var ar = ' if @{h.arks};
+        
+        push @$cod, 'var ay = ';
         
         (my $vus = sjson([$talk])) =~ s/^\[|\]$//g;
         push @$cod, "io\.$t($vus,[";
@@ -310,7 +310,7 @@ JaBabz: | # make hutscript javascript
         push @$cod, join ',', @{h.vars} if @{h.vars};
         
         push @$cod, ']);';
-        push @$cod, ' var '.$_.' = ar.'.$_.';' for @{h.arks};
+        push @$cod, ' var '.$_.' = ay'.'.sc.'.$_.';' for uniq @{h.arks};
         $cod = join '', @$cod;
         ar.ta and push @{ar.ta}, [$talk,$cod];
         return $cod
@@ -642,6 +642,7 @@ jst: | # test js babbler
         o { Object.keys(C.sc).length } $d/*/*
         (pa.arkfor ||= []).push(m[0])
         i $o/@class/@#doop va:{ va(C) }:class o 1s&cee/*:va/*:doop
+        o va:{ lattices }:klass $cee/*:va/*:doop
     
     
     # too far away:
@@ -759,17 +760,18 @@ jst: | # test js babbler
                     return
                 }
             }
-        io.i("latiurau/$d",[d]);
-        var ar = io.o("latic:yon/$d/*:mil/#lala:gl",[d,lala]); var yon = ar.yon; var mil = ar.mil; var gl = ar.gl;
+        var ay = io.i("latiurau/$d",[d]);
+        var ay = io.o("latic:yon/$d/*:mil/#lala:gl",[d,lala]); var yon = ay.sc.yon; var mil = ay.sc.mil; var gl = ay.sc.gl;
         // 
         // 
         // wanga
-        var ar = io.i("$d/@whur/@lamb {}:whur y {} o $lambs/*",[d,function(A,C,G,T,s){  return C.sc.fat && "laughter"  },function(A,C,G,T,s){  fai(C,s); C.sc.ok = 1; return C.sc.depth * 3  },lambs]); var whur = ar.whur; var lamb = ar.lamb;
-        var whur = io.i("$d/@whur {dehydrate}:whur ye,C- {notch} y o $lambs/*",[d,"5","",lambs]);
-        var ar = io.i("$d/@la/@dio la:{} dio:y o $ohp/*:la/#loc/da/*:dio",[d,function(A,C,G,T,s){ C.sc.i++; return 1 },ohp,loc]); var la = ar.la; var dio = ar.dio;
-        io.o("{} $d/*/*",[function(A,C,G,T,s){  return Object.keys(C.sc).length  },d]);
+        var ay = io.i("$d/@whur/@lamb {}:whur y {} o $lambs/*",[d,function(A,C,G,T,s){  return C.sc.fat && "laughter"  },function(A,C,G,T,s){  fai(C,s); C.sc.ok = 1; return C.sc.depth * 3  },lambs]); var whur = ay.sc.whur; var lamb = ay.sc.lamb;
+        var ay = io.i("$d/@whur {dehydrate}:whur ye,C- {notch} y o $lambs/*",[d,"5","",lambs]); var whur = ay.sc.whur;
+        var ay = io.i("$d/@la/@dio la:{} dio:y o $ohp/*:la/#loc/da/*:dio",[d,function(A,C,G,T,s){ C.sc.i++; return 1 },ohp,loc]); var la = ay.sc.la; var dio = ay.sc.dio;
+        var ay = io.o("{} $d/*/*",[function(A,C,G,T,s){  return Object.keys(C.sc).length  },d]);
         (pa.arkfor = pa.arkfor || []).push(m[0])
-        var ar = io.i("$o/@class/@#doop va:{}:class o $cee/*:va/*:doop",[o,function(A,C,G,T,s){  return va(C)  },A[1].sc.cee]); var class = ar.class; var doop = ar.doop;
+        var ay = io.i("$o/@class/@#doop va:{}:class o $cee/*:va/*:doop",[o,function(A,C,G,T,s){  return va(C)  },A[1].sc.cee]); var class = ay.sc.class; var doop = ay.sc.doop;
+        var ay = io.o("va:{}:klass $cee/*:va/*:doop",[function(A,C,G,T,s){  return lattices  },cee]); var klass = ay.sc.klass; var va = ay.sc.va; var doop = ay.sc.doop;
         }
         
     

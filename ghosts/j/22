@@ -900,33 +900,56 @@ iooia: | # F > i/o > input/output
             }
         }
         
-        # returns deepest atoms
-        $rows = T.o.rows;
-        T.o.talk = talk;
-        return rows.map(&row{ return row.slice(-1)[0] })
-            .filter(&s{ return s });
+        # ay separation?
+        # ays&$arky = [grep{s} whole column]
+        $ay = T.o;
+        ay.talk = talk;
+        io.realise(ay);
+        ay.sc ||= {};
+        # so [] in sc implies it's all stuff you should know
+        # and usually the howness it is is sleeping (z)
+        each ik ay.arky {
+            ay.sc[k] and throw "have something ay.sc."+k, d
+        }
+        each i,row ay.rows {
+            each ik ay.arky {
+                !row[i] and continue
+                $N = ay.sc[k] ||= [];
+                N.slice(-1)[0] == row[i] and continue
+                N.push(row[i])
+            }
+        }
         
+        #   < and eat arrays as params as many somethings it could match?
+        #     in a way that generates lots of permutations!
+        #   so d would be an A:o, c.stroke: scarkyN
+        #   a way to present foamy marks
+        # < higher order stylehouse
+        return ay
     };
     
     #c nz
     # converts p.rows to iteration or whatever
-    io.nz = &d{
-        d ||= T.o;
-        !d and throw "Can't find T.o"
-        # takes over from o
-        $t = ex({},d);
-        
+    # but first, name columns:
+    io.realise = &t{
         # name columns [i: name]
         t.arks = [];
-        each i,pa d.path {
+        each i,pa t.path {
             pa.ark and t.arks[i] = pa.ark;
         }
-        # arks ||= {-1:s}
         # < Babz S io must know this
-        if (!Object.keys(t.arks).length)
-            t.arks[t.path.length - 1] = 's';
-        
-        t.arks.length == 1 and t.oned = t.arks.slice(-1)[0]
+        #   may have a wasn't-asked-for name and s
+        if (!Object.keys(t.arks).length) {
+            $i = t.path.length;
+            while (t.path[--i]) {
+                $pa = t.path[i];
+                pa.doof and continue;
+                break
+            }
+            # even an io of one doof must have some path from data chewed on
+            !t.path[i] and throw "ran out of path looking for reals"
+            t.arks[i] = 's';
+        }
         
         t.arky = t.arks.slice();
         # add anything else we can name but wasn't asked for
@@ -935,11 +958,21 @@ iooia: | # F > i/o > input/output
             !pa.t and continue
             t.arky[pa.t] || pa.ark and continue
             pa.t.match(/\W/) and continue
+            t.arky.indexOf(pa.t) >= 0 and continue
             t.arky[i] = pa.t;
             t.nonarks[i] = pa.t;
         }
         # edge case: implicit thing should cede 'r' to ark
         #   else it is counted early
+    };
+    io.nz = &d{
+        d ||= T.o;
+        !d and throw "Can't find T.o"
+        # takes over from o
+        $t = ex({},d);
+        
+        # gets names
+        !t.arky && io.realise(t);
         
         # iterate per row
         t.i = null;
@@ -1146,6 +1179,8 @@ iooia: | # F > i/o > input/output
     #      maybe if you're database you want to know things.
     #    < in exact mode should keep z sorted,  overwrite tv
     #    < in soft mode should not overwrite (el=1)
+    #      throwing input from various sources into various light
+    #      to model contended content
     #    
     # non-tv index/join types:
     #    I: could be known to be of/ov/t/cv?
@@ -1153,7 +1188,8 @@ iooia: | # F > i/o > input/output
     #    beliefs in cv like subnets, having octaves of octaves,
     #      non-linear spaces, klein bottle public netspace
     #      lanes of stripes whipping around a torus, etc.
-    #
+    #    of a drawing made
+    #    of an id dealt by indexOf(s)
     # 
     # s = data
     # d = [pa,th], puts at that path
@@ -1452,8 +1488,9 @@ t/iooia: |
             (c == 1 || c.show) &&
                 m d_of_"+t+"  $s:d
         }
+        $thing = t == 'parsetalk' ? r : r.sc;
         $n =
-        m $t  $s:r
+        m $t  $s:thing,dl:7.22
         typeof c == 'object' and ex(n.c,c)
         return r
     };
@@ -1481,9 +1518,9 @@ t/iooia: |
     
     $aw = a('o','w/*:w');
     
-    $w =
+    $ay =
     a('i','trouble/w:r/#w:t','sweeee',1);
-    w = w.pop();
+    $w = ays&t[0];
     ws&plat = 5;
     $aw = a('o','w/*');
     # too far
@@ -1531,7 +1568,7 @@ t/iooia: |
     
     $maN = a('o','$d/#matri',[d,matri]);
     
-    $ma = maN[0];
+    $ma = maNs&matri[0];
     mas&cla = 'osi';
     
     $vong = G&Cye,['Viog',34];
@@ -1544,9 +1581,8 @@ t/iooia: |
     }
     m iterator  $s:t,d:8.22 %fs:120%
     
-    $v =
     i $ma/#vong
-    v = v[0];
+    v = ays&vong[0];
     vs&latjkc = 42;
     a('o','$d/*:dui/*:s',[d],1);
     $t = io.nz();
@@ -1735,7 +1771,7 @@ t/iooia: |
     
     o $n/*/*
     $t = io.nz();
-    m therowsofan  $s:t.p.rows,dl:8.16
+    m therowsofan  $s:t.rows,dl:8.16
     
     t.partial = 1;
     $s = t.ind(&s,t{ return G&toLines,s }).join("\n");
@@ -1762,7 +1798,7 @@ t/iooia: |
         ns&hue || ns&pi and continue
         nc&pi = 'fod';
         ns&dos = 'grow';
-        nc&dl ||= 12;
+        nc&dl ||= 8.24;
     }
     
 t/iooiata: | # func really
@@ -1858,7 +1894,6 @@ t/iooiata: | # func really
     
     #c
     S 2 change cee & see
-    
     $o = G&Cye,['fall'];
     # < #@class bareword from non C (C.t = the string?
     #     or A:o map it in c&s and draw cartoon for C.t)
@@ -1952,7 +1987,7 @@ t/iooiata: | # func really
     $seen = [];
     i $o/bolo/@zom ysource,destiny { seen.push(C); C.t.match(/al$/) } o 1s&cee/*:zom
     a(0,'adding al$ zom to bolo o');
-    m whats  $s:ar
+    m whats  $s:ay.sc,dl:6.33
     m seenCfunc  $s:seen,dl:6.24
     #i $o/bolo/@ump/@dat { s&grabb = 1 } ysource,destiny zom:{ s&grabb = 1; C.t.match(/oo/) }:dat zom:{ C.t.match(/al$/) }:ump o 1s&cee/*:zom
     
