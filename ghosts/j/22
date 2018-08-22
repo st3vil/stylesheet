@@ -299,7 +299,19 @@ iooia: | # F > i/o > input/output
                 
                 pa.t = parse;
                 
-                pa.t == '*' and pa.glob = 1;
+                # anything, anything deeply, anything something matches
+                if (pa.t[0] == '*') {
+                    pa.glob = 1;
+                    pa.t == '*' and pa.glob = 1
+                    else
+                    pa.t == '**' and pa.wander = 1
+                    else
+                    p(/^\*(\w+)$/) and pa.wander = pa.wanderer = m[0] || 1
+                    else {
+                        throw "wandery looking", pa.t
+                    }
+                }
+                
                 pa.ark == '1' and pa.ark = pa.t;
                 
                 # value of here from a:
@@ -354,6 +366,25 @@ iooia: | # F > i/o > input/output
                     # get thing to peel it already?
                     # then these d can be compiled in
                 }
+            }
+            if (pa.wanderer) {
+                $name = pa.wanderer;
+                each i,da d.path {
+                    !(da.arkfor && da.arkfor.indexOf(name) == 0) and continue
+                    da.hijacked = pa;
+                    pa.hijacks = da;
+                }
+                !pa.hijacked && !io[name] and throw "no wanderer "+name
+            }
+            if (pa.wander) {
+                $rest = d.path.slice(i+1);
+                $sensible = rest.filter(&s{ return !pa.doof });
+                sensible.length and throw "Cannot wander and then return to path";
+                # < because row must fit path
+                #   be nice to find such cul de sacs after however far
+                #   that's really what we want in a little while
+                #   Arrays only kind of work with fractions, no indexOf it seems
+                #     or a many-celled cell could do it...
             }
             !pa.doof && !fi and fi = pa
         }
@@ -426,6 +457,8 @@ iooia: | # F > i/o > input/output
     # is a join from the rows already, but pretending its not
     # adds a column for return value
     io.doof = &D,t,pa{
+        # supplied for pa.wanderer to pick atoms with
+        pa.hijacked and return
         # take iterator
         !t.more and t = io.nz(t)
         if (pa.doof == '1') {
@@ -434,7 +467,7 @@ iooia: | # F > i/o > input/output
         }
         else {
             # eg separation, must return a t (post-nz())
-            return io[pa.doof](D,t,pa)    
+            return io[pa.doof](D,t,pa)
         }
         # copy schema + column for func return
         $d = {};
@@ -810,8 +843,8 @@ iooia: | # F > i/o > input/output
                 #  - happen just before this io returns
                 # firstfuncs at end of path
                 #  - happen before we started, are now d.plumb
-                # suppose we continue with row as our rows, etc.
-                p.found = [1];
+                # transparent?
+                p.found = ['adoof'];
             }
             else
             if (first) {
@@ -870,8 +903,53 @@ iooia: | # F > i/o > input/output
                 # p.nz shapely enough to nothing when nothing
             }
             else {
-                # new column of many - duplicate this row out
-                p.rows = p.found.map(&s{
+                # new column of many - 
+                # keep wandering/grep possible (p.found) directions
+                if (pa.wander) {
+                    # grep possible directions
+                    if (pa.wanderer) {
+                        $name = pa.wanderer;
+                        name == '1' and name = null
+                        $da = pa.hijacks;
+                        $cb;
+                        if (da) {
+                            !da.hijacked and throw "hijacks not hijacked",pa,da
+                            cb = da.v;
+                        }
+                        else
+                        name && io[name] and cb = io[name];
+                        else {
+                            throw "what wanderer?",pa
+                        }
+                        typeof cb != 'function' and throw "wanderer cb not function",pa,da
+                        
+                        # < might it want them all/a bunch? width first eventually
+                        # < B cursors, so we can find everything...
+                        #   chrome debugger itself does alright finding things
+                        p.found = p.found.filter(&s{
+                            $r = cb(A,s,G,T,d);
+                            return r
+                        });
+                    }
+                    
+                    if (p.found.length) {
+                        # stretch path
+                        $na = d.path[p.i+1];
+                        if (!na || !na.wander)) {
+                            na = ex({},pa);
+                            na.wandering = pa.wandering || pa;
+                            d.path.splice(p.i+1,0,na);
+                        }
+                    }
+                    else {
+                        p.found.push(null)
+                    }
+                }
+                # loop: finish rows whose [-1] is already row dont travel onward rows whose [-1] are also further back
+                # such is loopy
+                
+                # duplicate this row out
+                p.rows = p.found.map(&s,i{
                     ro = p.row.slice();
                     ro.push(s);
                     return ro
@@ -879,11 +957,13 @@ iooia: | # F > i/o > input/output
                 # q.nz absorbs inners after loop
                 p.nz = p.found.slice();
             }
-            
             # rows grow to the right
             # < go width first? ps&z
-            
             !d.path[p.i+1] and return p
+            
+            
+            $al = ro.indexOf(s);
+            al >= 0 and (p.nough ||= []).push(
             
             #c end - an expanding map
             $rows = [];
@@ -899,6 +979,19 @@ iooia: | # F > i/o > input/output
                 h.Pmod and P = h.Pmod(d,p,P)
                 
                 each ib P {
+                    # protection from going in circles
+                    $s = b.row.slice(-1)[0];
+                    $si = b.row.indexOf(s);
+                    if (si >= 0 && b.row.length-1 > si) {
+                        # < only if the path .wanders before now?
+                        # thing stated in row only twice
+                        d.loops ||= [];
+                        d.loops.indexOf(s) < 0 and d.loops.push(s)
+                        b.row.push(null);
+                        rows.push(b.row);
+                        continue
+                    }
+                    # go
                     $b = col(p,b);
                     (p.pond ||= []).push(b);
 
@@ -1144,8 +1237,12 @@ iooia: | # F > i/o > input/output
     # the dot of the i is somestuff, index the space, trunk way etc.
     # shall we use a talky Babz'd params-implied-by-$ thing? yes
     io.i = &talk,params,d{
-        # talk:
+        # talk: 
         #   'universal keyworded-by $thing'
+        # the only universal available is A.r,
+        #   if your first thing is a spacer
+        # the only keyworded-by is /,
+        #   means inside, by tv or so
         # find these things... barewords we have around?
         # usually a J universal like N,M,1,9, etc.
         # and somethinging to it:
@@ -1162,7 +1259,7 @@ iooia: | # F > i/o > input/output
         # < wandery globs, must grow rows, path?
         #     see separation + invent the talk for
         # < sometimes (to doof many times in one row)
-        #   need a cell that corresponds to the other cells,
+        #   need a cell that corresponds to many other cells,
         #   but not much
         
         return io.rowing(talk,params,d,{
@@ -1272,7 +1369,7 @@ iooia: | # F > i/o > input/output
             # the last bit of our space: the universal
             #   could be something trascendant
             #   like being a thing with hooks, more our until path...
-            d.our && i == d.our.length and d.on_our = x
+            d.our && i == d.our.length-1 and d.on_our = x
             # done, leave S on second to last thing
             i+1 == path.length and continue
             # hash usual
@@ -1863,8 +1960,9 @@ t/iooia: |
 t/iooiata: | # func really
     G&heading;
     $io = G&way,'iooia';
-    
+    #1s&step = 2;
     G&way,'Doming',ar;
+    
     $show = {};
     show.talk = 1;
     $a = &t,talk,params{
@@ -1897,7 +1995,7 @@ t/iooiata: | # func really
                 # iterate objects if that's all you want
                 text = G&intag:'>1 '+text
             }
-            if (show.yind) {
+            if (show.y) {
                 # attach y, which hides most first
                 $say = ki(s.y,6.24);
                 say = say.replace(/^\{|\}$/g,'');
@@ -2029,7 +2127,7 @@ t/iooiata: | # func really
         dofs&seen = 'overino';
     }
     
-    show.yind = 1;
+    show.y = 1;
     o $o/*/*/*
     a(0,'see o');
     o 1s&cee/*/*/*
@@ -2055,6 +2153,32 @@ t/iooiata: | # func really
     o 1s&cee/*/*/*
     a(0,'see cee');
     
+    1s&ooo = o;
+    
+    S 3 super nice
+    show 
+    $c = 1s&cee;
+    $o = 1s&ooo;
+    o $o/*:bit/*
+    show.y = 1;
+    a(0,'see o again');
+    $t = io.nz();
+    $oo = [];
+    # F for stuff
+    t.ind(&C,t{
+        t.d <= 1 and return
+        $na = C.t.match(/(o)/g);
+        !na and return
+        oo.push(na.slice(1))
+        each in oo {
+            $name = n.join('ii');
+            $na = G&Cye,[name,3];
+            ~>39 injecting: name
+            i $C/branch/$na
+        }
+    });
+    o $o/**
+    a(0,'see o again');
     
     =pod check out ar returnings
         i $d/@whur/@lamb { s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s&depth * 3 } o $lambs/*
