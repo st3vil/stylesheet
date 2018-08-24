@@ -621,7 +621,7 @@ iooia: | # F > i/o > input/output
                 }
                 # < separate other things,
                 #   even indexes themselves,
-                #     with a reroot-changed-hashes scheme like git
+                #     with new hash leading to changes, like git
                 !io.isC(s) and continue
                 row[i] = io.separate(s,Pa,pa,ya);
                 (ya.separated ||= []).push(s)
@@ -657,11 +657,13 @@ iooia: | # F > i/o > input/output
         if (ya.yshallow) { # y,
             # only the top clones, keeps all innards
             #   whether path includes their depths or not
+            debugger;
         }
         else
         if (ya.yalone) { # y.
             # disconnect innards
             # < elabourate input()
+            delete neu.y.tv;
         }
         else { # y
             # clone everything
@@ -989,6 +991,9 @@ iooia: | # F > i/o > input/output
                     # protection from going in circles (esp if pa.wander)
                     $s = b.row.slice(-1)[0];
                     $si = b.row.indexOf(s);
+                    # < do this ^ for every atom (and then what?)
+                    #   A:o (p for prototype) is all about much webbing
+                    # short term solution, finish a row when it duplicates an object
                     if (typeof s == 'object' && si >= 0 && b.row.length-1 > si) {
                         # < only if the path .wanders before now?
                         # thing stated in row only twice
@@ -1002,7 +1007,7 @@ iooia: | # F > i/o > input/output
                     if (p.uninteresting // to pa.wanderer
                         && p.uninteresting.indexOf(s) >= 0) {
                         # after stating them once?
-                        debugger;
+                        b.row.push(null);
                         rows.push(b.row);
                         continue
                     }
@@ -1052,19 +1057,41 @@ iooia: | # F > i/o > input/output
             }
         }
         
+        #c ps
         # ay separation?
         # ays&$arky = [grep{s} whole column]
         $ay = T.o;
         ay.talk = talk;
         io.realise(ay);
         ay.sc ||= {};
-        # so [] in sc implies it's all stuff you should know
+        # sc is a stage, it gets set in many ways
+        # [] in sc implies it's all stuff you should know
         # and usually the howness it is is sleeping (z)
         each ik ay.arky {
             ay.sc[k] and throw "have something ay.sc."+k, d
         }
         each i,row ay.rows {
             each ik ay.arky {
+                $pa = ay.path[i];
+                if (pa.wandering) {
+                    # nonfirst .wander globs are .wandering = the first
+                    # the last should be empty, path exhausts things
+                    # < spacetime limit while going wide will confuse this
+                    # how much and what is implied by the k:
+                    if (1 || k[0] < 'm') {
+                        # easiest one to do already
+                        # < last not entirely null column
+                        pa = ay.path[--i];
+                    }
+                    else
+                    if (k == 's' || k == 'S') {
+                        # < gather (unique|all) objects
+                        # art making
+                    }
+                    else {
+                        # < last not null cell on each row
+                    }
+                }
                 !row[i] and continue
                 $N = ay.sc[k] ||= [];
                 N.slice(-1)[0] == row[i] and continue
@@ -1556,21 +1583,22 @@ iooia: | # F > i/o > input/output
     };
     #c knowables
     io.knowing = &d,v{
-        # glob tv wants to make some path
-        v ||= {t:'*',y:{cv:'*'}};
         # a subtype, reenters at the end:
         d.asa and $other = d; d = other.asa;
         # types
-        !io.isC(v) && !(v && v.t == '*') and debugger;
-        d == 'tv' and d = {t:d,our:['y','tv'],path:[v.t,v.y.cv],usu:1};
-        d == 'tw' and d = {t:d,our:['y','tw'],path:[v.t],usu:1}
+        d == 'tv' and d = {t:d,our:['y','tv'],usu:1};
+        d == 'tw' and d = {t:d,our:['y','tw'],usu:1}
         d == 'z' and d = {t:d,our:['sc','z']}
         # sheer bunch of keys
         d.constructor == Array and d = {path:d,usu:1}
-        
         typeof d == 'string' and throw "intelligise", d, other
         
-        other and ex(d,other);
+        other and ex(d,other)
+        # glob tv wants to make some path
+        !v and d.glob = 1; v = {t:'*',y:{cv:'*'}};
+        !d.glob && !io.isC(v) and debugger;
+        d.t == 'tv' and d.path ||= [v.t,v.y.cv]
+        d.t == 'tw' and d.path ||= [v.t]
         
         # apply the usual behaviour:
         #  - when duplicate, overwrite
@@ -1828,13 +1856,13 @@ t/iooia: |
          greps if not named or named grep
          
          y
-           cloning the C as it moves over...
+           cloning the C as it moves over
            forget about using its .y.tv tho, see perspective
          yC,o
            means cloned.y.C = origin, origin.y.o = cloned
            and these have some knownness,
            should always be able to go C-ward?
-         y-
+         y.
            cloning C but disconnecting them from things we dont take with us
          
       perspective:
@@ -1861,10 +1889,10 @@ t/iooia: |
         setup from T.o, the last i/o $d
         flat map like G&ind:
           t.ind(&s,t{ [t.d,s] })   # [ [depth,C]+ ]
-          t.ind(&s,t{ ki(s) })     # [indented toLineses]
+          t.ind(&s,t{ ki(s) })     # [indented toLinesish]
         iterate rows:
-          ar = t.more() # named columns
-          s = t.more() # if one ark/thing in total
+          shift each ay.sc.$k (before nz())
+          t = t.more() # named columns in t.sc.$k
         see code about grouping nonarks into [v+]s
         
         while(ar=t.more()) it
@@ -1901,6 +1929,7 @@ t/iooia: |
       < pipelining, a rattley flood of A:o would...
           esp if they push certainty on each other
           as welding a long seam, its only a liquid for a little stretch
+          with a rolloff/on
       
       other stuff:
       < specialise #things spacer creation (with a doof)
@@ -1911,7 +1940,7 @@ t/iooia: |
             or where else in the schema it might have disappeared to
             if O knows when it disappeared?
       
-        p could be C, etc,
+        p could be C or A, etc,
           is more shapely and langholdey than rows
           they offer an alternative positioning system,
             according to the new gravity cast on it.
@@ -1919,7 +1948,8 @@ t/iooia: |
         p could become o@3 compatible
         
         p could become aware of what's around what they're aware of,
-          and then -od fields of data that show when stuff isn't on the screen changes
+          and then -od, fields of data that
+          can show when stuff isn't on the screen changes
         
         d has now a sc for sc[k] = v (ar) when iterating,
           and before iteration begins is ar[k] = [v+] for unique and true v
@@ -2271,14 +2301,25 @@ t/iooiata: | # func really
     $o = 1s&ooo;
     i $o/bolo/tank
     i $o/bolo/boil/river
-    A.debug = 1;
     S flute: o $o/*:glib/*:glub/*
         glubs&direction = "Under "+glib.t;
         glubs&supports = s.map(&s{ return s.t }).join(', ');
     S
+    A.debug = 1;
     o $o/**
+    debugger;
     a(0,'see o has become more self aware');
     
+    S 5 eparate
+    # test out y/y,/y.
+    
+    S 6 deletes
+    # 
+    
+    S 7 iterator transactions
+    #
+    
+    S 8 one name, any fraction
     
     =pod check out ar returnings
         i $d/@whur/@lamb { s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s&depth * 3 } o $lambs/*
@@ -2294,7 +2335,6 @@ t/iooiata: | # func really
     #       but providing safe data wandering
     # < clarify how to use to gather C on C
     # 
-    A.debug = 1;
     # check:
     # {}:ting $d/*:ting # should have 1 ting column
     # searching for @names
