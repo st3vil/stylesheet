@@ -775,11 +775,12 @@ iooia: | # F > i/o > input/output
                     
                     # locate sark as ark of theirs
                     # column number, for in d.path/p.row (G/W)
+                    # < try making this t.arky
                     $coli = t.arks.indexOf(pa.t);
-                    coli == null && pa.t == 's' and coli = t.path.length-1
+                    coli < 0 && pa.t == 's' and coli = t.path.length-1
                     # < if it's 'lamb' and they have 'lambs/*',
                     #   suppose s is a lamb
-                    coli == null and throw "no find ark/column for",pa.t,t.arks
+                    coli < 0 and throw "no find ark/column for",pa.t,t.arks
                     
                     #A.debug && p.i > 1 and debugger
                     # uniq the arked column's values
@@ -1089,17 +1090,26 @@ iooia: | # F > i/o > input/output
         t.arky = t.arks.slice();
         # add anything else we can name but wasn't asked for
         t.nonarks = {}; # tarky not in tarks
+        $globs = 0;
         each i,pa t.path {
             !pa.t and continue
             t.arky[pa.t] || pa.ark and continue
+            pa.glob and globs = i; # will never be 0, as i * implies i A.r/*
             pa.t.match(/\W/) and continue
             t.arky.indexOf(pa.t) >= 0 and continue
             t.arky[i] = pa.t;
             t.nonarks[i] = pa.t;
         }
         
-        # < Babz S io must know this
-        # < may have a wasn't-asked-for name and s
+        # Babz S io must know this
+        if (globs) {
+            # may have a wasn't-asked-for name and s
+            $pa = t.path[globs];
+            if (!pa.ark && t.arky.indexOf('s') < 0) {
+                t.arky[globs] =
+                t.nonarks[globs] = 's';
+            }
+        }
         if (!Object.keys(t.arky).length) {
             $i = t.path.length;
             while (t.path[--i]) {
@@ -1908,7 +1918,7 @@ t/iooia: |
     # < solve this... if ark is singularly defined we could return it?
     #   and if many we could return them as whole columns...
     #   and only return last column when no arking
-    m lish_var -jod $s:lish
+    m lish_var -jod $s:ays&lish
     
     $t = io.nz();
     
@@ -1931,7 +1941,7 @@ t/iooia: |
     # i can set vars... use T.o if you unsure of 1/+ness
     $t = io.nz();
     m andasio_To  $s:T.o
-    m andasio_varset  $s:an
+    m andasio_varset  $s:ays&an
     m andasio_tmore_once  $s:t.more().sc
     m andasio_tar  $s:t.ar
     m andasio_tmore_twice  $s:t.more().sc

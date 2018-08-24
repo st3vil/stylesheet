@@ -256,8 +256,11 @@ JaBabz: | # make hutscript javascript
         # since that redefines columns
         # assume @things, #things, $things, anything:things are for var/ar unpack
         $defunc->();
+        my $firstpath = h.path;
         while ($s =~ s/^(\S+)\s*//) {
-            my $path = [split '/', $1];
+            my $island = $1;
+            $firstpath = [@{h.path}] if $island =~ /^[io]$/;
+            my $path = [split '/', $island];
             for (@$path) {
                 my $pa = {};
                 # waving (and so we dont see :y)
@@ -313,6 +316,10 @@ JaBabz: | # make hutscript javascript
             }
             # possibly just s
             @{h.arks} = 's' if !@{h.arks};
+        }
+        if ($firstpath->[-1]->{t} eq '*') {
+            my $pa = $firstpath->[-1];
+            push @{h.arks}, 's' unless pa.ark || grep {$_ eq 's'} @{h.arks};
         }
         
         # S does var setting, or each io can set ay
@@ -831,11 +838,11 @@ jst: | # test js babbler
         var ay = io.i("$d/@whur/@lamb {}:whur y {} o $lambs/*",[d,function(A,C,G,T,s){  return C.sc.fat && "laughter"  },function(A,C,G,T,s){  fai(C,s); C.sc.ok = 1; return C.sc.depth * 3  },lambs]); var whur = ay.sc.whur; var lamb = ay.sc.lamb;
         var ay = io.i("$d/@whur {dehydrate}:whur ye,C- {notch} y o $lambs/*",[d,"5","",lambs]); var whur = ay.sc.whur;
         var ay = io.i("$d/@la/@dio la:{} dio:y o $ohp/*:la/#loc/da/*:dio",[d,function(A,C,G,T,s){ C.sc.i++; return 1 },ohp,loc]); var la = ay.sc.la; var dio = ay.sc.dio;
-        var ay = io.o("{} $d/*/*",[function(A,C,G,T,s){  return Object.keys(C.sc).length  },d]); var d = ay.sc.d;
+        var ay = io.o("{} $d/*/*",[function(A,C,G,T,s){  return Object.keys(C.sc).length  },d]); var d = ay.sc.d; var s = ay.sc.s;
         (pa.arkfor = pa.arkfor || []).push(m[0])
         var ay = io.i("$o/@class/@#doop va:{}:class o $cee/*:va/*:doop",[o,function(A,C,G,T,s){  return va(C)  },A[1].sc.cee]); var class = ay.sc.class; var doop = ay.sc.doop;
         var ay = io.o("va:{}:klass $cee/*:va/*:doop",[function(A,C,G,T,s){  return lattices  },cee]); var klass = ay.sc.klass; var va = ay.sc.va; var doop = ay.sc.doop;
-        var ay = io.o("w/*",[]); var w = ay.sc.w;
+        var ay = io.o("w/*",[]); var w = ay.sc.w; var s = ay.sc.s;
         } var ay; while (ay = G.h(A,C,G,T,"S",'','',"i $s/$o",[s,o])) { var s = ay.sc.s; var o = ay.sc.o;
           injecto $o from midtones of $s
         } var ay; while (ay = G.h(A,C,G,T,"S",'','',"o yo $s/*:tak",[s])) { var tak = ay.sc.tak;
