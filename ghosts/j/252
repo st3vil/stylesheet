@@ -329,6 +329,8 @@ Doming: | # in the place in the place
             # < unless they're after S 0, above the skin of the embryo,
             #   and they're probably Osc activato
             # < remodelling
+            # not now, if the last numbery S was not completed
+            A&located_step && A&located_step != A&current_step and return 0
             # now, S 3 is current and finished, 1s&step is 4
             !A&current_step || A&current_step != 1s&step-1 and return 0
             # assume extension to current step
@@ -337,6 +339,12 @@ Doming: | # in the place in the place
                 return A&io.forS(talk,params);
             }
             else {
+                if (!t) {
+                    # after a forS? keep going like we're in the last step
+                    A&afteraforS and return 0
+                    A&afteraforS = 1;
+                    return 1
+                }
                 # could be an Osc triggered continuation...
                 # so we need a numbers stepper, which locates a subtree
                 #  of S without numbers, for within that number
@@ -345,6 +353,11 @@ Doming: | # in the place in the place
                 debugger;
             }
         }
+        else {
+            # to hold the last number located
+            A&located_step = s;
+        }
+        delete A&afteraforS;
         
         $sa =
         ~>93 Step: s, 1s&step, A&current_step, '>38:glib do'
