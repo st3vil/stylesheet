@@ -22,6 +22,7 @@ TripDeck: | # note vortex, bakes patterns into info
     # this would be a good place to start
     # piling stuff up
     =head
+        stop top posting
       TD
       to start raying together ghost/wormholes and travel
       so change becomes a crawling shadow,
@@ -1079,8 +1080,7 @@ iooia: | # F > i/o > input/output
         return ay
     };
     
-    #c nz
-    # converts p.rows to iteration or whatever
+    #c realise
     # but first, name columns:
     io.realise = &t{
         # name columns [i: name]
@@ -1127,6 +1127,8 @@ iooia: | # F > i/o > input/output
         # edge case: implicit thing should cede 'r' to ark
         #   else it is counted early
     };
+    #c nz $d/$ay -> $t so t.more()
+    # converts d.rows to iteration or whatever
     io.nz = &d{
         d ||= T.o;
         !d and throw "Can't find T.o"
@@ -1175,10 +1177,20 @@ iooia: | # F > i/o > input/output
                 # i #Con:/@#G:/@W o $mag/*:G/*:W
                 # should iter for every Con and G
                 #  with W=[W+] read ahead
+                $be;
                 $first = 1;
+                $accumulate = &{
+                    # d.path before the grouped stuff will never > 1
+                    #   unless divergent paths reconverged on one thing...
+                    A.debug and debugger;
+                    each ik t.nonarks {
+                        first and ar[k] = [ar[k]]
+                        be and ar[k].push(be[k]);
+                    }
+                };
                 while (1) {
                     # get next one...
-                    $be = parkar(1);
+                    be = parkar(1);
                     !be and break
                     $diff = 0;
                     each ik t.arks {
@@ -1188,16 +1200,14 @@ iooia: | # F > i/o > input/output
                     if (diff) {
                         t.next_i = t.i;
                         t.next_row = t.row;
-                        t.next_row = be;
+                        t.next = be;
+                        be = null;
                         break
                     }
-                    each ik t.nonarks {
-                        # or accumulate nonarked things
-                        first and ar[k] = [ar[k]]
-                        ar[k].push(be[k]);
-                    }
+                    accumulate();
                     first = 0
                 }
+                first and accumulate();
             }
             t.i = ti;
             t.row = trow;
@@ -2247,15 +2257,17 @@ t/iooiata: | # func really
     m looped_trow  $s:t.row,dl:8.24
     m looped_row  $s:row,dl:8.24
     
+    S 4 forS ittruati
+    
+    $c = 1s&cee;
+    $o = 1s&ooo;
     i $o/bolo/tank
     i $o/bolo/boil/river
-    
+    A.debug = 1;
     S flute: o $o/*:glib/*:glub/*
         glubs&direction = "Under "+glib.t;
-        !(s && s.map) and debugger;
-        s && s.map and glubs&supports = s.map(&s{ return s.t }).join(', ');
+        glubs&supports = s.map(&s{ return s.t }).join(', ');
     S
-    
     o $o/**
     a(0,'see o has become more self aware');
     
