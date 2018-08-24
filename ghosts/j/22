@@ -379,7 +379,7 @@ iooia: | # F > i/o > input/output
             if (pa.wander) {
                 $rest = d.path.slice(i+1);
                 $sensible = rest.filter(&s{ return !pa.doof });
-                sensible.length and throw "Cannot wander and then return to path";
+                sensible.length and throw "Cannot unwander";
                 # < because row must fit path
                 #   be nice to find such cul de sacs after however far
                 #   that's really what we want in a little while
@@ -458,7 +458,7 @@ iooia: | # F > i/o > input/output
     # adds a column for return value
     io.doof = &D,t,pa{
         # supplied for pa.wanderer to pick atoms with
-        pa.hijacked and return
+        pa.hijacked and debugger
         # take iterator
         !t.more and t = io.nz(t)
         if (pa.doof == '1') {
@@ -926,16 +926,23 @@ iooia: | # F > i/o > input/output
                         # < might it want them all/a bunch? width first eventually
                         # < B cursors, so we can find everything...
                         #   chrome debugger itself does alright finding things
+                        
                         p.found = p.found.filter(&s{
                             $r = cb(A,s,G,T,d);
-                            return r
+                            r and return 1
+                            # to show the limit of the search
+                            # the edge of the d of light
+                            (p.uninteresting ||= []).push(s);
+                            return 1
+                            # or not show it:
+                            return 0
                         });
                     }
                     
                     if (p.found.length) {
                         # stretch path
                         $na = d.path[p.i+1];
-                        if (!na || !na.wander)) {
+                        if (!na || !na.wander) {
                             na = ex({},pa);
                             na.wandering = pa.wandering || pa;
                             d.path.splice(p.i+1,0,na);
@@ -961,10 +968,6 @@ iooia: | # F > i/o > input/output
             # < go width first? ps&z
             !d.path[p.i+1] and return p
             
-            
-            $al = ro.indexOf(s);
-            al >= 0 and (p.nough ||= []).push(
-            
             #c end - an expanding map
             $rows = [];
             each i,row p.rows {
@@ -979,15 +982,23 @@ iooia: | # F > i/o > input/output
                 h.Pmod and P = h.Pmod(d,p,P)
                 
                 each ib P {
-                    # protection from going in circles
+                    # protection from going in circles (esp if pa.wander)
                     $s = b.row.slice(-1)[0];
                     $si = b.row.indexOf(s);
-                    if (si >= 0 && b.row.length-1 > si) {
+                    if (typeof s == 'object' && si >= 0 && b.row.length-1 > si) {
                         # < only if the path .wanders before now?
                         # thing stated in row only twice
+                        # kind of thing you'd T when it starts happening
                         d.loops ||= [];
                         d.loops.indexOf(s) < 0 and d.loops.push(s)
                         b.row.push(null);
+                        rows.push(b.row);
+                        continue
+                    }
+                    if (p.uninteresting // to pa.wanderer
+                        && p.uninteresting.indexOf(s) >= 0) {
+                        # after stating them once?
+                        debugger;
                         rows.push(b.row);
                         continue
                     }
@@ -1192,8 +1203,6 @@ iooia: | # F > i/o > input/output
         #c ind: callback per item, flat list with depth...
         t.ind = &cb{
             t.indstr ||= '  ';
-            # recurse into p.nz?
-            # < just like the idea of nz apparently,
             $la = [];
             $N = [];
             each i,row t.rows {
