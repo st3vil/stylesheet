@@ -198,7 +198,7 @@ JaBabz: | # make hutscript javascript
     #   perldoc perlre "(??{ code })" onwards?
     my $brackin;
     $brackin = qr/\{[^\}\{]*$brackin?[^\}\{]*\}/;
-    my $varguessbab = &t,s{ #}}
+    my $varguessbab = &t,s,varcod,nocall{
         my $talk = $s;
         # talk is all the i is without the i
         my $cod = [];
@@ -298,6 +298,7 @@ JaBabz: | # make hutscript javascript
             $after_first_pathy_thing = 1 if @$path > 1;
             $defunc->();
         }
+        #c iocall
         return "Bailed: h.bail" if h.bail;
         each tin $h {
             $n =~ /\W+/ && die "wobbyly $t varnameinterpretation: $n", $s;
@@ -314,23 +315,35 @@ JaBabz: | # make hutscript javascript
             @{h.arks} = 's' if !@{h.arks};
         }
         
-        push @$cod, 'var ay = ';
+        # S does var setting, or each io can set ay
+        #   but not each ay.sc.$arks
+        my $sets = 'ay';
         
+        push @$cod, "var $sets = " unless $nocall;
+        nocall.sets = $sets if $nocall;
+        
+        # put i/o in talk
+        $talk = "$t $talk" if $nocall;
+        # quote talk
         (my $vus = sjson([$talk])) =~ s/^\[|\]$//g;
-        push @$cod, "io\.$t($vus,[";
-        
+        # call io (or dont)
+        my $call = $nocall ? "" : "io\.$t(";
+        push @$cod, "$call$vus,[";
+        # bind params
         push @$cod, join ',', @{h.vars} if @{h.vars};
         
-        push @$cod, ']);';
-        push @$cod, ' var '.$_.' = ay'.'.sc.'.$_.';' for uniq @{h.arks};
+        push @$cod, ']'.($nocall ? "" : ");");
+        $varcod ||= $cod;
+        push @$varcod, ' var '.$_.' = '.$sets.'.sc.'.$_.';' for uniq @{h.arks};
         $cod = join '', @$cod;
         ar.ta and push @{ar.ta}, [$talk,$cod];
         return $cod
     };
     return $varguessbab if ar.ta;
-    c&s =~ s{(^\s*|return )(i|o) ([\w\@\{\$\#]+[^\n]*[^\n;]+)$}
-    
-    { "$1".$varguessbab->($2,$3) }smeg;
+    c&s =~ s{(^\s*|return )(i|o) ([\w\@\{\$\#]+[^\n]*[^\n;]+)$}{
+        # unless testing, i/o doesn't set variables, only as S i/o
+        my $varcod = ar.testing_io_vars ? undef : [];
+        "$1".$varguessbab->($2,$3,$varcod) }smeg;
      
         
     #c each
@@ -521,23 +534,56 @@ JaBabz: | # make hutscript javascript
             if (/$anS/) {
                 my $args = $1;
                 $args =~ s/^\s+|\s+$//g;
+                # G&S,s/num,t/nam,talk/json(d),params
                 my $num = $1 if $args =~ s/^(\d+(?:\.\d+)?)\s*//;
-                my $sets;
+                my $nam; # maybe 'S 3 (title): i/o ....
+                # so then: } var sets; while(sets = G&S:3,'title','i/o ...',[params]) { var one = sets.sc.one; ...
+                my $sets; # name of G&S return value ^
+                my $talkpara; # 'i/o ...',[params]
+                my $setting = []; # the (var one = sets.sc.one;)+
+                # talk,params pass through S, which iterates and sets vars inside
+                $args =~ s{^(?:(.*?):? )?(i|o) ([\w\@\{\$\#]+[^\n]*[^\n;]+)$}{
+                    $nam = $1 if $1;
+                    my $nocall = {};
+                    $talkpara = $varguessbab->($2,$3,$setting,$nocall);
+                    $sets = nocall.sets;
+                    ''
+                }smeg;
+                
+                # io-light, assume one eg $N may be returned from the call
+                # < projected to expand... unless io is the place that also sees
+                #   up the A train to where N and M etc live.
+                #   coming from or going to Osc
                 if ($args) {
                     # title contains '$N' to while (N = ...)
                     # title loses '$'
-                    $args =~ s/\$([^\s\+]+)(\+|$)/$sets = $1/seg;
-                    $args = "\"$args\"";
+                    if ($args =~ s/\$([^\s\+]+)(\+|$)/$1/sg) {
+                        $1 && $sets && die "have dollarey $1 in args, also io return sets $sets";
+                        $sets = $1;
+                    }
                 }
-                $args = join',',grep{length}$num,$args;
+                $nam && $args && die "io set nam='$nam', also args: $args";
+                $nam = $args;
+                ($nam = sjson([$nam])) =~ s/^\[|\]$//g if $nam;
+                $num ||= "''" unless $num eq '0';
+                $nam ||= "''";
+                $args = join',',grep{length}$num,$nam,$talkpara;
+                
                 my $call = join':',grep{length}$GandS,$args;
+                # conjoins while blocks
                 my $con = $firstS ? "" : "} ";
                 $firstS = 0;
                 if ($sets) {
-                    $call = "$sets = $call";
                     $con .= "var $sets; ";
+                    $call = "$sets = $call";
                 }
                 $con .= "while (".$call.") {";
+                if (@$setting) {
+                    
+                    #$setting = join ';', @$setting;
+                    #$setting =~ s/;;/;/sg;
+                    $con .=  join '',@$setting;
+                }
                 $con
             }
             else {
@@ -547,11 +593,11 @@ JaBabz: | # make hutscript javascript
         push @l, '}';
         c&s = join "\n",@l;
     }
-    # G&thing:args,"with space";
-    c&s =~ s/($poing)\&(\$)?($poing)(:[^\n;]+)(;|\) ?\{\s*$|\s*$)/
+    # G&thing:args,"with space";     $e v
+    c&s =~ s/($poing)\&(\$)?($poing)(?::([^\n;]+))(|\) ?\{ var.+$|\s*$|\s*$|;)/
         my ($on,$var,$p,$e,$t) = ($1,$2,$3,$4,$5);
-        $t = $1 if $e =~ s{(\) ?\{)$}{};
-        $e =~ s{^:}{,};
+        $t = "$1$t" if $e =~ s{(\) ?\{(?: var.+|))$}{};
+        $e = ",$e" if length $e;
         ($on,my$in) = ("G\.h",'A,C,G,T,')
             if $on eq 'G';
         $p = "\"$p\"" unless $var;
@@ -656,8 +702,11 @@ jst: | # test js babbler
         i $o/@class/@#doop va:{ va(C) }:class o 1s&cee/*:va/*:doop
         o va:{ lattices }:klass $cee/*:va/*:doop
         o w/*
-        i $s/$o
-    
+        S limpiuty: i $s/$o
+          injecto $o from midtones of $s
+        S o yo $s/*:tak
+          m figurative 2 $Blazm:tak
+        S 0
     
     # too far away:
     
@@ -688,7 +737,7 @@ jst: | # test js babbler
         G.h(A,C,G,T,"dothis",'fourly',[f]);
             C.sc.attr.title = C.sc.attr.title || C.t+' '+C.y.cv;
 
-        while (G.h(A,C,G,T,'S')) {
+        while (G.h(A,C,G,T,"S",'','')) {
         G.h(A,C,G,T,"wide","several ticks");
         G.h(A,C,G,T,some,4,56-3, (28 / A[5].sc.e))
         A[5].sc.log = [];
@@ -702,7 +751,7 @@ jst: | # test js babbler
         var knuckles;
         G.h(A,C,G,T,"c",knuckles,[fav, ours]);
         //etc
-        } while (G.h(A,C,G,T,"S","fouring")) {
+        } while (G.h(A,C,G,T,"S",'',"fouring")) {
         // etc
         Y.sc.nope = 1;
         A.lo.sc.ayer = 3;
@@ -761,14 +810,14 @@ jst: | # test js babbler
         var v;
         var te = vol;
         te = te || vol;
-        } while (G.h(A,C,G,T,"S",4)) {
+        } while (G.h(A,C,G,T,"S",4,'')) {
         var ve =
         A[1].sc.Casa = A[1].sc.Casa || 
         G.h(A,C,G,T,"n",["scA","-jod_3",{s:Y,dl:2},{}]);
         // etc
-        } while (G.h(A,C,G,T,'S')) {
+        } while (G.h(A,C,G,T,"S",'','')) {
         if (k == 'r.c.M') { // changes everywhere?
-        } var N; while (N = G.h(A,C,G,T,"S","as last N")) {
+        } var N; while (N = G.h(A,C,G,T,"S",'',"as last N")) {
             if (d.dup) {
                 if (d.dup(x)) {
                     return
@@ -787,11 +836,15 @@ jst: | # test js babbler
         var ay = io.i("$o/@class/@#doop va:{}:class o $cee/*:va/*:doop",[o,function(A,C,G,T,s){  return va(C)  },A[1].sc.cee]); var class = ay.sc.class; var doop = ay.sc.doop;
         var ay = io.o("va:{}:klass $cee/*:va/*:doop",[function(A,C,G,T,s){  return lattices  },cee]); var klass = ay.sc.klass; var va = ay.sc.va; var doop = ay.sc.doop;
         var ay = io.o("w/*",[]); var w = ay.sc.w;
-        var ay = io.i("$s/$o",[s,o]); var s = ay.sc.s; var o = ay.sc.o;
+        } var ay; while (ay = G.h(A,C,G,T,"S",'','',"i $s/$o",[s,o])) { var s = ay.sc.s; var o = ay.sc.o;
+          injecto $o from midtones of $s
+        } var ay; while (ay = G.h(A,C,G,T,"S",'','',"o yo $s/*:tak",[s])) { var tak = ay.sc.tak;
+          G.h(A,C,G,T,"m",M,["figurative","2",{Blazm:tak},{}]);
+        } while (G.h(A,C,G,T,"S",0,'')) {
         }
         
     
-    #c testily 
+    #c testily
     if (0) {
     c&s = <<'';
         la
@@ -807,6 +860,7 @@ jst: | # test js babbler
     
     $good = "";
     }
+    ar.testing_io_vars = 1;
     
     Rw JaBabz;
     
