@@ -319,10 +319,32 @@ Doming: | # in the place in the place
     
     
     #c S-tep
-    A&S = &s,d{
+    A&S = &s,d,talk,params{
         # any? named? data joint roller? for/if something?
         typeof s != 'number' && s !== '' and throw "NaN",s;
-        s === '' and debugger;
+        if (s === '') {
+            # if on a step, these unnumbered are part of it
+            #   but their own while. after leaving the pin:
+            # < seek the S number then the S name, ignore otherwise
+            # < unless they're after S 0, above the skin of the embryo,
+            #   and they're probably Osc activato
+            # < remodelling
+            # now, S 3 is current and finished, 1s&step is 4
+            !A&current_step || A&current_step != 1s&step-1 and return 0
+            # assume extension to current step
+            if (talk && params) {
+                !A&io and throw "no A&io"
+                return A&io.forS(talk,params);
+            }
+            else {
+                # could be an Osc triggered continuation...
+                # so we need a numbers stepper, which locates a subtree
+                #  of S without numbers, for within that number
+                # then S 0 means end/non-step,
+                # which can have S,'',name steps in
+                debugger;
+            }
+        }
         
         $sa =
         ~>93 Step: s, 1s&step, A&current_step, '>38:glib do'
@@ -376,7 +398,7 @@ Doming: | # in the place in the place
             A&bailstep = s+1;
         }
         # totals should be accurate when not coded
-        1s&step > total and ~Sextra steps: 1s&step+'/'+total
+        1s&step > total and ~extra steps: 1s&step+'/'+total
         # A has attempts to do a step
         A&current_step = s;
         $t = s;

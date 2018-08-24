@@ -701,6 +701,8 @@ iooia: | # F > i/o > input/output
             io.parsetalk(talk,params,d);
         }
         !d.path and throw "no path"
+        # < bind params now so parsetalk can be compiletime,
+        #     call io.i(sjson(parsetalk(talk
         
         #c plumb from somewhere
         if (d.plumb && !d.plumb.more) {
@@ -1151,6 +1153,7 @@ iooia: | # F > i/o > input/output
             return row
         };
         # grouping ar[k]=[v+] for implied names
+        # < some way to exclude an ark from the 
         $parkar = &be{
             $ar = t.next; delete t.next;
             if (ar) {
@@ -1211,7 +1214,6 @@ iooia: | # F > i/o > input/output
             t.sc = t.ar;
             return t;
         };
-        
         #c ind: callback per item, flat list with depth...
         t.ind = &cb{
             t.indstr ||= '  ';
@@ -1251,6 +1253,19 @@ iooia: | # F > i/o > input/output
     };
     
     
+    #c forS  
+    io.forS = &talk,params{
+        $ng = io.forSing ||= {};
+        ng.talk && talk != ng.talk and delete ng.t;
+        ng.talk = talk;
+        if (!ng.t) {
+            $d = io.parsetalk(talk,params);
+            !d.is and throw "No d.is"
+            d = io[d.is](d);
+            ng.t = io.nz(d);
+        }
+        return ng.t.more()
+    };
     #c io
     # modes of rowing awareness
     
@@ -1624,7 +1639,7 @@ iooia: | # F > i/o > input/output
                 # but we (as eg tv) shall go on to tw and z even dups
                 # no information lost!
     };
-
+    A&io = io;
     return io
     
 t/iooia: |
@@ -2232,6 +2247,19 @@ t/iooiata: | # func really
     m looped_trow  $s:t.row,dl:8.24
     m looped_row  $s:row,dl:8.24
     
+    i $o/bolo/tank
+    i $o/bolo/boil/river
+    
+    debugger;
+    S flute: o $o/*:glib/*:glub/*
+        glubs&direction = "Under "+glib.t;
+        glubs&supports = s.map(&s{ return s.t }).join(', ');
+    S
+    
+    o $o/**
+    a(0,'see o has become more self aware');
+    
+    
     =pod check out ar returnings
         i $d/@whur/@lamb { s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s&depth * 3 } o $lambs/*
         i $d/@whur {dehydrate:5}:whur ye,C. {notch} y o $lambs/*
@@ -2245,6 +2273,7 @@ t/iooiata: | # func really
     #     you'd be building them on top probably...
     #       but providing safe data wandering
     # < clarify how to use to gather C on C
+    # 
     A.debug = 1;
     # check:
     # {}:ting $d/*:ting # should have 1 ting column
