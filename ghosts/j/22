@@ -1091,7 +1091,7 @@ iooia: | # F > i/o > input/output
         
         t.arky = t.arks.slice();
         # add anything else we can name but wasn't asked for
-        t.nonarks = {}; # tarky not in tarks
+        t.nonarks = []; # arky !arks
         $globs = 0;
         each i,pa t.path {
             !pa.t and continue
@@ -1154,10 +1154,13 @@ iooia: | # F > i/o > input/output
             }
             return row
         };
-        # grouping ar[k]=[v+] for implied names
-        # < some way to exclude an ark from the 
+        # grouping by arks, after which implied names ar[k]=[v+]
+        # < naming stuff with arks, not grouping with them
+        # < to ungrouped, partial, nz(), regroup, grep/map row/column/objects, 
+        #     in one, ay.nz(3,&arks,_,nonarks{})?
         $parkar = &be{
             $ar = t.next; delete t.next;
+            # position save/load around grouping ahead
             if (ar) {
                 t.i = t.next_i; delete t.next_i;
                 t.row = t.next_row; delete t.next_row;
@@ -1179,11 +1182,16 @@ iooia: | # F > i/o > input/output
                 #  with W=[W+] read ahead
                 $be;
                 $first = 1;
+                $groupstarts = Object.keys(t.arks)[0];
                 $accumulate = &{
                     # d.path before the grouped stuff will never > 1
-                    #   unless divergent paths reconverged on one thing...
-                    A.debug and debugger;
+                    #   unless rows converged on one thing
+                    #     with the same state, etc
                     each ik t.nonarks {
+                        if (i < groupstarts) {
+                            be && be[k] != ar[k] and throw "nonsimilar fore-grouped",k,be[k],ar[k],t
+                            continue
+                        }
                         first and ar[k] = [ar[k]]
                         be and ar[k].push(be[k]);
                     }
