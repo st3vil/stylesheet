@@ -1085,19 +1085,6 @@ iooia: | # F > i/o > input/output
         each i,pa t.path {
             pa.ark and t.arks[i] = pa.ark;
         }
-        # < Babz S io must know this
-        #   may have a wasn't-asked-for name and s
-        if (!Object.keys(t.arks).length) {
-            $i = t.path.length;
-            while (t.path[--i]) {
-                $pa = t.path[i];
-                pa.doof and continue;
-                break
-            }
-            # even an io of one doof must have some path from data chewed on
-            !t.path[i] and throw "ran out of path looking for reals"
-            t.arks[i] = 's';
-        }
         
         t.arky = t.arks.slice();
         # add anything else we can name but wasn't asked for
@@ -1109,6 +1096,21 @@ iooia: | # F > i/o > input/output
             t.arky.indexOf(pa.t) >= 0 and continue
             t.arky[i] = pa.t;
             t.nonarks[i] = pa.t;
+        }
+        
+        # < Babz S io must know this
+        # < may have a wasn't-asked-for name and s
+        if (!Object.keys(t.arky).length) {
+            $i = t.path.length;
+            while (t.path[--i]) {
+                $pa = t.path[i];
+                pa.doof and continue;
+                break
+            }
+            # even an io of one doof must have some path from data chewed on
+            !t.path[i] and throw "ran out of path looking for reals"
+            t.arky[i] =
+            t.nonarks[i] = 's';
         }
         # edge case: implicit thing should cede 'r' to ark
         #   else it is counted early
