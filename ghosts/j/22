@@ -606,9 +606,32 @@ iooia: | # F > i/o > input/output
         # see also "no find ark/column" for when they ...
         if (!ya.arkfor) {
             # defaults to stuff @heading Downstream
+            # < less column access ugliness
+            #   repeating special cases for s
+            # < imply .../@s when/how exactly?
+            # < .../@s or @jhon or nothing should match .../jhon
+            # < column accessors, knowing where looking from/through/to  
             ya.arkfor = [];
             each i,Pa D.path {
                 Pa.sark and ya.arkfor[i] = Pa.t
+            }
+            # make sure each sark we are adapting an arkfor from
+            $arks = ya.arkfor.filter(&s{ return s });
+            each i,pa t.path {
+                $ai = arks.indexOf(pa.ark || pa.t);
+                ai < 0 and continue
+                # is there
+                arks.splice(ai,1);
+            }
+            if (arks.length == 1 && arks[0] == 's') {
+                # @s defaults to their last column,
+                #   which defaults to being named s only aft realise()
+                $la = t.path.slice(-1)[0];
+                la.doof and throw "they doof, looking for s, make column accessors"
+                ya.arkfor[t.path.length-1] = la.t;
+            }
+            else {
+                arks.length and throw "sarks unfound over there: "+arks.join(', ')
             }
         }
         
@@ -2218,6 +2241,7 @@ t/iooiata: | # func really
         return t
     };
     a.nz = nz;
+    a.show = show;
     ar.atavism and return a
     S 1 make a dee, replicate to cee
     $start = 
@@ -2501,30 +2525,63 @@ t/iooiatal: |
     ar.atavism = 1;
     $a = G&way,'t/iooiata',ar;
     $nz = a.nz;
+    a.show.y = 1;
     $io = A&io;
     
     S 1 eparate
     # test out y/y,/y.
-    $o = 1s&o = G&Cye,['yop',1];
-    i $o/ting/lots
-    # < pa.v = [] Pmods
-    $ting = 'glap sip cap bee far chua hsing halma jhon jonne comedia musico'.split(' ');
-    A.debug = 1;
-    i $o/@#$ting
-    A.debug = 0;
-    ting = ting.slice(-4);
-    i $o/@#$ting/wamptch/stul
-    i $o/@$ting/mmm/er
-    ting.pop(); ting.shift();
-    i $o/@#$ting/lum/iuty/voux
-    o $o/**
-    a(0,'look at all those hats');
-    a(9,'wamptch/stul disappeared because @$ting not @#$ting')
+    $eyi = 2;
+    $o;
+    while (eyi--) {
+        o = 1s&o = G&Cye,['yop',1];
+        i $o/ting/lots
+        # < pa.v = [] Pmods
+        $ting = 'glap sip cap bee far chua hsing halma jhon jonne comedia musico'.split(' ');
+        i $o/@#$ting
+        ting = ting.slice(-4);
+        i $o/@#$ting/wamptch/stul
+        if (eyi == 1) {
+            i $o/@$ting/mmm/er
+        }
+        else {
+            i $o/@#$ting/mmm/er
+        }
+        ting.pop(); ting.shift();
+        i $o/@#$ting/lum/iuty/voux
+        o $o/**
+        a(0,'look at all those '+(eyi == 1 ? '' : 'lovely ')+'hats');
+        eyi == 1 and a(9,'wamptch/stul disappeared because @$ting not @#$ting')
+    }
     
-    i $o/cap/@s y o $o/jhon
+    A.debug = 1;
+    # nothing
+    i $o/cap/@s o $o/jonne
+    # just the top thing
+    i $o/cap/@s y, o $o/jonne/wamptch
+    # everything
+    i $o/cap/@s y o $o/jonne/lum
+    # without things
+    i $o/cap/@s y. o $o/jonne/mmm
+    
+    A.debug = 0;
     i $o/cap/hasothers
+    S scribble on originals: o $o/jonne:leap/*:lap/*:lop
+        leaps&boogie = 3;
+        laps&eel = 33;
+        lops&ded = 1;
+    S
+    # < alternations:
+    #o $o/{cap,jonne}/**
     o $o/cap/**
-    a(0,'jhon entirely transported to cap');
+    a(0,'jhon entirely transported to cap, not scribbled on');
+    a('bug','lum got scribbled in, should clone innards');
+    
+    # < in separate(), mode:y (default):
+    #   i $neu/** y, o $neu/**
+    
+    # < leads neatly into deletes, for mode:y.
+    #   pathy: $thing. 
+    
     
     
     S 2 deletes
