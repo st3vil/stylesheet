@@ -314,7 +314,7 @@ iooia: | # F > i/o > input/output
                 p(/^(\w+)?#/) and pa.isparam = 1; pa.relative = m[0] || 1;
                 pa.sark and delete pa.isparam;
                 
-                # C itself for path bit got from param
+                # uses thing from params
                 p(/^\$/) and pa.isparam = 1
                 
                 pa.t = parse;
@@ -347,23 +347,25 @@ iooia: | # F > i/o > input/output
                     # < move assignment later, work with @sarked things,
                     #   t=nonC from doof
                     # < and some @3? <3? select spaces
-                    pa.v = G&Cye,[pa.t,1]
                     # words are the lumber of the algorithm
                     pa.word = pa.spacer = 1;
                 }
                 # namespaceness of something
-                if (pa.relative) {
-                    pa.spacer = 1;
-                }
+                pa.relative and pa.spacer = 1
                 dpa();
             }
             parse = outer;
         }
         parse and throw "Unparsed", parse
         
-        # 2
+        #c 2 grasp better
         $fi;
         each i,pa d.path {
+            if (pa.sark && pa.isparam) {
+                # array of something, eg @#$names spacerises an array of t
+                # is like Pmod in multicity
+                pa.isother = 1;
+            }
             if (pa.separation) {
                 $mode = pa.separation;
                 mode == '1' and mode = 'C';
@@ -759,7 +761,7 @@ iooia: | # F > i/o > input/output
             d.plumb = io.doof(d,d.plumb,pa);
             i--;
         }
-        # plumb rowmuddler
+        # plumb rowmuddler -one iterator multiplying itself in at several points
         if (d.plumb) {
             $t = d.plumb;
             # pa.sark and pa.v = their rows's ark
@@ -769,11 +771,10 @@ iooia: | # F > i/o > input/output
             # P = [p], p.row = our row
             # p.pa be diverged from the one in d.path itself,
             #   so to split their pa.v (value entering/space identity)
-            h.Pmod = &d,p,P{
+            h.Pmod = &d,p,P,pa{
                 !P[0].row and throw "must be iterating the p.rows"
                 P.length > 1 and throw "already multiplying row?"
                 # if next bit of path is sarky
-                $pa = d.path[p.i+1];
                 !pa.sark and return P
                 # ^ is the P[0].pa also
                 # last sark thing has more rows
@@ -785,6 +786,9 @@ iooia: | # F > i/o > input/output
                     pS.sark and throw "sark above not pa", pS
                     pS = pS.up
                 }
+                # ^ an io for that
+                #   could it be t? a three-t? protocol, I and t (and direction?)
+                #   are these d/p things protocols? or dialings?
                 $R = [];
                 each ib P {
                     # inject multiplicity into directions taken on the path
@@ -800,7 +804,7 @@ iooia: | # F > i/o > input/output
                         # all they say
                         rows = t.rows;
                         # complete rows
-                        if (!d.partial)
+                        if (!(d.partial || t.partial))
                             rows = rows.filter(&row{ return row.slice(-1)[0] })
                     }
                     
@@ -818,10 +822,10 @@ iooia: | # F > i/o > input/output
                     }
                     coli < 0 and throw "no find ark/column for",pa.t,t.arky
                     
-                    # uniq the arked column's values
-                    # group rows, put b.pa.rows for next regroup inward
-                    $vals = [];
-                    $valis = {};
+                    # for uniq sarked values, group unsarked (so far)
+                    #   on b.pa.rows next sarking inward
+                    $vals = []; # coming out here, to a pa.v
+                    $valis = []; # corresponding further branches (rows)
                     each ir rows {
                         $v = r[coli];
                         $vi = vals.indexOf(v);
@@ -856,6 +860,41 @@ iooia: | # F > i/o > input/output
                 return R
             };
         }
+        #c isother Pmod
+        each i,pa d.path {
+            !pa.isother and continue
+            pa.Pmod and debugger
+            pa.Pmod = &d,p,P,pa{
+                !pa.isother and debugger
+                # < might mean one bit of v per incoming row...
+                P.length > 1 and throw "already multiplying row?"
+                # < v func? C packet of expanding foam to let off here?
+                $vals = pa.v;
+                !(vals && typeof vals == 'object' && vals.constructor == Array) and debugger
+                
+                $R = [];
+                each ib P {
+                    # multiply b by possible vals
+                    b.otheriplied = vals.length;
+                    $B = b;
+                    each iv vals {
+                        b = ex({},B);
+                        b.pa ||= d.path[b.i];
+                        $ba = b.pa = ex({},B.pa);
+                        if (!ba.relative && typeof v == 'string') {
+                            # @$strings wanting consciousness?
+                            # < 'get me a 2-94'
+                            # make word, but via relative string v
+                            ba.word = 1;
+                        }
+                        b.pa.v = v;
+                        R.push(b);
+                    }
+                }
+                b.otheriplies = R.length;
+                return R
+            };
+        }
         
         #c beginning
         h.first ||= &{};
@@ -866,9 +905,19 @@ iooia: | # F > i/o > input/output
             p.i ||= q ? q.i+1 : 0;
             $pa = p.pa || d.path[p.i];
             !pa and throw "No pattern!: "+p.i
+            # Pmodding new pa for multiplying laters will change pa,
+            #  to create space to hold values insisted in pa.v
+            #  but later path must keep this multiplicity,
+            #   so eg pa.word which does pa.v = C pa.v 1,
+            #    doesn't happen again, when pa.v is not string
+            # < pa.v should be on the path-happening part (p)
+            pa != d.path[p.i] and d.pamultiplies = 1
+            else
+            d.pamultiplies and pa = p.pa = ex({},p.pa)
+            
             
             if (pa.relative) {
-                # relative spacers use the t+cv (space) of something
+                # relative spacers use the t+cv (space) of their param
                 # < are likely to not replace?
                 pa.vorig = pa.v;
                 # < we could assume it's lvish + delete etc through here?
@@ -876,7 +925,10 @@ iooia: | # F > i/o > input/output
                 #   .spacer wants to alienate the from C,
                 #   but .relative assumes the C is already
                 #   alien and for this operation?
-                if (!io.isC(pa.v)) {
+                if (io.isC(pa.v)) {
+                    pa.v = G&Cye,[pa.v.t,1];
+                }
+                else {
                     if (typeof pa.v == 'string') {
                         # < something@4, stuff>3
                         !pa.sark and throw "!isC !sark relative string pav",pa,pa.v
@@ -886,9 +938,20 @@ iooia: | # F > i/o > input/output
                         throw "!isC relative pav",pa,pa.v
                     }
                 }
-                else { # space ident from C
-                    pa.v = G&Cye,[pa.v.t,1];
+            }
+            if (pa.word) {
+                # not expecting the word to be called another word,
+                # see case of pa.v string in relative
+                if (pa.v != null) {
+                    typeof pa.v == 'string' and // word(s) called another name
+                    else {
+                        throw "word with pa.v, not string",pa
+                    }
                 }
+                else {
+                    pa.v = pa.t;
+                }
+                pa.v = G&Cye,[pa.v,1];
             }
             
             if (pa.doof) { # not a real step
@@ -960,9 +1023,8 @@ iooia: | # F > i/o > input/output
             }
             else {
                 # new column of many - 
-                # keep wandering/grep possible (p.found) directions
                 if (pa.wander) {
-                    # grep possible directions
+                    # grep found directions, keep wandering
                     if (pa.wanderer) {
                         $name = pa.wanderer;
                         name == '1' and name = null
@@ -1031,11 +1093,12 @@ iooia: | # F > i/o > input/output
                 $b = {};
                 b.i ||= p.i+1;
                 b.row = row;
-                b.pa = d.path[b.i];
+                $pa = b.pa = d.path[b.i];
                 
                 # can go down a path in multiple directions
                 $P = [b];
-                h.Pmod and P = h.Pmod(d,p,P)
+                h.Pmod and P = h.Pmod(d,p,P,pa)
+                pa.Pmod and P = pa.Pmod(d,p,P,pa)
                 
                 each ib P {
                     # protection from going in circles (esp if pa.wander)
@@ -2107,18 +2170,15 @@ t/iooiata: | # func really
             m bugreport  $s:talk %fs:120%,hue:170deg,dis:block
             return;
         }
-        if (t != 9) {
-            t && io[t](talk,params||[],{})
-            t = io.nz();
+        if (t == '9') {
+            m speech  $s:talk %hue:100deg,dis:block
+            return;
         }
-        else {
-            t = {t:talk};
-            $jesui = 1;
-        }
+        t && io[t](talk,params||[],{})
+        t = io.nz();
         
-        (show.talk || jesui) &&
+        show.talk &&
         m talk  $s:t.talk %fs:130%,hue:-40deg,dis:block,float:right,mw:50%
-        jesui and return
         
         m thistest  $s:talk %fs:160%,hue:120deg,dis:block
         
@@ -2126,7 +2186,6 @@ t/iooiata: | # func really
         m iter  $s:t,dl:9.26
         
         t.partial = 1;
-        #A.debug and debugger
         $s = t.ind(&s,t{
             $text = io.isC(s) ? G&toLines,s : "GARB: "+ki(s);
             if (t.objects && t.objects.indexOf(s) >= 0) {
@@ -2438,7 +2497,7 @@ t/iooiata: | # func really
         ns&dos = 'grow';
         nc&dl ||= 12;
     }
-t/iooiala: |
+t/iooiatal: |
     ar.atavism = 1;
     $a = G&way,'t/iooiata',ar;
     $nz = a.nz;
@@ -2449,16 +2508,24 @@ t/iooiala: |
     $o = 1s&o = G&Cye,['yop',1];
     i $o/ting/lots
     # < pa.v = [] Pmods
-    $ting = 'glap sip cap bee far chua hsing halma jhon jonne comedia musico';
-    i $o/ting/@$ting
+    $ting = 'glap sip cap bee far chua hsing halma jhon jonne comedia musico'.split(' ');
+    A.debug = 1;
+    i $o/@#$ting
+    A.debug = 0;
     ting = ting.slice(-4);
-    i $o/ting/@$ting/wamptch/stul
-    i $o/ting/@$ting/mmm/er
+    i $o/@#$ting/wamptch/stul
+    i $o/@$ting/mmm/er
     ting.pop(); ting.shift();
-    i $o/ting/@$ting/lum/iuty/voux
-    
+    i $o/@#$ting/lum/iuty/voux
     o $o/**
     a(0,'look at all those hats');
+    a(9,'wamptch/stul disappeared because @$ting not @#$ting')
+    
+    i $o/cap/@s y o $o/jhon
+    i $o/cap/hasothers
+    o $o/cap/**
+    a(0,'jhon entirely transported to cap');
+    
     
     S 2 deletes
     # 
@@ -2486,7 +2553,7 @@ t/BuildACastle: | # test Duning and io
     # ones
 Fly: |
     G&heading;
-    G&way,'t/iooiata',ar;
+    G&way,'t/iooiatal',ar;
     return;
     
     1s&empathy = 4;
