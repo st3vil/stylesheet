@@ -792,11 +792,15 @@ iooia: | # F > i/o > input/output
                     # < try making this t.arky
                     $coli = t.arks.indexOf(pa.t);
                     coli < 0 && pa.t == 's' and coli = t.path.length-1
-                    # < if it's 'lamb' and they have 'lambs/*',
-                    #   suppose s is a lamb
-                    coli < 0 and throw "no find ark/column for",pa.t,t.arks
+                    if (coli < 0) {
+                        # implicitly s after plural of what we want
+                        # if it's 'lamb' and they have 'lambs/*', s is a lamb
+                        $si = t.arky.indexOf('s');
+                        $k = t.arky[si-1];
+                        k == pa.t+'s' and coli = si
+                    }
+                    coli < 0 and throw "no find ark/column for",pa.t,t.arky
                     
-                    #A.debug && p.i > 1 and debugger
                     # uniq the arked column's values
                     # group rows, put b.pa.rows for next regroup inward
                     $vals = [];
@@ -1086,6 +1090,8 @@ iooia: | # F > i/o > input/output
         each i,row ay.rows {
             each ik ay.arky {
                 $pa = ay.path[i];
+                # < sure?
+                pa.doof and continue;
                 if (pa.wandering) {
                     # nonfirst .wander globs are .wandering = the first
                     # the last should be empty, path exhausts things
@@ -1217,7 +1223,8 @@ iooia: | # F > i/o > input/output
                 !t.row and return
                 ar = {};
                 each ik t.arky {
-                    ar[k] = t.row[i];
+                    # < mess by choosing first column with given k?
+                    ar[k] ||= t.row[i];
                 }
             }
             $ti = t.i;
