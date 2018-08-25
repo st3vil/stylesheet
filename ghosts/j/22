@@ -804,13 +804,14 @@ iooia: | # F > i/o > input/output
                     each ir rows {
                         $v = r[coli];
                         $vi = vals.indexOf(v);
-                        if (vi == -1) {
+                        if (vi < 0) {
                             vi = vals.push(v)-1;
                             valis[vi] = [];
                         }
                         valis[vi].push(r);
                     }
                     b.plumbiplied = vals.length;
+                    b.plumbpa = t.path[coli];
                     
                     # multiply b by possible vals
                     $B = b;
@@ -887,6 +888,9 @@ iooia: | # F > i/o > input/output
 
                     # to the bits
                     $D = {asa:'tv'};
+                    D.p = p;
+                    D.pa = pa;
+                    D.d = d;
                     # to diversify...
                     pa.spacer and D.spacer = 1;
                     pa.glob and D.meta = ['*','*']
@@ -1601,6 +1605,7 @@ iooia: | # F > i/o > input/output
     #c knowables
     io.knowing = &d,v{
         # a subtype, reenters at the end:
+        $p = d.p || {};
         d.asa and $other = d; d = other.asa;
         # types
         d == 'tv' and d = {t:d,our:['y','tv'],usu:1};
@@ -2096,7 +2101,7 @@ t/iooiata: | # func really
         t.partial = 1;
         #A.debug and debugger
         $s = t.ind(&s,t{
-            $text = G&toLines,s;
+            $text = io.isC(s) ? G&toLines,s : "GARB: "+ki(s);
             if (t.objects && t.objects.indexOf(s) >= 0) {
                 # highlight t.objects (that doof matched)
                 # < chucking rows with any object on matching
@@ -2340,10 +2345,8 @@ t/iooiata: | # func really
     i $lambs/lambert
     i $lambs/laminate
     i $lambs/lucien
-    #A.debug = 1;
     S lambs: o $lambs/**
         s.t.match(/am/) and ss&fat = 1;
-    debugger;
     S
     a(0,'the lambs');
     o $reggae/**
@@ -2351,7 +2354,7 @@ t/iooiata: | # func really
     $seen = [];
     $fai = &C,s{ seen.push(C) };
     i $reggae/@whur/@lamb { s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s.d * 3 } o $lambs/*
-    
+    debugger;
     a(0,'the lamb move');
     
     $t = nz();
