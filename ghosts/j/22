@@ -476,6 +476,9 @@ iooia: | # F > i/o > input/output
         # 7/8 sanity on dials, exact traction
         params.length and throw "Too many params", params
         
+        # without plumbings on
+        typeof talk == 'string' and d.talk = talk;
+        
         # 8/9
         return d
     };
@@ -496,14 +499,14 @@ iooia: | # F > i/o > input/output
             # eg separation, must return a t (post-nz())
             return io[pa.doof](D,t,pa)
         }
-        # copy schema + column for func return
+        # copy schema, little else
         $d = {};
+        d.talk = t.talk;
+        d.plumb = t;
         d.path = t.path.slice();
-        # it may be for what defines it (lastfunc)
+        # try use the doof column for function's return
         $funci = d.path.indexOf(pa);
         funci < 0 and d.path.unshift(pa);
-        # how to operate
-        $h = {};
         # iterations vote for/against row and a cell: {
         #   r: func return value
         #   row: in t.rows[t.i]
@@ -598,6 +601,7 @@ iooia: | # F > i/o > input/output
     io.separation = &D,t,ya{
         # another iterator
         $d = {};
+        d.talk = t.talk;
         d.plumb = t;
         d.separation = 1;
         # which should have clones
@@ -730,31 +734,29 @@ iooia: | # F > i/o > input/output
     #c rowing: travel d.path for i/o hooks
     # < able to async, when A:o things
     io.rowing = &talk,params,d,h{
-        # reduce or sprout iterator
-        # rows multiply as deeper atoms many
-        # - [r,1,1a]
-        # - [r,1,1b]
-        # - [r.2,null]
-        # - [r,3,3a]
-        # < or a mirror C set, like G&ind/G&o does
-        # < find us for ind-like N, p.nz goes:
-        #   [r,[1,[1a,1b],2,3,[3a]]]
-        
-        # being plumbed somewhere
+        if (d && d.path) {
+            # compiled so talk is still up front
+            typeof d != 'object' and throw "dnotob"
+            typeof talk != 'string' and throw "talknotstring"
+            d.talk = talk;
+        }
+        else
         if (typeof talk == 'object') {
             # d already, if compiling enough (sjson(io.parsetalk()))
             # or we are plumbed in to something that parsed our talk
             params && params.length and throw "talkref + params";
             d and throw "talkref + d"
-            d = talk
+            d = talk;
         }
         else {
             d ||= {};
             h.is && !d.is and d.is = h.is
             io.parsetalk(talk,params,d);
         }
-        typeof talk == 'string' and d.talk ||= talk;
-        !d.path and throw "no path"
+        !d.talk and throw "no dtalk"
+        !d.path and debugger;
+        #throw "no path"
+        
         # < bind params now so parsetalk can be compiletime,
         #     call io.i(sjson(parsetalk(talk
         
@@ -779,7 +781,7 @@ iooia: | # F > i/o > input/output
             # < support for mid-path doofing
             #   could decide what to put after finding options for where
             !pa.doof and break
-            !d.plumb && !pa.separation and throw "firstfunc !y no plumb",pa
+            !(d.plumb || pa.separation) and throw "firstfunc !y no plumb",pa
             # new iterator replaces old, so we can pipeline?
             d.plumb = io.doof(d,d.plumb,pa);
             i--;
@@ -2291,8 +2293,8 @@ t/iooiata: | # func really
     #A.debug = 1;
     o va:{ vat(C) }:klass 1s&cee/*:va/*:doop
     a(0,'only hear of va things having o');
-    #debugger;
     $t = nz(1);
+    #debugger;
     o { vat(C) }:klass 1s&cee/*:va/*:doop
     a(0,'hear of things having o');
     
