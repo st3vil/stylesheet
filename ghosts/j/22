@@ -445,7 +445,7 @@ iooia: | # F > i/o > input/output
         # i $d o $o   implies   i $d/@s o $o/*:s
         if (d.plumb) {
             # < i $i/@#dee o $o/*:dee   to copy spacers
-            if (!d.path.filter(&s{ return s.sark }).length)
+            if (!d.path.filter(&pa{ return pa.sark || pa.wander }).length)
                 d.path.push({sark:1,t:'s'})
             # or, if d.plumb (iterator) has no ark:s
             #   < use path[-1] (default in d.plumb's h.Pmod's coli)
@@ -635,11 +635,12 @@ iooia: | # F > i/o > input/output
                 ya.arkfor[t.path.length-1] = la.t;
             }
             else {
-                arks.length and throw "sarks unfound over there: "+arks.join(', ')
+                arks.length and debugger; throw "sarks unfound over there: "+arks.join(', ')
             }
         }
         
         #A.debug and debugger;
+        D.is == 'i' && A.debug and debugger
         if (!t) {
             # funcfirst y, D.plumb would be t
             D.plumb and throw "funcfirst y !t D.plumb"
@@ -761,6 +762,7 @@ iooia: | # F > i/o > input/output
         #     call io.i(sjson(parsetalk(talk
         
         #c plumb from somewhere
+        # make it happen
         if (d.plumb && !d.plumb.more) {
             $b = d.plumb;
             !b.is and throw "no plumb.is, i/o?"
@@ -771,10 +773,8 @@ iooia: | # F > i/o > input/output
             # have the iterator
             d.plumb = io.nz();
         }
-        # find any firstfuncs
-        # d.plumb replaces itself
-        # these remain in path,
-        # so we can ark their return
+        # related: find any firstfuncs
+        # grow d.plumb in front of d.plumb
         $i = d.path.length-1;
         while (d.path[i]) {
             $pa = d.path[i];
@@ -786,7 +786,7 @@ iooia: | # F > i/o > input/output
             d.plumb = io.doof(d,d.plumb,pa);
             i--;
         }
-        # plumb rowmuddler -one iterator multiplying itself in at several points
+        #c plumb rowmuddler -one iterator multiplying itself in at several points
         if (d.plumb) {
             $t = d.plumb;
             # pa.sark and pa.v = their rows's ark
@@ -799,16 +799,17 @@ iooia: | # F > i/o > input/output
             h.Pmod = &d,p,P,pa{
                 !P[0].row and throw "must be iterating the p.rows"
                 P.length > 1 and throw "already multiplying row?"
-                # if next bit of path is sarky
-                !pa.sark and return P
+                # if next bit of our path is sarky or wandery
+                !(pa.sark || pa.wander) and return P
                 # ^ is the P[0].pa also
                 # last sark thing has more rows
                 $la;
+                # climb p.up:
                 $pS = p;
                 while (pS && !la) {
-                    pS.pa && pS.sark and la = pS
+                    pS.pa && pS.plumbpa and la = pS
                     else
-                    pS.sark and throw "sark above not pa", pS
+                    pS.plumbpa and throw "plumbiplied above with no pa", pS
                     pS = pS.up
                 }
                 # ^ an io for that
@@ -833,19 +834,37 @@ iooia: | # F > i/o > input/output
                             rows = rows.filter(&row{ return row.slice(-1)[0] })
                     }
                     
-                    # locate sark as ark of theirs
-                    # column number, for in d.path/p.row (G/W)
-                    # < try making this t.arky
-                    $coli = t.arks.indexOf(pa.t);
-                    coli < 0 && pa.t == 's' and coli = t.path.length-1
-                    if (coli < 0) {
-                        # implicitly s after plural of what we want
-                        # if it's 'lamb' and they have 'lambs/*', s is a lamb
-                        $si = t.arky.indexOf('s');
-                        $k = t.arky[si-1];
-                        k == pa.t+'s' and coli = si
+                    # la.column
+                    # eat their rows:
+                    # < hook to select what? around column accessors
+                    $coli;
+                    if (pa.sark) { # as named
+                        # locate sark as ark of theirs
+                        # column number, for in d.path/p.row (G/W)
+                        # < try making this t.arky
+                        coli = t.arks.indexOf(pa.t);
+                        coli < 0 && pa.t == 's' and coli = t.path.length-1
+                        if (coli < 0) {
+                            # implicitly s after plural of what we want
+                            # if it's 'lamb' and they have 'lambs/*', s is a lamb
+                            $si = t.arky.indexOf('s');
+                            $k = t.arky[si-1];
+                            k == pa.t+'s' and coli = si
+                        }
+                        coli < 0 and throw "no find sark/column for",pa.t,t.arky
                     }
-                    coli < 0 and throw "no find ark/column for",pa.t,t.arky
+                    else
+                    if (pa.wander) { # as they are
+                        coli = la && la.plumb_coli;
+                        if (coli == null) {
+                            # our/their first wander,
+                            # < plumbing sarks, then wandering the rest
+                            each i,opa t.path {
+                                opa.wander and coli = i * 1; break
+                            }
+                        }
+                        else { coli = coli + 1 }
+                    }
                     
                     # for uniq sarked values, group unsarked (so far)
                     #   on b.pa.rows next sarking inward
@@ -862,6 +881,7 @@ iooia: | # F > i/o > input/output
                     }
                     b.plumbiplied = vals.length;
                     b.plumbpa = t.path[coli];
+                    b.plumb_coli = coli * 1;
                     
                     # multiply b by possible vals
                     $B = b;
@@ -874,8 +894,11 @@ iooia: | # F > i/o > input/output
                         b.pa.v = v;
                         $rows = 
                         b.pa.rows = valis[i];
-                        !v and debugger;
-                        #throw "nullish v! for rows",b.pa.rows
+                        if (v == null) {
+                            pa.wander and continue
+                            debugger;
+                            #throw "nullish v! for rows",b.pa.rows
+                        }
                         #~>78 plumba: ki(b.row), ki(v,3)
                         R.push(b)
                     }
@@ -885,7 +908,7 @@ iooia: | # F > i/o > input/output
                 return R
             };
         }
-        #c isother Pmod
+        #c isother Pmod, array for pa.v
         each i,pa d.path {
             !pa.isother and continue
             pa.Pmod and debugger
@@ -1081,7 +1104,6 @@ iooia: | # F > i/o > input/output
                             return 0
                         });
                     }
-                    
                     if (p.found.length) {
                         # stretch path
                         $na = d.path[p.i+1];
@@ -1164,8 +1186,15 @@ iooia: | # F > i/o > input/output
                     $r = b.rows;
                     !r and throw "rowing nothing"
                     # keeps pushing null once lost
-                    !r.length and throw "not one row"
+                    !r.length and debugger; #throw "not one row"
                     r.map(&ro{ rows.push(ro) })
+                }
+                # no more recursion at end of wander in
+                if (!P.length) {
+                    pa.wander and rows.push(row)
+                    else {
+                        debugger;
+                    }
                 }
             }
             p.rows = rows;
@@ -2555,11 +2584,11 @@ t/iooiatal: |
         eyi == 1 and a(9,'wamptch/stul disappeared because @$ting not @#$ting')
     }
     
-    A.debug = 1;
+    
     # nothing
     i $o/cap/@s o $o/jonne
     # just the top thing
-    i $o/cap/@s y, o $o/jonne/wamptch
+    #i $o/cap/@s y, o $o/jonne/wamptch
     # everything
     i $o/cap/@s y o $o/jonne/lum
     # without things
@@ -2578,8 +2607,23 @@ t/iooiatal: |
     a(0,'jhon entirely transported to cap, not scribbled on');
     a('bug','lum got scribbled in, should clone innards');
     
+    $h = G&Cye,['chair',3];
+    #A.debug = 1;
+    i $h/** y, o $o/**
+    A.debug = 0;
+    a(0,'what the hell is that');
+    S o $h/**
+        $r = ay.row[2];
+        !r and continue
+        rs&lapitude = 3;
+    S
+    o $o/*/**
+    a(0,'two or more o');
+    o $h/*/**
+    a(0,'two or more h');
+    
     # < in separate(), mode:y (default):
-    #   i $neu/** y, o $neu/**
+    #   i $neu/** y, o $old/**
     
     # < leads neatly into deletes, for mode:y.
     #   pathy: $thing. 
