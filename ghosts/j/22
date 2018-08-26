@@ -616,8 +616,19 @@ iooia: | # F > i/o > input/output
             # < .../@s or @jhon or nothing should match .../jhon
             # < column accessors, knowing where looking from/through/to  
             ya.arkfor = [];
+            $yai = D.path.indexOf(ya);
             each i,Pa D.path {
                 Pa.sark and ya.arkfor[i] = Pa.t
+                else
+                if (Pa.ark && Pa.doof) {
+                    # sark and ark downstream
+                    # < only for one instance
+                    $arki = i < D.path.indexOf(ya) ? 1 : -1;
+                    while (arki >= 0) {
+                        arki = ya.arkfor.indexOf(Pa.ark);
+                        arki >= 0 and delete ya.arkfor[arki]
+                    }
+                }
             }
             # make sure each sark we are adapting an arkfor from
             $arks = ya.arkfor.filter(&s{ return s });
@@ -651,7 +662,6 @@ iooia: | # F > i/o > input/output
         }
         
         #A.debug and debugger;
-        D.is == 'i' && A.debug and debugger
         if (!t) {
             # funcfirst y, D.plumb would be t
             D.plumb and throw "funcfirst y !t D.plumb"
@@ -907,11 +917,13 @@ iooia: | # F > i/o > input/output
                         b.pa.rows = valis[i];
                         if (v == null) {
                             pa.wander and continue
-                            debugger;
+                            #debugger;
                             #throw "nullish v! for rows",b.pa.rows
                         }
-                        #~>78 plumba: ki(b.row), ki(v,3)
-                        R.push(b)
+                        else {
+                            #~>78 plumba: ki(b.row), ki(v,3)
+                            R.push(b)
+                        }
                     }
                 }
                 p.plumbiplies = R.length;
@@ -1204,7 +1216,7 @@ iooia: | # F > i/o > input/output
                 if (!P.length) {
                     pa.wander and rows.push(row)
                     else {
-                        debugger;
+                        #debugger;
                     }
                 }
             }
@@ -2340,8 +2352,10 @@ t/iooiata: | # func really
     
     
     #debugger;
+    #A.debug = 1;
     i $o/@klass/@doop va:{ vat(C) }:klass o 1s&cee/*:va/*:doop
-    a(0,'cant i without full path');
+    #A.debug = 0;
+    a(0,'cant i without full path: matri:va not /o/ so no :doop');
     $t = nz();
     
     
@@ -2507,7 +2521,7 @@ t/iooiata: | # func really
     a(0,'the reggae');
     $seen = [];
     $fai = &C,s{ seen.push(C) };
-    i $reggae/@#whur/@lamb { s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s.d * 3 } o $lambs/*
+    i $reggae/@#whur/@lamb { s&ae='ce'; s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s.d * 3 } o $lambs/*
     #debugger;
     a(0,'the lamb move');
     
@@ -2667,7 +2681,7 @@ t/BuildACastle: | # test Duning and io
     # ones
 Fly: |
     G&heading;
-    G&way,'t/iooiatal',ar;
+    G&way,'t/iooiata',ar;
     return;
     
     1s&empathy = 4;
