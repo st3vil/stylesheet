@@ -361,6 +361,7 @@ iooia: | # F > i/o > input/output
         #c 2 grasp better
         $fi;
         each i,pa d.path {
+            # < many pathed fun, dimensions?
             if (pa.sark && pa.isparam) {
                 # array of something, eg @#$names spacerises an array of t
                 # is like Pmod in multicity
@@ -469,6 +470,13 @@ iooia: | # F > i/o > input/output
         }
         # < without plumbing, i $d would do nothing?
         
+        $before = 1;
+        $after = 0;
+        each i,pa d.path {
+            before && !pa.doof and before = 0; # path begun
+            !before && pa.doof and after = 1; # path finished
+            after && !pa.doof and debugger; throw "two bits of path? "+talk
+        }
         
         # 6/8 others, use up params
         d.plumb and d.plumb = io.parsetalk(d.plumb,params)
@@ -2272,7 +2280,7 @@ t/iooiata: | # func really
         show.t &&
         m iter  $s:t,dl:9.26
         
-        t.partial = 1;
+        !show.impartial and t.partial = 1;
         $s = t.ind(&s,t{
             $text = io.isC(s) ? G&toLines,s : "GARB: "+ki(s);
             if (t.objects && t.objects.indexOf(s) >= 0) {
@@ -2654,27 +2662,49 @@ t/iooiatal: |
     #A.debug = 1;
     i $h/** y. o $o/**
     A.debug = 0;
-    a(0,'what the hell is that');
+    a(0,'each thing alone but reconnected by being in a flood of **');
     S o $h/**
         $r = ay.row[2];
         !r and continue
         rs&lapitude = 3;
     S
-    o $o/*/**
-    a(0,'two or more o');
-    o $h/*/**
-    a(0,'two or more h');
+    o $o/*/*/**
+    a(0,'$o-riginal not scribbled on');
+    o $h/*/*/**
+    a(0,'chair says lapitude all over');
+    o $h/*/*
+    a.show.impartial = 1;
+    a(0,'h-two-three');
+    
     
     # again for clarity...
     $o = G&Cye,['yruva',1];
     i $o/glangic/tibe
+    i $o/glangic/ttt/bol/ate
+    i $o/glangic/ttt/bol/ais
     i $o/glangic/true
     #ays&s.map(&s{ ss&yes = C.t.reverse() });
+    $ays = ay.sc;
     m some_ay  $s:ay.sc
     
     o $o/**
     a(0,'see a smaller bit')
     
+    i $o/not/@s o $o/glangic
+    a(0,'not y');
+    
+    i $o/fully/@s y o $o/glangic
+    a(0,'fully y');
+    
+    i $o/toppily/@s y, o $o/glangic
+    #debugger;
+    a(0,'toppily y,');
+    
+    i $o/toponly/@s y. o $o/glangic
+    a(0,'toponly y.');
+    
+    o $o/**
+    a(0,'see a less small bit')
     
     # < in separate(), mode:y (default):
     #   i $neu/** y, o $old/**
