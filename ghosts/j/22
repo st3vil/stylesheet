@@ -607,6 +607,10 @@ iooia: | # F > i/o > input/output
         A.deyug and debugger;
         # which should have clones
         # we could know how separatey things want to be,
+        # doof tends to run over everything/all depths,
+        #   meaning we may have to clone for it
+        # < compile what's moving where in the path,
+        #   to give doof etc an orderly grasp of whats what
         # see "universals can want attention"
         # see also "no find ark/column" for when they ...
         if (!ya.arkfor) {
@@ -619,25 +623,23 @@ iooia: | # F > i/o > input/output
             ya.arkfor = [];
             $yai = D.path.indexOf(ya);
             each i,Pa D.path {
+                Pa == ya and break
+                # name wanted
                 Pa.sark and ya.arkfor[i] = Pa.t
                 else
-                if (Pa.ark && Pa.doof) {
-                    # sark and ark downstream
-                    # < only for one instance
-                    $arki = i < D.path.indexOf(ya) ? 1 : -1;
-                    while (arki >= 0) {
-                        arki = ya.arkfor.indexOf(Pa.ark);
-                        arki >= 0 and delete ya.arkfor[arki]
-                    }
-                }
+                # name provided downstream
+                if (Pa.ark && Pa.doof)
+                    ya.arkfor = ya.arkfor.filter(&s{ return s != Pa.ark });
             }
             # make sure each sark we are adapting an arkfor from
             $arks = ya.arkfor.filter(&s{ return s });
-            each i,pa t.path {
-                $ai = arks.indexOf(pa.ark || pa.t);
-                ai < 0 and continue
-                # is there
-                arks.splice(ai,1);
+            if (arks.length) {
+                each i,pa t.path {
+                    $ai = arks.indexOf(pa.ark || pa.t);
+                    ai < 0 and continue
+                    # is there
+                    arks.splice(ai,1);
+                }
             }
             if (arks.length == 1) {
                 # find @lamb in $lambs/*
@@ -2326,7 +2328,7 @@ t/iooiata: | # func really
         m srow  $s:t.row,dl:6
     }
     
-    o { C.t = C.t.split('').reverse().join(''); 1 }:tings yD,o. $d:cee/*/*
+    o { C.t = C.t.split('').reverse().join(''); 1 }:tings yD,o $d:cee/*/*
     a(0,'funclast map tchange after separation, yD,o');
     $t = nz();
     while (t.more()) {
@@ -2351,13 +2353,18 @@ t/iooiata: | # func really
     !1s&cee and throw "NO cee"
     #i $o/@klass/@doop va:{ va(C) }:klass 
     #A.debug = 1;
-    o va:{ vat(C) }:klass 1s&cee/*:va/*:doop
+    #A.deyug = 1;
+    $seen = [];
+    o va:{ seen.push(C); vat(C) }:klass 1s&cee/*:va/*:doop
     a(0,'only hear of va things having o');
     $t = nz(1);
     #debugger;
-    o { vat(C) }:klass 1s&cee/*:va/*:doop
+    $seen = [];
+    o { seen.push(C); vat(C) }:klass 1s&cee/*:va/*:doop
     a(0,'hear of things having o');
+    #debugger;
     
+    #continue;
     
     #debugger;
     #A.debug = 1;
@@ -2392,7 +2399,7 @@ t/iooiata: | # func really
     # > ar.klass == 1, in t.arky twice?
     # < diy debug wedge, big words of code
     o $o/*/*/*:dof
-    a(0,'o ends up with one pair of goiV');
+    a(0,'o ends up with one pair of Viog');
     
     # lets try and circumvent that bug
     $o = G&Cye,['fall'];
@@ -2431,11 +2438,11 @@ t/iooiata: | # func really
     #   things unbounding, jumping through hoops, rebounding
     #  usually mean to not ark the function
     $seen = [];
-    i $o/bolo/@zom ysource,destiny { seen.push(C); C.t.match(/al$/) } o 1s&cee/*:zom
-    a(0,'adding al$ zom to bolo o');
+    i $o/bolo/@zom ysource,destiny { seen.push(C); C.t.match(/^la/) } o 1s&cee/*:zom
+    a(0,'adding ^la zom to bolo o');
     m whats  $s:ay.sc,dl:6.33
     m seenCfunc  $s:seen,dl:6.24
-    #i $o/bolo/@ump/@dat { s&grabb = 1 } ysource,destiny zom:{ s&grabb = 1; C.t.match(/oo/) }:dat zom:{ C.t.match(/al$/) }:ump o 1s&cee/*:zom
+    #i $o/bolo/@ump/@dat { s&grabb = 1 } ysource,destiny zom:{ s&grabb = 1; C.t.match(/oo/) }:dat zom:{ C.t.match(/^la/) }:ump o 1s&cee/*:zom
     
     o $o/*/*/*:dof
     a(0,'see o again');
@@ -2474,7 +2481,8 @@ t/iooiata: | # func really
     while (t.more()) {
         row = t.row;
         $s = row.slice(-2)[0];
-        s.t != 'goiV' and continue
+        !s and debugger;
+        s.t != 'Viog' and continue
         i $s/$o
         break
     }
@@ -2529,7 +2537,8 @@ t/iooiata: | # func really
     a(0,'the reggae');
     $seen = [];
     $fai = &C,s{ seen.push(C) };
-    i $reggae/@#whur/@lamb { s&ae='ce'; s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s.d * 3 } o $lambs/*
+    # this y shall do everything
+    i $reggae/@#whur/@lamb { s&ae='ce'; s&fat && "laughter" }:whur y, { fai(C,s); s&ok = 1; s.d * 3 } o $lambs/*
     #debugger;
     a(0,'the lamb move');
     
@@ -2690,7 +2699,7 @@ t/BuildACastle: | # test Duning and io
     # ones
 Fly: |
     G&heading;
-    G&way,'t/iooiatal',ar;
+    G&way,'t/iooiata',ar;
     return;
     
     1s&empathy = 4;
