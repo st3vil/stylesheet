@@ -286,9 +286,16 @@ iooia: | # F > i/o > input/output
                 #c grasp tokens
                 # so i $o/yap will not $o, separation=ap
                 $island = path.length == 1;
+                
                 # y clones C
                 if (island && p(/^((\w+:)*)y(\S*?)(:\w+)?$/,'03'))
                     pa.separation = m[2] || 1;
+                
+                # delete all innards without returning em
+                p(/-$/) and debugger; pa.delete = 1;
+                # where-iations on glob
+                p(/([<>]\w+)$/) and debugger; (pa.glob ||= []).push(m[0])
+                
                 # set var/name column from path bit
                 p(/:(\w*)$/) and pa.ark = m[0] || 1
                 # which ark specifically (usu all/sarked) to doof
@@ -323,8 +330,8 @@ iooia: | # F > i/o > input/output
                 
                 # anything, anything deeply, anything something matches
                 if (pa.t[0] == '*') {
-                    pa.glob = 1;
-                    pa.t == '*' and pa.glob = 1
+                    pa.glob ||= 1;
+                    pa.t == '*' and // yep
                     else
                     pa.t == '**' and pa.wander = 1
                     else
@@ -375,11 +382,11 @@ iooia: | # F > i/o > input/output
                 parse = mode;
                 # how to clone depth
                 p(/\,$/) and pa.yshallow = 1;
-                p(/\.$/) and pa.yalone = 1;
+                p(/\-$/) and pa.yalone = 1;
                 # can yer through time, 'y' implies new.y.C = old
                 mode = parse.split(',');
-                pa.yto = mode[0];
-                pa.yfrom = mode[1];
+                mode[0] and pa.yto = mode[0];
+                mode[1] and pa.yfrom = mode[1];
                 pa.doof = 'separation';
             }
             if (pa.doof) {
@@ -749,6 +756,7 @@ iooia: | # F > i/o > input/output
         if (ya.yshallow) { # y,
             # only the top clones, keeps all innards
             #   whether path includes their depths or not
+            # < clone their index
         }
         else
         if (ya.yalone) { # y.
@@ -762,7 +770,7 @@ iooia: | # F > i/o > input/output
             # < why does it need this/examine with tools:
             if (neu.y.tv) {
                 delete neu.y.tv;
-                i $neu/** y. o $old/**
+                i $neu/** y- o $old/**
             }
         }
         A.deyug and debugger;
@@ -1084,6 +1092,8 @@ iooia: | # F > i/o > input/output
                     D.d = d;
                     # to diversify...
                     pa.spacer and D.spacer = 1;
+                    # ** is a type of glob but gets plumbed in
+                    # < i $h/*/something # just use many i/o
                     pa.glob && d.is != 'i' and D.meta = ['*','*']
                     else
                     pa.sark and // should have been figured by now?
@@ -2375,8 +2385,6 @@ t/iooiata: | # func really
     a(0,'hear of things having o');
     #debugger;
     
-    #continue;
-    
     #debugger;
     #A.debug = 1;
     i $o/@klass/@doop va:{ vat(C) }:klass o 1s&cee/*:va/*:doop
@@ -2614,7 +2622,7 @@ t/iooiatal: |
     
     S 1 eparate
     
-    # test out y/y,/y.
+    # test out y/y,/y-
     $eyi = 2;
     $o;
     while (eyi--) {
@@ -2646,7 +2654,7 @@ t/iooiatal: |
     # everything
     i $o/cap/@s y o $o/jonne/lum
     # without things
-    i $o/cap/@s y. o $o/jonne/mmm
+    i $o/cap/@s y- o $o/jonne/mmm
     
     A.debug = 0;
     i $o/cap/hasothers
@@ -2662,7 +2670,7 @@ t/iooiatal: |
     
     $h = G&Cye,['chair',3];
     #A.debug = 1;
-    i $h/** y. o $o/**
+    i $h/** y- o $o/**
     A.debug = 0;
     a(0,'each thing alone but reconnected by being in a flood of **');
     S o $h/**
@@ -2678,15 +2686,13 @@ t/iooiatal: |
     a.show.impartial = 1;
     a(0,'h-two-three');
     
-    
-    # again for clarity...
+    S 2 separate again
+    # for clarity...
     $o = G&Cye,['yruva',1];
     i $o/glangic/tibe
     i $o/glangic/ttt/bol/ate
     i $o/glangic/ttt/bol/ais
     i $o/glangic/true
-    #ays&s.map(&s{ ss&yes = C.t.reverse() });
-    $ays = ay.sc;
     m some_ay  $s:ay.sc
     
     o $o/**
@@ -2701,8 +2707,8 @@ t/iooiatal: |
     i $o/yshallow/@s y, o $o/glangic
     a(0,'yshallow y,');
     
-    i $o/yalone/@s y. o $o/glangic
-    a(0,'yalone y.');
+    i $o/yalone/@s y- o $o/glangic
+    a(0,'yalone y-');
     
     S scribble on originals: o $o/glangic:leap/*:lap/*:lop
         leaps&boogie = 3;
@@ -2711,20 +2717,18 @@ t/iooiatal: |
     S
     o $o/**
     a(0,'see a less small bit')
-    
-    
+    1s&ooo = o;
     # < leads neatly into deletes, for mode:y.
     #   pathy: $thing. 
     
-    
-    
-    S 2 deletes
+    #c 33
+    S 3 deletes
     # 
     
-    S 3 iterator transactions
+    S 4 iterator transactions
     #
     
-    S 4 one name, any fraction
+    S 5 one name, any fraction
     
     
     S 0
