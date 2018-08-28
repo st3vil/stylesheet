@@ -274,8 +274,7 @@ iooia: | # F > i/o > input/output
             $pa;
             $dpa = &eatparam{
                 if (eatparam) { # bind param to path bit
-                    !params.length and throw "Not enough params", pa.t, pa, d
-                    pa.v = params.shift();
+                    pa.isparam ||= 1
                 }
                 d.path.push(pa)
             };
@@ -361,22 +360,16 @@ iooia: | # F > i/o > input/output
                 pa.ark == '1' and pa.ark = pa.t;
                 
                 # value of here from a:
-                if (pa.isparam) { # variable/bind param
-                    !params.length and throw "Not enough params", pa.t, pa, d
-                    pa.v = params.shift();
-                }
+                if (pa.isparam) {} # variable/param, bind later
                 else
                 if (pa.glob) {} # anything
                 else
-                if (pa.sark) {} # name of a column in d.plumb...
-                else { # bareword
-                    # < move assignment later, work with @sarked things,
-                    #   t=nonC from doof
-                    # < and some @3? <3? select spaces
+                if (pa.sark) {} # name of a column in d.plumb
+                else {
                     # words are the lumber of the algorithm
                     pa.word = pa.spacer = 1;
                 }
-                # namespaceness of something
+                # low-resolution image of something, usu t and maybe cv?
                 pa.relative and pa.spacer = 1
                 dpa();
             }
@@ -405,19 +398,6 @@ iooia: | # F > i/o > input/output
                 mode[0] and pa.yto = mode[0];
                 mode[1] and pa.yfrom = mode[1];
                 pa.doof = 'separation';
-            }
-            if (pa.doof) {
-                $known = pa.doof;
-                if (known == '1') {
-                    typeof pa.v != 'function' and throw "expecting doof",pa
-                    # doof(acgts) each thing, or so
-                }
-                else {
-                    typeof known != 'string' and throw "expecting doofstring",pa
-                    !io[known] and throw "dont have doofer io."+known
-                    # get thing to peel it already?
-                    # then these d can be compiled in
-                }
             }
             if (pa.wanderer) {
                 $name = pa.wanderer;
@@ -477,9 +457,10 @@ iooia: | # F > i/o > input/output
             # or, if d.plumb (iterator) has no ark:s
             #   < use path[-1] (default in d.plumb's h.Pmod's coli)
             #     should be here, where language sorts itself out
+            # call it wruple, the wriggle of tuples
             # or if we have arks that don't exists over there:
             #   < find @lamb in $lambs/*
-            #   
+            # done just in time out in various places...
             # < other: io-ish syntax/tool these such operations ^
         }
         else {
@@ -507,8 +488,7 @@ iooia: | # F > i/o > input/output
         # 6/8 others, use up params
         d.plumb and d.plumb = io.parsetalk(d.plumb,params)
         
-        # 7/8 sanity on dials, exact traction
-        params.length and throw "Too many params", params
+        # 7/8 in rowing, with params
         
         # without plumbings on
         typeof talk == 'string' and d.talk = talk;
@@ -800,8 +780,8 @@ iooia: | # F > i/o > input/output
     #c rowing: travel d.path for i/o hooks
     # < able to async, when A:o things
     io.rowing = &talk,params,d,h{
+        # should be compiled (on hut) so talk is still up front
         if (d && d.path) {
-            # compiled so talk is still up front
             typeof d != 'object' and throw "dnotob"
             typeof talk != 'string' and throw "talknotstring"
             d.talk = talk;
@@ -810,11 +790,11 @@ iooia: | # F > i/o > input/output
         if (typeof talk == 'object') {
             # d already, if compiling enough (sjson(io.parsetalk()))
             # or we are plumbed in to something that parsed our talk
-            params && params.length and throw "talkref + params";
             d and throw "talkref + d"
             d = talk;
         }
         else {
+            # d sometimes passes through
             d ||= {};
             h.is && !d.is and d.is = h.is
             io.parsetalk(talk,params,d);
@@ -823,28 +803,70 @@ iooia: | # F > i/o > input/output
         !d.path and debugger;
         #throw "no path"
         
-        # < bind params now so parsetalk can be compiletime,
-        #     call io.i(sjson(parsetalk(talk
-        each i,pa d.path {
-            #pa.isparam and // one/usual
-            #pa.grefpara and // that many
-        }
-        # also: d.plumb and d.plumb = io.parsetalk(d.plumb,params)
+        #c plumbindoofins from somewhere
+        # bind params nowish so parsetalk can be compiletime
         
-        #c plumb from somewhere
-        # make it happen
+        # bind params
+        each i,pa d.path {
+            if (pa.isparam) {
+                !params.length and throw "Not enough params", pa.t, pa, d
+                pa.v = params.shift();
+            }
+            if (pa.grefpara) {
+                each i,para pa.grefpara {
+                    !params.length and throw "Not enough grefparams", para, pa, d
+                    (pa.grefparam ||= {})[para] = params.shift();
+                }
+            }
+            # checks requiring params
+            if (pa.doof) {
+                !pa.isparam and throw "Doof no param"
+                $known = pa.doof;
+                if (known == '1') {
+                    typeof pa.v != 'function' and throw "expecting doof",pa
+                    # doof(acgts) each thing, or so
+                }
+                else {
+                    typeof known != 'string' and throw "expecting doofstring",pa
+                    !io[known] and throw "dont have doofer io."+known
+                    # get thing to peel it already?
+                    # then these d can be compiled in
+                }
+            }
+        }
+        
+        # do upstream first, after params taken
         if (d.plumb && !d.plumb.more) {
             $b = d.plumb;
             !b.is and throw "no plumb.is, i/o?"
             b.is != 'o' and throw "plumb not o"
             d.is != 'i' and throw "plumb to not i"
+            # compile-time
+            d.not and b.not = 1
             # make the call
-            io[b.is](b);
+            io[b.is](b,params);
             # have the iterator
-            d.plumb = io.nz();
+            #   or hold on to b again until $d is runtime (!not)
+            d.plumb = d.not ? b : io.nz(b);
         }
-        # related: find any firstfuncs
-        # grow d.plumb in front of d.plumb
+        # 7/8 sanity on dials, exact traction
+        params.length and throw "Too many params", params
+        
+        if (d.not) {
+            # compile-time does:
+            # $d = io.i(talk,params,{not:1})
+            # changing the call to:
+            # 'io.i(talk,params,'+sjson(d)+')'
+            # so the more we can smart/moving part before now the better
+            delete d.not;
+            each i,pa d.path {
+                pa.isparam and delete pa.v
+                pa.grefparam and delete pa.grefparam
+            }
+            return d
+        }
+        
+        # firstfuncs happen first, become upstream
         $i = d.path.length-1;
         while (d.path[i]) {
             $pa = d.path[i];
@@ -852,7 +874,9 @@ iooia: | # F > i/o > input/output
             #   could decide what to put after finding options for where
             !pa.doof and break
             !(d.plumb || pa.separation) and throw "firstfunc !y no plumb",pa
-            # new iterator replaces old, so we can pipeline?
+            # new iterator replaces old
+            # may have minimal kind of $d, no .talk
+            # should have path/rows + ability to nz()
             d.plumb = io.doof(d,d.plumb,pa);
             i--;
         }
@@ -1558,7 +1582,7 @@ iooia: | # F > i/o > input/output
         if (!ng.t) {
             $d = io.parsetalk(talk,params);
             !d.is and throw "No d.is"
-            d = io[d.is](d);
+            d = io[d.is](d,params);
             ng.t = io.nz(d);
         }
         return ng.t.more()
@@ -2641,7 +2665,7 @@ t/iooiatal: |
     $nz = a.nz;
     a.show.y = 1;
     $io = A&io;
-    
+    #debugger;
     S 1 eparate
     
     # test out y/y,/y-
