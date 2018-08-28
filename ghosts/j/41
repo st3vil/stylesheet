@@ -268,6 +268,16 @@ JaBabz: | # make hutscript javascript
                 pa.arkfor = $1 if @$path == 1 && s/^((\w+:)+)y(\w|$)/y$3/;
                 # returning
                 pa.ark = $1 || 1 if s/:(\w*)$//;
+                # greffing
+                if (s/\{(\S+)\}?$//) {
+                    pa.gref = $1;
+                    while (pa.gref =~ /\$(\w[\w\[\]\.]*)/g) {
+                        push @{pa.grefpara ||= []},$1;
+                        push @{h.vars}, $1;
+                    }
+                    s/^/*/ if /^$/; # implies globbing
+                }
+                
                 # parameters in
                 pa.issark = 1 if s/^@//;
                 pa.isvar = 1 if s/^#//;
@@ -719,6 +729,9 @@ jst: | # test js babbler
           m figurative 2 $Blazm:tak
         S 0
         i $o/ling/@#$ting
+        i $o/-flange
+        i $o/abit{3/{>1/{c&of/*{s&of=$i
+        i $o/abit{3/{>1/{c&of:dangle/*{s&of=$i:leap
     
     # too far away:
     
@@ -860,6 +873,9 @@ jst: | # test js babbler
           G.h(A,C,G,T,"m",M,["figurative","2",{Blazm:tak},{}]);
         } while (G.h(A,C,G,T,"S",0,'')) {
         var ay = io.i("$o/ling/@#$ting",[o,ting]); var ting = ay.sc.ting;
+        var ay = io.i("$o/-flange",[o]); var o = ay.sc.o;
+        var ay = io.i("$o/abit{3/{>1/{C.c.of/*{C.sc.of=$i",[o,i]); var o = ay.sc.o; var abit = ay.sc.abit; var s = ay.sc.s;
+        var ay = io.i("$o/abit{3/{>1/{C.c.of:dangle/*{C.sc.of=$i:leap",[o,i]); var dangle = ay.sc.dangle; var leap = ay.sc.leap;
         }
         
     
