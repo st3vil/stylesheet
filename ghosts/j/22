@@ -294,12 +294,24 @@ iooia: | # F > i/o > input/output
                 # delete all innards without returning em
                 p(/-$/) and debugger; pa.delete = 'in';
                 p(/^-/) and debugger; pa.delete = 'out';
+                
                 # where-iations on glob
                 # on-a-pa function, talk for F-iltering
                 #   for .found on whatever step
                 #     abit{3/*{>1/*{c&of/*{s&of=i
-                pa.gref = $1 if s/\{(\S+)\}?$//;
-                p(/([<>]\w+)$/) and debugger; (pa.glob ||= []).push(m[0])
+                # greffing
+                if (p(/\{((!=\})\S+)\}?$/)) {
+                    throw "nothing grefs yet?";
+                    pa.gref = m[0];
+                    $grefouter = parse;
+                    parse = pa.gref;
+                    while (p(/\$(\w[\w\[\]\.]*)/)) {
+                        (pa.grefpara ||= []).push(m[0]);
+                    }
+                    parse = grefouter;
+                    # implies globbing
+                    parse == '' and parse = '*'
+                }
                 
                 # set var/name column from path bit
                 p(/:(\w*)$/) and pa.ark = m[0] || 1
@@ -813,6 +825,11 @@ iooia: | # F > i/o > input/output
         
         # < bind params now so parsetalk can be compiletime,
         #     call io.i(sjson(parsetalk(talk
+        each i,pa d.path {
+            #pa.isparam and // one/usual
+            #pa.grefpara and // that many
+        }
+        # also: d.plumb and d.plumb = io.parsetalk(d.plumb,params)
         
         #c plumb from somewhere
         # make it happen
