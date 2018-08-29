@@ -755,7 +755,24 @@ iooia: | # F > i/o > input/output
         if (ya.yshallow) { # y,
             # only the top clones, keeps all innards
             #   whether path includes their depths or not
-            # < clone their index
+            # Cye only rebuilds the C, not structures in it
+            #   since not replacing them at io level
+            #   so y.tv needs new hashes all over?
+            #    < unless we go for rerooting indexes when anything changes
+            #      then we could share a tv with an other, and when they
+            #      change anything in it they would leave our instance
+            #        
+            if (neu.y.tv) {
+                $tv = {};
+                each t,cv,v neu.y.tv {
+                    tv[t] ||= {};
+                    tv[t][cv] = v;
+                }}
+                neu.y.tv = tv;
+            }
+            # < to the bits
+            #$D = {asa:'tv',pa:ya};
+            #io.reindex(neu,D);
         }
         else
         if (ya.yalone) { # y.
@@ -778,6 +795,29 @@ iooia: | # F > i/o > input/output
         ya.yfrom and old.y[ya.yfrom] = neu
         
         return neu
+    };
+    # < finish, for tv/tw/z etc as well
+    io.reindex = &s,d{ 
+        d.glob = 1; # so .path shows its geometry
+        d = io.knowing(d);
+        
+        $starts = d.our.length-1;
+        $reindex = &s,i{
+            if (i <= starts) {
+                $p = d.our[i];
+                !s[p] and return
+                i < starts and reindex(s[p],i+1)
+                else {
+                    
+                }
+            }
+            else {
+                
+                each k,v s {
+                    d.path[i+1] and reindex(v,i+1);
+                }
+            }
+        };
     };
     #c rowing: travel d.path for i/o hooks
     # < able to async, when A:o things
@@ -1134,10 +1174,7 @@ iooia: | # F > i/o > input/output
                     $v = pa.v;
 
                     # to the bits
-                    $D = {asa:'tv'};
-                    D.p = p;
-                    D.pa = pa;
-                    D.d = d;
+                    $D = {asa:'tv',d:d,p:p,pa:pa};
                     # to diversify...
                     pa.spacer and D.spacer = 1;
                     # ** is a type of glob but gets plumbed in
@@ -2767,6 +2804,13 @@ t/iooiatal: |
     S
     o $o/**
     a(0,'see a less small bit')
+    
+    
+    i $o/glangic/TALIS
+    i $o/glangic/true/FALS
+    o $o/**
+    a(0,'tv clones?')
+    
     1s&ooo = o;
     # < leads neatly into deletes, for mode:y.
     #   pathy: $thing. 
