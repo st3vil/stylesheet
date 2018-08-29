@@ -337,13 +337,45 @@ Doming: | # in the place in the place
             if (talk && params) {
                 A&afteraforS = 0;
                 !A&io and throw "no A&io"
-                return A&io.forS(talk,params);
+                
+                # keep dome cursor pointing sorta here
+                # < remodel so subdomes blah
+                #!A&domeunstep and A&domeunstep = 1; 1s&step--;
+                
+                $ta = A&dometransact;
+                ta and delete ta.in_progress
+                $eT = {};
+                
+                $r = A&io.forS(talk,params,eT);
+                
+                if (eT.ransact) {
+                    $ta = A&dometransact = eT.ransact;
+                    # supposing a broken A discards, not retries
+                    # delete even if ^waits or ^async, at the J6 pin catch
+                    if (!ta.bailance) {
+                        # and that we should redo the dome
+                        # < just relocate it, do the iteration
+                        $step = 1s&step-1;
+                        (A&onbail ||= []).push(&er{
+                            A.deSug and debugger;
+                            !ta.bailance and return;
+                            delete A&dometransact;
+                            1s&step = step;
+                        });
+                        ta.bailance = 1;
+                    }
+                    ta.in_progress = 1;
+                }
+                !r and delete ta.bailance;
+                
+                return r
             }
             else {
                 if (!t) {
                     # after a forS? keep going like we're in the last step
                     A&afteraforS and return 0
                     A&afteraforS = 1;
+                    #A&domeunstep and delete A&domeunstep; 1s&step++;
                     return 1
                 }
                 # could be an Osc triggered continuation...
@@ -356,6 +388,7 @@ Doming: | # in the place in the place
         }
         else {
             # to hold the last number located
+            #A&domeunstep and delete A&domeunstep; 1s&step++;
             A&located_step = s;
         }
         delete A&afteraforS;
