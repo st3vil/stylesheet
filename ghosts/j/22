@@ -761,15 +761,8 @@ iooia: | # F > i/o > input/output
             #    < unless we go for rerooting indexes when anything changes
             #      then we could share a tv with an other, and when they
             #      change anything in it they would leave our instance
-            #        
-            if (neu.y.tv) {
-                $tv = {};
-                each t,cv,v neu.y.tv {
-                    tv[t] ||= {};
-                    tv[t][cv] = v;
-                }}
-                neu.y.tv = tv;
-            }
+            #
+            io.reindex(neu);
             # < to the bits
             #$D = {asa:'tv',pa:ya};
             #io.reindex(neu,D);
@@ -778,16 +771,12 @@ iooia: | # F > i/o > input/output
         if (ya.yalone) { # y.
             # disconnect innards
             # < elabourate input()
-            delete neu.y.tv;
+            io.deindex(neu);
         }
         else { # y
             # clone everything
-            #debugger;
-            # < why does it need this/examine with tools:
-            if (neu.y.tv) {
-                delete neu.y.tv;
+            if (io.deindex(neu))
                 i $neu/** y- o $old/**
-            }
         }
         A.deyug and debugger;
         
@@ -818,6 +807,37 @@ iooia: | # F > i/o > input/output
                 }
             }
         };
+    };
+    # rehashes tv
+    io.reindex = &s{
+        !s.y.tv and return
+        $tv = {};
+        each t,cv,v s.y.tv {
+            tv[t] ||= {};
+            tv[t][cv] = v;
+        }}
+        s.y.tv = tv;
+    };
+    # blanks tv
+    io.deindex = &s{
+        $was = s.y.tv;
+        delete s.y.tv;
+        return was
+    };
+    # removes from tv
+    io.unlink = &s,x{
+        $tv = s.y.tv;
+        !tv and return
+        !tv[x.t] and return
+        delete tv[x.t][x.y.cv];
+        if (Object.keys(tv[x.t]).length == 0) {
+            delete tv[x.t];
+            Object.keys(tv).length == 0 and delete s.y.tv;
+        }
+        # if unfound, check s&z.indexOf(x), which may indicate t/cv change
+        #   suppose then look for x in tv[x.t], then all of tv
+        # things should be isolated, change their names with el
+        # so 4
     };
     #c rowing: travel d.path for i/o hooks
     # < able to async, when A:o things
@@ -1186,10 +1206,22 @@ iooia: | # F > i/o > input/output
                     else
                     !v and debugger; #throw "null pav?"
                     
-                    pa.delete and D.delete = pa.delete; debugger;
-                    
                     # make more rows
                     h.found(d,p,pa,s,D,v);
+                    
+                    if (pa.delete) {
+                        each i,x p.found {
+                            if (pa.delete == 'in') {
+                                io.deindex(x);
+                            }
+                            else if(pa.delete == 'out') {
+                                io.unlink(s,x);
+                            }
+                            else {
+                                throw "delete mode "+pa.delete
+                            }
+                        }
+                    }
                 }
             }
             
@@ -2840,11 +2872,16 @@ t/iooiatal: |
     S 5 deletes
     # <
     $o = 1s&ooo;
-    o $o/**
-    a(0,'what is')
+    o $o/glangic/**
+    a(0,'what is glangic')
     
+    i $o/glangic/ttt/bol-
+    a(0,'empty bol')
+    i $o/glangic/-TALIS
+    a(0,'delete TALIS')
     
-    
+    o $o/glangic/**
+    a(0,'what is glangic after')
     
     S 6 iterator transactions
     #
