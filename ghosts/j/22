@@ -299,8 +299,7 @@ iooia: | # F > i/o > input/output
                 #   for .found on whatever step
                 #     abit{3/*{>1/*{c&of/*{s&of=i
                 # greffing
-                if (p(/\{((!=\})\S+)\}?$/)) {
-                    throw "nothing grefs yet?";
+                if (p(/\{([^\s\}]+\S*)\}?$/)) {
                     pa.gref = m[0];
                     $grefouter = parse;
                     parse = pa.gref;
@@ -419,6 +418,10 @@ iooia: | # F > i/o > input/output
                 #   that's really what we want in a little while
                 #   Arrays only kind of work with fractions, no indexOf it seems
                 #     or a many-celled cell could do it...
+            }
+            if (pa.gref) {
+                # parse gref, params bind their names (at compile time)
+                pa.grefd = io.gref([],pa.gref,pa.grefpara,{not:1});
             }
             !pa.doof && !fi and fi = pa
         }
@@ -888,7 +891,7 @@ iooia: | # F > i/o > input/output
             d.plumb = io.doof(d,d.plumb,pa);
             i--;
         }
-        #c plumb rowmuddler -one iterator multiplying itself in at several points
+        #c d.plumb rowmuddler -one iterator multiplying itself in at several points
         if (d.plumb) {
             $t = d.plumb;
             # pa.sark and pa.v = their rows's ark
@@ -1189,6 +1192,15 @@ iooia: | # F > i/o > input/output
             }
             else {
                 # new column of many - 
+                if (pa.gref) {
+                    # usually filtering what glob found
+                    # < expanding foam
+                    # pa.gref is the talk
+                    # pa.grefparam is array of values to bind/zip to:
+                    # pa.grefpara
+                    p.found = io.gref(p.found,pa.gref,pa.grefparam,pa.grefd);
+                }
+                
                 if (pa.wander) {
                     # grep found directions, keep wandering
                     if (pa.wanderer) {
@@ -1235,8 +1247,6 @@ iooia: | # F > i/o > input/output
                         p.found.push(null)
                     }
                 }
-                # loop: finish rows whose [-1] is already row dont travel onward rows whose [-1] are also further back
-                # such is loopy
                 
                 # duplicate this row out
                 p.rows = p.found.map(&s,i{
@@ -1609,6 +1619,47 @@ iooia: | # F > i/o > input/output
         T.ransact = t;
         t.in_progress and return t
         return t.more()
+    };
+    #c gref
+    # < closer to FactorEase
+    # < d should be C whose c&s is talk, s&r N...
+    io.gref = &N,talk,params,d{
+        if (d && d.path) {
+            d.talk = talk;
+        }
+        else {
+            d ||= {};
+            io.parsegref(talk,params,d);
+        }
+        !d.talk and throw "no dtalk"
+        !d.path and debugger;
+        # bind params
+        each i,pa d.path {
+            #pa.isparam and 
+        }
+        if (d.not) {
+            delete d.not;
+            d.path.map(&pa{ delete pa.v });
+            return d
+        }
+        # to filter/expand thus
+        $M = [];
+        each i,n N {
+            each i,pa d.path {
+                
+            }
+        }
+        
+        
+        # pa.gref is the talk
+        # pa.grefparam is array of values to bind/zip to:
+        # pa.grefpara
+        p.found = io.gref(p.found,pa.gref,pa.grefpara);
+        return M
+    };
+    io.parsegref = &talk,params,d{
+        d.path = [];
+        
     };
     #c io
     # modes of rowing awareness
@@ -2892,16 +2943,18 @@ t/iooiatal: |
     
     
     S 6 iterator transactions
-    # <
     $o = 1s&ooo;
     1s&la ||= [];
     #A.deSug = 1;
     S o $o/glangic/*/*:tong
         1s&la.push(tong);
+        tongs&guine ||= 0;
+        tongs&guine++;
         if (!1s&hazard) {
             1s&hazard = 1;
             throw "Hazard"
         }
+        tongs&great = 1;
     S
     
     m see_la  $s:1s&la
@@ -2910,7 +2963,13 @@ t/iooiatal: |
     
     
     S 7 one name, any fraction
-    
+    # <
+    $o = 1s&ooo;
+    $gre = 'm';
+    o $o/{>$gre
+    a.show.t = 1;
+    a(0,"limbicals");
+    a.show.t = 0;
     
     S 0
     # everytime dome:
