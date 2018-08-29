@@ -785,60 +785,6 @@ iooia: | # F > i/o > input/output
         
         return neu
     };
-    # < finish, for tv/tw/z etc as well
-    io.reindex = &s,d{ 
-        d.glob = 1; # so .path shows its geometry
-        d = io.knowing(d);
-        
-        $starts = d.our.length-1;
-        $reindex = &s,i{
-            if (i <= starts) {
-                $p = d.our[i];
-                !s[p] and return
-                i < starts and reindex(s[p],i+1)
-                else {
-                    
-                }
-            }
-            else {
-                
-                each k,v s {
-                    d.path[i+1] and reindex(v,i+1);
-                }
-            }
-        };
-    };
-    # rehashes tv
-    io.reindex = &s{
-        !s.y.tv and return
-        $tv = {};
-        each t,cv,v s.y.tv {
-            tv[t] ||= {};
-            tv[t][cv] = v;
-        }}
-        s.y.tv = tv;
-    };
-    # blanks tv
-    io.deindex = &s{
-        $was = s.y.tv;
-        delete s.y.tv;
-        return was
-    };
-    # removes from tv
-    io.unlink = &s,x{
-        $tv = s.y.tv;
-        !tv and return
-        !tv[x.t] and return
-        delete tv[x.t][x.y.cv];
-        if (Object.keys(tv[x.t]).length == 0) {
-            delete tv[x.t];
-            Object.keys(tv).length == 0 and delete s.y.tv;
-        }
-        # if unfound, check s&z.indexOf(x), which may indicate t/cv change
-        #   suppose then look for x in tv[x.t], then all of tv
-        # things should be isolated, change their names with el
-        # so 4
-    };
     #c rowing: travel d.path for i/o hooks
     # < able to async, when A:o things
     io.rowing = &talk,params,d,h{
@@ -1929,6 +1875,62 @@ iooia: | # F > i/o > input/output
             .map(&row{ return row.slice(-1)[0] })
             .filter(&s{ return s });
         return last_column
+    };
+    
+    #c misc lowlevelations
+    # < finish, for tv/tw/z etc as well
+    io.reindex = &s,d{ 
+        d.glob = 1; # so .path shows its geometry
+        d = io.knowing(d);
+        
+        $starts = d.our.length-1;
+        $reindex = &s,i{
+            if (i <= starts) {
+                $p = d.our[i];
+                !s[p] and return
+                i < starts and reindex(s[p],i+1)
+                else {
+                    
+                }
+            }
+            else {
+                
+                each k,v s {
+                    d.path[i+1] and reindex(v,i+1);
+                }
+            }
+        };
+    };
+    # rehashes tv
+    io.reindex = &s{
+        !s.y.tv and return
+        $tv = {};
+        each t,cv,v s.y.tv {
+            tv[t] ||= {};
+            tv[t][cv] = v;
+        }}
+        s.y.tv = tv;
+    };
+    # blanks tv
+    io.deindex = &s{
+        $was = s.y.tv;
+        delete s.y.tv;
+        return was
+    };
+    # removes from tv
+    io.unlink = &s,x{
+        $tv = s.y.tv;
+        !tv and return
+        !tv[x.t] and return
+        delete tv[x.t][x.y.cv];
+        if (Object.keys(tv[x.t]).length == 0) {
+            delete tv[x.t];
+            Object.keys(tv).length == 0 and delete s.y.tv;
+        }
+        # if unfound, check s&z.indexOf(x), which may indicate t/cv change
+        #   suppose then look for x in tv[x.t], then all of tv
+        # things should be isolated, change their names with el
+        # so 4
     };
     #c knowables
     io.knowing = &d,v{
