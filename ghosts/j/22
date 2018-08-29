@@ -1635,7 +1635,8 @@ iooia: | # F > i/o > input/output
         !d.path and debugger;
         # bind params
         each i,pa d.path {
-            #pa.isparam and 
+            !params.length and throw "not enough params "+ki(pa)
+            pa.isparam and pa.v = params.shift();
         }
         if (d.not) {
             delete d.not;
@@ -1645,9 +1646,34 @@ iooia: | # F > i/o > input/output
         # to filter/expand thus
         $M = [];
         each i,n N {
+            $fall = {}; # ABCDE
             each i,pa d.path {
-                
+                if (pa.cel) {
+                    !typeof n == 'object' and throw "cel nk/gk on nonobject", n
+                    $S = n[pa.nk];
+                    S != null && pa.gk != null and S = S[pa.gk];
+                    fall.E = S;
+                }
+                if (pa.word) {
+                    fall.E = S;
+                }
+                if (pa.op) {
+                    # A remains
+                }
+                if (fall.ha('E')) {
+                    if (fall.A) {
+                        # becomes C
+                        # for all B[] ops
+                        
+                        # try and be complete statement
+                    }
+                    else {
+                        fall.A = !fall.E||1;
+                        !fall.E and break
+                    }
+                }
             }
+            !fall.A and M.push(n)
         }
         
         
@@ -1659,7 +1685,39 @@ iooia: | # F > i/o > input/output
     };
     io.parsegref = &talk,params,d{
         d.path = [];
-        
+        parse = talk;
+        $i = 20;
+        while (1) {
+            i-- < 1 and throw "out of i"
+            $was = parse;
+            $pa = {};
+            $dpa = &isparam{
+                pa.isparam and pa.isparam = 1;
+                d.path.push(pa);
+                pa = {};
+            };
+            if (p(/^(?:(\w+)&)(\w+)/)
+            p(/^(?:C\.(\w+)\.)(\w+)/))
+                pa.cel = [m[0],m[1]]; dpa()
+            p(/^>/) and pa.op = 'gt'; dpa();
+            p(/^</) and pa.op = 'lt'; dpa();
+            # Babz should $1s&choo -> $choo by now
+            p(/^\$(\w[\[\]\.\w]+)/) and pa.t = m[0]; dpa(1);
+            p(/^(\w+)$/) and pa.t = m[0]; pa.word = 1;
+            was == parse and break
+        }
+        each i,pa d.path {
+            if (pa.cel) {
+                $nk = pa.cel[0];
+                nk == 's' and nk == 'sc';
+                $gk = pa.cel[1];
+                gk == 't' && !nk and gk = null; nk = 't';
+                pa.nk = nk;
+                !nk and throw "no read nk/gk "+ki(pa)
+                gk != null and pa.gk = gk;
+            }
+        }
+        return d
     };
     #c io
     # modes of rowing awareness
