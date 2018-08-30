@@ -154,7 +154,7 @@ JaBabz: | # make hutscript javascript
         my $line = $1."BlockQuote$2\n";
         my $was = $3;
         my $lines = [split /\n/, $was];
-        $lines->[-1] == '' && pop @$lines;
+        $lines->[-1] eq '' && pop @$lines;
         # not always?
         #die "not nl last: aft $line: $lines->[-1] ".wdump 3,[$was,$lines];
         $lines = join "+\n", map {
@@ -320,8 +320,8 @@ JaBabz: | # make hutscript javascript
                 pa.issark && pa.isvar < 2 && delete pa.isvar;
                 pa.t = $_;
                 my $varnamung;
-                if (pa.t =~ /\w[\[\.]\w/) {
-                    # A[1].sc.cee named cee
+                if (pa.t =~ /^\w+[\[\.]\w/) {
+                    # A[1].sc.cee named $cee
                     # < could be pointing to anything
                     #   into datatype (date/time/style?) aspects
                     #   to/through/with functions
@@ -329,7 +329,10 @@ JaBabz: | # make hutscript javascript
                     $varnamung = pa.t;
                     my $name = $1 if pa.t =~ /^\w[\w\[\]\.]+?(\w+)$/;
                     !$name && die "Cant de-qualify name: pa.t    in $talk";
-                    $talk =~ s/\Q$varnamung\E/$name/sg
+                    1 && saybl "AHvo: $name ". substr($name,0,1) . " OPR " . substr($name,1,0);
+                    $name = "\$$name" unless
+                        substr($name,0,1) eq "\$";
+                    $talk =~ s/\$?\Q$varnamung\E/$name/sg
                         || die "Cant find pa.t    in $talk";
                     pa.t = $name;
                     pa.isvar = 1;
@@ -750,6 +753,7 @@ jst: | # test js babbler
         wanga
 
         =cut
+        # #c more
         i $d/@whur/@lamb { s&fat && "laughter" }:whur y { fai(C,s); s&ok = 1; s&depth * 3 } o $lambs/*
         i $d/@whur {dehydrate:5}:whur ye,C- {notch} y o $lambs/*
         o $lambs/*
@@ -782,6 +786,7 @@ jst: | # test js babbler
         1
         
         # 20th century
+        o va:{ seen.push(C); vat(C) }:klass 1s&cee/*:va/*:doop
     
     # too far away:
     
@@ -903,6 +908,7 @@ jst: | # test js babbler
         // 
         // 
         // wanga
+        // #c more
         var ay = io.i("$d/@whur/@lamb {}:whur y {} o $lambs/*",[d,function(A,C,G,T,s){  return C.sc.fat && "laughter"  },function(A,C,G,T,s){  fai(C,s); C.sc.ok = 1; return C.sc.depth * 3  },lambs]); var whur = ay.sc.whur; var lamb = ay.sc.lamb;
         var ay = io.i("$d/@whur {dehydrate}:whur ye,C- {notch} y o $lambs/*",[d,"5","",lambs]); var whur = ay.sc.whur;
         var ay = io.o("$lambs/*",[lambs]); var lambs = ay.sc.lambs; var s = ay.sc.s;
@@ -937,6 +943,7 @@ jst: | # test js babbler
         "1\n";
         var o = G.h(A,C,G,T,'readLines',BlockQuote);
         // 20th century
+        var ay = io.o("va:{}:klass $cee/*:va/*:doop",[function(A,C,G,T,s){  seen.push(C); return vat(C)  },A[1].sc.cee]); var klass = ay.sc.klass; var va = ay.sc.va; var doop = ay.sc.doop;
         }
         
     
@@ -954,6 +961,8 @@ jst: | # test js babbler
         vatica
         S
     
+    c&s = <<'';
+        o va:{ seen.push(C); vat(C) }:klass 1s&cee/*:va/*:doop
     $good = "";
     }
     ar.testing_io_vars = 1;
