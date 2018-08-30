@@ -147,6 +147,8 @@ JaBabz: | # make hutscript javascript
     # blockquote til /^\s*$/g
     # multi line, always \n$
     # supposed to not babz anything in it...
+    # < stylehouse (the editor) must know this,
+    #   or it'll expand them to up to 4 spaces
     my $quote = "''";
     c&s =~ s{^($nlp)<<$quote($nlp)\n((?:$nlp\n)+)[ \t]*\n}{
         my $line = $1."BlockQuote$2\n";
@@ -156,6 +158,8 @@ JaBabz: | # make hutscript javascript
         # not always?
         #die "not nl last: aft $line: $lines->[-1] ".wdump 3,[$was,$lines];
         $lines = join "+\n", map {
+            # HACK, tabs expanded by editor
+            s/ {8,}/\t\t\t/g;
             $jstring->("$_\n")
         } @$lines;
         $lines = "var BlockQuote =\n$lines;";
@@ -924,10 +928,10 @@ jst: | # test js babbler
         var ay = io.i("$ooo/abit{3/{>$A[1].sc.step/{C.c.of:dangle/*{C.sc.of=$i:leap",[A[1].sc.ooo,A[1].sc.step,i]); var dangle = ay.sc.dangle; var leap = ay.sc.leap;
         else if (blab) {
         var BlockQuote =
-        "yruva        \n"+
-        "  glangic            boogie:3\n"+
-        "    tibe        \n"+
-        "    ttt            eel:33\n"+
+        "yruva\t\t\t\n"+
+        "  glangic\t\t\tboogie:3\n"+
+        "    tibe\t\t\t\n"+
+        "    ttt\t\t\teel:33\n"+
         "G&op;\n"+
         "G&Enticing,Babils and throw\n"+
         "1\n";
