@@ -1630,7 +1630,6 @@ iooia: | # F > i/o > input/output
         }
         else {
             d ||= {};
-            debugger;
             io.parsegref(talk,params,d);
             d.talk = talk;
         }
@@ -1661,53 +1660,60 @@ iooia: | # F > i/o > input/output
         };
         $reason;
         $M = [];
-        each i,n N {
-            $f = {}; # ABCDE
+        $sortby = []; # relative to M
+        each mi,n N {
+            $f = {}; # A:is,B:op,E:to  D:dead
             each i,pa d.path {
-                f.D <= -1 and break;
-                if (pa.Climb) { # Climb
+                qa = d.path[i+1]; # next
+                if (pa.Climb) {
+                    # Climb C.$nk.$gk
                     !typeof n == 'object' and throw "cel nk/gk on nonobject", n
                     $S = n[pa.nk];
                     S && pa.gk != null and S = S[pa.gk];
                     f.E = S;
                 }
-                if (pa.word) {
-                    f.E = pa.v;
-                }
-                if (pa.op) {
-                    if (f.B) {
-                        if (f.B.op == 'lt' && f.D
-                        }
-                    }
-                    f.B = pa;
-                    # A remains
-                }
-                if (hak(f,'E')) {
+                # little value
+                pa.word and f.E = pa.v
+                pa.op and f.B = pa.op
+                while (hak(f,'E')) {
+                    hak(f,'A') && !A and f.D = 1
+                    f.D and break;
                     if (f.A) {
                         if (f.B) {
                             # try and be complete statement
-                            compute(f.A,f.B,f.E);
+                            $r = compute(f.A,f.B,f.E);
+        debugger;
+                            # A<E>E means !between(E,E), inducing an or
+                            !r && f.B.op == 'lt' && qa.op == 'gt' and r = 1
+                            delete f.B;
+                            delete f.E;
+                            !r and f.D = 1; break
                         }
                         else {
                             debugger; throw "no operation between"
                         }
                     }
                     else {
-                        # no A yet
+                        # no A yet: <E
                         if (f.B) {
-                            # '', op, E
                             if (typeof f.E == 'object') {
                                 # something universal waves at others
                                 debugger; throw 'op to object';
                             }
                             elsif (typeof f.E == 'string' || typeof f.E == 'number') {
-                                if (f.E.match(/^\d(?:\.\d+)$/)) {
-                                    # implies cv
-                                    f.A = 
+                                if (f.E.match(/^\d(?:\.\d+)?$/)) {
+                                    # implies for cv, <1
+                                    f.A = n.y.cv;
+                                    while (f.E >= 1) { f.E *= 0.1 }
                                 }
                                 else {
-                                    # 
+                                    # implies t
+                                    f.A = n.t;
+                                    
                                 }
+                            }
+                            else {
+                                debugger; throw "what to E?";
                             }
                         }
                         # make up f.A
@@ -1715,12 +1721,11 @@ iooia: | # F > i/o > input/output
                         f.A = f.E;
                     }
                 }
-                f.D and f.D *= 0.5;
+                f.D and break;
                 delete f.E;
             }
-            f.D < 0 and continue
+            f.D and continue
             M.push(n)
-            fail == 0 and debugger;
         }
         return M
     };
@@ -1734,7 +1739,6 @@ iooia: | # F > i/o > input/output
             $pa = {};
             $dpa = &isparam{
                 isparam and pa.isparam = 1;
-                debugger;
                 d.path.push(pa);
                 pa = {};
             };
@@ -3062,8 +3066,70 @@ t/iooiatal: |
     i $o/limbics/@$1s&la
     a(0,"limbicals");
     
+    S 7 save
+    o $1s&ooo/**
+    a.show.y = 0;
+    a(0,"grab");
     
-    S 7 one name, any fraction
+    S 0
+    # everytime dome:
+    # perhaps not by being last but by being named
+    # has agenda to do slice of sequential or a certain name,
+    # or just run in to things.
+    each in M {
+        ns&hue || ns&pi and continue
+        nc&pi = 'fod';
+        ns&dos = 'grow';
+        nc&dl ||= 8.22;
+    }
+t/iooif: |    
+    ar.atavism = 1;
+    $a = G&way,'t/iooiata',ar;
+    $nz = a.nz;
+    a.show.y = 1;
+    $io = A&io;
+    #debugger;
+    S 1 loadup
+    $o = G&readLines,<<'';
+    yruva        
+      glangic            boogie:3
+        tibe        
+        ttt            eel:33
+          bol            ded,great,guine:2
+        true        
+          FALS            great,guine
+      not        
+        glangic            boogie:3
+          tibe        
+          ttt            eel:33
+            bol            ded,great,guine:2
+          true        
+            FALS            great,guine
+      yfully        
+        glangic        
+          tibe        
+          ttt        
+            bol        
+              ate        
+              ais        
+          true        
+      yshallow        
+        glangic        
+          tibe        
+          ttt            eel:33
+            bol            ded,great,guine:2
+          true        
+            FALS            great,guine
+      yalone        
+        glangic        
+      flump        
+        "Falling sa glangic"        
+      limbics        
+        bol            ded,great,guine:2
+        FALS            great,guine
+
+    
+    S 2 fractions
     # <
     $o = 1s&ooo;
     $gre = 'm';
