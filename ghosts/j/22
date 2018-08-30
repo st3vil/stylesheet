@@ -318,7 +318,7 @@ iooia: | # F > i/o > input/output
                 }
                 
                 # function
-                p(/^((\w+:)*)\{(\w+)?\}$/) and pa.doof = m[0]||1; dpa(1); continue
+                p(/^\{(\w+)?\}$/) and pa.doof = m[0]||1; dpa(1); continue
                 pa.separation and dpa(); continue
                 pa.arkfor and throw "arkfor non-doof"
                 # and use each of them
@@ -375,7 +375,7 @@ iooia: | # F > i/o > input/output
             }
             parse = outer;
         }
-        parse and throw "Unparsed", parse
+        parse and throw "io Unparsed", parse
         
         #c 2 grasp better
         $fi;
@@ -422,7 +422,8 @@ iooia: | # F > i/o > input/output
             }
             if (pa.gref) {
                 # parse gref, params bind their names (at compile time)
-                pa.grefd = io.gref([],pa.gref,pa.grefpara.slice(),{not:1});
+                $para = (pa.grefpara || []).slice();
+                pa.grefd = io.gref([],pa.gref,para,{not:1});
             }
             !pa.doof && !fi and fi = pa
         }
@@ -1200,7 +1201,7 @@ iooia: | # F > i/o > input/output
                     # pa.gref is the talk
                     # pa.grefpara[i] param names/pa.t
                     # pa.grefparam[i] values to bind
-                    p.found = io.gref(p.found,pa.gref,pa.grefparam,pa.grefd);
+                    p.found = io.gref(p.found,pa.gref,pa.grefparam||[],pa.grefd);
                 }
                 
                 if (pa.wander) {
@@ -1315,8 +1316,11 @@ iooia: | # F > i/o > input/output
 
                     $r = b.rows;
                     !r and throw "rowing nothing"
-                    # keeps pushing null once lost
-                    !r.length and debugger; #throw "not one row"
+                    if (!r.length) {
+                        # keeps pushing null once lost?
+                        # < should be a minor Ting
+                        #debugger; #throw "not one row"
+                    }
                     r.map(&ro{ rows.push(ro) })
                 }
                 # no more recursion at end of wander in
@@ -1622,10 +1626,51 @@ iooia: | # F > i/o > input/output
         t.in_progress and return t
         return t.more()
     };
-    #c gref
-    # < closer to FactorEase
+    #c gref/parse
+    # < ghost closer to FactorEase
     # < d should be C whose c&s is talk, s&r N...
+    io.parsegref = &talk,params,d{
+        d.path = [];
+        parse = talk;
+        $i = 20;
+        while (1) {
+            i-- < 1 and throw "out of i"
+            $was = parse;
+            $pa = {};
+            $dpa = &isparam{
+                isparam and pa.isparam = 1;
+                d.path.push(pa);
+                pa = {};
+            };
+            if (p(/^(?:(\w+)&)(\w+)/) ||
+            p(/^(?:C\.(\w+)\.)(\w+)/)) {
+                pa.Climb = [m[0],m[1]]; dpa()
+            }
+            p(/^>/) and pa.op = 'gt';
+            p(/^</) and pa.op = 'lt';
+            pa.op && p(/^=/) and pa.orequal = 1;
+            pa.op and dpa()
+            
+            # Babz should $1s&choo -> $choo by now
+            p(/^\$(\w[\[\]\.\w]+)/) and pa.t = m[0]; dpa(1);
+            p(/^(\w+)$/) and pa.t = m[0]; pa.word = 1; dpa();
+            was == parse || parse == '' and break
+        }
+        each i,pa d.path {
+            if (pa.Climb) {
+                $nk = pa.Climb[0];
+                nk == 's' and nk == 'sc';
+                $gk = pa.Climb[1];
+                gk == 't' && !nk and gk = null; nk = 't';
+                pa.nk = nk;
+                !nk and throw "no read nk/gk "+ki(pa)
+                gk != null and pa.gk = gk;
+            }
+        }
+        return d
+    };
     io.gref = &N,talk,params,d{
+        params ||= [];
         if (d && d.path) {
             d.talk = talk;
         }
@@ -1636,12 +1681,14 @@ iooia: | # F > i/o > input/output
         }
         !d.talk and throw "no dtalk"
         !d.path and debugger;
+        parse and throw "gref Unparsed: "+parse
         
         # bind params
         each i,pa d.path {
-            !params.length and throw "gref not enough params "+ki(pa)
-            pa.isparam and pa.v = params.shift();
             pa.word and pa.v = pa.t;
+            !pa.isparam and continue
+            !params.length and throw "gref not enough params "+ki(pa)
+            pa.v = params.shift();
         }
         params.length and throw "gref Too many params", params
         if (d.not) {
@@ -1650,22 +1697,31 @@ iooia: | # F > i/o > input/output
             return d
         }
         
-        # to filter/expand thus
+        #c gref/proper to filter/expand thus
+        # < each [], as sort sip
+        #   sort?
         $compute = &a,b,c{
+            b.orequal && b.op == 'gt' and return a >= c
+            else
+            b.orequal && b.op == 'lt' and return a <= c
+            else
             b.op == 'gt' and return a > c
             else
-            b.op == 'lt' and return a > c
+            b.op == 'lt' and return a < c
             else {
                 debugger; throw "what op "+b.op;
             }
         };
-        $reason;
         $M = [];
         $sortby = []; # relative to M
         each mi,n N {
-            $f = {}; # A:is,B:op,E:to  D:dead
+            $f = {};
+            # A value tested
+            # B pa of operation
+            # E value wanted
+            # D for dead
             each i,pa d.path {
-                qa = d.path[i+1]; # next
+                qa = d.path[i+1] || {}; # next
                 if (pa.Climb) {
                     # Climb C.$nk.$gk
                     !typeof n == 'object' and throw "cel nk/gk on nonobject", n
@@ -1673,9 +1729,9 @@ iooia: | # F > i/o > input/output
                     S && pa.gk != null and S = S[pa.gk];
                     f.E = S;
                 }
-                # little value
-                pa.word and f.E = pa.v
-                pa.op and f.B = pa.op
+                # little/big value
+                pa.word || pa.isparam and f.E = pa.v
+                pa.op and f.B = pa
                 while (hak(f,'E')) {
                     hak(f,'A') && !A and f.D = 1
                     f.D and break;
@@ -1683,7 +1739,6 @@ iooia: | # F > i/o > input/output
                         if (f.B) {
                             # try and be complete statement
                             $r = compute(f.A,f.B,f.E);
-        debugger;
                             # A<E>E means !between(E,E), inducing an or
                             !r && f.B.op == 'lt' && qa.op == 'gt' and r = 1
                             delete f.B;
@@ -1708,64 +1763,27 @@ iooia: | # F > i/o > input/output
                                     while (f.E >= 1) { f.E *= 0.1 }
                                 }
                                 else {
-                                    # implies t
+                                    # implies for t
                                     f.A = n.t;
-                                    
                                 }
                             }
                             else {
                                 debugger; throw "what to E?";
                             }
                         }
-                        # make up f.A
-                        !f.E and fail();
-                        f.A = f.E;
+                        # A must be true
+                        !f.A and f.A = f.E;
                     }
                 }
+                A.debuggref and debugger;
                 f.D and break;
                 delete f.E;
             }
+            #debugger;
             f.D and continue
             M.push(n)
         }
         return M
-    };
-    io.parsegref = &talk,params,d{
-        d.path = [];
-        parse = talk;
-        $i = 20;
-        while (1) {
-            i-- < 1 and throw "out of i"
-            $was = parse;
-            $pa = {};
-            $dpa = &isparam{
-                isparam and pa.isparam = 1;
-                d.path.push(pa);
-                pa = {};
-            };
-            if (p(/^(?:(\w+)&)(\w+)/) ||
-            p(/^(?:C\.(\w+)\.)(\w+)/)) {
-                pa.Climb = [m[0],m[1]]; dpa()
-            }
-            p(/^>/) and pa.op = 'gt'; dpa();
-            p(/^</) and pa.op = 'lt'; dpa();
-            # Babz should $1s&choo -> $choo by now
-            p(/^\$(\w[\[\]\.\w]+)/) and pa.t = m[0]; dpa(1);
-            p(/^(\w+)$/) and pa.t = m[0]; pa.word = 1;
-            was == parse || parse == '' and break
-        }
-        each i,pa d.path {
-            if (pa.Climb) {
-                $nk = pa.Climb[0];
-                nk == 's' and nk == 'sc';
-                $gk = pa.Climb[1];
-                gk == 't' && !nk and gk = null; nk = 't';
-                pa.nk = nk;
-                !nk and throw "no read nk/gk "+ki(pa)
-                gk != null and pa.gk = gk;
-            }
-        }
-        return d
     };
     #c io
     # modes of rowing awareness
@@ -3087,9 +3105,8 @@ t/iooif: |
     ar.atavism = 1;
     $a = G&way,'t/iooiata',ar;
     $nz = a.nz;
-    a.show.y = 1;
     $io = A&io;
-    #debugger;
+    
     S 1 loadup
     $o = G&readLines,<<'';
     yruva        
@@ -3128,7 +3145,10 @@ t/iooif: |
       limbics        
         bol            ded,great,guine:2
         FALS            great,guine
-
+    
+    $o = 1s&ooo = o.shift();
+    o $o/*/*
+    a(0,'loade');
     
     S 2 fractions
     # <
@@ -3138,6 +3158,43 @@ t/iooif: |
     a.show.t = 1;
     a(0,"t more than m");
     a.show.t = 0;
+    o $o/{<$gre
+    a(0,"t less than m");
+    $eye = 1;
+    $rein = [];
+    S indicate: o $o/*:be/{<g:es
+        ++eye > 9 and continue
+        es.y.cv = eye / 10;
+        rein.indexOf(be) < 0 and rein.push(be);
+    S
+    $noticeyt = &fore,be{
+        $tee = fore+" "+be.t;
+        $yt = [];
+        each t,cv,s be.y.tv {
+            cv = cv.replace(/^0\./,'');
+            yt.push(cv);
+        }}
+        yt = [[yt.join(",")]];
+        m $tee  $s:yt
+    };
+    rein.map(&be{
+        noticeyt("before",be);
+        debugger;
+        io.reindex(be);
+        noticeyt("aftere",be);
+    });
+    
+    
+    
+    #A.debuggref = 1;
+    o $o/*:mid/{>=3
+    a.show.t = 1;
+    a(0,"cv 3 up");
+    ays&s.map(&s{ s.y.cv = 0.4 + s.y.cv / 0.6 });
+    ays&s.map(&s{ io.reindex(s) });
+    m manys  $s:ay.sc,dl:5.32
+    
+    
     
     S 0
     # everytime dome:
@@ -3156,7 +3213,7 @@ t/BuildACastle: | # test Duning and io
     # ones
 Fly: |
     G&heading;
-    G&way,'t/iooiatal',ar;
+    G&way,'t/iooif',ar;
     return;
     
     1s&empathy = 4;
@@ -3221,7 +3278,7 @@ pi/fod: | # a js J, shows a J-shaped bit of data, to aspect serialising change
         $p = es.path;
         delete es.path;
         each in p {
-            m path -fod $s:n,d:2,dl:7
+            m path -fod $s:n,d:2,dl:7.45
         }
     }
     if (es.p) {
@@ -3238,6 +3295,11 @@ pi/fod: | # a js J, shows a J-shaped bit of data, to aspect serialising change
         $p = es.plumb;
         delete es.plumb;
         m plumb -fod $s:p,d:3,dl:7
+    }
+    if (es.grefd) {
+        $p = es.grefd;
+        delete es.grefd;
+        m grefd -fod $s:p,d:3,dl:7
     }
     
     
