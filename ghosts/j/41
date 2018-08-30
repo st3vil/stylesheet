@@ -135,6 +135,37 @@ JaBabz: | # make hutscript javascript
     my $poing = qr/\w+(?:\.\w+)?/;
     my $nlp = qr/[^\n]+/;
     my $nls = qr/[ \t]*(?! *\/\/)/;
+    # < enj() should do this
+    my $jstring = &s{
+        $s = sjson([$s]);
+        $s =~ s/^\[//;
+        $s =~ s/\]$//;
+        $s
+    };
+    my $hide = {};
+    
+    # blockquote til /^\s*$/g
+    # multi line, always \n$
+    # supposed to not babz anything in it...
+    my $quote = "''";
+    c&s =~ s{^($nlp)<<$quote($nlp)\n((?:$nlp\n)+)[ \t]*\n}{
+        my $line = $1."BlockQuote$2\n";
+        my $was = $3;
+        my $lines = [split /\n/, $was];
+        $lines->[-1] == '' && pop @$lines;
+        # not always?
+        #die "not nl last: aft $line: $lines->[-1] ".wdump 3,[$was,$lines];
+        $lines = join "+\n", map {
+            $jstring->("$_\n")
+        } @$lines;
+        $lines = "var BlockQuote =\n$lines;";
+        my $dig = dig($lines);
+        $hide->{$dig} = $lines;
+        "HIDING:$dig\n$line";
+    }smeg;
+    
+    #$o = G&readLines,<<'';
+
     
     # # comment to // comment
     c&s =~ s/^(\s*)#/$1\/\//gsm;
@@ -582,7 +613,7 @@ JaBabz: | # make hutscript javascript
                 }
                 $nam && $args && die "io set nam='$nam', also args: $args";
                 $nam = $args if $args;
-                ($nam = sjson([$nam])) =~ s/^\[|\]$//g if $nam;
+                $nam = $jstring->($nam) if $nam;
                 $num ||= "''" unless $num eq '0';
                 $nam ||= "''";
                 $args = join',',grep{length}$num,$nam,$talkpara;
@@ -630,6 +661,9 @@ JaBabz: | # make hutscript javascript
         my $h = $1 eq 'G' ? ".h(A,C,G,T,$t" : "\[$t\](A,C,G,T";
         $1.$h."$4)$5"
     /smge;
+    
+    # unhide blockquotation
+    %$hide && c&s =~ s/HIDING:([0-9a-f]+)/$hide->{$1} || die "Cant find $1"/seg;
     
 jst: | # test js babbler
     c&s = <<'';
@@ -734,6 +768,16 @@ jst: | # test js babbler
         i $o/abit{3/{>1/{c&of/*{s&of=$i
         i $1s&ooo/abit{3/{>$1s&step/{c&of:dangle/*{s&of=$i:leap
         elsif (blab) {
+        $o = G&readLines,<<'';
+        yruva        
+          glangic            boogie:3
+            tibe        
+            ttt            eel:33
+        G&op;
+        G&Enticing,Babils and throw
+        1
+        
+        # 20th century
     
     # too far away:
     
@@ -879,6 +923,16 @@ jst: | # test js babbler
         var ay = io.i("$o/abit{3/{>1/{C.c.of/*{C.sc.of=$i",[o,i]); var o = ay.sc.o; var abit = ay.sc.abit; var s = ay.sc.s;
         var ay = io.i("$ooo/abit{3/{>$A[1].sc.step/{C.c.of:dangle/*{C.sc.of=$i:leap",[A[1].sc.ooo,A[1].sc.step,i]); var dangle = ay.sc.dangle; var leap = ay.sc.leap;
         else if (blab) {
+        var BlockQuote =
+        "yruva        \n"+
+        "  glangic            boogie:3\n"+
+        "    tibe        \n"+
+        "    ttt            eel:33\n"+
+        "G&op;\n"+
+        "G&Enticing,Babils and throw\n"+
+        "1\n";
+        var o = G.h(A,C,G,T,'readLines',BlockQuote);
+        // 20th century
         }
         
     
