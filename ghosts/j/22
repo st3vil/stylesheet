@@ -1651,44 +1651,74 @@ iooia: | # F > i/o > input/output
         }
         
         # to filter/expand thus
+        $compute = &a,b,c{
+            b.op == 'gt' and return a > c
+            else
+            b.op == 'lt' and return a > c
+            else {
+                debugger; throw "what op "+b.op;
+            }
+        };
         $reason;
         $M = [];
         each i,n N {
             $f = {}; # ABCDE
-            $fail = &t{
-                reason = t;
-                fail = 0;
-                break;
-            };
             each i,pa d.path {
-                if (pa.cel) {
+                f.D <= -1 and break;
+                if (pa.Climb) { # Climb
                     !typeof n == 'object' and throw "cel nk/gk on nonobject", n
                     $S = n[pa.nk];
-                    S != null && pa.gk != null and S = S[pa.gk];
+                    S && pa.gk != null and S = S[pa.gk];
                     f.E = S;
                 }
                 if (pa.word) {
                     f.E = pa.v;
                 }
                 if (pa.op) {
-                    f.D = pa;
+                    if (f.B) {
+                        if (f.B.op == 'lt' && f.D
+                        }
+                    }
+                    f.B = pa;
                     # A remains
                 }
                 if (hak(f,'E')) {
                     if (f.A) {
-                        if (f.C) {
+                        if (f.B) {
                             # try and be complete statement
-                        
+                            compute(f.A,f.B,f.E);
+                        }
+                        else {
+                            debugger; throw "no operation between"
                         }
                     }
                     else {
+                        # no A yet
+                        if (f.B) {
+                            # '', op, E
+                            if (typeof f.E == 'object') {
+                                # something universal waves at others
+                                debugger; throw 'op to object';
+                            }
+                            elsif (typeof f.E == 'string' || typeof f.E == 'number') {
+                                if (f.E.match(/^\d(?:\.\d+)$/)) {
+                                    # implies cv
+                                    f.A = 
+                                }
+                                else {
+                                    # 
+                                }
+                            }
+                        }
                         # make up f.A
                         !f.E and fail();
                         f.A = f.E;
                     }
                 }
+                f.D and f.D *= 0.5;
                 delete f.E;
             }
+            f.D < 0 and continue
             M.push(n)
             fail == 0 and debugger;
         }
@@ -1710,7 +1740,7 @@ iooia: | # F > i/o > input/output
             };
             if (p(/^(?:(\w+)&)(\w+)/) ||
             p(/^(?:C\.(\w+)\.)(\w+)/)) {
-                pa.cel = [m[0],m[1]]; dpa()
+                pa.Climb = [m[0],m[1]]; dpa()
             }
             p(/^>/) and pa.op = 'gt'; dpa();
             p(/^</) and pa.op = 'lt'; dpa();
@@ -1720,10 +1750,10 @@ iooia: | # F > i/o > input/output
             was == parse || parse == '' and break
         }
         each i,pa d.path {
-            if (pa.cel) {
-                $nk = pa.cel[0];
+            if (pa.Climb) {
+                $nk = pa.Climb[0];
                 nk == 's' and nk == 'sc';
-                $gk = pa.cel[1];
+                $gk = pa.Climb[1];
                 gk == 't' && !nk and gk = null; nk = 't';
                 pa.nk = nk;
                 !nk and throw "no read nk/gk "+ki(pa)
