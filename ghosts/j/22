@@ -421,7 +421,7 @@ iooia: | # F > i/o > input/output
             }
             if (pa.gref) {
                 # parse gref, params bind their names (at compile time)
-                pa.grefd = io.gref([],pa.gref,pa.grefpara,{not:1});
+                pa.grefd = io.gref([],pa.gref,pa.grefpara.slice(),{not:1});
             }
             !pa.doof && !fi and fi = pa
         }
@@ -824,9 +824,10 @@ iooia: | # F > i/o > input/output
                 pa.v = params.shift();
             }
             if (pa.grefpara) {
+                $m = pa.grefparam ||= [];
                 each i,para pa.grefpara {
                     !params.length and throw "Not enough grefparams", para, pa, d
-                    (pa.grefparam ||= {})[para] = params.shift();
+                    m.push(params.shift());
                 }
             }
             # checks requiring params
@@ -1196,8 +1197,8 @@ iooia: | # F > i/o > input/output
                     # usually filtering what glob found
                     # < expanding foam
                     # pa.gref is the talk
-                    # pa.grefparam is array of values to bind/zip to:
-                    # pa.grefpara
+                    # pa.grefpara[i] param names/pa.t
+                    # pa.grefparam[i] values to bind
                     p.found = io.gref(p.found,pa.gref,pa.grefparam,pa.grefd);
                 }
                 
@@ -1629,58 +1630,68 @@ iooia: | # F > i/o > input/output
         }
         else {
             d ||= {};
+            debugger;
             io.parsegref(talk,params,d);
+            d.talk = talk;
         }
         !d.talk and throw "no dtalk"
         !d.path and debugger;
+        
         # bind params
         each i,pa d.path {
-            !params.length and throw "not enough params "+ki(pa)
+            !params.length and throw "gref not enough params "+ki(pa)
             pa.isparam and pa.v = params.shift();
+            pa.word and pa.v = pa.t;
         }
+        params.length and throw "gref Too many params", params
         if (d.not) {
             delete d.not;
             d.path.map(&pa{ delete pa.v });
             return d
         }
+        
         # to filter/expand thus
+        $reason;
         $M = [];
         each i,n N {
-            $fall = {}; # ABCDE
+            $f = {}; # ABCDE
+            $fail = &t{
+                reason = t;
+                fail = 0;
+                break;
+            };
             each i,pa d.path {
                 if (pa.cel) {
                     !typeof n == 'object' and throw "cel nk/gk on nonobject", n
                     $S = n[pa.nk];
                     S != null && pa.gk != null and S = S[pa.gk];
-                    fall.E = S;
+                    f.E = S;
                 }
                 if (pa.word) {
-                    fall.E = S;
+                    f.E = pa.v;
                 }
                 if (pa.op) {
+                    f.D = pa;
                     # A remains
                 }
-                if (fall.ha('E')) {
-                    if (fall.A) {
-                        # becomes C
-                        # for all B[] ops
+                if (hak(f,'E')) {
+                    if (f.A) {
+                        if (f.C) {
+                            # try and be complete statement
                         
-                        # try and be complete statement
+                        }
                     }
                     else {
-                        fall.A = !fall.E||1;
-                        !fall.E and break
+                        # make up f.A
+                        !f.E and fail();
+                        f.A = f.E;
                     }
                 }
+                delete f.E;
             }
-            !fall.A and M.push(n)
+            M.push(n)
+            fail == 0 and debugger;
         }
-        
-        
-        # pa.gref is the talk
-        # pa.grefparam is array of values to bind/zip to:
-        # pa.grefpara
-        p.found = io.gref(p.found,pa.gref,pa.grefpara);
         return M
     };
     io.parsegref = &talk,params,d{
@@ -1692,19 +1703,21 @@ iooia: | # F > i/o > input/output
             $was = parse;
             $pa = {};
             $dpa = &isparam{
-                pa.isparam and pa.isparam = 1;
+                isparam and pa.isparam = 1;
+                debugger;
                 d.path.push(pa);
                 pa = {};
             };
-            if (p(/^(?:(\w+)&)(\w+)/)
-            p(/^(?:C\.(\w+)\.)(\w+)/))
+            if (p(/^(?:(\w+)&)(\w+)/) ||
+            p(/^(?:C\.(\w+)\.)(\w+)/)) {
                 pa.cel = [m[0],m[1]]; dpa()
+            }
             p(/^>/) and pa.op = 'gt'; dpa();
             p(/^</) and pa.op = 'lt'; dpa();
             # Babz should $1s&choo -> $choo by now
             p(/^\$(\w[\[\]\.\w]+)/) and pa.t = m[0]; dpa(1);
             p(/^(\w+)$/) and pa.t = m[0]; pa.word = 1;
-            was == parse and break
+            was == parse || parse == '' and break
         }
         each i,pa d.path {
             if (pa.cel) {
@@ -3026,7 +3039,7 @@ t/iooiatal: |
     $gre = 'm';
     o $o/{>$gre
     a.show.t = 1;
-    a(0,"limbicals");
+    a(0,"t more than m");
     a.show.t = 0;
     
     S 0
