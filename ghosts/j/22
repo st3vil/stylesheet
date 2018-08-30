@@ -294,6 +294,12 @@ iooia: | # F > i/o > input/output
                 p(/-$/) and pa.delete = 'in';
                 p(/^-/) and pa.delete = 'out';
                 
+                # set var/name column from path bit
+                p(/:(\w*)$/) and pa.ark = m[0] || 1
+                # which ark specifically (usu all/sarked) to doof
+                while (p(/^(\w+):/))
+                     (pa.arkfor ||= []).push(m[0])
+                
                 # where-iations on glob
                 # on-a-pa function, talk for F-iltering
                 #   for .found on whatever step
@@ -311,11 +317,6 @@ iooia: | # F > i/o > input/output
                     parse == '' and parse = '*'
                 }
                 
-                # set var/name column from path bit
-                p(/:(\w*)$/) and pa.ark = m[0] || 1
-                # which ark specifically (usu all/sarked) to doof
-                while (p(/^(\w+):/))
-                     (pa.arkfor ||= []).push(m[0])
                 # function
                 p(/^((\w+:)*)\{(\w+)?\}$/) and pa.doof = m[0]||1; dpa(1); continue
                 pa.separation and dpa(); continue
