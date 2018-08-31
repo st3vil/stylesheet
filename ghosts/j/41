@@ -330,7 +330,7 @@ JaBabz: | # make hutscript javascript
                     $varnamung = pa.t;
                     my $name = $1 if pa.t =~ /^\w[\w\[\]\.]+?(\w+)$/;
                     !$name && die "Cant de-qualify name: pa.t    in $talk";
-                    1 && saybl "AHvo: $name ". substr($name,0,1) . " OPR " . substr($name,1,0);
+                    #1 && saybl "AHvo: $name ". substr($name,0,1) . " OPR " . substr($name,1,0);
                     $name = "\$$name" unless
                         substr($name,0,1) eq "\$";
                     $talk =~ s/\$?\Q$varnamung\E/$name/sg
@@ -371,7 +371,15 @@ JaBabz: | # make hutscript javascript
             @{h.arks} = 's' if !@{h.arks};
         }
         my $la = $firstpath->[-1];
-        if ((la.glob || la.word) && !la.ark && !grep {$_ eq 's'} @{h.arks}) {
+        # the test: i $d/@la/@dio la:{} ... puts s as the {}
+            #my $vork = '$d/@la/@dio';
+            #$talk =~ m{\Q$vork\E}
+            #    && saybl "Found it: ".wdump 5,[$h,$la];
+        # maybe we should call it r if .../made:s {}
+        # probably about right.. unplumbed {}$ could mean grep that stuff?
+        #   except for row generation, which is how anyway?
+        # < knowing better, realise() won't spit out doofs as s
+        if ((la.glob || la.word) && !la.ark && !la.issark && !grep {$_ eq 's'} @{h.arks}) {
             @{h.arks} = grep { $_ ne la.t } @{h.arks}; # remove word as nonark
             push @{h.arks}, 's';
         }
