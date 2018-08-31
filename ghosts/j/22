@@ -1109,7 +1109,10 @@ iooia: | # F > i/o > input/output
                 else {
                     pa.v = pa.t;
                 }
-                pa.v = G&Cye,[pa.v,1];
+                $tys = pa.v.indexOf('@');
+                $t = tys >= 0 ? pa.v.slice(0,tys) : pa.v;
+                $cv = tys >= 0 ? pa.v.slice(tys+1) : 1;
+                pa.v = G&Cye,[t,cv];
             }
             
             if (pa.doof) { # not a real step
@@ -1629,6 +1632,9 @@ iooia: | # F > i/o > input/output
     #c gref/parse
     # < ghost closer to FactorEase
     # < d should be C whose c&s is talk, s&r N...
+    # < the compiling (and variating) thing should be native to G&t
+    #   like w compiles args on: w/$args/$w,
+    #   io/gref should compile gref/$talk/$d
     io.parsegref = &talk,params,d{
         d.path = [];
         parse = talk;
@@ -1656,6 +1662,7 @@ iooia: | # F > i/o > input/output
             p(/^(\w+)$/) and pa.t = m[0]; pa.word = 1; dpa();
             was == parse || parse == '' and break
         }
+        parse and debugger; throw "gref Unparsed: "+parse
         each i,pa d.path {
             if (pa.Climb) {
                 $nk = pa.Climb[0];
@@ -1681,7 +1688,6 @@ iooia: | # F > i/o > input/output
         }
         !d.talk and throw "no dtalk"
         !d.path and debugger;
-        parse and throw "gref Unparsed: "+parse
         
         # bind params
         each i,pa d.path {
@@ -1699,7 +1705,13 @@ iooia: | # F > i/o > input/output
         
         #c gref/proper to filter/expand thus
         # < each [], as sort sip
-        #   sort?
+        #   
+        # < sort? after io lists a whole arky first?
+        #     we are called with each inside bunch (p.found)
+        # < ...
+        # should compile a single code to do the whole match...
+        #   then we can have logical expressions without the DIY
+        # 
         $compute = &a,b,c{
             b.orequal && b.op == 'gt' and return a >= c
             else
@@ -1719,8 +1731,10 @@ iooia: | # F > i/o > input/output
             # A value tested
             # B pa of operation
             # E value wanted
+            # C satisfied
             # D for dead
             each i,pa d.path {
+                i *= 1;
                 qa = d.path[i+1] || {}; # next
                 if (pa.Climb) {
                     # Climb C.$nk.$gk
@@ -1739,8 +1753,14 @@ iooia: | # F > i/o > input/output
                         if (f.B) {
                             # try and be complete statement
                             $r = compute(f.A,f.B,f.E);
-                            # A<E>E means !between(E,E), inducing an or
-                            !r && f.B.op == 'lt' && qa.op == 'gt' and r = 1
+                            if (f.B.op == 'lt' && qa.op == 'gt') {
+                                # A<E>E means !between(E,E), inducing an or
+                                if (r) {
+                                    f.C = 1;
+                                     break
+                                }
+                                else { r = 1 }
+                            }
                             delete f.B;
                             delete f.E;
                             !r and f.D = 1; break
@@ -1757,7 +1777,7 @@ iooia: | # F > i/o > input/output
                                 debugger; throw 'op to object';
                             }
                             elsif (typeof f.E == 'string' || typeof f.E == 'number') {
-                                if (f.E.match(/^\d(?:\.\d+)?$/)) {
+                                if (f.E.match(/^\d+(?:\.\d+)?$/)) {
                                     # implies for cv, <1
                                     f.A = n.y.cv;
                                     while (f.E >= 1) { f.E *= 0.1 }
@@ -1775,11 +1795,9 @@ iooia: | # F > i/o > input/output
                         !f.A and f.A = f.E;
                     }
                 }
-                A.debuggref and debugger;
-                f.D and break;
+                f.D || f.C and break;
                 delete f.E;
             }
-            #debugger;
             f.D and continue
             M.push(n)
         }
@@ -3196,6 +3214,14 @@ t/iooif: |
     m manys  $s:ay.sc,dl:6.32
     o $o/*/*
     a(0,"cv made interesting");    
+    i $o/not/seve@123
+    a(0,"word@cv");
+    o $o/*:mid/{>=123<=16
+    a(0,"cv between");
+    #A.debuggref = 1;
+    o $o/*:mid/{<=123>=16
+    a(0,"cv unbetween");
+    
     
     
     S 0
