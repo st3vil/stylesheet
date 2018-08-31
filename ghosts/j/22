@@ -1459,28 +1459,30 @@ iooia: | # F > i/o > input/output
         t.arky = t.arks.slice();
         # add anything else we can name but wasn't asked for
         t.nonarks = []; # arky !arks
-        $globs = 0;
+        $la; # last thing t !doof
         each i,pa t.path {
             !pa.t and continue
-            t.arky[pa.t] || pa.ark and continue
-            pa.glob and globs = i; # will never be 0, as i * implies i A.r/*
+            pa.doof and continue
+            la = pa;
+            pa.ark || t.arky.indexOf(pa.t) >= 0 and continue
+            # doof never implicit arks
             pa.t.match(/\W/) and continue
             t.arky.indexOf(pa.t) >= 0 and continue
             t.arky[i] = pa.t;
             t.nonarks[i] = pa.t;
         }
         
-        # < Babz S io must know this (** -> s)
-        if (globs) {
-            # may have a wasn't-asked-for name and s
-            $pa = t.path[globs];
-            if (!pa.ark && t.arky.indexOf('s') < 0) {
-                # see io.rowing/ps for more...
-                pa.wandering && t.path[globs-1] == pa.wandering and globs--
-                t.arky[globs] =
-                t.nonarks[globs] = 's';
-            }
+        # a word|glob !ark was last, known as s
+        #   may already have a wasn't-asked-for name
+        #   may already be another thing called s
+        if (la && (la.word || la.glob) && !la.ark && t.arky.indexOf('s') < 0) {
+            $i = t.path.indexOf(la);
+            i < 0 and throw "cant find last thing"
+            # see io.rowing/ps for more...
+            la.wandering && t.path[i-1] == la.wandering and i--
+            t.arky[i] = t.nonarks[i] = 's';
         }
+        
         if (!t.arky.length) {
             $i = t.path.length;
             while (t.path[--i]) {
