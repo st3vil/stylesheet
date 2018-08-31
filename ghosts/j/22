@@ -443,12 +443,17 @@ iooia: | # F > i/o > input/output
         #c 3 implications create path
         
         # adds to either end of the non-doof steps of the path
-        $patin = &t,s{ //}
+        $patin = &t,s{ //}}
             $la;
             each i,pa d.path {
-                t == 'push' and la && pa.doof and return d.path.splice(i,0,s)
-                else
-                t == 'unshift' and !pa.doof and return d.path.splice(i,0,s)
+                if (la && pa.doof) {
+                    t == 'push' and return d.path.splice(i,0,s)
+                    t == 'last' and return d.path[i-1]
+                }
+                elsif (!pa.doof) {
+                    t == 'unshift' and return d.path.splice(i,0,s)
+                    t == 'first' and return d.path[i-1]
+                }
                 !pa.doof and la = pa
             }
             d.path.push(s);
@@ -3393,27 +3398,42 @@ t/gref: |
     o $o/thirt/{s&ded=
     a(0,"unded thirt");
     
+    $wa = G&Cye,['wall',3,{},{madeof:'brick'}];
+    i $o/not/$wa
+    $wa = G&Cye,['path',3,{},{madeof:'stone'}];
+    i $o/not/$wa
+    a(0,"added not/wall+path");
     
-    if (0) {
-        i $o/thort/@mid/yalla y- o $o/*:mid/{@>13
-        a(0,">13 made mid island");
-        i $o/thoirt/@mid/@s y- o $o/*:mid/{@>13
-        a(0,">13 made another island");
-        i $o/thorrrt/@mid/glimp/@s/dahl/@s o $o/*:mid/{@>13
-        a(0,">13 made messyas island");
-    }
+    i $o/not/lunch
+    ays&s[0].sc.madeof = 'spanich';
+    i $o/not/computer
+    ays&s[0].sc.madeof = 'reason';
+    i $o/not/stylehouse
+    ays&s[0].sc.madeof = 'good reason';
+    i $o/not/broke
+    ays&s[0].sc.madeof = '0';
     
-    continue;
+    o $o/not/{s&madeof
+    a(0,"s\&madeof !null");
+    o $o/not/{s&madeof=
+    a(0,"s\&madeof null, oxymo");
     
-    $wa = G&Cye,['wall',3,{},{madeof:'stone'}];
-    i $o/not/$w
-    a(0,"added not/wall");
-    o $o/*:mid/{s&madeof=
-    a(0,"s\&madeof notnull");
+    o $o/not/{s&madeof~electr
+    a(0,"s\&madeof ~electr");
     
     
     # nakey, almost grepping Lines
     $similar_words = {brick:['mason','stone','rock']};
+    $similariser = &s{
+        $t = s;
+        t.replace(/s$/,'');
+        $alike = similar_words[s];
+        !alike and return t
+        alike = alike.slice();
+        alike.unshift(t);
+        return "["+alike.join('|')+"]"
+    };
+    
     # < deeper than string:
     #  io.divables.madeof.yaml=5
     #   and memo that as far as acts on it (via s) are knowable
@@ -3424,6 +3444,15 @@ t/gref: |
     
     
     
+    # < fancy-check-outiblalia should make easy sense of:
+    if (0) {
+        i $o/thort/@mid/yalla y- o $o/*:mid/{@>13
+        a(0,">13 made mid island");
+        i $o/thoirt/@mid/@s y- o $o/*:mid/{@>13
+        a(0,">13 made another island");
+        i $o/thorrrt/@mid/glimp/@s/dahl/@s o $o/*:mid/{@>13
+        a(0,">13 made messyas island");
+    }
     
     S 0
     # everytime dome:
