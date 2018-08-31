@@ -305,14 +305,24 @@ iooia: | # F > i/o > input/output
                 #   for .found on whatever step
                 #     abit{3/*{>1/*{c&of/*{s&of=i
                 # greffing
-                if (p(/\{([^\s\}]+\S*)\}?$/)) {
-                    pa.gref = m[0];
-                    $grefouter = parse;
+                if (p(/^(.*)\{([^\s\}]+\S*)\}?$/,'0')) {
+                    $nongref = parse;
+                    $other = m[0];
+                    pa.gref = m[1];
                     parse = pa.gref;
                     while (p(/\$(\w[\w\[\]\.]*)/)) {
                         (pa.grefpara ||= []).push(m[0]);
                     }
-                    parse = grefouter;
+                    # < for input (@ark{conditions) it wants to grep P after Pmod
+                    #   like a last minute doof
+                    if (other) {
+                        # < needs to hang off another step sometimes
+                        # p(...,'0') has left other in parse
+                        # it (pa) may have arks and go on to word etc.
+                        # < loosen any specificity we want to control
+                        #   word does glob_cv, for now
+                    }
+                    parse = nongref;
                     # implies globbing
                     parse == '' and parse = '*'
                 }
@@ -1103,16 +1113,20 @@ iooia: | # F > i/o > input/output
                 if (pa.v != null) {
                     typeof pa.v == 'string' and // word(s) called another name
                     else {
-                        throw "word with pa.v, not string",pa
+                        # should be C?
+                        !(pa.isC ||= io.isC(pa.v)) and throw "word with pa.v, not string or C",pa
                     }
                 }
                 else {
                     pa.v = pa.t;
                 }
-                $tys = pa.v.indexOf('@');
-                $t = tys >= 0 ? pa.v.slice(0,tys) : pa.v;
-                $cv = tys >= 0 ? pa.v.slice(tys+1) : 1;
-                pa.v = G&Cye,[t,cv];
+                if (typeof pa.v == 'string') {
+                    $tys = pa.v.indexOf('@');
+                    tys < 0 and pa.v = G&Cye,[pa.v,1]; pa.glob_cv = 1;
+                    else {
+                        pa.v = G&Cye,[pa.v.slice(0,tys),pa.v.slice(tys+1)]
+                    }
+                }
             }
             
             if (pa.doof) { # not a real step
@@ -1156,6 +1170,8 @@ iooia: | # F > i/o > input/output
                     # < i $h/*/something # just use many i/o
                     pa.glob && d.is != 'i' and D.meta = ['*','*']
                     else
+                    pa.glob_cv and D.meta = ['','*']
+                    else
                     pa.sark and // should have been figured by now?
                     # cos we want to input each thing via pa.v...
                     else
@@ -1197,7 +1213,7 @@ iooia: | # F > i/o > input/output
                 # p.nz shapely enough to nothing when nothing
             }
             else {
-                # new column of many - 
+                # new column of many -
                 if (pa.gref) {
                     # usually filtering what glob found
                     # < expanding foam
@@ -1648,10 +1664,21 @@ iooia: | # F > i/o > input/output
                 d.path.push(pa);
                 pa = {};
             };
+            # set A - left side
+            # < other stuff, universals
             if (p(/^(?:(\w+)&)(\w+)/) ||
             p(/^(?:C\.(\w+)\.)(\w+)/)) {
                 pa.Climb = [m[0],m[1]]; dpa()
             }
+            # short for {C.y.cv ...
+            if (p(/^@/)) {
+                pa.t = 'at-ycv';
+                pa.Climb = ['y','cv'];
+                pa.beA = 1;
+                dpa();
+            }
+            p(/^=/) and pa.op = 'eq'; dpa();
+            p(/^!=/) and pa.op = 'noteq'; dpa();
             p(/^>/) and pa.op = 'gt';
             p(/^</) and pa.op = 'lt';
             pa.op && p(/^=/) and pa.orequal = 1;
@@ -1661,12 +1688,7 @@ iooia: | # F > i/o > input/output
             # < on a second loop?
             p(/^\$(\w[\[\]\.\w]+)/) and pa.t = m[0]; dpa(1);
             p(/^(\w+)/) and pa.t = m[0]; pa.word = 1; dpa()
-            if (p(/^@/)) {
-                pa.t = 'at-ycv';
-                pa.Climb = ['y','cv'];
-                pa.beA = 1;
-                dpa();
-            }
+            
             if (p(/^~(.+)$/)) {
                 pa.op = 'regex';
                 $re = m[0];
@@ -1728,6 +1750,13 @@ iooia: | # F > i/o > input/output
         #   then we can have logical expressions without the DIY
         # 
         $compute = &a,b,c{
+            b.op == 'notnull' and return a != null
+            else
+            # < A must exist && not be c
+            b.op == 'noteq' and return a != c
+            else
+            b.op == 'eq' and return a == c
+            else
             b.orequal && b.op == 'gt' and return a >= c
             else
             b.orequal && b.op == 'lt' and return a <= c
@@ -3252,7 +3281,6 @@ t/iooif: |
     
     $o = 1s&ooo;
     
-    A.inpdebug = 1;
     i $o/yfully/ate@123
     i $o/yfully/ate@1221
     i $o/yfully/ate@12
@@ -3260,8 +3288,12 @@ t/iooif: |
     
     o $o/*:mid/{@~12
     a(0,"t any, cv in 12");
-    #o $o/*:mid/{ate@~12
-    #a(0,"t such, cv in 12");
+    o $o/*:mid/{=ate@~12
+    a(0,"t such, cv in 12");
+    o $o/*:mid/ate{@~12
+    debugger;
+    a.show.t = 1;
+    a(0,"also t such, cv in 12");
     
     
     S 0
