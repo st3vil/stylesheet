@@ -1701,6 +1701,9 @@ iooia: | # F > i/o > input/output
         }
         parse and debugger; throw "gref Unparsed: "+parse
         each i,pa d.path {
+            i *= 1;
+            $la = d.path[i-1] || {};
+            $qa = d.path[i+1] || {};
             if (pa.Climb) {
                 $nk = pa.Climb[0];
                 nk == 's' and nk == 'sc';
@@ -1709,6 +1712,11 @@ iooia: | # F > i/o > input/output
                 pa.nk = nk;
                 !nk and throw "no read nk/gk "+ki(pa)
                 gk != null and pa.gk = gk;
+            }
+            if (qa.word && pa.op && la.t == 'at-ycv') {
+                # or otherwise aiming at a fraction
+                # and the right side is whole numbery:
+                qa.t.match(/^\d+$/) and qa.t = "0."+qa.t
             }
         }
         return d
@@ -1750,8 +1758,6 @@ iooia: | # F > i/o > input/output
         #   then we can have logical expressions without the DIY
         # 
         $compute = &a,b,c{
-            b.op == 'notnull' and return a != null
-            else
             # < A must exist && not be c
             b.op == 'noteq' and return a != c
             else
@@ -1785,7 +1791,7 @@ iooia: | # F > i/o > input/output
             # D for dead
             each i,pa d.path {
                 i *= 1;
-                qa = d.path[i+1] || {}; # next
+                $qa = d.path[i+1] || {nothing:1}; # next
                 if (pa.Climb) {
                     # Climb C.$nk.$gk
                     !typeof n == 'object' and throw "cel nk/gk on nonobject", n
@@ -1802,10 +1808,23 @@ iooia: | # F > i/o > input/output
                     f.A = f.E;
                     delete f.E;
                 }
+                # E unstated E at end of path
+                $trick = 0;
+                if (qa.nothing && hak(f,'A') && hak(f,'B') && !hak(f,'E')) {
+                    # not null: s&thing!=
+                    #debugger;
+                    f.B.op == 'eq' || f.B.op == 'noteq' and f.E = null; trick=1;
+                    else
+                    # a positive number: s&inte>
+                    f.B.op == 'gt' || f.B.op == 'lt' and f.E = 0; trick=1;
+                }
                 while (hak(f,'E')) {
-                    hak(f,'A') && !A and f.D = 1
+                    # A must be true, unless E is untrue, so null=null
+                    hak(f,'A') && !f.A && !trick and f.D = 1
                     f.D and break;
-                    if (f.A) {
+                    A.grefbug and debugger;
+                    if (f.A || trick) {
+                        trick = 0;
                         if (f.B) {
                             # try and be complete statement
                             $r = compute(f.A,f.B,f.E);
@@ -1828,7 +1847,8 @@ iooia: | # F > i/o > input/output
                     else {
                         # no A yet: <E
                         if (f.B) {
-                            if (typeof f.E == 'object') {
+                            # null is an object
+                            if (f.E && typeof f.E == 'object') {
                                 # something universal waves at others
                                 debugger; throw 'op to object';
                             }
@@ -1848,7 +1868,10 @@ iooia: | # F > i/o > input/output
                             }
                         }
                         # A must be true
-                        !f.A and f.A = f.E;
+                        !f.A and f.A = f.E; delete f.E;
+                        # for not null: s&thing -> s&thing!=
+                        qa.nothing && hak(f,'A') && !f.B and f.B = {op:'noteq'}; f.E = null;
+                        qa.nothing && !hak(f,'A') and debugger;
                     }
                 }
                 f.D || f.C and break;
@@ -3312,7 +3335,67 @@ t/gref: |
     o $o/*:mid/{=ate
     a(0,"just t such, greffily, partial");
     
-    # not null?
+    
+    o $o/*:mid/{~te
+    a(0,"t like te");
+    o $o/*:mid/{~te$
+    a(0,"t like te$");
+    
+    S 4 nullism
+    
+    $o = 1s&ooo;
+    
+    o $o/*:mid/{s&guine>1
+    a(0,"s\&guine >1");
+    ays&s[1].sc.vol = '5';
+    
+    o $o/*:mid/{s&guine<=1
+    a(0,"s\&guine <=1");
+    ays&s[1].sc.vol = '3';
+    
+    o $o/*:mid/{s&guine
+    a(0,"s\&guine notnull");
+    ays&s[1].sc.vol = '2';
+    
+    o $o/*:mid/{s&vol
+    a(0,"s\&vol notnull");
+    o $o/*:mid/{s&vol!=
+    a(0,"s\&vol notnull longhand");
+    
+    #A.grefbug = 1;
+    o $o/*:mid/{@>13
+    a(0,">13");
+    i $o/thirt o $o/*:mid/{@>13
+    a(0,">13 made island");
+    i $o/thort/@mid/yalla o $o/*:mid/{@>13
+    a(0,">13 made mid island");
+    i $o/thoirt/@mid/@s o $o/*:mid/{@>13
+    a(0,">13 made another island");
+    i $o/thorrrt/@mid/glimp/@s/dahl/@s o $o/*:mid/{@>13
+    a(0,">13 made messyas island");
+    
+    
+    continue;
+    
+    $wa = G&Cye,['wall',3,{},{madeof:'stone'}];
+    i $o/not/$w
+    a(0,"added not/wall");
+    o $o/*:mid/{s&madeof=
+    a(0,"s\&madeof notnull");
+    
+    
+    # nakey, almost grepping Lines
+    $similar_words = {brick:['mason','stone','rock']};
+    # < deeper than string:
+    #  io.divables.madeof.yaml=5
+    #   and memo that as far as acts on it (via s) are knowable
+    #   and sc-only, only such kind of attribute, etc.
+    #  or their Line, which most things come from most of the time,
+    #   when the culture is sloshing
+    
+    
+    
+    
     
     S 0
     # everytime dome:
