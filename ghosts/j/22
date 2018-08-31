@@ -442,6 +442,18 @@ iooia: | # F > i/o > input/output
         }
         #c 3 implications create path
         
+        # adds to either end of the non-doof steps of the path
+        $patin = &t,s{ //}
+            $la;
+            each i,pa d.path {
+                t == 'push' and la && pa.doof and return d.path.splice(i,0,s)
+                else
+                t == 'unshift' and !pa.doof and return d.path.splice(i,0,s)
+                !pa.doof and la = pa
+            }
+            d.path.push(s);
+        };
+        
         # o word   implies   o A.r/word
         if (fi) {
             # first non-doofer
@@ -454,7 +466,7 @@ iooia: | # F > i/o > input/output
                 #   and so Domes and other tatters of process can be
                 #   undef'd after a point, or to some sense....
                 pa = {t:'r',implicit:1,v:A.r};
-                d.path.splice(d.path.indexOf(fi),0,pa);
+                patin('unshift',pa);
                 # should leave out of rows, being implied?
             }
         }
@@ -463,14 +475,15 @@ iooia: | # F > i/o > input/output
         if (d.is == 'o') {
             !fi and throw "no one?"
             if (d.path.length == 1 && fi.isparam)
-                d.path.push({t:'*',glob:1})
+                patin('push',{t:'*',glob:1})
         }
         
         # i $d o $o   implies   i $d/@s o $o/*:s
         if (d.plumb) {
             # < i $i/@#dee o $o/*:dee   to copy spacers
+            A.gottadebug and debugger;
             if (!d.path.filter(&pa{ return pa.sark || pa.wander }).length)
-                d.path.push({sark:1,t:'s'})
+                patin('push',{sark:1,t:'s'})
             # or, if d.plumb (iterator) has no ark:s
             #   < use path[-1] (default in d.plumb's h.Pmod's coli)
             #     should be here, where language sorts itself out
@@ -3341,6 +3354,7 @@ t/gref: |
     o $o/*:mid/{~te$
     a(0,"t like te$");
     
+    #c 444
     S 4 nullism
     
     $o = 1s&ooo;
@@ -3365,15 +3379,18 @@ t/gref: |
     #A.grefbug = 1;
     o $o/*:mid/{@>13
     a(0,">13");
-    i $o/thirt o $o/*:mid/{@>13
+    i $o/thirt y- o $o/*:mid/{@>13
     a(0,">13 made island");
-    i $o/thort/@mid/yalla o $o/*:mid/{@>13
-    a(0,">13 made mid island");
-    i $o/thoirt/@mid/@s o $o/*:mid/{@>13
-    a(0,">13 made another island");
-    i $o/thorrrt/@mid/glimp/@s/dahl/@s o $o/*:mid/{@>13
-    a(0,">13 made messyas island");
-    
+    o $o/thirt/**
+    a(0,"thirt island");
+    if (0) {
+        i $o/thort/@mid/yalla y- o $o/*:mid/{@>13
+        a(0,">13 made mid island");
+        i $o/thoirt/@mid/@s y- o $o/*:mid/{@>13
+        a(0,">13 made another island");
+        i $o/thorrrt/@mid/glimp/@s/dahl/@s o $o/*:mid/{@>13
+        a(0,">13 made messyas island");
+    }
     
     continue;
     
