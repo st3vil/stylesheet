@@ -1658,8 +1658,23 @@ iooia: | # F > i/o > input/output
             pa.op and dpa()
             
             # Babz should $1s&choo -> $choo by now
+            # < on a second loop?
             p(/^\$(\w[\[\]\.\w]+)/) and pa.t = m[0]; dpa(1);
-            p(/^(\w+)$/) and pa.t = m[0]; pa.word = 1; dpa();
+            p(/^(\w+)/) and pa.t = m[0]; pa.word = 1; dpa()
+            if (p(/^@/)) {
+                pa.t = 'at-ycv';
+                pa.Climb = ['y','cv'];
+                pa.beA = 1;
+                dpa();
+            }
+            if (p(/^~(.+)$/)) {
+                pa.op = 'regex';
+                $re = m[0];
+                # eg @~33 means in that subnet
+                re.match(/^\d+$/) and re = '^0\\.'+re
+                pa.regex = re;
+                dpa();
+            }
             was == parse || parse == '' and break
         }
         parse and debugger; throw "gref Unparsed: "+parse
@@ -1720,6 +1735,12 @@ iooia: | # F > i/o > input/output
             b.op == 'gt' and return a > c
             else
             b.op == 'lt' and return a < c
+            else
+            if (b.op == 'regex') {
+                !c and throw "bop regex no fE";
+                $re = c.constructor == RegExp ? c : new RegExp(c);
+                return re.test(a)
+            }
             else {
                 debugger; throw "what op "+b.op;
             }
@@ -1746,6 +1767,12 @@ iooia: | # F > i/o > input/output
                 # little/big value
                 pa.word || pa.isparam and f.E = pa.v
                 pa.op and f.B = pa
+                pa.regex and f.E = pa.regex;
+                # put to A, to be tested
+                if (pa.beA) {
+                    f.A = f.E;
+                    delete f.E;
+                }
                 while (hak(f,'E')) {
                     hak(f,'A') && !A and f.D = 1
                     f.D and break;
@@ -3172,7 +3199,6 @@ t/iooif: |
     a(0,'loade');
     
     S 2 fractions
-    # <
     $o = 1s&ooo;
     $gre = 'm';
     o $o/{>$gre
@@ -3222,6 +3248,20 @@ t/iooif: |
     o $o/*:mid/{<=123>=16
     a(0,"cv unbetween");
     
+    S 3 regexen
+    
+    $o = 1s&ooo;
+    
+    A.inpdebug = 1;
+    i $o/yfully/ate@123
+    i $o/yfully/ate@1221
+    i $o/yfully/ate@12
+    i $o/yfully/atee@12
+    
+    o $o/*:mid/{@~12
+    a(0,"t any, cv in 12");
+    #o $o/*:mid/{ate@~12
+    #a(0,"t such, cv in 12");
     
     
     S 0
