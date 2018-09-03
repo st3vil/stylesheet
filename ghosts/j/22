@@ -1609,6 +1609,7 @@ iooia: | # F > i/o > input/output
             return t;
         };
         #c ind: callback per item, flat list with depth...
+        # < not a branch of it
         t.ind = &cb{
             t.indstr ||= '  ';
             $la = [];
@@ -1747,13 +1748,14 @@ iooia: | # F > i/o > input/output
         }
         else {
             d ||= {};
+            # compile time
             io.parsegref(talk,params,d);
             d.talk = talk;
         }
         !d.talk and throw "no dtalk"
         !d.path and debugger;
         
-        # bind params
+        # bind params - compile and runtime
         each i,pa d.path {
             pa.word and pa.v = pa.t;
             !pa.isparam and continue
@@ -1767,7 +1769,23 @@ iooia: | # F > i/o > input/output
             return d
         }
         
-        #c gref/proper to filter/expand thus
+        (window.grefdone ||= []).push(d);
+        return io.grefstatemash(N,d);
+        # or run/compile codes,
+        # maybe drop path, reads like a parse tree, massive
+    };
+    
+    #c grefcode
+    # lazily written js 
+    io.codegref = &N,d{
+        # compile stage
+        # then run
+    };
+    #c grefstatemash
+    # done in a way nobody will want to maintain
+    #  doesn't much order the problem, but might?
+    io.grefstatemash = &N,d{
+        # gref/proper to filter/expand thus
         # < each [], as sort sip
         #   
         # < sort? after io lists a whole arky first?
@@ -1843,7 +1861,7 @@ iooia: | # F > i/o > input/output
                     # A must be true, unless pulling the is-null trick
                     hak(f,'A') && !f.A && !trick and f.D = 1
                     f.D and break;
-                    A.grefbug and debugger;
+                    #A.grefbug and debugger;
                     if (f.A || trick) {
                         trick = 0;
                         if (f.B) {
@@ -3222,7 +3240,7 @@ t/iooiatal: |
         ns&dos = 'grow';
         nc&dl ||= 8.22;
     }
-t/gref: |    
+t/gref: |
     ar.atavism = 1;
     $a = G&way,'t/iooiata',ar;
     $nz = a.nz;
@@ -3425,6 +3443,7 @@ t/gref: |
     a(0,"s\&madeof ~on");
     o $o/not/{s&madeof~tone
     a(0,"s\&madeof ~tone");
+    #A.grefbug = 1;
     o $o/not/{~tone
     a(0,"anything ~tone");
     o $o/not/{~good
@@ -3467,6 +3486,92 @@ t/gref: |
         a(0,">13 made messyas island");
     }
     
+    S 0
+    # everytime dome:
+    # perhaps not by being last but by being named
+    # has agenda to do slice of sequential or a certain name,
+    # or just run in to things.
+    each in M {
+        ns&hue || ns&pi and continue
+        nc&pi = 'fod';
+        ns&dos = 'grow';
+        nc&dl ||= 8.22;
+    }
+t/grefcodes: |
+    ar.atavism = 1;
+    $a = G&way,'t/iooiata',ar;
+    $nz = a.nz;
+    $io = A&io;
+    $make_codes = &N{
+        typeof N == 'string' and N = dey(N);
+        each in N {
+            # compile path from talk/params
+            $talk = n[0];
+            $params = n[1] || [];
+            $d = io.gref([],talk,params.slice(),{not:1});
+            $before = eny(d);
+            # and add code
+            io.codegref(d);
+            $aft = eny(n);
+            # to see what it adds
+            $dif = diff(before,aft);
+            a(9,"codegref: "+talk);
+            each im dif {
+                ms&hue = '80deg';
+                m.t == 'new' and ms&hue = '345deg';
+                m.t == 'gone' and ms&hue = '191deg';
+                m.t += " bit";
+                ms&ws = 'pre';
+                m $m
+            }
+        }
+    };
+    
+    S 1 gtlty
+    make_codes(<<'');
+    - - '>$gre'
+      - - m
+    - - <$gre
+      - - m
+    - - 
+    - - '>=3'
+    - - '>=123<=16'
+    - - <=123>=16
+    - - '@~12'
+    - - =ate@~12
+    - - '@~12'
+    - - =ate
+    - - =ate
+    #c regexity
+    S 2 regexy
+    make_codes(<<'');
+    - - ~te
+    - - ~te$
+    - - C.sc.guine>1
+    - - C.sc.guine<=1
+    - - C.sc.guine
+    - - C.sc.vol
+    - - C.sc.vol!=
+    - - '@>13'
+    - - '@>13'
+    - - C.sc.great=
+    - - C.sc.ded
+    - - C.sc.ded=
+    - - C.sc.madeof
+    - - C.sc.madeof=
+    - - C.sc.madeof~on
+    - - C.sc.madeof~tone
+    - - ~tone
+    - - ~good
+    - - ~brick
+    
+
+    #c buenoco
+    each in N {
+        
+    }
+    
+    # etc
     S 0
     # everytime dome:
     # perhaps not by being last but by being named

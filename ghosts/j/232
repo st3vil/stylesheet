@@ -182,14 +182,29 @@ says/Tri: | # code is said
     
 Sevo: |
     G&heading;
-    $s = "Glapsitic Blows";
-    $d = diff(s,"Vlapitutic Vowels");
-    n in 1 $s:d,ht:1 %dis:block
-    $d = diff(s,"Vlapitutic Vowels",{chunk:'line'});
-    n inline 1 $s:d,ht:1 %dis:block,hue:80deg
-    $d = diff(s,"Vlapitutic Vowels",{chunk:'word'});
-    n loz 1 $s:d,ht:1 %dis:block,hue:80deg
-    n nie 2 s:glapulism\sgaps %hue:40deg,fs:400%
+    
+    $io = G&way,'iooia';
+    
+    $N = uniq(window.grefdone);
+    #debugger;
+    each in N {
+        $params = [];
+        n = dey(eny(n));
+        n.path.map(&pa{ pa.isparam && params.push(pa.v) });
+        n.path.map(&pa{ delete pa.v });
+        $was = eny(n);
+        $d = io.gref([],n.talk,params.slice(),{not:1});
+        $to = eny(d)
+        if (was == to) {
+            $s = [n.talk];
+            params.length and s.push(params);
+            m works  $s:eny([s]),ht:1 %dis:block,fs:70%,ws:pre
+        }
+        else {
+            m diff  $s:was,ht:1 %dis:block,ws:pre
+            m diff  $s:to,ht:1 %dis:block,hue:50deg,ws:pre
+        }
+    }
 Sevoticate: |
     G&e,['Sevo'],['C+click','',{p:'t'}];
     T.ok = 1;

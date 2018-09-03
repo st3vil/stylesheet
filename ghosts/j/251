@@ -210,6 +210,8 @@ NutGravy: | # non-I routines: json, dig, diff
     # disable Hut's particling of c&W
     A.I.om.y.tw.W.c.code = &acgts{};
     
+    # data
+    
     # s=Object has keys, or has a d=key
     window.hak = &s,d{
         return d == null ? Object.keys(s).length : s.hasOwnProperty(d)
@@ -217,16 +219,37 @@ NutGravy: | # non-I routines: json, dig, diff
     window.ex = &s,d{
         return $.extend(s,d)
     };
+    # < for hash too?
+    window.uniq = &N{
+        $M = [];
+        each is N {
+            M.indexOf(s) >= 0 and continue
+            M.push(s);
+        }
+        return M;
+    };
+    
+    # encodings
     window.enj = &s{
         return JSON.stringify(s)
     };
     window.dej = &s{
         return $.parseJSON(s)
     };
+    # < depth/node limit
+    window.eny = &s{
+        return jsyaml.safeDump(s)
+    };
+    window.dey = &s{
+        return jsyaml.safeLoad(s)
+    };
+    
+    # the other hash
     window.dig = &s{
         return sha256(s).slice(0,12)
     };
     
+    # diffing
     window.dmp = new diff_match_patch();
     window.diff = &s,S,c{
         c ||= {};
@@ -264,6 +287,8 @@ NutGravy: | # non-I routines: json, dig, diff
         }
         return N
     };
+    # the example
+    # < make it use G&intag?
     window.diff_prettyHtml = &diffs{
         $html = [];
         $pattern_amp = /&/g;
