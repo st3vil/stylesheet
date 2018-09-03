@@ -1773,9 +1773,9 @@ iooia: | # F > i/o > input/output
             delete d.tocode;
             return io.codegref(N,d);
         }
-        A.grefbug and debugger;
         
-        (window.grefdone ||= []).push(d);
+        window.grefdone and window.grefdone.push(d);
+        
         return io.grefstatemash(N,d);
         # or run/compile codes,
         # maybe drop path, reads like a parse tree, massive
@@ -3513,7 +3513,39 @@ t/gref: |
         ns&dos = 'grow';
         nc&dl ||= 8.22;
     }
-t/grefcodes: |
+t/grefcodes: | #
+    # higher resolution of t/gref, using gref calls it makes
+    # shows diff as it compiles code for the path
+    # for development
+    # < easily updating test data
+    1s&ein ||= {};
+    1s&ein.update = &acgts{
+        if (0) { # update update
+            window.grefdone = [];
+            # run t/gref
+        }
+        $io = G&way,'iooia';
+        $N = uniq(window.grefdone);
+        each in N {
+            $params = [];
+            n = dey(eny(n));
+            n.path.map(&pa{ pa.isparam && params.push(pa.v) });
+            n.path.map(&pa{ delete pa.v });
+            $was = eny(n);
+            $d = io.gref([],n.talk,params.slice(),{not:1});
+            $to = eny(d)
+            if (was == to) {
+                $s = [n.talk];
+                params.length and s.push(params);
+                m works  $s:eny([s]),ht:1 %dis:block,fs:70%,ws:pre
+            }
+            else {
+                m diff  $s:was,ht:1 %dis:block,ws:pre
+                m diff  $s:to,ht:1 %dis:block,hue:50deg,ws:pre
+            }
+        }
+    };
+    
     ar.atavism = 1;
     $a = G&way,'t/iooiata',ar;
     $nz = a.nz;
