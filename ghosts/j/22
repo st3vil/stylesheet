@@ -1769,6 +1769,12 @@ iooia: | # F > i/o > input/output
             return d
         }
         
+        if (d.tocode) {
+            delete d.tocode;
+            return io.codegref(N,d);
+        }
+        A.grefbug and debugger;
+        
         (window.grefdone ||= []).push(d);
         return io.grefstatemash(N,d);
         # or run/compile codes,
@@ -1780,6 +1786,9 @@ iooia: | # F > i/o > input/output
     io.codegref = &N,d{
         # compile stage
         # then run
+        d.code = 'ed';
+        $M = N.slice();
+        return M;
     };
     #c grefstatemash
     # done in a way nobody will want to maintain
@@ -2717,7 +2726,12 @@ t/iooiata: | # func really
             return;
         }
         if (t == '9') {
-            m speech  $s:talk %hue:100deg,dis:block
+            m speech  $s:talk %hue:100deg,dis:block,fs:140%
+            return;
+        }
+        if (t == '7') {
+            # right hand hanging talk
+            m talk  $s:talk %fs:130%,hue:-40deg,dis:block,float:right,mw:50%
             return;
         }
         t && io[t](talk,params||[],{})
@@ -3301,11 +3315,13 @@ t/gref: |
     a(0,"t less than m");
     $eye = 1;
     $rein = [];
+    A.grefbug = 1;
     S indicate: o $o/*:be/{<g:es
         ++eye > 9 and continue
         es.y.cv = eye / 10;
         rein.indexOf(be) < 0 and rein.push(be);
     S
+    A.grefbug = 0;
     $noticeyt = &fore,be{
         $tee = fore+" "+be.t;
         $yt = [];
@@ -3502,20 +3518,28 @@ t/grefcodes: |
     $a = G&way,'t/iooiata',ar;
     $nz = a.nz;
     $io = A&io;
+    $ola = [
+        G&Cye,['ate',1234,{s:"good"},{madeof:'stone'}] ,
+        G&Cye,['ote',1234,{s:"good"},{madeof:'stone'}]
+    ];
     $make_codes = &N{
         typeof N == 'string' and N = dey(N);
         each in N {
             # compile path from talk/params
             $talk = n[0];
             $params = n[1] || [];
-            $d = io.gref([],talk,params.slice(),{not:1});
+            $d = io.gref(ola,talk,params.slice(),{not:1});
             $before = eny(d);
-            # and add code
-            io.codegref(d);
-            $aft = eny(n);
+            
+            # add code and do
+            d.tocode = 1;
+            $olar = io.gref(ola,talk,params.slice(),d);
+            # io.codegref(d); # ^ contains
+            $aft = eny(d);
             # to see what it adds
             $dif = diff(before,aft);
-            a(9,"codegref: "+talk);
+            a(7,talk);
+            a(9,"selected: "+olar.map(&s{ return s.t }).join(', '));
             each im dif {
                 ms&hue = '80deg';
                 m.t == 'new' and ms&hue = '345deg';
@@ -3524,6 +3548,7 @@ t/grefcodes: |
                 ms&ws = 'pre';
                 m $m
             }
+            a('')
         }
     };
     
@@ -3533,7 +3558,7 @@ t/grefcodes: |
       - - m
     - - <$gre
       - - m
-    - - 
+    - - <g
     - - '>=3'
     - - '>=123<=16'
     - - <=123>=16
@@ -3542,6 +3567,7 @@ t/grefcodes: |
     - - '@~12'
     - - =ate
     - - =ate
+    
     #c regexity
     S 2 regexy
     make_codes(<<'');
@@ -3565,12 +3591,6 @@ t/grefcodes: |
     - - ~good
     - - ~brick
     
-
-    #c buenoco
-    each in N {
-        
-    }
-    
     # etc
     S 0
     # everytime dome:
@@ -3589,7 +3609,7 @@ t/BuildACastle: | # test Duning and io
     # ones
 Fly: |
     G&heading;
-    G&way,'t/gref',ar;
+    G&way,'t/grefcodes',ar;
     return;
     
     1s&empathy = 4;
