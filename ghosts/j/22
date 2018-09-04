@@ -1785,6 +1785,99 @@ iooia: | # F > i/o > input/output
     # lazily written js 
     io.codegref = &N,d{
         # compile stage
+        each i,pa d.path {
+            pa.op and pa.tok = 'op'
+            else
+            pa.Climb and pa.tok = 'k'
+            else {
+                pa.tok = 'v'
+            }
+        }
+        $com = [];
+        $expr = [d.path.slice()];
+        $splitfour = &c{
+            $b = [];
+            b.push(c.shift());
+            b.push(c.shift());
+            expr.splice(0,0,b,c);
+        }
+        # limited by not parsing smaller bits of syntax off the front
+        #   instead each whole statement as tokens must be known to break down
+        # < RecDesc sometime.
+        while (expr.length) {
+            # what to match implied
+            $c = expr.shift();
+            # make summary of types of tokens
+            $l = c.map(&pa{ return pa.tok }).join(' ');
+            if (l == 'op v op v') {
+                # <or>, >and<
+                c[0].op == 'lt' && c[2].op == 'gt' and c[0].inanor = 1
+                splitfour(c);
+                continue
+            }
+            elsif (l == 'op v k op') {
+                splitfour(c);
+                continue
+            }
+            elsif (l == 'op v') {
+                $v = c[1];
+                $k = {tok:'k'}; c.unshift(k);
+                !hak(v,'v') and throw "must value"
+                # something universal waves at others
+                typeof v.v == 'object' and throw 'op to object';
+                # name/number fields discernible
+                if (typeof v.v == 'string' || typeof v.v == 'number') {
+                    if (v.v.match(/^\d+(?:\.\d+)?$/)) {
+                        k.Climb = ['y','cv'];
+                        while (v.v >= 1) { v.v *= 0.1 }
+                    }
+                    else {
+                        k.Climb = ['t'];
+                    }
+                }
+                else {
+                    throw "what do op,v imply?"
+                }
+            }
+            elsif (l == 'k') {
+                # s&great implies != null
+                c.push({tok:'op',op:'noteq'});
+                expr.unshift(c);
+                continue;
+            }
+            elsif (l == 'k op') {
+                if (c[1].op == 'regex') {
+                    # look like this
+                }
+                else {
+                    # nothing
+                    c.push({tok:'v',v:null,isnull:1});
+                }
+            }
+            else {
+                debugger;
+            }
+            com.push(c);
+        }
+        
+        # composited bracketed bits conjoin codily
+        $cod = [];
+        each i,c com {
+            $co = [];
+            $op;
+            each ii,pa c {
+                pa.tok == 'op' and op = pa
+                if (pa.tok == 'k') {
+                    
+                };
+            }
+            cod.push(co);
+            com[i-+-1] and cod.push(op.inanor ? '||' : '&&')
+        }
+        # for params, have to receive via d.path,
+        #   it can forget about everything else if it likes
+        # but the code we add
+        
         # then run
         d.code = 'ed';
         $M = N.slice();
