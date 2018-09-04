@@ -1714,6 +1714,7 @@ iooia: | # F > i/o > input/output
                 $re = m[0];
                 # eg @~33 means in that subnet
                 re.match(/^\d+$/) and re = '^0\\.'+re
+                # < look for $things in there and ...
                 pa.regex = re;
                 dpa();
             }
@@ -1862,8 +1863,13 @@ iooia: | # F > i/o > input/output
         }
         
         #c conjoin codelings
-        # once, potentially many calls... i cache grefs?
-        #   eg RegExp to build reusables once, 
+        # setup once per gref(), params may involve themselves?
+        #   eg RegExp to build reusable object, 
+        #     which may be a little too often still?
+        #   < need to know if it involves params to recompile it
+        #     have one that can i-cache, one that call-cachesas now?
+        #       reminds me of the many flavours of begin there used to be,
+        #       when names could just be a hash
         $begin = [];
         # things too cumbersome and checky to put in the last line
         #   throwings should be from insanity, 'return 0;' to fail match
@@ -1887,7 +1893,19 @@ iooia: | # F > i/o > input/output
             h[t] = s;
             return t
         };
-        each i,c com {
+        # stringifies any [] or [[],'||',[]] arrangement
+        $lineate = &L,di{
+            di ||= 0;
+            di < 15 and throw "Too many lineate";
+            $s = [];
+            each il L {
+                !l and throw "holes"
+                l.constructor == Array and l = '('+lineate(l,di-1)+')'
+                s.push(l)
+            }
+            return s.join(' ')
+        };
+        each ic com {
             $co = [];
             $op;
             each ii,pa c {
@@ -1909,6 +1927,7 @@ iooia: | # F > i/o > input/output
                                +t+" = "+from+"['"+limb+"'];"
                             );
                         }
+                        def.map(&s{ pre.push(s) });
                         
                         # turns into a var!
                         co.push(t);
@@ -1918,10 +1937,41 @@ iooia: | # F > i/o > input/output
                     }
                 }
                 elsif (pa.tok == 'op') {
-                
+                    if (pa.op == 'regex') {
+                        $leg = pa.regex && typeof pa.regex != 'object';
+                        !leg and throw "not seeing pa.regex"
+                        # appears on the gref()'s $d, at begin
+                        $t = decl(d,'regex');
+                        # \ doubling, quotationing
+                        $dub = enj(pa.regex);
+                        begin.push("d['"+t+"'] = new RegExp("+dub+");");
+                        # and to call it
+                        $arg = lineate(co);
+                        co = [];
+                        co.push("d['"+t+"'].test("+arg+")");
+                    }
+                    else {
+                        $symb =
+                        pa.op == 'noteq' ? '!=' :
+                        pa.op == 'eq' ? '==' :
+                        pa.orequal && pa.op == 'gt' ? ">=" :
+                        pa.orequal && pa.op == 'lt' ? "<=" :
+                        pa.op == 'gt' ? ">" :
+                        pa.op == 'lt' ? "<" :
+                            'ohno';
+                        symb == 'ohno' and throw "what op "+pa.op
+                        co.push(symb)
+                    }
                 }
                 elsif (pa.tok == 'v') {
-                
+                    if (pa.isparam) {
+                        # make plan to acquire it,
+                        # while aiming to drop d.path when compiled
+                        # only that params get consumed matters externally
+                        $t = decl((d.ar ||= {}), (pa.t||'value'));
+                        begin.push("d.ar["+t+"] = params.shift();");
+                        
+                    }
                 }
                 else {
                     throw "tok what? "+ki(pa)
@@ -1931,6 +1981,7 @@ iooia: | # F > i/o > input/output
             com[i-+-1] and cod.push(op.inanor ? '||' : '&&')
         }
         # for params, have to receive via d.path,
+        d.ar and begin.unshift("d.ar = {}");
         #   it can forget about everything else if it likes
         # but the code we add
         
