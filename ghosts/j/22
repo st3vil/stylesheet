@@ -1684,12 +1684,28 @@ iooia: | # F > i/o > input/output
                 d.path.push(pa);
                 pa = {};
             };
-            # set A - left side
-            # < other stuff, universals
+            
+            # got value - left side
+            
+            # point to s&thing, etc (Babzd)
+            # < name other things, universals
             if (p(/^(?:(\w+)&)(\w+)/) ||
             p(/^(?:C\.(\w+)\.)(\w+)/)) {
                 pa.Climb = [m[0],m[1]]; dpa()
             }
+            
+            # loose match, multiplies the rest of the code...
+            # so c* feeds C.c.*, keys and values,
+            # through the rest of the statement
+            # < lot to do with squishing sets of universals together
+            # < the treasure puzzle
+            # < find a Core/defined class of attribute,
+            # < resolve y-picture enough to find when in life something
+            if (p(/^(?:(\w)|%(\w+))%/)) {
+                pa.Calg = m[0] || m[1] || 1;
+                dpa();
+            }
+            
             # short for {C.y.cv ...
             if (p(/^@/)) {
                 pa.t = 'at-ycv';
@@ -1742,6 +1758,7 @@ iooia: | # F > i/o > input/output
         }
         return d
     };
+    #c gref
     io.gref = &N,talk,params,d{
         params ||= [];
         if (d && d.path) {
@@ -1756,12 +1773,14 @@ iooia: | # F > i/o > input/output
         !d.talk and throw "no dtalk"
         !d.path and debugger;
         
-        # bind params - compile and runtime
+        # bind params - compiletime/thusfar and runtime
+        $paramz = [];
         each i,pa d.path {
             pa.word and pa.v = pa.t;
             !pa.isparam and continue
             !params.length and throw "gref not enough params "+ki(pa)
             pa.v = params.shift();
+            paramz.push(pa.v);
         }
         params.length and throw "gref Too many params", params
         if (d.not) {
@@ -1770,9 +1789,11 @@ iooia: | # F > i/o > input/output
             return d
         }
         
+        # ne
+        
         if (d.tocode) {
             delete d.tocode;
-            return io.codegref(N,d);
+            return io.codegref(N,d,paramz);
         }
         
         window.grefdone and window.grefdone.push(d);
@@ -1784,12 +1805,12 @@ iooia: | # F > i/o > input/output
     
     #c grefcode
     # lazily written js 
-    io.codegref = &N,d{
+    io.codegref = &N,d,params{
         # compile stage
         each i,pa d.path {
             pa.op and pa.tok = 'op'
             else
-            pa.Climb and pa.tok = 'k'
+            pa.Climb || pa.Calg and pa.tok = 'k'
             else {
                 pa.tok = 'v'
             }
@@ -1856,6 +1877,12 @@ iooia: | # F > i/o > input/output
                     c.push({tok:'v',v:null,isnull:1});
                 }
             }
+            elsif (l == 'op') {
+                # a regex or so looking in/at sc.* and c&s
+                c.unshift({tok:'k',Calg:'%'});
+                expr.unshift(c);
+                continue;
+            }
             else {
                 debugger;
             }
@@ -1890,7 +1917,7 @@ iooia: | # F > i/o > input/output
             # if h != lets, dedupe/host names there as well
             $know = h[t] || lets[t];
             if (know) {
-                know == s and debugger; knowname = 1; return t
+                know == s and knowname = 1; return t
                 t = t+'2';
                 h[t] && h[t] != s and throw "need more names"
                 lets[t] && lets[t] != s and throw "need more names"
@@ -1910,10 +1937,10 @@ iooia: | # F > i/o > input/output
             }
             return s.join(' ')
         };
-        each ic com {
+        each comi,c com {
             $co = [];
             $op;
-            each ii,pa c {
+            each i,pa c {
                 $hadparam = 0;
                 #c central figure
                 pa.tok == 'op' and op = pa
@@ -1940,6 +1967,13 @@ iooia: | # F > i/o > input/output
                         }
                         # turns into a var!
                         co.push(t);
+                    }
+                    elsif (pa.Calg) {
+                        # < become multiplier...
+                        # io.Calg.1 for every bit of everything,
+                        # in rows!
+                        # eats the rest of the equation somehow...
+                        #co.push(
                     }
                     else {
                         throw "non Climb k"
@@ -1986,8 +2020,8 @@ iooia: | # F > i/o > input/output
                         # make plan to acquire it,
                         # aiming to drop d.path when compiled
                         # only that params get consumed matters
-                        begin.push("d.ar["+t+"] = params.shift();");
-                        pre.push("var "+t+" = d.ar["+t+"];");
+                        begin.push("d.ar['"+t+"'] = params.shift();");
+                        pre.push("var "+t+" = d.ar['"+t+"'];");
                         co.push(t);
                         hadparam = 1;
                     }
@@ -2003,7 +2037,7 @@ iooia: | # F > i/o > input/output
                 pa.isparam && !hadparam and throw "unhandled isparam"
             }
             cod.push(co);
-            com[i-+-1] and cod.push(op.inanor ? '||' : '&&')
+            com[comi-+-1] and cod.push(op.inanor ? '||' : '&&')
         }
         #c we collected vars coming from params
         delete d.path;
@@ -2053,9 +2087,9 @@ iooia: | # F > i/o > input/output
         if (!d.setup) {
             if (d.begin) {
                 typeof d.begin != 'string' and throw "begin not string"
-                d.begin = eval(d.begin);
+                eval('d.begin = '+d.begin);
             }
-            d.code = eval(d.code);
+            eval('d.code = '+d.code);
         }
         d.setup = 1;
         
@@ -3839,6 +3873,13 @@ t/grefcodes: | #
         G&Cye,['ote',1234,{},{madeof:'good',guine:2,vol:9,ded:1}] ,
         G&Cye,['lala',344,{s:"lal"},{madeof:0,guine:1}] ,
     ];
+    $subneut = &func{
+        !func and return null
+        $l = func.toString().split("\n");
+        !l.shift().match(/^function \(d,/) and throw "func start funny"
+        l.pop() != '}' and throw "func end funny"
+        return l.join("\n")
+    };
     $make_codes = &N{
         typeof N == 'string' and N = dey(N);
         each in N {
@@ -3852,6 +3893,9 @@ t/grefcodes: | #
             d.tocode = 1;
             $olar = io.gref(ola,talk,params.slice(),d);
             # io.codegref(d); # ^ contains
+            d.begin = subneut(d.begin);
+            d.code = subneut(d.code);
+            d.regex and d.regex = ''+d.regex
             $aft = eny(d);
             
             # also via statemash:
