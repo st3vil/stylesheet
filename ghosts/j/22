@@ -1901,7 +1901,7 @@ iooia: | # F > i/o > input/output
         # stringifies any [] or [[],'||',[]] arrangement
         $lineate = &L,di{
             di ||= 0;
-            di < 15 and throw "Too many lineate";
+            di < -15 and debugger; throw "Too many lineate";
             $s = [];
             each il L {
                 !l and throw "holes"
@@ -1980,13 +1980,14 @@ iooia: | # F > i/o > input/output
                         # make another lets just for params,
                         # make the code look more consistent, but isn't
                         # < it's more important they get their name? hard.
-                        $t = decl((d.ar ||= {}), (pa.t||'value'),1);
+                        d.ar ||= {};
+                        $t = decl(d.ar,pa.t||'value',1);
                         knowname and throw "Already know param?"
                         # make plan to acquire it,
                         # aiming to drop d.path when compiled
                         # only that params get consumed matters
                         begin.push("d.ar["+t+"] = params.shift();");
-                        pre.push("var "+t+" = d.ar["+t+"]");
+                        pre.push("var "+t+" = d.ar["+t+"];");
                         co.push(t);
                         hadparam = 1;
                     }
@@ -2004,21 +2005,73 @@ iooia: | # F > i/o > input/output
             cod.push(co);
             com[i-+-1] and cod.push(op.inanor ? '||' : '&&')
         }
-        # we collect things that might become vars
-        # for params, have to receive via d.path,
-        d.ar and begin.unshift("d.ar = {}");
-        delete d.ar;
+        #c we collected vars coming from params
         delete d.path;
-        # even d.talk
+        if (d.ar && d.ar.length) {
+            begin.unshift("d.ar = {};");
+            if (0) {
+                # if they didn't params.shift() at begin
+                d.path = [];
+                each k,v d.ar {
+                    # grabs param for d.ar.something
+                    d.path.push({t:k,isparam:1});
+                }
+            }
+        }
         
+        # codes hang on d such that d.code = eval(d.code),
+        #   then d.code(d,n) each n in N filters to M
+        # < they might like to know their position,
+        #    how much s&sand is in front of them...
+        #    the rolling crash of the matrix
+        # Babz must take them functions not strings,
+        #   in gref, in any pa of any io's d.path...
+        #   or we could emit their presence, a self-T
+        #   pass them as params instead?
+        if (begin.length) {
+            # d <- params
+            begin.unshift("function(d,params){");
+            begin.push("};");
+            d.begin = begin.join("\n");
+        }
         
-        #   it can forget about everything else if it likes
-        # but the code we add
+        !cod.length and throw "no cod?"
+        # the setup
+        $code = (pre||[]).slice();
+        # the final expression
+        code.push('return '+lineate(cod));
+        # <- d / n
+        code.unshift("function(d,n){");
+        code.push("};");
+        d.code = code.join("\n");
+        
+        # ~~
+        # Babz can drop/move out d.talk
+        # ~~
         
         # then run
-        d.code = 'ed';
-        $M = N.slice();
-        return M;
+        if (!d.setup) {
+            if (d.begin) {
+                typeof d.begin != 'string' and throw "begin not string"
+                d.begin = eval(d.begin);
+            }
+            d.code = eval(d.code);
+        }
+        d.setup = 1;
+        
+        d.begin and d.begin(d,params)
+        
+        $M = [];
+        $out = [];
+        each in N {
+            $r = d.code(d,n);
+            r and M.push(n)
+            else {
+                out.push(M)
+            }
+        }
+        
+        return M
     };
     #c grefstatemash
     # done in a way nobody will want to maintain
