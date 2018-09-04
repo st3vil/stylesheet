@@ -1801,6 +1801,7 @@ iooia: | # F > i/o > input/output
             b.push(c.shift());
             expr.splice(0,0,b,c);
         }
+        # hydrate tokens
         # limited by not parsing smaller bits of syntax off the front
         #   instead each whole statement as tokens must be known to break down
         # < RecDesc sometime.
@@ -1860,16 +1861,71 @@ iooia: | # F > i/o > input/output
             com.push(c);
         }
         
-        # composited bracketed bits conjoin codily
+        #c conjoin codelings
+        # once, potentially many calls... i cache grefs?
+        #   eg RegExp to build reusables once, 
+        $begin = [];
+        # things too cumbersome and checky to put in the last line
+        #   throwings should be from insanity, 'return 0;' to fail match
+        $pre = [];
+        # composited [bracketed bits], ('conjoin codily', [etc])*
         $cod = [];
+        # so all the checks, carefully accessed, on one line
+        # < notice surroundings too, with a lesser severity
+        #   an -od design goal
+        
+        # assign pool of variables
+        # their name -> code that defines them, so can dedupe
+        $lets = {};
+        $decl = &h,t,s{
+            $know = h[t];
+            if (know) {
+                know == s and return t
+                t = t+'2';
+                h[t] && h[t] != s and throw "need more names"
+            }
+            h[t] = s;
+            return t
+        };
         each i,c com {
             $co = [];
             $op;
             each ii,pa c {
                 pa.tok == 'op' and op = pa
                 if (pa.tok == 'k') {
-                    
-                };
+                    if (pa.Climb) {
+                        # check limb names are easily coded
+                        pa.Climb.map(&s{
+                            s.match(/[^\w\.\-]/) and throw "weird limb"
+                        });
+                        
+                        # set/climb to S from n
+                        $t = decl(lets,'S');
+                        $def = [];
+                        each i,limb pa.Climb {
+                            $from = i == 0 ? 'n' : t+' && '+t;
+                            def.push(
+                                (i==0 ? 'var ' : '')
+                               +t+" = "+from+"['"+limb+"'];"
+                            );
+                        }
+                        
+                        # turns into a var!
+                        co.push(t);
+                    }
+                    else {
+                        throw "non Climb k"
+                    }
+                }
+                elsif (pa.tok == 'op') {
+                
+                }
+                elsif (pa.tok == 'v') {
+                
+                }
+                else {
+                    throw "tok what? "+ki(pa)
+                }
             }
             cod.push(co);
             com[i-+-1] and cod.push(op.inanor ? '||' : '&&')
