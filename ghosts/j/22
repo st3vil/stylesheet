@@ -1881,16 +1881,21 @@ iooia: | # F > i/o > input/output
         #   an -od design goal
         
         # assign pool of variables
-        # their name -> code that defines them, so can dedupe
+        # their name -> code that defines them, so can dedupe code unpacking the same thing over and over
         $lets = {};
-        $decl = &h,t,s{
-            $know = h[t];
+        $knowname = 0;
+        $decl = &h,t,s{ //}}
+            knowname = 0; 
+            #di > 10 and throw "too much decl"
+            # if h != lets, dedupe/host names there as well
+            $know = h[t] || lets[t];
             if (know) {
-                know == s and return t
+                know == s and debugger; knowname = 1; return t
                 t = t+'2';
                 h[t] && h[t] != s and throw "need more names"
+                lets[t] && lets[t] != s and throw "need more names"
             }
-            h[t] = s;
+            h[t] = lets[t]= s;
             return t
         };
         # stringifies any [] or [[],'||',[]] arrangement
@@ -1909,7 +1914,10 @@ iooia: | # F > i/o > input/output
             $co = [];
             $op;
             each ii,pa c {
+                $hadparam = 0;
+                #c central figure
                 pa.tok == 'op' and op = pa
+                # got
                 if (pa.tok == 'k') {
                     if (pa.Climb) {
                         # check limb names are easily coded
@@ -1918,17 +1926,18 @@ iooia: | # F > i/o > input/output
                         });
                         
                         # set/climb to S from n
-                        $t = decl(lets,'S');
-                        $def = [];
-                        each i,limb pa.Climb {
-                            $from = i == 0 ? 'n' : t+' && '+t;
-                            def.push(
-                                (i==0 ? 'var ' : '')
-                               +t+" = "+from+"['"+limb+"'];"
-                            );
+                        $t = decl(lets,'S',enj(pa.Climb));
+                        if (!knowname) {
+                            $def = [];
+                            each i,limb pa.Climb {
+                                $from = i == 0 ? 'n' : t+' && '+t;
+                                def.push(
+                                    (i==0 ? 'var ' : '')
+                                   +t+" = "+from+"['"+limb+"'];"
+                                );
+                            }
+                            def.map(&s{ pre.push(s) });
                         }
-                        def.map(&s{ pre.push(s) });
-                        
                         # turns into a var!
                         co.push(t);
                     }
@@ -1936,15 +1945,17 @@ iooia: | # F > i/o > input/output
                         throw "non Climb k"
                     }
                 }
+                # compare
                 elsif (pa.tok == 'op') {
                     if (pa.op == 'regex') {
                         $leg = pa.regex && typeof pa.regex != 'object';
                         !leg and throw "not seeing pa.regex"
-                        # appears on the gref()'s $d, at begin
-                        $t = decl(d,'regex');
-                        # \ doubling, quotationing
+                        # \ magic, quotes
                         $dub = enj(pa.regex);
-                        begin.push("d['"+t+"'] = new RegExp("+dub+");");
+                        $regex = "new RegExp("+dub+");";
+                        
+                        $t = decl(lets,'regex',regex);
+                        !knowname and begin.push("d['"+t+"'] = "+regex);
                         # and to call it
                         $arg = lineate(co);
                         co = [];
@@ -1963,25 +1974,44 @@ iooia: | # F > i/o > input/output
                         co.push(symb)
                     }
                 }
+                # expected
                 elsif (pa.tok == 'v') {
                     if (pa.isparam) {
+                        # make another lets just for params,
+                        # make the code look more consistent, but isn't
+                        # < it's more important they get their name? hard.
+                        $t = decl((d.ar ||= {}), (pa.t||'value'),1);
+                        knowname and throw "Already know param?"
                         # make plan to acquire it,
-                        # while aiming to drop d.path when compiled
-                        # only that params get consumed matters externally
-                        $t = decl((d.ar ||= {}), (pa.t||'value'));
+                        # aiming to drop d.path when compiled
+                        # only that params get consumed matters
                         begin.push("d.ar["+t+"] = params.shift();");
-                        
+                        pre.push("var "+t+" = d.ar["+t+"]");
+                        co.push(t);
+                        hadparam = 1;
+                    }
+                    else {
+                        !pa.word and throw "What vealing?"
+                        !hak(pa,'v') and throw "should have some v?"
+                        co.push(enj(pa.v));
                     }
                 }
                 else {
                     throw "tok what? "+ki(pa)
                 }
+                pa.isparam && !hadparam and throw "unhandled isparam"
             }
             cod.push(co);
             com[i-+-1] and cod.push(op.inanor ? '||' : '&&')
         }
+        # we collect things that might become vars
         # for params, have to receive via d.path,
         d.ar and begin.unshift("d.ar = {}");
+        delete d.ar;
+        delete d.path;
+        # even d.talk
+        
+        
         #   it can forget about everything else if it likes
         # but the code we add
         
