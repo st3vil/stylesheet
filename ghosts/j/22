@@ -1828,28 +1828,30 @@ iooia: | # F > i/o > input/output
         #   instead each whole statement as tokens must be known to break down
         # < RecDesc sometime.
         while (expr.length) {
-            # what to match implied
             $c = expr.shift();
             # make summary of types of tokens
             $l = c.map(&pa{ return pa.tok }).join(' ');
-            if (l == 'op v op v') {
-                # <or>, >and<
+            # lots of what to match (k) implying
+            
+            if (l == 'k op v') {
+                # ideal/complete
+            }
+            elsif (l == 'op v k op') {
+                # too long, eg: >t@~33
+                splitfour(c);
+                continue
+            }
+            elsif (l == 'op v op v') {
+                # everything ands, only <3>5 can mean or
                 c[0].op == 'lt' && c[2].op == 'gt' and c[0].inanor = 1
                 splitfour(c);
                 continue
             }
-            # the >t@~33?
-            elsif (l == 'op v k op') {
-                splitfour(c);
-                continue
-            }
-            # >3?
             elsif (l == 'op v') {
+                # >3?
                 $v = c[1];
                 $k = {tok:'k'}; c.unshift(k);
                 !hak(v,'v') and throw "must value"
-                # something universal waves at others
-                typeof v.v == 'object' and throw 'op to object';
                 # name/number fields discernible
                 if (typeof v.v == 'string' || typeof v.v == 'number') {
                     if (v.v.match(/^\d+(?:\.\d+)?$/)) {
@@ -1861,6 +1863,7 @@ iooia: | # F > i/o > input/output
                     }
                 }
                 else {
+                    # something universal waves at others
                     throw "what do op,v imply?"
                 }
             }
@@ -1872,7 +1875,7 @@ iooia: | # F > i/o > input/output
             }
             elsif (l == 'k op') {
                 if (c[1].op == 'regex') {
-                    # look like this
+                    # look like this, pa.regex = string
                 }
                 else {
                     # nothing
