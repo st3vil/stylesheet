@@ -1935,15 +1935,11 @@ iooia: | # F > i/o > input/output
             return t
         };
         # stringifies any [] or [[],'||',[]] arrangement
-        $lineate = &L,di{
-            di ||= 0;
-            di < -15 and debugger; throw "Too many lineate";
-            $s = [];
-            each il L {
-                !l and throw "holes"
-                l.constructor == Array and l = '('+lineate(l,di-1)+')'
-                s.push(l)
-            }
+        
+        $linear = &L{
+            # around everything
+            $s = lineate(L,&l{ return lineate(['(',l,')']) });
+            # between everything
             return s.join(' ')
         };
         each comi,c com {
@@ -1999,7 +1995,7 @@ iooia: | # F > i/o > input/output
                         $t = decl(lets,'regex',regex);
                         !knowname and begin.push("d['"+t+"'] = "+regex);
                         # and to call it
-                        $arg = lineate(co);
+                        $arg = linear(co);
                         !arg.length and debugger;
                         co = [];
                         co.push("d['"+t+"'].test("+arg+")");
@@ -2053,62 +2049,47 @@ iooia: | # F > i/o > input/output
         Calgula.length > 1 and throw "Many calg?"
         
         # first/otherwise, compile everything
-        delete d.path;
         d.ar && d.ar.length and begin.unshift("d.ar = {};")
         
         # begin
         if (begin.length) {
-            # d <- params
-            begin.unshift("function(d,params){");
-            begin.push("};");
-            d.begin = begin.join("\n");
+            d.begin = lineate(["function(d,params){",begin,"};"]).join("\n");
         }
         
         !cod.length and throw "no cod?"
+        d.code = lineate([
+            "function(d,n){",
         # the setup
-        $code = (pre||[]).slice();
+            pre || [],
         # the final expression
-        code.push('return '+lineate(cod));
-        # <- d / n
-        code.unshift("function(d,n){");
-        code.push("};");
-        d.code = code.join("\n");
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+            "return "+linear(cod),
+            "};",
+        ]).join("\n");
         
         
         
         each i,pa Calgula {
-            Calgula
+            #
+            #debugger;
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         }
-        
-        
-        
-        #c we collected vars coming from params
         
         delete d.path;
-        if (d.ar && d.ar.length) {
-            begin.unshift("d.ar = {};");
-            if (0) {
-                # if they didn't params.shift() at begin
-                d.path = [];
-                each k,v d.ar {
-                    # grabs param for d.ar.something
-                    d.path.push({t:k,isparam:1});
-                }
-            }
-        }
+        
+        
+        #c we collect vars coming from params
         
         # codes hang on d such that d.code = eval(d.code),
         #   then d.code(d,n) each n in N filters to M
