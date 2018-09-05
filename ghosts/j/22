@@ -1761,51 +1761,77 @@ iooia: | # F > i/o > input/output
     #c gref
     io.gref = &N,talk,params,d{
         params ||= [];
-        if (d && d.path) {
+        $wouldeat = [];
+        if (d && d.code) {
             d.talk = talk;
         }
         else {
             d ||= {};
             # compile time
             io.parsegref(talk,params,d);
+            !d.path and debugger;
+            d.path.map(&pa{
+                pa.isparam and wouldeat.push(1)
+            });
+            io.codegref(d);
             d.talk = talk;
         }
         !d.talk and throw "no dtalk"
-        !d.path and debugger;
+        !d.code and debugger;
         
-        # bind params - compiletime/thusfar and runtime
-        $paramz = [];
-        each i,pa d.path {
-            pa.word and pa.v = pa.t;
-            !pa.isparam and continue
-            !params.length and throw "gref not enough params "+ki(pa)
-            pa.v = params.shift();
-            paramz.push(pa.v);
-        }
-        params.length and throw "gref Too many params", params
         if (d.not) {
+            # must eat params
+            wouldeat.map(&s{
+                !params.length and throw "gref not enough params "+ki(pa)
+                params.shift();
+            });
+            params.length and throw "gref Too many params", params
+            
             delete d.not;
-            d.path.map(&pa{ delete pa.v });
             return d
         }
         
-        # ne
+        # we collect vars coming from params
         
-        if (d.tocode) {
-            delete d.tocode;
-            return io.codegref(N,d,paramz);
+        # codes hang on d such that d.code = eval(d.code),
+        #   then d.code(d,n) each n in N filters to M
+        # < they might like to know their position,
+        #    how much s&sand is in front of them...
+        #    the rolling crash of the matrix
+        # Babz must take them functions not strings,
+        #   in gref, in any pa of any io's d.path...
+        #   or we could emit their presence, a self-T
+        #   pass them as params instead?
+        
+        # ~~
+        # Babz can drop/move out d.talk
+        # ~~
+        
+        if (typeof d.code != 'function') {
+            d.begin and eval('d.begin = '+d.begin);
+            d.code2 and eval('d.code2 = '+d.code2);
+            eval('d.code = '+d.code);
         }
+        
+        d.begin and d.begin(d,params)
         
         window.grefdone and window.grefdone.push(d);
         
-        return io.grefstatemash(N,d);
-        # or run/compile codes,
-        # maybe drop path, reads like a parse tree, massive
+        # < group by r?
+        $M = [];
+        $rs = [];
+        $out = [];
+        each in N {
+            $r = d.code(d,n);
+            r ? rs.push(r) && M.push(n) : out.push(n)
+        }
+        
+        return M
     };
     
     #c grefcode
     # lazily written js 
-    io.codegref = &N,d,params{
+    io.codegref = &d{
         # compile stage
         each i,pa d.path {
             pa.op and pa.tok = 'op'
@@ -1851,20 +1877,18 @@ iooia: | # F > i/o > input/output
                 # >3?
                 $v = c[1];
                 $k = {tok:'k'}; c.unshift(k);
-                !hak(v,'v') and throw "must value"
                 # name/number fields discernible
-                if (typeof v.v == 'string' || typeof v.v == 'number') {
-                    if (v.v.match(/^\d+(?:\.\d+)?$/)) {
-                        k.Climb = ['y','cv'];
-                        while (v.v >= 1) { v.v *= 0.1 }
-                    }
-                    else {
-                        k.Climb = ['t'];
-                    }
+                if (hak(v,'v') && (typeof v.v == 'string'
+                                || typeof v.v == 'number') 
+                    && v.v.match(/^\d+(?:\.\d+)?$/)) {
+                    k.Climb = ['y','cv'];
+                    while (v.v >= 1) { v.v *= 0.1 }
                 }
                 else {
-                    # something universal waves at others
-                    throw "what do op,v imply?"
+                    k.Climb = ['t'];
+                    # < clever for param not there yet
+                    # if ref? something universal waves at others
+                    #throw "what do op,v imply?"
                 }
             }
             elsif (l == 'op') {
@@ -2035,7 +2059,7 @@ iooia: | # F > i/o > input/output
                     }
                     else {
                         !pa.word and throw "What vealing?"
-                        !hak(pa,'v') and throw "should have some v?"
+                        !pa.v && !hak(pa,'v') and pa.v = pa.t
                         co.push(enj(pa.v));
                     }
                 }
@@ -2091,40 +2115,9 @@ iooia: | # F > i/o > input/output
         }
         
         delete d.path;
-        
-        
-        #c we collect vars coming from params
-        
-        # codes hang on d such that d.code = eval(d.code),
-        #   then d.code(d,n) each n in N filters to M
-        # < they might like to know their position,
-        #    how much s&sand is in front of them...
-        #    the rolling crash of the matrix
-        # Babz must take them functions not strings,
-        #   in gref, in any pa of any io's d.path...
-        #   or we could emit their presence, a self-T
-        #   pass them as params instead?
-        
-        # ~~
-        # Babz can drop/move out d.talk
-        # ~~
-        
-        if (typeof d.code != 'function') {
-            d.begin and eval('d.begin = '+d.begin);
-            d.code2 and eval('d.code2 = '+d.code2);
-            eval('d.code = '+d.code);
-        }
-        
-        d.begin and d.begin(d,params)
-        
-        $M = [];
-        $out = [];
-        each in N {
-            $r = d.code(d,n);
-            r ? M.push(n) : out.push(n)
-        }
-        
-        return M
+        # d is now storable/simple as possible
+        # < not assigning each step of paths
+        #   could everything be one line?
     };
     #c grefstatemash
     # done in a way nobody will want to maintain
@@ -3906,47 +3899,25 @@ t/grefcodes: | #
             $talk = n[0];
             $params = n[1] || [];
             $d = io.gref(ola,talk,params.slice(),{not:1});
-            $before = eny(d);
             
             # add code and do
-            d.tocode = 1;
             $olar = io.gref(ola,talk,params.slice(),d);
-            # io.codegref(d); # ^ contains
             d.begin and d.begin = subneut(d.begin);
             d.code and d.code = subneut(d.code);
             d.code2 and d.code2 = subneut(d.code2);
             d.regex and d.regex = ''+d.regex
             $aft = eny(d);
             
-            # also via statemash:
-            $sm = dey(before);
-            $smar = io.gref(ola,talk,params.slice(),sm);
-            sm.path.map(&pa{ delete pa.v });
-            $smaft = eny(sm);
-            before != smaft and a(9,"d differs after"); debugger;
-            
-            # to see what it adds
+            # < to see what it changes when compiling was cool
+            #   was two-step parsing + coding, now kinda one
             #$dif = diff(before,aft,{chunk:'word',edar:16});
+            
             a(7,talk);
-            $exp = smar.map(&s{ return s.t }).join(',');
             $got = olar.map(&s{ return s.t }).join(',');
-            a(9,"expected: "+exp);
             a(9,"selected: "+got);
-            $src =
-            m source  $s:before %hue:33deg,ws:pre,fs:33%
             $com =
             m compiled  $s:aft %hue:345deg,ws:pre,fs:80%
-            exp != got and coms&hue = '191deg'; srcs&fs = '88%';
             
-            $dif = [];
-            each im dif {
-                ms&hue = '80deg';
-                m.t == 'new' and ms&hue = '345deg';
-                m.t == 'gone' and ms&hue = '191deg';
-                m.t += " bit";
-                ms&ws = 'pre';
-                m $m
-            }
             a('')
         }
     };
