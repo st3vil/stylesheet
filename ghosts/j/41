@@ -147,12 +147,19 @@ JaBabz: | # make hutscript javascript
     # blockquote til /^\s*$/g
     # multi line, always \n$
     # supposed to not babz anything in it...
-    # < stylehouse (the editor) must know this,
-    #   or it'll expand them to up to 4 spaces
-    my $quote = "''";
-    c&s =~ s{^($nlp)<<$quote($nlp)\n((?:$nlp\n)+)[ \t]*\n}{
-        my $line = $1."BlockQuote$2\n";
-        my $was = $3;
+    # < stylehouse (the editor) must know this too
+    #     or it'll expand tabs to 4 spaces
+    c&s =~ s{^(\s*)($nlp)<<(''|"")($nlp?)\n((?:$nlp\n)+)[ \t]*\n}{
+        my $babin = $3 eq '""';
+        my $ind = $1 || '';
+        my $line = $1.$2."BlockQuote$4\n";
+        my $was = $5;
+        $was =~ s/^$ind//sgm;
+        if ($babin) {
+            my $C = {c=>{s=>$was}};
+            Rw JaBabz $C;
+            $was = c&s;
+        }
         my $lines = [split /\n/, $was];
         $lines->[-1] eq '' && pop @$lines;
         # not always?
@@ -160,9 +167,9 @@ JaBabz: | # make hutscript javascript
         $lines = join "+\n", map {
             # HACK, tabs expanded by editor
             s/ {8,}/\t\t\t/g;
-            $jstring->("$_\n")
+            $ind.$jstring->("$_\n")
         } @$lines;
-        $lines = "var BlockQuote =\n$lines;";
+        $lines = $ind."var BlockQuote =\n$lines;";
         my $dig = dig($lines);
         $hide->{$dig} = $lines;
         "HIDING:$dig\n$line";
@@ -577,9 +584,9 @@ JaBabz: | # make hutscript javascript
     
     # tiny sub maker, &raw,args{
     # TODO any >1 noncomma args split
-    c&s =~ s/([^G&])&acgts\{/$1function(A,C,G,T,s){/gm;
-    c&s =~ s/([^G&])&acgt\{/$1function(A,C,G,T){/gm;
-    c&s =~ s/([^G&])&(\w*(,\w+)*)\{/$1function($2){/gm;
+    c&s =~ s/([^G&]|^)&acgts\{/$1function(A,C,G,T,s){/gm;
+    c&s =~ s/([^G&]|^)&acgt\{/$1function(A,C,G,T){/gm;
+    c&s =~ s/([^G&]|^)&(\w*(,\w+)*)\{/$1function($2){/gm;
     
     # $thing -> var thing
     #  doesn't see '$get # vardescript', see # -> //
@@ -793,11 +800,15 @@ jst: | # test js babbler
         $o = G&readLines,<<'';
         yruva        
           glangic            boogie:3
-            tibe        
+            tibe     s&certainty
             ttt            eel:33
         G&op;
         G&Enticing,Babils and throw
         1
+        
+        etc
+            $o = G&readLines,<<"";
+              sense s&certainty
         
         # 20th century
         o va:{ seen.push(C); vat(C) }:klass 1s&cee/*:va/*:doop
@@ -951,12 +962,16 @@ jst: | # test js babbler
         var BlockQuote =
         "yruva\t\t\t\n"+
         "  glangic\t\t\tboogie:3\n"+
-        "    tibe\t\t\t\n"+
+        "    tibe     s&certainty\n"+
         "    ttt\t\t\teel:33\n"+
         "G&op;\n"+
         "G&Enticing,Babils and throw\n"+
         "1\n";
         var o = G.h(A,C,G,T,'readLines',BlockQuote);
+        etc
+            var BlockQuote =
+            "  sense C.sc.certainty\n";
+            var o = G.h(A,C,G,T,'readLines',BlockQuote);
         // 20th century
         var ay = io.o("va:{}:klass $cee/*:va/*:doop",[function(A,C,G,T,s){  seen.push(C); return vat(C)  },A[1].sc.cee]); var klass = ay.sc.klass; var va = ay.sc.va; var doop = ay.sc.doop;
         var ay = io.i("$o/not/stylehouse",[o]); var o = ay.sc.o; var not = ay.sc.not; var s = ay.sc.s;
