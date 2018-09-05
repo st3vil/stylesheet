@@ -1867,6 +1867,13 @@ iooia: | # F > i/o > input/output
                     throw "what do op,v imply?"
                 }
             }
+            elsif (l == 'op') {
+                # a regex or so looking in/at sc.* and c&s
+                # < OR, test t?
+                c.unshift({tok:'k',Calg:1});
+                expr.unshift(c);
+                continue;
+            }
             elsif (l == 'k') {
                 # s&great implies != null
                 c.push({tok:'op',op:'noteq'});
@@ -1881,12 +1888,6 @@ iooia: | # F > i/o > input/output
                     # nothing
                     c.push({tok:'v',v:null,word:1,isnull:1});
                 }
-            }
-            elsif (l == 'op') {
-                # a regex or so looking in/at sc.* and c&s
-                c.unshift({tok:'k',Calg:1});
-                expr.unshift(c);
-                continue;
             }
             else {
                 debugger;
@@ -1911,6 +1912,9 @@ iooia: | # F > i/o > input/output
         # so all the checks, carefully accessed, on one line
         # < notice surroundings too, with a lesser severity
         #   an -od design goal
+        
+        # also, modulate multiplicity
+        $Calgula = [];
         
         # assign pool of variables
         # their name -> code that defines them, so can dedupe code unpacking the same thing over and over
@@ -1975,10 +1979,9 @@ iooia: | # F > i/o > input/output
                     }
                     elsif (pa.Calg) {
                         # < become multiplier...
-                        # io.Calg.1 for every bit of everything,
-                        # in rows!
-                        # eats the rest of the equation somehow...
-                        #  co.push("
+                        # let the code build around, back later
+                        co.push('n');
+                        Calgula.push(pa);
                     }
                     else {
                         throw "non Climb k"
@@ -1997,6 +2000,7 @@ iooia: | # F > i/o > input/output
                         !knowname and begin.push("d['"+t+"'] = "+regex);
                         # and to call it
                         $arg = lineate(co);
+                        !arg.length and debugger;
                         co = [];
                         co.push("d['"+t+"'].test("+arg+")");
                     }
@@ -2044,7 +2048,55 @@ iooia: | # F > i/o > input/output
             cod.push(co);
             com[comi-+-1] and cod.push(op.inanor ? '||' : '&&')
         }
+        
+        #c fin, Calgula etc
+        Calgula.length > 1 and throw "Many calg?"
+        
+        # first/otherwise, compile everything
+        delete d.path;
+        d.ar && d.ar.length and begin.unshift("d.ar = {};")
+        
+        # begin
+        if (begin.length) {
+            # d <- params
+            begin.unshift("function(d,params){");
+            begin.push("};");
+            d.begin = begin.join("\n");
+        }
+        
+        !cod.length and throw "no cod?"
+        # the setup
+        $code = (pre||[]).slice();
+        # the final expression
+        code.push('return '+lineate(cod));
+        # <- d / n
+        code.unshift("function(d,n){");
+        code.push("};");
+        d.code = code.join("\n");
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        each i,pa Calgula {
+            Calgula
+        }
+        
+        
+        
         #c we collected vars coming from params
+        
         delete d.path;
         if (d.ar && d.ar.length) {
             begin.unshift("d.ar = {};");
@@ -2067,22 +2119,6 @@ iooia: | # F > i/o > input/output
         #   in gref, in any pa of any io's d.path...
         #   or we could emit their presence, a self-T
         #   pass them as params instead?
-        if (begin.length) {
-            # d <- params
-            begin.unshift("function(d,params){");
-            begin.push("};");
-            d.begin = begin.join("\n");
-        }
-        
-        !cod.length and throw "no cod?"
-        # the setup
-        $code = (pre||[]).slice();
-        # the final expression
-        code.push('return '+lineate(cod));
-        # <- d / n
-        code.unshift("function(d,n){");
-        code.push("};");
-        d.code = code.join("\n");
         
         # ~~
         # Babz can drop/move out d.talk
@@ -3898,8 +3934,8 @@ t/grefcodes: | #
             d.tocode = 1;
             $olar = io.gref(ola,talk,params.slice(),d);
             # io.codegref(d); # ^ contains
-            d.begin = subneut(d.begin);
-            d.code = subneut(d.code);
+            d.begin and d.begin = subneut(d.begin);
+            d.code and d.code = subneut(d.code);
             d.regex and d.regex = ''+d.regex
             $aft = eny(d);
             
@@ -3911,11 +3947,19 @@ t/grefcodes: | #
             before != smaft and a(9,"d differs after"); debugger;
             
             # to see what it adds
-            $dif = diff(before,aft);
+            #$dif = diff(before,aft,{chunk:'word',edar:16});
             a(7,talk);
-            a(9,"expected: "+smar.map(&s{ return s.t }).join(','));
-            a(9,"selected: "+olar.map(&s{ return s.t }).join(','));
+            $exp = smar.map(&s{ return s.t }).join(',');
+            $got = olar.map(&s{ return s.t }).join(',');
+            a(9,"expected: "+exp);
+            a(9,"selected: "+got);
+            $src =
+            m source  $s:aft %hue:33deg,ws:pre,fs:66%
+            $com =
+            m compiled  $s:aft %hue:345deg,ws:pre,fs:80%
+            exp != got and com.hue = '191deg'
             
+            $dif = [];
             each im dif {
                 ms&hue = '80deg';
                 m.t == 'new' and ms&hue = '345deg';
