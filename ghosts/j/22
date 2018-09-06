@@ -1923,16 +1923,17 @@ iooia: | # F > i/o > input/output
         }
         
         #c conjoin codelings
-        # setup once per gref(), params may involve themselves?
-        #   eg RegExp to build reusable object, 
-        #     which may be a little too often still?
-        #   < need to know if it involves params to recompile it
-        #     have one that can i-cache, one that call-cachesas now?
-        #       reminds me of the many flavours of begin there used to be,
-        #       when names could just be a hash
+        # begin for set up
+        #   params shift to d.ar.$t
+        #   and RegExp build (reusable objects)
+        #     begin may split a slower level to i-cache (t)
+        #     if we don't involve params in the RegExp, etc
+        #        which is unsupported but near happening
+        #     reminds me of the many flavours of begin there used to be,
+        #     when ghost could be a hash, since yaml
         $begin = [];
         # things too cumbersome and checky to put in the last line
-        #   throwings should be from insanity, 'return 0;' to fail match
+        #   throwings should be from insanity, return 0 to fail match
         $pre = [];
         # composited [bracketed bits], ('conjoin codily', [etc])*
         $cod = [];
@@ -2043,15 +2044,11 @@ iooia: | # F > i/o > input/output
                 # expected
                 elsif (pa.tok == 'v') {
                     if (pa.isparam) {
-                        # make another lets just for params,
-                        # make the code look more consistent, but isn't
                         # < it's more important they get their name? hard.
                         d.ar ||= {};
                         $t = decl(d.ar,pa.t||'value',1);
                         knowname and throw "Already know param?"
-                        # make plan to acquire it,
-                        # aiming to drop d.path when compiled
-                        # only that params get consumed matters
+                        # params get consumed
                         begin.push("d.ar['"+t+"'] = params.shift();");
                         pre.push("var "+t+" = d.ar['"+t+"'];");
                         co.push(t);
@@ -2119,9 +2116,10 @@ iooia: | # F > i/o > input/output
         # < not assigning each step of paths
         #   could everything be one line?
     };
-    #c grefstatemash
+    #c grefstatemash DEAD
     # done in a way nobody will want to maintain
     #  doesn't much order the problem, but might?
+    #  gets a couple of things wrong like <or>, ...
     io.grefstatemash = &N,d{
         # gref/proper to filter/expand thus
         # < each [], as sort sip
