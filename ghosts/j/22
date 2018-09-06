@@ -1877,11 +1877,11 @@ iooia: | # F > i/o > input/output
                 # >3?
                 $v = c[1];
                 $k = {tok:'k'}; c.unshift(k);
-                # name/number fields discernible
-                if (hak(v,'v') && (typeof v.v == 'string'
-                                || typeof v.v == 'number') 
-                    && v.v.match(/^\d+(?:\.\d+)?$/)) {
+                # name/number fields discernible if v is, !param
+                !hak(v,'v') && v.word and v.v = v.t;
+                if (v.v && isnum(v.v)) {
                     k.Climb = ['y','cv'];
+                    # < other places this etc type imposition can be...
                     while (v.v >= 1) { v.v *= 0.1 }
                 }
                 else {
@@ -2057,6 +2057,8 @@ iooia: | # F > i/o > input/output
                     else {
                         !pa.word and throw "What vealing?"
                         !pa.v && !hak(pa,'v') and pa.v = pa.t
+                        if (pa.v != null && isnum(pa.v))
+                            pa.v = (pa.v*1).toPrecision(8)*1
                         co.push(enj(pa.v));
                     }
                 }
@@ -3750,21 +3752,23 @@ t/gref: |
     ays&s[1].sc.vol = '5';
     
     o $o/*:mid/{s&guine<=1
+    a.show.t = 1;
     a(0,"s\&guine <=1");
     ays&s[1].sc.vol = '3';
     
     o $o/*:mid/{s&guine
-    a(0,"s\&guine notnull");
+    a(0,"s\&guine true");
     ays&s[1].sc.vol = '2';
     
     o $o/*:mid/{s&vol
-    a(0,"s\&vol notnull");
+    a(0,"s\&vol true");
     o $o/*:mid/{s&vol!=
-    a(0,"s\&vol notnull longhand");
+    a(0,"s\&vol notnull");
     
     #A.grefbug = 1;
     o $o/*:mid/{@>13
     a(0,">13");
+    a.show.t = 0;
     i $o/thirt y- o $o/*:mid/{@>13
     a(0,">13 made island");
     o $o/thirt/**
@@ -3994,7 +3998,7 @@ t/BuildACastle: | # test Duning and io
     # ones
 Fly: |
     G&heading;
-    G&way,'t/grefcodes',ar;
+    G&way,'t/gref',ar;
     return;
     
     1s&empathy = 4;
@@ -4081,6 +4085,9 @@ pi/fod: | # a js J, shows a J-shaped bit of data, to aspect serialising change
         $p = es.grefd;
         delete es.grefd;
         m grefd -fod $s:p,d:3,dl:7
+        $code = p.code2 || p.code;
+        code = ''+code;
+        m code  $s:code %ws:pre,dis:block,ml:5em
     }
     
     
