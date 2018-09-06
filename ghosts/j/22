@@ -295,6 +295,9 @@ iooia: | # F > i/o > input/output
                 
                 # set var/name column from path bit
                 p(/:(\w*)$/) and pa.ark = m[0] || 1
+                # .../:whatsit -> .../*:whatsit
+                pa.ark && hak(pa) == 1 && parse == '' and parse = '*';
+                
                 # which ark specifically (usu all/sarked) to doof
                 while (p(/^(\w+):/))
                      (pa.arkfor ||= []).push(m[0])
@@ -1444,7 +1447,7 @@ iooia: | # F > i/o > input/output
         return ay
     };
     
-    #c realise
+    #c realise name columns
     # but first, name columns:
     io.realise = &t{
         # name columns [i: name]
@@ -1647,7 +1650,7 @@ iooia: | # F > i/o > input/output
     };
     
     
-    #c forS  
+    #c forS, domes that iterate
     io.forS = &talk,params,T{
         $ng = 1s&forSing ||= {};
         ng.talk && talk != ng.talk and delete ng.t;
@@ -1664,7 +1667,7 @@ iooia: | # F > i/o > input/output
         t.in_progress and return t
         return t.more()
     };
-    #c gref
+    #c gref attribute matching
     io.gref = &N,talk,params,d{
         params ||= [];
         $wouldeat = [];
@@ -3562,16 +3565,18 @@ t/iooiatal: |
     tibs&glota = 3;
     $tiby = G&Cye,tib;
     if (0) {
-    # < once y-cultures are sorted nicely,
-    #   delete only the exact or so-understood descendant
-    #   of the real object
-    o $o/glangic/$tiby
-    a(0,'look at tibe with (!=) tiby')
-    o $o/glangic/#$tiby
-    a(0,'look at tibe with (!=) tiby, but use spacer')
+        # < once y-cultures are sorted nicely,
+        #   delete only the exact or so-understood descendant
+        #   of the real object
+        o $o/glangic/$tiby
+        a(0,'look at tibe with (!=) tiby')
+        o $o/glangic/#$tiby
+        a(0,'look at tibe with (!=) tiby, but use spacer')
     }
     o $o/glangic/-$tiby
     a(0,'tiby is not exactly whats there, but deletes tibe since ty')
+    o $o/glangic/-$tiby
+    a(0,'while deleted, o delete again')
     i $o/glangic/-$tiby
     a(0,'while deleted, i delete again')
     a('bug',"looks kind of there");
@@ -3580,16 +3585,8 @@ t/iooiatal: |
     o $o/glangic/**
     a(0,'right')
     
-    
-    o $o/glangic/-$tib
-    a(0,'delete tibe as param')
-    o $o/glangic/**
-    a(0,'right')
-    
-    o $o/glangic/**
-    a(0,'what is glangic after')
-    
-    
+    o $o/glangic/:ti
+    a(0,'* leg ark only')
     
     
     S 5 iterator transactions
@@ -4028,7 +4025,7 @@ t/BuildACastle: | # test Duning and io
     # ones
 Fly: |
     G&heading;
-    G&way,'t/gref',ar;
+    G&way,'t/iooiatal',ar;
     return;
     
     1s&empathy = 4;
