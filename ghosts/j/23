@@ -1098,11 +1098,23 @@ NutText: | # s&e adjustables - keep typing in the mind!
             c&tag = 'input';
             s&inv = 1;
             s&textinput = 1;
+            s&width = '5em'
         }
         else {
             s&codemirror = 1;
         }
     
+    # behaviour watcher
+    # < sensitive to typing, except insofar as:
+    # widthening when typed into
+    # < become codemirror, tell upstream to transfigure awake ...
+    e 66:
+        s != '2' and return
+        A.on.onkeydown = &ev,{
+            $(A.on).css('width', (2 + (A.on.value.length / 1.95))+'em');
+        };
+        $(A.on).trigger('change');
+        
     # every element has an A:om
     # .up to A:n doing s doing HutLV...?
     any 4: %any
