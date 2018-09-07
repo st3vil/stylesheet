@@ -228,7 +228,7 @@ iooia: | # F > i/o > input/output
             $path = m[0].split('/');
             $outer = parse;
             $pa;
-            $dpa = &eatparam{
+            $dpa = &eatparam,{
                 if (eatparam) { # bind param to path bit
                     pa.isparam ||= 1
                 }
@@ -445,7 +445,7 @@ iooia: | # F > i/o > input/output
         if (d.plumb) {
             # < i $i/@#dee o $o/*:dee   to copy spacers
             A.gottadebug and debugger;
-            if (!d.path.filter(&pa{ return pa.sark || pa.wander }).length)
+            if (!d.path.filter(&pa,{ return pa.sark || pa.wander }).length)
                 patin('push',{sark:1,t:'s'})
             # or, if d.plumb (iterator) has no ark:s
             #   < use path[-1] (default in d.plumb's h.Pmod's coli)
@@ -925,7 +925,7 @@ iooia: | # F > i/o > input/output
                         rows = t.rows;
                         # complete rows
                         if (!(d.partial || t.partial))
-                            rows = rows.filter(&row{ return row.slice(-1)[0] })
+                            rows = rows.filter(&row,{ return row.slice(-1)[0] })
                     }
                     
                     # la.column
@@ -1316,7 +1316,7 @@ iooia: | # F > i/o > input/output
                         # < should be a minor Ting
                         #debugger; #throw "not one row"
                     }
-                    r.map(&ro{ rows.push(ro) })
+                    r.map(&ro,{ rows.push(ro) })
                 }
                 # no more recursion at end of wander in
                 if (!P.length) {
@@ -1491,7 +1491,7 @@ iooia: | # F > i/o > input/output
         # < naming stuff with arks, not grouping with them
         # < to ungrouped, partial, nz(), regroup, grep/map row/column/objects, 
         #     in one, ay.nz(3,&arks,_,nonarks{})?
-        $parkar = &roundagain{
+        $parkar = &roundagain,{
             $ar = t.next; delete t.next;
             # position save/load around grouping ahead
             if (ar) {
@@ -1569,7 +1569,7 @@ iooia: | # F > i/o > input/output
         };
         #c ind: callback per item, flat list with depth...
         # < not a branch of it
-        t.ind = &cb{
+        t.ind = &cb,{
             t.indstr ||= '  ';
             $la = [];
             $N = [];
@@ -1647,7 +1647,7 @@ iooia: | # F > i/o > input/output
             # compile time
             io.parsegref(talk,params,d);
             !d.path and debugger;
-            d.path.map(&pa{
+            d.path.map(&pa,{
                 pa.isparam and wouldeat.push(1)
             });
             io.codegref(d);
@@ -1720,7 +1720,7 @@ iooia: | # F > i/o > input/output
             i-- < 1 and throw "out of i"
             $was = parse;
             $pa = {};
-            $dpa = &isparam{
+            $dpa = &isparam,{
                 isparam and pa.isparam = 1;
                 d.path.push(pa);
                 pa = {};
@@ -1826,7 +1826,7 @@ iooia: | # F > i/o > input/output
         while (expr.length) {
             $c = expr.shift();
             # make summary of types of tokens
-            $l = c.map(&pa{ return pa.tok }).join(' ');
+            $l = c.map(&pa,{ return pa.tok }).join(' ');
             # lots of what to match (k) implying
             
             if (l == 'k op v') {
@@ -2495,7 +2495,7 @@ iooia: | # F > i/o > input/output
         # take off columns not in the formula (A.r)
         
         $last_column = d.rows
-            .map(&row{ return row.slice(-1)[0] })
+            .map(&row,{ return row.slice(-1)[0] })
             .filter(&s{ return s });
         return last_column
     };
@@ -2957,7 +2957,7 @@ t/iooiata: | # func really
         t.p = 'usual';
         return d
     };
-    $nz = &show{
+    $nz = &show,{
         $t = io.nz();
         t.partial = 1;
         t.ungrouped = 1;
@@ -3538,7 +3538,7 @@ t/gref: |
         rein.indexOf(be) < 0 and rein.push(be);
     S
     A.grefbug = 0;
-    $noticeyt = &fore,be{
+    $noticeyt = &fore,be,{
         $tee = fore+" "+be.t;
         $yt = [];
         each t,cv,s be.y.tv {
@@ -3548,7 +3548,7 @@ t/gref: |
         yt = [[yt.join(",")]];
         m $tee  $s:yt
     };
-    rein.map(&be{
+    rein.map(&be,{
         noticeyt("before",be);
         #debugger;
         io.reindex(be);
@@ -3748,8 +3748,8 @@ t/grefcodes: | #
         each in N {
             $params = [];
             n = dey(eny(n));
-            n.path.map(&pa{ pa.isparam && params.push(pa.v) });
-            n.path.map(&pa{ delete pa.v });
+            n.path.map(&pa,{ pa.isparam && params.push(pa.v) });
+            n.path.map(&pa,{ delete pa.v });
             $was = eny(n);
             $d = io.gref([],n.talk,params.slice(),{not:1});
             $to = eny(d)
@@ -3774,7 +3774,7 @@ t/grefcodes: | #
         G&Cye,['ote',1234,{},{madeof:'good',guine:2,vol:9,ded:1}] ,
         G&Cye,['lala',344,{s:"lal"},{madeof:0,guine:1}] ,
     ];
-    $subneut = &func{
+    $subneut = &func,{
         !func and return null
         $l = func.toString().split("\n");
         !l.shift().match(/^function \(d,/) and throw "func start funny"
