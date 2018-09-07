@@ -513,7 +513,7 @@ JaBabz: | # make hutscript javascript
         $ope.$guts
     }smeg;
     
-    #c n groundula
+    #c n groundula, keywords, subs
     
     # n thing -jod_33 s:var hue:'490deg'
     #   c/sc get wrapped with {}
@@ -583,11 +583,26 @@ JaBabz: | # make hutscript javascript
     $1    $3
     $1}/gm for 1..3;
     
-    # tiny sub maker, &raw,args{
-    # TODO any >1 noncomma args split
-    c&s =~ s/([^G&]|^)&acgts\{/$1function(A,C,G,T,s){/gm;
-    c&s =~ s/([^G&]|^)&acgt\{/$1function(A,C,G,T){/gm;
-    c&s =~ s/([^G&]|^)&(\w*(,\w+)*)\{/$1function($2){/gm;
+    # &raw,args{ -> function(raw,args){
+    # &acgtsec,lamp,socket{ -> function(A,C,G,T,s,e,c,lamp,socket){
+    # < (arfgunc) a way to write its args on it without having to read via toString parse
+    c&s =~ s/([^G&]|^)&(acgt)?(\w+)?((?:,\w+)+?)?(,)?\{/;
+        my @args;
+        my ($not,$acgt,$wordy,$commad,$wholimp) = ($1,$2,$3,$4,$5);
+        if (!$acgt && $wordy && ($commad || $wholimp)) {
+            # all,of,it is whole names, add comma to end if one \w+: &isparam,{
+            @args = split ',', $wordy.$commad
+        }
+        else {
+            # acgt on the front or no commas
+            # means single letters until after commas
+            @args = (
+                split('', ($acgt && 'ACGT').$wordy),
+                split(',', $commad),
+            );
+        }
+        "${not}function(".join(',',map{$_}grep{$_}@args)."){"
+    /gem;
     
     # $thing -> var thing
     #  doesn't see '$get # vardescript', see # -> //
@@ -815,6 +830,8 @@ jst: | # test js babbler
         o va:{ seen.push(C); vat(C) }:klass 1s&cee/*:va/*:doop
         i $o/not/stylehouse
         o $o/glangic/-$tiby
+        1s&ein.says = &acgtsc{
+        ve = &isparam,{
     
     # too far away:
     
@@ -849,7 +866,7 @@ jst: | # test js babbler
         G.h(A,C,G,T,"wide","several ticks");
         G.h(A,C,G,T,some,4,56-3, (28 / A[5].sc.e))
         A[5].sc.log = [];
-        var tys = function(acto){
+        var tys = function(a,c,t,o){
             if (vase) {
                 G.h(A,C,G,T,'bump')
             }
@@ -978,6 +995,8 @@ jst: | # test js babbler
         var ay = io.o("va:{}:klass $cee/*:va/*:doop",[function(A,C,G,T,s){  seen.push(C); return vat(C)  },A[1].sc.cee]); var klass = ay.sc.klass; var va = ay.sc.va; var doop = ay.sc.doop;
         var ay = io.i("$o/not/stylehouse",[o]); var o = ay.sc.o; var not = ay.sc.not; var s = ay.sc.s;
         var ay = io.o("$o/glangic/-$tiby",[o,tiby]); var o = ay.sc.o; var glangic = ay.sc.glangic; var tiby = ay.sc.tiby;
+        A[1].sc.ein.says = function(A,C,G,T,s,c){
+        ve = function(isparam){
         }
         
     
