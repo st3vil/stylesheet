@@ -136,12 +136,277 @@ TripDeck: | # note vortex, holder of diverse brief moments, bakes patterns into 
     #A.ontula = [];
 StayToSleep: | # gentleness scan
     # 
+t/ool: | # the usual io check maker
+    G&heading;
+    $io = G&way,'iooia';
+    #1s&step = 2;
+    G&way,'Doming',ar;
+    
+    $show = {};
+    show.talk = 1;
+    $a = &t,talk,params{
+        if (t === '' && !talk) {
+            m space   %fs:120%,hue:170deg,width:100%,height:3em,dis:block
+            return
+        }
+        if (t == 'bug') {
+            m bugreport  $s:talk %fs:120%,hue:170deg,dis:block
+            return;
+        }
+        if (t == '9') {
+            m speech  $s:talk %hue:100deg,dis:block,fs:140%
+            return;
+        }
+        if (t == '7') {
+            # right hand hanging talk
+            m talk  $s:talk %fs:130%,hue:-40deg,dis:block,float:right,mw:50%
+            return;
+        }
+        t && io[t](talk,params||[],{})
+        t = io.nz();
+        
+        $iis;
+        $rowtalk = &S{
+            $i = 5;
+            while (S && !S.is && i-- > 0) { S = S.plumb }
+            S = S.is && S;
+            iis = S;
+            S and return S.is+' '+S.talk
+        };
+        
+        if (show.talk) {
+            # i chainlinked behind lastfuncs
+            $bits = [rowtalk(t)];
+            # o chainlinked behind firstfuncs
+            iis && iis.plumb and bits.push(rowtalk(iis.plumb));
+            $tk = bits.join(' ');
+            m talk  $s:tk %fs:130%,hue:-40deg,dis:block,float:right,mw:50%
+        }
+        
+        m thistest  $s:talk %fs:160%,hue:120deg,dis:block
+        
+        show.t &&
+        m iter  $s:t,dl:9.26
+        
+        !show.impartial and t.partial = 1;
+        $s = t.ind(&s,t{
+            $text = io.isC(s) ? G&toLines,s : "GARB: "+ki(s);
+            if (t.objects && t.objects.indexOf(s) >= 0) {
+                # highlight t.objects (that doof matched)
+                # < chucking rows with any object on matching
+                # iterate objects if that's all you want
+                text = G&intag:'>1 '+text
+            }
+            if (show.y) {
+                # attach y, which hides most first
+                $say = ki(s.y,6.24);
+                say = say.replace(/^\{|\}$/g,'');
+                text += "\t"+G&intag:'>3 '+say;
+            }
+            return text;
+        }).join("\n");
+        s += "\n";
+        m inds  $s:s,ht:1 %hue:120deg,ws:pre,dis:block
+        # lum for dumping state
+        t.p = 'usual';
+        return d
+    };
+    $nz = &show,{
+        $t = io.nz();
+        t.partial = 1;
+        t.ungrouped = 1;
+        while (show && t.more()) {
+            m apull  $s:t.sc,dl:8.26
+            m srow  $s:t.row,dl:8.26
+        }
+        return t
+    };
+    a.nz = nz;
+    a.show = show;
+    
+    a.fin = &{
+        each in M {
+            ns&hue || ns&pi and continue
+            nc&pi = 'fod';
+            ns&dos = 'grow';
+            nc&dl ||= 12;
+        }
+    };
+    return a
 t/BuildACastle: | # test Duning and io
-    # Duning (non sequence) sequence
+    'Doming iooia'.split(' ').map(&s{ G&waylay,s });
+    $a = G&way,'t/ool';
+    $io = A&io;
+    io.dotw = 1;
+    
+    S 1 setup, first
+    $h = 1s&ooo = G&Cye,['how'];
+    debugger;
+    $ghos = 'jit inc room'.split(' ');
+    S Ghsot: i $h/ghost/@#$ghos
+        if (ghos.t == 'jit') {
+            ghosc&s = <<'';
+                g.n('sheep',3,{},'&hue:54deg,fs:200%');
+        
+            ghoss&dige = dig(ghosc&s);
+        }
+        # etc
+    S
+    
+    i $h/travel/room
+    
+    i $h/wormhole/room
+    
+    $g = {};
+    g.n = &t,y,c,sc{
+        g.perc[g.who].push(G&Cye,[t,y,c,sc])
+    };
+    g.be = &se{
+        $was = g.who; # stack
+        g.is ||= {}; # everyone
+        $er = null; # any emergency
+        g.who = s; # its being the J
+        g.perc ||= []; # in progress
+        $N = g.perc[g.who] = []; # ground
+        # > networked names: land.names.self
+        $t = g.who.match(/([\/\w]+)$/)[0];
+        # G&t and compile
+        $w = h.y.tw.ghost.y.tw[t];
+        !w && g.who != 'ope' and return g.be('ope',t);
+        # we eval, they cache, trust (s,dige) <-> (code,dige)
+        $code = wc&code && wc&dige == ws&dige && wc&code;
+        if (!code) {
+            $pin = t.replace(/\W/g,'')+ws&dige;
+            code = 'wc&code = function '+pin+"(A,C,G,T,g){\n"+wc&s+"}";
+            try{ eval(code) }
+            catch(er){
+                # eval(lacode) on the console to see the line...
+                window.lacode = code;
+                # nice coupling of ghost<->explosion
+                g.er = ['compile',w,er];
+            }
+            if (!g.er) {
+                wc&dige = ws&dige;
+                code = wc&code;
+            }
+        }
+        if (!er) {
+            # the dome!
+            try{ code(A,C,G,T,g) }
+            catch(er){ g.er = ['J6',w,er] }
+        }
+        if (!er) {
+            # the oscillator - put on 9, think?, store
+            $nine = G&Cye,[t,9,{},{z:g.perc[g.who]}];
+            
+            try{ g.oscthink && g[g.oscthink](nine) }
+            catch(er){ g.er = ['J7',w,er] }
+            g.is[g.who] = nine;
+        }
+        g.er and (g.ers ||= []).push(g.er); delete g.er;
+        g.who = was;
+    };
+    # and take the first look
+    g.be('jit');
+    $i = g.is.jit;
+    o $i/**
+    a(0,"Ohlook")
+    # < io should z's
+    # < 9 should c&s ascii art
+    #     separation of style/content about keeping crypto
+    
+    S 2
+    # < make a T.../T thing a try enveloper
+    
+    o $i/**
+    a(0,"Ohlook")
+    
+    
+    S 0
+    a.fin();
+    
+    
+    
+    
+    
+    
+    
+    
+    # environ a thing Duning (non sequence) sequence
     # osc domes, concat them into this J
     # here be test data and... floots
 t/BAC: | # alana
     # shunt system, maniable
     $io = G&way,'iooia';
     $F = io.F;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    # 
+PseudoF: | # to develop limbs to G&F
+    # see also fe/fi ...
+        $m;
+        $p = &r{
+            m = d.match(r);
+            !m and return
+            m.shift();
+            d = d.replace(r,'');
+            return 1
+        };
+        $dstart = d;
+        $v;
+        
+        # all Array of items, assume the spec also de-arrays it
+        s.constructor == Object and s = [s];
+        
+        if (p(/^\* ?/)) {
+            $S = s;
+            s = [];
+            each in S {
+                if (ns&J) {
+                    $j = ns&J;
+                    !j and continue
+                    $os = js&s;
+                    !os and continue;
+                    # skips over 9
+                    $t = oss&top;
+                    !t || !ts&z and continue;
+                    ts&z.map(&z{
+                        s.push(z);
+                    });
+                }
+                else {
+                    continue
+                }
+            }
+        }
+        
+        # calling it C means grep for
+        # < put selected values on limb if given
+        if (p(/^(C)\.(y|c|sc)\.(\w+) ?/)) {
+            $typology = m[0];
+            $nk = m[1];
+            $gk = m[2];
+            s = s.filter(&s{ 
+                s && s[nk] && s[nk][gk] != null and v = s[nk][gk]; return 1
+            });
+        }
+        
+        d.length and throw "FE spec leftover: "+d
+        
+        return s
+        
 
