@@ -2438,17 +2438,24 @@ iooia: | # F > i/o > input/output
             $rows = [];
             each ri,row d.rows {
                 $S = row.slice(-1)[0];
-                if (io.dotw && S == null && i == mi && s.sc && ss&z) {
+                if (io.dotw && S == null && i == mi && s.sc && (ss&z || s.y.tw)) {
                     d.our.join('') != 'ytv' and throw "have ss&z, null our thing, but what is dour?", d.our.join('')
-                    # we got to y.tv, but it seems to use z instead
-                    # A:o used to mix all attachment methods together...
-                    # suppose this is fine:
-                    $tv = s.y.tv = {};
-                    each ii,n ss&z {
-                        tv[n.t] ||= {};
-                        tv[n.t][n.y.cv] = n;
+                    if (ss&z) {
+                        # we got to y.tv, but it seems to use z instead
+                        # A:o used to mix all attachment methods together...
+                        # suppose this is fine:
+                        $tv = s.y.tv = {};
+                        each ii,n ss&z {
+                            tv[n.t] ||= {};
+                            tv[n.t][n.y.cv] = n;
+                        }
+                        S = tv;
                     }
-                    S = tv;
+                    else {
+                        !s.y.tw and throw "What"
+                        path.pop(); # tw is t:v, not t:cv:v
+                        S = s.y.tw;
+                    }
                     row.splice(-1,1,S); # pop into row
                 }
                 if (S == null) {
