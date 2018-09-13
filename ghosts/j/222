@@ -266,6 +266,28 @@ t/encodings: | # test yaml
     $io = A&io;
     $t = &title,ty{ a(title,ty||8) }
     
+    $tryeny = &s{
+        $err;
+        $yam;
+        try{ yam = eny(s,T) }
+        catch(er) {
+            err = er;
+        }
+        if (err) {
+            m eny_error  $s:ki(err)
+            err.tc &&
+            m error_tc  $s:err.tc
+        }
+        
+        m eny_encoded  $s:ki(yam)
+        
+        yam &&
+        m dey_eny  $s:dey(yam)
+        
+        empty_catch();
+        return yam
+    };
+    
     S 1 encoding functions
     
     $anray = &tsl{
@@ -283,7 +305,6 @@ t/encodings: | # test yaml
         delete T.enj_catch; delete T.eny_catch;
         anray(t,s);
     };
-    
     
     t('json',7);
     # used by ind()/G&toLines for small things
@@ -318,28 +339,6 @@ t/encodings: | # test yaml
     
     a('','');
     
-    $tryeny = &s{
-        $err;
-        $yam;
-        try{ yam = eny(s,T) }
-        catch(er) {
-            err = er;
-        }
-        if (err) {
-            m eny_error  $s:ki(err)
-            err.tc &&
-            m error_tc  $s:err.tc
-        }
-        
-        m eny_encoded  $s:ki(yam)
-        
-        yam &&
-        m dey_eny  $s:dey(yam)
-        
-        empty_catch();
-        return yam
-    };
-    
     t("eny() no T.eny_catch, 2 troubles, blows up");
     bes&doubley = &be{ 2 };
     tryeny(be);
@@ -367,13 +366,26 @@ t/encodings: | # test yaml
     tryeny({za:2,za:be,ohbythe:[2,2,[{sal:'ia'}]],be});
     anray('culdesac',cul,1);
     
-    
     # options (camelCase beyond here) etc:
     #   dl/nl                depth/node limit
     #   dryrun                 recon only, fast size check
     #     returns internal $state, with .node_count and .depth_max
+    1s&be = be;
     
     S 2 (node|depth)_limit
+    
+    $be = 1s&be;
+    !be and throw "losing marbles"
+    t("eny() dryrun");
+    $state = eny(be,0,{dryrun:1});
+    m node_count  $s:state.node_count
+    m depth_max  $s:state.depth_max
+    m deepest_path  $s:state.deepest_path
+    
+    
+    
+    #t("eny() skipCode + culdesacs");
+    #tryeny({za:2,za:be,ohbythe:[2,2,[{sal:'ia'}]],be});
     #
     S 3 culdesac, roundtrip null
     #

@@ -888,17 +888,24 @@ function getDuplicateReferences(object, state) {
   }
   state.usedDuplicates = new Array(length);
 }
-
+function checkLimits(state,objects,path) {
+  var because;
+  if (state.nl && state.nl < objects.length) because = 'nodes';
+  if (state.dl && state.dl < path.length) because = 'depths';
+  if (!because) return
+  // < get working in writeNode, so we can:
+  // < put (marker here|path somewhere)
+  // < avoid doing any more ... if ...
+  // nah, people should/would just use C
+  new YAMLException("Too many yaml "+because+", around "+path.join('/'));
+}
 function inspectNode(object, objects, duplicatesIndexes, state, path) {
   var objectKeyList,
       index,
       length;
   
-  if (state.nl && state.nl < objects.length) {
-    throw new YAMLException("Too many yaml nodes, around "+path.join('/'));
-  }
-  if (state.dl && state.dl < path.length) {
-    throw new YAMLException("Too many yaml depth, around "+path.join('/'));
+  if (state.nl || state.dl) {
+    checkLimits(state,objects,path);
   }
   // deprecated
   if (window.maxyamling && window.maxyamling < objects.length) {
@@ -937,7 +944,10 @@ function inspectNode(object, objects, duplicatesIndexes, state, path) {
   if (state.dryrun) {
     // track extra geometries, see also state.culdesacs
     state.node_count = objects.length;
-    if (path.length > state.depth_max) state.depth_max = path.length;
+    if (path && path.length > state.depth_max) {
+      state.depth_max = path.length;
+      state.deepest_path = path;
+    }
   }
   if (culdesac && state.culdesacs) {
     // paths to endpoints, showing geometry, see also state.dryrun
