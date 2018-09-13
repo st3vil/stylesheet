@@ -433,9 +433,8 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
             !Object.keys(gks).length and delete n[nk]
         }
         #c toLines encoded bits
-        $enj = &s{
-            return JSON.stringify(s);
-        };
+        # may pass a T.enj_catch, so functions can warn/show up as 'CODE'
+        $enj = &s{ return window.enj(s,T) };
 
         # t can be messy
         $l = simp(t) ? t : enj(t);
@@ -474,7 +473,7 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
             $k = "  "+nk+" "+gk+":";
             if (typeof v != 'string') {
                 # BQ yaml data
-                $v = jsyaml.safeDump(v);
+                $v = eny(v,T);
                 $vs = [];
                 v = v.split("\n");
                 each is v {
