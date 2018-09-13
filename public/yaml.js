@@ -944,7 +944,7 @@ function inspectNode(object, objects, duplicatesIndexes, state, path) {
   if (state.dryrun) {
     // track extra geometries, see also state.culdesacs
     state.node_count = objects.length;
-    if (path && path.length > state.depth_max) {
+    if (path && path.length > (state.depth_max||0)) {
       state.depth_max = path.length;
       state.deepest_path = path;
     }
