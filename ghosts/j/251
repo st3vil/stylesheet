@@ -288,32 +288,40 @@ NutGravy: | # non-I routines: json, dig, diff
     window.dej = &s{
         return $.parseJSON(s)
     };
-    # < depth/node limit
-    window.eny = &s{
-        window.yamler and throw "yaml encode within yaml encode";
-        $ler = window.yamler = [];
-        $en;
+    
+    window.eny = &sTn{
+        $opt = {};
+        typeof n == 'object' and ex(opt,n); n = 0
+        !T and 1
+        else
+        typeof T == 'object' and opt.Tcatch = T.eny_catch; T = n;
+        
+        T > 0 and opt.nl = T; # node limit
+        else
+        T < 0 and opt.dl = T * -1; # depth limit
+        
+        opt.Tcatch and opt.catch = opt.Tcatch
+        opt.catch ||= [];
+        opt.catch.length and throw "T.eny_catch not empty array"
+        $encoded;
         $err;
-        try { en = jsyaml.safeDump(s) }
+        try { encoded = jsyaml.safeDump(s,opt) }
         catch(er) { err = er }
-        G.enybug and debugger;
-        if (err || ler.length) {
-            # < T to politely pole the problem 'pon, var scoping is vague
-            # err if fatal/throwing, ler if (some) details missing
-            $catsh = T.eny_catch;
-            if (catsh) {
-                catsh.push(err); # object
-                catsh.push(ler); # array, of troubled paths
+        if (err || opt.catch.length) {
+            if (opt.Tcatch) {
+                # is minded by something up there,
+                # allows munted encodes
+                err and opt.catch.push(err);
+                opt.catch.length and opt.catch.push(ler);
             }
             elsif (err) {
-                throw err, ler
+                throw err, opt.catch
             }
             else {
-                throw "Unyamlables", ler
+                throw "Unyamlables", opt.catch
             }
         }
-        delete window.yamler;
-        return en
+        return encoded
     };
     window.dey = &s{
         return jsyaml.safeLoad(s)
