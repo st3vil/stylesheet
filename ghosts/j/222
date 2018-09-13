@@ -157,6 +157,10 @@ t/ool: | # the usual io check maker
             m speech  $s:talk %hue:100deg,dis:block,fs:140%
             return;
         }
+        if (t == '8') { # normal test title
+            m thistest  $s:talk %fs:160%,hue:120deg,dis:block
+            return;
+        }
         if (t == '7') {
             # right hand hanging talk
             m talk  $s:talk %fs:130%,hue:-40deg,dis:block,float:right,mw:50%
@@ -257,7 +261,7 @@ t/encodings: | # test yaml
     'Doming iooia'.split(' ').map(&s{ G&waylay,s });
     $a = G&way,'t/ool',ar;
     $io = A&io;
-    $t = &title,{ a(title,9) }
+    $t = &title,{ a(title,8) }
     
     S 1 encoding functions
     
@@ -280,22 +284,25 @@ t/encodings: | # test yaml
     Lac&code = &coin{ 1 + 4 };
     Las&dol = {fe:3,go:{la:{pic:&coin{ 1 + 4 }}}};
     o $h/**
-    a("no T.enj_catch, no warning");
+    a("no T.enj_catch, simply vanishes");
     
     T.enj_catch = [];
-    G.enybug = 1;
     a("T.enj_catch gets warning, last bit of path");
     empty_catch();
-    G.enybug = 0;
-    
-    
     
     i $h/-incida
     i $h/beolo
     $be = ays&s[0];
     bes&zo = [{P:1},[null,null,['re',{thing:&s{ 2 }}]]];
     o $h/**
-    a("Arrays too")
+    a("no T.eny_catch, blows up");
+    T.eny_catch = [];
+    a("T.eny_catch, returned munt");
+    empty_catch();
+    
+    
+    
+    a('','');
     
     $tryeny = &s{
         $err;
@@ -304,9 +311,12 @@ t/encodings: | # test yaml
         catch(er) {
             err = er;
         }
-        err &&
-        m eny_error  $s:ki(err)
-
+        if (err) {
+            m eny_error  $s:ki(err)
+            err.tc &&
+            m error_tc  $s:err.tc
+        }
+        
         m eny_encoded  $s:ki(yam)
         
         yam &&
@@ -316,11 +326,11 @@ t/encodings: | # test yaml
         return yam
     };
     
-    t("encoding with 2 troubles, no T-catchment so no return");
+    t("eny() no T.eny_catch, 2 troubles, blows up");
     bes&doubley = &be{ 2 };
     tryeny(be);
     
-    t("encoding with 3 troubles, T-catch, returned munt");
+    t("eny() T.eny_catch, 3 troubles, returned munt");
     bes&trippple = &be{ 2 };
     T.eny_catch = [];
     tryeny({Steve:{was:{here:be}}});
