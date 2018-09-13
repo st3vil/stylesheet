@@ -208,6 +208,13 @@ function encodeHex(character) {
 }
 
 function State(options) {
+  // Steve was here
+  this.dl = options['dl'] || null;
+  this.nl = options['nl'] || null;
+  this.culdesacs = options['culdesacs'] || null;
+  this.catch = options['catch'] || null;
+  this.dryrun = options['dryrun'] || null;
+
   this.schema       = options['schema'] || DEFAULT_FULL_SCHEMA;
   this.indent       = Math.max(1, (options['indent'] || 2));
   this.skipInvalid  = options['skipInvalid'] || false;
