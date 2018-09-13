@@ -302,14 +302,24 @@ NutGravy: | # non-I routines: json, dig, diff
     window.dej = &s{
         return $.parseJSON(s)
     };
-    
+    # options (camelCase in there) etc:
+    #   dl/nl                depth/node limit
+    #   culdesacs=[]         many path=[k+] to tips
+    #   dryrun                 recon only, fast size check
+    #     returns internal $state, with .node_count and .depth_max
+    #  either voids throwing on Function:
+    #   catch/T.eny_catch=[] pushed Function warnings
+    #   skipCode                Functions vanish
+    # can be given on T.eny_opt or n
+    # T (or n if T=object, as T is) can be >0 nl, <0 dl
     window.eny = &sTn{
         $opt = {};
         typeof n == 'object' and ex(opt,n); n = 0
-        !T and 1
-        else
-        typeof T == 'object' and opt.Tcatch = T.eny_catch; T = n;
-        
+        elsif (typeof T == 'object') {
+            opt.Tcatch = T.eny_catch;
+            T.eny_opt and ex(opt,T.eny_opt);
+            T = n;
+        }
         T > 0 and opt.nl = T; # node limit
         else
         T < 0 and opt.dl = T * -1; # depth limit

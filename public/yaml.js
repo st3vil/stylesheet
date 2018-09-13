@@ -214,6 +214,7 @@ function State(options) {
   this.culdesacs = options['culdesacs'] || null;
   this.catch = options['catch'] || null;
   this.dryrun = options['dryrun'] || null;
+  this.skipCode = options['skipCode'] || null;
 
   this.schema       = options['schema'] || DEFAULT_FULL_SCHEMA;
   this.indent       = Math.max(1, (options['indent'] || 2));
@@ -856,7 +857,7 @@ function writeNode(state, level, object, block, compact, iskey, path) {
         writeScalar(state, state.dump, level, iskey);
       }
     } else if (type === '[object Function]') {
-      if (state.skipInvalid) return false;
+      if (state.skipInvalid || state.skipCode) return false;
       // should halt W until mutes are added?
       state.catch && state.catch.push("Has a function at "+path.join('/'));
       writeScalar(state, "CODE", level, iskey);
@@ -899,11 +900,6 @@ function inspectNode(object, objects, duplicatesIndexes, state, path) {
   if (state.dl && state.dl < path.length) {
     throw new YAMLException("Too many yaml depth, around "+path.join('/'));
   }
-  if (state.dryrun) {
-    // track extra geometries, see also state.culdesacs
-    state.node_count = objects.length;
-    if (path.length > state.depth_max) state.depth_max = path.length;
-  }
   // deprecated
   if (window.maxyamling && window.maxyamling < objects.length) {
     throw new YAMLException("Too much to yaml");
@@ -937,6 +933,11 @@ function inspectNode(object, objects, duplicatesIndexes, state, path) {
         }
       }
     }
+  }
+  if (state.dryrun) {
+    // track extra geometries, see also state.culdesacs
+    state.node_count = objects.length;
+    if (path.length > state.depth_max) state.depth_max = path.length;
   }
   if (culdesac && state.culdesacs) {
     // paths to endpoints, showing geometry, see also state.dryrun
@@ -1149,6 +1150,7 @@ function State(input, options) {
   this.culdesacs = options['culdesacs'] || null;
   this.catch = options['catch'] || null;
   this.dryrun = options['dryrun'] || null;
+  this.skipCode = options['skipCode'] || null;
 
   this.filename  = options['filename']  || null;
   this.schema    = options['schema']    || DEFAULT_FULL_SCHEMA;
