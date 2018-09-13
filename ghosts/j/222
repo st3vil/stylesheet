@@ -369,8 +369,7 @@ t/encodings: | # test yaml
     1s&be = be;
     a('','');
     
-    
-    
+    #c (node|depth)_limit
     S 2 (node|depth)_limit
     
     $be = 1s&be;
@@ -384,21 +383,39 @@ t/encodings: | # test yaml
     m depth_max  $s:state.depth_max
     m deepest_path  $s:state.deepest_path.join(',')
     
+    $neg = &nl,dl,desc{
+        t("limit of "+(nl?"nl="+nl:"")+" "+(dl?"dl="+dl:"")+
+            (desc?" - "+desc:"")
+        );
+        T.eny_opt = {skipCode:1,dl:dl,nl:nl};
+        $err;
+        $res;
+        try{ res = eny(be,T) }
+        catch(er){ err = er }
+        if (err) {
+            m eny_error  $s:ki(err)
+            err.tc &&
+            m error_tc  $s:err.tc
+        }
+        else {
+            !res and throw "no error or result?"
+        }
+    };
     
     #   dl/nl                depth/node limit
+    #window.enybug = 1;
+    neg(0,0,'no limit');
+    neg(0,7,'plenty depths');
+    neg(10,0,'plenty nodes');
+    neg(9,6,'just enough of both');
+    #debugger;
+    neg(0,5,'not enough depths');
+    neg(5,0,'not enough nodes');
+    neg(55,5,'plenty of nodes, not enough depth');
+    neg(4,55,'plenty of depth, not enough nodes');
     
-    
-    #t("eny() skipCode + culdesacs");
-    #tryeny({za:2,za:be,ohbythe:[2,2,[{sal:'ia'}]],be});
-    #
-    S 3 culdesac, roundtrip null
-    #
     S 0
     a.fin();
-    
-    
-    
-    # 
 t/BuildACastle: | # test Duning and io
     'Doming iooia'.split(' ').map(&s{ G&waylay,s });
     $a = G&way,'t/ool',ar;

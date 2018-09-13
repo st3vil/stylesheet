@@ -891,13 +891,13 @@ function getDuplicateReferences(object, state) {
 function checkLimits(state,objects,path) {
   var because;
   if (state.nl && state.nl < objects.length) because = 'nodes';
-  if (state.dl && state.dl < path.length) because = 'depths';
+  if (path && state.dl && state.dl < path.length) because = 'depths';
   if (!because) return
   // < get working in writeNode, so we can:
   // < put (marker here|path somewhere)
   // < avoid doing any more ... if ...
   // nah, people should/would just use C
-  new YAMLException("Too many yaml "+because+", around "+path.join('/'));
+  throw new YAMLException("Too many yaml "+because+", around "+path.join('/'));
 }
 function inspectNode(object, objects, duplicatesIndexes, state, path) {
   var objectKeyList,
