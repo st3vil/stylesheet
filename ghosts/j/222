@@ -195,6 +195,7 @@ t/ool: | # the usual io check maker
                 $code = sc&code;
                 delete sc&code;
                 # definitely need a munt beacon + warning
+                G.enybug and debugger;
                 text = G&toLines,s;
                 code and sc&code = code
             }
@@ -243,7 +244,7 @@ t/ool: | # the usual io check maker
         }
     };
     return a
-t/yaml: | # test yaml
+t/encodings: | # test yaml
     'Doming iooia'.split(' ').map(&s{ G&waylay,s });
     $a = G&way,'t/ool',ar;
     $io = A&io;
@@ -256,7 +257,7 @@ t/yaml: | # test yaml
     Lac&code = &coin{ 1 + 4 };
     Las&dol = {fe:3,go:{la:{pic:&coin{ 1 + 4 }}}};
     o $h/**
-    G.enybug = 1;
+    #G.enybug = 1;
     a("Huh, what");
     G.enybug = 0;
     
@@ -270,21 +271,29 @@ t/yaml: | # test yaml
     $tryeny = &s{
         $err;
         $yam;
-        try{ yam = eny(s) }
+        G.enybug and debugger;
+        try{ yam = eny(s,T) }
         catch(er) {
             err = er;
         }
+        err &&
         m eny_error  $s:err
 
-        m eny_encoded  $s:yam
+        m eny_encoded  $s:ki(yam)
         
         yam &&
         m dey_eny  $s:dey(yam)
         return yam
     };
     
-    i("A troubley encoding");
-    tryeny(bes&zo);
+    i("encoding with 2 troubles, no T-catchment so no return");
+    bes&doubley = &be{ 2 };
+    tryeny(be);
+    
+    i("encoding with 3 troubles, T-catch, returned munt");
+    bes&trippple = &be{ 2 };
+    T.eny_catch = [];
+    tryeny({Steve:{was:{here:be}}});
     
     S 0
     a.fin();
