@@ -281,7 +281,7 @@ NutGravy: | # non-I routines: json, dig, diff
         return M;
     };
     
-    # encodings
+    #c encodings
     window.enj = &s{
         return JSON.stringify(s)
     };
@@ -290,7 +290,30 @@ NutGravy: | # non-I routines: json, dig, diff
     };
     # < depth/node limit
     window.eny = &s{
-        return jsyaml.safeDump(s)
+        window.yamler and throw "yaml encode within yaml encode";
+        $ler = window.yamler = [];
+        $en;
+        $err;
+        try { en = jsyaml.safeDump(s) }
+        catch(er) { err = er }
+        G.enybug and debugger;
+        if (err || ler.length) {
+            # < T to politely pole the problem 'pon, var scoping is vague
+            # err if fatal/throwing, ler if (some) details missing
+            $catsh = T.eny_catch;
+            if (catsh) {
+                catsh.push(err); # object
+                catsh.push(ler); # array, of troubled paths
+            }
+            elsif (err) {
+                throw err, ler
+            }
+            else {
+                throw "Unyamlables", ler
+            }
+        }
+        delete window.yamler;
+        return en
     };
     window.dey = &s{
         return jsyaml.safeLoad(s)
@@ -301,7 +324,7 @@ NutGravy: | # non-I routines: json, dig, diff
         return sha256(s).slice(0,12)
     };
     
-    # diffing
+    #c diffing text
     window.dmp = new diff_match_patch();
     window.diff = &s,S,c{
         c ||= {};

@@ -578,7 +578,7 @@ function escapeString(string) {
   return result;
 }
 
-function writeFlowSequence(state, level, object) {
+function writeFlowSequence(state, level, object, path) {
   var _result = '',
       _tag    = state.tag,
       index,
@@ -586,7 +586,10 @@ function writeFlowSequence(state, level, object) {
 
   for (index = 0, length = object.length; index < length; index += 1) {
     // Write only valid elements.
-    if (writeNode(state, level, object[index], false, false)) {
+    // grow the path to where we are, so complaints can say where we are
+    var pathin = (path||[]).slice();
+    pathin.push(index);
+    if (writeNode(state, level, object[index], false, false,false,pathin)) {
       if (index !== 0) _result += ',' + (!state.condenseFlow ? ' ' : '');
       _result += state.dump;
     }
@@ -596,15 +599,18 @@ function writeFlowSequence(state, level, object) {
   state.dump = '[' + _result + ']';
 }
 
-function writeBlockSequence(state, level, object, compact) {
+function writeBlockSequence(state, level, object, compact, path) {
   var _result = '',
       _tag    = state.tag,
       index,
       length;
 
   for (index = 0, length = object.length; index < length; index += 1) {
+    // grow the path to where we are, so complaints can say where we are
+    var pathin = (path||[]).slice();
+    pathin.push(index);
     // Write only valid elements.
-    if (writeNode(state, level + 1, object[index], true, true)) {
+    if (writeNode(state, level + 1, object[index], true, true, false, pathin)) {
       if (!compact || index !== 0) {
         _result += generateNextLine(state, level);
       }
@@ -623,7 +629,7 @@ function writeBlockSequence(state, level, object, compact) {
   state.dump = _result || '[]'; // Empty sequence if no valid values.
 }
 
-function writeFlowMapping(state, level, object) {
+function writeFlowMapping(state, level, object, path) {
   var _result       = '',
       _tag          = state.tag,
       objectKeyList = Object.keys(object),
@@ -640,8 +646,11 @@ function writeFlowMapping(state, level, object) {
 
     objectKey = objectKeyList[index];
     objectValue = object[objectKey];
+    // grow the path to where we are, so complaints can say where we are
+    var pathin = (path||[]).slice();
+    pathin.push(objectKey);
 
-    if (!writeNode(state, level, objectKey, false, false)) {
+    if (!writeNode(state, level, objectKey, false, false, false, pathin)) {
       continue; // Skip this pair because of invalid key;
     }
 
@@ -649,7 +658,7 @@ function writeFlowMapping(state, level, object) {
 
     pairBuffer += state.dump + ':' + (state.condenseFlow ? '' : ' ');
 
-    if (!writeNode(state, level, objectValue, false, false)) {
+    if (!writeNode(state, level, objectValue, false, false, false, pathin)) {
       continue; // Skip this pair because of invalid value.
     }
 
@@ -663,7 +672,7 @@ function writeFlowMapping(state, level, object) {
   state.dump = '{' + _result + '}';
 }
 
-function writeBlockMapping(state, level, object, compact) {
+function writeBlockMapping(state, level, object, compact, path) {
   var _result       = '',
       _tag          = state.tag,
       objectKeyList = Object.keys(object),
@@ -695,8 +704,11 @@ function writeBlockMapping(state, level, object, compact) {
 
     objectKey = objectKeyList[index];
     objectValue = object[objectKey];
-
-    if (!writeNode(state, level + 1, objectKey, true, true, true)) {
+    // grow the path to where we are, so complaints can say where we are
+    var pathin = (path||[]).slice();
+    pathin.push(objectKey);
+    
+    if (!writeNode(state, level + 1, objectKey, true, true, true, pathin)) {
       continue; // Skip this pair because of invalid key.
     }
 
@@ -717,7 +729,7 @@ function writeBlockMapping(state, level, object, compact) {
       pairBuffer += generateNextLine(state, level);
     }
 
-    if (!writeNode(state, level + 1, objectValue, true, explicitPair)) {
+    if (!writeNode(state, level + 1, objectValue, true, explicitPair, null, pathin)) {
       continue; // Skip this pair because of invalid value.
     }
 
@@ -775,7 +787,7 @@ function detectType(state, object, explicit) {
 // Serializes `object` and writes it to global `result`.
 // Returns true on success, or false on invalid object.
 //
-function writeNode(state, level, object, block, compact, iskey) {
+function writeNode(state, level, object, block, compact, iskey, path) {
   state.tag = null;
   state.dump = object;
 
@@ -810,24 +822,24 @@ function writeNode(state, level, object, block, compact, iskey) {
     }
     if (type === '[object Object]') {
       if (block && (Object.keys(state.dump).length !== 0)) {
-        writeBlockMapping(state, level, state.dump, compact);
+        writeBlockMapping(state, level, state.dump, compact, path);
         if (duplicate) {
           state.dump = '&ref_' + duplicateIndex + state.dump;
         }
       } else {
-        writeFlowMapping(state, level, state.dump);
+        writeFlowMapping(state, level, state.dump, path);
         if (duplicate) {
           state.dump = '&ref_' + duplicateIndex + ' ' + state.dump;
         }
       }
     } else if (type === '[object Array]') {
       if (block && (state.dump.length !== 0)) {
-        writeBlockSequence(state, level, state.dump, compact);
+        writeBlockSequence(state, level, state.dump, compact, path);
         if (duplicate) {
           state.dump = '&ref_' + duplicateIndex + state.dump;
         }
       } else {
-        writeFlowSequence(state, level, state.dump);
+        writeFlowSequence(state, level, state.dump, path);
         if (duplicate) {
           state.dump = '&ref_' + duplicateIndex + ' ' + state.dump;
         }
@@ -836,8 +848,13 @@ function writeNode(state, level, object, block, compact, iskey) {
       if (state.tag !== '?') {
         writeScalar(state, state.dump, level, iskey);
       }
+    } else if (type === '[object Function]') {
+        // should halt W until mutes are added
+        window.yamler && window.yamler.push("Has a function at "+path.join('/'));
+        writeScalar(state, "\&{}", level, iskey);
     } else {
       if (state.skipInvalid) return false;
+      window.yamler && window.yamler.push("Has a "+type+" at "+path.join('/'));
       throw new YAMLException('unacceptable kind of an object to dump ' + type);
     }
 
