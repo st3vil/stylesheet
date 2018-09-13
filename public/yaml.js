@@ -849,12 +849,13 @@ function writeNode(state, level, object, block, compact, iskey, path) {
         writeScalar(state, state.dump, level, iskey);
       }
     } else if (type === '[object Function]') {
-        // should halt W until mutes are added
-        window.yamler && window.yamler.push("Has a function at "+path.join('/'));
-        writeScalar(state, "\&{}", level, iskey);
+      if (state.skipInvalid) return false;
+      // should halt W until mutes are added?
+      state.catch && state.catch.push("Has a function at "+path.join('/'));
+      writeScalar(state, "CODE", level, iskey);
     } else {
       if (state.skipInvalid) return false;
-      window.yamler && window.yamler.push("Has a "+type+" at "+path.join('/'));
+      state.catch && state.catch.push("Has a "+type+" at "+path.join('/'));
       throw new YAMLException('unacceptable kind of an object to dump ' + type);
     }
 
@@ -872,7 +873,7 @@ function getDuplicateReferences(object, state) {
       index,
       length;
 
-  inspectNode(object, objects, duplicatesIndexes);
+  inspectNode(object, objects, duplicatesIndexes, state);
 
   for (index = 0, length = duplicatesIndexes.length; index < length; index += 1) {
     state.duplicates.push(objects[duplicatesIndexes[index]]);
@@ -880,15 +881,28 @@ function getDuplicateReferences(object, state) {
   state.usedDuplicates = new Array(length);
 }
 
-function inspectNode(object, objects, duplicatesIndexes) {
+function inspectNode(object, objects, duplicatesIndexes, state, path) {
   var objectKeyList,
       index,
       length;
   
+  if (state.nl && state.nl < objects.length) {
+    throw new YAMLException("Too many yaml nodes, around "+path.join('/'));
+  }
+  if (state.dl && state.dl < path.length) {
+    throw new YAMLException("Too many yaml depth, around "+path.join('/'));
+  }
+  if (state.dryrun) {
+    // track extra geometries, see also state.culdesacs
+    state.node_count = objects.length;
+    if (path.length > state.depth_max) state.depth_max = path.length;
+  }
+  // deprecated
   if (window.maxyamling && window.maxyamling < objects.length) {
     throw new YAMLException("Too much to yaml");
   }
 
+  var culdesac = 1;
   if (object !== null && typeof object === 'object') {
     index = objects.indexOf(object);
     if (index !== -1) {
@@ -900,16 +914,26 @@ function inspectNode(object, objects, duplicatesIndexes) {
 
       if (Array.isArray(object)) {
         for (index = 0, length = object.length; index < length; index += 1) {
-          inspectNode(object[index], objects, duplicatesIndexes);
+          var pathin = (path||[]).slice();
+          pathin.push(index);
+          inspectNode(object[index], objects, duplicatesIndexes, state, pathin);
+          culdesac = 0;
         }
       } else {
         objectKeyList = Object.keys(object);
 
         for (index = 0, length = objectKeyList.length; index < length; index += 1) {
-          inspectNode(object[objectKeyList[index]], objects, duplicatesIndexes);
+          var pathin = (path||[]).slice();
+          pathin.push(objectKeyList[index]);
+          inspectNode(object[objectKeyList[index]], objects, duplicatesIndexes, state, pathin);
+          culdesac = 0;
         }
       }
     }
+  }
+  if (culdesac && state.culdesacs) {
+    // paths to endpoints, showing geometry, see also state.dryrun
+    state.culdesacs.push(path);
   }
 }
 
@@ -919,6 +943,8 @@ function dump(input, options) {
   var state = new State(options);
 
   if (!state.noRefs) getDuplicateReferences(input, state);
+  
+  if (state.dryrun) return state
 
   if (writeNode(state, 0, input, true, true)) return state.dump + '\n';
 
@@ -1109,6 +1135,13 @@ for (var i = 0; i < 256; i++) {
 
 function State(input, options) {
   this.input = input;
+
+  // Steve was here
+  this.dl = options['dl'] || null;
+  this.nl = options['nl'] || null;
+  this.culdesacs = options['culdesacs'] || null;
+  this.catch = options['catch'] || null;
+  this.dryrun = options['dryrun'] || null;
 
   this.filename  = options['filename']  || null;
   this.schema    = options['schema']    || DEFAULT_FULL_SCHEMA;
