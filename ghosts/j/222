@@ -250,6 +250,9 @@ t/ool: | # the usual io check maker
                 text += "\t"+G&intag:'>3 '+say;
             }
             probs.length and text += atchprobs('one');
+            
+            a.indhook and text = a.indhook(text,s,t);
+            
             return text;
         };
         $s;
@@ -284,6 +287,123 @@ t/ool: | # the usual io check maker
     };
     a.nz = nz;
     a.show = show;
+    #c a.d
+    # incremental ind
+    a.d = &talk,t{
+        $d = a.d.d;
+        if (!d || t && t.constructor == Array) {
+            # init
+            d = a.d.d = {};
+            d.params = t;
+            d.talk = talk;
+            d.params = params;
+            !(d.talk && d.params) and throw "a.d must init with talk/params"
+        }
+        
+        # looks again
+        io.o(d.talk,d.params.slice());
+        $op = t || {};
+        typeof op != 'object' and throw "op/t not"
+        $t = io.nz();
+        
+        # for each ind() callback
+        #   each v remembers its path & readLines encode
+        $n = {vals:[],texts:[],vinds:[]};
+        a.ind_one = &text,s,t{
+            n.vals.push(s);
+            n.texts.push(text);
+            n.vinds.push(t.vind.slice());
+            return text
+        };
+        # for new them (n.vals) against old them (d.vals)
+        # vals/texts/vinds/gone i all lign up, amongst new or old
+        # replaces the conjoined string
+        #   with changes only, except parents holding changed children
+        #   DIY indent from vind (path of s inc here)
+        a.ind_many = &{
+            $gone = (d.vals||[]).slice(); # gone i is d.vals i
+            n.was = []; # n.vals i -> d.vals i
+            each is n.vals {
+                $gi = gone.indexOf(s);
+                gi >= 0 and gone[gi] = null; n.was[i] = gi;
+            }
+            $gonetip = []; # gone i -> parent in n.vals i
+            $goners = []; # gone i -> parent in gone i
+            each is gone {
+                !s and continue
+                i == 0 and throw "first atom changed ref"
+                $p = d.vinds[i];
+                $pi = p.length-2;
+                p[pi+1] != s and throw "last vind not us"
+                $parent = p[pi];
+                !parent and throw "no parent"
+                # parent may still be around
+                # < try match looser than ==, C.t/C.y.cv/overall look
+                $ni = n.vals.indexOf(parent);
+                ni >= 0 and gonetip[i] = ni; continue
+                # parent also gone, some ancestor will still be around
+                $di = gone.indexOf(parent);
+                di >= 0 and goners[i] = di; continue
+                $here = ki(s,2)+" ("+ki(parent,2)+"?)";
+                throw "parent of "+here+" is nowhere"
+            }
+            
+            $indent = &s,ind,also{
+                also ||= '';
+                ind < 0 and throw "negative ind for "+s
+                $inds = ''; while (ind--) { inds += '  ' }
+                return s.split("\n").map(&s{ return also+inds+s }).join("\n");
+            };
+            $textdiff = &neu,old,ind{
+                $s = '';
+                old == neu and return indent(neu,ind,'=')
+                old and s += indent(old,ind,'-')
+                neu and s += indent(neu,ind,'+')
+                return s
+            };
+            $bits = []; # [now i?,gone i?,ind,textdiff]
+            $sg = [];
+            $gonerism = &i,ind{
+                bits.push([null,i,ind,textdiff(null,d.texts[i],ind)]);
+                each ii,gi goners[i] {
+                    sg.push(gi);
+                    gonerism(gi,ind+1);
+                }
+            };
+            $sgt = [];
+            each is n.vals {
+                $neu = n.texts[i];
+                $di = n.was[i];
+                $old = d.texts[di]; # may not be
+                
+                $p = n.vinds[i];
+                bits.push([i,null,ind,textdiff(neu,old,p.length-1)]);
+                
+                each ii,gi gonetip[di] {
+                    # vanished immediate children recurse further
+                    sgt.push(gi);
+                    gonerism(gi,p.length+1);
+                }
+            }
+            
+            $usg = goners.filter(&gi{ return sg.indexOf(gi) >= 0 });
+            $usgt = gonetips.filter(&gi{ return sgt.indexOf(gi) >= 0 });
+            usg.length and throw "unseen goners: "+ki(usg)
+            usgt.length and throw "unseen gonetips: "+ki(usgt)
+            
+            
+            
+            $i = d.vals.indexOf(s);
+            i < 0 and i = d.vals.push(s);
+            $ret = text;
+            d.texts[i] = text;
+            return con
+        };
+        T.o = t;
+        a(talk);
+        delete a.indhook;
+    };
+    
     
     a.fin = &{
         each in M {
@@ -488,7 +608,7 @@ t/BuildACastle: | # test Duning and io
             ghosc&s = <<'';
             g.n('sheep',3,{},'hue:54deg,fs:200%');
             g.n('loge',4,{},'hue:154deg,fs:230%');
-            throw "aparty"
+            // hereish
         
             ghoss&dige = dig(ghosc&s);
         }
@@ -570,10 +690,23 @@ t/BuildACastle: | # test Duning and io
         # J9 - go back outside
         g.who = was;
     };
-    # and take the first look
+    #c and...
+    o $h/**
+    a("Fresh instance")
+    
+    # < not to be reindexed, compulsory upstream to z/etc
+    #   be other than tw with the same shape
+    # < inflate nonC in it?
+    i $h/wormhole/g_is
+    ays&s[0].y.tw = g.is;
+    # < not to be transferred to tv....
+    i $h/travel/g_ers
+    ays&s[0].sc.z = g.ers;
+    
+    
     g.be('jit');
     $i = g.is.jit;
-    o $i/**
+    o $h/**
     a("Ohlook, jit")
     # < io should z's
     # < 9 should c&s ascii art
@@ -585,14 +718,6 @@ t/BuildACastle: | # test Duning and io
     # < make a T.../T thing a try enveloper
     $h = 1s&ooo;
     $g = 1s&ggg;
-    # < not to be reindexed, compulsory upstream to z/etc
-    #   be other than tw with the same shape
-    # < inflate nonC in it?
-    i $h/wormhole/g_is
-    ays&s[0].y.tw = g.is;
-    # < not to be transferred to tv....
-    i $h/travel/g_ers
-    ays&s[0].sc.z = g.ers;
     
     $i = g.is.jit;
     #debugger;
