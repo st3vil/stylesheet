@@ -242,7 +242,10 @@ SingConscious: |
         1s&brains ||= {};
         $C = A&s = 1s&brains[g.t] = 1s&brains[g.t] || G&Cye,[g.t,1,{},{J:A.1}];
         # transactional
-        C = G&Cye,C;
+        # yet some things need to build up across non-commits:
+        s&waiting ||= {};
+        $prev = C;
+        C = A&s = G&Cye,C;
         
         # may async and start over from A:n@8, because A:s !A&T
         # we should wire back to ourselves as Ys&z += A:n
@@ -260,8 +263,7 @@ SingConscious: |
             #  - the 9 seems to be Ycv=1, things todo
             # io for C... maybe tangle the s&la notation
             #  making indexes in the field
-            $wai =
-            s&waiting ||= {};
+            $wai = s&waiting;
             $b = wai.by_sip ||= {};
             b =
             b[Yc&sip] ||= {};
@@ -269,7 +271,8 @@ SingConscious: |
             b.i ||= 0;
             b.i++;
             b.cv != Y.cv and b.i = 0;
-            if (b.i > 12 && b.triedeverything) {
+            b.cv = Y.cv;
+            if (b.i > 12 && !b.triedeverything) {
                 if (Y.up && Y.up.c.s.y.cv == 0.9 && !b.triednine) {
                     b.triednine = 1;
                     Y = Y.up
@@ -282,7 +285,7 @@ SingConscious: |
                 }
             }
             
-            ~wait for: ki(Yc&s,3), '@'+Y.cv
+            ~wait for: Yc&sip, 'i:'+b.i, ki(Y,2), ki(Yc&s,3)
             # continue;
             # get attention (from Jin)
             4s&N.push(Y);
