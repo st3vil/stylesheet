@@ -305,12 +305,12 @@ NutGravy: | # non-I routines: json, dig, diff
     # options (camelCase in there) etc:
     #   dl/nl                depth/node limit
     #   culdesacs=[]         many path=[k+] to tips
-    #   dryrun                 recon only, fast size check
+    #   dryrun               recon only, fast size check
     #     returns internal $state, with .node_count and .depth_max
-    #  either voids throwing on Function:
+    # void throwing on Function:
     #   catch/T.eny_catch=[] pushed Function warnings
-    #   skipCode                Functions vanish
-    # can be given on T.eny_opt or n
+    #   skipCode             Functions vanish
+    # options can be given on T.eny_opt or n
     # T (or n if T=object, as T is) can be >0 nl, <0 dl
     window.eny = &sTn{
         $opt = {};
@@ -332,14 +332,16 @@ NutGravy: | # non-I routines: json, dig, diff
         try { encoded = jsyaml.safeDump(s,opt) }
         catch(er) { err = er }
         if (err || opt.catch.length) {
-            if (opt.Tcatch) {
-                # is minded by something up there,
-                # allows munted encodes
-                # < not mixing types, may [err,pathwarning+]
-                err and opt.catch.unshift(err);
-            }
-            elsif (err) {
+            if (err) {
+                # even if Tcatch, have nothing to return,
+                #   so process between must abort
                 throw err, opt.catch
+            }
+            elsif (opt.Tcatch) {
+                # is minded by something up there,
+                # which should be closely coupled to here
+                # !err allows munted encodes,
+                #   so the process can go on/muntwarn at the end
             }
             else {
                 throw "Unyamlables", opt.catch
