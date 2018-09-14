@@ -187,7 +187,7 @@ t/ool: | # the usual io check maker
         !show.impartial and t.partial = 1;
         #c describe Cpath (ind) and nkgk (toLines)
         $whereindis = &{
-            $balk;
+            $balk = '';
             if (t.vind) { # amongst Cs
                 balk += " on "+t.vind.map(&s{
                     return isC(s) ? s.t : ki(s,2)
@@ -205,7 +205,7 @@ t/ool: | # the usual io check maker
         $atchprobs = &t{
             t == 'one' && show.probspermany and return
             anyprobs += probs.length;
-            return G&intag:'>6 '+"\n"+probs.join("\n")+"\n"
+            return G&intag:'>6 '+"\n"+probs.splice(0).join("\n")+"\n"
         };
         $cb = &s,t{
             $text;
@@ -228,7 +228,7 @@ t/ool: | # the usual io check maker
                         $ca = T[t+'_catch'];
                         delete T[t+'_catch'];
                         !ca.length and return
-                        probs.push(t+" warning "+whereindis())
+                        probs.push(t+" warning"+whereindis())
                         ca.map(&s{ probs.push('  '+s) });
                     });
                 }
@@ -255,7 +255,7 @@ t/ool: | # the usual io check maker
         $s;
         try { s = t.ind(cb).join("\n") }
         catch(er) {
-            $balk = "Error calling ind()";
+            $balk = "Error calling ind()"+whereindis();
             m error_calling_ind  $s:balk %hue:100deg,dis:block,fs:140%
             m indBANG  $s:er.message %fs:130%,hue:170deg,dis:block
             m error_tc  $s:er.tc
@@ -264,7 +264,7 @@ t/ool: | # the usual io check maker
         probs.length and s += atchprobs('many');
         if (anyprobs) {
             $say = ">6 !"+anyprobs+" problems!";
-            s = G&intag,say + s
+            s = G&intag,say +"\n"+s
         }
         s += "\n";
         m inds  $s:s,ht:1 %hue:120deg,ws:pre,dis:block
@@ -460,7 +460,12 @@ t/encodings: | # test yaml
     delete T.eny_opt;
     a("encoding wobblies");
     delete bes&doubley;
+    i 1s&huh/afore
     i $be/lala
+    i 1s&huh/zafter
+    ays&s[0].sc.geo = 43;
+    a("add some C, i zafter misses trouble");
+    o 1s&huh/**
     a("encoding wobblies less");
     
     
