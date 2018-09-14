@@ -162,7 +162,7 @@ t/ool: | # the usual io check maker
         t = io.nz();
         
         $iis;
-        $rowtalk = &S{
+        $findtalk = &S{
             $i = 5;
             while (S && !S.is && i-- > 0) { S = S.plumb }
             S = S.is && S;
@@ -172,9 +172,9 @@ t/ool: | # the usual io check maker
         
         if (show.talk) {
             # i chainlinked behind lastfuncs
-            $bits = [rowtalk(t)];
+            $bits = [findtalk(t)];
             # o chainlinked behind firstfuncs
-            iis && iis.plumb and bits.push(rowtalk(iis.plumb));
+            iis && iis.plumb and bits.push(findtalk(iis.plumb));
             $tk = bits.join(' ');
             m talk  $s:tk %fs:130%,hue:-40deg,dis:block,float:right,mw:50%
         }
@@ -185,18 +185,57 @@ t/ool: | # the usual io check maker
         m iter  $s:t,dl:9.26
         
         !show.impartial and t.partial = 1;
+        #c describe Cpath (ind) and nkgk (toLines)
+        $whereindis = &{
+            $balk;
+            if (t.vind) { # amongst Cs
+                balk += " on "+t.vind.map(&s{
+                    return isC(s) ? s.t : ki(s,2)
+                }).join('/');
+            }
+            $nkgk = T.eny_nkgk; delete T.eny_nkgk;
+            if (nkgk) { # in C
+                # from G&toLines via T, if thrown from its eny()
+                balk += "'s "+nkgk.join('.');
+            }
+            return balk
+        };
+        $anyprobs = 0;
+        $probs = []; # many message+whereindis,catch?
+        $atchprobs = &t{
+            t == 'one' && show.probspermany and return
+            anyprobs += probs.length;
+            return G&intag:'>6 '+"\n"+probs.join("\n")+"\n"
+        };
         $cb = &s,t{
             $text;
             if (isC(s)) {
                 $code = sc&code;
                 delete sc&code;
-                # definitely need a munt beacon + warning
                 G.enybug and debugger;
+                if (!show.nocatch) {
+                    # so we receive munted encodes + warnings
+                    T.eny_catch = [];
+                    T.enj_catch = [];
+                }
+                
                 text = G&toLines,s;
+                
                 code and sc&code = code
+                if (!show.nocatch) {
+                    # attach warnings
+                    ['eny','enj'].map(&t{
+                        $ca = T[t+'_catch'];
+                        delete T[t+'_catch'];
+                        !ca.length and return
+                        probs.push(t+" warning "+whereindis())
+                        ca.map(&s{ probs.push('  '+s) });
+                    });
+                }
             }
             else {
                 text = "GARB: "+ki(s);
+                probs.push("nonC"+whereindis());
             }
             if (t.objects && t.objects.indexOf(s) >= 0) {
                 # highlight t.objects (that doof matched)
@@ -210,6 +249,7 @@ t/ool: | # the usual io check maker
                 say = say.replace(/^\{|\}$/g,'');
                 text += "\t"+G&intag:'>3 '+say;
             }
+            probs.length and text += atchprobs('one');
             return text;
         };
         $s;
@@ -220,6 +260,11 @@ t/ool: | # the usual io check maker
             m indBANG  $s:er.message %fs:130%,hue:170deg,dis:block
             m error_tc  $s:er.tc
             return
+        }
+        probs.length and s += atchprobs('many');
+        if (anyprobs) {
+            $say = ">6 !"+anyprobs+" problems!";
+            s = G&intag,say + s
         }
         s += "\n";
         m inds  $s:s,ht:1 %hue:120deg,ws:pre,dis:block
@@ -254,6 +299,7 @@ t/encodings: | # test yaml
     $a = G&way,'t/ool',ar;
     $io = A&io;
     $t = &title,ty{ a(title,ty||8) }
+    a.show.nocatch = 1;
     
     $tryeny = &s{
         $err;
@@ -349,6 +395,7 @@ t/encodings: | # test yaml
     tryeny({za:2,za:be,ohbythe:'null'});
     
     #   culdesacs=[]         many path=[k+] to tips
+    # < would be better in that nz format...
     $cul = [];
     T.eny_opt = {skipCode:1,culdesacs:cul};
     t("eny() skipCode + culdesacs");
@@ -356,6 +403,7 @@ t/encodings: | # test yaml
     anray('culdesac',cul,1);
     
     1s&be = be;
+    1s&huh = h;
     a('','');
     
     #c lim
@@ -402,6 +450,14 @@ t/encodings: | # test yaml
     neg(5,0,'not enough nodes');
     neg(55,5,'plenty of nodes, not enough depth');
     neg(4,55,'plenty of depth, not enough nodes');
+    
+    a('','');
+    
+    t("a()/ind()'s built in warning system");
+    delete a.show.nocatch;
+    debugger;
+    o 1s&huh/**
+    a("bleeds at ya");
     
     S 0
     a.fin();
@@ -513,7 +569,7 @@ t/BuildACastle: | # test Duning and io
     # < J5 most (knowable) asyncing/res-readying
     
     # 
-    S 2
+    S 2 figura
     # < make a T.../T thing a try enveloper
     $h = 1s&ooo;
     $g = 1s&ggg;
@@ -525,7 +581,7 @@ t/BuildACastle: | # test Duning and io
     # < not to be transferred to tv....
     i $h/travel/g_ers
     ays&s[0].sc.z = g.ers;
-    S
+    
     $i = g.is.jit;
     #debugger;
     o $h/**

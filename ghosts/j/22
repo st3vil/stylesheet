@@ -1578,13 +1578,17 @@ iooia: | # F > i/o > input/output
                 # only for parents with children
                 !t.partial && t.row.slice(-1)[0] == null and continue
                 $unreal_depth = 0;
+                t.vind = [];
                 each dv row {
                     v == null and continue
+                    d *= 1;
                     $pa = t.path[d];
                     pa.doof and unreal_depth++; continue
+                    # path of real things, not path[i]
+                    t.vind.push(v);
                     # same as last row, still at depth
                     la[d] == v and continue
-                    # < t.d should probably be as row/path i...
+                    # < t.d should probably be t.vind.length...
                     t.d = d;
                     $s = cb(v,t);
                     s == null and continue;
