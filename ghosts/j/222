@@ -251,7 +251,7 @@ t/ool: | # the usual io check maker
             }
             probs.length and text += atchprobs('one');
             
-            a.indhook and text = a.indhook(text,s,t);
+            a.ind_one and text = a.ind_one(text,s,t);
             
             return text;
         };
@@ -264,6 +264,7 @@ t/ool: | # the usual io check maker
             m error_tc  $s:er.tc
             return
         }
+        a.ind_many and s = a.ind_many(s,t);
         probs.length and s += atchprobs('many');
         if (anyprobs) {
             $say = ">6 !"+anyprobs+" problems!";
@@ -289,16 +290,17 @@ t/ool: | # the usual io check maker
     a.show = show;
     #c a.d
     # incremental ind
-    a.d = &talk,t{
+    a.d = &talk,t,opt{
         $d = a.d.d;
         if (!d || t && t.constructor == Array) {
             # init
-            d = a.d.d = {};
+            d = a.d.d = {vals:[],texts:[],vinds:[]};
             d.params = t;
+            t = opt;
             d.talk = talk;
-            d.params = params;
             !(d.talk && d.params) and throw "a.d must init with talk/params"
         }
+        1s&additioner = d;
         
         # looks again
         io.o(d.talk,d.params.slice());
@@ -327,7 +329,7 @@ t/ool: | # the usual io check maker
                 $gi = gone.indexOf(s);
                 gi >= 0 and gone[gi] = null; n.was[i] = gi;
             }
-            $gonetip = []; # gone i -> parent in n.vals i
+            $gonetips = []; # gone i -> parent in n.vals i
             $goners = []; # gone i -> parent in gone i
             each is gone {
                 !s and continue
@@ -340,7 +342,7 @@ t/ool: | # the usual io check maker
                 # parent may still be around
                 # < try match looser than ==, C.t/C.y.cv/overall look
                 $ni = n.vals.indexOf(parent);
-                ni >= 0 and gonetip[i] = ni; continue
+                ni >= 0 and gonetips[i] = ni; continue
                 # parent also gone, some ancestor will still be around
                 $di = gone.indexOf(parent);
                 di >= 0 and goners[i] = di; continue
@@ -357,11 +359,22 @@ t/ool: | # the usual io check maker
             $textdiff = &neu,old,ind{
                 $s = '';
                 old == neu and return indent(neu,ind,'=')
+                if (old && neu && neu.match(/\n/)) {
+                    # < use diff()
+                    old = old.split("\n");
+                    neu = neu.split("\n");
+                    while (old.length || neu.length) {
+                        s.length and s += "\n"
+                        s += textdiff(neu.shift(),old.shift(),ind);
+                    }
+                    return s
+                }
                 old and s += indent(old,ind,'-')
+                neu && old and s += "\n";
                 neu and s += indent(neu,ind,'+')
                 return s
             };
-            $bits = []; # [now i?,gone i?,ind,textdiff]
+            $bits = []; # [now i?,gone i?,ind_number,textdiff]
             $sg = [];
             $gonerism = &i,ind{
                 bits.push([null,i,ind,textdiff(null,d.texts[i],ind)]);
@@ -377,32 +390,40 @@ t/ool: | # the usual io check maker
                 $old = d.texts[di]; # may not be
                 
                 $p = n.vinds[i];
-                bits.push([i,null,ind,textdiff(neu,old,p.length-1)]);
+                $ind = p.length-1;
+                bits.push([i,null,ind,textdiff(neu,old,ind)]);
                 
-                each ii,gi gonetip[di] {
+                each ii,gi gonetips[di] {
                     # vanished immediate children recurse further
                     sgt.push(gi);
-                    gonerism(gi,p.length+1);
+                    gonerism(gi,ind+1);
                 }
             }
             
-            $usg = goners.filter(&gi{ return sg.indexOf(gi) >= 0 });
-            $usgt = gonetips.filter(&gi{ return sgt.indexOf(gi) >= 0 });
+            $usg = goners.filter(&i{ return sg.indexOf(i) >= 0 });
+            $usgt = gonetips.filter(&i{ return sgt.indexOf(i) >= 0 });
             usg.length and throw "unseen goners: "+ki(usg)
             usgt.length and throw "unseen gonetips: "+ki(usgt)
             
+            # < reduce ...
             
+            # save
+            ex(d,n);
             
-            $i = d.vals.indexOf(s);
-            i < 0 and i = d.vals.push(s);
-            $ret = text;
-            d.texts[i] = text;
-            return con
+            # conjoin
+            $con = [];
+            each iw bits {
+                con.push(w[3]);
+            }
+            return con.join("\n")+"\n";
         };
         T.o = t;
         a(talk);
-        delete a.indhook;
+        delete a.ind_one;
+        delete a.ind_many;
     };
+    # resurrect between domes
+    a.d.d = 1s&additioner;
     
     
     a.fin = &{
@@ -691,8 +712,8 @@ t/BuildACastle: | # test Duning and io
         g.who = was;
     };
     #c and...
-    o $h/**
-    a("Fresh instance")
+    a.d('$h/**',[h]);
+    #a("Fresh instance")
     
     # < not to be reindexed, compulsory upstream to z/etc
     #   be other than tw with the same shape
@@ -706,8 +727,7 @@ t/BuildACastle: | # test Duning and io
     
     g.be('jit');
     $i = g.is.jit;
-    o $h/**
-    a("Ohlook, jit")
+    a.d("Ohlook, jit & ers/is turned up");
     # < io should z's
     # < 9 should c&s ascii art
     #     separation of style/content about keeping crypto
@@ -721,8 +741,7 @@ t/BuildACastle: | # test Duning and io
     
     $i = g.is.jit;
     #debugger;
-    o $h/**
-    a("Entirety")
+    a.d("Anything?");
     
     
     S 0
