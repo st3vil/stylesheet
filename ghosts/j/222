@@ -319,9 +319,9 @@ t/ool: | # the usual io check maker
         };
         # for new them (n.vals) against old them (d.vals)
         # vals/texts/vinds/gone i all lign up, amongst new or old
-        # replaces the conjoined string
-        #   with changes only, except parents holding changed children
-        #   DIY indent from vind (path of s inc here)
+        # < do we notice if something just moves around?
+        #   relying on it not, and refs being the same every time...
+        # < should look for same t in parent at least
         a.ind_many = &{
             $gone = (d.vals||[]).slice(); # gone i is d.vals i
             n.was = []; # n.vals i -> d.vals i
@@ -399,33 +399,42 @@ t/ool: | # the usual io check maker
                     gonerism(gi,ind+1);
                 }
             }
-            
+            # sanity
             $usg = goners.filter(&i{ return sg.indexOf(i) >= 0 });
             $usgt = gonetips.filter(&i{ return sgt.indexOf(i) >= 0 });
             usg.length and throw "unseen goners: "+ki(usg)
             usgt.length and throw "unseen gonetips: "+ki(usgt)
-            
-            # < reduce ...
-            
-            # save
+            # commit
             ex(d,n);
-            
-            # conjoin
-            $con = [];
-            each iw bits {
-                con.push(w[3]);
-            }
-            return con.join("\n")+"\n";
+            # reduce/conjoin
+            $bits = bits.map(&w{ return w[3] });
+            bits = a.reduce(bits);
+            return bits.join("\n")+"\n"
         };
         T.o = t;
         a(talk);
         delete a.ind_one;
         delete a.ind_many;
     };
-    # resurrect between domes
+    # keep knowing between domes
     a.d.d = 1s&additioner;
     
-    
+    #c reduce
+    a.reduce = &bits,{
+        $N = bits.slice();
+        # strings for each atom, each line of which is:
+        #   (+/-/=)(  indent)(toLinesing)
+        # reduce to difference with context:
+        #   parents of changes as just t
+        #   t siblings if the pool of them is <10 and >0.5 change
+        $M = [];
+        $parento = [];
+        $sibbe = [];
+        each is N {
+            M.push(s);
+        }
+        return M
+    };
     a.fin = &{
         each in M {
             ns&hue || ns&pi and continue
@@ -619,7 +628,6 @@ t/BuildACastle: | # test Duning and io
     $a = G&way,'t/ool',ar;
     $io = A&io;
     io.dotw = 1;
-    ys&ml = '1em';
     
     S 1 setup, first
     $h = 1s&ooo = G&Cye,['how'];
@@ -738,6 +746,10 @@ t/BuildACastle: | # test Duning and io
     # < make a T.../T thing a try enveloper
     $h = 1s&ooo;
     $g = 1s&ggg;
+    o $h/ghost/jit
+    
+    $j = ays&s[0];
+    jc&s = jc&s.replace(/\/\/ hereish\n/,"There's bits\n// hereish\n");
     
     $i = g.is.jit;
     #debugger;
