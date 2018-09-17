@@ -423,9 +423,11 @@ t/ool: | # the usual io check maker
     # intag + diff, snip long sames. eg:
     # L = ["=house","+  shed","=  hut"+]
     #  house gets a (subatomic) shed, only seeing first 3 huts
+    # returns array of one multilined string
             $rediff = &L{
                 $old = [];
                 $neu = [];
+                #L.length > 1 and debugger;
                 each il L {
                     $sym = l.substr(0,1);
                     l = l.substr(1);
@@ -451,7 +453,7 @@ t/ool: | # the usual io check maker
                             d[i-1] and nL[0] = L.splice(0,context).join("\n")
                             d[i+1] and nL[2] = L.splice(-context).join("\n")
                             $inds; L.find(&s{
-                                $m = s.match(/^(\s*));
+                                $m = s.match(/^(\s*)/);
                                 return m && (inds = m[1])
                             });
                             nL[1] = inds+ (nL[0]?"...":'')+
@@ -461,11 +463,11 @@ t/ool: | # the usual io check maker
                         }
                     }
                     $co = n.t == 'same' ? 8 : n.t == 'gone' ? 1 : 4;
-                    $ht = G&intag,'>'+co+' '+nc&s;
+                    $ht = G&intag:'>'+co+' '+nc&s; 
                     N.push(ht);
                 }
                 # l = '~'+ind+stuff for changes
-                return L
+                return [N.join("")]
             };
     #c reduce
     # < rewrite with F/etc and its temporary hierarchy mapintoism
@@ -495,7 +497,7 @@ t/ool: | # the usual io check maker
         };
         # add a must-see, also any parents
         $tothis = &s{
-            !parinds.length and return []
+            !parinds.length and M.push(s); return []
             $i = parinds[ind];
             parinds.splice(ind);
             parents.splice(i).map(&s{ M.push(s) });
@@ -562,15 +564,17 @@ t/ool: | # the usual io check maker
                     $key = L.shift();
                     # < going to miss a key change
                     !anych(L) and continue;
+                    debugger;
                     $L = rediff(L);
-                    L.unshift(key);
+                    L.unshift(key.substr(1));
                     change.push(L);
                 }
             }
             # should have known up at anych(L)
             !change.length and debugger; vaguely(find,t); continue;
-            atomt and change.unshift(atomt);
-            tothis(find,L.join("\n"));
+            atomt and change.unshift(atomt.substr(1));
+            
+            tothis(change.join("\n"));
         }
         return M
     };
