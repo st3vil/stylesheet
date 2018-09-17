@@ -419,8 +419,57 @@ t/ool: | # the usual io check maker
     # keep knowing between domes
     a.d.d = 1s&additioner;
     
+    #c rediff()
+    # intag + diff, snip long sames. eg:
+    # L = ["=house","+  shed","=  hut"+]
+    #  house gets a (subatomic) shed, only seeing first 3 huts
+            $rediff = &L{
+                $old = [];
+                $neu = [];
+                each il L {
+                    $sym = l.substr(0,1);
+                    l = l.substr(1);
+                    sym == '-' and old.push(l)
+                    else
+                    sym == '+' and neu.push(l)
+                    else {
+                        old.push(l); neu.push(l)
+                    }
+                }
+                $d = diff(old.join("\n"),neu.join("\n"));
+                $N = [];
+                $nl;
+                each in d {
+                    i *= 1;
+                    if (n.t == 'same') {
+                        $L = nc&s.split("\n");
+                        $context = 3;
+                        $needs = context * (d[i-1] && d[i+1] ? 2 : 1);
+                        if (L.length > needs) {
+                            # squish after thing before
+                            $nL = [];
+                            d[i-1] and nL[0] = L.splice(0,context).join("\n")
+                            d[i+1] and nL[2] = L.splice(-context).join("\n")
+                            $inds; L.find(&s{
+                                $m = s.match(/^(\s*));
+                                return m && (inds = m[1])
+                            });
+                            nL[1] = inds+ (nL[0]?"...":'')+
+                                L.length+" more"+
+                                (nL[2]?"...":'')
+                            nc&s = nL.join("\n");
+                        }
+                    }
+                    $co = n.t == 'same' ? 8 : n.t == 'gone' ? 1 : 4;
+                    $ht = G&intag,'>'+co+' '+nc&s;
+                    N.push(ht);
+                }
+                # l = '~'+ind+stuff for changes
+                return L
+            };
     #c reduce
     # < rewrite with F/etc and its temporary hierarchy mapintoism
+    
     a.reduce = &bits,{
         $N = bits.slice();
         # reduce to difference with context:
@@ -495,33 +544,13 @@ t/ool: | # the usual io check maker
                 dif != 1 and debugger; throw "BQkey indjump "+l, es
                 # step BQ keys and their lines
                 L.unshift(l);
-                $ond;
                 $at;
-                while (L.length && (ond = just(L[0],ind))) {
-                    #debugger;
-                    #ond != ind+1 and throw "ind jump BQkey",ind,ond;
+                while (L.length && just(L[0],ind)) {
                     $kl = L.shift();
                     !at and at = []; es.push(at); ind += 1;
                     at.push(kl);
                 }
             }
-            # for the insides, intag diff(), mute long sames
-            $rediff = &L{
-                $old = [];
-                $neu = [];
-                each il L {
-                    l[0] == '=' and old.push(l); neu.push(l);
-                    l[0] == '+' and neu.push(l);
-                    l[0] == '-' and old.push(l);
-                }
-                $d = diff(old.join("\n"),neu.join("\n"));
-                $N = [];
-                each in d {
-                    
-                }
-                # l = '~'+ind+stuff for changes
-                return L
-            };
             $atomt;
             $change = [];
             each iL es {
