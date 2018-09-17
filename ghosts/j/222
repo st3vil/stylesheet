@@ -289,6 +289,12 @@ t/ool: | # the usual io check maker
     a.nz = nz;
     a.show = show;
     #c a.d
+    $indent = &s,ind,prefix{
+        prefix ||= '';
+        ind < 0 and throw "negative ind for "+s
+        $inds = ''; while (ind--) { inds += '  ' }
+        return s.split("\n").map(&s{ return prefix+inds+s }).join("\n");
+    };
     # incremental ind
     a.d = &talk,t,opt{
         $d = a.d.d;
@@ -350,12 +356,6 @@ t/ool: | # the usual io check maker
                 throw "parent of "+here+" is nowhere"
             }
             
-            $indent = &s,ind,also{
-                also ||= '';
-                ind < 0 and throw "negative ind for "+s
-                $inds = ''; while (ind--) { inds += '  ' }
-                return s.split("\n").map(&s{ return also+inds+s }).join("\n");
-            };
             $textdiff = &neu,old,ind{
                 $s = '';
                 old == neu and return indent(neu,ind,'=')
@@ -420,18 +420,128 @@ t/ool: | # the usual io check maker
     a.d.d = 1s&additioner;
     
     #c reduce
+    # < rewrite with F/etc and its temporary hierarchy mapintoism
     a.reduce = &bits,{
         $N = bits.slice();
-        # strings for each atom, each line of which is:
-        #   (+/-/=)(  indent)(toLinesing)
         # reduce to difference with context:
         #   parents of changes as just t
-        #   t siblings if the pool of them is <10 and >0.5 change
+        # < t siblings if the pool of them is <10 and >0.5 change
+        #   blows the algorithm, diff to be done real good somewhere...
         $M = [];
-        $parento = [];
-        $sibbe = [];
-        each is N {
+        # a stack of things above here not in M, their depth
+        $parents = [];
+        $parinds = []; # ind -> parents i
+        # put just t as parent while children may need them
+        $vaguely = &ind,s{ // }}
+            $out = [];
+            while (ind >= Object.keys(parinds).slice(-1)[0]) {
+                # indent reduces
+                $i = parinds.pop();
+                # pop undefs if gappy (shouldn't be)
+                i == null and continue
+                parents.splice(i)
+            }
+            $i = parents.push(indent(s,ind,' '))-1;
+            ind > Object.keys(parinds).slice(-1)[0] and parinds.push(i)
+        };
+        # add a must-see, also any parents
+        $tothis = &s{
+            !parinds.length and return []
+            $i = parinds[ind];
+            parinds.splice(ind);
+            parents.splice(i).map(&s{ M.push(s) });
             M.push(s);
+        };
+        # find such indent
+        $just = &l,atleast{
+            $ind;
+            $re = !atleast ? /^\S(\s*)(\S.*)(\t|:)/
+                # BQvals indented yay much, maybe more
+                : RegExp('^\\S((  ){'+atleast+'})');
+            $ind = l.match(re);
+            !ind and debugger; throw "Lin not ("+gtind+"): "+l, es
+            return ind[1].length / 2
+        };
+        # false if nothing in L changes
+        $anych = &L{
+            each il L {
+                l[0] != '=' and return 1
+            }
+        };
+        each is N {
+            # strings for each atom, each line of which is:
+            #   (+/-/=)(  indent)(toLinesing)
+            ind = s.match(/^\S(\s*)(\S.*)(\t|:)/);
+            !ind and throw "lin not "+s
+            $t = ind[2];
+            ind = ind[1].length / 2;
+            
+            $L = s.split("\n");
+            # simple, get gone (until becoming parent of action)
+            !anych(L) and vaguely(ind,t); continue;
+            
+            # partitions of L lines: atom, BQ*
+            $es = [[]];
+            # ind shall wander up by 1 to BQ keys, 2 for BQ value...
+            $find = ind;
+            $l;
+            while (L.length) {
+                l = L.shift();
+                # match atoms and their BQ keys
+                $ind = just(l);
+                $dif = ind - find;
+                # atoms
+                dif == 0 and es[0].push(l); continue
+                dif != 1 and debugger; throw "BQkey indjump "+l, es
+                # step BQ keys and their lines
+                L.unshift(l);
+                $ond;
+                $at;
+                while (L.length && (ond = just(L[0],ind))) {
+                    #debugger;
+                    #ond != ind+1 and throw "ind jump BQkey",ind,ond;
+                    $kl = L.shift();
+                    !at and at = []; es.push(at); ind += 1;
+                    at.push(kl);
+                }
+            }
+            # for the insides, intag diff(), mute long sames
+            $rediff = &L{
+                $old = [];
+                $neu = [];
+                each il L {
+                    l[0] == '=' and old.push(l); neu.push(l);
+                    l[0] == '+' and neu.push(l);
+                    l[0] == '-' and old.push(l);
+                }
+                $d = diff(old.join("\n"),neu.join("\n"));
+                $N = [];
+                each in d {
+                    
+                }
+                # l = '~'+ind+stuff for changes
+                return L
+            };
+            $atomt;
+            $change = [];
+            each iL es {
+                if (i == 0) { # the atom
+                    !anych(L) and atomt = indent(t,find,' '); continue
+                    change.push(rediff(L));
+                }
+                else { # BQ branches therein
+                    $key = L.shift();
+                    # < going to miss a key change
+                    !anych(L) and continue;
+                    $L = rediff(L);
+                    L.unshift(key);
+                    change.push(L);
+                }
+            }
+            # should have known up at anych(L)
+            !change.length and debugger; vaguely(find,t); continue;
+            atomt and change.unshift(atomt);
+            tothis(find,L.join("\n"));
         }
         return M
     };
