@@ -422,14 +422,13 @@ t/ool: | # the usual io check maker
     
     #c rediff
     # bunch of "+  ..." get properly diff()'d and html tagged
-    # intag + diff, snip long sames. eg:
+    # eg:
     # L = ["=house","+  shed","=  hut"+]
-    #  house gets a (subatomic) shed, only seeing first 3 huts
-    # returns array of one multilined string
+    #  house gets a (subatomic) shed, snip huts after 3
+    # < can't see gone whitespace
             $rediff = &L,opt{
                 $old = [];
                 $neu = [];
-                #L.length > 1 and debugger;
                 each il L {
                     $sym = l.substr(0,1);
                     l = l.substr(1);
@@ -470,8 +469,7 @@ t/ool: | # the usual io check maker
                     co != null and nc&s = G&intag:'>'+co+' '+nc&s; 
                     N.push(nc&s);
                 }
-                # l = '~'+ind+stuff for changes
-                return [N.join("")]
+                return N.join("")
             };
     #c reduce
     # < rewrite with F/etc and its temporary hierarchy mapintoism
@@ -497,7 +495,7 @@ t/ool: | # the usual io check maker
                 i == null and continue
                 parents.splice(i)
             }
-            $i = parents.push(indent(s,ind,' '))-1;
+            $i = parents.push(indent(s,ind,''))-1;
             !(ind > Object.keys(parinds).slice(-1)[0]) and parinds[ind] = i
         };
         # add a must-see, also any parents
@@ -562,15 +560,14 @@ t/ool: | # the usual io check maker
             $change = [];
             each iL es {
                 if (i == 0) { # the atom
-                    !anych(L) and atomt = indent(t,find,' '); continue
+                    !anych(L) and atomt = indent(t,find,''); continue
                     change.push(rediff(L));
                 }
                 else { # BQ branches therein
-                    # < going to miss a key change?
-                    #$key = L.shift().substr(1);
                     !anych(L) and continue;
-                    $L = rediff(L,{snipnotfirst:1});
-                    change.push(L);
+                    # < show first line of each new indent above change
+                    #   to have not this wacky option that keeps BQkey:
+                    change.push(rediff(L,{snipnotfirst:1}));
                 }
             }
             # should have known up at anych(L)
