@@ -288,11 +288,12 @@ t/ool: | # the usual io check maker
     };
     a.nz = nz;
     a.show = show;
-    #c a.d
-    $indent = &s,ind,prefix{
+    #c add
+    $indent = &s,ind,prefix,indstring{
         prefix ||= '';
+        indstring ||= '  ';
         ind < 0 and throw "negative ind for "+s
-        $inds = ''; while (ind--) { inds += '  ' }
+        $inds = ''; while (ind > 0 && ind--) { inds += indstring }
         return s.split("\n").map(&s{ return prefix+inds+s }).join("\n");
     };
     # incremental ind
@@ -419,12 +420,13 @@ t/ool: | # the usual io check maker
     # keep knowing between domes
     a.d.d = 1s&additioner;
     
-    #c rediff()
+    #c rediff
+    # bunch of "+  ..." get properly diff()'d and html tagged
     # intag + diff, snip long sames. eg:
     # L = ["=house","+  shed","=  hut"+]
     #  house gets a (subatomic) shed, only seeing first 3 huts
     # returns array of one multilined string
-            $rediff = &L{
+            $rediff = &L,opt{
                 $old = [];
                 $neu = [];
                 #L.length > 1 and debugger;
@@ -445,6 +447,7 @@ t/ool: | # the usual io check maker
                     i *= 1;
                     if (n.t == 'same') {
                         $L = nc&s.split("\n");
+                        $key = opt && opt.snipnotfirst ? L.shift()+"\n" : null;
                         $context = 3;
                         $needs = context * (d[i-1] && d[i+1] ? 2 : 1);
                         if (L.length > needs) {
@@ -459,19 +462,21 @@ t/ool: | # the usual io check maker
                             nL[1] = inds+ (nL[0]?"...":'')+
                                 L.length+" more"+
                                 (nL[2]?"...":'')
-                            nc&s = nL.join("\n");
+                            nc&s = key+nL.join("\n");
                         }
                     }
-                    $co = n.t == 'same' ? 8 : n.t == 'gone' ? 1 : 4;
-                    $ht = G&intag:'>'+co+' '+nc&s; 
-                    N.push(ht);
+                    # these colours expect to hue+120deg
+                    $co = n.t == 'new' ? 0 : n.t == 'gone' ? 9 : null;
+                    co != null and nc&s = G&intag:'>'+co+' '+nc&s; 
+                    N.push(nc&s);
                 }
                 # l = '~'+ind+stuff for changes
                 return [N.join("")]
             };
     #c reduce
     # < rewrite with F/etc and its temporary hierarchy mapintoism
-    
+    #   it as lines, groups of lines, bits of change all as one
+    #   regexp/map/alterations working on any partism of the whole
     a.reduce = &bits,{
         $N = bits.slice();
         # reduce to difference with context:
@@ -485,7 +490,7 @@ t/ool: | # the usual io check maker
         # put just t as parent while children may need them
         $vaguely = &ind,s{ // }}
             $out = [];
-            while (ind >= Object.keys(parinds).slice(-1)[0]) {
+            while (ind <= Object.keys(parinds).slice(-1)[0]) {
                 # indent reduces
                 $i = parinds.pop();
                 # pop undefs if gappy (shouldn't be)
@@ -493,14 +498,14 @@ t/ool: | # the usual io check maker
                 parents.splice(i)
             }
             $i = parents.push(indent(s,ind,' '))-1;
-            ind > Object.keys(parinds).slice(-1)[0] and parinds.push(i)
+            !(ind > Object.keys(parinds).slice(-1)[0]) and parinds[ind] = i
         };
         # add a must-see, also any parents
         $tothis = &s{
+            #a.debog and debugger;
             !parinds.length and M.push(s); return []
-            $i = parinds[ind];
-            parinds.splice(ind);
-            parents.splice(i).map(&s{ M.push(s) });
+            parinds.splice(0);
+            parents.splice(0).map(&s{ M.push(s) });
             M.push(s);
         };
         # find such indent
@@ -522,7 +527,7 @@ t/ool: | # the usual io check maker
         each is N {
             # strings for each atom, each line of which is:
             #   (+/-/=)(  indent)(toLinesing)
-            ind = s.match(/^\S(\s*)(\S.*)(\t|:)/);
+            ind = s.match(/^\S(\s*)(\S.*?)(\t|:)/);
             !ind and throw "lin not "+s
             $t = ind[2];
             ind = ind[1].length / 2;
@@ -561,12 +566,10 @@ t/ool: | # the usual io check maker
                     change.push(rediff(L));
                 }
                 else { # BQ branches therein
-                    $key = L.shift();
-                    # < going to miss a key change
+                    # < going to miss a key change?
+                    #$key = L.shift().substr(1);
                     !anych(L) and continue;
-                    debugger;
-                    $L = rediff(L);
-                    L.unshift(key.substr(1));
+                    $L = rediff(L,{snipnotfirst:1});
                     change.push(L);
                 }
             }
@@ -574,7 +577,9 @@ t/ool: | # the usual io check maker
             !change.length and debugger; vaguely(find,t); continue;
             atomt and change.unshift(atomt.substr(1));
             
-            tothis(change.join("\n"));
+            $string = change.join("\n");
+            #a.debog && string.includes('jit') and debugger;
+            tothis(string);
         }
         return M
     };
@@ -878,6 +883,7 @@ t/BuildACastle: | # test Duning and io
     
     g.be('jit');
     $i = g.is.jit;
+    a.debog = 1;
     a.d("Ohlook, jit & ers/is turned up");
     # < io should z's
     # < 9 should c&s ascii art
