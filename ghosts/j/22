@@ -613,13 +613,14 @@ iooia: | # F > i/o > input/output
         d.talk = t.talk;
         d.plumb = t;
         d.separation = 1;
-        A.deyug and debugger;
+        #A.deyug and debugger;
         # which should have clones
         # we could know how separatey things want to be,
         # doof tends to run over everything/all depths,
         #   meaning we may have to clone for it
         # < compile what's moving where in the path,
         #   to give doof etc an orderly grasp of whats what
+        #   path being atoms/doofiness stays runny, resolves in a few places
         # see "universals can want attention"
         # see also "no find ark/column" for when they ...
         if (!ya.arkfor) {
@@ -699,21 +700,27 @@ iooia: | # F > i/o > input/output
         d.rows = t.rows.slice();
         each i,row d.rows {
             row = d.rows[i] = row.slice();
+            # 'var la' doesn't reset its value to undefined
+            $la = null;
             each is row {
                 $pa = t.path[i];
                 $Pa = d.path[i];
-                #A.debug and debugger;
+                # is s real?
+                !io.isC(s) and continue
+                $sup = la;
+                #A.deyug and debugger;
+                la = s;
+                # is s wanted?
                 if (ya.arkfor) {
                     # only those - arkfor keyed by sark in D path, not t/d path
                     ya.arkfor.indexOf(pa.ark || pa.t) < 0 and continue
                 }
                 # not the first thing, anticipating i $neu/** y, p $old/**
-                i == 0 and continue
+                !sup and continue
                 # < separate other things,
                 #   even indexes themselves,
                 #     with new hash leading to changes, like git
-                !io.isC(s) and continue
-                row[i] = io.separate(s,Pa,pa,ya);
+                la = row[i] = io.separate(s,Pa,pa,ya,D,sup);
                 (ya.separated ||= []).push(s)
             }
         }
@@ -724,7 +731,7 @@ iooia: | # F > i/o > input/output
     #c separate
     # could get complicated soon...
     # universals can want attention here
-    io.separate = &s,Pa,pa,ya{
+    io.separate = &s,Pa,pa,ya,D,sup{
         # Pa - io going to's path bit
         # pa - io coming from's path bit
         # ya - the .separation path bit
@@ -768,11 +775,22 @@ iooia: | # F > i/o > input/output
         }
         else { # y
             # clone everything
-            # < dedupe this work if already **ing above?
-            if (io.deindex(neu))
+            #A.deyug && neu.t == 'jit' and debugger;
+            $wanders = D.path.filter(&pa,{ return pa.wander }).length;
+            if (!ya.arkfor && wanders) {
+                # ying everything, **ing above
+            }
+            elsif (io.deindex(neu)) {
                 i $neu/** y- o $old/**
+            }
         }
-        A.deyug and debugger;
+        if (io.yz && sup && sups&z) {
+            $putat = sups&z.indexOf(old);
+            putat < 0 and debugger; throw "y: s up z without old";
+            sups&z.indexOf(neu) >= 0 and throw "y: s up z has new already";
+            sups&z[putat] = neu;
+            #A.deyug and debugger;
+        }
         
         ya.yto and neu.y[ya.yto] = old
         ya.yfrom and old.y[ya.yfrom] = neu
@@ -2532,7 +2550,6 @@ iooia: | # F > i/o > input/output
                 }
             }
             else {
-                
                 each k,v s {
                     d.path[i+1] and reindex(v,i+1);
                 }
