@@ -675,7 +675,6 @@ iooia: | # F > i/o > input/output
             !arks.length and delete ya.arkfor
         }
         
-        #A.debug and debugger;
         if (!t) {
             # funcfirst y, D.plumb would be t
             D.plumb and throw "funcfirst y !t D.plumb"
@@ -723,7 +722,11 @@ iooia: | # F > i/o > input/output
                 #   even indexes themselves,
                 #     with new hash leading to changes, like git
                 la = row[i] = io.separate(s,Pa,pa,ya,D,sup);
-                (ya.separated ||= []).push(s)
+                # make a random note
+                (ya.separated ||= []).push(la);
+                (ya.separates ||= []).push(s);
+                # now (and after doofing), the la must replace s
+                #   
             }
         }
         
@@ -786,12 +789,11 @@ iooia: | # F > i/o > input/output
                 i $neu/** y- o $old/**
             }
         }
-        if (io.yz && sup && sups&z) {
-            $putat = sups&z.indexOf(old);
-            putat < 0 and debugger; throw "y: s up z without old";
-            sups&z.indexOf(neu) >= 0 and throw "y: s up z has new already";
-            sups&z[putat] = neu;
-            #A.deyug and debugger;
+        
+        if (sup) {
+            # and for s into sup (the s above, Row[i-1])
+            # < unless we're going into an i that will sort it out?
+            io.replace(sup,neu,old,{zcareful:1});
         }
         
         ya.yto and neu.y[ya.yto] = old
@@ -2536,7 +2538,14 @@ iooia: | # F > i/o > input/output
     };
     
     #c misc lowlevelations
-    # < finish, for tv/tw/z etc as well
+    # so tving (things in things) is mapped out from three angles/views:
+    #   tv - t, y.cv index: C
+    #   tw - t index: C
+    #   z - ordered list of C
+    # simple right?
+    # < finish, be the one reindex, for tv/tw/z etc...
+    #   needs to know gone/old thing, notice which view of space is upstream,
+    #   which could be the one inconsistent with the others...
     io.reindex = &s,d{ 
         d.glob = 1; # so .path shows its geometry
         d = io.knowing(d);
@@ -2558,39 +2567,107 @@ iooia: | # F > i/o > input/output
             }
         };
     };
-    # rehashes tv
-    # < check C? look for y.later what it should be now?
+    # regenerate objects of the index itself,
+    #   so separated out-C can have its own indexes of in-C
+    #   but share the in-C themselves with where ever else they are
+    # only just not done by Cye, due to exponential complexity...
+    #   changing an in-C.t should reindex it everywhere,
+    #   o/s is the noticer of such
+    # just replaces what's there without checking for contradictions
+    # < which would mean knowing about change, which view is more right
+    # < putting those "revision of an item" yers from usu_dup
     io.reindex = &s{
-        !s.y.tv and return
-        $tv = {};
-        each t,cv,v s.y.tv {
-            t = v.t;
-            cv = v.y.cv;
-            tv[t] ||= {};
-            tv[t][cv] = v;
-        }}
-        s.y.tv = tv;
+        if (s.y.tv) {
+            $tv = {};
+            each t,cv,v s.y.tv {
+                t = v.t;
+                cv = v.y.cv;
+                tv[t] ||= {};
+                tv[t][cv] = v;
+            }}
+            s.y.tv = tv;
+        }
+        if (s.y.tw) {
+            $tw = {};
+            each t,v s.y.tw {
+                t = v.t;
+                tw[t] ||= v;
+            }
+            s.y.tw = tw;
+        }
+        if (s.sc.z) {
+            s.sc.z = s.sc.z.slice();
+        }
     };
-    # blanks tv
+    # blanks tving, leaving s empty
     io.deindex = &s{
         $was = s.y.tv;
         delete s.y.tv;
+        delete s.y.tw;
+        delete s.sc.z;
         return was
     };
-    # removes from tv
-    io.unlink = &s,x{
+    # removes s's particular x
+    io.unlink = &s,x,opt{
+        opt ||= {};
         $tv = s.y.tv;
-        !tv and return
-        !tv[x.t] and return
-        delete tv[x.t][x.y.cv];
-        if (Object.keys(tv[x.t]).length == 0) {
-            delete tv[x.t];
-            Object.keys(tv).length == 0 and delete s.y.tv;
+        if (tv && tv[x.t]) {
+            tv[x.t][x.y.cv] == x and opt.was_tv = 1
+            delete tv[x.t][x.y.cv];
+            if (!hak(tv[x.t])) {
+                delete tv[x.t];
+                !hak(tv) and delete s.y.tv
+            }
         }
+        $tw = s.y.tw;
+        if (tw && tw[x.t]) {
+            tw[x.t] == x and opt.was_tw = 1
+            delete tw[x.t]
+        }
+        $z = s.sc.z;
+        if (z && !opt.notz) {
+            $at = z.indexOf(x);
+            # < prefer to null it so some process can fade it out?
+            at >= 0 and ve.splice(at,1); opt.was_z = at;
+        }
+        return opt;
         # if unfound, check s&z.indexOf(x), which may indicate t/cv change
         #   suppose then look for x in tv[x.t], then all of tv
         # things should be isolated, change their names with el
-        # so 4
+        # so 4, keeping itself from confusion
+    };
+    # replaces s's x
+    # < putting those "revision of an item" yers from usu_dup
+    #   ie can't just assign to tv, must check it is was or nothing
+    #   layers...
+    io.replace = &s,x,was,opt{
+        opt ||= {};
+        opt.notz == null and opt.notz = 1;
+        if (was) {
+            # remove the t/cv that was
+            io.unlink(s,was,opt);
+            $z = s.sc.z;
+            if (z) {
+                $at = z.indexOf(was);
+                at >= 0 and z[at] = x; opt.was_z = at
+                else {
+                    opt.zcareful and throw "no find was in ss&z",was,s
+                }
+            }
+        }
+        $tv = s.y.tv ||= {};
+        tv[x.t] ||= {};
+        tv[x.t][x.y.cv] = x;
+        
+        if (A&io.dotw) {
+            $tw = s.y.tv ||= {};
+            tw[x.t] = x;
+        }
+        
+        if (A&io.yz) {
+            $z = s.sc.z ||= [];
+            opt.was_z == null and z.push(x)
+        }
     };
     #c knowables
     io.knowing = &d,v{
@@ -2701,7 +2778,6 @@ iooia: | # F > i/o > input/output
     A&io = io;
     return io
     
-
 t/iooia: |
     G&heading;
     $io = G&way,'iooia';
