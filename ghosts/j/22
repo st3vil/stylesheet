@@ -243,8 +243,10 @@ iooia: | # F > i/o > input/output
                 $island = path.length == 1;
                 
                 # y clones C
-                if (island && p(/^((\w+:)*)y(\S*?)(:\w+)?$/,'03'))
-                    pa.separation = m[2] || 1;
+                if (island && p(/^((\w+:)*)(\*)?y(\S*?)(:\w+)?$/,'04')) {
+                    m[2] and pa.everything = m[2] && 1;
+                    pa.separation = m[3] || 1;
+                }
                 
                 # delete all innards without returning em
                 p(/-$/) and pa.delete = 'in';
@@ -529,7 +531,7 @@ iooia: | # F > i/o > input/output
                 t.partial = 1;
                 t.ind(&s,t{
                     # C the item, s the iterator, to them
-                    !io.isC(s) and throw "doof-grep-ind got !C s",s,t.row;
+                    !isC(s) and throw "doof-grep-ind got !C s",s,t.row;
                     $si = t.row.indexOf(s);
                     si < 0 and throw "s not in trow?",s,t.row
                     $sa = t.path[si];
@@ -542,10 +544,10 @@ iooia: | # F > i/o > input/output
                     $r = cb(A,s,G,T,t);
                     
                     # did they change its index?
-                    # < replace with r if isC
+                    # < replace with r if isC?
                     if (was.t != s.t || was.y.cv != s.y.cv) {
                         $sup = t.row[si-1];
-                        #io.replace(sup,s,was,{zcareful:1});
+                        sup && isC(sup) and io.replace(sup,s,was,{zcareful:1});
                     }
                     
                     $doofing = {
@@ -714,17 +716,24 @@ iooia: | # F > i/o > input/output
                 # is s real?
                 !io.isC(s) and continue
                 $sup = la;
-                #A.deyug and debugger;
                 la = s;
                 # is s wanted?
                 if (ya.arkfor) {
                     # only those - arkfor keyed by sark in D path, not t/d path
                     ya.arkfor.indexOf(pa.ark || pa.t) < 0 and continue
                 }
-                # not the first thing
-                # < not?
+                $sepi = ya.separates && ya.separates.indexOf(s);
+                if (sepi >= 0) {
+                    # check if we did so already, as rows multi left joins
+                    la = ya.separated[sepi];
+                    !la and throw "already separated"
+                    row[i] = la;
+                    continue;
+                }
+                # not the first thing, or not
                 # < does i $neu/** y, o $old/** work?
-                !sup and continue
+                #!sup && A.deyug and debugger;
+                !sup && !ya.everything and continue
                 # < separate other things,
                 #   even indexes themselves,
                 #     with new hash leading to changes, like git
@@ -733,7 +742,6 @@ iooia: | # F > i/o > input/output
                 (ya.separated ||= []).push(la);
                 (ya.separates ||= []).push(s);
                 # now (and after doofing), the la must replace s
-                #   
             }
         }
         
@@ -768,12 +776,8 @@ iooia: | # F > i/o > input/output
             # only the top clones, keeps all innards
             #   whether path includes their depths or not
             # Cye only rebuilds the C, not structures in it
-            #   since not replacing them at io level
-            #   so y.tv needs new hashes all over?
-            #    < unless we go for rerooting indexes when anything changes
-            #      then we could share a tv with an other, and when they
-            #      change anything in it they would leave our instance
-            #
+            #   since not replacing them
+            # < care about universals and how to move them around
             io.reindex(neu);
             # < to the bits
             #$D = {asa:'tv',pa:ya};
@@ -792,13 +796,13 @@ iooia: | # F > i/o > input/output
             if (!ya.arkfor && wanders) {
                 # ying everything, **ing above
             }
+            # < more avoidance depending on how things move
             elsif (io.deindex(neu)) {
                 i $neu/** y- o $old/**
             }
         }
         
         if (sup) {
-            #A.deyug and debugger;
             # < knowiung 
             if (D.is == 'i' &&
                 D.path.slice(0,D.path.indexOf(ya))
@@ -3080,9 +3084,11 @@ t/iooiata: | # func really
      +"    Viog\t\t\tlatjkc:42\n"
      +"    Viog\t34\n"
      +"  vou\n";
-    $d = 1s&dee = G&readLines,start [0];
+    $d = G&readLines,start [0];
     show.t = 1;
     a('o','$d/*/*',[d]);
+    $t = nz();
+    t.ind(&s{ delete ss&z });
     
     o { Object.keys(C.sc).length }:tings $d/*/*
     a(0,'funclast grep by sc length');
@@ -3200,8 +3206,8 @@ t/iooiata: | # func really
     #   things unbounding, jumping through hoops, rebounding
     #  usually mean to not ark the function
     $seen = [];
-    i $o/bolo/@zom ysource,destiny { seen.push(C); C.t.match(/^la/) } o 1s&cee/*:zom
-    a(0,'adding ^la zom to bolo o');
+    i $o/bolo/@zom ysource,destiny { seen.push(C); C.t.match(/al$/) } o 1s&cee/*:zom
+    a(0,'adding al$ zom to bolo o');
     m whats  $s:ay.sc,dl:6.33
     m seenCfunc  $s:seen,dl:6.24
     #i $o/bolo/@ump/@dat { s&grabb = 1 } ysource,destiny zom:{ s&grabb = 1; C.t.match(/oo/) }:dat zom:{ C.t.match(/^la/) }:ump o 1s&cee/*:zom
@@ -3451,6 +3457,9 @@ t/iooiatal: |
     
     i $o/yalone/@s y- o $o/glangic
     a(0,'yalone y-');
+    
+    o $o/glangic/tibe
+    !ays&s and debugger;
     #debugger;
     S scribble on originals: o $o/glangic:leap/*:lap/*:lop
         leaps&boogie = 3;
@@ -3459,7 +3468,8 @@ t/iooiatal: |
     S
     o $o/**
     a(0,'see a less small bit')
-    
+    o $o/glangic/tibe
+    !ays&s and debugger;
     
     i $o/glangic/TALIS
     i $o/glangic/true/FALS
