@@ -538,7 +538,15 @@ iooia: | # F > i/o > input/output
                         pa.arkfor.indexOf(sa.ark || sa.t) < 0 and return
                     }
                     
+                    $was = {t:s.t,y:{cv:s.y.cv}};
                     $r = cb(A,s,G,T,t);
+                    
+                    # did they change its index?
+                    # < replace with r if isC
+                    if (was.t != s.t || was.y.cv != s.y.cv) {
+                        $sup = t.row[si-1];
+                        #io.replace(sup,s,was,{zcareful:1});
+                    }
                     
                     $doofing = {
                         r: r,
@@ -2551,7 +2559,8 @@ iooia: | # F > i/o > input/output
     #   z - ordered list of C
     # simple right?
     # < finish, be the one reindex, for tv/tw/z etc...
-    #   needs to know gone/old thing, notice which view of space is upstream,
+    #   needs to know gone/old thing,
+    #   notice which view of space is upstream,
     #   which could be the one inconsistent with the others...
     io.reindex = &s,d{ 
         d.glob = 1; # so .path shows its geometry
@@ -3234,8 +3243,7 @@ t/iooiata: | # func really
     while (t.more()) {
         row = t.row;
         $s = row.slice(-2)[0];
-        !s and debugger;
-        s.t != 'Viog' and continue
+        !s || s.t != 'Viog' and continue
         i $s/$o
         break
     }
@@ -3253,7 +3261,7 @@ t/iooiata: | # func really
     while (t.more()) {
         row = t.row;
         $s = row.slice(-2)[0];
-        s.t != 'fall' and continue
+        !s || s.t != 'fall' and continue
         break
     }
     m looped_tarky  $s:t.arky,dl:8.24
