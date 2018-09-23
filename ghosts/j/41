@@ -412,9 +412,15 @@ JaBabz: | # make hutscript javascript
         push @$cod, join ',', @{h.vars} if @{h.vars};
         
         push @$cod, ']'.($nocall ? "" : ");");
+        # undef (becomes $cod) if ar.testing_io_vars
+        # else for hoisting up to the inside of the S {
+        my $ya = '';
+        # if not hoisting and returning an s column, set first one as ya
+        $ya = " var ya = ay\.sc\.s && ay\.sc\.s[0];"
+            if !$nocall && grep {$_ eq 's'} @{h.arks};
         $varcod ||= $cod;
         push @$varcod, ' var '.$_.' = '.$sets.'.sc.'.$_.';' for uniq @{h.arks};
-        $cod = join '', @$cod;
+        $cod = join '', @$cod, $ya;
         ar.ta and push @{ar.ta}, [$talk,$cod];
         return $cod
     };
@@ -633,7 +639,7 @@ JaBabz: | # make hutscript javascript
                 my $num = $1 if $args =~ s/^(\d+(?:\.\d+)?)\s*//;
                 my $nam; # maybe 'S 3 (title): i/o ....
                 # so then: } var sets; while(sets = G&S:3,'title','i/o ...',[params]) { var one = sets.sc.one; ...
-                my $sets; # name of G&S return value ^
+                my $sets; # name of G&S return ^
                 my $talkpara; # 'i/o ...',[params]
                 my $setting = []; # the (var one = sets.sc.one;)+
                 # talk,params pass through S, which iterates and sets vars inside
@@ -838,6 +844,7 @@ jst: | # test js babbler
         upCs&J && 2
         $from = ~From
         o { C.t = C.t.split('').reverse().join(''); 1 }:tings *yD,o $d:cee/*/*
+        i ghost/jit
     
     # too far away:
     
@@ -960,28 +967,28 @@ jst: | # test js babbler
         // 
         // wanga
         // #c more
-        var ay = io.i("$d/@whur/@lamb {}:whur y {} o $lambs/*",[d,function(A,C,G,T,s){  return C.sc.fat && "laughter"  },function(A,C,G,T,s){  fai(C,s); C.sc.ok = 1; return C.sc.depth * 3  },lambs]); var whur = ay.sc.whur; var lamb = ay.sc.lamb; var s = ay.sc.s;
-        var ay = io.i("$d/@whur {dehydrate}:whur ye,C- {notch} y o $lambs/*",[d,"5","",lambs]); var whur = ay.sc.whur; var s = ay.sc.s;
-        var ay = io.o("$lambs/*",[lambs]); var lambs = ay.sc.lambs; var s = ay.sc.s;
+        var ay = io.i("$d/@whur/@lamb {}:whur y {} o $lambs/*",[d,function(A,C,G,T,s){  return C.sc.fat && "laughter"  },function(A,C,G,T,s){  fai(C,s); C.sc.ok = 1; return C.sc.depth * 3  },lambs]); var whur = ay.sc.whur; var lamb = ay.sc.lamb; var s = ay.sc.s; var ya = ay.sc.s && ay.sc.s[0];
+        var ay = io.i("$d/@whur {dehydrate}:whur ye,C- {notch} y o $lambs/*",[d,"5","",lambs]); var whur = ay.sc.whur; var s = ay.sc.s; var ya = ay.sc.s && ay.sc.s[0];
+        var ay = io.o("$lambs/*",[lambs]); var lambs = ay.sc.lambs; var s = ay.sc.s; var ya = ay.sc.s && ay.sc.s[0];
         } var ay; while (ay = G.h(A,C,G,T,"S",'',"lambs","o $lambs/**",[lambs])) { var lambs = ay.sc.lambs; var s = ay.sc.s;
             if (C.t.match(/am/)) {
                 s.sc.fat = 1;
             }
         } while (G.h(A,C,G,T,"S",'','')) {
-        var ay = io.i("$d/@la/@dio la:{} dio:y o $ohp/*:la/#loc/da/*:dio",[d,function(A,C,G,T,s){ C.sc.i++; return 1 },ohp,loc]); var la = ay.sc.la; var dio = ay.sc.dio; var s = ay.sc.s;
-        var ay = io.o("{} $d/*/*",[function(A,C,G,T,s){  return Object.keys(C.sc).length  },d]); var d = ay.sc.d; var s = ay.sc.s;
+        var ay = io.i("$d/@la/@dio la:{} dio:y o $ohp/*:la/#loc/da/*:dio",[d,function(A,C,G,T,s){ C.sc.i++; return 1 },ohp,loc]); var la = ay.sc.la; var dio = ay.sc.dio; var s = ay.sc.s; var ya = ay.sc.s && ay.sc.s[0];
+        var ay = io.o("{} $d/*/*",[function(A,C,G,T,s){  return Object.keys(C.sc).length  },d]); var d = ay.sc.d; var s = ay.sc.s; var ya = ay.sc.s && ay.sc.s[0];
         (pa.arkfor = pa.arkfor || []).push(m[0])
         var ay = io.i("$o/@class/@#doop va:{}:class o $cee/*:va/*:doop",[o,function(A,C,G,T,s){  return va(C)  },A[1].sc.cee]); var class = ay.sc.class; var doop = ay.sc.doop;
         var ay = io.o("va:{}:klass $cee/*:va/*:doop",[function(A,C,G,T,s){  return lattices  },cee]); var klass = ay.sc.klass; var va = ay.sc.va; var doop = ay.sc.doop;
-        var ay = io.o("w/*",[]); var w = ay.sc.w; var s = ay.sc.s;
+        var ay = io.o("w/*",[]); var w = ay.sc.w; var s = ay.sc.s; var ya = ay.sc.s && ay.sc.s[0];
         } var ay; while (ay = G.h(A,C,G,T,"S",'',"limpiuty","i $s/$o",[s,o])) { var s = ay.sc.s; var o = ay.sc.o;
           injecto $o from midtones of $s
         } var ay; while (ay = G.h(A,C,G,T,"S",'','',"o yo $s/*:tak",[s])) { var tak = ay.sc.tak;
           G.h(A,C,G,T,"m",M,["figurative","2",{Blazm:tak},{}]);
         } while (G.h(A,C,G,T,"S",0,'')) {
         var ay = io.i("$o/ling/@#$ting",[o,ting]); var ting = ay.sc.ting;
-        var ay = io.i("$o/-flange",[o]); var o = ay.sc.o; var s = ay.sc.s;
-        var ay = io.i("$o/abit{3/{>1/{C.c.of/*{C.sc.of=$i",[o,i]); var o = ay.sc.o; var abit = ay.sc.abit; var s = ay.sc.s;
+        var ay = io.i("$o/-flange",[o]); var o = ay.sc.o; var s = ay.sc.s; var ya = ay.sc.s && ay.sc.s[0];
+        var ay = io.i("$o/abit{3/{>1/{C.c.of/*{C.sc.of=$i",[o,i]); var o = ay.sc.o; var abit = ay.sc.abit; var s = ay.sc.s; var ya = ay.sc.s && ay.sc.s[0];
         var ay = io.i("$ooo/abit{3/{>$A[1].sc.step/{C.c.of:dangle/*{C.sc.of=$i:leap",[A[1].sc.ooo,A[1].sc.step,i]); var dangle = ay.sc.dangle; var leap = ay.sc.leap;
         else if (blab) {
         var BlockQuote =
@@ -999,14 +1006,15 @@ jst: | # test js babbler
             var o = G.h(A,C,G,T,'readLines',BlockQuote);
         // 20th century
         var ay = io.o("va:{}:klass $cee/*:va/*:doop",[function(A,C,G,T,s){  seen.push(C); return vat(C)  },A[1].sc.cee]); var klass = ay.sc.klass; var va = ay.sc.va; var doop = ay.sc.doop;
-        var ay = io.i("$o/not/stylehouse",[o]); var o = ay.sc.o; var not = ay.sc.not; var s = ay.sc.s;
+        var ay = io.i("$o/not/stylehouse",[o]); var o = ay.sc.o; var not = ay.sc.not; var s = ay.sc.s; var ya = ay.sc.s && ay.sc.s[0];
         var ay = io.o("$o/glangic/-$tiby",[o,tiby]); var o = ay.sc.o; var glangic = ay.sc.glangic; var tiby = ay.sc.tiby;
         A[1].sc.ein.says = function(A,C,G,T,s,c){
         ve = function(isparam){
         (A.r.sc.the = A.r.sc.the || {})[C.t] = s
         A.up.c.s.sc.J && 2
         var from = G.h(A,C,G,T,"c",'From',[]);
-        var ay = io.o("{}:tings *yD,o $d:cee/*/*",[function(A,C,G,T,s){  C.t = C.t.split('').reverse().join(''); return 1  },d]); var tings = ay.sc.tings; var cee = ay.sc.cee; var s = ay.sc.s;
+        var ay = io.o("{}:tings *yD,o $d:cee/*/*",[function(A,C,G,T,s){  C.t = C.t.split('').reverse().join(''); return 1  },d]); var tings = ay.sc.tings; var cee = ay.sc.cee; var s = ay.sc.s; var ya = ay.sc.s && ay.sc.s[0];
+        var ay = io.i("ghost/jit",[]); var ghost = ay.sc.ghost; var s = ay.sc.s; var ya = ay.sc.s && ay.sc.s[0];
         }
         
     
