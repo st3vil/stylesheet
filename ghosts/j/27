@@ -176,7 +176,8 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
         }
     
     #c readLines - string to [C+]
-    readLines:
+    readLines: %acgt:s opt
+        opt ||= {};
         $L = s.split("\n");
         $oL = [];
         $tot = L.length;
@@ -201,6 +202,7 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
         # sc can kick in early, still one \t
         y && y[0] == '%' and sc = y.slice(1); y = '';
         c && c[0] == '%' and sc = c.slice(1); c = '';
+        y && opt.y1 && opt.y1[0] == '%' and (opt.tosc ||= {})[opt.y1.slice(1)] = y; y = '';
         $s = li[4];
         
         t.match(/^\W/) and t = $.parseJSON(t);
@@ -315,6 +317,7 @@ NutLands: | # reading bay/el/Figures/1,2 and etc
         stack[d] = C;
         while (stack[d+1])
             stack.pop();
+        opt.tosc and ex(C.sc,opt.tosc);
         
         }
         return N

@@ -1146,7 +1146,8 @@ NutText: | # s&e adjustables - keep typing in the mind!
     codemirror 6:
         $cm = A.b.cm = A.b.cm || CodeMirror(
             A.on,
-            {mode:'perl',theme:'midnight',lineWrapping:true}
+            {mode:'perl',theme:'midnight',
+            lineWrapping:true,indentUnit:4}
         );
         # set options later:
         # cm.setOption(k,v)
@@ -1183,7 +1184,14 @@ NutText: | # s&e adjustables - keep typing in the mind!
         $sav = &{ G&gev };
         cm.setOption('extraKeys', {
             'Esc': sav,
+            'Tab': &c{
+                c.execCommand('insertSoftTab');
+            },
+            'Shift-Tab': &c{
+                c.replaceSelection("\t");
+            },
             "Ctrl-Enter": sav,
+            
             # TODO doesn't work?
             "Ctrl-Q": &cm,{ cm.foldCode(cm.getCursor()); },
         });
