@@ -1,11 +1,8 @@
 Clalia: | # drag n learn
     G&heading;
-    # to
-    # utch
-    # < wants S for data source
-    # < J optional events
+    # to make html+javascript that lives a life of its own
     
-    $s = <<"".replace(/(?!^)  /g,"\t");
+    n Classes -Class $s:<<""
     Engineering  4000
       seeing  439  %st:being,pow:24
         Riddiford  %day:1,time:900-1040
@@ -18,15 +15,41 @@ Clalia: | # drag n learn
       weld  468  %st:geometrica,pow:9
         Riddiford  %day:1,time:900-1040
         Riddiford  %day:3,time:1300-1450
-        Taxiderm   %day:2,time:1300-1340&1400-1450
+        Taxiderm   %day:2,time:1300-1340;1400-1450
     
-    
-    n ultch  $s:s %ws:pre
-    $N = G&readLines,s;
-    n Classes -Class $s:N
-    
+    # etc.
+    n Week -Week s:40hour
 pi/Class: |
     ys&dis = 'block';
     
     n t 1 $s:C.t
+    
+    if (typeof s == 'string') {
+        # first fix '  ' into \t, editor swaps tabs for spaces
+        # < editor should insert spaces and leave tabs alone
+        # < Ctrl-tab inserts tab?
+        s = s.split("\n").map(&s{
+            !s.length and return
+            $m = s.match(/^(.*?\S)  /);
+            !m and throw "not a Line: "+s
+            $line = s.slice(0,m[1].length);
+            $etc = s.slice(m[1].length).split("  ").join("\t");
+            etc and line += etc
+            return line
+        }).join("\n");
+        #debugger;
+        s = G&readLines,s;
+    }
+    
+    each iv s {
+        debugger;
+        m fei -jod $s:ki(v)
+    }
+pi/Week: |
+    ys&dis = 'block';
+    
+    $map = '1,2,3,4,5x900-1700';
+    s != '40hour' and throw "what kind of week is "+s
+    
+    
 
