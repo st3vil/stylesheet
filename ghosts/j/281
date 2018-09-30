@@ -1,10 +1,14 @@
 Clalia: | # drag n learn
     G&heading;
+    ys&ab = '1';
+    ys&height = '30%';
+    ys&width = '60%';
     A.noelvis = 1;
     # to make html+javascript that lives a life of its own
     
     $t = window.t = 3s&t = {};
-    n Classes -Pupula $s:<<''
+    
+    n Classes -Pupula $s:<<'' %ab:1,width:100%,height:100%
     Engineering	4000
       seeing	439	%st:being,pow:24
         c s: |
@@ -31,27 +35,91 @@ Clalia: | # drag n learn
           But with plenty of slop.
         Riddiford	%day:1,time:900-1040
     
+    t.emplate = <<'';
+    <div id="bits"> Classes </div>
+    <div id="week"> Week </div> 
+    <div id="info"> Info </div>
     
+    t.days = 5;
+    t.daystart = '0900';
+    t.dayend = '1700';
     t.Start = &{
-        $cl = $('#'+'classes');
-        cl.empty();
-        cl = $('<ul></ul>').appendTo(cl)
+        $('#bits').replaceWith(t.emplate);
+        #$('table td').css('vertical-align','top');
+        
+        # classes
+        $cl = $('#bits').empty()
+            .css('position','absolute')
+            .css('width','30%')
+            .css('height','100%');
+        cl = $('<ul>').appendTo(cl)
         each ic t.group {
-            $('<li></li>')
+            $('<li>').appendTo(cl)
                 .attr('id',c.id).text(c.t)
-                .appendTo(cl);
+                .on('click',t.togGroup);
+        }
+        
+        # week
+        $we = $('#week').empty()
+            .css('position','absolute')
+            .css('left','30%')
+            .css('width','40%')
+            .css('height','100%');
+        $width = 100 / t.days;
+        $side = 0;
+        for (var day = 1; day <= t.days; day++) {
+            $d = $('<div id="day'+day+'">')
+                .css('width',width+'%')
+                .css('height','100%')
+                .css('position','absolute')
+                .css('background','rgba('+(day*30)+',120,120,0.3)');
+            side and d.css('left', side+'%')
+            we.append(d);
+            side += width;
+        }
+        
+        # info
+        $we = $('#info').empty()
+            .css('position','absolute')
+            .css('left','70%')
+            .css('width','40%')
+            .css('height','100%');
+        we.css('background','rgba(120,40,40,0.3)');
+        we.text('Click on a class');
+    };
+    t.togGroup = &{
+        $g = t.group[this.id];
+        !g and return;
+        $cl = $(this);
+        if (cl.attr('ope')) {
+            cl.attr('ope','');
+            cl.children().remove();
+            return;
+        }
+        cl.attr('ope',1);
+        cl = $('<ul>').appendTo(cl)
+        each ic g.z {
+            $('<li>').appendTo(cl)
+                .attr('id',c.id).text(c.t)
+                .on('click',t.graspClass);
         }
     };
+    t.graspClass = &e{
+        e.stopPropagation();
+        $cla = t.class[this.id];
+        !cla and return
+    };
     
-    # etc.
-    n Week -Week s:40hour
+    
+
     
     G&yl:0.05,&s{ t.Start() };
     
     #
 pi/Pupula: |
     $io = G&way,'iooia';
-    ys&id = 'classes';
+    ys&id = 'bits';
+    ys&width = '30%';
     
     n t 1 $s:C.t
     
@@ -98,14 +166,6 @@ pi/Pupula: |
         #return
     }
     
-    
-    
-    
-pi/Week: |
-    ys&dis = 'block';
-    
-    $map = '1,2,3,4,5x900-1700';
-    s != '40hour' and throw "what kind of week is "+s
     
     
     
