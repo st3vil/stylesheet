@@ -16,19 +16,19 @@ Clalia: | # drag n learn
           Takes hold.
         Riddiford	%day:1,time:900-1040
         Riddiford	%day:3,time:1300-1450
-        Taxiderm	%day:2,time:1300-1340&1400-1450
+        Taxiderm	%day:2,time:1300-1340
       triangle	469	%st:geometrica,pow:12
         c s: |
           Bring togs.
-        Riddiford	%day:4,time:900-1040
-        Riddiford	%day:3,time:1300-1450
-        Taxiderm	%day:2,time:1300-1340&1400-1450
+        Riddiford	%day:4,time:1120-1340
+        Riddiford	%day:3,time:1400-1550
+        Taxiderm	%day:2,time:1500-1640
       weld	468	%st:geometrica,pow:9
         c s: |
           Ceramic?
         Riddiford	%day:1,time:900-1040
         Riddiford	%day:3,time:1300-1450
-        Taxiderm	%day:2,time:1300-1340;1400-1450
+        Taxiderm	%day:2,time:1300-1340
     Art	8000
       weld	868	%st:enjoyment,pow:9
         c s: |
@@ -41,8 +41,13 @@ Clalia: | # drag n learn
     <div id="info"> Info </div>
     
     t.days = 5;
-    t.daystart = '0900';
-    t.dayend = '1700';
+    t.fracday = &s{
+        $m = (''+s).match(/^(\d?\d)(\d\d)$/);
+        !m and throw "not a time: "+s
+        return (m[1] * (1/24)) + (m[2] * (1/1440))
+    };
+    t.daystart = t.fracday('0900');
+    t.dayend = t.fracday('1700');
     t.Start = &{
         $('#bits').replaceWith(t.emplate);
         #$('table td').css('vertical-align','top');
@@ -81,12 +86,14 @@ Clalia: | # drag n learn
         # info
         $we = $('#info').empty()
             .css('position','absolute')
+            .css('white-space','pre')
             .css('left','70%')
             .css('width','40%')
             .css('height','100%');
         we.css('background','rgba(120,40,40,0.3)');
         we.text('Click on a class');
     };
+    #c tog grasp time
     t.togGroup = &{
         $g = t.group[this.id];
         !g and return;
@@ -108,6 +115,33 @@ Clalia: | # drag n learn
         e.stopPropagation();
         $cla = t.class[this.id];
         !cla and return
+        $te = [];
+        cla.t and te.push(cla.t)
+        # Placed $attime  or Placing
+        cla.st and te.push("St: "+cla.st)
+        cla.pow and te.push("Pow: "+cla.pow)
+        cla.desc and te.push(cla.desc)
+        cla.z and te.push(ki(cla.z,5))
+        te.length and $('#info').text(te.join("\n\n"));
+        # plot
+        $('#week .potential').remove();
+        each ic cla.z {
+            $day = $('#week #day'+c.day);
+            $time = c.time.split('-');
+            $starts = t.fracday(time[0]) - t.daystart;
+            $endures = t.fracday(time[1]) - starts;
+            endures < 0.1 and endures = 0.1;
+            $plot = $('<span>')
+                .css('position','absolute')
+                .css('width','100%')
+                .css('top',(starts*100)+'%')
+                .css('height',(endures*100)+'%')
+                .css('background','rgba(176,140,130,0.6)');
+            plot.text(starts+' - '+endures);
+            plot.attr('class','potential');
+            plot.appendTo(day);
+            
+        }
     };
     
     
