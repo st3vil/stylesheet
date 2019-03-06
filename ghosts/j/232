@@ -131,30 +131,163 @@ Typ: | # exact lounge
     # TO give at a glance a pretty good idea of where you are
     # in the colour code of
     G&heading;
+    #G&u,['MelIns'];
+    G&u,['MelTest'];
+    G&u,['NutText'];
+    G&clusp;
+    1s&M ||= [];
+    1c&ghosts ||= {};
     
-        G&u,['MelTest'];
-        G&u,['NutText'];
+    $me = 1c&methods = {};
+    me.http = &to,s{
+        $r = $.ajax({url:to,data:{s:s}});
+        r.done(&ns,how,c{
+            r.status != '200' and 1s&M.push("Bad "+to+": "+r.status);
+            1s&M.push("Got "+how+": "+ns);
+        });
+    };
+    
+    1s&ein['says'] = {w:'says/Typ'};
+    
+    # store also
+    1c&N ||= [ G&Cye,['Steve','-typ'] ];
+    
         
-        G&clusp;
-        1s&i ||= 0;
-        1s&i++;
-        G&n,['C',4,{s:'Hererereere'+1s&i},{e:1}];
     ~>3 Ze colour: 1s&i, '>1 one', '>2 two', '>3 three', '>4 four',  '>5 five',  '>6 six', '>7 seven', '>8 eight', '>9 nine'
-        
-        $te = "steve\t4\t\"Val\"\tEin:4,daw:go,sf:004";
-        $N = G&readLines,te;
-        each in N {
-            $cv = 0.6+i*0.002;
-            G&n:['readLines+ki',cv,{s:"Item: "+4s&ki(n)},{dis:'block'}];
-            $s = G&toLines,n;
-            G&n:['toLines',cv+0.001,{s:"Writ: "+s},{dis:'block'}];
-        }
-        
-    $m = G&n:['M','-jod_7',{s:A,dl:4}];
+    
+    each in 1c&N {
+        m $n
+    }
+    each in 1s&M {
+        m SE -jod $s:n
+    }
+    
     #$m = G&n:['overflow:scroll','-jod_7',{s:A,dl:4}];
         
     #1c&save = "lo";
     
+pi/typ: | # a code
+    ys&dis = 'block';
+    # 
+    $s = 3c&ghosts[C.t];
+    s == null and s = '# '
+    
+    G&n,['Name',3,{s:C.t},{e:2}];
+    G&n,['Content',4,{s:s},{e:1}];
+    
+says/Typ: | # handle putting
+    $c = G&E:'hC -1';
+    $g = G&E,'hC' [1];
+    #debugger;
+    $me = 1c&methods;
+    if (c.t == 'Name') {
+        g.t == ec&s and return
+        $o = c.y.next;
+        o.t != 'Content' and debugger;
+        
+        me.http('Getc/Ty/'+g.t);
+        me.http('Getc/Ty/'+ec&s,oc&s);
+        each in 1c&N {
+            n.t != g.t and continue
+            n.t = ec&s;
+        }
+        delete 1c&ghosts[g.t];
+        1c&ghosts[ec&s] = oc&s;
+        ~Named: g.t, ec&s
+        
+        # change the name/write in a new place
+        # < reset pre-name-change changes to Content, dividing history as:
+        #   (thing became as it is), GAP, (changes to thing, renamed to thing2)
+        #   with link between...
+        
+    }
+    else
+    if (c.t == 'Content') {
+        if (cc&s != ec&s) {
+            # diff and save
+            ~Typ now sez: ec&s
+            me.http('Getc/Ty/'+g.t,ec&s);
+            3c&ghosts[g.t] = ec&s;
+        }
+    }
+    ~>3 says/Typ:
+    
+Tyrade: | # Wed for Typ: crud of/t=strings, way with
+    # adopted from 24 Wade, W change negotiator
+    # see also 242 Spade, bulk version checkings
+    # 
+    any '/Getc/*W' => &c{
+        my $t = $c->param('W');
+        my $s = $c->param('s');
+        my $patch = $c->param('patch') && die "know patch";
+        my $cache = G.Gache ||= {};
+        
+        my $pipe = $1 if $t =~ s/\|(\w+)$//;
+        # read t, write if s
+        # all there
+        $t = "G/$t";
+        # char safety
+        $t =~ /([^\w\/-]+)/ && return
+            $c->render(text=>sjson(
+                {er=>"illegal t[".pos()."] char: $1 in '$t'"}
+            ));
+        
+        my $f = "$t";
+        
+        # returns json:
+        my $re = {ok=>0};
+        
+        if (defined $s) {
+            # optional safety - must replace such dige
+            my $pa = $c->param('parent');
+            if ($pa && $pa ne $cache.>$f ) {
+                re.er = 'not ffwd';
+                # could give out tree since...
+                $s = '';
+                # re.dige = $cache.>$f ;
+            }
+            elsif (!length $s) {
+                `rm $f`;
+                re.ok = 'deleted';
+            }
+            else {
+                my $dirbit = $1 if $f =~ /^(.+)\/\w+$/;
+                $dirbit || die "No dirbit";
+                -d $dirbit || `mkdir -p $dirbit`;
+                
+                my $new = !-f $f;
+                $s = "$s\n" if $s !~ /\n$/;
+                # we journal! can't trust anything
+                write_file("$f\.1",$s);
+                `mv $f\.1 $f`;
+                # < (notify nearby others, who )+
+                re.ok = 'updated';
+                re.ok = 'created' if $new;
+                $s = '';
+            }
+        }
+        else {
+            if (-f $f) {
+                $s = read_file($f);
+                re.ok = 'found';
+            }
+            else {
+                re.er = 'not found'
+            }
+        }
+        if (length $s) {
+            # it should have a dig
+            my $dig = slm(12,dig($s));
+            $cache->{$f} = $dig;
+            re.dige = $dig;
+            re.s = $s;
+            # if they know its hash, assume they don't need the string again
+            if (my $ha = $c->param('have')) {
+                delete re.s if grep {$_ eq $dig} split "\t", $ha
+            }
+        }
+        $c->render(text=>sjson($re));
+    };
 Tri: | # travel
     G&heading;
     # sends G by setting T they sprout from
@@ -315,7 +448,7 @@ Sevo: |
         
     };
     
-    
+    G&way,'Steev';
     
     
     

@@ -395,6 +395,16 @@ ServeC: | # atomic get/set, remote magic powers
         my $t = $c->param('way');
         $t =~ s/\W+/-/g;
         my $w = G&t,w=>$t;
+        if (!$w) {
+            my @opt = glob "G/*/$t";
+            my $f = shift @opt;
+            if ($f) {
+                $w = {t=>$t,y=>{}};
+                wc&s = read_file($f);
+                ws&dige = slm(12, dig wc&s);
+                ws&of = 'w';
+            }
+        }
         $w || return $c->reply->not_found;
         $c->res->headers->append(Dige => ws&dige);
         
@@ -412,6 +422,7 @@ ServeC: | # atomic get/set, remote magic powers
     
     Rw Spade;
     Rw Wade;
+    Rw Tyrade;
     
     # G&t backend...
     # atomic W operations
