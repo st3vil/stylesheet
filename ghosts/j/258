@@ -471,10 +471,81 @@ Rests: | # automate Bystandings
         !t and A&til("waits diff "+l.t)
         b();
         d = A&intv(d,'intoself');
-        debugger;
+        
+        #c now start looking at the difference of result
+        # continue only if minor changes
+        
+        $j = ts&J;
+        $line = 1; # first 4 lines are u versions
+        $mind_changes; # which is always accepted
+        $dq = []; # [[what,s]+];
+        $hier = ['body','Inside','Around'];
+        
         each in ds&z {
-            m diffre -jod $s:n
+            $what = n.t.split(' ');
+            $lines = nc&s.split("\n").length - 1;
+            lines and line += lines
+            if (line <= 4) {
+                what != 'same' and mind_changes = 1
+                continue
+            ;
+            $be = dq.slice(-1)[0];
+            $wwhat = be[0];
+            $was = be[1];
+            
+            $known_progression;
+            each ih hier {
+                $becomes = hier[i+1];
+                !becomes and break
+                wwhat == 'gone' &&
+                    (was == h || was == h.slice(0,3))
+                && what == 'new' &&
+                    (nc&s == becomes || nc&s == becomes.slice(0,3))
+                || continue
+                known_progression = 1;
+                break
+            }
+            known_progression and continue
+            
+            nc&s == ',on:?[object Object]?' and continue
+            nc&s == ':2' and continue
+            
+            dq.push([what,nc&s]);
         }
+        
+        
+        $dif = {};
+        each in dq {
+            $what = n[0];
+            $s = n[1];
+            dif[what] ||= 0;
+            dif[what] += s.length;
+        }
+        
+        # major gone sections may indicate a need to reserialise
+        if (dif.gone > 150 && dif.new < 50
+            && !jc&tried_reStringing) {
+            debugger;
+            jc&String++;
+            jc&tried_reStringing = 1;
+            A&til("Needing to reserialise");
+        }
+        # changes only in the mind, or not at all...
+        elsif (!dif.new && !dif.gone) {
+            if (mind_changes) {
+                debugger;
+                # -visit's c&Qs&Pc&String
+                # with mind version of js&String
+                G&e,['Expect'];
+            }
+        }
+        else {
+            
+        }
+        # minor changes, update the mind section and commit
+        
+        
+            m diffre -jod $s:n
         
         1s&step_tries = 1;
         ls&revisable = 1;
@@ -505,7 +576,9 @@ Rests: | # automate Bystandings
     S 3
     n Done 6 s:Done
     S 0
-    n hmm 6 s:hmm
+    n hmm 6 s:hmmew
+    G&e,['Revisit'],['click','',{p:"t/LetsOsc\t3\tString\t2"}]
+    
     
 pi/runnedtest: |
     G&heading;
