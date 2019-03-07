@@ -414,29 +414,100 @@ Resz: | # get into automate bystandings...
 Rests: | # automate Bystandings
     # yup3
     G&heading;
-    $me = 1c&me;
-    if (!me) {
-        me = 1c&me = {};
-        me.getlist = &{
-            $v = G&e,['Bystand'];
-            # more quacks for viable tangible
-            n byes -jod $s:v
-            $j = vs&J;
-            n bysj -jod $s:j
-            $r = js&root;
-            n byr -jod $s:r
-            !r and return;
-            $z = rs&z;
-            !z and return;
-            $sz = z.slice().filter(&x{ return xs&doe == 'Exprect' });
-            #sz = G&ind,sz,'ki';
-            n bys -jod $s:sz
-
-
-        };
+    G&way,'Doming',ar;
+    $b = A&beready;
+    
+    S 1 Get list of tests
+    
+    $r = A&intv(G&e,['Bystand'] , "from");
+    $z = rs&z || [];
+    $sz = z.slice().filter(&x{ return xs&doe == 'Exprect' });
+    !sz.length and A&til("No Exprects on Bystand")
+    1c&testlist = sz;
+    1c&testN = [];
+    
+    S 2
+    
+    $N = 1c&testN;
+    $l = N.slice(-1)[0];
+    if (!l || ls&complete) {
+        $x = 1c&testlist[N.length];
+        x and N.push(l = G&Cye,[x.t,'-runnedtest'] );
     }
     
-    me.getlist();
+    each in N {
+        n $n
+    }
     
-    delete 1c&me;
+    # test completes, we accept minor noises
+    if (!ls&started) {
+        delete 4s&Jtv.Expect;
+        1c&Expect =
+        e Expect W $testname:l.t
+        ls&started = 1;
+        A&slowstep();
+        A&til("started")
+    }
+    elsif (!ls&revisable) {
+        #$r = G&e,['Expect'];
+        b(1c&Expect, "Expecting");
+        
+        # cached or random asyncs with throw us
+        $r = 1c&Revisit ||= G&e,['Revisit'];
+        # will still check it's ready...
+        A&intv(r, "resulter");
+        $t = A&intv(r, "results for this test", l.t);
+        b();
+        n forthis -jod $s:t
+        
+        
+        # allow Doming more loops of this step since nested
+        A&slowstep();
+        
+        !t and A&til("wait for our results "+l.t)
+        b();
+        
+        $d = A&intv(t,'result diffrance','diff');
+        !t and A&til("waits diff "+l.t)
+        b();
+        d = A&intv(d,'intoself');
+        debugger;
+        each in ds&z {
+            m diffre -jod $s:n
+        }
+        
+        1s&step_tries = 1;
+        ls&revisable = 1;
+    }
+    elsif (!ls&complete) {
+        #ls&complete = 1;
+    }
+    else {
+        !ls&complete and A&til("doing "+l.t)
+    }
+    #ls&complete = 1;
+    #1c&testlist[N.length] and A&til("More tests...")
+    
+    
+    
+    if (0) {
+    each it 1c&testlist {
+        1c&testN[i] and continue
+        n running -jod $s:t
+        G&e,['Bystand'],['click','',{p:t.t}];
+        $l =
+        m t.t -jod s:running
+        1c&testN.push(l);
+        break
+    }
+    }
+    
+    S 3
+    n Done 6 s:Done
+    S 0
+    n hmm 6 s:hmm
+    
+pi/runnedtest: |
+    G&heading;
+    # capture results and ...
 

@@ -131,6 +131,7 @@ Doming: | # in the place in the place
     # to be adjusted, replacing itself
     $time = 256;
     comeback(time);
+    A&slowstep = &{ comeback(time*6); 1s&max_step_tries = 48 };
     
     #c throw /^waits/ to halt
     # pieces of jam are waited on + explained
@@ -152,7 +153,7 @@ Doming: | # in the place in the place
         G&n,['waits',A&waitscv,{s:s},'hue:150deg,ws:pre']
         A&waitscv += 0.0001;
         nc&s = s;
-        if (1s&step_tries++ > 16) {
+        if (1s&step_tries++ > (1s&max_step_tries || 16)) {
             nc&s = "Gave up: "+s;
             delete 1s&loop;
         }
@@ -296,6 +297,8 @@ Doming: | # in the place in the place
     # assume into the top
     
     A&intv = &n,desc,t,cv,pic{
+        # check it's ready - not asserted if tv going, backward compat
+        !t and A&beready(n,desc);
         $j = ns&J;
         !j and return A&til('get sJ',desc);
         $s = js&s;
