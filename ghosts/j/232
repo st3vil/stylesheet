@@ -139,18 +139,21 @@ Typ: | # exact lounge
     1c&ghosts ||= {};
     
     $me = 1c&methods = {};
-    me.http = &to,s{
-        $r = $.ajax({url:to,data:{s:s}});
+    me.http = &to,s,cb{
+        $da = {};
+        s !== null and da.s = s
+        $r = $.ajax({url:to,data:da});
         r.done(&ns,how,c{
             r.status != '200' and 1s&M.push("Bad "+to+": "+r.status);
             1s&M.push("Got "+how+": "+ns);
+            cb and cb(dej(ns));
         });
     };
     
     1s&ein['says'] = {w:'says/Typ'};
     
     # store also
-    1c&N ||= [ G&Cye,['Steve','-typ'] ];
+    1c&N ||= [ G&Cye,['Steev','-typ'] ];
     
         
     ~>3 Ze colour: 1s&i, '>1 one', '>2 two', '>3 three', '>4 four',  '>5 five',  '>6 six', '>7 seven', '>8 eight', '>9 nine'
@@ -169,11 +172,57 @@ Typ: | # exact lounge
 pi/typ: | # a code
     ys&dis = 'block';
     # 
+    $init = !1s&brains;
+    $me = 3c&methods;
     $s = 3c&ghosts[C.t];
-    s == null and s = '# '
-    
+    if (s == null) {
+        s = '# ';
+        if (init) {
+            me.http('Getc/Ty/'+C.t,null,&d{
+                d.ok != 'found' and return
+                3c&ghosts[C.t] = d.s;
+                ~Resolute: C.t
+                G&yl:500,&{ G&e,['Typ'] };
+            });
+        }
+    }
     G&n,['Name',3,{s:C.t},{e:2}];
+    
+    
+    if (1s&alive == 2) {
+        s != 1s&s.sc.top.y.tw.Content.c.s and 1s&alive = 1
+    }
+    if (1s&alive == 1) {
+        $L = G&e,['Launch'] .sc.J;
+        if (!Ls&child) {
+            ~Chilute: C.t
+            G&yl:700,&{ G&e,['Typ'] };
+        }
+        else {
+            $Y = A;
+            A = Ls&child;
+            if (!Ls&shrank) {
+                $(A.on.parentNode).css('top','20%').css('height','')
+                .find('#msgs').css('min-height','20em');
+                #Ls&shrank = 1;
+            }
+            G&e,[C.t];
+            A = Y;
+            1s&alive = 2;
+        }
+    }
+    n o 31 s:o %ma:2em,hue:42deg,dos:typ/Live:C.t
+    
     G&n,['Content',4,{s:s},{e:1}];
+    
+typ/Live: | # a life to a code
+    # 
+    G&e,['Launch'];
+    $g = G&E,'hC' [1];
+    g = gs&J;
+    gs&alive = 1;
+    
+    #
     
 says/Typ: | # handle putting
     $c = G&E:'hC -1';
@@ -182,10 +231,11 @@ says/Typ: | # handle putting
     $me = 1c&methods;
     if (c.t == 'Name') {
         g.t == ec&s and return
-        $o = c.y.next;
+        $o = g.sc.J.sc.root.y.tw.Content;
+        #debugger;
         o.t != 'Content' and debugger;
         
-        me.http('Getc/Ty/'+g.t);
+        me.http('Getc/Ty/'+g.t,'');
         me.http('Getc/Ty/'+ec&s,oc&s);
         each in 1c&N {
             n.t != g.t and continue
