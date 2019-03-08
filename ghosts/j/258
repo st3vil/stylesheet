@@ -495,9 +495,12 @@ Rests: | # automate Bystandings
         b();
         d = A&intv(d,'intoself');
         
+        lc&diffstash = ds&z.slice();
         ls&revisable = 1;
         #c now start looking at the difference of result
         # continue only if minor changes
+        
+        $desc = lc&diffscription ||= {};
         
         $j = ts&J;
         $line = 1; # first 4 lines are u versions
@@ -507,6 +510,8 @@ Rests: | # automate Bystandings
         
         each in ds&z {
             $what = n.t.split(' ');
+            what.length != 2 and continue;
+            what = what[0];
             $lines = nc&s.split("\n").length - 1;
             lines and line += lines
             if (line <= 4) {
@@ -514,13 +519,14 @@ Rests: | # automate Bystandings
                 continue
             }
             $be = dq.slice(-1)[0];
+            #nc&s.match("Inside") and debugger;
             if (be) {
             $wwhat = be[0];
             $was = be[1];
             
             $known_progression;
             each ih hier {
-                $becomes = hier[i+1];
+                $becomes = hier[i*1+1];
                 !becomes and break
                 if (wwhat == 'gone' &&
                     (was == h || was == h.slice(0,3))
@@ -530,8 +536,12 @@ Rests: | # automate Bystandings
                     break
                 }
             }
-            known_progression and continue
-            
+            if (known_progression) {
+                dq.pop();
+                desc.knownoise ||= 0;
+                desc.knownoise++
+                continue
+            }
             nc&s == ',on:?[object Object]?' and continue
             nc&s == ':2' and continue
             }
@@ -561,7 +571,7 @@ Rests: | # automate Bystandings
             if (mind_changes) {
                 # -visit's C, the n Above the root n
                 $D = j.sc.root.y.A.up.c.s;
-                Ds&pi != 'visit' and throw "Isn't visit"
+                Ds&pi != 'visit' and throw "Isn't -visit"
                 $was = D.c.Q.sc.P.c.String;
                 $is = js&String;
                 was = was.split("\n");
@@ -584,27 +594,34 @@ Rests: | # automate Bystandings
                 # with mind version of js&String
                 G&e,['Expect'];
                 n good 1 $s:goodauto
+                desc.mindup = 1;
+                desc.good = 1;
+            }
+            else {
+                desc.good = 1;
             }
         }
         else {
             # run stops, human intervenes
-            debugger;
+            #debugger;
+            desc.differs = "+"+dif.new+"-"+dif.gone;
         }
         # minor changes, update the mind section and commit
         1s&step_tries = 3;
         ls&revisable = 1;
-        debugger;
+        #debugger;
     }
-    #elsif (!ls&complete) {
-    #    #ls&complete = 1;
-    #}
-    #else {
-    #    !ls&complete and A&til("doing "+l.t)
-    #}
-    #ls&complete = 1;
-    #1c&testlist[N.length] and A&til("More tests...")
+    elsif (!ls&complete) {
+        ls&complete = 1;
+    }
     
-    
+    if (ls&complete) {
+        if (1c&testlist[N.length]) {
+            A&til("More tests...")
+        }
+    else {
+        A&til("doing "+l.t)
+    }
     
     S 3
     n Done 6 s:Done
@@ -616,4 +633,19 @@ Rests: | # automate Bystandings
 pi/runnedtest: |
     G&heading;
     # capture results and ...
+    
+    $desc = c&diffscription;
+    if (desc) {
+        desc.good &&
+            n good 1 s:good %fs:140%
+        desc.mindup &&
+            n mindup 12 s:u++ %hue:150deg
+        desc.knownoise &&
+            n noises 12 s:noises*"+desc.knownoise+" %hue:40deg
+        desc.differs &&
+            n differs 12 $s:desc.differs %hue:60deg
+    }
+    
+    $diff = c&diffstash;
+    # test should hault with relevant Revisit
 
