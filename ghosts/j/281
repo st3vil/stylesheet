@@ -279,7 +279,6 @@ Sevo: | # seive o
         C = A&s = {t:me.timestamp(),y:{},c:{},sc:{}};
         #$G = {y:{},c:{},sc:{}};
         T = {y:{},c:{},sc:{}};
-        A&fps = 3;
         
         me.star(A,C,G,T);
     };
@@ -313,6 +312,7 @@ Soogle: |
     $me = 4c&me;
     !me and throw "no me";
     $io = me.io;
+    4c&fps = 1;
     
     # loop comebacks between attentions
     me.star = &acgt{
@@ -320,16 +320,18 @@ Soogle: |
         $me = A&me;
         $starts = G&time;
         $Y = A;
+        A.on.A = A;
+        A.noelvis = 1;
         $frames = 1000/A&fps;
         frames += A&brake ||= 0;
+        A&brake > 0 and ~braking: A&brake
         G&yl,frames,&{me.star(Y,C,G,T)};
         
         try { me&starc }
         catch (e) {
-            $async = (e.message || e).match(/^async/);
+            $async = e.message.match(/^async/);
             # assume requests complete between framerates
-            ~star
-            async and return
+            async and return ~Ytp: e.message
             # or staccato explosions
             A&brake += 2000;
             throw e, 'star'
@@ -340,12 +342,14 @@ Soogle: |
         ends > (frames * 0.7) and A&brake += 200
         elsif (A&brake) { A&brake -= 100 }
         4s&busyratio = ends / frames;
-        4s&busyratio < 0.0001 and delete 4s&busyratio;
+        4s&busyratio < 0.001 and delete 4s&busyratio;
     };
     # cast gaze
     me.starc = &acgt{
         $A = G&Aye,'star';
         $g = A.ground = G&Cye,[me.timestamp(),{},{root:1},{}];
+        # any textual output:
+        4s&raw = [];
         i $g/self
         yac&s = C;
         
@@ -362,15 +366,24 @@ Soogle: |
         me&osc,A.ground;
         
         # already part of some self-reflexive time
+        4s&downghost and me&dodownghost
         4s&upghost and me&doupghost
     };
     
     me.osc = &acgts{
         A.on.innerText = G&ind,s,'ki';
-        $(A.on).append('<p>T</p>').on('click', &e{
+        
+        each it 4s&raw {
+            $la = $('<p>T</p>').appendTo(A.on);
+            la.text(t);
+        }
+        
+        $la = $('<p>T</p>').appendTo(A.on);
+        la.on('click', &e{
             e.stopPropagation();
-            me&upghost
+            me&upghost,'Soogle';
         });
+        la.css('font-size','150%');
     };
     # drop (1) or permanento (null) way caching
     me.waytime = &acgtts{
@@ -381,17 +394,34 @@ Soogle: |
         ws&now = s; # unixtime, forces update
     };
     me.upghost = &acgtt{
+        ~Uppingo
         t ||= 'Soogle';
         me&waytime,t,1;
         4s&upghost ||= [];
-        0 > 4s&upghost.indexOf(t)
-        4s&upghost.push(t);
+        4s&upghost.indexOf(t) < 0 and 4s&upghost.push(t)
     };
+    # < merely starts fetching new copy
+    #   next frame will carry out the update
+    $w = me.importo = {};
+    # the way to trigger, or simply the way to trigger
+    # all these should noop
+    w.Soogle = 1;
     me.doupghost = &acgt{
         each it 4s&upghost {
-            G&way,t
+            G&way,t,{},'noop';
+            ~tis: t
+            !w[t] and continue
+            4s&downghost ||= [];
+            4s&downghost.indexOf(t) < 0 and 4s&downghost.push(t)
         }
         delete 4s&upghost
+    };
+    me.dodownghost = &acgt{
+        each it 4s&downghost {
+            ~downung: t
+            G&way,t
+        }
+        delete 4s&downghost
     };
     me.otherandcontinue = &acgt{
         if (4s&log) {
@@ -402,7 +432,7 @@ Soogle: |
         if (4s&N) {
             4s&N = 4s&N.filter(&Y{
                 if (Y.4 && G.DNS[Y.4.t] != Y.4) {
-                    ~Not our4: ki(Y.4)
+                   #~TheirAnd: ki(Y.4)
                 }
                 else { return 1 }
             });
@@ -421,9 +451,15 @@ Soogle: |
         
     };
     me.digwaypoll = &acgt{
-        $C = G&n,['digwaypoll',''];
-        c&s = ki(A.5.I);
-        #ex(C.sc,A.5.I);
+        A = G&n,['digwaypoll'],5;
+        C = A&s;
+        #A&Jupstash();
+        
+        $w = A.5.I.w;
+        4s&raw.push('Downghost: '+ki(4s&downghost));
+        4s&raw.push('A1: '+ki(A.1));
+        4s&raw.push(ki(w));
+        
     };
     me.bounda = &{
     # give A websocket
@@ -436,7 +472,7 @@ Soogle: |
     #     making compressions
         a&ws && a&ws.readyState == 1 and return
         
-        A&ws ||= 'ws://'+location.host+'/s';
+        A&ws ||= 'ws://'+location.host+'/'+s;
         
         $ws = a&ws = new WebSocket(A&ws);
         
