@@ -345,18 +345,18 @@ Tyrade: | # Wed for Typ: crud of/t=strings, way with
         }
         $c->render(text=>sjson($re));
     };
-    #c digway-poll-notifier
+    #c digway-poll-notifier, see 281 Sevo
     my $poll = {tx=>[],ways=>{}};
     poll.wayt = {}; # pi/name -> pi-name
     poll.wayd = {}; # pi-name -> s&dige
     poll.doing = &o{
-        return if o && poll.one && o ne poll.one;
+        return if $o && poll.one && $o ne poll.one;
         
         my @ways;
         each pi poll.ways {
             my $t = $p;
             $t = poll.wayt.>$p ||= do { $t =~ s/\W/-/sg; $t };
-            $dig = readlink "wormhole/digway/$t";
+            my $dig = readlink "wormhole/digway/$t";
             $dig eq poll.wayd.>$t and next
             poll.wayd.>$t = $dig;
             push @ways, $p;
@@ -381,7 +381,7 @@ Tyrade: | # Wed for Typ: crud of/t=strings, way with
         Mojo::IOLoop->stream($tx->connection)->timeout(300000);
         $tx->max_websocket_size(512000);
         $s->on(message => &M,m{
-            die "Not wordy: $m" unless $m =~ /^[\w-\/]+$/;
+            die "Not wordy: $m" unless $m =~ /^[\w\-\/]+$/;
             tx.ways.>$m ++ || poll.ways.>$m ++;
         });
         
