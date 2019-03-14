@@ -316,7 +316,7 @@ Soogle: |
     
     # loop comebacks between attentions
     me.star = &acgt{
-        !A.on.ownerDocument.contains(A.on) and return "Unplugged"
+        !A.on.ownerDocument.contains(A.on) and return 4s&dead = "Unplugged"
         $me = A&me;
         $starts = G&time;
         $Y = A;
@@ -348,12 +348,20 @@ Soogle: |
     me.starc = &acgt{
         $A = G&Aye,'star';
         $g = A.ground = G&Cye,[me.timestamp(),{},{root:1},{}];
+        
+        # clusp
+        
+        # already part of some self-reflexive time
+        4s&upghost and me&doupghost
+        4s&downghost and me&dodownghost
+        
+        # surJey
+        
         # any textual output:
         4s&raw = [];
         i $g/self
         yac&s = C;
         
-        #yac&foN = 4s&N;
         ex(ya.sc,A.4.sc);
         yac&brake = upc&brake;
         
@@ -364,10 +372,6 @@ Soogle: |
         }
         
         me&osc,A.ground;
-        
-        # already part of some self-reflexive time
-        4s&downghost and me&dodownghost
-        4s&upghost and me&doupghost
     };
     
     me.osc = &acgts{
@@ -385,16 +389,15 @@ Soogle: |
         });
         la.css('font-size','150%');
     };
-    # drop (1) or permanento (null) way caching
+    
     me.waytime = &acgtts{
         $wa = A.5.I.w; # alien stash
-        !wa and throw "no wa"
+        !wa and throw "no wa", t
         $w = wa.y.tw[t]; # has G&ways we use
         !w and throw "no w", t
         ws&now = s; # unixtime, forces update
     };
     me.upghost = &acgtt{
-        ~Uppingo
         t ||= 'Soogle';
         me&waytime,t,1;
         4s&upghost ||= [];
@@ -404,12 +407,14 @@ Soogle: |
     #   next frame will carry out the update
     $w = me.importo = {};
     # the way to trigger, or simply the way to trigger
-    # all these should noop
     w.Soogle = 1;
     me.doupghost = &acgt{
         each it 4s&upghost {
-            G&way,t,{},'noop';
-            ~tis: t
+            # make sure it's out of date
+            me&waytime,t,1;
+            # noop, ttl = 1 hour
+            $cb = &t,ar,w{ ws&now = G&time + 3600 };
+            G&way,t,{},cb;
             !w[t] and continue
             4s&downghost ||= [];
             4s&downghost.indexOf(t) < 0 and 4s&downghost.push(t)
@@ -420,6 +425,7 @@ Soogle: |
         each it 4s&downghost {
             ~downung: t
             G&way,t
+            ~downund//1: t
         }
         delete 4s&downghost
     };
@@ -448,96 +454,52 @@ Soogle: |
     };
     # to receive way notifies
     me.J.digwaypoll = &acgt{
-        
+        #
     };
     me.digwaypoll = &acgt{
         A = G&n,['digwaypoll'],5;
         C = A&s;
-        #A&Jupstash();
-        
+        A&Jupstash();
+        1c&eyei ||= 0;
+        c&ieye = 1c&eyei++;
         $w = A.5.I.w;
-        4s&raw.push('Downghost: '+ki(4s&downghost));
-        4s&raw.push('A1: '+ki(A.1));
-        4s&raw.push(ki(w));
+        4s&raw.push('A.1: '+ki(A.1));
         
-    };
-    me.bounda = &{
-    # give A websocket
-    #   winds itself back when disconnected
-    # spawns:
-    #   A=send when you G&h,wss&send,'YourString'
-    #   A=receive when the a&receive happens, which sends 
-    #   and A receive (or whatever you set a&receive)
-    #   put in a J=tel to be recording stuff,
-    #     making compressions
-        a&ws && a&ws.readyState == 1 and return
+        # give A websocket
+        #   reconnects?
+        # spawns:
+        #   A=send when you G&h,wss&send,'YourString'
+        #   A=receive when the a&receive happens, which sends 
+        #   and A receive (or whatever you set a&receive)
+        #   put in a J=tel to be recording stuff,
+        #     making compressions
+        1c&ws && 1c&ws.readyState == 1 and return
         
-        A&ws ||= 'ws://'+location.host+'/'+s;
+        $to = 'ws://'+location.host+'/'+A.1.t;
         
-        $ws = a&ws = new WebSocket(A&ws);
+        $ws = 1c&ws = new WebSocket(to);
         
         ws.onopen = &{
-            ws !== a&ws  and return ~sockalivedupe: A&ws
+            ws !== 1c&ws and return ~sockalivedupe: A&ws
             delete a&dead;
-            
-            ~connected: A&ws
-            $('body').stop().css('-webkit-filter', '');
+            ~connected: to
+            each ti me.importo {
+                me&waytime,t,null;
+                ws.send(t);
+            }
         };
         
-        ws.onclose = &{
-            ws !== a&ws  and return ~sockalivedupe: A&ws
-            a&dead = (a&dead||0) + 1
-            
-            ~closed: A&ws
-            $('body').stop().css('-webkit-filter',
-                'blur(1px) brightness(1.3) contrast(2)');
-            
-            T.N.2 = 3;
-        };
-        
+        # wave of Lines...
         ws.onmessage = &ev,{
-            a&receive(A,C,G,T,ev.data,ev);
-        };
-        // generally it would be tied to a dialectic state
-        //   see making compressions ^
-        // Y may != A if someone in 4 uses our a&receive
-        // also AA is taking
-        $AA = A;
-        a&receive = &Y,C,G,T,s,ev{
-            A = AA;
-            $A = G&Aye,'receive',0,{Y:Y};
-            
-            // could be in I.receive
-            
-            typeof s != 'string' and throw "not string: ",s
-            
-            $guesswork = s.substr(0,1);
-            guesswork == "[" and s = $.parseJSON(s)
-            guesswork == "{" and s = $.parseJSON(s)
-            
-            // trusted to create anything
-            G&n,s
+            4s&dead and return ws.close()
+            $s = ev.data;
+            s = s.split("\n");
+            each il s {
+                l == '' and continue
+                me&upghost,l;
+            }
         };
         
-        // Y whoever G&h,wss&send,'YourString'
-        a&send = &Y,C,G,T,s,eg{
-            A = AA;
-            $A = G&Aye,'send',0,{Y:Y};
-            
-            // could be in I.send
-            
-            // test coverage:
-            $ws = upa&ws;
-            ws.readyState !== 1 and ~sockdropped: upA&ws
-            
-            typeof s != 'string' and s = JSON.stringify(s);
-            
-            // if too long?
-            ws.send(s);
-        };
-    
-        // wanting T.N=6 to do so
-        A.cv = 0.6
     }
 pi/god: | # surf all
     # #
