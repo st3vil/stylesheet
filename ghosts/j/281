@@ -420,56 +420,74 @@ Soogle: |
     me.J.digwaypoll = &acgt{
         #
     };
+    
+    # one ws per A.1, for its t
+    me.ws = &acgts{
+        A = 1c&ws ||= G&Aye,'ws';
+        $ws = A&ws;
+        ws && ws.readyState == 1 and return A
+        ws = A&ws ||= new WebSocket(
+            'ws://'+location.host+'/'+A.1.t);
+        ws.onclose = &ev,la{
+        };
+        ws.onerror = &ev,la{
+            debugger;
+        };
+        ws.onopen = &ev,{
+            ws !== A&ws and return ~sockalivedupe: A&ws
+            ~connected: ws.url
+            A&open and return A&open(ws)
+        };
+        ws.onmessage = &ev,la{
+            4s&dead and return ws.close()
+            $s = ev.data;
+            if (A&receive) {
+                A&receive(s)
+            }
+            elsif (A&receives) {
+                $l = s.split("\n");
+                l.slice(-1)[0] == '' and l.pop()
+                A&receives(l)
+            }
+            else {
+                throw "unhandled ws", ws.url, s
+            }
+        }
+        return A
+    };
+    
     me.digwaypoll = &acgt{
         A = G&n,['digwaypoll'],5;
         C = A&s;
         A&Jupstash();
+        #
         1c&eyei ||= 0;
         c&ieye = 1c&eyei++;
+        
         $w = A.5.I.w;
-        4s&raw.push('A.1: '+ki(A.1));
+        4s&raw.push('A.53: '+ki(A.1));
         
-        # give A websocket
-        #   reconnects?
-        # spawns:
-        #   A=send when you G&h,wss&send,'YourString'
-        #   A=receive when the a&receive happens, which sends 
-        #   and A receive (or whatever you set a&receive)
-        #   put in a J=tel to be recording stuff,
-        #     making compressions
-        1c&ws && 1c&ws.readyState == 1 and return
-        
-        $to = 'ws://'+location.host+'/'+A.1.t;
-        
-        $ws = 1c&ws = new WebSocket(to);
-        
-        ws.onopen = &{
-            ws !== 1c&ws and return ~sockalivedupe: A&ws
-            delete a&dead;
-            ~connected: to
+        $ws = me&ws,A.1.t;
+        #debugger;
+        wsc&open = &w{
+            # assert what we care about
             each ti me.importo {
                 me&waytime,t,null;
-                ws.send(t);
+                w.send(t);
             }
         };
-        
-        # wave of Lines...
-        ws.onmessage = &ev,{
-            4s&dead and return ws.close()
-            $s = ev.data;
-            s = s.split("\n");
-            each il s {
-                l == '' and continue
-                me&upghost,l;
+        wsc&receives = &l{
+            each is l {
+                me&upghost,s
             }
         };
-        
     }
     me.waytime = &acgtts{
         $wa = A.5.I.w; # alien stash
         !wa and throw "no wa", t
         $w = wa.y.tw[t]; # has G&ways we use
         !w and throw "no w", t
+        s == null and s = G&time + 3600
         ws&now = s; # unixtime, forces update
     };
     me.upghost = &acgtt{
