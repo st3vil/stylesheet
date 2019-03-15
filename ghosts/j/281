@@ -312,7 +312,7 @@ Soogle: |
     $me = 4c&me;
     !me and throw "no me";
     $io = me.io;
-    4c&fps = 1;
+    4c&fps = 3;
     
     # loop comebacks between attentions
     me.star = &acgt{
@@ -325,16 +325,19 @@ Soogle: |
         $frames = 1000/A&fps;
         frames += A&brake ||= 0;
         A&brake > 0 and ~braking: A&brake
+        A&brake > 7000 and A&brake = 7000
         G&yl,frames,&{me.star(Y,C,G,T)};
         
         try { me&starc }
         catch (e) {
             $async = e.message.match(/^async/);
             # assume requests complete between framerates
-            async and return ~Ytp: e.message
-            # or staccato explosions
-            A&brake += 2000;
-            throw e, 'star'
+            if (!async) {
+                # or staccato explosions
+                A&brake += 2000;
+                throw e, 'star'
+            }
+            ~Ytp: e.message
         }
         
         $ends = G&time,starts;
@@ -387,48 +390,9 @@ Soogle: |
             e.stopPropagation();
             me&upghost,'Soogle';
         });
-        la.css('font-size','150%');
+        la.css('font-size','280%');
     };
     
-    me.waytime = &acgtts{
-        $wa = A.5.I.w; # alien stash
-        !wa and throw "no wa", t
-        $w = wa.y.tw[t]; # has G&ways we use
-        !w and throw "no w", t
-        ws&now = s; # unixtime, forces update
-    };
-    me.upghost = &acgtt{
-        t ||= 'Soogle';
-        me&waytime,t,1;
-        4s&upghost ||= [];
-        4s&upghost.indexOf(t) < 0 and 4s&upghost.push(t)
-    };
-    # < merely starts fetching new copy
-    #   next frame will carry out the update
-    $w = me.importo = {};
-    # the way to trigger, or simply the way to trigger
-    w.Soogle = 1;
-    me.doupghost = &acgt{
-        each it 4s&upghost {
-            # make sure it's out of date
-            me&waytime,t,1;
-            # noop, ttl = 1 hour
-            $cb = &t,ar,w{ ws&now = G&time + 3600 };
-            G&way,t,{},cb;
-            !w[t] and continue
-            4s&downghost ||= [];
-            4s&downghost.indexOf(t) < 0 and 4s&downghost.push(t)
-        }
-        delete 4s&upghost
-    };
-    me.dodownghost = &acgt{
-        each it 4s&downghost {
-            ~downung: t
-            G&way,t
-            ~downund//1: t
-        }
-        delete 4s&downghost
-    };
     me.otherandcontinue = &acgt{
         if (4s&log) {
             4s&log = 4s&log.filter(&l{
@@ -501,6 +465,46 @@ Soogle: |
         };
         
     }
+    me.waytime = &acgtts{
+        $wa = A.5.I.w; # alien stash
+        !wa and throw "no wa", t
+        $w = wa.y.tw[t]; # has G&ways we use
+        !w and throw "no w", t
+        ws&now = s; # unixtime, forces update
+    };
+    me.upghost = &acgtt{
+        t ||= 'Soogle';
+        me&waytime,t,1;
+        4s&upghost ||= [];
+        4s&upghost.indexOf(t) < 0 and 4s&upghost.push(t)
+    };
+    # < merely starts fetching new copy
+    #   next frame will carry out the update
+    $w = me.importo = {};
+    # the way to trigger, or simply the way to trigger
+    w.Soogle = 1;
+    
+    me.doupghost = &acgt{
+        each it 4s&upghost {
+            # make sure it's out of date
+            me&waytime,t,1;
+            # noop, ttl = 1 hour
+            $cb = &t,ar,w{ ws&now = G&time + 3600 };
+            G&way,t,{},cb;
+            !w[t] and continue
+            4s&downghost ||= [];
+            4s&downghost.indexOf(t) < 0 and 4s&downghost.push(t)
+        }
+        delete 4s&upghost
+    };
+    me.dodownghost = &acgt{
+        each it 4s&downghost {
+            ~>3 downung: t
+            G&way,t
+            ~>3 downund//1: t
+        }
+        delete 4s&downghost
+    };
 pi/god: | # surf all
     # #
     #
