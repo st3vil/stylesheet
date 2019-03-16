@@ -312,7 +312,7 @@ Soogle: |
     $me = 4c&me;
     !me and throw "no me";
     $io = me.io;
-    4c&fps = 3;
+    4c&fps = 2;
     
     # loop comebacks between attentions
     me.star = &acgt{
@@ -341,8 +341,8 @@ Soogle: |
         }
         
         $ends = G&time,starts;
-        # aim for a third of our time out of the loop
-        ends > (frames * 0.7) and A&brake += 200
+        # aim for a third of our time in the loop
+        ends > (frames * 0.1) and A&brake += 200
         elsif (A&brake) { A&brake -= 100 }
         4s&busyratio = ends / frames;
         4s&busyratio < 0.001 and delete 4s&busyratio;
@@ -441,7 +441,7 @@ Soogle: |
     };
     #c Eighto
     me.J.wobulus = &acgt{
-        #
+        =pod
         n A4sc  $s:A.4.sc
         n A4on  $s:A.4.on
         n A  $s:A
@@ -451,6 +451,7 @@ Soogle: |
         n AonA  $s:A.on.A
         n AonA1  $s:A.on.A.1
         n A1  $s:A.1
+        =cut
         
         # random health dials
         $br = upupc&brake;
@@ -486,36 +487,45 @@ Soogle: |
                 $(A.on).appendTo(A.4.on)
             # beyond W level, upwards osc attaches
         }
+        A&s != C || C.y.A != A and throw "exosc";
+        
         1c&on = A.on;
         # last A
         $Y = A.on.A;
         A.on.A = A;
         # last C
         $D = Y && Yc&s;
-        Ac&s != C and throw "exosc";
         
         # work sea of C .y.A.on
         # advancing a D .y.A.on?
         # until the next J, who 1c&on
+        
+        # if Y && !Yrefs[it], picture forom goners, match
+        # is converting an old employee into a new one
+        # and refs, and .y.C etc moves sourceward
         $du = &s,d{
-            # needn't
-            $Y = s.y.A;
+            $n = s.y.A;
+            # yon J
+            if (n && n.1 != A.1) {
+                d.nofurther = 1;
+                return "Fhuro "+ki(s);
+            }
             
             # become squashable encoding C, if...
             $picture = me.picture(s);
-            A.2 == A.4 and return picture
-            $lot = &n,s{
-                picture += "\n"+s;
-                # G&intag:'>'+n+' '+s
-            };
-            lot(3,ki(d));
+            #picture = ki(d.up);
             
-            s.t == 'edges' and picture = ki(d);
+            $lot = &n,s{
+                picture += "\n"+
+                 G&intag:'>'+n+' '+s
+            };
+            lot(35,ki(d));
+            lot(35,ki(C));
             
             return picture
         };
         
-        A.on.innerText = G&ind,C,du;
+        A.on.innerHTML = G&ind,C,du;
         
         each it 4s&raw {
             $la = $('<p>T</p>').appendTo(A.on);
