@@ -461,6 +461,13 @@ Soogle: |
         n teeth 4
         n tongs 5 s:lovely
         
+        1c&timeto ||= 0;
+        if (0 && 1c&timeto > 3) {
+            n tot 6 s:aly
+            1c&timeto > 5 and 1c&timeto = 0
+        }
+        1c&timeto++
+        
         me&J,'digwaypoll';
         
         
@@ -478,22 +485,11 @@ Soogle: |
     # s might be an elvis or thing to go wide on
     # s/all the osc together escape linear code
     me.osc = &acgts{
-        # element im J
-        1c&on and A.on = 1c&on
-        if (0) {
-        #else { # creating
-            ~creating: A.1.t
-            A.on = $("<stylehouse>")[0];
-            (A.1 == A.3 || A.2 == A.4) &&
-                $(A.on).appendTo(A.4.on)
-            # beyond W level, upwards osc attaches
-        }
         A&s != C || C.y.A != A and throw "exosc";
         
-        1c&on = A.on;
         # last A
-        $Y = A.on.A;
-        A.on.A = A;
+        $Y = 1c&on && 1c&on.A;
+        #A.on.A = A;
         # last C
         $D = Y && Yc&s;
         
@@ -523,8 +519,15 @@ Soogle: |
             X.z.push(d);
             
             # history at te top
-            s == C && Y && Yc&X and d.V = Yc&X
+            if (s == C) {
+                Y && Yc&X and d.V = Yc&X; # debugger;
+                else {
+                    ~New: bit, ki(1c&on && 1c&on.A.c.X)
+                    #debugger;
+                }
+            }
             # caused by the passed, causing the future
+            #d.s.t == 'wobulus' and debugger
             $V = d.V && d.V[bit];
             # if there was something there
             $b = V && V.z && V.z.shift();
@@ -538,19 +541,39 @@ Soogle: |
             $n = s.y.A;
             # yon J
             if (n && n.1 != A.1) {
-                d.nofurther = 1;
+                d.not = 1;
                 $j = n.1;
                 !jc&on and debugger
                 d.on = jc&on
             }
         };
-        G&ind,C,du;
-        
+        G&ind,C,du,{cbfirst:1};
+        ~OSC: A.1.t
         each id A&ds {
             $b = d.b;
             $s = d.s;
-            b.s == d.s and throw "Crefsame"
-            d.on ||= b && b.on || $("<stylehouse>")[0];
+            b && b.s == d.s and throw "Crefsame"
+            d.on ||= b && b.on || s == C && 1c&on;
+            if (!d.on) {
+                d.on = $("<stylehouse>")[0];
+                if (i == 0) {
+                    s != C and throw "i0s!C"
+                    $fourier = (A.1 == A.3 || A.2 == A.4);
+                    $wob = !b && fourier && A.1.t == 'wobulus'
+                    if (wob) {
+                        if (!A.4.on.contains(d.on)) {
+                            ~adding: ki(d.s)
+                            $(d.on).appendTo(A.4.on);
+                        }
+                        else {
+                            ~nondonhad: ki(d.s)
+                        }
+                    }
+                    ~Owns: A.1.t, ki(d.s)
+                    #, ki(d.on.A.c.s)
+                    1c&on = d.on;
+                }
+            }
             
             # gen picture/comparable/muddlable
             $picture = me.picture(s);
@@ -559,50 +582,54 @@ Soogle: |
             }; #}
             lot(35,ki(d));
             d.up && lot(67,ki(d.up.s,3));
-            $goners = d.V && Object.keys(d.V);
-            if (goners.length) {
-                lot(85,"Gone: "+ki(goners))
-                d.gone = [];
-                d.goneon = [];
-                each ip d.V {
+            
+            $V = d.V;
+            if (V) {
+                V.z && !V.z.length and delete V.z
+                # any other t+cv are:
+                each ip V {
+                    lot(85,"Gone: "+ki(i))
+                    d.gone ||= [];
                     d.gone.push(p);
-                    d.goneon.push(p.on);
                 }
             }
             d.picture = picture+"\n";
             # d.s now vs b.s then
             
-            $cha = !b || d.picture != b.picture;
+            $cha = d.gone || !b || d.picture != b.picture;
             if (cha) {
                 # apply all the style
+                d.d > 1 && s.t == 'wobulus' and debugger;
                 d.d > 1 and $(d.on).css('margin-left',d.d+'em');
                 d.cha = 1;
             }
             
-            $n = s.y.A;
-            n and n.on = d.on;
-            
+            s.y.A and s.y.A.on = d.on; d.on.A = s.y.A;
+            s == C && s.y.A && s.y.A != A and debugger;
+            !d.up and continue
             d.up.down ||= [];
             d.up.down.push(d);
         }
         
         # put each in another
-        each id A&ds {
+        $rev = A&ds.slice().reverse();
+        each id rev {
+            !d.cha || d.not and continue
+               # debugger;
+            #~GKEo: d.d, d.s.t
+            # what to be
             $have = [d.picture];
-            if (d.down) {
-                each ip d.down {
-                    have.push(p.on)
-                }
-            }
+            (d.down||[]).filter(&p{ have.push(p.on) });
+            # what is
             $had = d.on.childNodes;
-            
-            $havent = [];
-            
-            $new = d.down.filter(&v,i{
+            # hadnt - what we didn't know was there
+            # havent - what goes
+            # rearrange, carefully. or just:
+            $(d.on).empty().append(have);
         }
         
         #A.on.innerHTML = G&ind,C,du;
-        
+        return;
         A.1.t != 'wobulus' and return
         
         each it 4s&raw {
