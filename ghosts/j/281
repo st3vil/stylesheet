@@ -546,54 +546,56 @@ Soogle: |
             $b = d.b;
             $s = d.s;
             b && b.s == d.s and throw "Crefsame"
-            # only after atoms not assigned reality
-            #d.on and continue
-            d.on ||= b && b.on; # as last time
-            if (s == C) { # top atom
-                d.on && d.on != 1c&on and throw "don!1on"
-            }
+            # reuse elements, affect changes
+            d.on ||= b && b.on;
             d.on ||= $("<stylehouse>")[0];
             
             # OSC 3, drawing out what is
             
             if (!b) { # on init
-                # set title
                 $(d.on).attr('title',s.t+' '+s.y.cv)
                 
                 if (d.d > 1) {
                     $(d.on).css('margin-left',(d.d-1)+'em');
                 }
+                # < go wide and reuse elements moving around
             }
+            
             if (d.J) {
                 # be a nothing
+                # < still wants some picturing
                 $(d.on).css('display','block');
+                d.in = 1c&on;
+                d.cha = !b || d.in != b.in;
                 continue
             }
-            
-            # gen picture/comparable/muddlable
-            $picture = me.picture(s);
-            $lot = &n,s{
-                picture += "\n"+ G&intag:'>'+n+' '+s
-            }; #}
-            
-            $V = d.V;
-            if (V) {
-                V.z && !V.z.length and delete V.z
-                # any other t+cv are:
-                each ip V {
-                    lot(85,"Gone: "+ki(i))
-                    d.gone ||= [];
-                    d.gone.push(p);
+            else {
+                # gen picture/comparable/muddlable
+                $picture = me.picture(s);
+                $lot = &n,s{
+                    picture += "\n"+ G&intag:'>'+n+' '+s
+                }; #}
+
+                $V = d.V;
+                if (V) {
+                    V.z && !V.z.length and delete V.z
+                    # any other t+cv are:
+                    each ip V {
+                        lot(85,"Gone: "+ki(i))
+                        d.gone ||= [];
+                        d.gone.push(p);
+                    }
                 }
+                #lot(67,ki(d.path,3));
+                d.picture = picture+"\n";
+                
+                # d.s now vs b.s then
+
+                # children gone, self appear or differ
+                d.cha = d.gone || !b || d.picture != b.picture;
+                # child needs parent to attach it
+                !b && d.up and d.up.cha ||= 1
             }
-            #lot(67,ki(d.path,3));
-            d.picture = picture+"\n";
-            # d.s now vs b.s then
-            
-            # children gone, self appear or differ
-            d.cha = d.gone || !b || d.picture != b.picture;
-            # child needs parent to attach it
-            !b && d.up and d.up.cha ||= 1
         }
         each id A&ds {
             $s = d.s;
@@ -617,30 +619,32 @@ Soogle: |
         #c put each in another
         $rev = A&ds.slice().reverse();
         each id rev {
-            #!d.cha && !d.J and continue
-               # debugger;
-            #~GKEo: d.d, d.s.t
-            # what to be
-            #!d.picture and throw "Nodpic"
-            #!d.down and ~>3 Nodown: d.s.t
-            #!d.down and continue
+            !d.cha and continue
             # what is
             $had = d.on.childNodes;
-            
-            # hadnt - what we didn't know was there
-            # havent - what goes
-            # rearrange, carefully. or just:
-            $(d.on).empty();
+            # what will be
+            $have = [];
             d.picture &&
-                $(d.on).append(d.picture);
+                have.push('<cs>'+d.picture+'</cs>');
             each ip d.down {
-                $(d.on).append(p.on)
+                have.push(p.on);
             }
             if (d.J) {
                 $J = d.J;
                 !Jc&on and throw "noJon";
-                $(d.on).append(Jc&on);
+                have.push(Jc&on);
             }
+            # < scan what is there, leave siblings of changes
+            #   rebuilding dom annoys stately insides (cm, video)
+            #     whose continuity (history + cursor position + focus) could be made up somehow
+            # hadnt - what we didn't know was there
+            # havent - what goes
+            # rearrange, carefully. or just:
+            $(d.on).empty();
+            each i,on have {
+                $(d.on).append(on);
+            }
+            
         }
         
         if (A.2 == A.4) {
