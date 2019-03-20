@@ -748,6 +748,9 @@ Packle: |
         $M = c&M = [];
         n t  $s:C.t %fs:25
         s&dis = 1;
+        s&bgi = 'i/greencush.jpg';
+        s&bo = '3px dotted white';
+        s&br = '3';
         
         if (s instanceof Array) {
             each kv s {
@@ -759,7 +762,7 @@ Packle: |
             n c  $s:ki(Object.keys(s.c))
             
             each kv s.c {
-                m k  $s:k
+                m k  $s:k %hs:748
                 m v  $s:ki(v,3) %fs:8
             }
 
@@ -767,7 +770,7 @@ Packle: |
                 me&J,['path','-od',{s:sc&path}];
         }
     };
-    #c dress d.on
+    #c dress d.on, a 3c&oscer
     me.Carb = &acgtd{
         # c&s != null and d.on.innerText = c&s
         $el = d.on;
@@ -799,6 +802,8 @@ Packle: |
             || diff(C.sc,x.sc||{},{ignore:'z'});
         cha and d.cha = 1;
         
+        me&Css,d;
+        
         if (typeof c&s == 'string') {
             d.picture = c&s;
             # ^ element's text gets set with children. later:
@@ -808,9 +813,6 @@ Packle: |
         }
         
         !d.cha and return
-        
-        s&fs and $(d.on).css("font-size",(s&fs * 10)+'%');
-        s&dis and $(d.on).css("display",'block');
     };
     #c apply styles.. expand unto copies of this thing,
     #   allowing a compressed notation to turn into styles,
@@ -819,6 +821,8 @@ Packle: |
     #   (we may use d to collect & export workings)
     #     and the whole osc atomism
     #   into css styles
+    $verbose = 0; # causes window.styletos to list styles
+    $robust = 0; # applies all css properties every time
     me.Css = &acgtd{
         $isnew = !d.b;
         # past self
@@ -835,6 +839,7 @@ Packle: |
             s&tag and d.tag = s&tag
         }
         # < hammerhead stylings wanting some cache api
+        #   alike, C fork down paths repeatable
         if (s&attr || b.attr) {
             $notin = ex({},b.attr||{});
             d.attr = {};
@@ -843,7 +848,7 @@ Packle: |
                 v == '!' and v = ''
                 d.attr[k] = v;
                 delete notin[k];
-                b.attr && b.attr[k] == v and continue
+                !robust && b.attr && b.attr[k] == v and continue
                 $(d.on).attr(k,v);
             }
             each kv notin {
@@ -893,14 +898,6 @@ Packle: |
             hak(css) and d.css = css;
         }
         
-        
-        
-        
-        
-        
-        
-        
-        
         #
     }
     #c styles
@@ -911,15 +908,15 @@ Packle: |
         #'numb+plus:-20 z ig^^index',
         #'numb+plus:-10 z ie^^index',
         'empc letter spacing',
-        'empc word spacing',
+        'empc wo^rd spacing',
         'empc line height',
         'empc margin left,right,top,bottom',
         'empc padding left,right,top,bottom',
         'empc ma^rgin',
         'empc mi^n width,height',
         'empc max width,height',
-        'empc lef^t,ri^ght,top^,bo^ttom',
-        'empc left^,right^,top^,bottom^',
+        'empc lef^t,ri^ght,top^,bot^tom',
+        'empc left^,right^,bottom^',
         'empc width^,height^',
         'empc wi^dth,he^ght',
         'empc border radius',
@@ -940,7 +937,7 @@ Packle: |
         ' ^filter sep^ia',
         ' ^filter inv^ert',
         ' ^filter gray^scale',
-        'sayurl background gi^^image', # bgi
+        'sayurl background gi^^image', // bgi
         ' bg^^background',
         'hsle bgh^^background-color',
         'hunine font size',
@@ -967,8 +964,9 @@ Packle: |
                 $get = [];
                 each ig set {
                     $poss = s.split(',');
+                    $gb = g;
                     each iz poss {
-                        g = ex({},g);
+                        $g = ex({},gb);
                         $m = [];
                         # different name
                         if (m = z.match(/^(.*)\^\^/)) {
@@ -987,7 +985,7 @@ Packle: |
                             g.gk ||= '';
                             g.gk += z[0];
                         }
-                        g.cssks ||= [];
+                        g.cssks = (g.cssks||[]).slice();
                         g.cssks.push(z);
                         get.push(g);
                     }
@@ -1005,7 +1003,7 @@ Packle: |
                     g.format = m[0]
                 }
             
-                N.push({t:g.gk,y:{},c:{},g});
+                N.push({t:g.gk,y:{},c:{},sc:g});
             }
         }
         #c formatty things
@@ -1022,7 +1020,7 @@ Packle: |
             s&fs > 17 and s&fs = 17
         };
         co.ron = &s,precision{
-            return +s.toFixed(precision || 4)
+            return +(+s).toFixed(precision || 4)
         };
         # hex value colouring, converted to 0-255
         co.cole = &s{
@@ -1048,32 +1046,31 @@ Packle: |
                 $called = 'rgb';
                 s[3] and s[3] = s[3] / 255; called += 'a'
                 return called+'('
-                    +s.map(&s{ return co.ron(s) })join(',')
+                    +s.map(&s{ return co.ron(s) }).join(',')
                 +')'
             }
         };
         co.hsle = &s{
-            $z = s.split(' ').map(&s{ return s / 100 });
+            #debugger;
+            $z = s.split(' ').map(&s{ return (+s) / 100 });
             s = z.length > 1 && z
-                || s.split('').map(&s{ return s / 10 });
-            s[0] = s[0] * 360;
+                || s.split('').map(&s{ return (+s) / 10 });
+            s[0] = co.ron(s[0] * 360,0);
             s[1] = (s[1]*100)+'%';
             s[2] = (s[2]*100)+'%';
-            $alpha = s[3] != null && s.pop(); #]
-            s = s.map(&s{ co.ron(s,0) });
             $called = 'hsl';
-            alpha != null and s.push(co.ron(alpha,3)); called += 'a'
-            return called+'('+s.join(',')+')');
+            s[3] != null and s[3] = co.ron(alpha,3); called += 'a'
+            return called+'('+s.join(',')+')'
         };
-        co.empc = %s{
+        co.empc = &s{
             s += '';
             !s.match(/%|em|px/) and s += 'em'
             return s
         };
-        co.defsa = %s,opt{
+        co.defsa = &s,opt{
             return s == '1' ? opt[0] : s
         };
-        co.ori = %s,opt{
+        co.ori = &s,opt{
             opt.length == 1 and return opt[0]
             if (isnum(s)) {
                 opt[s] == null and throw "Not a choice: "+s, opt
@@ -1081,13 +1078,13 @@ Packle: |
             }
             return s
         };
-        co.whipre = %s{
+        co.whipre = &s{
             s += '';
             return s.match(/^[2n]/) ? 'nowrap'
                 : s.match(/^[3l]/) ? 'pre-line'
             : 'pre';
         }
-        co.shadole = %s{
+        co.shadole = &s{
             s = s.split(' ');
             $colour = s.length == 4 && s.pop();
             colour and colour = co.cole(colour)
@@ -1109,16 +1106,19 @@ Packle: |
             return co.ron(s,8)
         };
         
-        co.hundr = &s{ # 0-1 of 100%
-            co.ron((+s)*100,0)+'%';
+        # 1 -> 100%
+        co.hundr = &s{
+            return co.ron((+s)*100,0)+'%';
         };
-        co.hunine = &s{ # 9 -> 81%
-            co.ron((+s)*9,0)+'%';
+        # 9 -> 81%
+        co.hunine = &s{
+            return co.ron((+s)*9,0)+'%';
         };
         co.numb = &s{
-            co.ron((+s)
+            return co.ron(+s)
         };
-        co.say = &s,unit{ # adds jargon
+        # adds jargon
+        co.say = &s,unit{
             return s.includes(unit) ? s : s+unit
         };
         co.saypx = &s{ return co.say(s,'px') };
@@ -1134,11 +1134,15 @@ Packle: |
         
         # index by gk
         $ext = {};
+        $tos = [];
         each iD N {
             !Ds&gk and continue
-            ext[Ds&gk] and throw "two gk"+Ds&gk;
+            ext[Ds&gk] and throw "two gk:"+Ds&gk+": "+Ds&cssk+" or "+ext[Ds&gk].sc.cssk;
             ext[Ds&gk] = D
+            tos.push(Ds&cssk+'   '+Ds&gk)
         }
+        verbose and window.styletos = tos.join("\n");
+        
         # styles: that(are) group(ed)
         $po = {};
         po.transform = ['rotate','scale'];
@@ -1154,6 +1158,7 @@ Packle: |
                     $f = co[Ds&format];
                     !f and throw "No format: "+Ds&format
                     v = f(v,Ds&options);
+                    #gk == 'fs' and ~Formats: gk, Ds&format, v
                 }
                 !Ds&cssk and throw "No CSS key to "+gk
                 css[Ds&cssk] = v
