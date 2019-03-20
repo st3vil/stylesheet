@@ -872,6 +872,10 @@ Packle: |
             }
             css.position = 'absolute';
         }
+        # ^ merge into me&styler:
+        # also s&cod/NutText
+        # and Stylaplicants's dropdown
+        
         $st = A&styler ||= me&styler;
         
         st(C,css);
@@ -902,7 +906,229 @@ Packle: |
     #c styles
     me.styler = &acgt{
         # generate noise
+        $data = [
+        'numb z index',
+        #'numb+plus:-20 z ig^^index',
+        #'numb+plus:-10 z ie^^index',
+        'empc letter spacing',
+        'empc line height',
+        'empc margin left,right,top,bottom',
+        'empc padding left,right,top,bottom',
+        'empc ma^rgin',
+        'empc mi^n width,height',
+        'empc max width,height',
+        'empc lef^t,ri^ght,top^,bo^ttom',
+        'empc left^,right^,top^,bottom^',
+        'empc width^,height^',
+        'empc wi^dth,he^ght',
+        'empc border radius',
+        
+        ' over^flow',
+        ' float^',
+        ' bo^rder',
+        'sca opa^city',
+
+        ' tr^ansform origin',
+        'radun ^transform rad^^rotate',
+        ' ^transform scale^',
+        'saypx ^filter blr^^blur',
+        ' ^filter sat^urate',
+        ' ^filter con^trast',
+        ' ^filter bri^ghtness',
+        'saydeg ^filter hue^-rotate',
+        ' ^filter sep^ia',
+        ' ^filter inv^ert',
+        ' ^filter gray^scale',
+        'sayurl background gi^^image', # bgi
+        ' bg^^background',
+        'hsle bgh^^background-color',
+        'hunine font size',
+        'hundr font si^ze',
+        'hundr font weight',
+        
+        'shadole ^text sha^dow',
+        'cole co^lor',
+        'hsle hs^^color',
+        'defsa:underline ^text deco^ration',
+        'ori:none~all poi^nter ^events',
+        'whipre white space',
+        'wordbreakwords word break',
+        'ori:none~block~inline-block~table-row dis^play'
+        ];
         $N = [];
+        each il data {
+            l = l.split(' ');
+            $format = l.shift();
+            $g = {}; # a bunch of css properties
+            $set = [g];
+            each is l {
+                $get = [];
+                each ig set {
+                    $poss = s.split(',');
+                    each iz poss {
+                        g = ex({},g);
+                        $m = [];
+                        # different name
+                        if (m = z.match(/^(.*)\^\^/)) {
+                            g.gk ||= '';
+                            g.gk += m[1];
+                            z = z.replace(/^(.*)\^\^/,'');
+                        }
+                        # part of name
+                        elsif (m = z.match(/^(.*)\^/)) {
+                            g.gk ||= '';
+                            g.gk += m[1];
+                            z = z.replace(/^(.*)\^/,m[1]);
+                        }
+                        # tiniest part of name
+                        else {
+                            g.gk ||= '';
+                            g.gk += z[0];
+                        }
+                        g.cssks ||= [];
+                        g.cssks.push(z);
+                        get.push(g);
+                    }
+                }
+                set = get;
+            }
+            each ig set {
+                !g.cssks and throw "nocsskeys"
+                g.cssk = g.cssks.join('-');
+                delete g.cssks;
+                
+                if (format) {
+                    $m = format.split(':');
+                    m[1] and g.options = m[1].split('~')
+                    g.format = m[0]
+                }
+            
+                N.push({t:g.gk,y:{},c:{},g});
+            }
+        }
+        #c random formatty things
+        $co = {};
+        # (otherhow) scale into such a space (changes C)
+        co.scaly = &acgtsl{
+            l ||= 15;
+            s&fs ||= 9;
+            $d = l - s.length;
+            d /= l/3.14159;
+            s&fs += d;
+            d < -0.6 and s&width = co.ron((6+l/2.13169),1);
+            s&fs < 3 and s&fs = 3
+            s&fs > 17 and s&fs = 17
+        };
+        co.ron = &s,precision{
+            return +s.toFixed(precision || 4)
+        };
+        # hex value colouring, converted to 0-255
+        co.cole = &s{
+            if (s.length == 1) {
+                # as ~messages?
+            }
+            else {
+                # rgb(a)
+                if (s.length == 3 || s.length == 4) {
+                    s = s.split('').map(&s{ return s+''+s });
+                }
+                else {
+                    $l = [];
+                    while (s.length) {
+                        l.push(s.slice(0,2))
+                        s = s.slice(2);
+                    }
+                    s = l;
+                }
+                each in s {
+                    s[i] = +eval('0x'+n)
+                }
+                $called = 'rgb';
+                s[3] and s[3] = s[3] / 255; called += 'a'
+                return called+'('
+                    +s.map(&s{ return co.ron(s) })join(',')
+                +')'
+            }
+        };
+        co.hsle = &s{
+            $z = s.split(' ').map(&s{ return s / 100 });
+            s = z.length > 1 && z
+                || s.split('').map(&s{ return s / 10 });
+            s[0] = s[0] * 360;
+            s[1] = (s[1]*100)+'%';
+            s[2] = (s[2]*100)+'%';
+            $alpha = s[3] != null && s.pop(); #]
+            s = s.map(&s{ co.ron(s,0) });
+            $called = 'hsl';
+            alpha != null and s.push(co.ron(alpha,3)); called += 'a'
+            return called+'('+s.join(',')+')');
+        };
+        co.empc = %s{
+            s += '';
+            !s.match(/%|em|px/) and s += 'em'
+            return s
+        };
+        co.defsa = %s,opt{
+            return s == '1' ? opt[0] : s
+        };
+        co.ori = %s,opt{
+            if (isnum(s)) {
+                opt[s] == null and throw "Not a choice: "+s, opt
+                return opt[s]
+            }
+            return s
+        };
+        co.whipre = %s{
+            s += '';
+            return s.match(/^[2n]/) ? 'nowrap'
+                : s.match(/^[3l]/) ? 'pre-line'
+            : 'pre';
+        }
+        co.shadole = %s{
+            s = s.split(' ');
+            $colour = s.length == 4 && s.pop();
+            colour and colour = co.cole(colour)
+            return s.map(&s{ return d+'px' }).join(' ')
+                + (colour ? ' '+colour : '')
+        }
+        # number of radians in a 90 degrees?
+        co.radian = 1.57079633;
+        # wind radial info only once around
+        co.radun = &s{
+            $o = co.radian*4;
+            $swish = o;
+            s < 0 and swish *= -1;
+            $i = 0;
+            while (s > o || s < o*-1) {
+                s -= swish;
+                i > 5 and throw "muchwinding"
+            }
+            return co.ron(s,8)
+        };
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        #
+        
+        
+        #c applied
+
         
         # index by gk
         $ext = {};
@@ -925,6 +1151,10 @@ Packle: |
         
         return &C,css{
             # apply C -> css
+            each gk,cssk ext {
+                C.sc[gk] != null and css[cssk] = C.sc[gk]
+            }
+            # transform/format some of those ^
             
             # grouped
             each itk po {
