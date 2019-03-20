@@ -911,6 +911,7 @@ Packle: |
         #'numb+plus:-20 z ig^^index',
         #'numb+plus:-10 z ie^^index',
         'empc letter spacing',
+        'empc word spacing',
         'empc line height',
         'empc margin left,right,top,bottom',
         'empc padding left,right,top,bottom',
@@ -952,9 +953,10 @@ Packle: |
         'defsa:underline ^text deco^ration',
         'ori:none~all poi^nter ^events',
         'whipre white space',
-        'wordbreakwords word break',
+        'ori:normal~break-word~break-all word break',
         'ori:none~block~inline-block~table-row dis^play'
         ];
+        # was/will be mind
         $N = [];
         each il data {
             l = l.split(' ');
@@ -1006,9 +1008,9 @@ Packle: |
                 N.push({t:g.gk,y:{},c:{},g});
             }
         }
-        #c random formatty things
+        #c formatty things
         $co = {};
-        # (otherhow) scale into such a space (changes C)
+        # GOING (otherhow) scale into such a space (changes C)
         co.scaly = &acgtsl{
             l ||= 15;
             s&fs ||= 9;
@@ -1072,6 +1074,7 @@ Packle: |
             return s == '1' ? opt[0] : s
         };
         co.ori = %s,opt{
+            opt.length == 1 and return opt[0]
             if (isnum(s)) {
                 opt[s] == null and throw "Not a choice: "+s, opt
                 return opt[s]
@@ -1105,24 +1108,23 @@ Packle: |
             }
             return co.ron(s,8)
         };
+        
+        co.hundr = &s{ # 0-1 of 100%
+            co.ron((+s)*100,0)+'%';
+        };
+        co.hunine = &s{ # 9 -> 81%
+            co.ron((+s)*9,0)+'%';
+        };
+        co.numb = &s{
+            co.ron((+s)
+        };
+        co.say = &s,unit{ # adds jargon
+            return s.includes(unit) ? s : s+unit
+        };
+        co.saypx = &s{ return co.say(s,'px') };
+        co.saydeg = &s{ return co.say(s,'deg') };
+        co.sayurl = &s{ return "url('"+s+"')" };
 
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         #
         
@@ -1133,7 +1135,9 @@ Packle: |
         # index by gk
         $ext = {};
         each iD N {
-            Ds&cssk && Ds&gk and ext[Ds&gk] = Ds&cssk
+            !Ds&gk and continue
+            ext[Ds&gk] and throw "two gk"+Ds&gk;
+            ext[Ds&gk] = D
         }
         # styles: that(are) group(ed)
         $po = {};
@@ -1141,20 +1145,19 @@ Packle: |
         po.filter = ('blur saturate brightness sepia'
             +' hue-rotate invert grayscale').split(' ');
         
-        
-        
-        
-        
-        
-        
-        
-        
         return &C,css{
             # apply C -> css
-            each gk,cssk ext {
-                C.sc[gk] != null and css[cssk] = C.sc[gk]
+            each gk,D ext {
+                $v = C.sc[gk];
+                v == null and continue
+                if (Ds&format) {
+                    $f = co[Ds&format];
+                    !f and throw "No format: "+Ds&format
+                    v = f(v,Ds&options);
+                }
+                !Ds&cssk and throw "No CSS key to "+gk
+                css[Ds&cssk] = v
             }
-            # transform/format some of those ^
             
             # grouped
             each itk po {
