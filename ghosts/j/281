@@ -759,25 +759,6 @@ Soogle: |
         }
         # more simpler translatoes
         $css = {};
-        if (s&geo) {
-            $s = s&geo.split(' ');
-            $aung = s[0].match(/^a(\d+)/);
-            aung and s.shift(); s&ab = aung[1]
-            s = {x:s[0],y:s[1],rad:s[2],scale:s[3],tro:s[4]};
-            css.top = (s.y * 100)+'%';
-            css.left = (s.x * 100)+'%';
-            css['transform-origin'] = '0% 0%';
-            s.tro and css['transform-origin'] = s.tro;
-            s.rad and css['transform-rotate'] = s.rad+'rad';
-            s.scale and css['transform-scale'] = s.scale;
-        }
-        if (s&ab) {
-            if (s&ab == '100') {
-                css.width = '100%';
-                css.height = '100%';
-            }
-            css.position = 'absolute';
-        }
         # ^ merge into me&styler:
         # also s&cod/NutText
         # and Stylaplicants's dropdown
@@ -907,6 +888,11 @@ Soogle: |
                 N.push({t:g.gk,y:{},c:{},sc:g});
             }
         }
+        
+        $auto = 'geo ab'.split(' ');
+        each in auto {
+            N.push({t:n,y:{},c:{},sc:{gk:n,format:'do_'+n}});
+        }
         #c formatty things
         $co = {};
         # GOING (otherhow) scale into such a space (changes C)
@@ -922,6 +908,29 @@ Soogle: |
         };
         co.ron = &s,precision{
             return +(+s).toFixed(precision || 4)
+        };
+        co.do_geo = &s,opt,css{
+            $s = s.split(' ');
+            $aung = s[0].match(/^a(\d+)/); #]
+            if (aung) {
+                s.shift();
+                # s&ab = aung[1] # can't set sc from here
+                co.do_ab(aung[1],{},css);
+            }
+            s = {x:s[0],y:s[1],rad:s[2],scale:s[3],tro:s[4]};
+            css.top = (s.y * 100)+'%';
+            css.left = (s.x * 100)+'%';
+            css['transform-origin'] = '0% 0%';
+            s.tro and css['transform-origin'] = s.tro;
+            s.rad and css['transform-rotate'] = s.rad+'rad';
+            s.scale and css['transform-scale'] = s.scale;
+        };
+        co.do_ab = &s,opt,css{
+            if (s == '100') {
+                css.width = '100%';
+                css.height = '100%';
+            }
+            css.position = 'absolute';
         };
         # hex value colouring, converted to 0-255
         co.cole = &s{
@@ -1058,10 +1067,10 @@ Soogle: |
                     $f = co[Ds&format];
                     !f and throw "No format: "+Ds&format
                     typeof v == 'number' and v = ""+v
-                    v = f(v,Ds&options);
+                    v = f(v,Ds&options,css);
                     #gk == 'fs' and ~Formats: gk, Ds&format, v
                 }
-                !Ds&cssk and throw "No CSS key to "+gk
+                !Ds&cssk and continue;
                 css[Ds&cssk] = v
             }
             
