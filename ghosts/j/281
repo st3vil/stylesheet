@@ -496,7 +496,7 @@ Soogle: |
         
         # OSC 1-2, see what is there
         
-        $Y = 1c&on && 1c&on.A;
+        $Y = 1c&on && 1c&on.A || 1c&osc;
         A&X = {};
         A&ds = [];
         $du = &s,d{
@@ -542,18 +542,11 @@ Soogle: |
             #return ki(s)
         };
         $l = G&ind,C,du,{cbfirst:1};
-        #c atoms in locations, another lives
+        # atoms in locations, another lives
         each id A&ds {
             $b = d.b;
             $s = d.s;
             b && b.s == d.s and throw "Crefsame"
-            
-            # knowing atomic-level motion here,
-            # and unfolding qua in another:
-            # OSC 3, drawing out of what is
-            #   to run rhythms over the atoms,
-            #   thinking of their subatomic meanings
-            # resuming whenever the list of atoms adjusts
             
             $V = d.V;
             if (V) {
@@ -565,59 +558,94 @@ Soogle: |
                 }
             }
             d.cha = d.gone || !b;
-            # < go wide and reuse elements moving around
-            #   persisting moving atoms,
-            #     based pictures of subatomics
-            #     a b in the d.V index leaving?
-            #   TES
-            $toosc = 1c&oscer || 3c&oscer;
-            if (toosc) {
-                # something knowing qualities
-                !me[toosc] and throw "No me."+3c&oscer
-                me[toosc](A,s,G,T,d);
-            }
-            else {
-                # terminal
-                d.on ||= b && b.on;
-                d.on ||= $("<stylehouse>")[0];
-                if (!b) {
-                    $(d.on).attr('title',s.t+' '+s.y.cv);
-                    d.d > 1 &&
-                    $(d.on).css('margin-left',(d.d-1)+'em');
-                }
-                if (d.J) {
-                    # be a nothing
-                    # < still wants some picturing
-                    $(d.on).css('display','block');
-                    $J = d.J;
-                    d.in = Jc&on;
-                    b && d.in != b.in and d.cha = 1
-                    continue
-                }
-                # gen picture/comparable/muddlable
-                $picture = me.picture(s);
-                $lot = &n,s{
-                    picture += "\n"+ G&intag:'>'+n+' '+s
-                }; #}
-
-                
-                #lot(85,"Gone: "+ki(i))
-                #lot(67,ki(d.path,3));
-                d.picture = picture+"\n";
-                
-                # d.s now vs b.s then
-
-                # children gone, self appear or differ
-                b && d.picture != b.picture and d.cha = 1;
-            }
-            
         }
+        
+        # knowing atomic-level motion here,
+        # and unfolding qua in another:
+        # OSC 3, drawing out of what is
+        #   to run rhythms over the atoms,
+        #   thinking of their subatomic meanings
+        # resuming whenever the list of atoms adjusts
+
+        # < go wide and reuse elements moving around
+        #   persisting moving atoms,
+        #     based pictures of subatomics
+        #     a b in the d.V index leaving?
+        #   TES
+        $oscer = 1c&oscer || 3c&oscer || 'OscInd';
+        if (oscer) {
+            # something knowing qualities
+            !me[oscer] and throw "No me."+oscer
+            me[oscer](A,C,G,T);
+        }
+        $oscup = 1c&oscup || 3c&oscup || 'OscUp';
+        if (oscup) {
+            # hoisting output
+            !me[oscup] and throw "No me."+oscup
+            me[oscup](A,C,G,T);
+        }
+    };
+    #c OscInd oscer
+    me.OscInd = &acgt{
         each id A&ds {
+            $b = d.b;
+            $s = d.s;
+            d.on ||= b && b.on;
+            d.on ||= $("<stylehouse>")[0];
+            if (!b) {
+                $(d.on).attr('title',s.t+' '+s.y.cv);
+                d.d > 1 &&
+                $(d.on).css('margin-left',(d.d-1)+'em');
+            }
+            if (d.J) {
+                # be a nothing
+                # < still wants some picturing
+                $(d.on).css('display','block');
+                $J = d.J;
+                d.in = Jc&on;
+                b && d.in != b.in and d.cha = 1
+                continue
+            }
+            # gen picture/comparable/muddlable
+            $picture = me.picture(s);
+            $lot = &n,s{
+                picture += "\n"+ G&intag:'>'+n+' '+s
+            }; #}
+            #lot(85,"Gone: "+ki(i))
+            #lot(67,ki(d.path,3));
+            d.picture = picture+"\n";
+            b && d.picture != b.picture and d.cha = 1;
+        }
+    };
+    me.picture = &s{
+        $Y = s.y.A;
+        $usu = Y && Y.t == 'n';
+        if (usu && sc&J && ss&J) {
+            s = hup(s);
+            sc&J == s.t and delete sc&J;
+            sc&W == s.t and delete sc&W;
+            #ss&W == s.t and delete ss&W;
+            delete ss&z;
+
+
+        }
+        $k = ki(s);
+        usu and k = k.replace(/,A;n/,'');
+        return k
+    };
+    #c put each in another
+    me.OscUp = &acgt{
+        each id A&ds {
+            $b = d.b;
             $s = d.s;
             # child needs parent to attach it
             # < TES less often, if b.on still == d.on?
             d.cha && d.up and d.up.cha = 1
             
+            if (!d.on) {
+                d.on ||= b.on;
+                !d.on and  debugger;
+            }
             if (s.y.A) {
                 $j = s.y.A;
                 jc&s != s and throw "notC";
@@ -635,7 +663,6 @@ Soogle: |
             d.up.down.push(d);
         }
         
-        #c put each in another
         $rev = A&ds.slice().reverse();
         each id rev {
             !d.cha and continue
@@ -657,7 +684,8 @@ Soogle: |
             }
             # < scan what is there, leave siblings of changes
             #   rebuilding dom annoys stately insides (cm, video)
-            #     whose continuity (history + cursor position + focus) could be made up somehow
+            #     whose continuity (history + cursor + focus)
+            #       could be made up somehow
             # hadnt - what we didn't know was there
             # havent - what goes
             # rearrange, carefully. or just:
@@ -683,76 +711,64 @@ Soogle: |
             }
         }
     };
-    me.picture = &s{
-        $Y = s.y.A;
-        $usu = Y && Y.t == 'n';
-        if (usu && sc&J && ss&J) {
-            s = hup(s);
-            sc&J == s.t and delete sc&J;
-            sc&W == s.t and delete sc&W;
-            #ss&W == s.t and delete ss&W;
-            delete ss&z;
-
-
-        }
-        $k = ki(s);
-        usu and k = k.replace(/,A;n/,'');
-        return k
-    };
     
     #c dress d.on, a 3c&oscer
-    me.Carb = &acgtd{
-        $b = d.b;
-        d.on ||= b && b.on;
-        d.on ||= $("<stylehouse>")[0];
-        
-        if (d.J) {
-            $(d.on).css('display','block');
-            $J = d.J;
-            d.in = Jc&on;
-            b && d.in != b.in and d.cha = 1
-            return
-        }
-        
-        # < me.scan
-        $diff = &di,ff,dd{
-            typeof di != 'object' and return di != ff
-            $wh = {gone:{},diff:{},new:{},same:{}};
-            each kv di {
-                null == ff[k] and wh.new[k] = {};
-                ff[k] != di[k] and wh.diff[k] = {};
-                wh.same[k] = {};
+    me.Carb = &acgt{
+        each id A&ds {
+            $b = d.b;
+            $C = d.s;
+            d.carbwashere = 1;
+            d.on ||= b && b.on;
+            d.on ||= $("<stylehouse>")[0];
+
+            if (d.J) {
+                $(d.on).css('display','block');
+                $J = d.J;
+                d.in = Jc&on;
+                b && d.in != b.in and d.cha = 1
+                continue
             }
-            each kv ff {
-                null == di[k] and wh.gone[k] = {};
+
+            # < me.scan
+            $diff = &di,ff,dd{
+                typeof di != 'object' and return di != ff
+                $wh = {gone:{},diff:{},new:{},same:{}};
+                each kv di {
+                    null == ff[k] and wh.new[k] = {};
+                    ff[k] != di[k] and wh.diff[k] = {};
+                    wh.same[k] = {};
+                }
+                each kv ff {
+                    null == di[k] and wh.gone[k] = {};
+                }
+                each qua,k,ha wh {
+                    qua == 'same' and continue
+                    dd && dd.ignore == k and continue
+                    return 1
+                }}
+            };
+            if (s&J) {
+                # expand/see into Js&v, write on this atom
             }
-            each qua,k,ha wh {
-                qua == 'same' and continue
-                dd && dd.ignore == k and continue
-                return 1
-            }}
-        };
-        if (s&J) {
-            # expand/see into Js&v, write on this atom
+
+            $x = b && b.s || {};
+            $cha = diff(C.c,x.c||{})
+                || diff(C.sc,x.sc||{},{ignore:'z'});
+            cha and d.cha = 1;
+
+            me&Css,d;
+
+            if (typeof c&s == 'string') {
+                d.picture = c&s;
+                b && d.picture != b.picture and d.cha = 1
+                # ^ element's text gets set with children. later:
+                c&ht and d.html = c&s;
+                else
+                d.text = c&s;
+            }
+
+            !d.cha and continue
         }
-        
-        $x = b && b.s || {};
-        $cha = diff(C.c,x.c||{})
-            || diff(C.sc,x.sc||{},{ignore:'z'});
-        cha and d.cha = 1;
-        
-        me&Css,d;
-        
-        if (typeof c&s == 'string') {
-            d.picture = c&s;
-            b && d.picture != b.picture and d.cha = 1
-            # ^ element's text gets set with children. later:
-            c&ht and d.html = c&s;
-            else
-            d.text = c&s;
-        }
-        
-        !d.cha and return
     };
     #c apply styles.. expand unto copies of this thing,
     #   allowing a compressed notation to turn into styles,
