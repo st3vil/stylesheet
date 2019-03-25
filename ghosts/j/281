@@ -262,6 +262,11 @@ Sevo: | # seive o
     me.start = &{
         $Y = G&Aye,'Four';
         A = Y;
+        delete A.ground;
+        delete A.r;
+        #delete A.up;
+        delete A.n;
+        
         #A.noelvis = 1;
         me.io = io;
         A&me = me;
@@ -279,9 +284,18 @@ Sevo: | # seive o
             $was = mc&code;
             mc&code = &acgtMs{
                 $C = was(A,C,G,T,M,s);
+                # attach to whatever ground is,
+                #  for ordering amongst n things
                 $g = A.ground;
                 gs&z ||= [];
                 gs&z.push(C);
+                $Jc = 1c&s;
+                if (Jc && Jcc&M && Jcc&M != M) {
+                    # M probably the z of something inside
+                    # allocate cv from J
+                    #debugger;
+                    Jcc&M.push(C);
+                }
                 return C
             };
         }
@@ -1252,6 +1266,10 @@ Packle: |
         };
         #G&yl:300,check;
         if (d.modu) {
+            # the swept up (behind/as y) pile of junk
+            #   in the hallway of infinity, outside a room
+            #   but essentially not in a door we believe in that much
+            #   everything will be C soon
             $swally = &{
             each in d.modu {
                 if (ns&swal) {
@@ -1260,7 +1278,11 @@ Packle: |
                     !me[n.t] and throw "no swal cb: "+n.t
                     me[n.t](A,C,G,T,nc&s);
                 }
+                else {
+                    throw "nonswal";
+                }
             }
+            swally = null;
             };
         }
         
@@ -1276,7 +1298,6 @@ Packle: |
                 }
                 else {
                     swally && swally();
-                    swally = null;
                     
                     $g = A.ground =
                     n $k  lef
@@ -1301,6 +1322,7 @@ Packle: |
                 }
             }
         }
+        swally && swally();
         
         if (d.C) {
                 $psc = {bo:'3px dotted #784'};
@@ -1312,7 +1334,7 @@ Packle: |
             n.t == 'k' and ns&hs = 748
         }
         
-        n scan 8 $s:ki(d) %hs:857
+        #n scan 8 $s:ki(d) %hs:857
     };
     #c a non-ind d, osc data tool
     $obs = {
@@ -1347,6 +1369,7 @@ Packle: |
             d.isp = ki(s);
         }
         if (d.sym == '{') {
+            $M = d.modu ||= [];
             each tD obs {
                 if (D.ks) { # keys to have
                     $match = 0;
@@ -1360,7 +1383,6 @@ Packle: |
                     }
                     if (match == D.ks.length) {
                         if (D.swal) {
-                            $M = d.modu ||= [];
                             m $D.swal  $s:s %swal
                             d.weirdkeys = d.weirdkeys.filter(&k{
                                 return 0 > D.ks.indexOf(k);
@@ -1387,14 +1409,27 @@ Packle: |
                 d.is == 'C' and d.C = 1
             }
             if (d.weirdkeys) {
+                $r =
+                m weirdkeys  $s:s %swal
+                rs&weirdkeys = d.weirdkeys;
                 d.ks = d.ks.filter(&k{
                     return 0 > d.weirdkeys.indexOf(k);
                 });
             }
+            !d.modu.length and delete d.modu
         }
         return d
     };
-    #c alabroi netty
+    #c alabroise netty
+    me.weirdkeys = &acgts{
+        $M = s&z = [];
+        $ks = s&weirdkeys;
+        #m weirdkeys  $s:ki(ks) %dis,hs:490
+        each ik ks {
+            m k  $s:k %hs:748
+            m v  $s:ki(s[k],3) %fs:8
+        }
+    };
     me.netty = &acgts{
         # osc app? prints netname relative to surrounding netnames
         # borrowed from 251 ki
@@ -1451,33 +1486,18 @@ Packle: |
             hast.4 == A.4 && hast.5 == A.5 and E.pop(); E.pop();
         }
         
-            $netname = [];
-            each id E {
-                typeof d == 'object' and d = d.t
-                netname.push(d);
-            }
-            netname = netname.join('.');
+        $netname = [];
+        each id E {
+            typeof d == 'object' and d = d.t
+            netname.push(d);
+        }
+        netname = netname.join('.');
+        
         s&fs = 6;
         s&hs = 848;
         $M = s&z = [];
-        netname += "\n";
+        #netname += "\n";
         m netname  $s:netname
-        
-        each in ks {
-            n *= 1;
-            $v = s[n]; #]
-            v.1 != v and throw "JnetnotJ"
-            $c =
-            m coma  s:_ %fs:20
-            cc&s = '--'+n+':';
-            c.t += n;
-            # same J takes highest number
-            $t =
-            m the  $s:v.t
-            t.t += n;
-        }
-        
-        
     };
     
     #c way
