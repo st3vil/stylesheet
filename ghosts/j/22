@@ -421,27 +421,28 @@ iooia: | # F > i/o > input/output
         };
         
         # o word   implies   o A.r/word
+        $implicitground = &{
+            # seems to have something to look at already
+            $implicity = A.R || A.r || A.ground;
+            !implicity and throw "unreal beginning, no Ar"
+            # < may refer to a 1s&word?
+            #   Babz must collect & maybe deposit them all somewhere
+            #     would make good autodoc
+            #   and so Domes and other tatters of process can be
+            #   undef'd after a point, or to some sense....
+            pa = {t:'r',implicit:1,v:implicity};
+            patin('unshift',pa);
+            # should leave out of rows, being implied?
+        };
         if (fi) {
             # first non-doofer
-            if (fi.glob || fi.spacer) {
-                # seems to have something to look at already
-                $implicity = A.R || A.r;
-                !implicity and throw "unreal beginning, no Ar"
-                # < may refer to a 1s&word?
-                #   Babz must collect & maybe deposit them all somewhere
-                #     would make good autodoc
-                #   and so Domes and other tatters of process can be
-                #   undef'd after a point, or to some sense....
-                pa = {t:'r',implicit:1,v:implicity};
-                patin('unshift',pa);
-                # should leave out of rows, being implied?
-            }
+            fi.glob || fi.spacer and implicitground();
         }
         
         # o $d   implies   o $d/*
         if (d.is == 'o') {
-            !fi and throw "no one?"
-            if (d.path.length == 1 && fi.isparam)
+            !fi and implicitground()
+            if (!fi || d.path.length == 1 && fi.isparam)
                 patin('push',{t:'*',glob:1})
         }
         
