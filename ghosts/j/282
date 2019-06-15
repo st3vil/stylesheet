@@ -136,6 +136,9 @@ Coffle: |
         $s = 1s&es;
         
         n vedge 3 s:vedge %fs:23,hs:594,dis
+        $tricks = "gala <pre>vi   ous";
+        n vedge 4 $s:tricks %fs:23,hs:894,dis
+        n vedge 5 $s:tricks,ht:1 %fs:14,hs:694,dis
         
         me&J,['expr','-go',{s:s}];
         
@@ -492,13 +495,17 @@ Coffle: |
         
         # Cs say their c&s
         if (typeof c&s == 'string') {
-            # 
-            Rs&picture = c&s;
-            b && Rs&picture != bs&picture and me&chR,R,'Picture'
-            # ^ element's text gets set with children. later:
-            c&ht and Rs&html = c&s;
-            else
-            Rs&text = c&s;
+            if (c&ht) {
+                Rs&html = c&s;
+                b && Rs&html != bs&html and me&chR,R,'html'
+            }
+            else {
+                Rs&text = c&s;
+                b && Rs&text != bs&text and me&chR,R,'text'
+            }
+            # Cupon sets Rs&on's text/html content as a child
+            # which is why to cause Rs&cha? might work without
+            # supposing the element will surely be there...
         }
     }
     #c 8html output: put each in another
@@ -544,8 +551,8 @@ Coffle: |
             # what will be
             $have = [];
             # text/html
-            Rs&picture &&
-                have.push('<cs>'+Rs&picture+'</cs>');
+            Rs&html and have.push('<cs>'+Rs&html+'</cs>');
+            Rs&text and have.push($('<cs>').text(Rs&text)[0]);
             # children
             each ir Rs&down {
                 have.push(rs&on);
