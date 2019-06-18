@@ -330,6 +330,7 @@ Coffle: |
             diff(C.c,x.c||{}) and me&chR,R,'CdaR-Diff-c'
             diff(C.sc,x.sc||{},{ignore:'z'}) and me&chR,R,'CdaR-Diff-sc'
         }
+        #c Relosophy of C and R
         =pod
         
         A good bassline... just display
@@ -432,6 +433,9 @@ Coffle: |
         #c CdaR etcing
         !A&CdaR and return
         
+        A&o ||= A&CdaR || 'Pond';
+        !me[A&o] and throw "No os me."+A&o
+        me[A&o](A,C,G,T,s);
         # name/groups new R
         # sprout node in new pool...
         # < these want to know each other,
@@ -495,7 +499,8 @@ Coffle: |
                 me&daR,s,R;
             };
             me&ing,'',r;
-            
+            me&RbitXgonism,r;
+
             # and anotheR to Cavon those M Cs,
             $d = project(r,{t:'Display',s:r});
             dc&middle = &sR{
@@ -510,6 +515,7 @@ Coffle: |
                 }
             }
             me&ing,'',d;
+            me&RbitXgonism,r;
             
             # throw styles over the 
             each in dc&N {
@@ -837,7 +843,7 @@ Coffle: |
         each iR N {
             $b = Rc&b;
             $s = Rc&s;
-            b && bc&s == Rc&s and throw "Crefsame may happen"
+            #b && bc&s == Rc&s and throw "Crefsame may happen"
             
             $V = Rc&V;
             if (V) {
@@ -877,14 +883,23 @@ Coffle: |
         }
         return R;
     };
+    # send message upwards
+    me.Rec = &acgtRs{
+        $h = Rc&N[0];
+        $a = hc&ha ||= {};
+        $m = a[s] ||= [];
+        m.push(R);
+    }
     me.ing = &acgtsR{
         $cb;
         typeof R == 'function' and cb = R; R = null
         R ||= {t:'ing',y:{},c:{s:s,N:[]},sc:{}};
         cb and Rc&middle = cb;
+        $s = Rc&s;
         
         # dedupe/limit objects
-        $s = Rc&s;
+        $limit = &s{ me&Rec,R,s };
+        
         !Rc&refs and Rc&refs = []; Rc&refR = [];
         $ri = Rc&refs.indexOf(s);
         if (ri < 0 || typeof s != 'object') {
@@ -894,14 +909,15 @@ Coffle: |
         }
         else {
             $od = Rc&refR[ri];
+            # < od[] for different layers
+            #   should find one in this pool?
             Rs&anotheR = od;
-            # < to know circular links
-            #   should accept this R end point
-            return;
+            return limit('dup')
+            # < to know circular links, converge
         }
         # sprawl limits
-        Rc&dl && Rc&dl < Rc&d and return
-        Rc&nl && Rc&N && Rc&nl < Rc&N.length and return
+        Rc&dl && Rc&dl < Rc&d and return limit('dl')
+        Rc&nl && Rc&N && Rc&nl < Rc&N.length and return limit('nl')
         Rc&N ||= [];
         
         # make a callback
@@ -914,12 +930,15 @@ Coffle: |
             Rs&z.push(r);
             return r
         };
+        
+        # 6 framing
         Rc&middle(Rc&s,R);
+        
         R.c.not and return
         
         # accepted into the list of atoms
-        # < place more carefully under Ryup?
-        #A&R and A&R.push(R);
+        # < out of order mode
+        # < place more carefully under Ryup and its z
         Rc&N.push(R);
         
         Rc&nofurther || !Rs&z and return
