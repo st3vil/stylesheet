@@ -107,7 +107,7 @@ Coffle: |
         
         n things 2
         
-        if (1 || !1s&es) {
+        if (0 || !1s&es) {
             $st = <<''.split("\n");
             Long way going to
             Get my medicine
@@ -179,8 +179,20 @@ Coffle: |
             Rc&d and sc.ml = Rc&d
             $C = Rc&s;
             me&J,['isC'+i,'-od',{s:C,newosc:1},sc];
+            if (i == 0) {
+                me&J,['isRs\&X'+i,'-od',{s:Rs&X,newosc:1},sc];
+                
+            }
             R.t != 's ' and continue
             me&J,['isR'+i,'-od',{s:R,newosc:1},sc];
+            $RX = Rs&X;
+            me&J,['Rc\&X'+i,'-od',{s:Rc&X,newosc:1},sc];
+            me&J,['Rs\&X'+i,'-od',{s:Rs&X,newosc:1},sc];
+            $X = RX.Knowing;
+            $K = X.z[0];
+            me&J,['isKnowingR0'+i,'-od',{s:K,newosc:1},sc];
+            me&J,['isKnowingcX'+i,'-od',{s:Kc&X,newosc:1},sc];
+            me&J,['isKnowingsX'+i,'-od',{s:Ks&X.Display,newosc:1},sc];
             me&J,['isA'+i,'-od',{s:C.y.A,newosc:1},sc];
         }
         
@@ -205,18 +217,6 @@ Coffle: |
         1s&counting > 5 and 1s&counting = 0;
         1s&counting > 3 &&
         n counts  s:counts
-        s&medo = 'cra';
-    };
-    # old thinger
-    me.Ja.gobe = &acgts{
-        n t  $s:C.t %fs:20,hs:594
-        #1c&newosc = 1;
-        # to lay out the sources for:
-        # oscillate the looker/climber, parenting from A.gobe
-        A&o = 'Gaze';
-        n s  $s:s %unknown
-        # where the Js break up the gobes becomes a size thing
-        # could end up walking z by usuality
         s&medo = 'cra';
     };
     me.cra = &acgtD{
@@ -284,6 +284,91 @@ Coffle: |
         me&Cavon,R;
         # 8 unify
         me&Cupon,R;
+    };
+    
+    #c CaR, daR - climb C/data generating R
+    # using Rc&emit,change to push new R into R-ing
+    # s = C
+    me.CaR = &acgtsR{
+        # yon J, parts Aing,
+        # < joins os? instead of 1s&on being the thing
+        $n = s.y && s.y.A;
+        if (n && n.1 != A.1) {
+            Rc&nofurther = 1;
+            $J = n.1;
+            #!Js&on and throw "Yon J not ready: "+J.t
+            Rs&J = J;
+        }
+        # way in
+        if (ss&z) {
+            each iD ss&z {
+                !D and continue
+                Rc&emit({s:D})
+            }
+        }
+        # also y.tv, y.in, etc...
+    };
+    # data/anything
+    me.daR = &acgtsR{
+        if (typeof s == 'object') {
+            each kv s {
+                Rc&emit({t:k,s:v})
+            }
+        }
+    };
+    
+    # Rbitology. history, ...
+    me.RbitX = &acgtR{
+        $bit = R.t;
+        # an X is bits of index and .z=[R that are here
+        A&X ||= {};
+        # check in to it
+        Rc&X ||= A&X;
+        $X = Rc&X = Rc&X[bit] ||= {};
+        X.z ||= [];
+        if (X.z.length) {
+            # dups allowed, assumes same ordering
+            if (X.z[0] == s) {
+                ~duup: ki(s,3), ki(X.z[0],3)
+            }
+        }
+        X.z.push(R);
+
+        # history at te top
+        Rc&V ||= A&V && A&V.c.X || {};
+        $V = Rc&V[bit] || {};
+        if (V) {
+            # care to leave history
+            V = ex({},V);
+            V.z and V.z = V.z.slice();
+        }
+        # only goners remain
+        $b = V && V.z && V.z.shift();
+        b && !V.z.length and delete Rc&V[bit]
+        # children inherit this past
+        Rc&V = V || {};
+        Rc&b = b;
+    };
+    me.RbitXgonism = &acgtR{
+        # atoms in locations, another lives
+        $N = Rc&N;
+        each iR N {
+            $b = Rc&b;
+            $s = Rc&s;
+            #b && bc&s == Rc&s and throw "Crefsame may happen"
+            
+            $V = Rc&V;
+            if (V) {
+                V.z && !V.z.length and delete V.z
+                # any other t+cv are:
+                each ip V {
+                    Rs&gone ||= [];
+                    Rs&gone.push(p);
+                }
+            }
+            Rs&gone and me&chR,R,'Goners:'+ki(Rs&gone)
+            !b and me&chR,R,'new!'
+        }
     };
     
     #c mid C os, take to details
@@ -431,28 +516,6 @@ Coffle: |
         
     };
     
-    # name/groups new R
-    # sprout node in new pool...
-    # < these want to know each other,
-    #   the many bits of work
-    # < put waves of orders through with P
-    #   such that early R can sleep, latereRs can life
-    #   like the ghost is still, pure activity
-    # dime flange
-    me.Re = &acgtRr{
-        r = Rc&emit(r);
-        # is not a dive for the above R-ing
-        Rs&z.slice(-1)[0] != r and throw "unlast"
-        Rs&z.pop();
-        rc&d = 0;
-        # nor its N (set)
-        rc&N = [];
-        # X/V (names in history)
-        rc&X = Rs&X ||= {};
-        $b = Rc&b;
-        rc&V = b && bs&X || {};
-        return r
-    };
     # a set of os action
     me.Gaze = &acgts{
         # cdar extendor
@@ -472,8 +535,8 @@ Coffle: |
             # A&R, refs and refR keep all
             # < refs dupe ignore at R bounds, overlap understandings
             $r = me&Re,R,{t:'Knowing',s:c&s};
-            rc&nl = 17;
             rc&middle = &sR{
+                Rc&nl = 17;
                 # 2 - know self
                 # R.t set by daR
                 me&RbitX,R;
@@ -740,7 +803,7 @@ Coffle: |
         }
         $move = N.filter(R => Rs&cha);
         #$(Rs&on).append('<p>~ '+
-        move.length and ~moveing: ki(A&chR)
+        #move.length and ~moveing: ki(A&chR)
         #move.map(R => Rc&s.t).join(', ')
         #~move: A.1.t, ki(move), '/', A&R.length
         
@@ -755,91 +818,7 @@ Coffle: |
         }
     };
     
-    #c CaR, daR - climb C/data generating R
-    # using Rc&emit,change to push new R into R-ing
-    # s = C
-    me.CaR = &acgtsR{
-        # yon J, parts Aing,
-        # < joins os? instead of 1s&on being the thing
-        $n = s.y && s.y.A;
-        if (n && n.1 != A.1) {
-            Rc&nofurther = 1;
-            $J = n.1;
-            #!Js&on and throw "Yon J not ready: "+J.t
-            Rs&J = J;
-        }
-        # way in
-        if (ss&z) {
-            each iD ss&z {
-                !D and continue
-                Rc&emit({s:D})
-            }
-        }
-        # also y.tv, y.in, etc...
-    };
-    # data/anything
-    me.daR = &acgtsR{
-        if (typeof s == 'object') {
-            each kv s {
-                Rc&emit({t:k,s:v})
-            }
-        }
-    };
-    
-    #c Rbitology. history, ...
-    me.RbitX = &acgtR{
-        $bit = R.t;
-        # an X is bits of index and .z=[R that are here
-        A&X ||= {};
-        # check in to it
-        Rc&X ||= A&X;
-        $X = Rc&X = Rc&X[bit] ||= {};
-        X.z ||= [];
-        if (X.z.length) {
-            # dups allowed, assumes same ordering
-            if (X.z[0] == s) {
-                ~duup: ki(s,3), ki(X.z[0],3)
-            }
-        }
-        X.z.push(R);
 
-        # history at te top
-        Rc&V ||= A&V && A&V.c.X || {};
-        $V = Rc&V[bit] || {};
-        if (V) {
-            # care to leave history
-            V = ex({},V);
-            V.z and V.z = V.z.slice();
-        }
-        # only goners remain
-        $b = V && V.z && V.z.shift();
-        b && !V.z.length and delete Rc&V[bit]
-        # children inherit this past
-        Rc&V = V || {};
-        Rc&b = b;
-    };
-    me.RbitXgonism = &acgtR{
-        # atoms in locations, another lives
-        $N = Rc&N;
-        each iR N {
-            $b = Rc&b;
-            $s = Rc&s;
-            #b && bc&s == Rc&s and throw "Crefsame may happen"
-            
-            $V = Rc&V;
-            if (V) {
-                V.z && !V.z.length and delete V.z
-                # any other t+cv are:
-                each ip V {
-                    Rs&gone ||= [];
-                    Rs&gone.push(p);
-                }
-            }
-            Rs&gone and me&chR,R,'Goners:'+ki(Rs&gone)
-            !b and me&chR,R,'new!'
-        }
-    };
-    
     #c R-ing, collecting rays, bouncing across matter
     # diving gear, has a middle you can steer it from
     # like ind but leaving Rs, looking at the points across it
@@ -863,26 +842,6 @@ Coffle: |
             to[k] = v;
         }
         return R;
-    };
-    # send message upwards
-    me.Rec = &acgtRs{
-        $h = Rc&N[0];
-        $a = hc&ha ||= {};
-        $m = a[s] ||= [];
-        m.push(R);
-    }
-    # s collects pile of reasons for Rs&cha
-    # < R-centricism, layered change, to phases
-    # < lossless.. for any R and any of its complains and their anyness.
-    # < with an index grouper, to merge the complainso
-    #   perhaps note which R have what symptoms,
-    #     then the R notes which symptoms are where.
-    # debuggy noise at this point...    
-    me.chR = &acgtRs{
-        Rs&cha = 1;
-        A&chR ||= {};
-        $ch = A&chR[R.t] ||= [];
-        ch.push(s)
     };
     me.ing = &acgtsR{
         $cb;
@@ -943,6 +902,55 @@ Coffle: |
             me&ing,rc&s,r;
         }
         return R
+    };
+    #c Rodulat
+    # send message upwards
+    me.Rec = &acgtRs{
+        $h = Rc&N[0];
+        $a = hc&ha ||= {};
+        $m = a[s] ||= [];
+        m.push(R);
+    }
+    # s collects pile of reasons for Rs&cha
+    # < R-centricism, layered change, to phases
+    # < lossless.. for any R and any of its complains and their anyness.
+    # < with an index grouper, to merge the complainso
+    #   perhaps note which R have what symptoms,
+    #     then the R notes which symptoms are where.
+    # debuggy noise at this point...    
+    me.chR = &acgtRs{
+        Rs&cha = 1;
+        A&chR ||= {};
+        $ch = A&chR[R.t] ||= [];
+        ch.push(s)
+    };
+    # name/groups new R
+    # sprout node in new pool...
+    # < these want to know each other,
+    #   the many bits of work
+    # < put waves of orders through with P
+    #   such that early R can sleep, latereRs can life
+    #   like the ghost is still, pure activity
+    # dime flange
+    me.Re = &acgtRr{
+        r = Rc&emit(r);
+        # is not a dive for the above R-ing
+        Rs&z.slice(-1)[0] != r and throw "unlast"
+        Rs&z.pop();
+        rc&d = 0;
+        # nor its N (set)
+        rc&N = [];
+        # X/V (names in history)
+        rc&X = Rs&X ||= {};
+        $b = Rc&b;
+        rc&V = b && bs&X || {};
+        return r
+    };
+    # new Re, ing & middle work as progress stream ala A
+    # R is basically an exploration of A
+    #  lets get pictures of the R joining first
+    me.Reis = &acgtR{
+    
     };
 
     # S for an osc pin, bump through segments of the work
