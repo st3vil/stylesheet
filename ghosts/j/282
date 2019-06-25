@@ -123,11 +123,6 @@ Coffle: |
         =cut
         
         
-
-
-
-
-
         #c Cav-on 7dress html
     # and whatever after the state of atoms is got (osc/3)
     # really it does 4 here - catching state of properties changing
@@ -358,22 +353,29 @@ Coffle: |
         cb and Rc&middle = cb;
         $s = Rc&s;
         
-        # dedupe/limit objects
+        # limits want workarounds
         $limit = &s{ me&Rec,R,s };
         
+        # dedupe/limit objects already in this pool
         !Rc&refs and Rc&refs = []; Rc&refR = [];
         $ri = Rc&refs.indexOf(s);
         if (ri < 0 || typeof s != 'object') {
             ri = Rc&refs.push(s) - 1;
             Rc&refR ||= {};
-            Rc&refR[ri] = R;
+            Rc&refR[ri] ||= [];
+            Rc&refR[ri].push(R);
         }
         else {
-            $od = Rc&refR[ri];
-            # < od[] for different layers
-            #   should find one in this pool?
-            Rs&anotheR = od;
-            return limit('dup')
+            $h = Rc&N[0];
+            # see the per-ref R table
+            $RN = Rc&refR[ri];
+            Rs&refR = RN;
+            each in RN {
+                # leave at one R per ref per pool
+                # < visit self several times to draw clusters...
+                nc&N == Rc&N and return limit('dup')
+            }
+            limit('dub');
             # < to know circular links, converge
         }
         # sprawl limits
