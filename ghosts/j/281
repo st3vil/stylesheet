@@ -1075,6 +1075,19 @@ Soogle: |
     # each of these to present furthers,
     # and watch/let go intermediaries as they squish from focus
     # visualising the shifting yet sameness
+    me.Modu = &acgtNM{
+        each in N {
+            if (ns&swal) {
+                $C =
+                m $n
+                !me[n.t] and throw "no swal cb: "+n.t
+                me[n.t](A,C,G,T,nc&s);
+            }
+            else {
+                throw "nonswal";
+            }
+        }
+    };
     me.Ja.od = &acgts{
         $M = c&M = [];
         n t  $s:C.t %fs:20,hs:594
@@ -1084,6 +1097,7 @@ Soogle: |
         s&bo ||= '3px dotted #235';
         s&br = '3';
         s&zi = -2;
+        
         
         $d = me&scan,s;
         delete d.s;
@@ -1097,26 +1111,12 @@ Soogle: |
             $(le).css('font-size', $(el).height()+'px');
         };
         #G&yl:300,check;
-        if (d.modu) {
+        # the minor modulate gang hang at mid-swallow (y)
+        $swal = d.modu ? &{ me&Modu,d.modu,M; swal = &{} } : &{};
             # the swept up (behind/as y) pile of junk
             #   in the hallway of infinity, outside a room
             #   but essentially not in a door we believe in that much
             #   everything will be C soon
-            $swally = &{
-            each in d.modu {
-                if (ns&swal) {
-                    $C =
-                    m $n
-                    !me[n.t] and throw "no swal cb: "+n.t
-                    me[n.t](A,C,G,T,nc&s);
-                }
-                else {
-                    throw "nonswal";
-                }
-            }
-            swally = null;
-            };
-        }
         
         each ik d.ks {
             A.ground = C;
@@ -1129,15 +1129,17 @@ Soogle: |
                     # no label, balled...
                 }
                 else {
-                    swally && swally();
+                    swal();
+                    # C.*
                     
-                    $g = A.ground =
-                    n $k  lef %ml:1
+                    #$g = A.ground =
+                    #n $k  lef %ml:1
                     #gs&bo ||= '3px dotted #235';
                     #gs&dis ||= 1;
                     m k  $s:k %fs:21,lh:42%
                     #m k  $s:k %hs:0000
                     each qv s[k] {
+                        #]
                         m k  $s:q %hs:748
                         $pow = 3;
                         k == 'y' and pow = 2
@@ -1163,7 +1165,7 @@ Soogle: |
                 }
             }
         }
-        swally && swally();
+        swal();
         
         if (d.C) {
                 $psc = {bo:'3px dotted #784'};
@@ -1219,8 +1221,8 @@ Soogle: |
             each tD obs {
                 if (D.ks) { # keys to have
                     $match = 0;
-            #C.t == 'foracsA0' and debugger
                     each ik d.ks {
+                        # see 
                         0 <= D.ks.indexOf(k) and match++
                         elsif (!D.swal) {
                             $wk = d.weirdkeys ||= [];
@@ -1229,18 +1231,18 @@ Soogle: |
                     }
                     if (match == D.ks.length) {
                         if (D.swal) {
+                            # group some details:
+                            # envelopes some d.ks with a d.modu[C]
                             # eg netty, keys 1-5
                             # swallows 1-5 from d.weirdkeys (misfits for C)
                             # and d.ks, keys shown
                             # < diving in, bursting the representation,
                             #   the illusion becoming items in the medium
+                            $r =
                             m $D.swal  $s:s %swal
-                            d.weirdkeys = d.weirdkeys.filter(&k{
-                                return 0 > D.ks.indexOf(k);
-                            });
-                            d.ks = d.ks.filter(&k{
-                                return 0 > D.ks.indexOf(k);
-                            });
+                            rs&ks = D.ks;
+                            d.weirdkeys = d.weirdkeys.filter(k=>!arin(k,D.ks));
+                            d.ks = d.ks.filter(k=>!arin(k,D.ks));
                             #A.1.t == 'delicio' and debugger
                         }
                         else {
@@ -1264,10 +1266,8 @@ Soogle: |
             if (d.weirdkeys) {
                 $r =
                 m weirdkeys  $s:s %swal
-                rs&weirdkeys = d.weirdkeys;
-                d.ks = d.ks.filter(&k{
-                    return 0 > d.weirdkeys.indexOf(k);
-                });
+                rs&ks = d.weirdkeys;
+                d.ks = d.ks.filter(k=>!arin(k,d.weirdkeys));
             }
             !d.modu.length and delete d.modu
         }
@@ -1276,7 +1276,7 @@ Soogle: |
     #c alabroise netty
     me.weirdkeys = &acgts{
         $M = s&z = [];
-        $ks = s&weirdkeys;
+        $ks = s&ks;
         s&ml = 1;
         #m weirdkeys  $s:ki(ks) %dis,hs:490
         each ik ks {
