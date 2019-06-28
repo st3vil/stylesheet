@@ -156,9 +156,10 @@ Coffle: |
             $RN = Rc&refR[ri];
             Rs&refR = RN;
             each in RN {
-                # leave at one R per ref per pool
-                # < visit self several times to draw clusters...
-                nc&N == Rc&N and return limit('dup')
+                if (nc&N == Rc&N) {
+                    limit('dup');
+                    Rc&nofurther = 1;
+                }
             }
             limit('dub');
             # < to know circular links, converge
