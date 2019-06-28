@@ -713,28 +713,28 @@ Packle: |
             $M = Rs&M;
             $zs = t+' < '+N.map(t=>t.t).join(',');
             $te = '*'+t;
-            m $te  $s:zs %decor,fs:13
+            m $te 117 $s:zs %decor,fs:13
         }}
     };
-    me.boostulate = &acgtR{
+    me.boostulate = &acgtRM{
         Rs&elvis = 'Gazel';
-        $M = Rs&M;
+        M ||= Rs&M;
         !M and throw "noRs\&M"
         $b = Rc&b;
         !(b && bs&boost) and return
         Rs&boost = bs&boost;
         Rc&nl and Rc&nl += Rs&boost * 3;
         Rc&dl and Rc&dl += Rs&boost;
+        $bo = Rs&boost;
+        $sym = bo < 0 ? 's' : 'W';
+        bo = bo < 0 ? bo*-1 : bo;
         $i = 0;
-        while (i < Rs&boost) {
+        while (i < bo) {
             $hu = 20*i+100;
             $z =
-            m booste  s:W %fs:20,hs:594,hue:$hu
+            m booste 11 $s:sym %fs:20,hs:594,hue:$hu
             z.t += hu;
             i++;
-        }
-        if (Rs&boost <= 0) {
-            m non  s:s %fs:20,hs:594,hue:$hu
         }
     };
     #c Gaze complicated
@@ -879,7 +879,7 @@ Packle: |
             
             $r = Ron(R,'Knowing',s,&Rs{
                 # index by R.t set by daR
-                Rc&nl ||= 35;
+                Rc&nl ||= 45;
                 Rc&dl ||= 5;
             }, &Rs{
                 $ret = &tcM{
@@ -895,34 +895,36 @@ Packle: |
                 $p = Ry&up;
                 Rs&M and return me&boostulate,R;
                 
-                Rs&M = [];
-                me&boostulate,R;
-                Rs&M.length and ret('boost',Rs&M); delete Rs&M
+                # this R can be clicked big/small
+                me&boostulate,R,Mw(R,'boost');
                 
                 $scan = Rs&scan = me&scan,s;
                 # sleep bs&scan
                 
                 # 1
                 # exit the entrance
-                $M = rM('tsym');
-                m t  $s:R.t %fs:13,hs:288
+                $M = Mw(R,'traw');
+                m t 1 $s:R.t %fs:13,hs:288
                 $is = scan.is || scan.sym;
-                m sym  $s:is %fs:15,mt:-0.1,ml:-0.1,zi:-1,hs:4955
+                m sym 12 $s:is %fs:15,mt:-0.1,ml:-0.1,zi:-1,hs:4955
                 
                 # domesticated perforated edge
                 if (scan.C) {
-                    s&dis = 1;
-                    s&bgi = 'i/greencush.jpg';
-                    s&bgh = '1115';
-                    s&bo ||= '6px dotted #235';
-                    s&br = '3';
-                    s&zi = -2;
-                    s&hue = 60;
+                    #Rs&dis = 1;
+                    Rs&bgi = 'i/greencush.jpg';
+                    Rs&bgh = '1115';
+                    Rs&bo ||= '6px dotted #235';
+                    Rs&br = '3';
+                    Rs&zi = -2;
+                    Rs&hue = 60;
                 }
                 
-                if (ps&isnk) {
+                if (ps&isnk || Rs&isgk) {
                     Rs&isgk = 1;
-                    m ki  $s:ki(s,3)
+                    M.pop(); # sym implied in ki
+                    debugger;
+                    m sym 12 not
+                    m ki 3 $s:ki(s,2)
                     return
                 }
                 
@@ -955,15 +957,24 @@ Packle: |
                     }
                 }
                 
-                # 2
-                if (!ks.length && scan.weirdkeys) {
-                    ks = scan.weirdkeys;
+                $wk = scan.weirdkeys || [];
+                if (!ks.length && wk.length) {
+                    # if all keys are weird
+                    # < scan within scan, schemas
+                    ks = wk;
                     delete scan.modu;
                     Rs&isnk = 1; # all weird keys being ghost
                 }
-                if (scan.modu) {
-                    each in scan.modu {
-                        me&Modu,[n],rM('modu:'+n.t)
+                else {
+                    if (scan.modu) {
+                        each in scan.modu {
+                            n.t == 'weirdkeys' and continue
+                            me&Modu,[n],rM('modu:'+n.t)
+                        }
+                    }
+                    each ik wk {
+                        $n = ret(k,{s:s [k],isgk:1});
+                        i == 0 and ns&ml = 1
                     }
                 }
                 
