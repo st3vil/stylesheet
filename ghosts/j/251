@@ -442,6 +442,9 @@ NutGravy: | # non-I routines: json, dig, diff
             m = (cv+'').match(/^0\.(\d+)$/);
             return m && m.length ? m[1] : cv
         };
+        $stringy = &s{
+            return typeof s == 'string' || typeof s == 'number'
+        };
         $li = &s,c,k{
             $ks = c.ks;
             $was = c;
@@ -523,7 +526,7 @@ NutGravy: | # non-I routines: json, dig, diff
                         each im M {
                             $sa = m[1];
                             # not es() intel object
-                            typeof sa == 'string' and N.push(m); continue
+                            stringy(sa) and N.push(m); continue
                             # take out cv, prefix to Jnet
                             sa.k == 'cv' and cvm = m; continue
                             # take out Jnet numbers
@@ -564,7 +567,7 @@ NutGravy: | # non-I routines: json, dig, diff
                             }
                             $netname = [];
                             each id E {
-                                typeof d != 'string' and d = d.v.t
+                                !stringy(d) and d = d.v.t
                                 netname.push(d);
                             }
                             netname = netname.join('.');
