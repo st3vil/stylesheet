@@ -852,6 +852,56 @@ Packle: |
     #
     
     #c Graze
+    # exit the entrance
+    me.domesticate = &acgtR{
+        $scan = Rs&scan;
+        # 1
+        $M = me&Mw,R,'traw';
+        m t 1 $s:R.t %fs:13,hs:288
+        $is = scan.is || scan.sym;
+        m sym 12 $s:is %fs:15,ls:-0.1,zi:-1,hs:4955
+        
+        # thing gets perforated edge
+        if (scan.C) {
+            !Rs&isgk and s&dis = 1;
+            s&bgi = 'i/greencush.jpg';
+            s&bgh = '1115';
+            s&bo ||= '0.4em dotted #235';
+            s&br = '3';
+            s&zi = -2;
+            s&hue = 60;
+        }
+    };
+    me.bagatagage = &acgtR{
+        $scan = Rs&scan;
+        $ks = scan.ks || [];
+        if (scan.C) {
+            ks[0] != 't' and debugger;
+            ks.shift();
+            $s = Rc&s;
+
+            $M = me&Mw,R,'.t';
+            scan.is == 'A' &&
+                m tofA 19 s:: %ls:-0.2
+
+            m t 2 $s:s.t %deco,fs:15
+
+            if (scan.is == 'A') {
+                $cv = s.cv+'';
+                cv[0] == '0' and cv = cv.slice(2);
+                cv = '@'+cv;
+                m cv 21 $s:cv %ls:-0.1,hs:339
+            }
+        }
+
+        if (scan.modu) {
+            each in scan.modu {
+                n.t == 'weirdkeys' and continue
+                $M = me&Mw,R,'modu:'+n.t;
+                me&Modu,[n],M;
+            }
+        }
+    };
     me.Graze = &acgts{
         # cdar extendor
         # all of them Jround here S variously, lay out trees,
@@ -888,25 +938,8 @@ Packle: |
                 me&boostulate,R;
                 
                 $scan = Rs&scan = me&scan,s;
-                # sleep bs&scan
-                #R.t == 'D' and debugger;
-                # 1
-                # exit the entrance
-                $M = me&Mw,R,'traw';
-                m t 1 $s:R.t %fs:13,hs:288
-                $is = scan.is || scan.sym;
-                m sym 12 $s:is %fs:15,ls:-0.1,zi:-1,hs:4955
                 
-                # domesticated perforated edge
-                if (scan.C) {
-                    !Rs&isgk and s&dis = 1;
-                    s&bgi = 'i/greencush.jpg';
-                    s&bgh = '1115';
-                    s&bo ||= '0.4em dotted #235';
-                    s&br = '3';
-                    s&zi = -2;
-                    s&hue = 60;
-                }
+                me&domesticate,R;
                 
                 # decision of presentation
                 ps&isnk || Rs&isgk and Rs&isgk = 1
@@ -917,7 +950,8 @@ Packle: |
                 scan.sym == "'" and Rs&isgk = 1;
                 
                 if (Rs&isgk) {
-                    # make sure block,inline+ have same indento
+                    $M = me&Mw,R,'traw';
+                    # make block,inline have same indento
                     $iN = (ps&z||[]).indexOf(R) - 1;
                     $f = iN >= 0 && ps&z[iN];
                     f && fs&rowish and s&ml = 1
@@ -927,43 +961,16 @@ Packle: |
                     return
                 }
                 
-                #R.t == 'c' &&
-                #M.push(me&J,['cscan','-od',{s:scan}] )
-                
                 # always a bunch of keys
                 #   sans those in Modus&ks=[]
                 #   with whom we want to pluck ks out of
                 #   bending the last representation outwards
                 #   or popping it in the short term... Rs become Ret lims,
-                #   wanting their boost read by the time we're here,
+                #   wanting child boost read by the time we're here,
                 #   to choose whether to Modu or RetR
+                me&bagatagage,R;
                 $ks = scan.ks || [];
-                if (scan.C) {
-                    ks[0] != 't' and debugger;
-                    ks.shift();
-                    
-                    $M = me&Mw,R,'.t';
-                    scan.is == 'A' &&
-                        m tofA 19 s:: %ls:-0.2
-                    
-                    m t 2 $s:s.t %deco,fs:15
-                    
-                    if (scan.is == 'A') {
-                        $cv = s.cv+'';
-                        cv[0] == '0' and cv = cv.slice(2);
-                        cv = '@'+cv;
-                        m cv 21 $s:cv %ls:-0.1,hs:339
-                    }
-                }
-                
                 $wk = scan.weirdkeys || [];
-                if (scan.modu) {
-                    each in scan.modu {
-                        n.t == 'weirdkeys' and continue
-                        $M = me&Mw,R,'modu:'+n.t;
-                        me&Modu,[n],M;
-                    }
-                }
                 each ik wk {
                     $n = me&Ret,R,{t:k,s:s[k],isgk:1}; #]
                     i == 0 and ns&ml = 1
