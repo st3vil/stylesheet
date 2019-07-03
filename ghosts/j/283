@@ -631,11 +631,21 @@ Packle: |
     #  taking the c&slope from small to big
     #  looking for Rs&elvis
     #  towards hy&interpreted
+    $latestR = &R{
+        $il = 75;
+        $futu = 0;
+        while (R.y.future) {
+            R = R.y.future;
+            futu++;
+            il-- < 0 and debugger;
+        }
+        futu > 5 and ~futu: R.t, futu
+        return R
+    };
     me.cra = &acgtD{
         #$el = c&path_yon.slice(-1)[0];
         $M = s&solvey = [];
         $upwards = c&slope.slice().reverse();
-        ~sloping
         $c = {};
         each in upwards {
             $v =
@@ -643,22 +653,15 @@ Packle: |
             vy&cv = ny&cv;
             if (ny&A) {
                 $Y = ny&A;
-                if (!c || c.1 && c.1 != Y.1) {
-                    # Jound
-                    vs&J = Y.1
-                }
+                # find J
+                c.1 != Y.1 and vs&J = Y.1
                 c.1 = Y.1;
+                # find W
+                Y.1 == Y.3 and vs&W = Y.1
             }
             if (ny&R) {
-                $R = vs&R = ny&R;
-                $il = 75;
-                $futu = 0;
-                while (R.y.future) {
-                    R = vs&R = R.y.future;
-                    futu++;
-                    il-- < 0 and debugger;
-                }
-                futu > 5 and ~futu: R.t, futu
+                $R = vs&R = latestR(ny&R);
+                vs&nam = ki(me&namup,R );
                 $h = Rc&N && Rc&N[0];
                 if (h) {
                     # follow to what head is looking at
@@ -669,20 +672,35 @@ Packle: |
                         ri < 0 and ~Notininterpreter: R.t
                         R = Rc&s;
                         h = Rc&N && Rc&N[0];
+                        vs&namu = ki(me&namup,R );
                     }
-                    !h and debugger;
-                    if (h) {
                     vs&h = h;
                     vs&task = hs&task;
-                    }
                 }
                 if (Rs&elvis && !c.elvis) {
                     me[Rs&elvis](A,C,G,T,R);
-                    c.elvis = s&elvis = Rs&elvis;
+                    c.elvis = vs&elvis = s&elvis = Rs&elvis;
                     #return
                 }
             }
         }
+        !c.elvis and ~sloping
+        !c.elvis and return;
+        $p = [];
+        each in M {
+            ns&elvis and p.push(n); continue
+            !p.length and continue
+            p.unshift(n);
+            ns&W and break
+        }
+        s&solvey = p;
+        # < to c&pointer, to locate us in
+        # < a pile of travel, io T points to look at
+        # < overplace set value
+        # < boostulate requires A1..3 carry T wires
+        #   for the rest R carry T wires
+        #   so set value can be reintroduced
+        # < check every T point was found
         #4s&elvising = C.c;
         #~etc: $(el).text();
     };
@@ -1049,7 +1067,7 @@ Packle: |
                 }
                 each iD ss&z {
                     ss&J and Rs&J = ss&J; continue
-                    $r = me&Ret,R,{t:D.t+D.y.cv+'-'+i,s:D};
+                    $r = me&Ret,R,{t:D.t,s:D};
                     Rs&modulat and rs&modulat = 1;
                 }
                 ss&C and Rs&C = ss&C;
