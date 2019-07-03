@@ -198,13 +198,24 @@ Coffle: |
         return R
     };
     #c Rbitology. history, ...
+    # X is the space index...
+    #  of X.x.$bit = X, inwards
+    #     X.z = [ R nodes
+    # clone for destructive history
+    me.RbitXtend = &acgtV{
+        V = ex({},V);
+        V.z and V.z = V.z.slice()
+        V.x and V.x = ex({},V.x)
+        return V
+    };
     me.RbitX = &acgtR{
         $bit = R.t;
-        # an X is bits of index and .z=[R that are here
-        A&X ||= {};
-        # check in to it
-        Rc&X ||= A&X;
-        $X = Rc&X = Rc&X[bit] ||= {};
+        # $X = {x:{$bit:$X},z:[R+]}
+        # X.x.$bit = another X, inwards a $bit
+        # X.z=[R that are here
+        Rc&X ||= {};
+        Rc&X.x ||= {};
+        $X = Rc&X = Rc&X.x[bit] ||= {};
         X.z ||= [];
         if (X.z.length) {
             # dups allowed, assumes same ordering
@@ -213,20 +224,17 @@ Coffle: |
             }
         }
         X.z.push(R);
-
+        
         # history at te top
-        Rc&V ||= A&V && A&V.c.X || {};
-        $V = Rc&V[bit] || {};
-        if (0 && V) {
-            # care to leave history
-            V = ex({},V);
-            V.z and V.z = V.z.slice();
-        }
+        Rc&V ||= {};
+        Rc&V.x ||= {};
+        $V = Rc&V.x[bit] || {};
         # only goners remain
         $b = V && V.z && V.z.shift();
-        b && !V.z.length and delete Rc&V[bit]
-        # children inherit this past
-        Rc&V = V || {};
+        b && !V.z.length and delete Rc&V.x[bit]
+        # children inherit the bit past
+        # care to leave history
+        Rc&V = V = V ? me&RbitXtend,V : {};
         if (b) {
             Rc&b = b;
             by&future = R;
@@ -400,10 +408,11 @@ Coffle: |
         rc&d = 0;
         # nor its N (set)
         rc&N = [];
-        # X/V (names in history)
+        # X - names for history
         rc&X = Rs&X ||= {};
         $b = Rc&b;
-        rc&V = b && bs&X || {};
+        # V - names from history
+        rc&V = b && bs&X ? me&RbitXtend,bs&X : {};
         return r
     };
     
