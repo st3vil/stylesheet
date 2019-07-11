@@ -570,7 +570,6 @@ Packle: |
     me.sunknown = &acgtRs{
         $b = Rc&b;
         $boust = Rs&boust;
-        $upw = R;
         # look at.. a scan of the thing
         $s = s || c&s;
         typeof s != 'object' and throw "unknown!ob"
@@ -580,7 +579,7 @@ Packle: |
             Rc&nl ||= 175;
             Rc&dl ||= 15;
         }, &Rs{
-            $p = Ry&up;    
+            $p = Ry&up;
             $C = Rs&C = G&Cye,[R.t,'',{}];
 
             # this R can be clicked big/small
@@ -640,6 +639,11 @@ Packle: |
             }
         });
         #
+        me&Display,r;
+    };
+    # bunch of Rs with Mw etc get html'd under R.y.up
+    #   for the R:Thingyoudo under the R:C visualising
+    me.Display = &acgtr{
         me&Mlimits,r;
 
         each iR rc&N {
@@ -677,8 +681,8 @@ Packle: |
         # join Display (d etc) directly under its cause (R)
         #  leaving out Knowing (r)
         d.y.interpreted = r;
-            d.y.up = upw;
-            me&Cupon,d;
+        d.y.up = r.y.up;
+        me&Cupon,d;
     };
     #c Gittoo - C -> Git elvis
     # minimal R:C for c&s
@@ -715,17 +719,15 @@ Packle: |
         return r
     };
     # makes copies of an R:C
+    # new Rc&s = old r
+    # new Rs&C = old C
     me.TakeC = &acgtRtc{
         $h = Rc&N[0];
         c ||= {};
         c.x == null and c.x = 'C'
         c.x && hs&task != c.x and throw "R:"+t+" takes R:"+c.x
         return Ron(R,t,R,0,&Rr{
-            r.c.not || rc&N.indexOf(r) < 0 and return R.c.not = 1
-            
             Rc&nl = 900;
-            # new Rc&s = old r
-            # new Rs&C = old C
             $C = Rs&C = rs&C || rc&s;
             c.cb && c.cb(R,r,C);
             R.c.not and return
@@ -735,13 +737,13 @@ Packle: |
                 me&Ret,R,{t:D.t,s:D};
             }
         });
-        
     };
-    me.Gittoo = &acgtR{
+    # stringify pool
+    me.enLinesR = &acgtR{
         $cb = &RrC{
             s&noLines and Rc&nofurther = 1
         };
-        $r = me&TakeC,R,'Gittoo',{cb:cb};
+        $r = me&TakeC,R,'enLinesR',{cb:cb};
         $ers = [];
         each iR rc&N {
             $b = Rc&b;
@@ -770,8 +772,8 @@ Packle: |
             }
             catch (er) {
                 #ers.push([part,R,s,er]);
-                ~Gittoo: ki(C,2)+"   !"+part+"! "+er
-                throw "Gittoo: "+ki(C,2)+"   !"+part+"! "+er
+                ~enLinesR: ki(C,2)+"   !"+part+"! "+er
+                throw "enLinesR: "+ki(C,2)+"   !"+part+"! "+er
             }
         }
         $rN = rc&N.slice().reverse();
@@ -789,5 +791,51 @@ Packle: |
         $string = Lines.join("\n")+"\n";
         rs&dige = dig(string);
         return r
+    };
+    # string+destring, place-place
+    me.Gittoo = &acgtR{
+        $r = Ron(R,'Gittoo',R,0,&Rs{
+            $got = me&enLinesR,s;
+            me&KnowR,got;
+            $exp = me&deLinesR,s;
+            me&KnowR,exp;
+        });
+        me&Display,r;
+        return r
+    };
+    
+    me.KnowR = &acgtR{
+        $r = Ron(R,'KnowR',R,0,&Rs{
+            $C = Rs&C = G&Cye,[R.t,'',{}];
+
+            # this R can be clicked big/small
+            me&boostulate,R;
+
+            $M = me&Mw,R,'traw';
+            m t 1 $s:R.t %fs:13,hs:288
+            
+            s&rowish = 1;
+        });
+        me&Display,r;
+    };
+    
+    me.deLinesR = &acgtR{
+        return Ron(R,'deLinesR',C.t,0,&Rs{
+            if (typeof s != 'object') {
+                s = localStorage[s]
+                !s and Rs&notfound = 1; return
+                Rs&dige = dig(s);
+                $N = G&readLines,s;
+                each iD N {
+                    me&Ret,R,{t:D.t,s:D};
+                }
+            }
+            else {
+                each iD ss&z {
+                    me&Ret,R,{t:D.t,s:D};
+                }
+            }
+        });
+    
     };
 
