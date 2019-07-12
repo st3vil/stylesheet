@@ -705,19 +705,12 @@ Packle: |
         #  leaving out Knowing (r), but routing elvis to it:
         d.y.interpreted = r;
         # the Display collector
-        $R = r.y.up;
-        Rs&thisdeb and debugger;
         
         # s&down already on the knower 
         rs&down and ds&down ||= []; ds&down.push(...rs&down)
         
         d.y.up = rc&inC && (rc&inC != r && rc&inC
             || ry&up.c.inC) || r.y.up;
-        
-        if (1s&vigua) {
-            $v = 1s&vigua;
-            v.push([d.y.up,d]);
-        }
         
         me&Cupon,d;
     };
@@ -726,41 +719,93 @@ Packle: |
     # string+destring, place-place
     me.Gittoo = &acgtR{
         $got = me&enLinesR,R,c&s;
-        $exp = me&deLinesR,R;
+        $exp = me&deLinesR,R,C.t;
         $o = C;
         #C.t == 'Wormhole' and 1s&vigua = [];
 
-        $r = Ron(R,'Gittoo',R,0,&Rs{
+        $r = Ron(R,'Gittoo',R,&Rs{
+            Rc&d == 0 and R.t = C.t
+        },&Rs{
             Rc&inC = R; # tells inner Displays to hoist to here
             $C = Rs&C = G&Cye,[R.t,'',{}];
+            me&boostulate,R;
+            $Re = &tsg{
+                return me&Ret,R,{t:t,s:s,g:g||'sunknown'};
+            };
+            
+            if (Rs&g == 'diff') {
+                me&diffLines,R,got,exp
+                return;
+            }
             
             $M = me&Mw,R,'traw';
             m te 1 $s:R.t %fs:13,hs:288
+            Rc&d == 0 &&
             m doe 1 s:Gittoo %fs:11,hs:688
             
-            # separate Rs, Display hoists here cos y&theC
-            #me&KnowR,R,got;
-            
-            #Rs&thisdeb = 1;
-            #o.t == 'Wormhole' and debugger;
-            s&rowish = 1;
-            o.t != 'Travel' and return
-            me&sunknown,R,got;
-            me&KnowR,R,exp;
-            me&sunknown,R,exp;
-            
-            each in gots&Lines {
-                $M = me&Mw,R,'traw';
-                m line  $s:n %dis,fs:6,hs:797
+            if (!Rs&g) {
+                Rs&rowish = 1;
+                Re('Here',got,'compare');
+                Re('Diff','','diff');
+                Re('There',exp,'compare');
             }
-        
+            elsif (Rs&g == 'sunknown') {
+                throw "un";
+            }
+            elsif (Rs&g == 'compare') {
+                Rs&rowish = 1;
+                m dige  $s:ss&dige %hs:588
+                
+                ss&Lines and Re('Lines',ss&Lines,'lines');
+                
+                !Rs&boost and return
+                delete Rs&Te.sc.boost
+                if (s == got) {
+                    # push to storage
+                    localStorage[expc&s] = gots&string
+                }
+                else {
+                    # read vivified into live
+                    $C = got.c.s.c.s;
+                    exps&vivify and ex(C,exps&vivify())
+                    else {
+                        throw "how to read "+exp.t
+                    }
+                }
+            }
+            elsif (Rs&g == 'lines') {
+                $M = me&Mw,R,'geo';
+                $top = s [0];
+                m top  $s:top %fs:6,hs:797
+                $len = 'x'+s.length;
+                m nolines  $s:len
+                
+                !Rs&boost and return
+                Rs&rowish = 1;
+                $M = me&Mw,R,'stuff';
+                each in s {
+                    m line  $s:n %dis,fs:6,hs:797
+                }
+            }
         });
         me&Display,r;
         return r
     };
     
+    me.diffLines = &acgtRgx{
+        $M = me&Mw,R,'diff';
+        if (gs&dige == xs&dige) {
+            m equal  s:= %fs:20,ab
+            return
+        }
+        m notequal  s:~ %fs:20,ab
+        
+    };
+    
+    # reduce sunknownness
     me.KnowR = &acgtRr{
         $r = Ron(R,'KnowR',(r||R),0,&Rs{
+            Rc&inC = R; # tells inner Displays to hoist to here
             $C = Rs&C = G&Cye,[R.t,'',{}];
 
             # this R can be clicked big/small
@@ -768,9 +813,12 @@ Packle: |
 
             $M = me&Mw,R,'traw';
             m t 1 $s:s.t %fs:13,hs:288
+            m sym 12 s:R %fs:15,ls:-0.1,zi:-1,hs:4955
+            
+            me&sunknown,R,s.sc;
             
             
-            s&rowish = 1;
+            Rs&rowish = 1;
         });
         me&Display,r;
     };
@@ -824,7 +872,7 @@ Packle: |
             }
         });
     };
-    # stringify pool
+    #c stringify pool
     me.enLinesR = &acgtRs{
         $c = me&Care,R,s;
         $cb = &RrC{
@@ -855,7 +903,7 @@ Packle: |
                 G&Compress,C;
                 
                 part = 'toLines';
-                Rs&Lines = G&toLines,C;
+                Rs&toLines = G&toLines,C;
             }
             catch (er) {
                 #ers.push([part,R,s,er]);
@@ -864,27 +912,39 @@ Packle: |
             }
         }
         $rN = rc&N.slice().reverse();
-        $Lines = [];
+        rs&Lines = [];
         each iR rN {
             $ind = '';
             $i = 0;
             while (i < Rc&d) { ind += '  '; i++ }
-            $l = Rs&Lines.split("\n")
+            $l = Rs&toLines.split("\n")
                 .map(l => ind+l).join("\n");
             #l += "\n";
-            Lines.unshift(l);
+            rs&Lines.unshift(l);
         }
-        rs&Lines = Lines;
-        $string = Lines.join("\n")+"\n";
-        rs&dige = dig(string);
+        rs&string = rs&Lines.join("\n")+"\n";
+        rs&dige = dig(rs&string);
         return r
     };
-    me.deLinesR = &acgtR{
-        return Ron(R,'deLinesR',C.t,0,&Rs{
+    me.deLinesR = &acgtRs{
+        return Ron(R,'deLinesR',s,0,&Rs{
             if (typeof s != 'object') {
                 s = localStorage[s]
                 !s and Rs&notfound = 1; return
+                $b = Rc&b;
+                Rs&string = s;
+                # sleep if bs&string == Rs&string
+                Rs&Lines = Rs&string.split("\n");
+                Rs&Lines.slice(-1)[0] == '' and Rs&Lines.pop();
                 Rs&dige = dig(s);
+                
+                Rs&vivify = &{
+                    $N = G&readLines,s;
+                    return N[0]
+                };
+                return; # just do ^ when pulled
+                # later, boost ripples back here,
+                # growing our nativising idea of this remote...
                 $N = G&readLines,s;
                 each iD N {
                     me&Ret,R,{t:D.t,s:D};
