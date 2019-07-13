@@ -895,25 +895,22 @@ Packle: |
             return
         }
         m notequal  s:~ %fs:45,ab
-        
 
-        $c = {chunk:'word'};
-         c.fold = 1;
         # switch chunk: word/line
         
         me&rollbs,R,'Digs,Diff,CompN,Comp';
-
-        c&was ||= '';
         $digs = dig(xs&string||'')+dig(gs&string||'')+dig(ki(c));
         Rs&Digs != digs and delete Rs&Diff; 
         Rs&Digs = digs;
 
+        # the job
+        $c = {chunk:'word',fold:1};
         $N = Rs&Diff ||= diff(xs&string,gs&string,c);
 
         # CompN - sum noise
         Rs&CompN != N and delete Rs&Comp;
         if (!Rs&Comp) {
-            Rs&Comp = me&textdiffN,N;
+            Rs&Comp = me&textdiffN,N,c;
             Rs&CompN = N;
         }
         
@@ -960,17 +957,19 @@ Packle: |
         each is k {
             $n = h[i];
             !n and continue
-            m t  $s:s %fs:45
-            n = ''+n;
-            m $i  $s:n %fs:40
+            $s = s+n;
+            $C =
+            m $i  $s:s %fs:45
+            C.t == 'new' and s&hue = '265deg';
+            C.t == 'gone' and s&hue = '111deg';
+            C.t == 'diff' and s&hue = '55deg';
         }
         # < putting yay many things approximately where they are,
         # < putting in names shaded to their thisthatty
     };
     #c textdiffN - clean up/fold
-    me.textdiffN = &acgtN{
+    me.textdiffN = &acgtNc{
         $M = [];
-        $shallow = /^(  +)/;
         each in N {
             $m =
             m bit  $s:nc&s %
@@ -1012,7 +1011,7 @@ Packle: |
                     }
                     la = null;
                     w.push(l);
-                    $shall = l.match(shallow);
+                    $shall = l.match(/^(  +)/);
                     if (shall) {
                         deep = new RegExp('^'+shall[1]+'  ');
                         la =
