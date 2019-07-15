@@ -312,12 +312,30 @@ Coffle: |
             if (rc&N.indexOf(n) >= 0) {
                 # R included
                 $M = me&Mw,n,'Mlimits';
-                m $t 89 s:* %decor,fs:13
+                m $t 89 s:* %deco,fs:7,lh:0.3
                 t == 'dub' and continue
                 # say where it originated
                 $o = ns&refR[0];
-                $nam = ki(me&namup,o );
-                m $t 892 $s:nam %fs:7
+                $namo = me&namup,o;
+                $name = me&namup,n;
+                $pup = [];
+                each is namo {
+                    if (!pup.length) {
+                        s == name[i] and continue
+                        if (name[i] != null) {
+                            # up the n
+                            pup.push(name.slice(i).map(la=>'^').join(''))
+                        }
+                    }
+                    pup.push(s)
+                }
+                if (!pup.length) {
+                    $ups = name.length - namo.length;
+                    while (ups--) { pup.push('^') }
+                    pup = [pup.join('')];
+                }
+                $nam = pup.join('/');
+                m $t 892 $s:nam %deco,fs:7,hs:999
                 continue;
             }
             else {
@@ -335,10 +353,10 @@ Coffle: |
             $M = Rs&M || me&Mw,R,'Mlimits';
             $zs = t+' < '+N.map(t=>t.t).join(',');
             $te = '*'+t;
-            m $te 117 $s:zs %decor,fs:13
+            m $te 117 $s:zs %deco,fs:13
         }}
     };
-    # Js drive wiring from above
+    #c Js drive wiring from above
     me.JT = &acgts{
         $p = A.1 == A.3 ? 4s&elvisory : 2s&Te;
         !p and return
