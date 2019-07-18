@@ -572,28 +572,31 @@ Coffle: |
             
             hy&ov && hy&ov < ty&cv and debugger;
             
-            # what the step is called
-            if (Ic&head[t.t]) {
-                # spawn to R:C
-            }
-            
+            # doing it:
+            $T = {};
             if (ts&if) {
-                ts&if == 'RcX' and !Rc&X and continue
+                ts&if == 'RcX' and !Rc&X and T.not='if'
                 else
-                ts&if == 'h' and R != h and continue
+                ts&if == 'h' and R != h and T.not='if'
+                elsif (ts&if[0] == 's') {
+                    !R.sc[ts&if.substr(1)] and T.not='if'
+                }
                 else {
                     throw "if "+ts&if
                 }
             }
             
-            # doming? T hook any G&n via A.ground...?
-            
-            $cb = tc&s;
-            !hak(R.c,'s') and debugger;
-            
-            cb(A,C,G,T,R,Rc&s);
-            
-            !Rc&nofurther and cz(R,zi)
+            if (!T.not) {
+                # doming? T hook any G&n via A.ground...?
+
+                $cb = tc&s;
+                !hak(R.c,'s') and debugger;
+
+                cb(A,C,G,T,R,Rc&s);
+
+                !Rc&nofurther and cz(R,zi)
+            }
+            delete T.not;
             Rs&ci ++;
             Ry&up.c.N == Rc&N && Ry&up.sc.ci > Rs&ci and hs&iN--
             
@@ -613,9 +616,58 @@ Coffle: |
         return 1;
     };
     
+    #c autoravel
+    
+    me.ravel = &acgtR{ return [
+        ['She','1',&acgtRs{
+            Rc&d == 0 and R.t = C.t;
+            Rc&inC = R; # tells inner Displays to hoist to here
+            Rc&nl ||= 175;
+            Rc&dl ||= 15;
+        }],
+        ['She','3',&acgtRs{
+            
+                $C = Rs&C = G&Cye,[R.t,'',{}];
+                me&boostulate,R;
+                $Re = &tsg{
+                    return me&Ret,R,{t:t,s:s,g:g||'sunknown'};
+                };
+
+
+                $M = me&Mw,R,'traw';
+                m tere 1 $s:R.t %fs:13,hs:288
+                
+                
+                $M = me&Mw,R,'maybe';
+                m climbon 8 $s:A %anet
+            
+            
+        }],
+        ['anet','4',&acgtRs{
+            $M = me&Mw,R,'traw';
+            m tere 1 s:toland %fs:17,hs:288
+            me&sunknown,R,s;
+        },'if:sanet'],
+        
+        ['She','6',&acgtRs{
+            $maybe = Rs&Mw && Rs&Mw.maybe;
+            if (maybe) {
+                delete Rs&Mw.maybe;
+                if (!Rs&z) {
+                    each in maybe {
+                        $c = ex(ex({},n.c),n.sc);
+                        c.t = n.t;
+                        me&Ret,R,c;
+                    }
+                }
+            }
+        },'if:h'],
+        ['Display','7',&acgtRs{
+            $d = me&Display,R;
+        },'if:h'],
+    ] };
     #c Ringing unknown
-    me.Cray = &acgtRs{
-        return [
+    me.Cray = &acgtRs{ return [
         ['She','1',&acgtRs{
             Rc&d == 0 and R.t = C.t;
             # index by R.t set by daR
@@ -696,8 +748,7 @@ Coffle: |
         ['She','7',&acgtRs{
             $d = me&Display,R;
         },'if:h'],
-        ]
-    };
+    ] };
     #c R-ing, collecting rays, bouncing across matter
     # diving gear, has a middle you can steer it from
     # like ind but leaving Rs, looking at the points across it
