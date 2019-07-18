@@ -525,8 +525,10 @@ Soogle: |
         $isnew = !Rc&b;
         # past self
         $b = Rc&b || {c:{},sc:{}};
-        # om details no longer relevant:
-        s&e and throw "used to eval(s&e)"
+        if (s&e) {
+            s&tag = 'input';
+            s&inv = 1;
+        }
         s&nobody and throw "used to reselect d.on"
         if (s&tag || bs&tag) { # or historically
             if (bs&tag != s&tag) {
@@ -582,9 +584,36 @@ Soogle: |
             hak(css) and Rs&css = css
         }
         
-        # Cs say their c&s
+        #c Cs say their c&s
         if (typeof c&s == 'string') {
-            if (c&ht) {
+            if (s&e) {
+                if (s&e == '1') {
+                    # sets value
+                    c&s != null and Rs&on.value = c&s
+                    
+                    # gives value
+                    Rs&on.eintro = &e{
+                        e.t = 'says';
+                        # we default to ec&s = $(on).val()
+                        # unless wanting to watch typing as it happens,
+                        # throws out events like click, keypress other than esc/enter
+                        ec&noisyinput = 1;
+                    };
+                    
+                    # stretched by value
+                    Rs&on.onkeydown = &ev,{
+                        $(Rs&on).css('width', (2 + (Rs&on.value.length / 1.95))+'em');
+                    };
+                    $(Rs&on).trigger('onkeydown');
+                    
+                    # leave value
+                    $(Rs&on).on('blur',function(ev,of,inn){G&gev });
+                }
+                else {
+                    throw "other e type"
+                }
+            }
+            elsif (c&ht) {
                 Rs&html = c&s;
                 b && Rs&html != bs&html and me&chR,R,'html'
             }
