@@ -493,6 +493,7 @@ Coffle: |
         $N = me[R.t](A,C,G,T,R);
         each in N {
             n = G&Cye,n;
+            ns&ift and ns&if = 's'+ns&ift; ns&ifeq = n.t;
             me&sortin,z,n;
         }
         # < Cye should put c=code as c.s
@@ -588,9 +589,11 @@ Coffle: |
             if (ts&if) {
                 ts&if == 'RcX' and !Rc&X and T.not='if'
                 else
-                ts&if == 'h' and R != h and T.not='if'
+                ts&if == 'h' and R != h and T.not='ifh'
                 elsif (ts&if[0] == 's') {
-                    !R.sc[ts&if.substr(1)] and T.not='if'
+                    $v = R.sc[ts&if.substr(1)];
+                    !v and T.not='if'
+                    ts&ifeq && v != ts&ifeq and T.not='ifeq'
                 }
                 else {
                     throw "if "+ts&if
@@ -637,13 +640,14 @@ Coffle: |
             # many R per Rc&s?
             Rc&dupl = 6;
         },'if:h'],
-        ['to','3',&acgtRs{
+        
+        ['cell','3',&acgtRs{
             $b = Rs&b;
             # they think about their state,
             # become straight, become curvy
             # have things wanting to be streamed uphill
             # showing interfaces where things can come across
-            if (Rs&to == 'cell') {
+                Rs&rowish = 1;
                 $M = me&Mw,R,'traw';
                 m tte  s:She %fs:7
                 m t  $s:R.t e
@@ -654,34 +658,56 @@ Coffle: |
                 $c = Rs&Cell ||= G&Cye,[R.t,'',{}];
                 if (Rs&sayeth) {
                     c.t = Rs&sayeth;
+                    ~SProuted
                     delete Rs&Te.sc.sayeth;
                     c = Rs&Cell = G&Cye,[R.t,'',{},{z:[c]}]
                 }
+                me&Ret,R,{t:'Cellhere',s:c,to:'sunknown'}
                 
-                me&Ret,R,{t:'TheTe',s:c,to:'sunknown'}
                 
                 $M = me&Mw,R,'intro';
                 b && bc&s == Rc&s &&
                 m csconstant  '='
                 
+                me&Ret,R,{t:"Itself",s:s,to:'sunknown'}
+                
                 $string = localStorage[R.t];
                 !string and localStorage[R.t] = 'happenings';
                 
+                if (cs&z) {
+                    each in cs&z {
+                        me&Ret,R,{t:n.t,s:n,to:'ball'}
+                    }
+                }
+                
                 # slow rolling wakeup
                 # openness is travelled in
-                me&Ret,R,{t:R.t,s:c,to:'Gittoo'}
-                
-                
-                #me&Gittoo,R,c;
-                #me&Ret,R,{t:'whats',s:[c],tof:'sunknown'}
-                
-                $M = me&Mw,R,'maybe';
-                #m climbon 8 $s:A %anet
+        },'ift:to'],
+        ['cell','6',&acgtRs{
+            $c = Rs&Cell;
+            #debugger;
+            #me&Ret,R,{t:R.t,s:c,to:'Gittoo'}
+            if (cs&z) {
+                each in cs&z {
+                    me&Ret,R,{t:n.t,s:n,to:'ball'}
+                }
             }
-            elsif (Rs&to) {
-                me[Rs&to](A,C,G,T,R,s);
-            }
-        },'if:sto'],
+        },'ift:to'],
+        
+        ['ball','3',&acgtRs{
+            #debugger;
+            # aim to keep a
+            me&Ret,R,{t:R.t,s:s,to:'sunknown'}
+        },'ift:to'],
+        
+        
+        ['sunknown','3',&acgtRs{
+            #debugger;
+            me&Reis,R,'Cray',s;
+            #me&Ret,R,{t:R.t,s:s,to:'sunknown'}
+        },'ift:to'],
+        
+        
         
         # sproutable new ? if low on !
         ['anet','4',&acgtRs{
@@ -702,6 +728,26 @@ Coffle: |
             }
         },'if:h'],
     ] };
+    [
+        # sproutable new ? if low on !
+        ['anet','4',&acgtRs{
+            $M = me&Mw,R,'traw';
+            
+        },'if:sanet'],
+        ['She','6',&acgtRs{
+            $maybe = Rs&Mw && Rs&Mw.maybe;
+            if (maybe) {
+                delete Rs&Mw.maybe;
+                if (!Rs&z) {
+                    each in maybe {
+                        $c = ex(ex({},n.c),n.sc);
+                        c.t = n.t;
+                        me&Ret,R,c;
+                    }
+                }
+            }
+        },'if:h'],
+    ];
     me.sayeth = &acgts{
         ~Sayeth: ki(A), c&s
         T.qua.sayeth = c&s;
@@ -836,6 +882,7 @@ Coffle: |
                 if (nc&N == Rc&N && !dupl--) {
                     limit('dup');
                     Rc&nofurther = 1;
+                    break;
                 }
             }
             limit('dub');
