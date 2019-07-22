@@ -612,7 +612,10 @@ Coffle: |
                         each in w {
                             if (nc&R) {
                                 # spawn R?
-                                me&Ret,R,ex({t:n.t,s:nc&R},n.sc)
+                                $parent = R;
+                                $s = nc&R;
+                                s && Rc&N.indexOf(s) >= 0 and parent = s; s = null
+                                me&Ret,parent,ex({t:n.t,s:s},n.sc)
                             }
                             else {
                                 # otherwise this mindthing grows M
@@ -676,6 +679,19 @@ Coffle: |
         
         
     };
+    # pick an R by name, from ...
+    #   io wants to know R, loadup qualities...
+    me.bit = &acgtRtf{
+        typeof t != 'object' and t = [t]
+        !f and f = R
+        f == 'h' and f == Rc&N[0]
+        each in t {
+            $fz = fc&X && fc&X.x[n] && fc&X.x[n].z;
+            fz.length > 1 and throw "many"
+            f = fz[0];
+        }
+        return f
+    };
     # they think about their state,
     # become straight, become curvy
     # have things wanting to be streamed uphill
@@ -726,12 +742,12 @@ Coffle: |
             n Wormhole  $R:c %to:ball
             if (cs&parent) {
                 # take things forward
-                n Induction  R %proj:Fold>Wormhole
+                n Induction  R:Fold>Wormhole %proj
                 n Fold  $R:cs&parent %to:ball
             }
             # but then!
-            n Ovulation  R %proj:String>Wormhole
-            n String  $R:localStorage %String
+            n Ovulation  R:String>Wormhole %proj
+            n String  $R:localStorage %String,abyss
             
             # < be facty
             $b = Rc&b;
@@ -741,12 +757,35 @@ Coffle: |
             # slow rolling wakeup
             # openness is travelled in
             # up into cell
-            n openness  s:openness %blr:4,fs:30    
+            n openness  s:openness %blr:4,fs:30
         },'ift:to,D'],
         
-        ['proj','28',&acgtRs{
-            $vector = R
-            n From  $R:
+        #c bits etc
+        ['proj','3',&acgtRs{
+            s = s.split('>');
+            n From  $R:s[0] %get
+            n To  $R:s[1] %get
+            me&rollbs,R,'upto';
+        },'ift,D'],
+        # resolves name
+        ['get','3',&acgtRs{
+            $p = bit(R,s,'h');
+            Rs&upstream = p;
+            Rc&s = pc&s;
+        },'ift,D'],
+        # the sometimes avoidable state percolation setup
+        ['proj','4',&acgtRs{
+            $f = bit(R,'From');
+            $t = bit(R,'To');
+            if (fs&abyss) {
+                # bring your own t, from the name of the destination's s
+                $ts = tc&s;
+                n ts.t  $R:f %pull
+            }
+            else {
+                # bring everything
+                
+            }
         },'ift,D'],
         
         ['wall','3',&acgtRs{
