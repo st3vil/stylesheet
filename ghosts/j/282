@@ -652,6 +652,13 @@ Coffle: |
                 !Rc&nofurther and cz(R,zi)
             }
             delete T.not;
+            if (T.wide) {
+                Rs&widenings ||= 0;
+                Rs&widenings++ > 30 and debugger;
+                delete T.wide;
+                busy = 1;
+                continue;
+            }
             Rs&ci ++;
             Ry&up.c.N == Rc&N && Ry&up.sc.ci > Rs&ci and hs&iN--
             onlyt = t;
@@ -777,40 +784,101 @@ Coffle: |
         },'ift:to,D'],
         
         #c bits etc
-        ['proj','3',&acgtRs{
+        ['proj','21',&acgtRs{
             s = s.split('>');
             n From  $R:s[0] %get
             n To  $R:s[1] %get
             me&rollbs,R,'upto';
         },'ift,D'],
-        # resolves name
-        ['get','3',&acgtRs{
+        # resolves name, links
+        ['get','21',&acgtRs{
             $p = me&bit,R,s,'h';
             Rs&upstream = p;
+            ps&downstream = R;
             Rc&s = pc&s;
-        },'ift,D'],
-        # the sometimes avoidable state percolation setup
-        ['proj','4',&acgtRs{
-            $f = me&bit,R,'From';
-            $t = me&bit,R,'To';
-            if (fs&abyss) {
-                # bring your own t, from Toc&s.t
-                $ts = tc&s;
-                n ts.t  $R:f %pull
-            }
-            else {
-                # bring everything
-                
-            }
+            s&bo = '1px solid pink';
+            s&fs = 7;
+            n t  $s:R.t %hs:999
+            n st  $s:pc&s.t
         },'ift,D'],
         
+        
+        ['String','23',&acgtRs{
+            # as elvising is, a potentially fast look for a thing
+            # creating land on the other side
+            Rs&checkout = &s{
+                Rc&s[s];
+            };
+        },'ift,D'],
+        # the sometimes avoidable state percolation setup
+        # for the (From) - (To)
+        #  start suggesting travelers to ...
+        ['proj','23',&acgtRs{
+            Rs&rowish = 1;
+            n t  $s:R.t %hs:789
+            #debugger;
+            $f = me&bit,R,'From';
+            $fp = fs&upstream;
+            !fp and return T.wide = 1;
+            me&Ret,R,{t:'getFr',s:[f,fs&upstream],to:'sunknown'};
+            return;
+            $t = me&bit,R,'To';
+            $fp = fs&upstream;
+            # these want to create in the FromR:
+            #  - things that don't exist there yet, as in Line decodes
+            #     and maintenance of all the objects included
+            #  - things that do exist there being beamed out
+            if (fps&abyss) {
+                # bring your own t, from Toc&s.t
+                $ts = tc&s;
+                n $ts.t  $R:f %pull
+                $s = 'pulls '+ts.t;
+                n says  $s:s
+            }
+            else {
+                # bring everything here
+                # once interacted, the fc&s is above the fold
+                #  and fpc&s is the raw what you could get
+                #   only the top few layers of C should clone to reflect that
+                $d = fc&s;
+                !isC(d) and return me&sunknown,R,d
+                if (!ds&z || !ds&z.length) {
+                    n strange  s:no.z %fs:6
+                    return 
+                }
+                # climb Rs
+                each in ds&z {
+                    $s = '- pull: '+n.t
+                    n says  $s:s
+                }
+            }
+            # then just the worries of fitting things together or over
+        },'ift,D'],
+        
+        ['String','3',&acgtRs{
+            Rs&rowish = 1;
+            n t  $s:R.t
+            
+            #Rs&downstream
+        },'ift,D'],
+        
+        ['pull','3',&acgtRs{
+            $r = R.y.up;
+            n t  $s:R.t
+            $p = rs&parent;
+            
+            
+        },'ift,D'],
         ['wall','3',&acgtRs{
             Rs&rowish = 1;
             me&domesticate,R;
         },'ift:to,D'],
         
+        #c continuing thing
         ['ball','3',&acgtRs{
             Rs&rowish = 1;
+            s&br = '3';
+            s&bo = '0.4em dotted #543';
             me&domesticate,R;
             R.t != s.t &&
                 n st 12 $s:s.t %deco,fs:8
