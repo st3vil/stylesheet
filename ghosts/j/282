@@ -630,6 +630,8 @@ Coffle: |
                                     parent = s;
                                     s = null;
                                 }
+                                delete nc&R;
+                                ex(n.sc,n.c);
                                 $r = me&Ret,parent,ex({t:n.t,s:s},n.sc);
                                 parent != R and zN(r)
                             }
@@ -772,12 +774,12 @@ Coffle: |
                 n Fold  $R:cs&parent %to:ball
             }
             # but then!
-            n Ovulation  R:String>Wormhole %proj,reLine
-            n String  $R:localStorage %String,abyss
+            n Ovulation  R:String>Wormhole %proj,itself
+            n String  $R:localStorage %String,theLines
             
             # < be facty
             $b = Rc&b;
-            b && bc&s == Rc&s &&
+            b && bc&s != Rc&s &&
                 n change  s:cscha
 
             # slow rolling wakeup
@@ -796,8 +798,7 @@ Coffle: |
         # resolves name, links
         ['get','21',&acgtRs{
             $p = me&bit,R,s,'h';
-            Rs&upstream = p;
-            ps&downstream = R;
+            Ry&up.sc[R.t] = p;
             Rc&s = pc&s;
             s&bo = '1px solid pink';
             s&fs = 7;
@@ -806,35 +807,26 @@ Coffle: |
         },'ift,D'],
         
         
-        ['String','23',&acgtRs{
-            # as elvising is, a potentially fast look for a thing
-            # creating land on the other side
-            Rs&checkout = &s{
-                Rc&s[s];
-            };
-        },'ift,D'],
         # the sometimes avoidable state percolation setup
         # for the (From) - (To)
         #  start suggesting travelers to ...
         ['proj','23',&acgtRs{
             Rs&rowish = 1;
+            
+            $f = Rs&From;
+            !f and return T.wide = 1;
+            $t = Rs&To;
+            
             n t  $s:R.t %hs:789
-            #debugger;
-            $f = me&bit,R,'From';
-            $fp = fs&upstream;
-            !fp and return T.wide = 1;
-            #me&Ret,R,{t:'getFr',s:[f,fs&upstream],to:'sunknown'};
-            #return;
-            $t = me&bit,R,'To';
-            $fp = fs&upstream;
+            
             # these want to create in the FromR:
             #  - things that don't exist there yet, as in Line decodes
             #     and maintenance of all the objects included
             #  - things that do exist there being beamed out
-            if (fps&abyss) {
+            if (fs&String) {
                 # bring your own t, from Toc&s.t
                 $ts = tc&s;
-                n $ts.t  $R:f %pull
+                n $ts.t  $pull:f,R
                 $s = 'pulls '+ts.t;
                 n says  $s:s
             }
@@ -843,7 +835,7 @@ Coffle: |
                 # once interacted, the fc&s is above the fold
                 #  and fpc&s is the raw what you could get
                 #   only the top few layers of C should clone to reflect that
-                $d = fc&s;
+                $d = f;
                 !isC(d) and return me&sunknown,R,d
                 if (!ds&z || !ds&z.length) {
                     n strange  s:no.z %fs:6
@@ -857,24 +849,70 @@ Coffle: |
             # then just the worries of fitting things together or over
         },'ift,D'],
         
-        ['String','3',&acgtRs{
-            Rs&rowish = 1;
-            n t  $s:R.t
+        ['itself','6',&acgtRs{
             
-            #Rs&downstream
+            
+            #Rs&Te and delete Rs&Te.sc.boost
+            
+        },'ift,D'],
+        ['proj','5',&acgtRs{
+            $f = Rs&From;
+            !f and return T.wide = 1;
+            $t = Rs&To;
+            if (Rs&boost) {
+                n here  s:wastobe
+                
+                if (Rs&itself) {
+                    ex(tc&s, fc&s);
+                }
+            }
+            1s&Te and delete Rs&Te.sc.boost
+            
         },'ift,D'],
         
-        ['pull','3',&acgtRs{
-            $r = R.y.up;
+        ['pull','22',&acgtRs{
+            $p = Rs&pull;
+            $pul = ps&pulled ||= [];
+            pul.push(R);
             n t  $s:R.t
-            $p = rs&parent;
-            
-            
+            s&bo = '3px dotted green';
+            s&br = 0.3;
         },'ift,D'],
-        ['wall','3',&acgtRs{
+        
+        ['String','3',&acgtRs{
             Rs&rowish = 1;
-            me&domesticate,R;
-        },'ift:to,D'],
+            !Rs&pulled and return T.wide = 1
+            n t  $s:R.t
+            s&bo = '1px dotted green';
+            s&br = 0.3;
+            
+            each in Rs&pulled {
+                s = localStorage[n.t];
+                n n.t  $R:s,unto:n %decode
+            }
+        },'ift,D'],
+        
+        ['decode','3',&acgtRs{
+            !s and ns&notfound = 1; return
+            $b = Rc&b;
+            Rs&string = s;
+            if (b && bs&string == Rs&string) {
+                me&rollbs,R,'Lines,dige,decoded';
+            }
+            else {
+                Rs&Lines = Rs&string.split("\n");
+                Rs&Lines.slice(-1)[0] == '' and Rs&Lines.pop();
+                Rs&dige = dig(s);
+                Rs&decoded = G&readLines,s [0];
+            }
+            $o = Rs&unto;
+            if (o) {
+                oc&s = Rs&decoded;
+                oc&dige = Rs&dige;
+            }
+            n decode  $s:Rs&decoded,R %to:ball
+        },'ift,D'],
+        
         
         #c continuing thing
         ['ball','3',&acgtRs{
@@ -882,6 +920,7 @@ Coffle: |
             s&br = '3';
             s&bo = '0.4em dotted #543';
             me&domesticate,R;
+            
             R.t != s.t &&
                 n st 12 $s:s.t %deco,fs:8
             Rs&is == 'live' and s&bo = '4px dotted #782';
@@ -898,7 +937,8 @@ Coffle: |
                     me&Ret,R,{t:n.t,s:n,to:'ball'}
                 }
             }
-        },'ift:to'],
+        },'ift:to,D'],
+        ['sun','3',&acgtRs{ me&Reis,R,'Cray',s; },'ift'],
         ['sunknown','3',&acgtRs{ me&Reis,R,'Cray',s; },'ift:to'],
         
         
