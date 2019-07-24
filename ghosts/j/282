@@ -631,6 +631,7 @@ Coffle: |
                                     s = null;
                                 }
                                 delete nc&R;
+                                nc&s and s = nc&s; delete nc&s
                                 ex(n.sc,n.c);
                                 $r = me&Ret,parent,ex({t:n.t,s:s},n.sc);
                                 parent != R and zN(r)
@@ -788,7 +789,7 @@ Coffle: |
             n openness  s:openness %blr:4,fs:30
         },'ift:to,D'],
         
-        #c bits etc
+        #c proj-ball etc
         ['proj','21',&acgtRs{
             s = s.split('>');
             n From  $R:s[0] %get
@@ -842,8 +843,9 @@ Coffle: |
                     return 
                 }
                 # climb Rs
-                each in fss&z {
-                    n $n.t  $pull:f,R:n
+                each in fs&z {
+                    !ns&ball and continue
+                    n $n.t  $pull:f,R,s:n
                 }
             }
             # then just the worries of fitting things together or over
@@ -866,8 +868,7 @@ Coffle: |
                     #  r= Jazz%pull -> Jazz ...
                     # f = String%String
                     # fs&pulled = [r+]
-                    #  Jazz%decode -> Jazz (Linestring)
-                    #    decode%ball -> Jazz == rc&s
+                    #  Jazz%decode,unto:r,ball -> Jazz == rc&s
                     !ts&ball and throw "notball"
                     ts&pushed ||= [];
                     ts&pushed.push(r);
@@ -888,20 +889,22 @@ Coffle: |
             me&rollbs,R,'pushed,pusheded';
             each ir Rs&pushed {
                 Rs&pusheded && Rs&pusheded[i].c.s == rc&s and continue
-                $Ri = Rc&refs.indexOf(rc&s);
-                $l = Rc&refR[Ri].filter(l => ls&ball)[0];
-                    debugger;
+                #    debugger;
+                
                 $D =
-                n pushed  $s:ki(rc&s,3) %fs:7
+                n pushed  $s:ki(r,3) %fs:7
                 D.sc.bo = '2px solid yellow';
                 #n rolling  $s:ki(n,3) &hs:857
             }
         },'ift,D'],
         #c pull-String
         ['pull','22',&acgtRs{
-            $p = Rs&pull;
-            $pul = ps&pulled ||= [];
-            pul.push(R);
+            s && !ss&ball and throw "pull:ball"
+            if (!s) { # ask from for it
+                $p = Rs&pull;
+                $pul = ps&pulled ||= [];
+                pul.push(R);
+            }
             n t  $s:R.t
             s&bo = '3px dotted green';
             s&br = 0.3;
@@ -914,13 +917,13 @@ Coffle: |
             s&bo = '1px dotted green';
             s&br = 0.3;
             
-            each in Rs&pulled {
-                s = localStorage[n.t];
-                n $n.t  $R:s,unto:n %decode
+            each ir Rs&pulled {
+                s = localStorage[r.t];
+                n $r.t  $R:s,unto:r %decode,intoa:ball
             }
         },'ift,D'],
         
-        ['decode','3',&acgtRs{
+        ['decode','22',&acgtRs{
             !s and ns&notfound = 1; return
             $b = Rc&b;
             Rs&string = s;
@@ -933,12 +936,10 @@ Coffle: |
                 Rs&dige = dig(s);
                 Rs&decoded = G&readLines,s [0];
             }
-            $o = Rs&unto;
-            if (o) {
-                oc&s = Rs&decoded;
-                oc&dige = Rs&dige;
-            }
-            n decode  $s:Rs&decoded,R %ball
+            Rc&s = Rs&decoded;
+            Rs&unto and Rs&unto.c.s = R
+            Rs&intoa and R.sc[Rs&intoa] = 1
+            # are now %ball continued
         },'ift,D'],
         
         
