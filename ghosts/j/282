@@ -789,7 +789,7 @@ Coffle: |
             n openness  s:openness %blr:4,fs:30
         },'ift:to,D'],
         
-        #c proj-ball etc
+        #c proj
         ['proj','21',&acgtRs{
             s = s.split('>');
             n From  $R:s[0] %get
@@ -884,19 +884,6 @@ Coffle: |
                 delete Rs&Te.sc.boost
             }
         },'ift,D'],
-        
-        ['ball','52',&acgtRs{
-            me&rollbs,R,'pushed,pusheded';
-            each ir Rs&pushed {
-                Rs&pusheded && Rs&pusheded[i].c.s == rc&s and continue
-                #    debugger;
-                
-                $D =
-                n pushed  $s:ki(r,3) %fs:7
-                D.sc.bo = '2px solid yellow';
-                #n rolling  $s:ki(n,3) &hs:857
-            }
-        },'ift,D'],
         #c pull-String
         ['pull','22',&acgtRs{
             s && !ss&ball and throw "pull:ball"
@@ -948,17 +935,19 @@ Coffle: |
             Rs&rowish = 1;
             s&br = '3';
             s&bo = '0.4em dotted #543';
-            me&domesticate,R;
             
             R.t != s.t &&
-                n st 12 $s:s.t %deco,fs:8
+                n t 1 $s:R.t %fs:13,hs:288
+            
+            n t 11 $s:s.t %deco,fs:8,fix:t
+            
             Rs&is == 'live' and s&bo = '4px dotted #782';
             
             # aim to keep a
-            $sc = ex({},s.sc);
-            delete sc.z;
-            hak(sc) &&
-            me&Ret,R,{t:R.t,s:sc,to:'sunknown',isgk:1};
+            each kv s.sc {
+                k == 'z' and continue
+                n $k  $s:v,R %fix:sc
+            }
             
             Rs&boost < 0 and return
             if (ss&z) {
@@ -967,6 +956,43 @@ Coffle: |
                 }
             }
         },'ift,D'],
+        
+        ['ball','52',&acgtRs{
+            me&rollbs,R,'pushed,pusheded';
+            each ir Rs&pushed {
+                Rs&pusheded && Rs&pusheded[i].c.s == rc&s and continue
+                #    debugger;
+                !rs&pull and throw "%ball,pushed:%pull"
+                $F = rc&s;
+                !Fs&ball and throw "%pull -> %ball"
+                
+                $pr = ry&up;
+                if (prs&itself) {
+                    # this first t and sc shall fix themselves
+                    
+                }
+                
+                each in Fs&z {
+                    n.t != z and continue
+                    each ib ns&z {
+                }
+                
+                # apply r/*%fix to s
+                #   load 
+                # then watch for changes
+                $D =
+                n pushed  $s:ki(r,3) %fs:7
+                D.sc.bo = '2px solid yellow';
+                #n rolling  $s:ki(n,3) &hs:857
+            }
+        },'ift,D'],
+
+        ['fix','3',&acgtRs{
+            # fix
+            n k 1 $s:R.t %fs:11,hs:288
+            me&gkness,R;
+        },'ift,D'],
+        
         ['sun','3',&acgtRs{ me&Reis,R,'Cray',s; },'ift'],
         ['sunknown','3',&acgtRs{ me&Reis,R,'Cray',s; },'ift:to'],
         
@@ -1095,6 +1121,26 @@ Coffle: |
             $d = me&Display,R;
         },'if:h'],
     ] };
+    me.gkness = &acgtR{
+        $M = me&Mw,R,'traw';
+        
+        # make block,inline have same indento
+        $p = Ry&up;
+        $iN = (ps&z||[]).indexOf(R) - 1;
+        $f = iN >= 0 && ps&z[iN];
+        f && fs&rowish and s&ml = 1
+        
+        s&fs = 7;
+        m sym 12 not
+        $pow = 2;
+        Rs&boost and pow = 4;
+        $string = ki(s,pow);
+        if (string.length > 100) {
+            string = string.substr(0,100)
+              +'..'+(string.length - 100)
+        }
+        m ki 3 $s:string
+    };
     me.Cray = &acgtRs{ return [
         ... me&Displayingness ,
         ['She','3',&acgtRs{
@@ -1116,18 +1162,7 @@ Coffle: |
             scan.sym == "'" and Rs&isgk = 1;
 
             if (Rs&isgk) {
-                $M = me&Mw,R,'traw';
-                # make block,inline have same indento
-                $iN = (ps&z||[]).indexOf(R) - 1;
-                $f = iN >= 0 && ps&z[iN];
-                f && fs&rowish and s&ml = 1
-                s&fs = 7;
-                m sym 12 not
-                $pow = 2;
-                Rs&boost and pow = 4;
-                $string = ki(s,pow);
-                string.length > 100 and string = string.substr(0,100)+'..'+(string.length - 100)
-                m ki 3 $s:string
+                me&gkness,R;
                 return
             }
             
