@@ -816,6 +816,8 @@ Coffle: |
             $f = Rs&From;
             !f and return T.wide = 1;
             $t = Rs&To;
+            $fs = fc&s;
+            $ts = tc&s;
             
             n t  $s:R.t %hs:789
             
@@ -824,8 +826,7 @@ Coffle: |
             #     and maintenance of all the objects included
             #  - things that do exist there being beamed out
             if (fs&String) {
-                # bring your own t, from Toc&s.t
-                $ts = tc&s;
+                # bring your own t/pointer
                 n $ts.t  $pull:f,R
                 $s = 'pulls '+ts.t;
                 n says  $s:s
@@ -835,39 +836,41 @@ Coffle: |
                 # once interacted, the fc&s is above the fold
                 #  and fpc&s is the raw what you could get
                 #   only the top few layers of C should clone to reflect that
-                $d = f;
-                !isC(d) and return me&sunknown,R,d
-                if (!ds&z || !ds&z.length) {
+                !isC(fs) and return me&sunknown,R,d
+                if (!fss&z || !fss&z.length) {
                     n strange  s:no.z %fs:6
                     return 
                 }
                 # climb Rs
-                each in ds&z {
-                    n pull  $s:n.t ma:0.3
+                each in fss&z {
+                    n $n.t  $pull:f,R:n
                 }
             }
             # then just the worries of fitting things together or over
         },'ift,D'],
         
-        ['itself','6',&acgtRs{
-            
-            
-            #Rs&Te and delete Rs&Te.sc.boost
-            
-        },'ift,D'],
         ['proj','5',&acgtRs{
             $f = Rs&From;
             !f and return T.wide = 1;
             $t = Rs&To;
+            $fs = fc&s;
+            $ts = tc&s;
             if (Rs&boost) {
                 n here  s:wastobe
-                
-                if (Rs&itself) {
-                    ex(tc&s, fc&s);
+                each ir Rs&z {
+                    # apply all these pull requests
+                    !rs&pull and continue
+                    rs&boost < 0 and continue
+                    # 
+                    if (Rs&itself) {
+                        ex(tc&s, rc&s);
+                    }
+                    else {
+                        i $ts y- o rc&s/**
+                    }
                 }
+                delete Rs&Te.sc.boost
             }
-            1s&Te and delete Rs&Te.sc.boost
-            
         },'ift,D'],
         
         ['pull','22',&acgtRs{
