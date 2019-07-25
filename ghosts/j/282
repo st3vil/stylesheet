@@ -755,7 +755,7 @@ Coffle: |
             if (was || !c) {
                 c = Rs&Cell = G&Cye,[R.t,''];
                 # and inherit from it
-                cs&parent = was
+                was and cs&parent = was
             }
             
             # was given by the machine
@@ -811,7 +811,7 @@ Coffle: |
         # the sometimes avoidable state percolation setup
         # for the (From) - (To)
         #  start suggesting travelers to ...
-        ['proj','23',&acgtRs{
+        ['proj','31',&acgtRs{
             Rs&rowish = 1;
             
             $f = Rs&From;
@@ -829,15 +829,16 @@ Coffle: |
             if (fs&String) {
                 # bring your own t/pointer
                 n $ts.t  $pull:f,R
-                $s = 'pulls '+ts.t;
-                n says  $s:s
             }
             else {
                 # bring everything here
                 # once interacted, the fc&s is above the fold
                 #  and fpc&s is the raw what you could get
                 #   only the top few layers of C should clone to reflect that
-                !isC(fs) and return me&sunknown,R,d
+                if (!isC(fs)) {
+                    n strange s:fsnotC %fs:6
+                    return me&sunknown,R,fs
+                }
                 if (!fss&z || !fss&z.length) {
                     n strange  s:no.z %fs:6
                     return 
@@ -858,7 +859,6 @@ Coffle: |
             $fs = fc&s;
             $ts = tc&s;
             if (Rs&boost) {
-                n here  s:wastobe
                 each ir Rs&z {
                     # apply all these pull requests
                     !rs&pull and continue
@@ -870,16 +870,8 @@ Coffle: |
                     # fs&pulled = [r+]
                     #  Jazz%decode,unto:r,ball -> Jazz == rc&s
                     !ts&ball and throw "notball"
-                    ts&pushed ||= [];
-                    ts&pushed.push(r);
-                    
-                    continue;
-                    if (Rs&itself) {
-                        ex(tc&s, rc&s);
-                    }
-                    else {
-                        i $ts/@s y- o rc&s/**
-                    }
+                    ts&othering ||= [];
+                    ts&othering.push(r);
                 }
                 delete Rs&Te.sc.boost
             }
@@ -930,7 +922,7 @@ Coffle: |
         },'ift,D'],
         
         
-        #c continuing thing
+        #c ball, continuing thing around thing
         ['ball','3',&acgtRs{
             Rs&rowish = 1;
             s&br = '3';
@@ -956,25 +948,58 @@ Coffle: |
                 }
             }
         },'ift,D'],
+        ['fix','3',&acgtRs{
+            # fix
+            n k 1 $s:R.t %fs:11,hs:288
+            
+            Rs&boost < 1 and return me&gkness,R;
+            
+        },'ift,D'],
+        
         
         ['ball','52',&acgtRs{
-            me&rollbs,R,'pushed,pusheded';
-            each ir Rs&pushed {
-                Rs&pusheded && Rs&pusheded[i].c.s == rc&s and continue
-                #    debugger;
-                !rs&pull and throw "%ball,pushed:%pull"
+            # %othering is an incoming %pull -> %ball -> Jazz
+            # to give us/yonder %balls here:
+            #   pushing: %pull when incoming
+            #   pushed: %pull (toplevel, otherer id)
+            #   pushed_ball: %ball
+            me&rollbs,R,'pushed,pushed_ball';
+            $sync_pushed = &Rrs{
+                !Rs&ball and throw "!ball sync"
+                !rs&pull and throw "sync !pull"
+                !ss&ball and throw "sync !ball"
+                Rs&pushed ||= [];
+                Rs&pushed_ball ||= [];
+                $ri = Rs&pushed.indexOf(r);
+                if (ri >= 0) {
+                    Rs&pushed_ball[ri] = s
+                }
+                else {
+                    Rs&pushed.push(r);
+                    Rs&pushed_ball.push(s)
+                }
+            };
+            Rs&ush = &kv{
+                $l = R.sc[k] ||= [];
+                l.push(v)
+            };
+            #c acivate from pull
+            each ir Rs&othering {
+                # an incoming %pull -> %ball -> Jazz
+                !rs&pull and throw "%ball,othering:%pull"
                 $F = rc&s;
                 !Fs&ball and throw "%pull -> %ball"
+                # gets %pushed(_ball)
+                sync_pushed(R,r,rc&s);
                 
                 $pr = ry&up;
                 if (prs&itself) {
-                    # this first t and sc shall fix themselves
-                    
+                    # this C receives %fix'd values
+                    Rs&ush('pushing',r);
                 }
-                
-                each in Fs&z {
-                    n.t != z and continue
-                    each ib ns&z {
+                else {
+                    # merge children into here
+                    Rs&ush('pushing_z',r);
                 }
                 
                 # apply r/*%fix to s
@@ -985,14 +1010,42 @@ Coffle: |
                 D.sc.bo = '2px solid yellow';
                 #n rolling  $s:ki(n,3) &hs:857
             }
+            # hereload
+            each ir Rs&pushing {
+                ~Pulling: r.t
+                $F = Rs&pushed_ball[Rs&pushed.indexOf(r)];
+                !F and throw "noball"
+                
+                F.t != s.t and s.t = F.t
+                each in Fs&z {
+                    !ns&fix and continue
+                    # < clone function would live on ball
+                    F[ns&fix][n.t] = nc&s;
+                }
+                Rs&ush('pushing_z',r);
+            }
+            # theyload
+            each ir Rs&pushing_z {
+                $F = Rs&pushed_ball[Rs&pushed.indexOf(r)];
+                !F and throw "noball"
+                
+                each in Fs&z {
+                    !ns&ball and continue
+                    $t = Rs&z && Rs&z.filter(t => ts&ball && t.t == n.t)[0];
+                    if (!t) {
+                        # make C
+                        $D = G&Cye,nc&s;
+                        D.c = {}; D.sc = {};
+                        t = me&Ret,R,{t:D.t,s:D,ball:1};
+                        i $s/$D
+                    }
+                    sync_pushed(t,r,n);
+                    ts&pushing ||= [];
+                    ts&pushing.push(r);
+                }
+            }
         },'ift,D'],
 
-        ['fix','3',&acgtRs{
-            # fix
-            n k 1 $s:R.t %fs:11,hs:288
-            me&gkness,R;
-        },'ift,D'],
-        
         ['sun','3',&acgtRs{ me&Reis,R,'Cray',s; },'ift'],
         ['sunknown','3',&acgtRs{ me&Reis,R,'Cray',s; },'ift:to'],
         
@@ -1134,7 +1187,7 @@ Coffle: |
         m sym 12 not
         $pow = 2;
         Rs&boost and pow = 4;
-        $string = ki(s,pow);
+        $string = ki(Rc&s,pow);
         if (string.length > 100) {
             string = string.substr(0,100)
               +'..'+(string.length - 100)
