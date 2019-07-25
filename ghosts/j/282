@@ -887,6 +887,10 @@ Coffle: |
             n t  $s:R.t
             s&bo = '3px dotted green';
             s&br = 0.3;
+            # < overall, has it pushed? 
+            # < state change here/there click to show in %ball
+            #     that %ball's %pushed_ball will be historic,
+            #         have sc.z %fix and etc
         },'ift,D'],
         
         ['String','3',&acgtRs{
@@ -1028,7 +1032,10 @@ Coffle: |
             each ir Rs&pushing_z {
                 $F = Rs&pushed_ball[Rs&pushed.indexOf(r)];
                 !F and throw "noball"
-                
+                if (!Rs&pushing || Rs&pushing.indexOf(r) < 0) {
+                    # not being s but inside s
+                    F = {sc:{ball:1,z:[F]}};
+                }
                 each in Fs&z {
                     !ns&ball and continue
                     $t = Rs&z && Rs&z.filter(t => ts&ball && t.t == n.t)[0];
