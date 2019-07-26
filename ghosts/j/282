@@ -758,7 +758,8 @@ Coffle: |
             }
             if (was || !c) {
                 c = Rs&Cell = G&Cye,[R.t,''];
-                i $c/#$C.t
+                $Ct = Ry&up.c.s.t;
+                i $c/#$Ct
                 # and inherit from it
                 #was and cs&parent = was
             }
@@ -810,7 +811,6 @@ Coffle: |
             s = s.split('>');
             n From  $R:s[0] %get
             n To  $R:s[1] %get
-            Rs&vey and delete Rs&proj
         },'ift,D'],
         # resolves name, links
         ['get','21',&acgtRs{
@@ -822,20 +822,6 @@ Coffle: |
             s&fs = 7;
             n t  $s:R.t %hs:999
             n st  $s:pc&s.t
-        },'ift,D'],
-        
-        
-        ['vey','31',&acgtRs{
-            Rs&rowish = 1;
-            n t  $s:R.t %hs:789
-            
-            $f = Rs&From;
-            !f and return T.wide = 1;
-            $t = Rs&To;
-            $fs = fc&s;
-            $ts = tc&s;
-            
-            
         },'ift,D'],
         
         # the sometimes avoidable state percolation setup
@@ -856,19 +842,23 @@ Coffle: |
                 # From loads others of names in To
                 each in ts&z {
                     !ns&ball and continue
-                    n $n.t  $pull:f,R
+                    n $n.t  $pull:f,R,other:n
                 }
             }
             else {
                 # From is stuff, pulling puts it in To
                 each in fs&z {
                     !ns&ball and continue
+                    #$o = ts&z && ts&z.filter(o => o.t == n.t)[0];
                     n $n.t  $pull:f,R,s:n
                 }
             }
             # then just the worries of fitting things together or over
         },'ift,D'],
         
+        ['vey','35',&acgtRs{
+            delete Rs&proj;
+        },'ift,D'],
         ['proj','5',&acgtRs{
             $f = Rs&From;
             !f and return T.wide = 1;
@@ -897,6 +887,24 @@ Coffle: |
             }
         },'ift,D'],
         #c pull-String
+        # get the that
+        #   elvising/G&t-ish interface to mysterious places
+        ['String','2',&acgtRs{
+            Rs&rowish = 1;
+            n t  $s:R.t
+            s&bo = '1px dotted green';
+            s&br = 0.3;
+            Rs&twocom = &ne{
+                # as G&t, %ball seeking itself over here
+                $k = ns&H || n.t;
+                s = localStorage[k];
+                !s and return
+                nc&s = me&Reis,R,'ravel',s,{decode:1,intoa:'ball'};
+            };
+        },'ift,D'],
+        # from one of these
+        # < t individual in any place
+        # currently c.s = from %ball
         ['pull','22',&acgtRs{
             s && !ss&ball and throw "pull:ball"
             n t  $s:R.t
@@ -916,24 +924,98 @@ Coffle: |
             #     that %ball's %pushed_ball will be historic,
             #         have sc.z %fix and etc
         },'ift,D'],
-        
-        ['String','2',&acgtRs{
+        # and the %other %ball already in the place
+        ['pull','3',&acgtRs{
+            # if we have our this, the reflection of s
+            $ot = Rs&other;
+            $v = Ry&up;
+            !ot || !vs&vey and return
+            # may start encoding
+            n veys  $s:vs&vey
+            
+            !Rs&boost and return
+            # start %balls doing %Lines
+            ot.sc[vs&vey] = 1;
+            # trust %encoded %balls to still == string
             Rs&rowish = 1;
-            n t  $s:R.t
-            s&bo = '1px dotted green';
-            s&br = 0.3;
-            Rs&twocom = &n{
-                # as G&t, %ball seeking itself over here
-                $k = ns&dige || n.t;
-                s = localStorage[k];
-                !s and return
-                nc&s = me&Reis,R,'ravel',s,{decode:1,intoa:'ball'};
-            };
+            Rs&veying = 1;
         },'ift,D'],
-        ['twocom','21',&acgtRs{
-            !Rs&twocom and throw "no twocom handler"
+        ['pull','7',&acgtRs{
+            !Rs&veying and return
+            # showing in reverse (to From)
+            $ot = Rs&other;
+            if (s) {
+                # is expected, compute diff
+                n diff  $s:ot,diff:s,R
+            }
+            else {
+                n new  s:new %fs:12
+            }
+            $ss = !s ? '' : ss&ball && ss&encode && ss&string;
+            if (s == null) {
+                n want  s:tomakestring
+            }
+            $ots = ots&string;
+            
+            
+            Rs&boost < 2 and return
+            Rs&Te.sc.boost = 1;
+            
+            # may contain several things to which you must link
+            
+            #localStorage[R.t] = ots;
+            n writ  s:ots
         },'ift,D'],
         
+        #c diff balls with strings
+        ['diff','21',&acgtRs{
+            s&ws = 'pre';
+            s&fs = 7;
+            s&wb = 'break-word';
+            s&hue = '80deg';
+            
+            $g = Rc&s;
+            !gs&ball and throw "Got!ball"
+            $x = Rs&diff;
+            x && !xs&ball and throw "Exp!ball"
+            
+            if (gs&string == xs&string) {
+                n equal  s:= %fs:45,ab,lh:0.1
+                return
+            }
+            if (!gs&string || !xs&string) {
+                n empties  s:! %fs:45,ab,lh:0.1
+                return
+            }
+            n notequal  s:~ %fs:45,ab
+
+            # switch chunk: word/line
+
+            me&rollbs,R,'Digs,Diff,CompN,Comp';
+            $digs = dig(xs&string||'')+dig(gs&string||'')+dig(ki(c));
+            Rs&Digs != digs and delete Rs&Diff; 
+            Rs&Digs = digs;
+
+            # the job
+            $c = {chunk:'word',fold:1};
+            $N = Rs&Diff ||= diff(xs&string,gs&string,c);
+
+            # CompN - sum noise
+            Rs&CompN != N and delete Rs&Comp;
+            if (!Rs&Comp) {
+                Rs&Comp = me&textdiffN,N,c;
+                Rs&CompN = N;
+            }
+
+            me&diffproximate,R;
+
+            !Rs&boost and return
+
+            $W = Rs&Comp;
+            M = me&Mw,R,'difftext';
+            M.push(...W)
+        },'ift,D'],
+        #c encode-decode
         ['decode','22',&acgtRs{
             !s and ns&notfound = 1; return
             $b = Rc&b;
@@ -948,11 +1030,64 @@ Coffle: |
                 Rs&decoded = G&readLines,s [0];
             }
             Rc&s = Rs&decoded;
-            Rs&unto and Rs&unto.c.s = R
             Rs&intoa and R.sc[Rs&intoa] = 1
             # are now %ball continued
         },'ift,D'],
         
+        
+        ['Lines','6',&acgtRs{
+            !Rs&ball and throw "Lines!ball"
+            $L = Rs&Lines;
+            if (L == '1') {
+                L = Rs&Lines = R;
+                Rs&Hi = {};
+                Rs&LinesN = [];
+            }
+            Ls&LinesN.push(R);
+            $part;
+            try {
+                part = 'scan';
+                !isC(s) and throw "Not C"
+                typeof C.y != 'object' and throw "NotC"
+                sc&N and throw "mightbe R"
+                # ^ Care-ing for an unconscious R in z?
+                #     if Rs&C wasn't made, Rc&s = Rousce
+                #   as if Rc&nofurther + s&z emit, they may show up...
+                part = 'clone';
+                $D = G&Cye,s;
+                part = 'comp';
+                # comp && comp(R,D);
+                #R.c.not and return
+                part = 'Compress';
+                G&Compress,D;
+                part = 'toLines';
+                Rs&toLines = G&toLines,D;
+            }
+            catch (er) {
+                ~enLinesR: ki(C,2)+"   !"+part+"! "+er
+                me&Rec,R,'err';
+                Rs&toLines = "[error} "+ki(C);
+                Rs&err = "enLinesR: "+part+": "+er;
+                n err  $s:Rs&err
+            }
+        },'ift,D'],
+        ['Lines','67',&acgtRs{
+            Rs&Lines != R and return
+            $rN = Rs&LinesN.slice().reverse();
+            Rs&LinesBunch = [];
+            each ir rN {
+                $ind = '';
+                $i = 0;
+                $dent = rc&d - Rc&d;
+                while (i < dent) { ind += '  '; i++ }
+                $l = Rs&toLines.split("\n")
+                    .map(l => ind+l).join("\n");
+                #l += "\n";
+                Rs&LinesBunch.unshift(l);
+            }
+            Rs&string = Rs&LinesBunch.join("\n")+"\n";
+            Rs&dige = dig(Rs&string);
+        },'ift,D'],
         
         #c ball, continuing thing around thing
         ['ball','3',&acgtRs{
@@ -1259,7 +1394,7 @@ Coffle: |
             # this R can be clicked big/small
             me&boostulate,R;
         }],
-        ['Displayingness','7',&acgtRs{
+        ['Displayingness','9',&acgtRs{
             $d = me&Display,R;
         },'if:h'],
     ] };
