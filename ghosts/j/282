@@ -484,8 +484,9 @@ Coffle: |
         ['RbitX','2',&acgtRs{ me&RbitX,R; },'if:RcX'],
         ['RbitX','4',&acgtRs{ me&RbitXgonism,R; },'if:RcX'],
         ].map(n => G&Cye,n );
-        
-        $N = me[R.t](A,C,G,T,R);
+        $task = Rs&task || R.t;
+        !me[task] and debugger;
+        $N = me[task](A,C,G,T,R);
         each in N {
             n = G&Cye,n;
             
@@ -899,7 +900,9 @@ Coffle: |
                 $k = ns&H || n.t;
                 s = localStorage[k];
                 !s and return
-                nc&s = me&Reis,R,'ravel',s,{decode:1,intoa:'ball'};
+                $re = Rs&rememb ||= {};
+                re[k+dig(s)] ||= me&Reis,R,k,s,{task:'ravel',decode:1,intoa:'ball'};
+                nc&s = re[k];
             };
         },'ift,D'],
         # from one of these
@@ -937,6 +940,8 @@ Coffle: |
             # start %balls doing %Lines
             ot.sc[vs&vey] = 1;
             # trust %encoded %balls to still == string
+            s&hs = 688;
+            s&fs = 12;
             Rs&rowish = 1;
             Rs&veying = 1;
         },'ift,D'],
@@ -951,24 +956,16 @@ Coffle: |
             else {
                 n new  s:new %fs:12
             }
-            $ss = !s ? '' : ss&ball && ss&encode && ss&string;
-            if (s == null) {
-                n want  s:tomakestring
-            }
-            $ots = ots&string;
-            
-            
             Rs&boost < 2 and return
             Rs&Te.sc.boost = 1;
-            
             # may contain several things to which you must link
-            
-            #localStorage[R.t] = ots;
+            !(ots&string && ots&string.length > 3) and throw "string dodgy"
+            localStorage[R.t] = ots&string;
             n writ  s:ots
         },'ift,D'],
         
         #c diff balls with strings
-        ['diff','21',&acgtRs{
+        ['diff','3',&acgtRs{
             s&ws = 'pre';
             s&fs = 7;
             s&wb = 'break-word';
@@ -1008,12 +1005,12 @@ Coffle: |
             }
 
             me&diffproximate,R;
-
+            
             !Rs&boost and return
-
-            $W = Rs&Comp;
-            M = me&Mw,R,'difftext';
-            M.push(...W)
+            
+            $p =
+            n patch   %mah:3em,over,dis
+            ps&z = [...Rs&Comp];
         },'ift,D'],
         #c encode-decode
         ['decode','22',&acgtRs{
@@ -1021,11 +1018,11 @@ Coffle: |
             $b = Rc&b;
             Rs&string = s;
             if (b && bs&string == Rs&string) {
-                me&rollbs,R,'Lines,dige,decoded';
+                me&rollbs,R,'toLines,dige,decoded';
             }
             else {
-                Rs&Lines = Rs&string.split("\n");
-                Rs&Lines.slice(-1)[0] == '' and Rs&Lines.pop();
+                Rs&toLines = Rs&string.split("\n");
+                Rs&toLines.slice(-1)[0] == '' and Rs&toLines.pop();
                 Rs&dige = dig(s);
                 Rs&decoded = G&readLines,s [0];
             }
@@ -1044,6 +1041,10 @@ Coffle: |
                 Rs&LinesN = [];
             }
             Ls&LinesN.push(R);
+            each in Rs&z {
+                !ns&ball and continue
+                ns&Lines = Rs&Lines
+            }
             $part;
             try {
                 part = 'scan';
@@ -1746,7 +1747,7 @@ Coffle: |
         delete rc&dl;
         delete rc&N;
         # grasp task, eg Pond
-        rs&task = r.t;
+        rs&task ||= r.t;
         if (Rs&z) {
             # is not a dive for the above R-ing
             Rs&z.slice(-1)[0] != r and throw "unlast"
