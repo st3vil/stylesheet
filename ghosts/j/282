@@ -452,6 +452,7 @@ Coffle: |
     me.Reis = &acgtRtsc{
         $r = me&Re,R,ex(c||{},{t:t,s:s});
         me&Ring,r;
+        return r
     };
     
     # simpler Ring, until display enough to Ring it up
@@ -730,6 +731,8 @@ Coffle: |
     me.ravel = &acgtR{ return [
         ... me&Displayingness ,
         ['She','1',&acgtRs{
+            $uh = Ry&up && Ry&up.c.N[0];
+            uhs&task == Rs&task and return;
             # start by checking out thy name
             Rs&to = 'cell';
             Rc&dupl = 6;
@@ -738,10 +741,10 @@ Coffle: |
         # the living bit
         ['cell','3',&acgtRs{
             Rs&rowish = 1;
-            
+            # settle/unsettle %vey
             n st  s:~ %statebusiness,fs:7
-            n t  $s:R.t e
-            me&Tie,R,'sayeth',1;
+            n t  $s:R.t
+            #me&Tie,R,'sayeth',1;
             
             # ourself as a commit
             me&rollbs,R,'Cell';
@@ -755,8 +758,9 @@ Coffle: |
             }
             if (was || !c) {
                 c = Rs&Cell = G&Cye,[R.t,''];
+                i $c/#$C.t
                 # and inherit from it
-                was and cs&parent = was
+                #was and cs&parent = was
             }
             
             # was given by the machine
@@ -776,8 +780,8 @@ Coffle: |
                 n Fold  $R:cs&parent %ball
             }
             # but then!
-            n Ovulation  R:String>Wormhole %proj,itself
-            #n Bring  R:String>Wormhole %proj,vey:Lines,itself
+            n Ovulation  R:String>Wormhole %proj
+            n Bring  R:String>Wormhole %proj,vey:Lines
             #n Subgumption  R:Travel>Wormhole %vey:Teing
             #n Subclassity  R:Wormhole>Ghost %vey:Going
             #n Substraction  R:Wormhole>String %vey:Lines
@@ -793,14 +797,14 @@ Coffle: |
             # up into cell
             n openness  s:openness %blr:4,fs:30
         },'ift:to,D'],
-        ['cell','6',&acgtRs{
-            each ir Rc&N {
-                !rs&ball || rs&boost and continue
-                $pr = r.y.up;
-                prs&z.filter(t => ts&ball).length != 1 and continue
-                delete rs&rowish;
-            }
-        },'ift:to,D'],
+        # a pattern match and squish for long skinny trees
+        ['ball','6',&acgtRs{
+            Rs&boost and return
+            $pr = Ry&up;
+            !pr and return;
+            prs&z.filter(t => ts&ball).length != 1 and return
+            delete Rs&rowish;
+        },'ift'],
         #c proj
         ['proj','21',&acgtRs{
             s = s.split('>');
@@ -831,9 +835,7 @@ Coffle: |
             $fs = fc&s;
             $ts = tc&s;
             
-            # %itself is for the 
-        },'ift,D'],
-        ['vey','31',&acgtRs{
+            
         },'ift,D'],
         
         # the sometimes avoidable state percolation setup
@@ -850,28 +852,15 @@ Coffle: |
             
             n t  $s:R.t %hs:789
             
-            # these want to create in the FromR:
-            #  - things that don't exist there yet, as in Line decodes
-            #     and maintenance of all the objects included
-            #  - things that do exist there being beamed out
-            if (fs&String) {
-                # bring your own t/pointer
-                n $ts.t  $pull:f,R
+            if (fs&twocom) {
+                # From loads others of names in To
+                each in ts&z {
+                    !ns&ball and continue
+                    n $n.t  $pull:f,R
+                }
             }
             else {
-                # bring everything here
-                # once interacted, the fc&s is above the fold
-                #  and fpc&s is the raw what you could get
-                #   only the top few layers of C should clone to reflect that
-                if (!isC(fs)) {
-                    n strange s:fsnotC %fs:6
-                    return me&sunknown,R,fs
-                }
-                if (!fss&z || !fss&z.length) {
-                    n strange  s:no.z %fs:6
-                    return 
-                }
-                # climb Rs
+                # From is stuff, pulling puts it in To
                 each in fs&z {
                     !ns&ball and continue
                     n $n.t  $pull:f,R,s:n
@@ -910,31 +899,39 @@ Coffle: |
         #c pull-String
         ['pull','22',&acgtRs{
             s && !ss&ball and throw "pull:ball"
-            if (!s) { # ask from for it
-                $p = Rs&pull;
-                $pul = ps&pulled ||= [];
-                pul.push(R);
-            }
             n t  $s:R.t
             s&bo = '3px dotted green';
             s&br = 0.3;
+            if (!s) { # ask from for it
+                $p = Rs&pull;
+                !ps&twocom and throw "pull!s!twocom"
+                ps&twocom(R);
+                s = Rc&s;
+            }
+            if (!s) {
+                n nos  s:nos %fs:6,hs:594
+            }
             # < overall, has it pushed? 
             # < state change here/there click to show in %ball
             #     that %ball's %pushed_ball will be historic,
             #         have sc.z %fix and etc
         },'ift,D'],
         
-        ['String','3',&acgtRs{
+        ['String','2',&acgtRs{
             Rs&rowish = 1;
-            !Rs&pulled and return T.wide = 1
             n t  $s:R.t
             s&bo = '1px dotted green';
             s&br = 0.3;
-            
-            each ir Rs&pulled {
-                s = localStorage[r.t];
-                n $r.t  $R:s,unto:r %decode,intoa:ball
-            }
+            Rs&twocom = &n{
+                # as G&t, %ball seeking itself over here
+                $k = ns&dige || n.t;
+                s = localStorage[k];
+                !s and return
+                nc&s = me&Reis,R,'ravel',s,{decode:1,intoa:'ball'};
+            };
+        },'ift,D'],
+        ['twocom','21',&acgtRs{
+            !Rs&twocom and throw "no twocom handler"
         },'ift,D'],
         
         ['decode','22',&acgtRs{
