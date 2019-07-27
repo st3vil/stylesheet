@@ -135,6 +135,7 @@ Coffle: |
     # < collectively, esp. with Js
     # < the out-C and in-C are the same
     #   but their elements are not? what is set when?
+    $drag;
     me.handelvis = &acgt{
         # go up C path until bingoed
         $lop = c&slope.slice().reverse();
@@ -150,8 +151,22 @@ Coffle: |
             return
         }
         # - s&med: 
-        #   e -> 4c&elvising -> J:Fourier -> me.Elvising
-        #   having gone inside (4c&callback)
+        #   e -> 4c&elvrupto -> me.handelvis (here)
+        # puts 4c&elvising as the event of the 4c&callback
+        #   then inside callback J:Fourier oscs me.Elvising
+        C.t.includes('mousedown') and drag = C; return 
+        if (drag) {
+            $d = drag;
+            $dif = [];
+            # one common C, the rest different?
+            each in dc&slope {
+                if (n != Cc&slope[i]) {
+                    !dif.length && i > 0 and dif.push(Cc&slope[i-1])
+                    dif.push(n)
+                }
+            }
+            dif.length and c&dragslope = dif;
+        }
 
 
         4s&elvising = C;
@@ -219,12 +234,11 @@ Coffle: |
         futu > 5 and ~futu: R.t, futu
         return R
     };
-    me.cra = &acgtD{
-        #$el = c&path_yon.slice(-1)[0];
-        $M = s&solvey = [];
-        $upwards = c&slope.slice().reverse();
+    me.solveR = &acgtN{
+        N = N.slice().reverse();
+        $M = [];
         $c = {};
-        each in upwards {
+        each in N {
             $v =
             m $n.t  $s:n
             ny&cv != null and vy&cv = ny&cv
@@ -254,25 +268,52 @@ Coffle: |
                     vs&h = h;
                     vs&task = hs&task;
                 }
-                Rs&elvis && !c.elvis and c.elvis = vs&elvis = Rs&elvis
+                # find the deepest each of ...
+                $perc = 'elvis dragelvis'.split(' ');
+                each it perc {
+                    R.sc[t] && !c[t] and c[t] = v.sc[t] = R.sc[t]
+                }
             }
         }
-        !c.elvis and ~sloping
-        !c.elvis and return
         $p = [];
         each in M {
+            # down to inner %elvis
             ns&elvis and p.push(n); continue
             !p.length and continue
             p.unshift(n);
             ns&W and break
         }
-        s&solvey = p;
-        
+        return p
+    };
+    me.cra = &acgtD{
+        s&solvey = me&solveR,c&slope;
+        !s&solvey.length and return
+        if (c&dragslope) {
+            s&dragsolvey = me&solveR,c&dragslope;
+            each in s&solvey {
+                !ns&dragelvis and continue
+                # once someone up the line wants to do motion
+                each id s&dragsolvey {
+                    # the dragged from R%elvis
+                    !ds&elvis and continue
+                    c&dragfrom = ds&R;
+                }
+                each id s&solvey {
+                    # and what would have handled a non-drag
+                    !ds&elvis and continue
+                    c&dragto ||= ds&R;
+                    delete ds&elvis;
+                }
+                # use the travel agent
+                ns&elvis = ns&dragelvis;
+                break
+            }
+        }
         # < to c&pointer, to locate us in
         $M = c&pointer = [];
         # < a pile of travel, io T points to look at
         $el = 4s&elvisory ||= G&Cye,['Elvisory',''];
-        each in p {
+        each in s&solvey {
             $v =
             m $n.t  {}
             ny&cv != null and vy&cv = ny&cv
@@ -725,6 +766,13 @@ Coffle: |
         }
         return f
     };
+    # send massages
+    me.projvey = &acgtR{
+        $from = me&namup,c&dragfrom;
+        $to = me&namup,c&dragto;
+        ~fr: ki(from)
+        ~to: ki(to)
+    }
     # they think about their state,
     # become straight, become curvy
     # have things wanting to be streamed uphill
@@ -746,6 +794,7 @@ Coffle: |
             n st  s:~ %statebusiness,fs:7
             n t  $s:R.t
             #me&Tie,R,'sayeth',1;
+            Rs&dragelvis = 'projvey';
             
             # ourself as a commit
             me&rollbs,R,'Cell';
@@ -901,8 +950,9 @@ Coffle: |
                 s = localStorage[k];
                 !s and return
                 $re = Rs&rememb ||= {};
-                re[k+dig(s)] ||= me&Reis,R,k,s,{task:'ravel',decode:1,intoa:'ball'};
-                nc&s = re[k];
+                nc&s = re[k+dig(s)] ||= me&Reis,R,k,s,{task:'ravel',decode:1,intoa:'ball'};
+                $S = nc&s;
+                !Ss&ball and throw "notball twocomda "+k
             };
         },'ift,D'],
         # from one of these
@@ -934,14 +984,14 @@ Coffle: |
             $v = Ry&up;
             !ot || !vs&vey and return
             # may start encoding
-            n veys  $s:vs&vey
+            n veys  $s:vs&vey %fs:6,hs:594
             
             !Rs&boost and return
             # start %balls doing %Lines
             ot.sc[vs&vey] = 1;
             # trust %encoded %balls to still == string
-            s&hs = 688;
-            s&fs = 12;
+            s&hue = '80deg';
+            s&fs = 13;
             Rs&rowish = 1;
             Rs&veying = 1;
         },'ift,D'],
@@ -969,7 +1019,8 @@ Coffle: |
             s&ws = 'pre';
             s&fs = 7;
             s&wb = 'break-word';
-            s&hue = '80deg';
+            #s&hue = '84deg';
+            # ^ applies to diffproximate but not the patch?
             
             $g = Rc&s;
             !gs&ball and throw "Got!ball"
@@ -1009,7 +1060,7 @@ Coffle: |
             !Rs&boost and return
             
             $p =
-            n patch   %mah:3em,over,dis
+            n patch   %max-height:7,over,dis
             ps&z = [...Rs&Comp];
         },'ift,D'],
         #c encode-decode
@@ -1144,7 +1195,6 @@ Coffle: |
         # an open ball
         # < sprout usual inquisitivity/saveness?
         ['etype','3',&acgtRs{
-            #s&fs = 8;
             n saying   %e,fs:8
             me&Tie,R,'sayeth',1;
             if (Rs&sayeth) {
@@ -1276,26 +1326,6 @@ Coffle: |
         
         
     ] };
-    [
-        # sproutable new ? if low on !
-        ['anet','4',&acgtRs{
-            $M = me&Mw,R,'traw';
-            
-        },'if:sanet'],
-        ['She','6',&acgtRs{
-            $maybe = Rs&Mw && Rs&Mw.maybe;
-            if (maybe) {
-                delete Rs&Mw.maybe;
-                if (!Rs&z) {
-                    each in maybe {
-                        $c = ex(ex({},n.c),n.sc);
-                        c.t = n.t;
-                        me&Ret,R,c;
-                    }
-                }
-            }
-        },'if:h'],
-    ];
     me.sayeth = &acgts{
         ~Sayeth: ki(A), c&s
         T.qua.sayeth = c&s;
