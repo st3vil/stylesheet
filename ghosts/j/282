@@ -889,6 +889,7 @@ Coffle: |
             n st  $s:pc&s.t
         },'ift,D'],
         
+        # bunch of pools
         # bunch of pulls
         ['vey','31',&acgtRs{
             Rs&rowish = 1;
@@ -896,8 +897,6 @@ Coffle: |
             $f = Rs&From;
             !f and return T.wide = 1;
             $t = Rs&To;
-            $fs = fc&s;
-            $ts = tc&s;
             
             n t  $s:R.t %hs:789
             
@@ -922,7 +921,7 @@ Coffle: |
                             !ms&ball and continue
                             m.t != n.t and continue
                             # which it may just have
-                            pc&s = mc&s;
+                            pc&self = mc&s;
                         }
                     }
                 }
@@ -961,24 +960,25 @@ Coffle: |
             }
         },'ift,D'],
         #c pull
-        # from one of these
-        # < t individual in any place
-        # currently c.s = from %ball
+        # t individuals in any place
+        # %pull=from %ball vaguely
+        # %self=from %ball specifica
+        # %haveth=to %ball vaguely
+        # %other=from %ball specifica
         ['pull','22',&acgtRs{
+            s = Rs&self;
             s && !ss&ball and throw "pull:ball"
             s&bo = '3px dotted green';
             s&br = 0.3;
+            s&dis = 2;
             if (!s) { # ask from for it
                 $Y = Rs&pull;
                 if (Ys&twocom) {
                     Ys&twocom(R);
-                    s = Rc&s;
+                    s = Rc&self;
                 }
             }
             # < may take a while to find it remotely
-            if (!s) {
-                n nos  s:nos %fs:6,hs:594
-            }
             # < nameclue wants the whole %pull-%ball-C structure
             #   which might have important kinks
             #   concat modulat 1-2?
@@ -1002,8 +1002,8 @@ Coffle: |
         ['pull','3',&acgtRs{
             # if we have our this, the reflection of s
             $ot = Rs&other;
-            n from  $s:Rc&s,haveth:Rs&pull,R
-            n into  $s:Rs&other,haveth:Rs&into,R
+            n from  $self:Rc&self,haveth:Rs&pull,R
+            n into  $self:Rs&other,haveth:Rs&into,R
             # 
             $v = Ry&up;
             !ot || !vs&vey and return
@@ -1019,6 +1019,7 @@ Coffle: |
             Rs&rowish = 1;
             Rs&veying = 1;
         },'ift,D'],
+        
         ['haveth','4',&acgtRs{
             $cby = &sfzd{
                 !s and return
@@ -1030,7 +1031,6 @@ Coffle: |
                 r and return d
                 return cby(z(s),f,z,d)
             };
-            
             $we = cby(R,&R{ return Rs&cell });
             $th = cby(Rs&haveth,&R{ return Rs&cell });
             $direction = "v";
@@ -1046,7 +1046,7 @@ Coffle: |
                 }
                 break;
             }
-            n direction  $s:direction %fs:22,lh:0.03
+            n direction  $s:direction %fs:22,lh:0.03,hs:346
             # direction of the %pull from the pu
         },'ift,D'],
         # 
@@ -1054,9 +1054,10 @@ Coffle: |
             !Rs&veying and return
             # showing in reverse (to From)
             $ot = Rs&other;
+            $s = Rs&self;
             if (s) {
                 # is expected, compute diff
-                n diff  $s:ot,diff:s,R
+                n diff  $self:ot,diff:s,R
             }
             else {
                 n new  s:new %fs:12
@@ -1077,7 +1078,7 @@ Coffle: |
             #s&hue = '84deg';
             # ^ applies to diffproximate but not the patch?
             
-            $g = Rc&s;
+            $g = Rc&s || Rc&self;
             !gs&ball and throw "Got!ball"
             $x = Rs&diff;
             x && !xs&ball and throw "Exp!ball"
@@ -1118,7 +1119,7 @@ Coffle: |
             n patch   %max-height:7,over,dis
             ps&z = [...Rs&Comp];
         },'ift,D'],
-        #c encode-decode
+        #c String & the %balls on %Lines encode-decode
         # get the that
         # assorted W you asked for, bay of incoming remotes
         #   elvising/G&t-ish interface to mysterious places
@@ -1133,8 +1134,8 @@ Coffle: |
                 s = localStorage[k];
                 !s and return
                 $re = Rs&rememb ||= {};
-                nc&s = re[k+dig(s)] ||= me&Reis,R,k,s,{task:'ravel',Lines:1,intoa:'ball'};
-                $S = nc&s;
+                nc&self = re[k+dig(s)] ||= me&Reis,R,k,s,{task:'ravel',Lines:1,intoa:'ball'};
+                $S = nc&self;
                 !Ss&ball and throw "notball twocomda "+k
             };
         },'ift,D'],
@@ -1603,10 +1604,11 @@ Coffle: |
         # limits want workarounds
         $limit = &s{ me&Rec,R,s };
         
-        # dedupe/limit objects already in this pool
         !Rc&refs and Rc&refs = []; Rc&refR = [];
+        if (s && typeof s == 'object') {
+        # dedupe/limit objects already in this pool
         $ri = Rc&refs.indexOf(s);
-        if (ri < 0 || typeof s != 'object') {
+        if (ri < 0) {
             ri = Rc&refs.push(s) - 1;
             Rc&refR ||= {};
             Rc&refR[ri] ||= [];
@@ -1628,6 +1630,7 @@ Coffle: |
             # a different 
             !Rc&nofurther and limit('dub')
             # < to know circular links, converge
+        }
         }
         # sprawl limits
         Rc&dl && Rc&dl < Rc&d and return limit('dl')
