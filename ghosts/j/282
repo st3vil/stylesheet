@@ -155,7 +155,7 @@ Coffle: |
         # puts 4c&elvising as the event of the 4c&callback
         #   then inside callback J:Fourier oscs me.Elvising
         C.t.includes('mousedown') and drag = C; return 
-        if (drag) {
+        if (drag && C.t.includes('mouseup')) {
             $d = drag;
             $dif = [];
             # one common C, the rest different?
@@ -178,14 +178,24 @@ Coffle: |
         A&o = 'Elvising';
         
         4s&elvised = [];
+        G.oclon ||= G.clon;
+        G.oclof ||= G.clof;
         if (1 && 'draggable') {
-            window.onmousedown = &{ G&gev };
-            window.onmouseup = &{ G&gev };
             G.clof();
+            G.clof = &{
+                window.onmousedown = null;
+                window.onmouseup = null;
+            };
+            G.clon = &{
+                window.onmousedown = &{ G&gev };
+                window.onmouseup = &{ G&gev };
+            };
+            G.clon();
         }
         else {
-            window.onmousedown = null;
-            window.onmouseup = null;
+            G.clof();
+            G.clon = G.oclon;
+            G.clof = G.oclof;
             G.clon();
         }
         
@@ -807,7 +817,6 @@ Coffle: |
             # start by checking out thy name
             Rs&cell = 1;
             Rc&dupl = 6;
-            Rc&nl = 33;
         },'if:h'],
         
         # the living bit
