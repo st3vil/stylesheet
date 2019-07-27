@@ -805,8 +805,9 @@ Coffle: |
             $uh = Ry&up && Ry&up.c.N[0];
             uhs&task == Rs&task and return;
             # start by checking out thy name
-            Rs&to = 'cell';
+            Rs&cell = 1;
             Rc&dupl = 6;
+            Rc&nl = 33;
         },'if:h'],
         
         # the living bit
@@ -815,47 +816,38 @@ Coffle: |
             # settle/unsettle %vey
             n st  s:~ %statebusiness,fs:7
             n t  $s:R.t
-            #me&Tie,R,'sayeth',1;
             Rs&dragelvis = 'projvey';
             s&unsel = 1;
             
-            # ourself as a commit
+            # ourself in a space
             me&rollbs,R,'Cell';
-            $c = Rs&Cell;
-            
-            if (Rs&sayeth) {
-                # to commit, make HEAD other
-                c.t = Rs&sayeth;
-                $was = c;
-                c = null;
-            }
-            if (was || !c) {
-                c = Rs&Cell = G&Cye,[R.t,''];
-                $Ct = Ry&up.c.s.t;
-                i $c/#$Ct
-                # and inherit from it
-                #was and cs&parent = was
+            if (!Rs&Cell) {
+                $t = Ry&up.c.s.t;
+                Rs&Cell = G&Cye,["Wormhole",''];
+                i Rs&Cell/#$t
             }
             
             # was given by the machine
             # what is shared to/at A.4, intro
             # the environment we use to push/pull desires
             # is the local stage, our gear projected on
-            n Travel  $R:s %ball,give:T
+            n Travel  $R:Rc&s %ball
             # learn from the future
-            n Subgumption  R:Travel>Wormhole %proj
-            # stream ourselves in there
-            n Substraction  R:Wormhole>Travel %proj
-            # be ourselves
-            n Wormhole  $R:c %ball
+            n Subgumption  R:Wormhole>Travel %vey:Teing
+            # be ourselves (plural)
+            n Wormhole  $R:Rs&Cell %ball
+            
+            # building spacetime islands ^
+            
+            # to sweep off a stretch of it...
+            #  steps might be contained in a single W here
             if (cs&parent) {
-                # take things forward
-                n Induction  R:Fold>Wormhole %proj
+                # take things forward, hijack its goneR
+                n Induction  R:Fold>Wormhole %vey
                 n Fold  $R:cs&parent %ball
             }
             # but then!
-            n Ovulation  R:String>Wormhole %proj
-            n Bring  R:String>Wormhole %proj,vey:Lines
+            n Substraction  R:Wormhole>String %vey:Lines
             #n Subgumption  R:Travel>Wormhole %vey:Teing
             #n Subclassity  R:Wormhole>Ghost %vey:Going
             #n Substraction  R:Wormhole>String %vey:Lines
@@ -870,7 +862,7 @@ Coffle: |
             # openness is travelled in
             # up into cell
             n openness  s:openness %blr:4,fs:30
-        },'ift:to,D'],
+        },'ift,D'],
         # a pattern match and squish for long skinny trees
         ['ball','6',&acgtRs{
             Rs&boost and return
@@ -879,8 +871,8 @@ Coffle: |
             prs&z.filter(t => ts&ball).length != 1 and return
             delete Rs&rowish;
         },'ift'],
-        #c proj
-        ['proj','21',&acgtRs{
+        #c vey
+        ['vey','21',&acgtRs{
             s = s.split('>');
             n From  $R:s[0] %get
             n To  $R:s[1] %get
@@ -897,10 +889,8 @@ Coffle: |
             n st  $s:pc&s.t
         },'ift,D'],
         
-        # the sometimes avoidable state percolation setup
-        # for the (From) - (To)
-        #  start suggesting travelers to ...
-        ['proj','31',&acgtRs{
+        # bunch of pulls
+        ['vey','31',&acgtRs{
             Rs&rowish = 1;
             
             $f = Rs&From;
@@ -911,19 +901,30 @@ Coffle: |
             
             n t  $s:R.t %hs:789
             
-            if (fs&twocom) {
-                # From loads others of names in To
-                each in ts&z {
-                    !ns&ball and continue
-                    n $n.t  $pull:f,R,other:n
-                }
-            }
-            else {
-                # From is stuff, pulling puts it in To
-                each in fs&z {
-                    !ns&ball and continue
-                    #$o = ts&z && ts&z.filter(o => o.t == n.t)[0];
-                    n $n.t  $pull:f,R,s:n
+            # gather names
+            $any = [f,t];
+            $shared = {};
+            each iy any {
+                # only from the other side
+                ys&twocom and continue
+                each iY any {
+                    y == Y and continue
+                    # < ys&cursor, as a way to tune into the Wormhole
+                    # < sub-pulls to things aimed at
+                    # < knowing the thing moved:
+                    #    follow, or restart at the new cursor position
+                    each in ys&z {
+                        !ns&ball and continue
+                        # From (with n) wants to pull anything To has
+                        $p =
+                        n $n.t  $pull:Y,into:y,R,other:n
+                        each im Ys&z {
+                            !ms&ball and continue
+                            m.t != n.t and continue
+                            # which it may just have
+                            pc&s = mc&s;
+                        }
+                    }
                 }
             }
             # then just the worries of fitting things together or over
@@ -932,7 +933,7 @@ Coffle: |
         ['vey','35',&acgtRs{
             delete Rs&proj;
         },'ift,D'],
-        ['proj','5',&acgtRs{
+        ['vey','5',&acgtRs{
             $f = Rs&From;
             !f and return T.wide = 1;
             $t = Rs&To;
@@ -968,10 +969,11 @@ Coffle: |
             s&bo = '3px dotted green';
             s&br = 0.3;
             if (!s) { # ask from for it
-                $p = Rs&pull;
-                !ps&twocom and throw "pull!s!twocom"
-                ps&twocom(R);
-                s = Rc&s;
+                $Y = Rs&pull;
+                if (Ys&twocom) {
+                    Ys&twocom(R);
+                    s = Rc&s;
+                }
             }
             # < may take a while to find it remotely
             if (!s) {
@@ -982,9 +984,9 @@ Coffle: |
             #   concat modulat 1-2?
             # wants to Rc&refs s now?
             # and the usual two-step confusible C-C nametag
-            s && R.t != s.t &&
+            (!s || R.t != s.t) &&
                 n t 1 $s:R.t %fs:13,hs:288
-            $t =
+            $t = s &&
             n t 11 $s:s.t %deco,fs:8,mr:0.3
             # < overall, has it pushed? 
             # < state change here/there click to show in %ball
@@ -1000,6 +1002,9 @@ Coffle: |
         ['pull','3',&acgtRs{
             # if we have our this, the reflection of s
             $ot = Rs&other;
+            n from  $s:Rc&s,haveth:Rs&pull,R
+            n into  $s:Rs&other,haveth:Rs&into,R
+            # 
             $v = Ry&up;
             !ot || !vs&vey and return
             # may start encoding
@@ -1013,6 +1018,36 @@ Coffle: |
             s&fs = 13;
             Rs&rowish = 1;
             Rs&veying = 1;
+        },'ift,D'],
+        ['haveth','4',&acgtRs{
+            $cby = &sfzd{
+                !s and return
+                z == 'up' and z = null
+                z ||= &s{ return s.y.up };
+                d ||= [];
+                d.unshift(s) > 50 and debugger
+                $r = f(s);
+                r and return d
+                return cby(z(s),f,z,d)
+            };
+            
+            $we = cby(R,&R{ return Rs&cell });
+            $th = cby(Rs&haveth,&R{ return Rs&cell });
+            $direction = "v";
+            each in we {
+                $t = th[i];
+                t == n and continue
+                # path separates
+                i == 0 and throw "different cells"
+                $f = th[i-1];
+                each il fs&z {
+                    l == n and break
+                    l == t and direction = '^'
+                }
+                break;
+            }
+            n direction  $s:direction %fs:22,lh:0.03
+            # direction of the %pull from the pu
         },'ift,D'],
         # 
         ['pull','7',&acgtRs{
@@ -1077,7 +1112,7 @@ Coffle: |
 
             me&diffproximate,R;
             
-            !Rs&boost and return
+            Rs&boost < 1 and return
             
             $p =
             n patch   %max-height:7,over,dis
