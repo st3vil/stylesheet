@@ -137,37 +137,44 @@ Coffle: |
     #   but their elements are not? what is set when?
     $drag;
     me.handelvis = &acgt{
+        # unless dragging
+        C.t.includes('mousedown') and drag = C; return 
+        if (C.t.includes('mouseup')) {
+            C.t = C.t.replace(/mouseup/,'click');
+            if (drag) {
+                $d = drag;
+                $dif = [];
+                # one common C, the rest different?
+                each in dc&slope {
+                    if (n != Cc&slope[i]) {
+                        !dif.length && i > 0 and dif.push(Cc&slope[i-1])
+                        dif.push(n)
+                    }
+                }
+                dif.length and c&dragslope = dif;
+            }
+        }
+
         # go up C path until bingoed
         $lop = c&slope.slice().reverse();
         # - s&medo - instant, outside (A=4) (eg Jause)
         each in lop {
+            # dont fire usual click event when dragging stuff to it
+            c&dragslope and break
             $medo = ns&medo;
             !medo and continue
             !me[medo] and return ~Nomedo: medo
             $msg =
             ~Elvised: medo, '>3:what ...'
             $ret = me[medo](A,C,G,T,n);
-            G&yl:400,&{ msg.set('what',ki(ret)) };
+            G&yl:123,&{ msg.set('what',ki(ret)) };
             return
         }
         # - s&med: 
         #   e -> 4c&elvrupto -> me.handelvis (here)
         # puts 4c&elvising as the event of the 4c&callback
         #   then inside callback J:Fourier oscs me.Elvising
-        C.t.includes('mousedown') and drag = C; return 
-        if (drag && C.t.includes('mouseup')) {
-            $d = drag;
-            $dif = [];
-            # one common C, the rest different?
-            each in dc&slope {
-                if (n != Cc&slope[i]) {
-                    !dif.length && i > 0 and dif.push(Cc&slope[i-1])
-                    dif.push(n)
-                }
-            }
-            dif.length and c&dragslope = dif;
-        }
-
+        #    finding Rs&elvis = Gazer, etc
         4s&elvising = C;
         ~Insideon: ki(c&slope,2)
         G&yl,0,4c&callback;
@@ -804,6 +811,7 @@ Coffle: |
         $to = me&namup,c&dragto;
         ~fr: ki(from)
         ~to: ki(to)
+        ~on: ki(A.1)
     }
     # they think about their state,
     # become straight, become curvy
