@@ -918,27 +918,40 @@ Coffle: |
             
             # gather names
             $any = [f,t];
-            $shared = {};
+            # %pull thing per thing in any thing (+ pointers)
+            #   From: %pull/%self
+            #   To: %into/%other
+            # and the %vey above expects %ball to carry changes
+            #   %ball jointing of self-other,
+            #   %ball state moves also via Lines from self src'd for other
             each iy any {
-                # only from the other side
-                ys&twocom and continue
                 each iY any {
                     y == Y and continue
+                    # only from the other side
+                    $z = ys&twocom ? Ys&z : ys&z;
                     # < ys&cursor, as a way to tune into the Wormhole
                     # < sub-pulls to things aimed at
                     # < knowing the thing moved:
                     #    follow, or restart at the new cursor position
-                    each in ys&z {
+                    each in z {
                         !ns&ball and continue
-                        # From (with n) wants to pull anything To has
                         $p =
-                        n $n.t  $pull:Y,into:y,R,other:n
-                        each im Ys&z {
+                        n $n.t  $pull:y,into:Y,R,other:n
+                        
+                        $oz = z == Ys&z ? ys&z : Ys&z;
+                        each im oz {
                             !ms&ball and continue
                             m.t != n.t and continue
                             # which it may just have
-                            pc&self = mc&s;
+                            ps&self = m;
                         }
+                        if (z == Ys&z) {
+                            $other = ps&self;
+                            ps&self = ps&other;
+                            ps&other = other;
+                        }
+                        # to etc more easily as intended
+                        y == Rs&From and ps&forward = 1
                     }
                 }
             }
