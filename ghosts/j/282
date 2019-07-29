@@ -924,6 +924,7 @@ Coffle: |
             # and the %vey above expects %ball to carry changes
             #   %ball jointing of self-other,
             #   %ball state moves also via Lines from self src'd for other
+            $shared = {};
             each iy any {
                 each iY any {
                     y == Y and continue
@@ -936,22 +937,28 @@ Coffle: |
                     each in z {
                         !ns&ball and continue
                         $p =
-                        n $n.t  $pull:y,into:Y,R,other:n
+                        n $n.t  $pull:y,into:Y,R,self:n
                         
                         $oz = z == Ys&z ? ys&z : Ys&z;
                         each im oz {
                             !ms&ball and continue
                             m.t != n.t and continue
                             # which it may just have
-                            ps&self = m;
+                            ps&other = m;
                         }
-                        if (z == Ys&z) {
+                        if (z != ys&z) {
                             $other = ps&self;
                             ps&self = ps&other;
                             ps&other = other;
+                            ~SPlit: p.t
                         }
                         # to etc more easily as intended
                         y == Rs&From and ps&forward = 1
+                        $h = shared[n.t];
+                        if (h) {
+                            # be the rebase when upstream changes
+                            ps&rebases = h
+                        }
                     }
                 }
             }
@@ -974,13 +981,10 @@ Coffle: |
                     # that are enabled
                     rs&boost < 0 and continue
                     # if pushing String to Wormhole,
-                    # t = Wormhole%ball -> Jazz ... (other)
+                    # f = Wormhole%ball -> Jazz ... (other)
                     # R = Ovulation%proj
                     #  r= Jazz%pull -> Jazz ...
-                    # f = String%String
-                    # fs&pulled = [r+]
-                    #  Jazz%decode,unto:r,ball -> Jazz == rc&s
-                    # then the t%ball applies it
+                    # t = String%String
                     !ts&ball and throw "notball"
                     ts&othering ||= [];
                     ts&othering.push(r);
@@ -1034,29 +1038,14 @@ Coffle: |
                 !Rs&boost and s&fs = 6;
                 # return
             }
-            $ot = Rs&other;
+            if (!Rs&self || Rs&other) {
+            }
             n self  $self:Rs&self,haveth:Rs&pull,R,other:Rs&other
             
             n other  $self:Rs&other,haveth:Rs&into,R,other:Rs&self
-            !Rs&other &&
-                n new  s:new %fs:12
-            # 
-            $v = Ry&up;
-            !ot || !vs&vey and return
-            # may start encoding
-            n veys  $s:vs&vey %fs:6,hs:594
-            
-            !Rs&boost and return
-            # start %balls doing %Lines
-            ot.sc[vs&vey] = 1;
-            # trust %encoded %balls to still == string
-            s&hue = '80deg';
-            s&fs = 13;
-            Rs&rowish = 1;
-            Rs&veying = 1;
         },'ift,D'],
         
-        ['haveth','4',&acgtRs{
+        ['haveth','2',&acgtRs{
             $cby = &sfzd{
                 !s and return
                 z == 'up' and z = null
@@ -1093,8 +1082,40 @@ Coffle: |
                     p.sc[R.t] = Rs&self;
                 }
             }
+            !Rs&self &&
+                n no   s:!
+            
+            #n hav  $s:Rs&haveth.t
+            Rs&self &&
+            n havs  $s:Rs&self.t %fs:8,hs:645
+            
             # direction of the %pull from the pu
         },'ift,D'],
+        
+        #c pulling
+        ['pull','4',&acgtRs{
+            $ot = Rs&other;
+            
+            !Rs&self &&
+                n old  s:old %fs:12
+            !Rs&other &&
+                n new  s:new %fs:12
+            # 
+            $v = Ry&up;
+            !ot || !vs&vey and return
+            # may start encoding
+            n veys  $s:vs&vey %fs:6,hs:594
+            
+            !Rs&boost and return
+            # start %balls doing %Lines
+            ot.sc[vs&vey] = 1;
+            # trust %encoded %balls to still == string
+            s&hue = '80deg';
+            s&fs = 13;
+            Rs&rowish = 1;
+            Rs&veying = 1;
+        },'ift,D'],
+        
         # 
         ['pull','7',&acgtRs{
             !Rs&veying and return
@@ -1110,9 +1131,7 @@ Coffle: |
             }
             Rs&boost < 2 and return
             Rs&Te.sc.boost = 1;
-            # may contain several things to which you must link
-            !(ots&string && ots&string.length > 3) and throw "string dodgy"
-            localStorage[R.t] = ots&string;
+            # twocom ots
             n writ  s:ots
         },'ift,D'],
         
@@ -1177,12 +1196,29 @@ Coffle: |
             Rs&twocom = &ne{
                 # as G&t, %ball seeking itself over here
                 $k = ns&H || n.t;
+                if (e) {
+                    !es&ball and throw 'twocom e!ball'
+                    k = es&H || e.t;
+                    # < may contain several things to which you must link
+                    # < H - object by hash key
+                    $good = es&string && es&string.length > 3
+                    !good and throw "string dodgy"
+                    # < check it still is that
+                    localStorage[k] = es&string;
+                }
                 s = localStorage[k];
+                
                 !s and return
+                
                 $re = Rs&rememb ||= {};
-                nc&self = re[k+dig(s)] ||= me&Reis,R,k,s,{task:'ravel',Lines:1,intoa:'ball'};
-                $S = nc&self;
+                $S = re[k+dig(s)] ||= me&Reis,R,k,s,{task:'ravel',Lines:1,intoa:'ball'};
+                
                 !Ss&ball and throw "notball twocomda "+k
+                if (e) {
+                    # %balls check decode same?
+                }
+                
+                return S
             };
         },'ift,D'],
         
