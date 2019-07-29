@@ -1000,13 +1000,6 @@ Coffle: |
             s&bo = '3px dotted green';
             s&br = 0.3;
             s&dis = 2;
-            if (!s) { # ask from for it
-                $Y = Rs&pull;
-                if (Ys&twocom) {
-                    Ys&twocom(R);
-                    s = Rc&self;
-                }
-            }
             # < may take a while to find it remotely
             # < nameclue wants the whole %pull-%ball-C structure
             #   which might have important kinks
@@ -1030,9 +1023,23 @@ Coffle: |
         # and the %other %ball already in the place
         ['pull','3',&acgtRs{
             # if we have our this, the reflection of s
+            if (Rs&forward) {
+                # should show up as an item to push
+                #   push/display change fairly easily
+                #   n.t only: G&t-ish, pull almost auto
+                n forward  s:->
+            }
+            else {
+                # just something else over there
+                !Rs&boost and s&fs = 6;
+                # return
+            }
             $ot = Rs&other;
-            n from  $self:Rc&self,haveth:Rs&pull,R
-            n into  $self:Rs&other,haveth:Rs&into,R
+            n self  $self:Rs&self,haveth:Rs&pull,R,other:Rs&other
+            
+            n other  $self:Rs&other,haveth:Rs&into,R,other:Rs&self
+            !Rs&other &&
+                n new  s:new %fs:12
             # 
             $v = Ry&up;
             !ot || !vs&vey and return
@@ -1076,6 +1083,16 @@ Coffle: |
                 break;
             }
             n direction  $s:direction %fs:22,lh:0.03,hs:346
+            
+            $p = Ry&up;
+            !ps&pull and throw 'haveth up !pull'
+            $y = Rs&haveth;
+            if (!Rs&self) { # ask haveth for it
+                if (ys&twocom && Rs&other) {
+                    Rs&self = ys&twocom(Rs&other);
+                    p.sc[R.t] = Rs&self;
+                }
+            }
             # direction of the %pull from the pu
         },'ift,D'],
         # 
@@ -1107,7 +1124,7 @@ Coffle: |
             #s&hue = '84deg';
             # ^ applies to diffproximate but not the patch?
             
-            $g = Rc&s || Rc&self;
+            $g = Rc&s || Rs&self;
             !gs&ball and throw "Got!ball"
             $x = Rs&diff;
             x && !xs&ball and throw "Exp!ball"
