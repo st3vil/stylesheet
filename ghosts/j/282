@@ -813,6 +813,17 @@ Coffle: |
         ~to: ki(to)
         ~on: ki(A.1)
     }
+    # path finder
+    me.cby = &sfzd{
+        !s and return
+        z == 'up' and z = null
+        z ||= &s{ return s.y.up };
+        d ||= [];
+        d.unshift(s) > 50 and debugger
+        $r = f(s);
+        r and return d
+        return me.cby(z(s),f,z,d)
+    };
     # they think about their state,
     # become straight, become curvy
     # have things wanting to be streamed uphill
@@ -1001,18 +1012,8 @@ Coffle: |
         
         ['haveth','2',&acgtRs{
             # draw an arrow between two R
-            $cby = &sfzd{
-                !s and return
-                z == 'up' and z = null
-                z ||= &s{ return s.y.up };
-                d ||= [];
-                d.unshift(s) > 50 and debugger
-                $r = f(s);
-                r and return d
-                return cby(z(s),f,z,d)
-            };
-            $we = cby(R,&R{ return Rs&cell });
-            $th = cby(Rs&haveth,&R{ return Rs&cell });
+            $we = me.cby(R,&R{ return Rs&cell });
+            $th = me.cby(Rs&haveth,&R{ return Rs&cell });
             $direction = "v";
             each in we {
                 $t = th[i];
@@ -1031,7 +1032,9 @@ Coffle: |
             
             if (!Rs&self) {
                 # no yon %ball
-                R.t == 'self' and throw "self no self"
+                #R.t == 'self' and throw "self no self"
+                R.t == 'self' &&
+                    n ohno  s:!
                 delete ds&hs; # green
             }
             # give other bigger arrow
@@ -1044,7 +1047,7 @@ Coffle: |
         #c pulling
         ['pull','4',&acgtRs{
             s = Rs&self;
-            !s and throw "pull with no self"
+            !s and return; #throw "pull with no self"
             
             me&rollbs,R,'plan';
             $v = Ry&up;
@@ -1102,7 +1105,10 @@ Coffle: |
         
         ['pull','7',&acgtRs{
             if (Rs&twocoma) {
-                Rs&twocoma(Rs&other,Rs&self)
+                $t = Rs&twocoma;
+                $S = Rs&self;
+                ~Twocoming: Rs&other.sc.ta, Rs&self.sc.ta
+                ts&twocom(Rs&other,Rs&self);
                 n writ  s:⥾ %fs:22,ab
                 return
             }
@@ -1279,7 +1285,7 @@ Coffle: |
                 $i = 0;
                 $dent = rc&d - Rc&d;
                 while (i < dent) { ind += '  '; i++ }
-                $l = Rs&toLines.split("\n")
+                $l = rs&toLines.split("\n")
                     .map(l => ind+l).join("\n");
                 #l += "\n";
                 Rs&LinesBunch.unshift(l);
@@ -1347,11 +1353,19 @@ Coffle: |
             n saying   %e,fs:8
             me&Tie,R,'sayeth',1;
             if (Rs&sayeth) {
+                $S = Rs&sayeth;
                 $pr = Ry&up;
                 !prs&ball and "up!ball"
                 $ups = prc&s;
-                i $ups/#$Rs&sayeth
-                n made  s:made %fs:6,hs:594
+                if (S.substr(0,1) == '%') {
+                    S = S.substr(1);
+                    ups.sc[S] = ''
+                    n made  s:+ %fs:6,hs:594
+                }
+                else {
+                    i $ups/#$S
+                    n made  s:+C %fs:6,hs:594
+                }
             }
         },'ift,D'],
         
@@ -1385,96 +1399,90 @@ Coffle: |
             #   pushed: %pull (toplevel, otherer id)
             #   pushed_ball: %ball
             me&rollbs,R,'pushed,pushed_ball';
-            $sync_pushed = &Rrs{
-                !Rs&ball and throw "!ball sync"
-                !rs&pull and throw "sync !pull"
-                !ss&ball and throw "sync !ball"
-                # %balls keep %pulls up to date
-                # < de-other zombies
-                Rs&pushed = (Rs&pushed||[]).map(&r{
-                    while (r.y.future) {
-                        r = r.y.future;
+            
+            # dual array Stever
+            $ac = &skvKV{
+                K and K = k+'_'+K;
+                $l = s.sc[k] ||= [];
+                $li = l.indexOf(v);
+                if (li >= 0) {
+                    if (K) {
+                        $L = s.sc[K] ||= [];
+                        $was = L[li];
+                        V and L[li] = V
+                        return was
                     }
-                    return r
-                });
-                Rs&pushed_ball ||= [];
-                # %pull <-> %self%ball
-                $ri = Rs&pushed.indexOf(r);
-                if (ri >= 0) {
-                    Rs&pushed_ball[ri] = s
                 }
                 else {
-                    Rs&pushed.push(r);
-                    Rs&pushed_ball.push(s)
+                    l.push(v);
+                    if (K && V) {
+                        $L = s.sc[K] ||= [];
+                        L.push(V);
+                    }
                 }
-            };
-            Rs&ush = &kv{
-                $l = R.sc[k] ||= [];
-                l.push(v)
             };
             
+            # introgression begins at the %pull%into level
             each ir Rs&othering {
-                # an incoming %pull -> %ball -> Jazz
-                !rs&pull and throw "%ball,othering:%pull"
-                # to become
-                $F = rs&self;
-                !Fs&ball and throw "%pull -> %ball"
-                # gets %pushed(_ball)
-                sync_pushed(R,r,rs&self);
-                
-                $pr = ry&up;
-                if (prs&itself) {
-                    # this C receives %fix'd values
-                    Rs&ush('pushing',r);
+                # a %pull putting %self at %other
+                $o = rs&other;
+                if (o) {
+                    $cb = me.cby(o,&o{ return o == R });
+                    !cb || cb[0] != R and throw "%other not here"
+                    ac(o,'pushing',r,'ball',rs&self);
                 }
                 else {
-                    # merge children into here
-                    Rs&ush('pushing_z',r);
+                    rs&putting and throw "%pull !%other %putting somewhere"
+                    # or just here-ish, with a put-in-z emotion
+                    ac(R,'pushing_z',r,'ball',rs&self);
+                    # < build there down a branch, pass tests
                 }
                 
-                # apply r/*%fix to s
-                #   load 
-                # then watch for changes
+                $pr = ry&up;
                 $D =
                 n pushed   %fs:7
                 D.sc.bo = '2px solid yellow';
                 Dc&s = pr.t+'/'+r.t;
-                #n rolling  $s:ki(n,3) &hs:857
             }
-            # hereload
+            # %ball%pushed keep %pull up to date,
+            # but not %pushed_ball - to keep the applied
+            each ir Rs&pushed {
+                while (ry&future) { r = ry&future }
+                # < de-other zombies by rc&ip...
+                # < things rupturing as they delete
+                #   themselves at the edge of the light cone
+                Rs&pushed[i] = r;
+            }
+            # %pushing are active %pulls
             each ir Rs&pushing {
-                ~Pulling: r.t
-                $F = Rs&pushed_ball[Rs&pushed.indexOf(r)];
-                !F and throw "noball"
-                
-                F.t != s.t and s.t = F.t
-                each in Fs&z {
+                # whose descending %self is already here
+                $S = ac(R,'pushing',r,'ball');
+                # is replacing what was last copied
+                $l = ac(R,'pushed',r,'ball',S);
+                S.t != s.t and s.t = S.t
+                each in Ss&z {
                     !ns&fix and continue
                     # < clone function would live on ball
-                    F[ns&fix][n.t] = nc&s;
+                    s[ns&fix][n.t] = nc&s;
                 }
-                Rs&ush('pushing_z',r);
+                
+                ac(R,'pushing_z',r,'ball',S);
             }
-            # theyload
             each ir Rs&pushing_z {
-                $F = Rs&pushed_ball[Rs&pushed.indexOf(r)];
-                !F and throw "noball"
-                if (!Rs&pushing || Rs&pushing.indexOf(r) < 0) {
-                    # not being s but inside s
-                    F = {sc:{ball:1,z:[F]}};
-                }
-                each in Fs&z {
+                $S = ac(R,'pushing_z',r,'ball');
+                each in Ss&z {
                     !ns&ball and continue
+                    # look for a child under here already
                     $t = Rs&z && Rs&z.filter(t => ts&ball && t.t == n.t)[0];
+                    # or make it up
                     if (!t) {
-                        # make C
-                        i Rc&s/#$nc&s
+                        # < io should require unique arks
+                        i Rc&s:up/#$nc&s
                         $D = ays&s[0];
                         t = me&Ret,R,{t:D.t,s:D,ball:1};
                     }
-                    sync_pushed(t,r,n);
-                    ts&pushing ||= [];
-                    ts&pushing.push(r);
+                    # pass the same %pull and a descending %self...%ball
+                    ac(t,'pushing',r,'ball',n);
                 }
             }
         },'ift,D'],
