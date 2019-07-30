@@ -335,7 +335,7 @@ Coffle: |
                 each id s&dragsolvey {
                     # the dragged from R%elvis
                     !ds&elvis and continue
-                    c&dragfrom = ds&R;
+                    c&dragfrom ||= ds&R;
                 }
                 each id s&solvey {
                     # and what would have handled a non-drag
@@ -1000,6 +1000,7 @@ Coffle: |
         },'ift,D'],
         
         ['haveth','2',&acgtRs{
+            # draw an arrow between two R
             $cby = &sfzd{
                 !s and return
                 z == 'up' and z = null
@@ -1025,77 +1026,88 @@ Coffle: |
                 }
                 break;
             }
-            n direction  $s:direction %fs:22,lh:0.03,hs:346
+            $d =
+            n direction  $s:direction %fs:17,lh:0.05,hs:346
             
-            #!Rs&self and debugger;
-            !Rs&self &&
-                n nonsc   s:!
-            
-            #n hav  $s:Rs&haveth.t
-            Rs&self &&
-            n havs  $s:Rs&self.t %fs:8,hs:645
-            
-            # direction of the %pull from the pu
+            if (!Rs&self) {
+                # no yon %ball
+                R.t == 'self' and throw "self no self"
+                delete ds&hs; # green
+            }
+            # give other bigger arrow
+            dc&s = dc&s == '^' ? '▲' : '▼';
+            # < n should type styles into number etc
+            R.t == 'other' and ds&fs = (ds&fs*1)+7
+            # ◀ ▶
         },'ift,D'],
         
         #c pulling
         ['pull','4',&acgtRs{
             s = Rs&self;
             !s and throw "pull with no self"
-            !Rs&other &&
-                n new  s:new %fs:12
             
+            me&rollbs,R,'plan';
             $v = Ry&up;
-            if (vs&vey) {
-                # start fiddling with diffs
-                # may start encoding
-                n veys  $s:vs&vey %fs:6,hs:594
-                # do more often
-                !Rs&boost and return
-                # %self%balls do %Lines
-                s.sc[vs&vey] = 1;
-                # %other%balls trusted to == string decoded from
-                # < Linesing to any %balls we want to diff
-                s&hue = '80deg';
-                s&fs = 13;
-                Rs&rowish = 1;
-                
-                Rs&veying = 1;
+            $t = Rs&into;
+            if (Rs&boost > 0) {
+                if (Rs&other || ts&twocom) {
+                    # engage drawing up of planes
+                    # becoming matter for idea/diff/apply
+                    Rs&diffing = 'string';
+                    [Rs&self,Rs&other].map(&s{
+                        !s and return
+                        # make both sets %ball%Lines
+                        ss&Lines == null and ss&Lines = 1
+                        if (vs&vey) {
+                            # < moving stuff around processors:
+                            vs&vey == 'Lines' and return
+                            # %balls go through process
+                            # %ball%Teing takes %ball(%Lines)
+                            # compiles %self%ball%Teing --> I%ball
+                            # then I%ball%Lines <-> %other%ball%Lines
+                            # must know forward/reverse.
+                        }
+                        # either may do some %ball %othering into %ball
+                        # or if %into%twocom, Lines as string,
+                    });
+                }
+                else {
+                    # new item, no pre-game required to other it
+                }
+                # for engaging from 7 a difference:
+                #   either from each in Lines, or:
+                #   these %balls at 6 going into the Teing process
+                # to be brought back here for application
             }
-        },'ift,D'],
-        
-        
-        ['veerwy','5',&acgtRs{
-            $f = Rs&From;
-            !f and return T.wide = 1;
-            $t = Rs&To;
-            $fs = fc&s;
-            $ts = tc&s;
-            if (Rs&boost) {
-                # push the pulls
-                each ir Rs&z {
-                    !rs&pull and continue
-                    # that are enabled
-                    rs&boost < 0 and continue
-                    # if pushing String to Wormhole,
-                    # f = Wormhole%ball -> Jazz ... (other)
-                    # R = Ovulation%proj
-                    #  r= Jazz%pull -> Jazz ...
-                    # t = String%String
+            
+            if (Rs&boost > 1) {
+                Rs&Te.sc.boost = 1;
+                 
+                if (ts&twocom) {
+                    # jam them in now and resync Rs all over?
+                    # we could know from elvising that this pull is active
+                    # < do it out of time, so %other%balls should be already
+                    # do after %self%balls%Lines again
+                    Rs&twocoma = t
+                }
+                else {
+                    # things that apply now
                     !ts&ball and throw "notball"
                     ts&othering ||= [];
-                    ts&othering.push(r);
+                    ts&othering.push(R);
+                    n writ  s:⥿ %fs:22,ab
                 }
-                delete Rs&Te.sc.boost
             }
         },'ift,D'],
-        # 
+        
         ['pull','7',&acgtRs{
-            !Rs&veying and return
-            # showing in reverse (to From)
-            $ot = Rs&other;
-            $s = Rs&self;
-            if (Rs&other) {
+            if (Rs&twocoma) {
+                Rs&twocoma(Rs&other,Rs&self)
+                n writ  s:⥾ %fs:22,ab
+                return
+            }
+            if (Rs&diffing) {
+                s&hue = 80;
                 # is expected, compute diff
                 n diff  $self:Rs&self,diff:Rs&other,R
                 # < map diff back out to %balls, if clicked
@@ -1105,19 +1117,6 @@ Coffle: |
                 #   by the initial diff selecting %self%balls
                 #   to go %othering into a %staging%balls
                 #   %Lines that and diff etc against %other again
-            }
-            else {
-                n new  s:new! %fs:12
-            }
-            Rs&boost < 2 and return
-            Rs&Te.sc.boost = 1;
-            $t = Rs&into;
-            if (ts&twocom) {
-                ts&twocom(Rs&other,Rs&self);
-                n writ  s:writ
-            }
-            else {
-                n writ  s:howto?
             }
         },'ift,D'],
         
@@ -1168,11 +1167,11 @@ Coffle: |
 
             me&diffproximate,R;
             
-            Rs&boost < 1 and return
-            
-            $p =
-            n patch   %max-height:7,over,dis
-            ps&z = [...Rs&Comp];
+            if (Rs&boost > 0) {
+                $p =
+                n patch   %max-height:7,over,dis
+                ps&z = [...Rs&Comp];
+            }
         },'ift,D'],
         #c String & the %balls on %Lines encode-decode
         # get the that
@@ -1226,7 +1225,7 @@ Coffle: |
                 Rs&decoded = G&readLines,s [0];
             }
             Rc&s = Rs&decoded;
-            Rs&intoa and delete Rs&Lines; R.sc[Rs&intoa] = 1
+            Rs&intoa and Rs&Lines = 0; R.sc[Rs&intoa] = 1
             # are now %ball continued
         },'ift,D'],
         
@@ -1379,6 +1378,7 @@ Coffle: |
         
         #c othering
         ['ball','52',&acgtRs{
+            Rs&ball = 6; # look before you other
             # %othering is an incoming %pull -> %ball -> Jazz
             # to give us/yonder %balls here:
             #   pushing: %pull when incoming
@@ -1389,8 +1389,16 @@ Coffle: |
                 !Rs&ball and throw "!ball sync"
                 !rs&pull and throw "sync !pull"
                 !ss&ball and throw "sync !ball"
-                Rs&pushed ||= [];
+                # %balls keep %pulls up to date
+                # < de-other zombies
+                Rs&pushed = (Rs&pushed||[]).map(&r{
+                    while (r.y.future) {
+                        r = r.y.future;
+                    }
+                    return r
+                });
                 Rs&pushed_ball ||= [];
+                # %pull <-> %self%ball
                 $ri = Rs&pushed.indexOf(r);
                 if (ri >= 0) {
                     Rs&pushed_ball[ri] = s
@@ -1408,10 +1416,11 @@ Coffle: |
             each ir Rs&othering {
                 # an incoming %pull -> %ball -> Jazz
                 !rs&pull and throw "%ball,othering:%pull"
-                $F = rc&s;
+                # to become
+                $F = rs&self;
                 !Fs&ball and throw "%pull -> %ball"
                 # gets %pushed(_ball)
-                sync_pushed(R,r,rc&s);
+                sync_pushed(R,r,rs&self);
                 
                 $pr = ry&up;
                 if (prs&itself) {
@@ -1459,10 +1468,9 @@ Coffle: |
                     $t = Rs&z && Rs&z.filter(t => ts&ball && t.t == n.t)[0];
                     if (!t) {
                         # make C
-                        $D = G&Cye,nc&s;
-                        D.c = {}; D.sc = {};
+                        i Rc&s/#$nc&s
+                        $D = ays&s[0];
                         t = me&Ret,R,{t:D.t,s:D,ball:1};
-                        i $s/$D
                     }
                     sync_pushed(t,r,n);
                     ts&pushing ||= [];
