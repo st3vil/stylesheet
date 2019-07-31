@@ -254,7 +254,7 @@ Coffle: |
             }
         }
     };
-    #c slope/pointer
+    #c e-slope/pointer
     
     # c&pointer snips to subnets, finds your stuff
     # for pointing into R pools, finding Rs&elvis=hook
@@ -381,6 +381,43 @@ Coffle: |
         #~etc: $(el).text();
     };
     
+    #c ect
+    me.boostulate = &acgtR{
+        Rs&elvis = 'Gazel';
+        # ^ is somewherish. posits and deposits.
+        1s&Te and me&Tie,R,'boost'
+        
+        !Rs&boost and return
+        
+        # drawn
+        $M = me&Mw,R,'boost';
+        Rc&nl and Rc&nl += Rs&boost * 3;
+        Rc&dl and Rc&dl += Rs&boost;
+        $bo = Rs&boost;
+        $sym = bo < 0 ? 's' : 'W';
+        bo = bo < 0 ? bo*-1 : bo;
+        $i = 0;
+        while (i < bo) {
+            $hu = 20*i+100;
+            $z =
+            m booste 11 $s:sym %fs:20,hs:594,lh:0.5,hue:$hu
+            z.t += hu;
+            i++;
+        }
+    };
+    # click up/down anywhere
+    me.Gazel = &acgtR{
+        C.t == 'says' and return T.qua.sayeth = c&s
+        
+        Rs&boost ||= 0;
+        C.t.includes('C+') ? Rs&boost-- : Rs&boost ++;
+        T.qua.boost = Rs&boost;
+    };
+    # ESC from textinput
+    me.sayeth = &acgts{
+        ~Sayeth: ki(A), c&s
+        T.qua.sayeth = c&s;
+    };
     #c Mboostia
     # deprunablism - note Ry&ups&M about lost
     # would sit as a general ableness,
@@ -436,7 +473,8 @@ Coffle: |
             m $te 117 $s:zs %deco,fs:13
         }}
     };
-    #c Js drive wiring from above
+    #c Js receive Te
+    # drive wiring from above
     me.JT = &acgts{
         delete 1s&Te;
         $p = A.1 == A.3 ? 4s&elvisory : 2s&Te;
@@ -486,36 +524,7 @@ Coffle: |
         # oncer
         d == '1' and delete v.sc[k]
     };
-    me.boostulate = &acgtR{
-        Rs&elvis = 'Gazel';
-        # ^ is somewherish. posits and deposits.
-        1s&Te and me&Tie,R,'boost'
-        
-        !Rs&boost and return
-        
-        # drawn
-        $M = me&Mw,R,'boost';
-        Rc&nl and Rc&nl += Rs&boost * 3;
-        Rc&dl and Rc&dl += Rs&boost;
-        $bo = Rs&boost;
-        $sym = bo < 0 ? 's' : 'W';
-        bo = bo < 0 ? bo*-1 : bo;
-        $i = 0;
-        while (i < bo) {
-            $hu = 20*i+100;
-            $z =
-            m booste 11 $s:sym %fs:20,hs:594,lh:0.5,hue:$hu
-            z.t += hu;
-            i++;
-        }
-    };
-    me.Gazel = &acgtR{
-        C.t == 'says' and return T.qua.sayeth = c&s
-        
-        Rs&boost ||= 0;
-        C.t.includes('C+') ? Rs&boost-- : Rs&boost ++;
-        T.qua.boost = Rs&boost;
-    };
+    #c Rs
     me.namup = &acgts{
         !s and return
         $nam = [s.t];
@@ -523,6 +532,33 @@ Coffle: |
             nam.push(s.t);
         }
         return nam.reverse();
+    };
+    # pick an R by name, from ...
+    #   io wants to know R, loadup qualities...
+    me.bit = &acgtRtf{
+        typeof t != 'object' and t = [t]
+        !f and f = R
+        f == 'h' and f = Rc&N[0]
+        each in t {
+            #$fz = fc&X && fc&X.x[n] && fc&X.x[n].z;
+            $fz = fs&z && fs&z.filter(t => t.t == n);
+            !fz and throw "problem"
+            fz.length < 1 and throw "notfound"
+            fz.length > 1 and throw "many"
+            f = fz[0];
+        }
+        return f
+    };
+    # path finder
+    me.cby = &sfzd{
+        !s and return
+        z == 'up' and z = null
+        z ||= &s{ return s.y.up };
+        d ||= [];
+        d.unshift(s) > 50 and debugger
+        $r = f(s);
+        r and return d
+        return me.cby(z(s),f,z,d)
     };
     #c Ring R-ing
     # get R, s and R's middles to stream work
@@ -790,22 +826,6 @@ Coffle: |
         
         
     };
-    # pick an R by name, from ...
-    #   io wants to know R, loadup qualities...
-    me.bit = &acgtRtf{
-        typeof t != 'object' and t = [t]
-        !f and f = R
-        f == 'h' and f = Rc&N[0]
-        each in t {
-            #$fz = fc&X && fc&X.x[n] && fc&X.x[n].z;
-            $fz = fs&z && fs&z.filter(t => t.t == n);
-            !fz and throw "problem"
-            fz.length < 1 and throw "notfound"
-            fz.length > 1 and throw "many"
-            f = fz[0];
-        }
-        return f
-    };
     # send massages
     me.projvey = &acgtR{
         $from = me&namup,c&dragfrom;
@@ -814,22 +834,6 @@ Coffle: |
         ~to: ki(to)
         ~on: ki(A.1)
     }
-    me.sayeth = &acgts{
-        ~Sayeth: ki(A), c&s
-        T.qua.sayeth = c&s;
-    };
-
-    # path finder
-    me.cby = &sfzd{
-        !s and return
-        z == 'up' and z = null
-        z ||= &s{ return s.y.up };
-        d ||= [];
-        d.unshift(s) > 50 and debugger
-        $r = f(s);
-        r and return d
-        return me.cby(z(s),f,z,d)
-    };
     # they think about their state,
     # become straight, become curvy
     # have things wanting to be streamed uphill
@@ -871,17 +875,9 @@ Coffle: |
             }
             n Wormhole  $R:Rs&Cell %ball
             
-            # to sweep off a stretch of it...
-            #  steps might be contained in a single W here
-            if (cs&parent) {
-                # take things forward, hijack its goneR
-                n Induction  R:Fold>Wormhole %vey
-                n Fold  $R:cs&parent %ball
-            }
-            
-            # but then!
+            # continuity of generation
             n Substraction  R:Wormhole>String %vey:Lines
-            # other place
+            # into other place
             n String  $R:localStorage %String,twocom
             
             # < be facty
@@ -1014,7 +1010,8 @@ Coffle: |
             n other  $self:Rs&other,haveth:Rs&into,R,other:Rs&self
         },'ift,D'],
         
-        ['haveth','2',&acgtRs{
+        ['haveth','3',&acgtRs{
+            delete Rs&elvis;
             # draw an arrow between two R
             $we = me.cby(R,&R{ return Rs&cell });
             $th = me.cby(Rs&haveth,&R{ return Rs&cell });
@@ -1057,7 +1054,6 @@ Coffle: |
             $v = Ry&up;
             $t = Rs&into;
             if (Rs&boost > 0) {
-                Rs&rowish = 1;
                 if (Rs&other || ts&twocom) {
                     # engage drawing up of planes
                     # becoming matter for idea/diff/apply
@@ -1179,6 +1175,8 @@ Coffle: |
             me&diffproximate,R;
             
             if (Rs&boost > 0) {
+                $l = Ry&up;
+                ls&rowish = 1;
                 $p =
                 n patch   %max-height:7,over,dis
                 ps&z = [...Rs&Comp];
