@@ -431,25 +431,7 @@ Coffle: |
                 #t == 'dub' and continue
                 # say where it originated
                 $o = ns&refR[0];
-                $namo = me&namup,o;
-                $name = me&namup,n;
-                $pup = [];
-                each is namo {
-                    if (!pup.length) {
-                        s == name[i] and continue
-                        if (name[i] != null) {
-                            # up the n
-                            pup.push(name.slice(i).map(la=>'^').join(''))
-                        }
-                    }
-                    pup.push(s)
-                }
-                if (!pup.length) {
-                    $ups = name.length - namo.length;
-                    while (ups--) { pup.push('^') }
-                    pup = [pup.join('')];
-                }
-                $nam = pup.join('/');
+                $nam = me&nampup,o,n;
                 $M = me&Mw,n,'Mlimits';
                 m $t 89 s:* %deco,fs:7,lh:0.3
                 m $t 892 $s:nam %deco,fs:7,hs:999
@@ -532,6 +514,29 @@ Coffle: |
             nam.push(s.t);
         }
         return nam.reverse();
+    };
+    # show path between two R
+    me.nampup = &acgton{
+        $namo = me&namup,o;
+        $name = me&namup,n;
+        $pup = [];
+        each is namo {
+            if (!pup.length) {
+                s == name[i] and continue
+                if (name[i] != null) {
+                    # up the n
+                    pup.push(name.slice(i).map(la=>'^').join(''))
+                }
+            }
+            pup.push(s)
+        }
+        if (!pup.length) {
+            $ups = name.length - namo.length;
+            while (ups--) { pup.push('^') }
+            pup = [pup.join('')];
+        }
+        $nam = pup.join('/');
+        return nam
     };
     # pick an R by name, from ...
     #   io wants to know R, loadup qualities...
@@ -838,12 +843,14 @@ Coffle: |
     };
     # via a drag-n-drop of gear to send massages
     me.projvey = &acgtR{
+        $A = G&Aye;
         $from = me&namup,c&dragfrom;
         $to = me&namup,c&dragto;
+        
         ~fr: ki(from)
         ~to: ki(to)
         ~on: ki(A.1)
-        i 4s&eland/$C
+        4s&eland = C
     }
     # they think about their state,
     # become straight, become curvy
