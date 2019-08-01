@@ -423,16 +423,18 @@ Coffle: |
         $upritN = {};
         each tin rc&ha {
             if (rc&N.indexOf(n) >= 0) {
-                # R included
+                # R included are from Rc&refs/refR
+                # < may not be in our h/R pool, showing...
+                #   same Rc&s=objects near but not in this process
                 #t == 'dub' and continue
                 # say where it originated
                 $M = me&Mw,n,'Mlimits';
-                m $t 89 s:* %deco,fs:7,lh:0.3
-                m $t 892 $s:nam %deco,fs:7,hs:999
+                m $t 89 s:♲ %deco,fs:13,lh:0.3
                 # dub = from other R0
                 if (t == 'dub' || t == 'dup') {
                     $o = ns&refR[0];
                     $nam = me&nampup,o,n;
+                    m $t 892 $s:nam %deco,fs:7,hs:999
                 }
                 continue;
             }
@@ -565,8 +567,10 @@ Coffle: |
         return me.cby(z(s),f,z,d)
     };
     me.cbu = &sfz{
-        $f = &R{ return R.sc[f] };
-        $l = me.cby(s,f,z||'up');
+        $cb = f;
+        typeof f == 'string' and cb = &R{ return R.sc[f] }
+        typeof f == 'object' and cb = &R{ return R == f }
+        $l = me.cby(s,cb,z||'up');
         return l && l[0]
     };
     me.pivot = &ft{
@@ -576,7 +580,9 @@ Coffle: |
         $to = me.cby(t);
         from[0] != to[0] and debugger
         $la;
+        $i = 50;
         while (from[0] == to[0]) {
+            i-- < 0 and debugger;
             la = from.shift(); to.shift();
         }
         $a = from.slice();
@@ -864,26 +870,29 @@ Coffle: |
         4s&eland = d;
         ds&from = f;
         ds&to = t;
+        f == t and return ds&same = 1;
         $p = me.pivot(f,t);
         $v = p.v;
         # between places simple?
         $nonballic = p.a.filter(n => !ns&ball);
         if (!nonballic.length) {
-            $S = fc&s;
-            $s = tc&s;
+            $S = tc&s;
+            $s = fc&s;
             i $S/$s
+            ds&moved = 1;
+            ~move: S.t, '<-', s.t
         }
         elsif (vs&Cell) {
-            
+            ~cellsomething
         }
         else {
             # move item
             ds&dunno = 1;
+            ~dunno
         }
         dc&s = p;
-        ~grad
     }
-    #c %cell/%vey they think about their state,
+    #c cellvey think about their state,
     # become straight, become curvy
     # have things wanting to be streamed uphill
     # showing interfaces where things can come across
@@ -894,7 +903,7 @@ Coffle: |
             uhs&task == Rs&task and return;
             # start by checking out thy name
             Rs&cell = 1;
-            Rc&dupl = 6;
+            Rc&dupl = 3;
         },'if:h'],
         
         # the living bit
@@ -947,7 +956,7 @@ Coffle: |
             prs&z.filter(t => ts&ball).length != 1 and return
             delete Rs&rowish;
         },'ift'],
-        #c vey
+        # vey
         # gather names in either direction
         ['vey','31',&acgtRs{
             n t  $s:R.t %hs:789
@@ -1350,6 +1359,7 @@ Coffle: |
         #c ball, continuing thing around thing
         ['ball','3',&acgtRs{
             Rs&rowish = 1;
+            Rc&dupl = 0;
             s&br = '4';
             s&bo = '0.1em dotted #543';
             
@@ -1360,6 +1370,13 @@ Coffle: |
             n t 11 $s:s.t %deco,fs:8,fix:t,mr:0.3
             
             Rs&is == 'live' and s&bo = '4px dotted #782';
+            
+            
+            if (Rc&nofurther) {
+                n nofurther 17 s:♲ %fs:8,mr:0.3
+                return
+            }
+            
             
             # aim to keep a
             each kv s.c {
@@ -1394,7 +1411,6 @@ Coffle: |
                 # implant C -> C.t
                 n typeball  R %etype:ball
             }
-            
             
             if (ss&z) {
                 each in ss&z {
@@ -1687,15 +1703,17 @@ Coffle: |
             # see the per-ref R table
             $RN = Rc&refR[ri];
             Rs&refR = RN;
+            RN.push(R);
+            # in this pool
+            $RhN = RN.filter(r => rc&N == hc&N);
             $dupl = Rc&dupl || 0;
-            each in RN {
-                if (nc&N == Rc&N && !dupl--) {
-                    limit('dup');
-                    Rc&nofurther = 1;
-                    break;
-                }
+            if (RhN.length > dupl) {
+                limit('dup');
+                Rc&nofurther = 1;
             }
-            # a different 
+            else {
+                
+            }
             !Rc&nofurther and limit('dub')
             # < to know circular links, converge
         }
