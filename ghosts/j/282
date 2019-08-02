@@ -3,7 +3,7 @@ Coffle: |
     $me = 4c&me;
     !me and throw "no me";
     $io = me.io;
-
+    io.doz = 1
 
         # Relosophy of C and R
         =pod
@@ -556,15 +556,15 @@ Coffle: |
         return f
     };
     # path finder
-    me.cby = &sfzd{
+    me.cby = &sfzdo{
         !s and return !f && d
         z == 'up' and z = null
         z ||= &s{ return s.y.up };
         d ||= [];
         d.unshift(s) > 50 and debugger
-        $r = f && f(s);
+        $r = f && f(s,o);
         r and return d
-        return me.cby(z(s),f,z,d)
+        return me.cby(z(s),f,z,d,s)
     };
     me.cbu = &sfz{
         $cb = f;
@@ -797,7 +797,7 @@ Coffle: |
                 }
 
                 $cb = tc&s;
-                !hak(R.c,'s') and debugger;
+                #!hak(R.c,'s') and debugger;
                 
                 cb(A,Rs&C||C,G,T,R,Rc&s);
                 
@@ -972,6 +972,7 @@ Coffle: |
             n t  $s:R.t %hs:789
             $any = s.split('>').map(t => me&bit,R,t,'h' );
             Rs&from = any[0];
+            Rs&to = any[1];
             # %pull thing per thing in any thing (+ pointers)
             #   From: %pull/%self
             #   To: %into/%other
@@ -1049,11 +1050,11 @@ Coffle: |
                 # return
             }
             $poin = &ht{
-                return hs&z && hs&z
+                return h && hs&z && hs&z
                 .filter(n => ns&ball && n.t == t)[0];
             };
-            $pointer = &th{
-                $t = R.sc[t] || Rs&cot != null ? Rs&cot : R.t;
+            $pointer = &kh{
+                $t = R.sc[k] || (Rs&cot != null ? Rs&cot : R.t);
                 typeof t != 'object' and t = [t]
                 each in t {
                     h = h && poin(h,n);
@@ -1066,11 +1067,13 @@ Coffle: |
                 !o and return
                 return ys&twocom(o);
             };
+            !Rs&pull and return
+            !Rs&into and return
+            
             # havers of %balls
             Rs&self ||= pointer('picking',Rs&pull);
             Rs&other ||= pointer('putting',Rs&into);
             Rs&self ||= coutwo(Rs&pull,Rs&other);
-            !Rs&other && R.t == 'Jazz' and debugger;
             Rs&other ||= coutwo(Rs&into,Rs&self);
             
             n self  $self:Rs&self,haveth:Rs&pull,R,other:Rs&other
@@ -1079,6 +1082,9 @@ Coffle: |
         },'ift,D'],
         
         ['haveth','3',&acgtRs{
+            if (!Rs&haveth) {
+                n nohaveth  s:!
+            }
             delete Rs&elvis;
             # draw an arrow between two R
             $we = me.cby(R,&R{ return Rs&cell });
@@ -1167,6 +1173,7 @@ Coffle: |
                 else {
                     # things that apply now
                     !ts&ball and throw "notball"
+                    ts&ball == '6' and ~toolatetoother: t.t, R.t
                     ts&othering ||= [];
                     ts&othering.push(R);
                     n writ  s:⥿ %fs:22,ab
@@ -1491,10 +1498,62 @@ Coffle: |
             #n redo  s:◀
             n play  s:▶ %fs:22
         },'ift,D'],
-        ['ball','6',&acgtRs{
+        ['ball','4',&acgtRs{
             me&rollbs,R,'play';
-            Rs&play &&
+            !Rs&play and return
             n playing  s:▶
+            n $R.t  $s:R,R:1 %playing
+        },'ift,D'],
+        ['playing','3',&acgtRs{
+            $W = me.cby(Ry&up,&r{ return !rs&ball })[1];
+            i Wc&s/Co/sc&s
+        },'ift,D'],
+        ['unplaying','3',&acgtRs{
+            !ss&ball and throw "playing:s!%ball"
+            # here in a non-%ball, make an other
+            #  which would be %vey's job
+            # Teing consists of housing the thing
+            #  such that Co gets instructed with it
+            # need to have %balls of the other to other it
+            $rC = G&Cye,['Co',''];
+            $r = me&Ret,R,{s:rC,ball:1,z:[s],noDisplay:1};
+            zN(r);
+            # find upwards/prevward %vey
+            # < io walking expressions: o $s/^^%vey<*
+            $v;
+            me.cby(s,&ro{
+                !o || !rs&z and return
+                # other r children above o
+                $l = rs&z.slice(0,rs&z.indexOf(o)).reverse();
+                each in l {
+                    ns&vey and v = n; return 1
+                }
+            });
+            !v and throw "nov"
+            
+            
+            # name us after %ball
+            $pc = {t:R.t};
+            # pull from the origin %ball that %plays
+            pc.pull = Ry&up;
+            # but give the self = other %ball already
+            pc.self = r;
+            # put it where %vey goes
+            pc.into = vs&to;
+            # basically
+            $t = me&Ret,v,ex({},pc);
+            zN(t);
+            return;
+            # and in reverse
+            pc.pull = ts&into;
+            pc.into = ts&pull;
+            # %pull usually not without self
+            delete pc.self;
+            pc.other = ts&self;
+            pc.t += '-T';
+            $f = me&Ret,v,ex({},pc);
+            zN(f);
+            
         },'ift,D'],
         
         #c ball-othering
@@ -1582,12 +1641,18 @@ Coffle: |
                 each in z {
                     !ns&ball and continue
                     # look for a child under here already
-                    $t = Rs&z && Rs&z.filter(t => ts&ball && t.t == n.t)[0];
+                    $t = Rs&z && Rs&z.filter(t => ts&ball && t.t == n.t)[0]; z
                     # or make it up
                     if (!t) {
                         # < io should require unique arks
-                        i Rc&s:up/#$nc&s
-                        $D = ays&s[0];
+                        # io doing weird:
+                        #i Rc&s:up/#nc&s
+                        ~Making: R.t, n.t, ki(nc&s)
+                        $D = G&Cye,[nc&s.t,''];
+                        $s = Rc&s;
+                        ss&z && ss&z.filter(z => z.t == D.t).length and throw "inc"
+                        ss&z ||= [];
+                        ss&z.push(D);
                         t = me&Ret,R,{t:D.t,s:D,ball:1};
                     }
                     # pass the same %pull and a descending %self...%ball
