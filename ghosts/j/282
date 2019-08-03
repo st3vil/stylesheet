@@ -788,6 +788,7 @@ Coffle: |
             Rs&ci ||= 0;
             $t = c[Rs&ci];
             !t and continue
+            R.c.not and continue
             #onlyt && t != onlyt and continue
             
             hy&ov && hy&ov < ty&cv and debugger;
@@ -1469,13 +1470,73 @@ Coffle: |
                 n typeball  R %etype:ball
             }
             
-            if (ss&z) {
-                each in ss&z {
-                    n $n.t  $s:n,R %ball
+            # add s to Rc&s, updating %balls
+            $input = &Rs{
+                $S = Rc&s;
+                # look for it
+                o $S/#$s
+                ya && typeof s != 'object' and s = ya
+                if (ya && ya != s) {
+                    debugger;
+                    i $S/-$ya
+                    ya = null
                 }
-            }
+                if (!ya) {
+                    if (typeof s != 'object') {
+                        i $S/#$s
+                        s = ya
+                    }
+                    else {
+                        i $S/$s
+                    }
+                }
+                Rsync(R,1);
+                each in Rs&z {
+                    nc&s == s and return n
+                }
+                debugger;
+                # should have found that input
+            };
+            # keep a %ball for each Rc&ss&z
+            $Rsync = &RV{
+                $S = Rc&s;
+                # o $S/*
+                $ba = (Ss&z||[]).slice();
+                $rm = [];
+                each in Rs&z {
+                    !ns&ball and continue
+                    $bi = ba.indexOf(nc&s);
+                    bi >= 0 and ba.splice(bi,1)
+                    else { rm.push(n) }
+                }
+                each in rm {
+                    Rs&z.splice(Rs&z.indexOf(n),1);
+                    n.c.not = 1;
+                    V &&
+                    ~Removed: R.t, n.t
+                }
+                each in ba {
+                    V &&
+                    ~Included: R.t, n.t
+                    $t = me&Ret,R,{t:n.t,s:n,ball:1};
+                    zN(t);
+                }
+            };
+            # send trees to attach here-wards
+            Rs&input = &p{
+                $l = [];
+                $r = R;
+                each is p {
+                    r = input(r,s);
+                    l.push(r);
+                }
+                # let l unite
+                return l
+            };
+            #R.t == 'Wormhole' and debugger;
+            ss&z and Rsync(R);
         },'ift,D'],
-        # an open ball
+        #c ballope
         # < sprout usual inquisitivity/saveness?
         ['etype','3',&acgtRs{
             n saying   %e,fs:8
@@ -1497,8 +1558,8 @@ Coffle: |
             }
         },'ift,D'],
         
-        # %fix c/sc patchables in R-state
-        # t is coming too
+        # R%fix per c/sc style
+        # < t/cv natively
         ['fix','3',&acgtRs{
             n k 1 $s:R.t %fs:11,hs:288
             
@@ -1526,6 +1587,12 @@ Coffle: |
             #n stop  s:■
             #n redo  s:◀
             n play  s:▶ %fs:22
+            return
+            $p = Ry&up;
+            $W = ps&z[ps&z.indexOf(R)+1];
+            W.t != 'Wormhole' and return
+            $s = G&ind,Wc&s,'ki';
+            n ind  $s:s %dis
         },'ift,D'],
         ['ball','29',&acgtRs{
             1s&Te and me&Tie,R,'play'
@@ -1538,8 +1605,15 @@ Coffle: |
             Rs&Wball = W;
             # Teing consists of housing the thing
             #  such that Co gets instructed with it
-            i Wc&s/Co/$s
+            if (Ws&input) {
+                $b = Ws&input(['Co',s])[1];
+                # pushes empty, can be blown away if !diff push
+                bs&othertricks = 1;
                 
+            }
+            else {
+                #i Wc&s/Co/$s
+            }
             # usually %balls would have to clone out,
             #   change/encode into another %balls,
             #   that could then be othered..
@@ -1559,6 +1633,10 @@ Coffle: |
             #   pushed: %pull (toplevel, otherer id)
             #   pushed_ball: %ball
             me&rollbs,R,'pushed,pushed_ball';
+            
+            if (Rs&othertricks) {
+                n oth  s:othertricks
+            }
             
             # dual array Stever
             $ac = &skvKV{
@@ -1634,6 +1712,8 @@ Coffle: |
                 $z = self_was_here ? Ss&z : [S];
                 each in z {
                     !ns&ball and continue
+                    # n thing that should be here
+                    #   Rs&z +[ other%ball -> clone(nc&s)
                     # look for a child under here already
                     $t = Rs&z && Rs&z.filter(t => ts&ball && t.t == n.t)[0]; z
                     # or make it up
