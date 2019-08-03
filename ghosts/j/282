@@ -273,6 +273,28 @@ Coffle: |
         futu > 5 and ~futu: R.t, futu
         return R
     };
+    me.pivot = &ft{
+        !f and throw "no from"
+        !t and throw "no to"
+        $futurup = &r{
+            r = ry&up;
+            r && ry&future and r = latestR(r)
+            return r;
+        };
+        $from = me.cby(f,0,futurup);
+        $to = me.cby(t,0,futurup);
+        from[0] != to[0] and debugger
+        $la;
+        $i = 50;
+        while (from[0] == to[0]) {
+            i-- < 0 and debugger;
+            la = from.shift(); to.shift();
+        }
+        $a = from.slice();
+        la and a.push(la);
+        a.push(...to);
+        return {f:from,v:la,to:to,a:a};
+    };
     me.solveR = &acgtN{
         N = N.slice().reverse();
         $M = [];
@@ -621,22 +643,26 @@ Coffle: |
         $l = me.cby(s,cb,z||'up');
         return l && l[0]
     };
-    me.pivot = &ft{
-        !f and throw "no from"
-        !t and throw "no to"
-        $from = me.cby(f);
-        $to = me.cby(t);
-        from[0] != to[0] and debugger
-        $la;
-        $i = 50;
-        while (from[0] == to[0]) {
-            i-- < 0 and debugger;
-            la = from.shift(); to.shift();
+    # dual array Stever
+    window.ac = &skvKV{
+        K and K = k+'_'+K;
+        $l = s.sc[k] ||= [];
+        $li = l.indexOf(v);
+        if (li >= 0) {
+            if (K) {
+                $L = s.sc[K] ||= [];
+                $was = L[li];
+                V and L[li] = V
+                return was
+            }
         }
-        $a = from.slice();
-        a.push(la);
-        a.push(...to);
-        return {f:from,v:la,to:to,a:a};
+        else {
+            l.push(v);
+            if (K && V) {
+                $L = s.sc[K] ||= [];
+                L.push(V);
+            }
+        }
     };
     #c Ring R-ing
     # get R, s and R's middles to stream work
@@ -903,19 +929,27 @@ Coffle: |
         me&Gomp;
         !1s&Te and return
         o 1s&Te/*
-        each is ays&s {
+        $A = G&Aye,'Community';
+        # render too late for this J to include it every time
+        G&yl:22,&{ me&doN,ays&s };
+    };
+    # do only undone
+    me.doN = &acgtN{
+        each is N {
             sy&Co and continue
             $q = {q:'W'};
             try {
+                q.part = 'Jin';
                 C = me&J,s.t,q;
+                C ||= q.C;
                 q.part = 'Jreturned';
-                C != q.C and throw "retnotqC"
             }
             catch (er) {
-                $msg = ki(s,2)+"   !"+q.part+"! "+er;
+                $msg = ki(C,2)+"   !"+q.part+"! "+er;
                 ~JCo: msg
                 ss&err = msg
             }
+            ac(s,'z',C);
             sy&Co = C;
         }
     };
@@ -923,7 +957,7 @@ Coffle: |
     me.Ja.happenings = &acgt{
         me&Gomp;
         
-        n Plethoria  {s:<<''} %of:s
+        n Plethoria  $s:<<'' %of:s
             # glampiture
             n now  s:now %fs:54
         
@@ -1043,16 +1077,19 @@ Coffle: |
             s&bo = '3px dotted green';
             s&br = 0.3;
             s&dis = 2;
+            (!s || R.t != s.t) &&
+                n t 1 $s:Rs&cot||R.t %fs:13,hs:288
+            !s and return
+            # once turned up, may have an in-t and an out-t
+            $t = s &&
+            n t 11 $s:s.t %deco,fs:8,mr:0.3
+            
             # < may take a while to find it remotely
             # < nameclue wants the whole %pull-%ball-C structure
             #   which might have important kinks
             #   concat modulat 1-2?
             # wants to Rc&refs s now?
             # and the usual two-step confusible C-C nametag
-            (!s || R.t != s.t) &&
-                n t 1 $s:Rs&cot||R.t %fs:13,hs:288
-            $t = s &&
-            n t 11 $s:s.t %deco,fs:8,mr:0.3
             # < overall, has it pushed? 
             # < state change here/there click to show in %ball
             #     that %ball's %pushed_ball will be historic,
@@ -1109,6 +1146,10 @@ Coffle: |
             n self  $self:Rs&self,haveth:Rs&pull,R,other:Rs&other
             
             n other  $self:Rs&other,haveth:Rs&into,R,other:Rs&self
+            
+            # let the %ball find its %pulls
+            Rs&self and ac(Rs&self,'downstream',R)
+            Rs&other and ac(Rs&other,'upstream',R)
         },'ift,D'],
         
         ['haveth','3',&acgtRs{
@@ -1190,8 +1231,9 @@ Coffle: |
             }
             
             $bootable = !Rc&b && Rs&other && !Rs&other.sc.z;
-            if (bootable || Rs&boost > 1) {
-                !bootable and Rs&Te.sc.boost = 1;
+            bootable and Rs&shove ||= 'bootable'
+            if (Rs&shove || Rs&boost > 1) {
+                !Rs&shove and Rs&Te.sc.boost = 1;
                  
                 if (ts&twocom) {
                     # jam them in now and resync Rs all over?
@@ -1434,8 +1476,8 @@ Coffle: |
                         $pr = Ry&up;
                         !prs&ball and "up!ball"
                         $ups = prc&s;
-                        #i $ups/-$s
-                        upss&z = upss&z.filter(n => n != s);
+                        i $ups/-$s
+                        #upss&z = upss&z.filter(n => n != s);
                     }
                     n deleted  s:deleted %fs:6,hs:594
                     delete Rs&Te.sc.boost;
@@ -1605,24 +1647,24 @@ Coffle: |
             Rs&Wball = W;
             # Teing consists of housing the thing
             #  such that Co gets instructed with it
-            if (Ws&input) {
-                $b = Ws&input(['Co',s])[1];
-                # pushes empty, can be blown away if !diff push
-                bs&othertricks = 1;
-                
-            }
-            else {
-                #i Wc&s/Co/$s
-            }
+            $l = Ws&input(['Co',s]);
+            Rs&pullable = l[0];
+            $b = Rs&instructoball = l[1];
+            # pushes empty, gets replaced easily
+            bs&othertricks = 1;
             # usually %balls would have to clone out,
             #   change/encode into another %balls,
             #   that could then be othered..
             # wrapping layers of consciousness on
         },'ift,D'],
-        ['ball','41',&acgtRs{
+        ['ball','31',&acgtRs{
             !Rs&play and return
-            $RN = Rc&refR[Rc&refs.indexOf(s)];
-            n efe  $s:RN,R %sun
+            $b = Rc&b;
+            !b || bs&play and return
+            $Co = Rs&pullable; # Co%ball
+            $dow = Co && Cos&downstream;
+            !dow and return
+            dow.map(p => ps&shove = 1);
         },'ift,D'],
         #c ball-othering
         ['ball','52',&acgtRs{
@@ -1638,27 +1680,6 @@ Coffle: |
                 n oth  s:othertricks
             }
             
-            # dual array Stever
-            $ac = &skvKV{
-                K and K = k+'_'+K;
-                $l = s.sc[k] ||= [];
-                $li = l.indexOf(v);
-                if (li >= 0) {
-                    if (K) {
-                        $L = s.sc[K] ||= [];
-                        $was = L[li];
-                        V and L[li] = V
-                        return was
-                    }
-                }
-                else {
-                    l.push(v);
-                    if (K && V) {
-                        $L = s.sc[K] ||= [];
-                        L.push(V);
-                    }
-                }
-            };
             
             # introgression begins at the %pull%into level
             each ir Rs&othering {
@@ -1700,7 +1721,8 @@ Coffle: |
                 S.t != s.t and s.t = S.t
                 each in Ss&z {
                     !ns&fix and continue
-                    # < clone function would live on ball
+                    Ss&othertricks && ns&fix == 'sc' and continue
+                    # < clone-out function would live on n%ball
                     s[ns&fix][n.t] = nc&s;
                 }
                 
@@ -1712,18 +1734,16 @@ Coffle: |
                 $z = self_was_here ? Ss&z : [S];
                 each in z {
                     !ns&ball and continue
+                    # some Co/* reset C chucked to n
+                    #  many ways to try more clearly
+                    if (ns&othertricks) {
+                        i Rc&s/-#nc&s
+                    }
                     # n thing that should be here
                     #   Rs&z +[ other%ball -> clone(nc&s)
-                    # look for a child under here already
-                    $t = Rs&z && Rs&z.filter(t => ts&ball && t.t == n.t)[0]; z
-                    # or make it up
-                    if (!t) {
-                        # < io should require unique arks
-                        i Rc&s:up/#nc&s
-                        $D = ays&s[0];
-                        t = me&Ret,R,{t:D.t,s:D,ball:1};
-                    }
-                    # pass the same %pull and a descending %self...%ball
+                    # clone() = make spacer to keep %pushing to
+                    $t = Rs&input([n.t])[0];
+                    # t%ball now in Rs&z
                     ac(t,'pushing',r,'ball',n);
                 }
             }
