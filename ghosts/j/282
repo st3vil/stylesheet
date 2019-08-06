@@ -676,7 +676,40 @@ Coffle: |
         me&Ring,r;
         return r
     };
+    # empties grounda&z into M or more R
+    me.endome = &acgtR{
+        $g = A.ground;
+        !g and return
+        !gs&nonz || !gs&z and return
+        $N = gs&z;
+        !N.length and return
+        gs&z = [];
+        $M = null;
+        each in N {
+            if (nc&R) {
+                # spawn R?
+                $parent = R;
+                $s = nc&R;
+                if (s && Rc&N.indexOf(s) >= 0) {
+                    parent = s;
+                    s = null;
+                }
+                delete nc&R;
+                nc&s and s = nc&s; delete nc&s
+                ex(n.sc,n.c);
+                $r = me&Ret,parent,ex({t:n.t,s:s},n.sc);
+                parent != R and zN(r)
+            }
+            else {
+                # otherwise this mindthing grows M
+                M ||= me&Mw,R,t.t;
+                M.push(n)
+            }
+        }
+    };
     
+    # outdated syntacticon toward Reis
+    # not looking like Instructions
     # simpler Ring, until display enough to Ring it up
     # t from R, looking at s
     $Ron = &Rtsonc{
@@ -841,34 +874,14 @@ Coffle: |
                 if (ts&D) {
                     # doming for n
                     $g = A.ground;
-                    $z = gs&z;
+                    gs&nonz = gs&z;
                     gs&z = [];
                     packdown.push(&{
-                        $w = gs&z;
-                        gs&z = z;
-                        !w || !w.length and return
-                        $M = null;
-                        each in w {
-                            if (nc&R) {
-                                # spawn R?
-                                $parent = R;
-                                $s = nc&R;
-                                if (s && Rc&N.indexOf(s) >= 0) {
-                                    parent = s;
-                                    s = null;
-                                }
-                                delete nc&R;
-                                nc&s and s = nc&s; delete nc&s
-                                ex(n.sc,n.c);
-                                $r = me&Ret,parent,ex({t:n.t,s:s},n.sc);
-                                parent != R and zN(r)
-                            }
-                            else {
-                                # otherwise this mindthing grows M
-                                M ||= me&Mw,R,t.t;
-                                M.push(n)
-                            }
-                        }
+                        # empties grounda&z into M or more R
+                        me&endome,R;
+                        $g = A.ground;
+                        gs&z = gs&nonz;
+                        delete gs&nonz;
                     });
                 }
 
@@ -1584,6 +1597,7 @@ Coffle: |
                 n typeball  R %etype:ball
             }
             
+            me&endome,R;
             #R.t == 'Wormhole' and debugger;
             ss&z and Rsync(R);
         },'ift,D'],
