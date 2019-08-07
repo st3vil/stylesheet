@@ -1728,6 +1728,23 @@ Coffle: |
                 return
             }
             
+            # see ball-othering
+            me&rollbs,R,'pushed,pushed_ball';
+            if (sc&J || ss&H) {
+                # should become or is a separate object
+                #  H being dig(toLines(object))
+                # and twocom'd:
+                if (Rs&pushed) {
+                    $p = Rs&pushed && Rs&pushed.filter(p=>ps&upward)[0];
+                    $l = p && ps&pull;
+                    n pup  $s:l,R %sun
+                }
+                Rs&boost > 0 and 'open'
+                else {
+                    Rs&nofurtherDisplay = 1
+                }
+                n J  s:J %fs:14,hs:966
+            }
             
             # aim to keep a
             each kv s.c {
@@ -1739,7 +1756,7 @@ Coffle: |
             }
             
             
-            if (Rs&boost) {
+            if (Rs&boost > 0) {
                 # edit C.t
                 ts&e = 1;
                 me&Tie,R,'sayeth',1;
@@ -1750,7 +1767,6 @@ Coffle: |
                 # implant C -> C.t
                 n typeball  R %etype:ball
             }
-            
             me&endome,R;
             #R.t == 'Wormhole' and debugger;
             ss&z and me&Rsync,R;
@@ -1862,7 +1878,6 @@ Coffle: |
             #   pushing: %pull when incoming
             #   pushed: %pull (toplevel, otherer id)
             #   pushed_ball: %ball
-            me&rollbs,R,'pushed,pushed_ball';
             
             if (Rs&othertricks) {
                 n oth  s:othertricks
