@@ -810,6 +810,14 @@ Coffle: |
     # input s to Rc&s, updating %balls
     # an io that makes changes to both A & C at once
     me.input = &acgtRs{
+        if (!Rs&ball) {
+            # we are pathing to another group of %balls
+            # find R.t instead of Rc&s.t:
+            typeof s != 'string' and throw "input path out of %ball !string"
+            # there might be multiple of these, of %hypball
+            #   for each %push to hang up its state/ambition on
+            return Rs&z.filter(n => ns&ball && n.t == s)[0]
+        }
         $S = Rc&s;
         # look for it
         o $S/#$s
@@ -835,16 +843,70 @@ Coffle: |
         debugger;
         # should have found that input
     };
-    # %ball gets a limb
-    Rs&input = &Rp{
-        $l = [];
+    # %ball input limb, extra pathy
+    # < to hang push intentions on %ball
+    #   or on speculative balls for slow ...
+    me.pushpath = &acgtRp{
         $r = R;
         each is p {
-            r = me&input,r,s;
-            l.push(r);
+            $nr = s == '/' ?
+                me.cby(r,&r{ return rs&gee })[0]
+                :
+                me&input,r,s
+            !nr and throw "No "+s+" after "+r.t+" along "+ki(p)
+            r = nr;
         }
-        # let l unite
+        return r;
+    };
+    # %ball establishes an outgoing projection
+    #  in a %push on this %ball, rolling through time,
+    #   disconnecting once the cause (me&push call) stops
+    #  get there/here, make insertion insert it, return %ball holding it
+    # 
+    me.push = &acgtRpqtc{
+        # the named %push + its mode (%auto if t,!c args)
+        c ||= {auto:1};
+        typeof c == 'string' and c = G&peel,c
+        t and ex(c,typeof t == 'string' ? {t:t} : t)
+        c.push ||= 1;
+        !hak(c,'t') and c.t = ki(p,2)+' = '+ki(q,2)
+        $l = me&Ret,R,c;
+            zN(l);
+        
+        # and its items, from here
+        # path to receiver %ball (inflated)
+        $t = ls&there = me&pushpath,R,p;
+        # the thing itself, where it is (also inflated)
+        $h = ls&here = me&pushpath,R,q;
+        !t || !h and throw "falliball"
+        
+        # < pipelining of here as it goes there via ...
+        #   so it can wander through a network started here
+        
+        # no-push link
+        ts&pushish ||= [];
+        
+        # and if ready, begin othering:
+        ls&auto and return me&pushout,l
+        
+        # %ball pushed to %there, practically
+        # < %othering to %there,
+        #   saving %balls of here/there for Cdar diff
+        #   the %there%balls noticing our %push vanish
         return l
+    };
+    me.pushout = &acgtl{
+        $t = ls&there; # destination %ball
+        $h = ls&here; # source %ball
+        if ('thing itself') {
+            $thing = hc&s;
+            ls&thing = me&input,ls&there,thing;
+            return ls&thing
+        }
+        else {
+            # %there %pushering += $l
+            #  to feed it %here%balls
+        }
     };
     # keep a %ball for each Rc&ss&z
     me.Rsync = &acgtRV{
@@ -1217,8 +1279,51 @@ Coffle: |
             Rs&ball = 1;
             delete Rs&ballse;
         },'ift,D'],
+        # knows its pushed
+        ['ball','2',&acgtRs{
+            # see ball-othering
+            me&rollbs,R,'pushed,pushed_ball';
+        },'ift,D'],
+        ['lookup','2',&acgtRs{
+            $g = Ry&up.sc.z.filter(g=>g.t == 'G')[0];
+            !gs&ball and return T.wide = 1;
+            # W holds many, to sync to G
+            # with %lookup: highest/starting point
+            $t = Rs&lookup;
+            if (t != '1') {
+                # < be othering ourselves, lending content
+                #   to get instant %ball for things
+                #   and so disconnections keep objects
+                #     for packdown/gc
+                #   specifying types of ephemerality:
+                #     runspace kept tidier than piles
+                $n = me&push,R,[],[t],'purpose';
+                # ensure it's first in z
+                $zi = ss&z.indexOf(nc&s);
+                zi > 0 and ss&z.unshift(ss&z.splice(zi,1)[0])
+            }
+            
+            # ready all s/* as R/*%balls
+            me&Rsync,R;
+            
+            each in Rs&z {
+                !ns&ball and continue
+                # posit they %push(ish) to G
+                $l = me&push,n,['/','G'],[],'lookup',{};
+            }
+        },'ift,D'],
         ['kvstore','2',&acgtRs{
             # t source
+            # %pushin helps project lives from s
+            #   as decode
+            # looks at %balls pushing to it,
+            #  look for them here
+            #   pushing there 
+            #  accept their content if full enough
+            
+            me&Rsync,R;
+            # 
+            # rs&pushed t=lookup shall push
             Rs&twocom = &ne{
                 # as G&t, %ball seeking itself over here
                 $k = ns&H || n.t;
@@ -1251,30 +1356,6 @@ Coffle: |
                 
                 return S
             };
-        },'ift,D'],
-        ['lookup','2',&acgtRs{
-            # W holds many, to sync to G
-            # with %lookup: highest/starting point
-            if (Rs&lookup) {
-                # < be othering ourselves, lending content
-                #   to get instant %ball for things
-                #   and so disconnections keep objects
-                #     for packdown/gc
-                #   specifying types of ephemerality:
-                #     runspace kept tidier than piles
-                # ensure it's first in z
-                $t = Rs&lookup;
-                i $s/#$t
-                $zi = ss&z.indexOf(ay);
-                zi > 0 and ss&z.unshift(ss&z.splice(zi,1)[0])
-            }
-            # want to input $R/*%ball to G, in such a way that:
-            #   
-            $g = Ry&up;
-            g = gs&z.filter(n=>n.t == 'G')[0];
-            !g and throw "nog"
-            gs&twocom(
-            # Rs&twocom
         },'ift,D'],
         
         #c the living bit
@@ -1814,8 +1895,6 @@ Coffle: |
                 return
             }
             
-            # see ball-othering
-            me&rollbs,R,'pushed,pushed_ball';
             if (sc&J || ss&H) {
                 # should become or is a separate object
                 #  H being dig(toLines(object))
