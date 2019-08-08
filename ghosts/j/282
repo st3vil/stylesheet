@@ -858,7 +858,7 @@ Coffle: |
         }
         return r;
     };
-    # %ball establishes an outgoing projection
+    #c push - %ball's establishment of an outgoing projection
     #  in a %push on this %ball, rolling through time,
     #   disconnecting once the cause (me&push call) stops
     #  get there/here, make insertion insert it, return %ball holding it
@@ -877,36 +877,30 @@ Coffle: |
         # path to receiver %ball (inflated)
         $t = ls&there = me&pushpath,R,p;
         # the thing itself, where it is (also inflated)
-        $h = ls&here = me&pushpath,R,q;
+        $h = ls&here = isC(q) ? q : me&pushpath,R,q;
         !t || !h and throw "falliball"
         
         # < pipelining of here as it goes there via ...
         #   so it can wander through a network started here
         
-        # no-push link
-        ts&pushish ||= [];
-        
-        # and if ready, begin othering:
-        ls&auto and return me&pushout,l
-        
-        # %ball pushed to %there, practically
-        # < %othering to %there,
-        #   saving %balls of here/there for Cdar diff
-        #   the %there%balls noticing our %push vanish
-        return l
-    };
-    me.pushout = &acgtl{
-        $t = ls&there; # destination %ball
-        $h = ls&here; # source %ball
-        if ('thing itself') {
+        # begin othering:
+        if (ls&hard) {
+            ac(t,'pushering',l)
+        }
+        elsif (ls&auto) {
             $thing = hc&s;
             ls&thing = me&input,ls&there,thing;
             return ls&thing
         }
         else {
-            # %there %pushering += $l
-            #  to feed it %here%balls
+            # no-push link
+            !ls&auto and ac(t,'pushish',l)
         }
+        # %ball pushed to %there, practically
+        # < %othering to %there,
+        #   saving %balls of here/there for Cdar diff
+        #   the %there%balls noticing our %push vanish
+        return l
     };
     # keep a %ball for each Rc&ss&z
     me.Rsync = &acgtRV{
@@ -1312,6 +1306,7 @@ Coffle: |
                 $l = me&push,n,['/','G'],[],'lookup',{};
             }
         },'ift,D'],
+        #c kv
         ['kvstore','2',&acgtRs{
             # t source
             # %pushin helps project lives from s
@@ -1320,8 +1315,41 @@ Coffle: |
             #  look for them here
             #   pushing there 
             #  accept their content if full enough
+            !Rs&pushish and return T.wide = 1;
+            me&rollbs,R,'rememb';
             
-            me&Rsync,R;
+            each il Rs&pushish {
+                $t = ls&here;
+                # a remote %push, for some id
+                $k = ts&H || t.t;
+                $s = localStorage[k];
+                if (!s) {
+                    ls&new = 1;
+                    continue
+                }
+                # arrange decoder
+                $re = Rs&rememb ||= {};
+                $kd = k+dig(s);
+                $bc = {task:'ravel',Lines:1,intoa:'ball'};
+                bc.remova = &{ delete re[kd] };
+                # keep the %balls with the decoding Lines stuff
+                $S = re[kd] ||= me&Reis,R,k,s,bc;
+                # 
+                me&push,R,[],S,'decode','hard';
+                
+                $bc = {task:'ravel',Lines:1,intoa:'ball'};
+                me&Reis,R,k,s,bc;
+                $n = me&input,R,k;
+                # if new decode, other into here
+                $s = nc&s;
+                
+                n haveth  $s:t.t %fs:14
+                #$n = me&input,R,t.t;
+            }
+            each il Rs&pushering {
+                $t = ls&here;
+                # must have a Lines done
+            }
             # 
             # rs&pushed t=lookup shall push
             Rs&twocom = &ne{
