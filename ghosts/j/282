@@ -940,7 +940,7 @@ Coffle: |
             s&br = 1;
             s&fs = 8;
             Rs&arrow =
-            n $R.t  s:⇒ %fs:14
+            n $R.t 13 s:⇒ %fs:14
             
             $M = Rs&moves;
             !M and return
@@ -962,24 +962,23 @@ Coffle: |
                     #  eg to %kvstore %here%string
                     # not %their directly
                     ~pushering: t.t, R.t
-                    $i = tps&pushering.push(R)-1;
-                    # f (last %here) passed, will have 7ing
-                    $pb = tps&pushering_ball ||= [];
-                    pb[i] = f;
-                    ns&rebase and throw "%pushering %rebase"
+                    ac(tp,'pushering',R,'ball',f)
                 }
                 else {
                     # ensures (2-arg) it be aRound
                     t = me&yfuture,t,R;
                     ~othering: t.t, R.t
-                    ns&rebase and Rs&arrow.c.s = '⟵'
                     ts&ball == '6' and throw "too late to %ball"
-                    ac(t,'othering',R);
+                    ac(t,'othering',R,'ball',f)
                     # usu othering %pull%here,
                     # < the %moves making subcommits:
                     #   their own reselections of %ball
-                    f != Rs&here and ac(t,'othering',R,'ball',f)
                 }
+                
+                ns&sym = f != Rs&here ?
+                    (n.t == 'checkout' ? '↽' :
+                        ns&pending ? '◅' : '◄')
+                    : ns&pending ? '▻' : '►';
                 ns&done = 1;
                 n mov 14 $s:n.t
                 n ed 15 s:@ %deco
@@ -1073,7 +1072,8 @@ Coffle: |
             each in s {
                 $sym = n.t.substr(0,1);
                 s.length == 1 and sym = n.t
-                n $n.t  $s:sym %fs:7,hs:594
+                ns&sym and sym = ns&sym
+                n $n.t  $s:sym %fs:12,hs:594
 
                 # condense history
                 if (s.length > 5 && i > 0) {
