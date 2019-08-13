@@ -923,8 +923,8 @@ Coffle: |
             return ls&their
         }
         else {
-            # no-push link
-            !ls&auto and ac(t,'pushish',l)
+            # no-push link (elviser knows who's nearly elvised them)
+            ac(t,'pushish',l)
         }
         # %ball pushed to %there, practically
         # < %othering to %there,
@@ -941,12 +941,13 @@ Coffle: |
             s&fs = 8;
             Rs&arrow =
             n $R.t 13 s:⇒ %fs:14
-            
+            # certain/lowlevel types of %push
+            Rs&auto || Rs&hard and Rs&push = 9
+        },'ift,D'],
+        # connect 7ing %pushes with what they want to do
+        # early enough for %othering
+        ['push+moves','3',&acgtRs{
             $M = Rs&moves;
-            !M and return
-            
-            # connect 7ing pushes with what they want to do
-            # early enough for %othering
             each in M {
                 ns&done and continue
                 # with items from late last time
@@ -987,11 +988,12 @@ Coffle: |
             }
             
         },'ift,D'],
-        ['ball','55',&acgtRs{
+        ['ball+pushed','55',&acgtRs{
             # since ball 53 yfuture'd %pulled...
             $p = Ry&up;
+            $know = ps&pushed || [];
             each il Rs&pushed {
-                ps&pushed && ps&pushed.indexOf(l) >= 0 and continue
+                know.indexOf(l) >= 0 and continue
                 # < many?
                 ls&their = R;
             }
@@ -1004,8 +1006,6 @@ Coffle: |
             $d = Rs&deliverer;
             Rs&their = d ? ds&delivered : Rs&their;
             
-            $t = Rs&their;
-            $h = Rs&here;
             Rs&act = Rs&does || 'Lines';
             
             !Rs&act &&
@@ -1029,8 +1029,7 @@ Coffle: |
         
         #c push have encoded %balls wormhole through %moves
         #   received by this %push early enough to action
-        ['push','7',&acgtRs{
-            !Rs&act and return
+        ['push+act','7',&acgtRs{
             $M = Rs&moves ||= [];
             # make diff/post acceptings in M
             $t = Rs&their;
@@ -1070,14 +1069,17 @@ Coffle: |
                 # the usual
                 m push $from:h,to:t
             }
-            
+        },'ift,D'],
+        
+        # moves talked about 
+        ['moves','7',&acgtRs{
+            $M = Rs&moves;
             M.length &&
                 n moves $s:M,R %moved
-            
         },'ift,D'],
         # squishy shrinking ooze, preserving interesting events
         # more info at latest
-        ['moved','7',&acgtRs{
+        ['moved','3',&acgtRs{
             $forget = [];
             each in s {
                 $sym = n.t.substr(0,1);
