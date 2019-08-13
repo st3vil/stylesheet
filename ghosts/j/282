@@ -825,6 +825,21 @@ Coffle: |
             }
         }
     };
+    # %ball input limb, extra pathy
+    # < to hang push intentions on %ball
+    #   or on speculative balls for slow ...
+    me.pushpath = &acgtRp{
+        $r = R;
+        each is p {
+            $nr = s == '/' ?
+                me.cby(r,&r{ return rs&gee })[0]
+                :
+                me&input,r,s
+            !nr and throw "No "+s+" after "+r.t+" along "+ki(p)
+            r = nr;
+        }
+        return r;
+    };
     # input s to Rc&s, updating %balls
     # an io that makes changes to both A & C at once
     me.input = &acgtRs{
@@ -861,20 +876,30 @@ Coffle: |
         debugger;
         # should have found that input
     };
-    # %ball input limb, extra pathy
-    # < to hang push intentions on %ball
-    #   or on speculative balls for slow ...
-    me.pushpath = &acgtRp{
-        $r = R;
-        each is p {
-            $nr = s == '/' ?
-                me.cby(r,&r{ return rs&gee })[0]
-                :
-                me&input,r,s
-            !nr and throw "No "+s+" after "+r.t+" along "+ki(p)
-            r = nr;
+    # keep a %ball for each Rc&ss&z
+    me.Rsync = &acgtRV{
+        $S = Rc&s;
+        # o $S/*
+        $ba = (Ss&z||[]).slice();
+        $rm = [];
+        each in Rs&z {
+            !ns&ball and continue
+            $bi = ba.indexOf(nc&s);
+            bi >= 0 and ba.splice(bi,1)
+            else { rm.push(n) }
         }
-        return r;
+        each in rm {
+            Rs&z.splice(Rs&z.indexOf(n),1);
+            n.c.not = 1;
+            V &&
+            ~Removed: R.t, n.t
+        }
+        each in ba {
+            V &&
+            ~Included: R.t, n.t
+            $t = me&Ret,R,{t:n.t,s:n,ball:1};
+            zN(t);
+        }
     };
     #c push - %ball's establishment of an outgoing projection
     # < working via elvising hung near
@@ -934,31 +959,6 @@ Coffle: |
         !rs&ball and throw "!ball"
         return !rs&z || !rs&z
             .filter(n => ns&ball || ns&fix).length
-    };
-    # keep a %ball for each Rc&ss&z
-    me.Rsync = &acgtRV{
-        $S = Rc&s;
-        # o $S/*
-        $ba = (Ss&z||[]).slice();
-        $rm = [];
-        each in Rs&z {
-            !ns&ball and continue
-            $bi = ba.indexOf(nc&s);
-            bi >= 0 and ba.splice(bi,1)
-            else { rm.push(n) }
-        }
-        each in rm {
-            Rs&z.splice(Rs&z.indexOf(n),1);
-            n.c.not = 1;
-            V &&
-            ~Removed: R.t, n.t
-        }
-        each in ba {
-            V &&
-            ~Included: R.t, n.t
-            $t = me&Ret,R,{t:n.t,s:n,ball:1};
-            zN(t);
-        }
     };
     #c Ring R-ing
     # get R, s and R's middles to stream work
