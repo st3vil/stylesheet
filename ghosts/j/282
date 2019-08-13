@@ -998,17 +998,18 @@ Coffle: |
         },'ift,D'],
         # get %balls encoding
         ['push','59',&acgtRs{
+            Rs&push != 1 and return
             # find comparables, make plans to get %balls encoding
             # %deliverer hard pushed %delivered %ball
             $d = Rs&deliverer;
-            $c = Rs&their = d ? ds&delivered : Rs&their;
-            $h = Rs&here;
+            Rs&their = d ? ds&delivered : Rs&their;
             
-            # if someone has Lines, do Lines
-            if (c && hak(c.sc,'Lines')) {
-                Rs&act = 'Lines';
-                hs&Lines = 1;
-            }
+            $t = Rs&their;
+            $h = Rs&here;
+            Rs&act = Rs&does || 'Lines';
+            
+            !Rs&act &&
+                n noact  s:?
             
             !Rs&boost || Rs&boost < 1 and return
             
@@ -1017,6 +1018,15 @@ Coffle: |
             n thing  $s:R.sc,R %sun
             
         },'ift,D'],
+        # Lines of here/their help sleep the act, later
+        # string based representation of everything going into it
+        ['push+act','591',&acgtRs{
+            $soc = [Rs&their, Rs&here];
+            each ic soc {
+                !hak(c.sc,'Lines') and cs&Lines = 1
+            }
+        },'ift,D'],
+        
         #c push have encoded %balls wormhole through %moves
         #   received by this %push early enough to action
         ['push','7',&acgtRs{
@@ -1171,9 +1181,20 @@ Coffle: |
             n = G&Cye,n;
             
             # compile instructions
-            ns&ift == '1' and ns&if = 's'+n.t
-            else
-            ns&ift and ns&if = 's'+ns&ift; ns&ifeq = n.t;
+            if (ns&ift == '1') {
+                $op = n.t.split('+');
+                if (op.length > 1) {
+                    # must have all these sc
+                    ns&ifs = op
+                }
+                else {
+                    ns&if = 's'+n.t
+                }
+            }
+            elsif (ns&ift) {
+                ns&if = 's'+ns&ift;
+                ns&ifeq = n.t;
+            }
             
             me&sortin,z,n;
         }
@@ -1280,7 +1301,12 @@ Coffle: |
             
             # deciding
             $T = {};
-            if (ts&if) {
+            if (ts&ifs) {
+                each ik ts&ifs {
+                    R.sc[k] == null and T.not='ifs'
+                }
+            }
+            if (ts&if && !T.not) {
                 ts&if == 'RcX' and !Rc&X and T.not='if'
                 else
                 ts&if == 'h' and R != h and T.not='ifh'
