@@ -1398,7 +1398,6 @@ Coffle: |
                 }
                 else {
                     # must have a Lines done
-                    debugger;
                     !ts&ball || !ts&LinesN and throw "not %here=%ball%LinesN"
                     $good = ts&string && ts&string.length > 7
                     !good and throw "string dodgy"
@@ -1416,9 +1415,8 @@ Coffle: |
             s&bo = '1px dotted green';
             s&br = 1;
             s&fs = 8;
-            $ti = R.t+'%push';
             Rs&arrow =
-            n $ti  s:⇒ %fs:14
+            n $R.t  s:⇒ %fs:14
             
             $M = Rs&moves;
             !M and return
@@ -1434,7 +1432,6 @@ Coffle: |
                 
                 # pushing to %pushering land
                 $tp = ty&up;
-                    debugger;
                 if (tps&pushering) {
                     tp = me&yfuture,tp;
                     # parent mediates %push for some reason
@@ -1476,6 +1473,7 @@ Coffle: |
                 ls&their = R;
             }
         },'ift,D'],
+        # get %balls encoding
         ['push','59',&acgtRs{
             # find comparables, make plans to get %balls encoding
             # %deliverer hard pushed %delivered %ball
@@ -1496,6 +1494,8 @@ Coffle: |
             n thing  $s:R.sc,R %sun
             
         },'ift,D'],
+        #c push have encoded %balls wormhole through %moves
+        #   received by this %push early enough to action
         ['push','7',&acgtRs{
             !Rs&act and return
             $M = Rs&moves ||= [];
@@ -1525,21 +1525,37 @@ Coffle: |
             !hok || !tok and return
             
             if (!M.length && R.t == 'lookup') {
-                # empty here implies download (%their to %here)
+                # empty here implies checkout (%their to %here)
                 $just = hs&string.replace(/\s*$/,'');
                 if (just == h.t) {
                     # a move in reverse
                     m checkout $from:t,to:h %rebase
-                    # was:
-                    #  short lived %push, immediately %moves
-                    #n checkout $their:h,here:t,R %rebase
                 }
             }
-            
-            each in M {
-                n $n.t  $s:n.t %fs:7
+            if (Rs&shove || Rs&boost > 1) {
+                !Rs&shove and Rs&Te.sc.boost = 1;
+                n movey  s:movey %fs:13,hs:857
+                # the usual
+                m push $from:h,to:t
             }
             
+            M.length &&
+                n moves $s:M,R %moved
+            
+        },'ift,D'],
+        ['moved','7',&acgtRs{
+            if (Rs&boost < 1) {
+                n numberofmoves  $s:s.length
+            }
+            else {
+                while (s.length > 4) {
+                    s.shift() 
+                }
+                each in s {
+                    $sym = n.t.substr(0,1);
+                    n $n.t  $s:sym %fs:7,hs:594
+                }
+            }
         },'ift,D'],
         #c the living bit
         ['cell','3',&acgtRs{
@@ -2231,17 +2247,15 @@ Coffle: |
                 n oth  s:othertricks
             }
             
-            
             # introgression begins at the %pull%into level
             each ir Rs&othering {
                 if (rs&push) {
                     # a %push putting:
-                    $t = (Rs&pushering_ball||[])[i] || rs&here;
+                    $t = (Rs&othering_ball||[])[i] || rs&here;
                     
                     # if %there is not here?
                     #  want the %move to be around?
                     ac(R,'pushing',r,'ball',t);
-                    
                 }
                 else {
                     # a %pull putting %self at %other
