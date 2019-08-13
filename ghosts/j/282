@@ -932,6 +932,158 @@ Coffle: |
         #   the %there%balls noticing our %push vanish
         return l
     };
+    me.Pushingness = &acgtR{ return [
+        #c push
+        ['push','3',&acgtRs{
+            me&rollbs,R,'delivered,moves';
+            s&bo = '1px dotted green';
+            s&br = 1;
+            s&fs = 8;
+            Rs&arrow =
+            n $R.t  s:⇒ %fs:14
+            
+            $M = Rs&moves;
+            !M and return
+            
+            # connect 7ing pushes with what they want to do
+            # early enough for %othering
+            each in M {
+                ns&done and continue
+                # with items from late last time
+                $f = nc&from;
+                $t = nc&to;
+                # f is likely to be the last %here, unless reversing
+                
+                # pushing to %pushering land
+                $tp = ty&up;
+                if (tps&pushering) {
+                    tp = me&yfuture,tp;
+                    # parent mediates %push for some reason
+                    #  eg to %kvstore %here%string
+                    # not %their directly
+                    ~pushering: t.t, R.t
+                    $i = tps&pushering.push(R)-1;
+                    # f (last %here) passed, will have 7ing
+                    $pb = tps&pushering_ball ||= [];
+                    pb[i] = f;
+                    ns&rebase and throw "%pushering %rebase"
+                }
+                else {
+                    # ensures (2-arg) it be aRound
+                    t = me&yfuture,t,R;
+                    ~othering: t.t, R.t
+                    ns&rebase and Rs&arrow.c.s = '⟵'
+                    ts&ball == '6' and throw "too late to %ball"
+                    ac(t,'othering',R);
+                    # usu othering %pull%here,
+                    # < the %moves making subcommits:
+                    #   their own reselections of %ball
+                    f != Rs&here and ac(t,'othering',R,'ball',f)
+                }
+                ns&done = 1;
+                n mov 14 $s:n.t
+                n ed 15 s:@ %deco
+                #n thereup  $s:ty&up,R %sun
+                # t%ball%othering should get us
+            }
+            
+        },'ift,D'],
+        ['ball','55',&acgtRs{
+            # since ball 53 yfuture'd %pulled...
+            $p = Ry&up;
+            each il Rs&pushed {
+                ps&pushed && ps&pushed.indexOf(l) >= 0 and continue
+                # < many?
+                ls&their = R;
+            }
+        },'ift,D'],
+        # get %balls encoding
+        ['push','59',&acgtRs{
+            # find comparables, make plans to get %balls encoding
+            # %deliverer hard pushed %delivered %ball
+            $d = Rs&deliverer;
+            $c = Rs&their = d ? ds&delivered : Rs&their;
+            $h = Rs&here;
+            
+            # if someone has Lines, do Lines
+            if (c && hak(c.sc,'Lines')) {
+                Rs&act = 'Lines';
+                hs&Lines = 1;
+            }
+            
+            !Rs&boost || Rs&boost < 1 and return
+            
+            s&fs = 11;
+            s&dis = 1;
+            n thing  $s:R.sc,R %sun
+            
+        },'ift,D'],
+        #c push have encoded %balls wormhole through %moves
+        #   received by this %push early enough to action
+        ['push','7',&acgtRs{
+            !Rs&act and return
+            $M = Rs&moves ||= [];
+            # make diff/post acceptings in M
+            $t = Rs&their;
+            $h = Rs&here;
+            
+            $erch = &c{
+                $ok = 1;
+                if (!cs&dige || cs&Lines && cs&Lines != c) {
+                    ok = 0;
+                    n notLinesey  s:⊗
+                }
+                if (!cs&string || cs&string.length < 5) {
+                    ok = 0;
+                    n noLinesstring  s:⊗
+                }
+                return ok
+            };
+            # < checking states of R ^ on a tiny %sun
+            #   binding schema - place it is applied
+            #n here  $s:h,R %sun
+            $hok = erch(h);
+            n comp  s:?
+            $tok = erch(t);
+            #n there  $s:t,R %sun
+            !hok || !tok and return
+            
+            
+            
+            # checkout on init (%their to %here)
+            if (!M.length && Rs&mayco && me&sch_ballonlyt,h ) {
+                m checkout $from:t,to:h %rebase
+            }
+            
+            if (Rs&shove || Rs&boost > 1) {
+                !Rs&shove and Rs&Te.sc.boost = 1;
+                n movey  s:movey %fs:13,hs:857
+                # the usual
+                m push $from:h,to:t
+            }
+            
+            M.length &&
+                n moves $s:M,R %moved
+            
+        },'ift,D'],
+        # squishy shrinking ooze, preserving interesting events
+        # more info at latest
+        ['moved','7',&acgtRs{
+            $forget = [];
+            each in s {
+                $sym = n.t.substr(0,1);
+                s.length == 1 and sym = n.t
+                n $n.t  $s:sym %fs:7,hs:594
+
+                # condense history
+                if (s.length > 5 && i > 0) {
+                    n.t == s [i-1].t and forget.push(i-1)
+                }
+            }
+            forget.map(i => s.splice(i,1));
+        },'ift,D'],
+
+    ] };
     # empty here implies checkout 
     me.sch_ballonlyt = &acgtr{
         !rs&ball and throw "!ball"
@@ -1326,6 +1478,8 @@ Coffle: |
                 n news o9 s:s %fs:7,hs:297
             }
         },'ift,D'],
+        
+        ... me&Pushingness ,
         #c kv
         # accept %pushish as a name lookup first
         #  names %decode'd and pushed here
@@ -1393,155 +1547,7 @@ Coffle: |
             }
         },'ift,D'],
         
-        #c push
-        ['push','3',&acgtRs{
-            me&rollbs,R,'delivered,moves';
-            s&bo = '1px dotted green';
-            s&br = 1;
-            s&fs = 8;
-            Rs&arrow =
-            n $R.t  s:⇒ %fs:14
-            
-            $M = Rs&moves;
-            !M and return
-            
-            # connect 7ing pushes with what they want to do
-            # early enough for %othering
-            each in M {
-                ns&done and continue
-                # with items from late last time
-                $f = nc&from;
-                $t = nc&to;
-                # f is likely to be the last %here, unless reversing
-                
-                # pushing to %pushering land
-                $tp = ty&up;
-                if (tps&pushering) {
-                    tp = me&yfuture,tp;
-                    # parent mediates %push for some reason
-                    #  eg to %kvstore %here%string
-                    # not %their directly
-                    ~pushering: t.t, R.t
-                    $i = tps&pushering.push(R)-1;
-                    # f (last %here) passed, will have 7ing
-                    $pb = tps&pushering_ball ||= [];
-                    pb[i] = f;
-                    ns&rebase and throw "%pushering %rebase"
-                }
-                else {
-                    # ensures (2-arg) it be aRound
-                    t = me&yfuture,t,R;
-                    ~othering: t.t, R.t
-                    ns&rebase and Rs&arrow.c.s = '⟵'
-                    ts&ball == '6' and throw "too late to %ball"
-                    ac(t,'othering',R);
-                    # usu othering %pull%here,
-                    # < the %moves making subcommits:
-                    #   their own reselections of %ball
-                    f != Rs&here and ac(t,'othering',R,'ball',f)
-                }
-                ns&done = 1;
-                n mov 14 $s:n.t
-                n ed 15 s:@ %deco
-                #n thereup  $s:ty&up,R %sun
-                # t%ball%othering should get us
-            }
-            
-        },'ift,D'],
-        ['ball','55',&acgtRs{
-            # since ball 53 yfuture'd %pulled...
-            $p = Ry&up;
-            each il Rs&pushed {
-                ps&pushed && ps&pushed.indexOf(l) >= 0 and continue
-                # < many?
-                ls&their = R;
-            }
-        },'ift,D'],
-        # get %balls encoding
-        ['push','59',&acgtRs{
-            # find comparables, make plans to get %balls encoding
-            # %deliverer hard pushed %delivered %ball
-            $d = Rs&deliverer;
-            $c = Rs&their = d ? ds&delivered : Rs&their;
-            $h = Rs&here;
-            
-            # if someone has Lines, do Lines
-            if (c && hak(c.sc,'Lines')) {
-                Rs&act = 'Lines';
-                hs&Lines = 1;
-            }
-            
-            !Rs&boost || Rs&boost < 1 and return
-            
-            s&fs = 11;
-            s&dis = 1;
-            n thing  $s:R.sc,R %sun
-            
-        },'ift,D'],
-        #c push have encoded %balls wormhole through %moves
-        #   received by this %push early enough to action
-        ['push','7',&acgtRs{
-            !Rs&act and return
-            $M = Rs&moves ||= [];
-            # make diff/post acceptings in M
-            $t = Rs&their;
-            $h = Rs&here;
-            
-            $erch = &c{
-                $ok = 1;
-                if (!cs&dige || cs&Lines && cs&Lines != c) {
-                    ok = 0;
-                    n notLinesey  s:⊗
-                }
-                if (!cs&string || cs&string.length < 5) {
-                    ok = 0;
-                    n noLinesstring  s:⊗
-                }
-                return ok
-            };
-            # < checking states of R ^ on a tiny %sun
-            #   binding schema - place it is applied
-            #n here  $s:h,R %sun
-            $hok = erch(h);
-            n comp  s:?
-            $tok = erch(t);
-            #n there  $s:t,R %sun
-            !hok || !tok and return
-            
-            
-            
-            # checkout on init (%their to %here)
-            if (!M.length && Rs&mayco && me&sch_ballonlyt,h ) {
-                m checkout $from:t,to:h %rebase
-            }
-            
-            if (Rs&shove || Rs&boost > 1) {
-                !Rs&shove and Rs&Te.sc.boost = 1;
-                n movey  s:movey %fs:13,hs:857
-                # the usual
-                m push $from:h,to:t
-            }
-            
-            M.length &&
-                n moves $s:M,R %moved
-            
-        },'ift,D'],
-        # squishy shrinking ooze, preserving interesting events
-        # more info at latest
-        ['moved','7',&acgtRs{
-            $forget = [];
-            each in s {
-                $sym = n.t.substr(0,1);
-                s.length == 1 and sym = n.t
-                n $n.t  $s:sym %fs:7,hs:594
-
-                # condense history
-                if (s.length > 5 && i > 0) {
-                    n.t == s [i-1].t and forget.push(i-1)
-                }
-            }
-            forget.map(i => s.splice(i,1));
-        },'ift,D'],
+        
         #c the living bit
         ['cell','3',&acgtRs{
             Rs&rowish = 1;
