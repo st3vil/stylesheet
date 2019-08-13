@@ -720,7 +720,7 @@ Coffle: |
         # oncer
         d == '1' and delete v.sc[k]
     };
-    #c Rs
+    #c structuR
     me.namup = &acgts{
         !s and return
         $nam = [s.t];
@@ -774,7 +774,7 @@ Coffle: |
         z == 'up' and z = null
         z ||= &s{ return s.y.up };
         d ||= [];
-        d.unshift(s) > 50 and debugger
+        d.unshift(s) > 50 and throw "manycby"
         $r = f && f(s,o);
         r and return d
         return me.cby(z(s),f,z,d,s)
@@ -786,6 +786,22 @@ Coffle: |
         $l = me.cby(s,cb,z||'up');
         return l && l[0]
     };
+    me.yfuture = &acgtrRy{
+        $i = 300;
+        while (ry&future) {
+            r = ry&future;
+            i-- < 0 and throw "manyfuture"
+        }
+        if (R) {
+            if (0 > Rc&N.indexOf(r)) {
+                y and y
+                else {
+                    throw "yfutured "+R.t+" not in RcN"
+                }
+            }
+        }
+        return r
+    }
     #c Rdata
     # dual array Stever
     # see ball-othering
@@ -867,7 +883,11 @@ Coffle: |
     #    be generating grammars/I off the screen
     # in a %push on this %ball, rolling through time,
     # < disconnecting once the cause (me&push call) stops
-    #  get there/here, make insertion insert it, return %ball holding it
+    # 
+    # returns the %pull (which will Ring soonish) unless:
+    #  %pull%auto:
+    #    %their = me&input,%there,%herec&s
+    #    returns %their = %ball holding %herec&s under %there
     # 
     me.push = &acgtRpqtc{
         # the named %push + its mode (%auto if t,!c args)
@@ -881,6 +901,7 @@ Coffle: |
         
         # and its items, from here
         # path to receiver %ball (inflated)
+        #  < elvis pointing such that name changes/bits blow away when pushed
         $t = ls&there = me&pushpath,R,p;
         # the thing itself, where it is (also inflated)
         $h = ls&here = isC(q) ? q : me&pushpath,R,q;
@@ -895,8 +916,8 @@ Coffle: |
         }
         elsif (ls&auto) {
             $thing = hc&s;
-            ls&thing = me&input,ls&there,thing;
-            return ls&thing
+            ls&their = me&input,ls&there,thing;
+            return ls&their
         }
         else {
             # no-push link
@@ -1335,6 +1356,8 @@ Coffle: |
             #   pushing there 
             #  accept their content if full enough
             !Rs&pushish and return T.wide = 1;
+            # tell %push to do 
+            Rs&pushering ||= [];
             me&rollbs,R,'rememb';
             
             each il Rs&pushish {
@@ -1361,7 +1384,7 @@ Coffle: |
         },'ift,D'],
         ['kvstore','4',&acgtRs{
             each il Rs&pushering {
-                $t = ls&here;
+                $t = (Rs&pushering_ball||[])[i] || ls&here;
                 if (ls&hard) {
                     $S = tc&s;
                     # %here%ball must be the same
@@ -1375,6 +1398,7 @@ Coffle: |
                 }
                 else {
                     # must have a Lines done
+                    debugger;
                     !ts&ball || !ts&LinesN and throw "not %here=%ball%LinesN"
                     $good = ts&string && ts&string.length > 7
                     !good and throw "string dodgy"
@@ -1388,31 +1412,67 @@ Coffle: |
         
         #c push
         ['push','3',&acgtRs{
-            me&rollbs,R,'delivered';
+            me&rollbs,R,'delivered,moves';
             s&bo = '1px dotted green';
             s&br = 1;
             s&fs = 8;
             $ti = R.t+'%push';
             Rs&arrow =
             n $ti  s:⇒ %fs:14
+            
+            $M = Rs&moves;
+            !M and return
+            
+            # does othering early
+            each in M {
+                ns&done and continue
+                # with items from late last time
+                $f = nc&from; # = me&yfuture,nc&from;
+                $t = nc&to; # = me&yfuture,nc&to;
+                # f is likely to be the last %here, unless reversing
+                me&yfuture,f != Rs&here and throw "%push%here not %moves%fromy&future"
+                $tp = ty&up;
+                tp = me&yfuture,tp;
+                if (tps&pushering) {
+                    # parent mediates this %push for some reason
+                    #  eg to %kvstore %here%string
+                    # not %their directly
+                    ~pushering: t.t, R.t
+                    $i = tps&pushering.push(R)-1;
+                    # f (last %here) passed, will have 7ing
+                    $pb = tps&pushering_ball ||= [];
+                    pb[i] = f;
+                }
+                else {
+                    ~othering: t.t, R.t
+                    ts&ball == '6' and throw "too late to %ball"
+                    ac(t,'othering',R);
+                }
+                ns&done = 1;
+                n ed  s:@ %deco
+                #n thereup  $s:ty&up,R %sun
+                # t%ball%othering should get us
+            }
+            
         },'ift,D'],
         ['ball','55',&acgtRs{
             # since ball 53 yfuture'd %pulled...
             $p = Ry&up;
             each il Rs&pushed {
                 ps&pushed && ps&pushed.indexOf(l) >= 0 and continue
-                ls&thing = R;
+                # < many?
+                ls&their = R;
             }
         },'ift,D'],
         ['push','59',&acgtRs{
             # find comparables, make plans to get %balls encoding
             # %deliverer hard pushed %delivered %ball
             $d = Rs&deliverer;
-            $c = Rs&their = d ? ds&delivered : Rs&thing;
+            $c = Rs&their = d ? ds&delivered : Rs&their;
             $h = Rs&here;
             
             # if someone has Lines, do Lines
-            if (hak(c.sc,'Lines')) {
+            if (c && hak(c.sc,'Lines')) {
                 Rs&act = 'Lines';
                 hs&Lines = 1;
             }
@@ -1421,18 +1481,58 @@ Coffle: |
             
             s&fs = 11;
             s&dis = 1;
-            Rs&
             n thing  $s:R.sc,R %sun
             
         },'ift,D'],
         ['push','7',&acgtRs{
             !Rs&act and return
-            # make diff/post acceptance
-            $c = Rs&their;
+            $M = Rs&moves ||= [];
+            # make diff/post acceptings in M
+            $t = Rs&their;
             $h = Rs&here;
-            n here  $s:h,R %sun
-            n comp  s:?
-            n there  $s:c,R %sun
+            if (Rs&rebase) {
+                # going in reverse, switched %here/%there
+                # %ball / %push / %push
+                Rs&arrow.c.s = '⟵'
+                m $R.t $from:h,to:t
+            }
+            else {
+                $erch = &c{
+                    $ok = 1;
+                    if (!cs&dige || cs&Lines && cs&Lines != c) {
+                        ok = 0;
+                        n notLinesey  s:⊗
+                    }
+                    if (!cs&string || cs&string.length < 5) {
+                        ok = 0;
+                        n noLinesstring  s:⊗
+                    }
+                    return ok
+                };
+                # < checking states of R ^ on a tiny %sun
+                #   binding schema - place it is applied
+                #n here  $s:h,R %sun
+                $hok = erch(h);
+                n comp  s:?
+                $tok = erch(t);
+                #n there  $s:t,R %sun
+                !hok || !tok and return
+            }
+            
+            if (!M.length && R.t == 'lookup') {
+                # empty here implies download (%their to %here)
+                $just = hs&string.replace(/\s*$/,'');
+                if (just == h.t) {
+                    # %push with a %push going the other way
+                    #  short lived %push, immediately %moves
+                    n checkout $their:h,here:t,R %rebase
+                }
+            }
+            
+            each in M {
+                n $n.t  $s:n.t %fs:7
+            }
+            
         },'ift,D'],
         #c the living bit
         ['cell','3',&acgtRs{
@@ -2128,6 +2228,7 @@ Coffle: |
             # introgression begins at the %pull%into level
             each ir Rs&othering {
                 # a %pull putting %self at %other
+                rs&push and debugger
                 $o = rs&other;
                 if (o) {
                     $cb = me.cby(o,&o{ return o == R });
@@ -2150,11 +2251,10 @@ Coffle: |
             # %ball%pushed keep %pull up to date,
             # but not %pushed_ball - to keep the applied
             each ir Rs&pushed {
-                while (ry&future) { r = ry&future }
+                Rs&pushed[i] = me&yfuture,r;
                 # < de-other zombies by rc&ip...
                 # < things rupturing as they delete
                 #   themselves at the edge of the light cone
-                Rs&pushed[i] = r;
             }
             # %pushing are active %pulls
             each ir Rs&pushing {
