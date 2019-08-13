@@ -929,6 +929,12 @@ Coffle: |
         #   the %there%balls noticing our %push vanish
         return l
     };
+    # empty here implies checkout 
+    me.sch_ballonlyt = &acgtr{
+        !rs&ball and throw "!ball"
+        return !rs&z || !rs&z
+            .filter(n => ns&ball || ns&fix).length
+    };
     # keep a %ball for each Rc&ss&z
     me.Rsync = &acgtRV{
         $S = Rc&s;
@@ -1331,7 +1337,7 @@ Coffle: |
             each in Rs&z {
                 !ns&ball and continue
                 # posit they %push(ish) to G
-                $l = me&push,n,['/','G'],[],'lookup',{};
+                $l = me&push,n,['/','G'],[],'lookup','mayco';
             }
         },'ift,D'],
         ['ball','28',&acgtRs{
@@ -1524,14 +1530,13 @@ Coffle: |
             #n there  $s:t,R %sun
             !hok || !tok and return
             
-            if (!M.length && R.t == 'lookup') {
-                # empty here implies checkout (%their to %here)
-                $just = hs&string.replace(/\s*$/,'');
-                if (just == h.t) {
-                    # a move in reverse
-                    m checkout $from:t,to:h %rebase
-                }
+            
+            
+            # checkout on init (%their to %here)
+            if (!M.length && Rs&mayco && me&sch_ballonlyt,h ) {
+                m checkout $from:t,to:h %rebase
             }
+            
             if (Rs&shove || Rs&boost > 1) {
                 !Rs&shove and Rs&Te.sc.boost = 1;
                 n movey  s:movey %fs:13,hs:857
@@ -1543,19 +1548,21 @@ Coffle: |
                 n moves $s:M,R %moved
             
         },'ift,D'],
+        # squishy shrinking ooze, preserving interesting events
+        # more info at latest
         ['moved','7',&acgtRs{
-            if (Rs&boost < 1) {
-                n numberofmoves  $s:s.length
-            }
-            else {
-                while (s.length > 4) {
-                    s.shift() 
+            $forget = [];
+            each in s {
+                $sym = n.t.substr(0,1);
+                s.length == 1 and sym = n.t
+                n $n.t  $s:sym %fs:7,hs:594
+
+                # condense history
+                if (s.length > 5 && i > 0) {
+                    n.t == s [i-1].t and forget.push(i-1)
                 }
-                each in s {
-                    $sym = n.t.substr(0,1);
-                    n $n.t  $s:sym %fs:7,hs:594
-                }
             }
+            forget.map(i => s.splice(i,1));
         },'ift,D'],
         #c the living bit
         ['cell','3',&acgtRs{
