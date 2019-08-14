@@ -1019,7 +1019,7 @@ Coffle: |
             
         },'ift,D'],
         # have a look
-        ['push','591',&acgtRs{
+        ['push','8',&acgtRs{
             !Rs&boost || Rs&boost < 1 and return
             
             s&fs = 11;
@@ -1044,8 +1044,8 @@ Coffle: |
             $done = lm && lms&pushed;
             
             # both sides should Lines
-            me&sch_didLines,h;
-            !t || me&sch_didLines,t;
+            me&sch_didLines,R,h;
+            !t || me&sch_didLines,R,t;
             
             if (me&Mw,R,'err' .length) {
                 n errors  s:⊗ %fs:18
@@ -1062,14 +1062,14 @@ Coffle: |
                 }
                 if (!Rs&made) {
                     !me[Rs&act] and throw "no me.%act "+Rs&act
-                    Rs&made = me[Rs&act](A,C,G,T,R,f,t);
+                    Rs&made = me[Rs&act](A,C,G,T,R,h,t);
                 }
                 if (doing) {
                     $diff = me&diffya,R,Rs&act+"'d",Rs&made,doings&made;
                 }
             }
             else {
-                $diff me&diffya,R,'diff',h,t
+                $diff = me&diffya,R,'diff',h,t
             }
             
             if (t && done) {
@@ -1115,7 +1115,7 @@ Coffle: |
             each in s {
                 # done this round
                 if (ns&done == 6) {
-                    ns&done = 9
+                    ns&done = 9;
                     $r = ns&pusher;
                     # branch at %push%their with %move
                     r and ns&pushed = latestR(r)
@@ -1134,30 +1134,67 @@ Coffle: |
             
             forget.map(i => s.splice(i,1));
         },'ift,D'],
+        # clones %balls for me&Copy
+        ['Copy','11',&acgtRs{
+            Rc&s = G&Cye,s;
+            # update self in above z
+            $p = Ry&up;
+            if (p && ps&Copy) {
+                p = pc&s;
+                if (ps&z) {
+                    $pi = ps&z.indexOf(s);
+                    pi < 0 and throw "pi<0"
+                    ps&z[pi] = Rc&s;
+                }
+            }
+            s = Rc&s;
+            ss&z and ss&z = ss&z.slice()
+            ss&z and me&Rsync,R
+        },'ift,D'],
 
     ] };
     
-    me.diffya = &acgtRkhtq{
-        q and 'quiet'
+    # make an adaptor to a list processor,
+    #  match & rebuild h%balls as needed,
+    #  feed through destructive encoder,
+    me.TeCo = &acgtRhtc{
+        $r = me&Copy,R,hc&s,26;
+        # mangle rc&s
+        delete rs&ov;
+        rs&Lines = 1;
+        # onward 3%ball Rsyncs, anything under r may ~
+        me&Ring,r;
+        return r
+    };
+    # returns a 2%ball cloned from s (not a %ball)
+    me.Copy = &acgtRsc{
+        c ||= {};
+        # Rings up to a point
+        typeof c == 'number' and c = {ov:c};
+        while (c.ov > 1) { c.ov *= 0.1 }
         
+        ex(c,{task:'ravel',ball:1,noDisplay:1});
+        c.Copy = 1;
+        
+        $k = 'Copy';
+        Rs&act and k += '-> '+Rs&act
+        return me&Reis,R,k,s,c
+    };
+    
+    me.diffya = &acgtRkhtq{
+        if (ts&dige == hs&dige) {
+            return
+            n eq  s:= %exactly
+        }
+        else {
+            # out of band
+            n noteq  s:~
+            
         
             #ts&dige == hs&dige and cc&s = '='
             #    cc&s = '≠'
             # setty http://xahlee.info/comp/unicode_math_operators.html
-            
-            if (Rs&act) {
-                n run  $s:Rs&act %hs:387
-                # h == ph  sleep
-                # t != pt  rebase?
-                # otherwise go
-                # make an adaptor to a list processor,
-                #  match & rebuild h%balls as needed,
-                #  feed through destructive encoder,
-                # 
-            }
-            else {
-                # h to t
-            }
+        }
     };
     
     # empty here implies checkout
@@ -1169,8 +1206,10 @@ Coffle: |
     # check Lines was done
     # < checking states of R on a tiny %sun
     #   binding schema - place it is applied
-    me.sch_didLines = &acgtr{
+    me.sch_didLines = &acgtRr{
         $M = me&Mw,R,'err';
+        !r and throw "fednor"
+        !rs&ball and throw "!ball"
         $ok = 1;
         if (!rs&dige || rs&Lines && rs&Lines != r) {
             ok = 0;
@@ -1379,7 +1418,7 @@ Coffle: |
             R.c.not and continue
             #onlyt && t != onlyt and continue
             
-            hy&ov && hy&ov < ty&cv and debugger;
+            hs&ov && hs&ov < ty&cv and continue
             
             # deciding
             $T = {};
