@@ -1025,7 +1025,7 @@ Coffle: |
         ['push+act','591',&acgtRs{
             $soc = [Rs&their, Rs&here];
             each ic soc {
-                !hak(c.sc,'Lines') and cs&Lines = 1
+                c && !hak(c.sc,'Lines') and cs&Lines = 1
             }
         },'ift,D'],
         
@@ -1037,28 +1037,23 @@ Coffle: |
             $t = Rs&their;
             $h = Rs&here;
             
-            $erch = &c{
-                $ok = 1;
-                if (!cs&dige || cs&Lines && cs&Lines != c) {
-                    ok = 0;
-                    n notLinesey  s:⊗
-                }
-                if (!cs&string || cs&string.length < 5) {
-                    ok = 0;
-                    n noLinesstring  s:⊗
-                }
-                return ok
-            };
             # < checking states of R ^ on a tiny %sun
             #   binding schema - place it is applied
             #n here  $s:h,R %sun
-            $hok = erch(h);
+            $hok = me&sch_didLines,h;
+            $c =
             n comp  s:?
-            $tok = erch(t);
+            $tok = !t || me&sch_didLines,t;
             #n there  $s:t,R %sun
             !hok || !tok and return
+            # check t is not other than expected,
+            #   or offer slow rebase next to push
+            # 
             
             
+            if (Rs&act) {
+                n run  $s:Rs&act %hs:387
+            }
             
             # checkout on init (%their to %here)
             if (!M.length && Rs&mayco && me&sch_ballonlyt,h ) {
@@ -1098,11 +1093,24 @@ Coffle: |
         },'ift,D'],
 
     ] };
-    # empty here implies checkout 
+    # empty here implies checkout
     me.sch_ballonlyt = &acgtr{
         !rs&ball and throw "!ball"
         return !rs&z || !rs&z
             .filter(n => ns&ball || ns&fix).length
+    };
+    # empty here implies checkout
+    me.sch_didLines = &acgtr{
+        $ok = 1;
+        if (!rs&dige || rs&Lines && rs&Lines != r) {
+            ok = 0;
+            n notLinesey  s:⊗
+        }
+        if (!rs&string || rs&string.length < 5) {
+            ok = 0;
+            n noLinesstring  s:⊗
+        }
+        return ok
     };
     #c Ring R-ing
     # get R, s and R's middles to stream work
@@ -2218,6 +2226,11 @@ Coffle: |
             1s&Te and me&Tie,R,'play'
             !Rs&play and return
             n playing  s:▶
+            
+            $l = me&push,R,['/','T'],[],'run',{does:'TeCo'};
+            
+            
+            return
             # < io walking expressions: 
             # o $s/^^%vey<* # wander up, look before whence from
             # o $s/%ball^^ # highest %ball:
