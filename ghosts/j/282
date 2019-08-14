@@ -984,7 +984,7 @@ Coffle: |
                     (n.t == 'checkout' ? '↽' :
                         ns&pending ? '◅' : '◄')
                     : ns&pending ? '▻' : '►';
-                ns&done = 1;
+                ns&done = 6;
                 #n thereup  $s:ty&up,R %sun
                 # t%ball%othering should get us
             }
@@ -1008,27 +1008,24 @@ Coffle: |
             $d = Rs&deliverer;
             Rs&their = d ? ds&delivered : Rs&their;
             
-            Rs&act = Rs&does || 'Lines';
+            Rs&act = Rs&does || 0;
             
-            !Rs&act &&
-                n noact  s:?
+            # always Lines h/t to sleep the act, later
+            # string based representation of everything going into it
+            $soc = [Rs&their, Rs&here];
+            each ic soc {
+                c && !hak(c.sc,'Lines') and cs&Lines = 1
+            }
             
+        },'ift,D'],
+        # have a look
+        ['push','591',&acgtRs{
             !Rs&boost || Rs&boost < 1 and return
             
             s&fs = 11;
             s&dis = 1;
             n thing  $s:R.sc,R %sun
-            
         },'ift,D'],
-        # Lines of here/their help sleep the act, later
-        # string based representation of everything going into it
-        ['push+act','591',&acgtRs{
-            $soc = [Rs&their, Rs&here];
-            each ic soc {
-                c && !hak(c.sc,'Lines') and cs&Lines = 1
-            }
-        },'ift,D'],
-        
         #c push have encoded %balls wormhole through %moves
         #   received by this %push early enough to action
         ['push+act','7',&acgtRs{
@@ -1037,22 +1034,38 @@ Coffle: |
             $t = Rs&their;
             $h = Rs&here;
             
-            # < checking states of R ^ on a tiny %sun
-            #   binding schema - place it is applied
             #n here  $s:h,R %sun
             $hok = me&sch_didLines,h;
-            $c =
+            $c = Rs&compare =
             n comp  s:?
             $tok = !t || me&sch_didLines,t;
             #n there  $s:t,R %sun
             !hok || !tok and return
-            # check t is not other than expected,
-            #   or offer slow rebase next to push
-            # 
             
+            # last move !rebase has from=h to=t
+            #  to compare them to now, and to each other
+            # offer slow rebase if t changes without our push
+            
+            !t and cc&s = '⦳'
+            else 
+            ts&dige == hs&dige and cc&s = '='
+            else {
+                cc&s = '≠'
+            }
+            # setty http://xahlee.info/comp/unicode_math_operators.html
             
             if (Rs&act) {
                 n run  $s:Rs&act %hs:387
+                # h == ph  sleep
+                # t != pt  rebase?
+                # otherwise go
+                # make an adaptor to a list processor,
+                #  match & rebuild h%balls as needed,
+                #  feed through destructive encoder,
+                # 
+            }
+            else {
+                # h to t
             }
             
             # checkout on init (%their to %here)
@@ -1099,7 +1112,9 @@ Coffle: |
         return !rs&z || !rs&z
             .filter(n => ns&ball || ns&fix).length
     };
-    # empty here implies checkout
+    # check Lines was done
+    # < checking states of R on a tiny %sun
+    #   binding schema - place it is applied
     me.sch_didLines = &acgtr{
         $ok = 1;
         if (!rs&dige || rs&Lines && rs&Lines != r) {
