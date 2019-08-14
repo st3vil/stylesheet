@@ -1030,28 +1030,119 @@ Coffle: |
         #   received by this %push early enough to action
         ['push+act','7',&acgtRs{
             $M = Rs&moves ||= [];
+            each in M {
+                n.t == 'push' and Rs&lastpush = n
+            }
             # make diff/post acceptings in M
             $t = Rs&their;
             $h = Rs&here;
+            # last %move that was a push
+            $lm = Rs&lastpush;
+            # this %push when %move was started
+            $doing = lm && lms&pusher;
+            # this %push when %move was done
+            $done = lm && lms&pushed;
             
-            #n here  $s:h,R %sun
-            $hok = me&sch_didLines,h;
-            $c = Rs&compare =
-            n comp  s:?
-            $tok = !t || me&sch_didLines,t;
-            #n there  $s:t,R %sun
-            !hok || !tok and return
+            # both sides should Lines
+            me&sch_didLines,h;
+            !t || me&sch_didLines,t;
             
-            # last move !rebase has from=h to=t
-            #  to compare them to now, and to each other
-            # offer slow rebase if t changes without our push
-            
-            !t and cc&s = '⦳'
-            else 
-            ts&dige == hs&dige and cc&s = '='
-            else {
-                cc&s = '≠'
+            if (me&Mw,R,'err' .length) {
+                n errors  s:⊗ %fs:18
+                return
             }
+            
+            if (Rs&act) {
+                # with transformation in the middle
+                if (doing) {
+                    $indiff = me&diffya,R,'input',h,doings&here;
+                    if (indiff&exactly) {
+                        Rs&made = doings&made
+                    }
+                }
+                if (!Rs&made) {
+                    !me[Rs&act] and throw "no me.%act "+Rs&act
+                    Rs&made = me[Rs&act](A,C,G,T,R,f,t);
+                }
+                if (doing) {
+                    $diff = me&diffya,R,Rs&act+"'d",Rs&made,doings&made;
+                }
+            }
+            else {
+                $diff me&diffya,R,'diff',h,t
+            }
+            
+            if (t && done) {
+                # offer rebase if t changes without our push
+                $tdiff = me&diffya,R,'theirs',t,dones&their,2;
+                # < branch h <-> ms&h and patch onto that
+            }
+            
+            if (!t) {
+                done &&
+                    n va  s:vanishing!
+                n notheir  s:⦳
+            }
+            
+            # checkout on init (%their to %here)
+            if (!M.length && Rs&mayco && me&sch_ballonlyt,h ) {
+                m checkout $from:t,to:h %rebase
+            }
+            
+            # transmit here or what we made of it
+            Rs&made and h = Rs&made
+            
+            if (Rs&shove || Rs&boost > 1) {
+                !Rs&shove and Rs&Te.sc.boost = 1;
+                
+                n movey  s:movey %fs:13,hs:857
+                # the usual
+                m push $from:h,to:t,pusher:R
+            }
+        },'ift,D'],
+        
+        #c moves talked about 
+        ['moves','7',&acgtRs{
+            $M = Rs&moves;
+            M.length &&
+                n moves $s:M,R %moved
+        },'ift,D'],
+        # squishy shrinking ooze, preserving interesting events
+        # more info at latest
+        ['moved','3',&acgtRs{
+            $p = Ry&up;
+            $forget = [];
+            each in s {
+                # done this round
+                if (ns&done == 6) {
+                    ns&done = 9
+                    $r = ns&pusher;
+                    # branch at %push%their with %move
+                    r and ns&pushed = latestR(r)
+                }
+                # id by name then symbol
+                $sym = n.t;
+                ns&sym and sym = ns&sym
+                n $n.t  $s:sym %fs:12,hs:594
+                
+                # condenses
+                if (s.length > 5) {
+                    $ne = s [i+1];
+                    ne && n.t == ne.t and forget.push(i)
+                }
+            }
+            
+            forget.map(i => s.splice(i,1));
+        },'ift,D'],
+
+    ] };
+    
+    me.diffya = &acgtRkhtq{
+        q and 'quiet'
+        
+        
+            #ts&dige == hs&dige and cc&s = '='
+            #    cc&s = '≠'
             # setty http://xahlee.info/comp/unicode_math_operators.html
             
             if (Rs&act) {
@@ -1067,45 +1158,8 @@ Coffle: |
             else {
                 # h to t
             }
-            
-            # checkout on init (%their to %here)
-            if (!M.length && Rs&mayco && me&sch_ballonlyt,h ) {
-                m checkout $from:t,to:h %rebase
-            }
-            
-            if (Rs&shove || Rs&boost > 1) {
-                !Rs&shove and Rs&Te.sc.boost = 1;
-                n movey  s:movey %fs:13,hs:857
-                # the usual
-                m push $from:h,to:t
-            }
-        },'ift,D'],
-        
-        # moves talked about 
-        ['moves','7',&acgtRs{
-            $M = Rs&moves;
-            M.length &&
-                n moves $s:M,R %moved
-        },'ift,D'],
-        # squishy shrinking ooze, preserving interesting events
-        # more info at latest
-        ['moved','3',&acgtRs{
-            $forget = [];
-            each in s {
-                $sym = n.t.substr(0,1);
-                s.length == 1 and sym = n.t
-                ns&sym and sym = ns&sym
-                n $n.t  $s:sym %fs:12,hs:594
-
-                # condense history
-                if (s.length > 5 && i > 0) {
-                    n.t == s [i-1].t and forget.push(i-1)
-                }
-            }
-            forget.map(i => s.splice(i,1));
-        },'ift,D'],
-
-    ] };
+    };
+    
     # empty here implies checkout
     me.sch_ballonlyt = &acgtr{
         !rs&ball and throw "!ball"
@@ -1116,14 +1170,15 @@ Coffle: |
     # < checking states of R on a tiny %sun
     #   binding schema - place it is applied
     me.sch_didLines = &acgtr{
+        $M = me&Mw,R,'err';
         $ok = 1;
         if (!rs&dige || rs&Lines && rs&Lines != r) {
             ok = 0;
-            n notLinesey  s:⊗
+            m notLinesey  s:⊗
         }
         if (!rs&string || rs&string.length < 5) {
             ok = 0;
-            n noLinesstring  s:⊗
+            m noLinesstring  s:⊗
         }
         return ok
     };
