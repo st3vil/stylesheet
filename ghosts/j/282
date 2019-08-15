@@ -28,7 +28,7 @@ Coffle: |
      Lat is I stuff (%W with %z), posited as being Lat
      thinger is encoded (Latc&W:of)
     such that it is mostly ready for action:
-    A.3+ believes in Cont
+    A.3+ believes in Cont%W
     A.1 somewhere wants Lat
         (or thinger, knowing things like Lat might contain it)
      by elvising G/$pathtoA1/Lat,
@@ -894,7 +894,7 @@ Coffle: |
         # and its items, from here
         # path to receiver %ball (inflated)
         #  < elvis pointing such that name changes/bits blow away when pushed
-        $t = ls&there = me&pushpath,R,p,l;
+        $t = ls&there = me&pushpath,R,p;
         # the thing itself, where it is (also inflated)
         $h = ls&here = isC(q) ? q : me&pushpath,R,q;
         !t || !h and throw "falliball"
@@ -923,11 +923,10 @@ Coffle: |
     };
     # %ball input limb, extra pathy
     # < to hang push intentions on %ball
-    #   or on speculative balls for slow ... ''
-    me.pushpath = &acgtRpl{
+    #   or on speculative balls for slow ...
+    me.pushpath = &acgtRp{
         $r = R;
         each is p {
-            s == '' and ls&andthen = 1; break
             $nr = s == '/' ?
                 me.cby(r,&r{ return rs&gee })[0]
                 :
@@ -951,7 +950,7 @@ Coffle: |
         },'ift,D'],
         # connect 7ing %pushes with what they want to do
         # early enough for %othering
-        ['push+moves','3',&acgtRs{
+        ['push+moves','4',&acgtRs{
             $M = Rs&moves;
             each in M {
                 ns&done and continue
@@ -960,18 +959,11 @@ Coffle: |
                 $t = nc&to;
                 nc&push = R;
                 # f is likely to be the last %here, unless reversing
-                
+                # t (usu %their) may not be here yet:
+                #  R%othering %pull%there==R will z it
+                t ||= Rs&there;
                 $tp = t && ty&up;
-                if (!t && nc&childof) {
-                    # see Rs&andthen
-                    # !%their, put child of %there
-                    t = nc&childof;
-                    t = me&yfuture,t,R;
-                    ~moveing: t.t, R.t
-                    ts&ball == '6' and throw "too late to %ball"
-                    ac(t,'moveing',n)
-                }
-                elsif (tp && tps&pushering) {
+                if (tp && tps&pushering) {
                     tp = me&yfuture,tp;
                     # parent mediates %push for some reason
                     #  eg to %kvstore %here%string
@@ -1034,7 +1026,7 @@ Coffle: |
             
             s&fs = 11;
             s&dis = 1;
-            #n thing  $s:R.sc,R %sun
+            n thing  $s:R.sc,R %sun
         },'ift,D'],
         #c push have encoded %balls wormhole through %moves
         #   received by this %push early enough to action
@@ -1103,14 +1095,6 @@ Coffle: |
             # transmit here or what we made of it
             Rs&made and h = Rs&made
             
-            $pc = {};
-            if (!t && Rs&andthen) {
-                # %there is sometimes the parent of it
-                #  we are not doing selecting properly
-                #   me&pushpath is too injectey
-                pc.childof = Rs&there;
-            }
-            
             if (Rs&shove || Rs&boost > 1) {
                 !Rs&shove and Rs&Te.sc.boost = 1;
                 
@@ -1118,7 +1102,6 @@ Coffle: |
                 # the usual
                 $c =
                 m push $from:h,to:t,pusher:R
-                ex(c.c,pc);
             }
         },'ift,D'],
         
@@ -2359,7 +2342,7 @@ Coffle: |
             !Rs&play and return
             n playing  s:▶
             
-            $l = me&push,R,['/','T',''],[],'run',{does:'TeCo'};
+            $l = me&push,R,['/','T'],[],'run',{does:'TeCo'};
             
             
             return
@@ -2413,20 +2396,15 @@ Coffle: |
                 n oth  s:othertricks
             }
             
-            each in Rs&moveing {
-                $f = nc&from;
-                $t = nc&to;
-                ac(R,'pushing_z',nc&push,'ball',f);
-            }
-            # introgression begins at the %pull%into level
             each ir Rs&othering {
+                # want the %move to be around?
                 if (rs&push) {
                     # a %push putting:
                     $t = (Rs&othering_ball||[])[i] || rs&here;
-                    
-                    # if %there is not here?
-                    #  want the %move to be around?
-                    ac(R,'pushing',r,'ball',t);
+                    $putting = 'pushing';
+                    # if %there is here, their will inside
+                    R == rs&there and putting += '_z';
+                    ac(R,putting,r,'ball',t);
                 }
                 else {
                     # a %pull putting %self at %other
@@ -2461,10 +2439,10 @@ Coffle: |
             # %pushing are active %pulls
             each ir Rs&pushing {
                 # whose treeing %self is already here
-                #debugger;
                 $S = ac(R,'pushing',r,'ball');
                 !Sc&s and throw "pushing !cs"
                 !Ss&ball and throw "pushing !ball"
+                S.t == 'se' and debugger
                 # and replacing the last %self
                 $l = ac(R,'pushed',r,'ball',S);
                 $Ss = Sc&s;
