@@ -983,10 +983,9 @@ Coffle: |
                     #   their own reselections of %ball
                 }
                 
-                ns&sym = f != Rs&here ?
-                    (n.t == 'checkout' ? '↽' :
-                        ns&pending ? '◅' : '◄')
-                    : ns&pending ? '▻' : '►';
+                ns&sym = n.t == 'checkout' ? '↽' :
+                    ns&rebase ? (ns&pending ? '◅' : '◄')
+                    : (ns&pending ? '▻' : '►');
                 ns&done = 6;
                 #n thereup  $s:ty&up,R %sun
                 # t%ball%othering should get us
@@ -1098,8 +1097,6 @@ Coffle: |
             
             if (Rs&shove || Rs&boost > 1) {
                 !Rs&shove and Rs&Te.sc.boost = 1;
-                
-                n movey  s:movey %fs:13,hs:857
                 # the usual
                 $c =
                 m push $from:h,to:t,pusher:R
@@ -1153,8 +1150,13 @@ Coffle: |
                 }
             }
             s = Rc&s;
-            ss&z and ss&z = ss&z.slice()
-            ss&z and me&Rsync,R
+            if (ss&z) {
+                ss&z = ss&z.slice()
+                me&Rsync,R;
+                each ir Rs&z {
+                    rs&ball and rs&Copy = 1;
+                }
+            }
         },'ift,D'],
 
     ] };
@@ -2500,7 +2502,7 @@ Coffle: |
             Rc&inC = R;
             #Rc&d == 0 and R.t = C.t;
             # index by R.t set by daR
-            Rc&nl ||= 275;
+            Rc&nl ||= 3275;
             Rc&dl ||= 35;
         }],
         ['Displayingness','3',&acgtRs{
