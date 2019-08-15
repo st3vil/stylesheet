@@ -1026,7 +1026,7 @@ Coffle: |
             
             s&fs = 11;
             s&dis = 1;
-            n thing  $s:R.sc,R %sun
+            #n thing  $s:R.sc,R %sun
         },'ift,D'],
         #c push have encoded %balls wormhole through %moves
         #   received by this %push early enough to action
@@ -1083,7 +1083,7 @@ Coffle: |
             if (!t) {
                 done &&
                     n va  s:vanishing!
-                n notheir  s:⦳
+                n notheir  s:⦳ %fs:22
             }
             
             # checkout on init (%their to %here)
@@ -1097,6 +1097,8 @@ Coffle: |
             
             if (Rs&shove || Rs&boost > 1) {
                 !Rs&shove and Rs&Te.sc.boost = 1;
+                Rs&shove &&
+                    n shovedby  $s:Rs&shove %hs:388,deco
                 # the usual
                 $c =
                 m push $from:h,to:t,pusher:R
@@ -1211,9 +1213,13 @@ Coffle: |
         !r and throw "fednor"
         !rs&ball and throw "!ball"
         $ok = 1;
-        if (!rs&dige || rs&Lines && rs&Lines != r) {
+        if (rs&Lines == null) {
             ok = 0;
             m notLinesey  s:⊗
+        }
+        if (rs&Lines && !rs&LinesN) {
+            ok = 0;
+            m notLinesNtoppy  s:⊗
         }
         if (!rs&string || rs&string.length < 5) {
             ok = 0;
@@ -2113,7 +2119,7 @@ Coffle: |
                 return S
             };
         },'ift,D'],
-        
+        #c Lines
         ['Lines','22',&acgtRs{
             !s and ns&notfound = 1; return
             $b = Rc&b;
@@ -2132,21 +2138,22 @@ Coffle: |
             # are now %ball continued
         },'ift,D'],
         
+        # %Lines recurses, a list of toplevels to push R to
         ['Lines','6',&acgtRs{
             !Rs&ball and throw "Lines!ball"
-            $L = Rs&Lines;
-            if (L == '1') {
-                L = Rs&Lines = R;
-                Rs&Hi = {};
-                Rs&LinesN = [];
+            Rs&Lines == '1' and Rs&Lines = [R]
+            each ir Rs&Lines {
+                rs&LinesN ||= [];
+                rs&LinesN.push(R);
             }
             # if this %ball dups, head to origin
             # which only happens now
             # should have more singular drawings from
-            Ls&LinesN.push(R);
             each in Rs&z {
                 !ns&ball and continue
-                ns&Lines = Rs&Lines
+                $toppy = ns&Lines == '1';
+                ns&Lines = Rs&Lines.slice();
+                toppy and ns&Lines.push(n);
             }
             $part;
             try {
@@ -2177,9 +2184,9 @@ Coffle: |
         },'ift,D'],
         
         ['Lines','67',&acgtRs{
-            Rs&Lines != R and return
+            !Rs&LinesN and return
             $rN = Rs&LinesN.slice().reverse();
-            Rs&LinesBunch = [];
+            # Ring may distort the order of Rs&z
             each ir rN {
                 $ind = '';
                 $i = 0;
@@ -2190,8 +2197,24 @@ Coffle: |
                 $l = say.split("\n")
                     .map(l => ind+l).join("\n");
                 #l += "\n";
-                Rs&LinesBunch.unshift(l);
+                rs&LinesForSomeone = l;
             }
+            $stitch = &r{
+                $ri = rN.indexOf(r);
+                0 > ri and throw "wandering stitch"
+                rN.splice(ri,1);
+                $l = [rs&LinesForSomeone];
+                delete rs&LinesForSomeone;
+                !l[0] and throw r.t+" !LFS"
+                # not ordered but gets parent correct
+                each in rs&z {
+                    !ns&Lines || 0 > ns&Lines.indexOf(R) and continue
+                    l.push(...stitch(n))
+                }
+                return l
+            };
+            Rs&LinesBunch = stitch(R).slice();
+            rN.length and throw "unfound Linesers"
             Rs&string = Rs&LinesBunch.join("\n")+"\n";
             Rs&dige = dig(Rs&string);
         },'ift,D'],
