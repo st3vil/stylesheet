@@ -949,49 +949,6 @@ Coffle: |
             # certain/lowlevel types of %push
             Rs&auto || Rs&hard and Rs&push = 9
         },'ift,D'],
-        # connect 7ing %pushes with what they want to do
-        # early enough for %othering
-        ['push+moves','4',&acgtRs{
-            $M = Rs&moves;
-            each in M {
-                ns&done and continue
-                # with items from late last time
-                $f = nc&from;
-                $t = nc&to;
-                nc&push = R;
-                # f is likely to be the last %here, unless reversing
-                # t (usu %their) may not be here yet:
-                #  R%othering %pull%there==R will z it
-                t ||= Rs&there;
-                $tp = t && ty&up;
-                if (tp && tps&pushering) {
-                    tp = me&yfuture,tp;
-                    # parent mediates %push for some reason
-                    #  eg to %kvstore %here%string
-                    # not %their directly
-                    ~pushering: t.t, R.t
-                    ac(tp,'pushering',R,'ball',f)
-                }
-                else {
-                    # ensures (2-arg) it be aRound
-                    t = me&yfuture,t,R;
-                    ~othering: t.t, R.t
-                    ts&ball == '6' and throw "too late to %ball"
-                    ac(t,'othering',R,'ball',f)
-                    # usu othering %pull%here,
-                    # < the %moves making subcommits:
-                    #   their own reselections of %ball
-                }
-                
-                ns&sym = n.t == 'checkout' ? '↽' :
-                    ns&rebase ? (ns&pending ? '◅' : '◄')
-                    : (ns&pending ? '▻' : '►');
-                ns&done = 6;
-                #n thereup  $s:ty&up,R %sun
-                # t%ball%othering should get us
-            }
-            
-        },'ift,D'],
         ['ball+pushed','55',&acgtRs{
             # since ball 53 yfuture'd %pulled...
             $p = Ry&up;
@@ -1028,7 +985,7 @@ Coffle: |
             s&dis = 1;
             #n thing  $s:R.sc,R %sun
         },'ift,D'],
-        #c push have encoded %balls wormhole through %moves
+        # push have encoded %balls wormhole through %moves
         #   received by this %push early enough to action
         ['push+act','7',&acgtRs{
             $M = Rs&moves ||= [];
@@ -1078,6 +1035,10 @@ Coffle: |
                 # offer rebase if t changes without our push
                 $tdiff = me&diffya,R,'theirs',t,dones&their,2;
                 # < branch h <-> ms&h and patch onto that
+                if (!tdiffs&exactly) {
+                    # < explore what'll happen, run in reverse
+                    #m pull $from:t,to:h %pull,pending
+                }
             }
             
             if (!t) {
@@ -1089,7 +1050,7 @@ Coffle: |
             # checkout on init (%their to %here)
             if (1s&runs == 1 && !M.length
                 && Rs&mayco && me&sch_ballonlyt,h ) {
-                m checkout $from:t,to:h %rebase
+                m checkout $from:t,to:h %pull
             }
             
             # transmit here or what we made of it
@@ -1104,16 +1065,70 @@ Coffle: |
                 m push $from:h,to:t,pusher:R
             }
         },'ift,D'],
+        #c %push%made
+        # some complicated thing
+        ['push+made','8',&acgtRs{
+            $m = Rs&made;
+            n act  $s:Rs&act %deco
+            n prog  s:...
+            # m is %balls with %Copy = original
+            n expect  $s:ms&expect,R %sun
+        },'ift,D'],
+        #c %push%moves
+        # 7%push sends its future self %moves to do
+        #   objects (esp %from and %pusher) from that time
+        # now early enough for %othering
+        ['push+moves','4',&acgtRs{
+            $M = Rs&moves;
+            each in M {
+                ns&done and continue
+                # with items from late last time
+                $f = nc&from;
+                $t = nc&to;
+                nc&push = R;
+                # f is likely to be the last %here, unless reversing
+                # t (usu %their) may not be here yet:
+                #  R%othering %pull%there==R will z it
+                t ||= Rs&there;
+                $tp = t && ty&up;
+                if (tp && tps&pushering) {
+                    tp = me&yfuture,tp;
+                    # parent mediates %push for some reason
+                    #  eg to %kvstore %here%string
+                    # not %their directly
+                    ~pushering: t.t, R.t
+                    ac(tp,'pushering',R,'ball',f)
+                }
+                else {
+                    # ensures (2-arg) it be aRound
+                    t = me&yfuture,t,R;
+                    ~othering: t.t, R.t
+                    ts&ball == '6' and throw "too late to %ball"
+                    ac(t,'othering',R,'ball',f)
+                    # usu othering %pull%here,
+                    # < the %moves making subcommits:
+                    #   their own reselections of %ball
+                }
+                
+                ns&sym = n.t == 'checkout' ? '↽' :
+                    ns&pull ? (ns&pending ? '◅' : '◄')
+                    : (ns&pending ? '▻' : '►');
+                ns&done = 6;
+                #n thereup  $s:ty&up,R %sun
+                # t%ball%othering should get us
+            }
+            
+        },'ift,D'],
         
-        #c moves talked about 
-        ['moves','7',&acgtRs{
+        # moves talked about 
+        ['push+moves','7',&acgtRs{
             $M = Rs&moves;
             M.length &&
-                n moves $s:M,R %moved
+                n moves $s:M,R %hadmoves
         },'ift,D'],
         # squishy shrinking ooze, preserving interesting events
         # more info at latest
-        ['moved','3',&acgtRs{
+        ['hadmoves','3',&acgtRs{
             $p = Ry&up;
             $forget = [];
             each in s {
@@ -1138,8 +1153,10 @@ Coffle: |
             
             forget.map(i => s.splice(i,1));
         },'ift,D'],
+        
         # clones %balls for me&Copy
-        ['Copy','11',&acgtRs{
+        ['ball+Copy','11',&acgtRs{
+            Rs&Copy = s;
             Rc&s = G&Cye,s;
             # update self in above z
             $p = Ry&up;
@@ -1163,12 +1180,19 @@ Coffle: |
 
     ] };
     
-    # make an adaptor to a list processor,
-    #  match & rebuild h%balls as needed,
-    #  feed through destructive encoder,
+    #c pushy
+    # make instructions for Co
     me.TeCo = &acgtRhtc{
         $r = me&Copy,R,hc&s,26;
-        # mangle rc&s
+        
+        $s = rc&s;
+        # remove expectations
+        rs&expect = ss&z;
+        delete ss&z;
+        $c = rc&s = G&Cye,['Co',''];
+        i $c/$s
+        # pointer to s?
+        
         delete rs&ov;
         rs&Lines = 1;
         # onward 3%ball Rsyncs, anything under r may ~
