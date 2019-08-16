@@ -1074,7 +1074,7 @@ Coffle: |
                 m push $from:h,to:t,pusher:R
             }
         },'ift,D'],
-        #c %push%made
+        #c push-made
         # some complicated thing
         ['push+made','8',&acgtRs{
             $m = Rs&made;
@@ -1083,7 +1083,7 @@ Coffle: |
             # m is %balls with %Copy = original
             n expect  $s:ms&expect,R %sun
         },'ift,D'],
-        #c %push%moves
+        #c push-moves
         # 7%push sends its future self %moves to do
         #   objects (esp %from and %pusher) from that time
         # now early enough for %othering
@@ -1228,7 +1228,7 @@ Coffle: |
     # returned awake enough to help 7%push
     me.diffya = &acgtRkhtq{
         $d = me&Ret,R,{t:k,self:h,diff:t};
-        ts&dige == hs&dige and ds&exactly = 1;
+        t && h && ts&dige == hs&dige and ds&exactly = 1
         return d
     };
     
@@ -1687,15 +1687,10 @@ Coffle: |
             Rs&pushering ||= [];
             me&rollbs,R,'rememb';
             
-            each il Rs&pushish {
-                $t = ls&here;
-                # a remote %push, for some id
-                $k = ts&H || t.t;
-                $s = localStorage[k];
-                if (!s) {
-                    ls&new = 1;
-                    continue
-                }
+            Rs&get_key_for = &t{
+                return ts&H || t.t
+            };
+            Rs&arrange_decoder = &tsl{
                 # arrange decoder
                 $re = Rs&rememb ||= {};
                 $kd = k+dig(s);
@@ -1703,14 +1698,30 @@ Coffle: |
                 bc.remova = &{ delete re[kd] };
                 # keep the %balls with the decoding Lines stuff
                 $S = re[kd] ||= me&Reis,R,k,s,bc;
-                # %pull%here=S, will %thing when othered
-                $L = me&push,R,[],S,'decode','hard';
-                # allow %thing from ^ to look like l's %thing
-                ls&deliverer = L;
+                if (l) {
+                    # %pull%here=S, see below 
+                    $L = me&push,R,[],S,'decode','hard';
+                    # allow %their from ^ to look like l's %thing
+                    ls&deliverer = L;
+                }
+                return S
+            };
+            
+            each il Rs&pushish {
+                $t = ls&here;
+                # a remote %push, for some id
+                $k = Rs&get_key_for(t);
+                $s = localStorage[k];
+                !s and ls&new = 1; continue
+                
+                Rs&arrange_decoder(t,s,l);
             }
         },'ift,D'],
         ['kvstore','4',&acgtRs{
-            each il Rs&pushering {
+            !Rs&pushering and return
+            $i = 0;
+            while (Rs&pushering[i]) {
+                l = Rs&pushering[i];
                 $t = (Rs&pushering_ball||[])[i] || ls&here;
                 if (ls&hard) {
                     $S = tc&s;
@@ -1720,6 +1731,7 @@ Coffle: |
                         i Rc&s/-#S.t
                         n ush  s:ush
                         ac(R,'pushing_z',l,'ball',t);
+                        # becomes %push%their
                         ls&delivered = t;
                     }
                 }
@@ -1728,11 +1740,17 @@ Coffle: |
                     !ts&ball || !ts&LinesN and throw "not %here=%ball%LinesN"
                     $good = ts&string && ts&string.length > 7
                     !good and throw "string dodgy"
-                    $k = ts&H || t.t;
+                    # redecode, sets/does another ls&deliverer since lookup
+                    #  checks it works,
+                    #  %move%pushed%their gets what was pushed
+                    Rs&arrange_decoder(t,ts&string,l);
+                    
+                    $k = Rs&get_key_for(t);
                     localStorage[k] = ts&string;
                     # < check it's what %push knew about when it pushed
                     # < may contain several things to which you must link
                 }
+                i++;
             }
         },'ift,D'],
         
