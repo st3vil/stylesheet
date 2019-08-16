@@ -1530,4 +1530,123 @@ Soogle: |
             i++;
         }
     };
+    #c diff
+    me.diffproximate = &acgtR{
+        # how many lines +- approx
+        $M = me&Mw,R,'diffproximate';
+        $h = {};
+        $diff = 0;
+        each in Rs&Comp {
+            if (nc&s.indexOf("\n") < 0) {
+                # in-line boundary means something is changing, a little
+                # note that once per line
+                if (!diff) {
+                    h.diff ||= 0;
+                    h.diff++;
+                    diff = 1;
+                }
+            }
+            else {
+                diff = 0;
+            
+                $Lines = nc&s.split("\n");
+                $lines = Lines.length;
+                Lines.slice(-1)[0] == '' and lines--
+                h[n.t] ||= 0;
+                h[n.t] += lines;
+            }
+        }
+        $k = G&peel,'new:+,diff:~,gone:-,same:=';
+        each is k {
+            $n = h[i];
+            !n and continue
+            $s = s+n;
+            $C =
+            m $i  $s:s %fs:25
+            C.t == 'new' and s&hue = '265deg';
+            C.t == 'gone' and s&hue = '111deg';
+            C.t == 'diff' and s&hue = '55deg';
+        }
+        # < putting yay many things approximately where they are,
+        # < putting in names shaded to their thisthatty
+    };
+    # textdiffN - clean up/fold
+    me.textdiffN = &acgtNc{
+        $M = [];
+        each in N {
+            $m =
+            m bit  $s:nc&s %
+            m.t = n.t;
+            n.t == 'new' and ms&hue = '265deg';
+            n.t == 'gone' and ms&hue = '111deg';
+            ms&hue and continue
+            
+            !c.fold and continue
+            $s = mc&s;
+            s.length < 40 and continue
+            if (0 && !s.match(/\n/)) {
+                ms&shortfor = [s];
+                mc&s = s.slice(0,20)+" ... "+s.slice(-20);
+            }
+            else {
+                $L = s.split("\n");
+                $las = L.pop();
+                L = L.map(&s{ return s+"\n" });
+                las != '' and L.push(las);
+                $w = []; # to be
+                # fold ind level
+                # deep is shallow+1, when shallow bit grouper found
+                $deep;
+                $la;
+                $finalN = i*1+1 == N.length;
+                $firstN = i == 0;
+                each il L {
+                    # not 3 lines near a change
+                    if ((firstN || i > 1) &&
+                        (finalN || i < L.length - 3)) {
+                        if (deep && l.match(deep)) {
+                            !la and throw "no la";
+                            $sh =
+                            las&shortfor ||= [];
+                            sh.push(l);
+                            continue;
+                        }
+                    }
+                    la = null;
+                    w.push(l);
+                    $shall = l.match(/^(  +)/);
+                    if (shall) {
+                        deep = new RegExp('^'+shall[1]+'  ');
+                        la =
+                        m $m.t  $s:w.join("") %
+                        w = [];
+                    }
+                }
+                mc&s = w.join("");
+            }
+        } 
+        each in M {
+            ns&hue || ns&bri and continue
+            # shortened inside lines
+            $text = ns&shortfor;
+            !text and continue
+            # falsify a heading, 't y ... +n':
+            $m = nc&s.match(/^(  \S[^\t]*\t[^\t]*\t)/);
+            if (m) {
+                text.unshift(nc&s);
+                nc&s = m[1] + " ... +"+(text.length-1);
+                nc&s += "\n";
+            }
+            else { # never misses? 
+                #
+            }
+            !text.join and debugger;
+            ns&shortfor = text.join("");
+            ns&fs = '80%';
+            ns&bri = 0.6;
+            ns&dow = 'do/Swaps';
+        }
+        return M;
+    };
+    
 
