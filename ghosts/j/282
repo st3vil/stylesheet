@@ -1046,13 +1046,14 @@ Coffle: |
                 if (!tdiffs&exactly) {
                     # < explore what'll happen, run in reverse
                     #m pull $from:t,to:h %pull,pending
+                    n pending  s:pull? %hs:588
                 }
             }
             
             if (!t) {
                 done &&
                     n va  s:vanishing!
-                n notheir  s:⦳ %fs:22
+                n notheir  s:⧁ %fs:22
             }
             
             # checkout on init (%their to %here)
@@ -1074,7 +1075,7 @@ Coffle: |
             }
         },'ift,D'],
         #c push-made
-        # some complicated thing
+        # some complicated thing breaking out steps
         ['push+made','8',&acgtRs{
             # m is %balls with %Copy = origin, %Ropy 
             $m = Rs&made;
@@ -1090,34 +1091,97 @@ Coffle: |
             
             # 
             # Co/Hap/ Hap v1...
-            # 
+            # a
             # make deals across the border so
             $t = Rs&their;
             $N = me&iotballball,t;
             
             $h = Rs&here;
             $Z = hs&z.filter(h => hs&ball);
+            
+            $tot = '('+N.length+'/'+Z.length+')';
+            n tot  $s:tot %hs:357
             each in N {
-                n $i  $step:i,h:N[i],t:Z[i],R
+                n $i  $step:i,got:N[i],exp:Z[i],R
             }
-            
-            
+            while (Z[++i]) {
+                n $i  $step:i,got:N[i],exp:Z[i],R
+            }
         },'ift,D'],
         # transfer  
         ['step','4',&acgtRs{
             Rs&rowish = 1;
-            n t  s:s %hs:634,deco
+            n t  s:S: %hs:634
             n i  $s:Rs&step %hs:999
-            !Rs&h and throw "must be here"
+            # modes of perception seeing acts
+            $l = Ry&up;
+            $M = ls&moves;
+            !ls&push and throw "step up !push"
+            !M and throw "up push !moves"
+            
+            # stashed steperately
+            
+            
+            $g = Rs&got;
+            $x = Rs&exp;
+            if (!g) {
+                # not yet
+                n not  s:⧁ %fs:18
+                return
+            }
+            elsif (!x) {
+                # unexpected
+                Rs&dodiff = 1; # helps show it
+            }
+            else {
+                $X = xc&s;
+                if (Xs&H) {
+                    # is object pointer
+                    if (Xs&H == gs&dige) {
+                        # avoid decoding
+                        Rs&stat = 'ok';
+                        n good  s:== %fs:14,hs:387
+                        # disconnects from diff,
+                        return
+                    }
+                    # find Ghost via lookup
+                    x = me&GhostOut,R,Xs&H;
+                }
+            }
+            
             $k = 'step:'+Rs&step;
             
-            $d = me&diffya,R,k,Rs&h,Rs&t;
+            
+            $d = me&diffya,R,k,g,x;
             ds&new &&
-                n not  s:⦳ %fs:18
+                n not  s:⧀ %fs:18
             ds&exactly &&
                 n good  s:next %fs:14,hs:387
-            # modes of perception seeing acts
-            n made  $s:d,R %sun
+            
+            
+            if (Rs&boost > 1) {
+                #!Rs&shove and Rs&Te.sc.boost = 1;
+                # copy h to t
+                n push  s:push!
+                
+                # %got become the $step-th %ball under %here
+                # store object
+                !gs&dige || !gs&string and throw "weird"
+                me&GhostIn,R,gs&dige,gs&string;
+                # make pointer
+                $po = G&Cye,[k,'',{},{H:gs&dige}];
+                $bc = {task:'ravel',Lines:3,ball:1,noDisplay:1};
+                $ep = me&Reis,R,'thegot',po,bc;
+                
+                
+                $aa = [ls&here,Rs&got,ep];
+                n made  $s:aa,R %sun
+                
+                #    $k = Rs&get_key_for(t);
+                #    localStorage[k] = ts&string;
+                #m accept  $f:h,$t:t
+            }
+            
         },'ift,D'],
 
         # random look
@@ -1243,6 +1307,34 @@ Coffle: |
     ] };
     
     #c pushy
+    # operate on Ghost/kvstore remotely
+    # < s&H object pointers wander borders
+    me.GhostOut = &acgtRk{
+        $Ghost = Rs&sGhost ||= me&sGhost,R;
+        $k = Xs&H;
+        $s = localStorage[k];
+        !s and throw "noH: "+ki(X,3)
+        # a %ball with %Lines=0
+        return Rs&arrange_decoder(k,s);
+    };
+    # write-once storage
+    me.GhostIn = &acgtRks{
+        $Ghost = Rs&sGhost ||= me&sGhost,R;
+        $bs = localStorage[k];
+        bs && bs != s and throw "hash collision?"
+        !s and throw "noH: "+ki(X,3)
+        localStorage[k] = s;
+    };
+    # the source of your information
+    # o ^^%push %here %pushed'lookup' %there
+    me.sGhost = &acgtR{
+        $l = me.cby(R,&l{ return ls&push })[0];
+        $Ha = me.cby(ls&here,&b{ return
+            bc&pushed && bc&pushed[0].t == 'lookup'
+        })[0];
+        $pl = Hac&pushed[0];
+        return pls&there;
+    };
     # make instructions for Co
     me.TeCo = &acgtRhtc{
         $r = me&Copy,R,h,26;
@@ -1767,7 +1859,7 @@ Coffle: |
             Rs&get_key_for = &t{
                 return ts&H || t.t
             };
-            Rs&arrange_decoder = &tsl{
+            Rs&arrange_decoder = &ksl{
                 # arrange decoder
                 $re = Rs&rememb ||= {};
                 $kd = k+dig(s);
@@ -1791,7 +1883,7 @@ Coffle: |
                 $s = localStorage[k];
                 !s and ls&new = 1; continue
                 
-                Rs&arrange_decoder(t,s,l);
+                Rs&arrange_decoder(k,s,l);
             }
         },'ift,D'],
         ['kvstore','4',&acgtRs{
@@ -1820,9 +1912,8 @@ Coffle: |
                     # redecode, sets/does another ls&deliverer since lookup
                     #  checks it works,
                     #  %move%pushed%their gets what was pushed
-                    Rs&arrange_decoder(t,ts&string,l);
-                    
                     $k = Rs&get_key_for(t);
+                    Rs&arrange_decoder(k,ts&string,l);
                     localStorage[k] = ts&string;
                     # < check it's what %push knew about when it pushed
                     # < may contain several things to which you must link
@@ -2157,7 +2248,7 @@ Coffle: |
             n $R.t 13 s:~ %fs:29,lh:0.1
             
             if (Rs&boost > 1) {
-                n entirety  $s:gs&string
+                n entirety  $s:gs&string %max-height:7,over,dis
             }
             if (x && gs&string == xs&string) {
                 obc&s = '=';
@@ -2245,7 +2336,9 @@ Coffle: |
         },'ift,D'],
         #c Lines
         ['Lines','22',&acgtRs{
+            Rs&Lines == '3' and return Rs&Lines = 1
             !s and ns&notfound = 1; return
+            
             $b = Rc&b;
             Rs&string = s;
             if (b && bs&string == Rs&string) {
