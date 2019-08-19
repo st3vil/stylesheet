@@ -1109,7 +1109,7 @@ Coffle: |
                 if (doing) {
                     $indiff = me&diffya,R,'input',h,doings&here;
                     if (indiff && indiffs&exactly) {
-                        #Rs&made = doings&made
+                        Rs&made = doings&made
                     }
                 }
                 if (!Rs&made) {
@@ -1171,8 +1171,8 @@ Coffle: |
                 n prog  s:...
                 return
             }
-            # shrink the diff we sublate with step con
-            $tdC = tds&C; tdCs&fs = 5;
+            # less about input/their as made/steps
+            [td,dt.input].map(d => ds&sublated = 1);
             
             # their results
             $N = me&ioty,Rs&their,'%ball%ball';
@@ -1187,7 +1187,7 @@ Coffle: |
             r && rs&first != first and delete Rs&run
             if (!Rs&run) {
                 $runtime = (r && rs&runtime || 0) + 1;
-                $k = 'run:'+runtime;
+                $k = 'run_'+runtime;
                 r = Rs&run = G&Cye,[k,'']
             }
             # 
@@ -1200,7 +1200,7 @@ Coffle: |
             $tot = '('+N.length+'/'+Z.length+')';
             n tot  $s:tot %hs:357
             $astep = &i{
-                $k = 'step:'+i;
+                $k = 'step_'+i;
                 n $k  $step:i,got:N[i],exp:Z[i],R
             };
             each in N {
@@ -1335,11 +1335,13 @@ Coffle: |
                 ss&accepted = d
             }
             
-            Rs&ok &&
-                n ok  s:ok %fs:18,hs:395
+            if (Rs&ok) {
+                n ok  s:ok %hs:395
+                return
+            }
             
             if (Rs&boost > 1) {
-                !Rs&shove and Rs&Te.sc.boost = 1;
+                !Rs&shove and Rs&Te.sc.boost = 0;
                 # copy h to t
                 n push  s:accept
                 # %got become the $step-th %ball under %here
@@ -1351,6 +1353,9 @@ Coffle: |
                 me&input,ls&here,po;
                 
                 #m accept  $f:g,$t:x
+            }
+            elsif (Rs&boost > 0) {
+                n push  s:accept?
             }
             
         },'ift,D'],
@@ -1548,6 +1553,7 @@ Coffle: |
         #   by the initial diff selecting %self%balls
         #   to go %othering into a %staging%balls
         #   %Lines that and diff etc against %other again
+        
         ['diff','3',&acgtRs{
             s&ws = 'pre';
             s&fs = 7;
@@ -1556,7 +1562,6 @@ Coffle: |
             s&pa = 0.3;
             s&lh = 1;
             s&bo = '1px dotted yellow';
-            s&sublated and s&fs = 5
             #s&hue = '84deg';
             # ^ applies to diffproximate but not the patch?
             
@@ -1625,6 +1630,9 @@ Coffle: |
                     obc&s != '=' and throw "empty patch !="
                 }
             }
+        },'ift,D'],
+        ['diff','87',&acgtRs{
+            Rs&sublated and s&fs = 5
         },'ift,D'],
     ] };
     
@@ -2052,6 +2060,14 @@ Coffle: |
             }
         },'ift,D'],
         ['ball','28',&acgtRs{
+            $b = Rc&b;
+            !b &&
+            n newb o9 s:b %fs:7,hs:297
+            if (b && bc&s != Rc&s) {
+                n news o9 s:s %fs:7,hs:297
+            }
+        },'ift,D'],
+        ['push','28',&acgtRs{
             $b = Rc&b;
             !b &&
             n newb o9 s:b %fs:7,hs:297
