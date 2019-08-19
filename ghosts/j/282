@@ -1567,9 +1567,6 @@ Coffle: |
             $ob =
             n $R.t 13 s:~ %fs:29,lh:0.1
             
-            if (Rs&boost > 1) {
-                n entirety  $s:gs&string %max-height:7,over,dis
-            }
             if (x) {
                 if (gs&dige == xs&dige) {
                     # apparently the same, avoid load/decode
@@ -1583,15 +1580,19 @@ Coffle: |
             }
             if (!x) {
                 !Rs&unexpected and throw "Not expected to be unexpected"
-                obc&s += ' unexpected';
-                # < most after the difference from last time
+                # < most after the difference from previous step
+                obc&s = 'new!'
             }
-            if (!x || me&Mw,R,'err' .length) {
+            if (me&Mw,R,'err' .length) {
                 n errors  s:⊗ %fs:18
                 obc&s = '!'
             }
-            obc&s == '!' and return
-            obc&s == '=' and return
+            if (obc&s.match(/[!=]$/)) {
+                if (Rs&boost > 0) {
+                    n entirety  $s:gs&string %max-height:7,over,dis
+                }
+                return
+            }
             
             # switch chunk: word/line
 
