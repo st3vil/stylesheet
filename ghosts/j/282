@@ -1128,7 +1128,7 @@ Coffle: |
                 # offer rebase if t changes without our push
                 $tdiff = me&diffya,R,'theirs',t,dones&their;
                 # < branch h <-> ms&h and patch onto that
-                if (!tdiffs&exactly) {
+                if (!Rs&made && !tdiffs&exactly) {
                     # < explore what'll happen, run in reverse
                     #m pull $from:t,to:h %pull,pending
                     n pending  s:pull? %hs:588
@@ -1188,7 +1188,8 @@ Coffle: |
             if (!Rs&run) {
                 $runtime = (r && rs&runtime || 0) + 1;
                 $k = 'run_'+runtime;
-                r = Rs&run = G&Cye,[k,'']
+                r = Rs&run = G&Cye,[k,''];
+                rs&first = first;
             }
             # 
             # Co/Hap/ Hap v1...
@@ -1274,8 +1275,8 @@ Coffle: |
         ['step','4',&acgtRs{
             Rs&rowish = 1;
             
-            n t  s:S: %hs:634
-            n i  $s:Rs&step %hs:999
+            n t 11 s:S: %hs:634
+            n i 112 $s:Rs&step %hs:999
             
             # modes of perception seeing acts
             $l = Ry&up;
@@ -1316,31 +1317,31 @@ Coffle: |
             $s = ya;
             ss&step = Rs&step;
             $ac = ss&accepted;
-            if (ac) {
-                # results are allowed to wander off once accepted
-                # such info is interesting
-                # < accept/test for history-warp
-                dc.sublated = 1;
-                n accepted_before 13 s:=) %fs:29,lh:0.1
-                Rs&ok = 3
-            }
             
             $d = me&diffya,R,R.t,g,x,dc;
             
             ds&new &&
-                n not  s:⧀ %fs:18
+                n not 12 s:⧀ %fs:18
             
             if (ds&exactly) {
                 Rs&ok = 1;
                 ss&accepted = d
             }
+            elsif (ac) {
+                # results are allowed to wander off once accepted
+                # such info is interesting
+                # < accept/test for history-warp
+                ds&sublated = 1;
+                n accepted_before 15 s:=)
+                Rs&ok = 3
+            }
             
             if (Rs&ok) {
-                n ok  s:ok %hs:395
+                n ok 14 s:ok %hs:395
                 return
             }
             
-            if (Rs&boost > 1) {
+            if (Rs&boost > 0) {
                 !Rs&shove and Rs&Te.sc.boost = 0;
                 # copy h to t
                 n push  s:accept
@@ -1352,10 +1353,13 @@ Coffle: |
                 $po = G&Cye,[R.t,1,{},{H:gs&dige}];
                 me&input,ls&here,po;
                 
+                $dt = ds&Te;
+                # about to become '='
+                dt && dts&boost and dts&boost = 0
                 #m accept  $f:g,$t:x
             }
             elsif (Rs&boost > 0) {
-                n push  s:accept?
+                n push 12 s:accept?
             }
             
         },'ift,D'],
@@ -1964,6 +1968,12 @@ Coffle: |
     # now Ray and his armies will go do:
     me.Ja.happenings = &acgt{
         me&Gomp;
+        $bit = 1s&bithold ||= G&Cye,['Bit',''];
+        $b =
+        n abit  s:lau %fopia
+        i $b/$bit
+        bits&bobs ||= 0
+        bits&bobs --;
         
         n Plethoria  $s:<<'' %of:s
             # glampiture
