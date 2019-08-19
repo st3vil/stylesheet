@@ -726,7 +726,11 @@ Coffle: |
         # once located, muddle with opportunity
         
         #vs&cb && vs&cb,R,t
-        hak(v.sc,k) and R.sc[k] = v.sc[k]
+        if (hak(v.sc,k)) {
+            $V = v.sc[k];
+            k == 'boost' and V *= 1
+            R.sc[k] = V;
+        }
         # oncer
         d == '1' and delete v.sc[k]
     };
@@ -735,8 +739,10 @@ Coffle: |
     me.stackTe = &acgtN{
         $el = 4s&elvisory ||= G&Cye,['Elvisory',''];
         each in N {
-            # has a better .t
-            ns&Te && ns&Te.c and n = ns&Te
+            if (typeof n == 'object') {
+                # has a better .t
+                ns&Te && ns&Te.c and n = ns&Te
+            }
             # < io spacerising
             i $el/#$n
             el = ays&n[0];
@@ -746,14 +752,22 @@ Coffle: |
     # set Te
     #  for setting boost that can then wander off as per
     me.introqua = &acgtRcm{
-        me&Tie,R;
-        $h = Rs&Te;
-        # if none exists
-        h && h.c && !m and return
-        $N = me.cby(R);
-        N.shift().t != 'I' and throw "I!=0"
+        $N;
+        if (R.constructor == Array) {
+            N = R
+        }
+        else {
+            me&Tie,R;
+            $h = Rs&Te;
+            # if none exists
+            h && h.c && !m and return
+            N = me.cby(R);
+            N.shift().t != 'I' and throw "I!=0"
+        }
         $el = me&stackTe,N;
-        ex(el.sc,c);
+        each kv c {
+            el.sc[k] = v
+        }
     };
     #c structuR
     me.namup = &acgts{
@@ -1974,6 +1988,7 @@ Coffle: |
         i $b/$bit
         bits&bobs ||= 0
         bits&bobs --;
+        bits&bobs == -2 and throw "Unfielded quark"
         
         n Plethoria  $s:<<'' %of:s
             # glampiture
@@ -2007,6 +2022,7 @@ Coffle: |
             Rs&rowish = 1;
             # A.4 to/run/from, shared
             # is the local stage, our gear projected on
+            1s&runs == 1 and me&introqua,[A.1.t,'Ha','ravel','T',A.1.t],{boost:-1}
             n T  $s:sc&Travel,R %ball
             # create and harvest arrangements of gear
             #  %Teing extrapolates runningness
