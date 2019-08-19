@@ -1186,12 +1186,21 @@ Coffle: |
             
             $tot = '('+N.length+'/'+Z.length+')';
             n tot  $s:tot %hs:357
-            each in N {
+            $astep = &i{
+                $k = 'step:'+i;
                 n $i  $step:i,got:N[i],exp:Z[i],R
+            };
+            each in N {
+                astep(i)
             }
             while (Z[++i]) {
-                n $i  $step:i,got:N[i],exp:Z[i],R
+                astep(i)
             }
+        },'ift,D'],
+        ['push+made','81',&acgtRs{
+            n thing  $s:R.sc,R %sun
+            $steps = Rs&z.filter(n=>ns&step!=null);
+            n steps  $s:steps,R %sun
         },'ift,D'],
         # transfer  
         ['step','4',&acgtRs{
@@ -1211,7 +1220,7 @@ Coffle: |
             $x = Rs&exp;
             if (!g) {
                 # not yet
-                n not  s:⧁ %fs:18
+                n not  s:... %fs:18
                 return
             }
             elsif (!x) {
@@ -1232,14 +1241,14 @@ Coffle: |
                 }
             }
             
-            $k = 'step:'+Rs&step;
             
             
-            $d = me&diffya,R,k,g,x;
+            $d = me&diffya,R,R.t,g,x;
             ds&new &&
                 n not  s:⧀ %fs:18
             ds&exactly &&
                 n good  s:next %fs:14,hs:387
+            
             
             
             if (Rs&boost > 1) {
@@ -1945,7 +1954,7 @@ Coffle: |
         
         
         #c haveth
-        # interesting comment rubble from %pull:
+        # interesting comment rubble from drained %pull:
         
         # t individuals in any place
         #     < new/gone similar -> moved
@@ -1968,7 +1977,9 @@ Coffle: |
                 # engage drawing up of planes
                 # becoming matter for idea/diff/apply
         
-        # give idea of where on screen such ref is
+        # give idea of where on screen such ref is from here
+        # eg up/prev/in = up, up/next/in = down
+        # < up = left, in = right
         ['haveth','3',&acgtRs{
             if (!Rs&haveth) {
                 n nohaveth  s:!
@@ -2024,18 +2035,6 @@ Coffle: |
             n t 11 $s:s.t %deco,fs:8,fix:t,mr:0.3
             
             Rs&is == 'live' and s&bo = '4px dotted #782';
-            
-            # send trees to attach here-wards
-            Rs&input = &p{
-                $l = [];
-                $r = R;
-                each is p {
-                    r = me&input,r,s;
-                    l.push(r);
-                }
-                # let l unite
-                return l
-            };
             
             if (Rs&boost < 0) {
                 if (Rs&boost < -1) {
@@ -2097,7 +2096,6 @@ Coffle: |
                 n typeball  R %etype:ball
             }
             me&endome,R;
-            #R.t == 'Wormhole' and debugger;
             ss&z and me&Rsync,R;
         },'ift,D'],
         #c ballope
@@ -2163,6 +2161,7 @@ Coffle: |
             n playing  s:▶
             
             $l = me&push,R,['/','T'],[],'run',{does:'TeCo'};
+            ls&boost = 2;
             me&introqua,l,{boost:2};
             
             return
