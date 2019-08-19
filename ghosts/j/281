@@ -1675,9 +1675,11 @@ Soogle: |
     # setty http://xahlee.info/comp/unicode_math_operators.html
     
     # returned awake enough to help 7%push
-    me.diffya = &acgtRkhtq{
+    me.diffya = &acgtRkhtc{
+        c ||= {};
+        ex(c,{t:k,got:h,exp:t,diff:1});
         $dt = Rs&diffya ||= {};
-        $d = dt[k] = me&Ret,R,{t:k,got:h,exp:t,diff:1};
+        $d = dt[k] = me&Ret,R,c;
         # can be seen to be ... already
         t && h && ts&dige == hs&dige and ds&exactly = 1
         h && !t and ds&new = 1
@@ -1704,16 +1706,28 @@ Soogle: |
             $g = Rs&got;
             me&sch_didLines,R,g;
             $x = Rs&exp;
-            x && me&sch_didLines,R,x;
+            x && !Rs&expGhost and me&sch_didLines,R,x;
             $ob =
             n $R.t 13 s:~ %fs:29,lh:0.1
             
             if (Rs&boost > 1) {
                 n entirety  $s:gs&string %max-height:7,over,dis
             }
-            if (x && gs&string == xs&string) {
-                obc&s = '=';
-                ob.t += ' equal';
+            if (x) {
+                if (gs&dige == xs&dige) {
+                    # apparently the same, avoid load/decode
+                    obc&s = '=';
+                    ob.t += ' equal';
+                }
+                elsif (Rs&expGhost) {
+                    # decode contents of expectation
+                    x = Rs&exp = Rs&expGhost();
+                }
+            }
+            if (!x) {
+                !Rs&unexpected and throw "Not expected to be unexpected"
+                obc&s += ' unexpected';
+                # < most after the difference from last time
             }
             if (!x || me&Mw,R,'err' .length) {
                 n errors  s:⊗ %fs:18

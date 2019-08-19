@@ -1126,7 +1126,7 @@ Coffle: |
             
             if (t && done) {
                 # offer rebase if t changes without our push
-                $tdiff = me&diffya,R,'theirs',t,dones&their,2;
+                $tdiff = me&diffya,R,'theirs',t,dones&their;
                 # < branch h <-> ms&h and patch onto that
                 if (!tdiffs&exactly) {
                     # < explore what'll happen, run in reverse
@@ -1196,13 +1196,66 @@ Coffle: |
             while (Z[++i]) {
                 astep(i)
             }
+            n progress  R %decideprogress
         },'ift,D'],
-        ['push+made','81',&acgtRs{
+        ['push+made','82',&acgtRs{
             n thing  $s:R.sc,R %sun
-            $steps = Rs&z.filter(n=>ns&step!=null);
-            n steps  $s:steps,R %sun
+            
+            if (Rs&stepforward) {
+                # makes iteration by unblocking the instruction
+                $t = Rs&their;
+                $N = me&ioty,t,'%ball';
+                # this is W=Co's children, a shared space,
+                # < look for our %made's business
+                # the Winy&current points to Wins&z[-1] == Wout
+                each in N {
+                    delete ny&current;
+                }
+            }
         },'ift,D'],
-        # transfer  
+        # ⧐ from the top
+        # ∿ big change
+        # ~ small change
+        # ☯
+        # 
+        # should be a %push%run thing, or even its test A.4
+        #    or is it A.9?
+        #  persistent/rollbs like %push%made
+        #  per othering, which starts a test run (drops J)
+        ['decideprogress','5',&acgtRs{
+            $p = Ry&up;
+            
+            $steps = me&ioty,p,'%step';
+            Rs&ok = 1;
+            Rs&more = 0;
+            each in steps {
+                !ns&got and Rs&more = 1; break
+                # results got must be ok
+                !ns&ok and Rs&ok = 0
+            }
+            
+            if (Rs&boost > 0) {
+                Rs&Te.sc.boost = 0;
+                Rs&wantstep = 1;
+            }
+            
+            !Rs&ok &&
+                n notok  s:! %fs:17,hs:856
+            Rs&ok &&
+                n ok  s:ok
+            Rs&more &&
+                n more  s:...
+            
+            Rs&ok && Rs&more and Rs&wantstep = 1
+            Rs&more &&
+                n more  s:≻ %fs:15
+            !Rs&more &&
+                n moreanyway  s:⊁ %fs:15
+            
+            Rs&wantstep and ps&stepforward = 1
+            
+        },'ift,D'],
+        #c step transfer  
         ['step','4',&acgtRs{
             Rs&rowish = 1;
             n t  s:S: %hs:634
@@ -1218,38 +1271,33 @@ Coffle: |
             
             $g = Rs&got;
             $x = Rs&exp;
+            $dc = {};
             if (!g) {
                 # not yet
                 n not  s:... %fs:18
                 return
             }
             elsif (!x) {
-                # unexpected
-                Rs&dodiff = 1; # helps show it
+                dc.unexpected = 1
             }
             else {
                 $X = xc&s;
                 if (Xs&H) {
-                    # avoid decoding
-                    if (Xs&H == gs&dige) {
-                        Rs&stat = 'ok';
-                        n good  s:== %fs:14,hs:387
-                        return
+                    # Lines/decode should do this:
+                    xs&H = xs&dige = Xs&H;
+                    # which may avoid decoding it
+                    # until contents are needed for a diff:
+                    dc.expGhost = &{
+                        return me&GhostOut,R,Xs&H;
                     }
-                    # decode test data
-                    x = me&GhostOut,R,Xs&H;
                 }
             }
             
+            $d = me&diffya,R,R.t,g,x,dc;
             
-            
-            $d = me&diffya,R,R.t,g,x;
             ds&new &&
                 n not  s:⧀ %fs:18
-            ds&exactly &&
-                n good  s:next %fs:14,hs:387
-            
-            
+            ds&exactly and Rs&ok = 1;
             
             if (Rs&boost > 1) {
                 !Rs&shove and Rs&Te.sc.boost = 1;
@@ -1417,9 +1465,28 @@ Coffle: |
         }
         return r
     };
+    # io should be able to: $t/%ball/%ball or so
+    #  and Bab this while loop with var sets
+    me.ioty = &acgtty{
+        $leg = [];
+        typeof y == 'string' and leg = y.split('%');
+        leg[0] == '' and leg.shift();
+        # default $t/*
+        !leg.length and leg.push('');
+        !ts&z and return []
+        $bit = leg.shift();
+        $z = ts&z.filter(l => !bit || l.sc[bit] != null);
+        if (leg.length) {
+            leg = leg.join('%');
+            $Z = [];
+            each il z {
+                Z.push( ... me&ioty,l,leg );
+            }
+            z = Z;
+        }
+        return z
+    };
     me.iotballball = &acgtt{
-        # io should be able to: $t/%ball/%ball or so
-        #  and Bab this while loop with var sets
         o $t/*:ins/*:out
         $y = io.nz();
         $N = [];
