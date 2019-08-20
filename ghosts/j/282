@@ -595,6 +595,7 @@ Coffle: |
         }
         else {
             # move item
+            debugger;
             ds&dunno = 1;
             ~dunno
             T.non = 'drag'
@@ -923,6 +924,40 @@ Coffle: |
             zN(t);
         }
     };
+    # roll %run per result[0] (c.lineate)
+    #   and c&increment++ added to .t
+    me.rollbsc = &acgtRtc{
+        me&rollbs,R,t;
+        $r = R.sc[t];
+        if (c.lineate) {
+            if (r && rc&lineate != c.lineate) {
+                # y.hist?
+                delete R.sc[t]
+            }
+        }
+        if (!R.sc[t]) {
+            $n = G&Cye,[t,''];
+            
+            c.increment ||= c.incrementt;
+            if (c.increment) {
+                nc&increment = r ? rc&increment + 1 : 0;
+                if (c.incrementt) {
+                    n.t += '_'+nc&increment;
+                    delete c.incrementt;
+                }
+                delete c.increment;
+            }
+            
+            if (c.lineate) {
+                nc&lineate = c.lineate;
+                delete c.lineate
+            }
+            
+            ex(n.sc,c);
+            r = R.sc[t] = n
+        }
+        return r
+    }
     #c Rcopy
     # returns a 2%ball cloned from s (not a %ball)
     me.Copy = &acgtRsc{
@@ -1197,18 +1232,15 @@ Coffle: |
                 return
             }
             
-            # roll run per result[0]
-            me&rollbs,R,'run';
-            $first = N[0] && N[0].c.s;
-            $r = Rs&run;
-            r && rs&first != first and delete Rs&run
-            if (!Rs&run) {
-                $runtime = (r && rs&runtime || 0) + 1;
-                $k = 'run_'+runtime;
-                r = Rs&run = G&Cye,[k,''];
-                rs&first = first;
-            }
-            # 
+            $birthcert = N[0] && N[0].c.s;
+            # %run per ^, named from run_0
+            $r = me&rollbsc,R,'run',{lineate:birthcert,incrementt:1,count:1};
+            rs&counts ||= 0;
+            rs&counts++
+            $sp = r.t+"@"+rs&counts;
+            n sp  $s:sp
+            # hold parallel %steprun state
+            
             # Co/Hap/ Hap v1...
             # a bug chaser
             # make deals across the border so
@@ -1331,11 +1363,10 @@ Coffle: |
             }
             
             $r = ls&run;
-            # correspond %run%step
+            # correspond this %push %step to %push%run %step
             i $r/#R.t:s
-            $s = ya;
-            ss&step = Rs&step;
-            $ac = ss&accepted;
+            $S = ya;
+            Ss&stepish ||= Rs&step;
             
             $d = me&diffya,R,R.t,g,x,dc;
             
@@ -1344,9 +1375,9 @@ Coffle: |
             
             if (ds&exactly) {
                 Rs&ok = 1;
-                ss&accepted = d
+                Ss&ok = R
             }
-            elsif (ac) {
+            elsif (Ss&ok) {
                 # results are allowed to wander off once accepted
                 # such info is interesting
                 # < accept/test for history-warp
@@ -2053,6 +2084,7 @@ Coffle: |
             # create and harvest arrangements of gear
             #  %Teing extrapolates runningness
             n W  $lookup:s.t,R %ballse
+            #,dragelvis:projvey
             # to stable
             n G  $kvstore:localStorage,R %ballse
         },'ift,D'],
