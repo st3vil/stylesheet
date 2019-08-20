@@ -857,6 +857,7 @@ Coffle: |
     # an io that makes changes to both A & C at once
     me.input = &acgtRs{
         if (!Rs&ball) {
+            ~THISHAPPENS
             # we are pathing to another group of %balls
             # find R.t instead of Rc&s.t:
             typeof s != 'string' and throw "input path out of %ball !string"
@@ -1088,64 +1089,97 @@ Coffle: |
         }
         return r;
     };
+    #c push
     me.Pushingness = &acgtR{ return [
-        # push
+        # %push = cv awake
         ['push','3',&acgtRs{
-            me&rollbs,R,'delivered,moves';
+            me&rollbs,R,'moves,delivered';
             s&bo = '1px dotted green';
             s&hue = 70;
             s&br = 1;
             s&fs = 8;
             Rs&arrow =
-            n $R.t 13 s:⇒ %fs:14
+            n $R.t 13 s:⇒ %fs:24
             # certain/lowlevel types of %push
-            Rs&auto || Rs&hard and Rs&push = 9
+            Rs&auto || Rs&hard and return Rs&push = 9
+            # log
+            Rs&moves ||= []
         },'ift,D'],
-        ['ball+pushed','55',&acgtRs{
+        
+        # ways the item 7s from afars:
+        
+        # %push%their = %balls reporting back
+        ['ball+pushed','56',&acgtRs{
             # since ball 53 yfuture'd %pulled...
             $p = Ry&up;
-            $know = ps&pushed || [];
+            $above = ps&pushed || [];
             each il Rs&pushed {
-                know.indexOf(l) >= 0 and continue
+                # %pushed here and not above
+                above.indexOf(l) >= 0 and continue
                 # < many?
                 ls&their = R;
             }
         },'ift,D'],
-        # get %balls encoding
-        ['push','59',&acgtRs{
-            Rs&push != 1 and return
-            # find comparables, make plans to get %balls encoding
-            # %deliverer hard pushed %delivered %ball
+        # %push%their = what %deliverer did (via %pushish)
+        ['push+deliverer','56',&acgtRs{
             $d = Rs&deliverer;
-            Rs&their = d ? ds&delivered : Rs&their;
-            
-            Rs&act = Rs&does || 0;
-            
-            # always Lines h/t to sleep the act, later
-            # string based representation of everything going into it
-            $soc = [Rs&their, Rs&here];
-            each ic soc {
-                c && !hak(c.sc,'Lines') and cs&Lines = 1
+            !d and return
+            $de = ds&delivered;
+            de and Rs&their = de
+        },'ift,D'],
+        # the %moves could lead somewhere
+        ['push+moves','56',&acgtRs{
+            each in Rs&moves {
+                n.t == 'push' and Rs&lastpush = n
             }
+        },'ift,D'],
             
-            # make subgroupings of Lines
-            # < Te this in here?
+        
+        ['push','59',&acgtRs{
+            Rs&push >= 9 and return
+            $h = Rs&here;
             $t = Rs&their;
-            if (t && t.t == 'Co') {
-                me&ioty,t,'%ball%ball'
-                    .map(out => outs&Lines = 1)
+            
+            # %act from what it %does to get %made
+            Rs&does and Rs&act = Rs&does
+            
+            $youLines = &s{
+                s && ss&Lines == null and ss&Lines = 1
+            };
+            # attaching checks to its parts
+            h && youLines(h);
+            t && youLines(t);
+            if (h && t) {
+                # what you can do with both
+                if (t.t != h.t) {
+                    # when t is a container of something like h
+                    # Co/$here-ish/$steps+
+                    $main = me&ioty,t,'%ball'
+                        .filter(n=>n.t == h.t);
+                    main.length != 1 and throw "mains"
+                    main = main[0];
+                    if (main) {
+                        Rs&main = main;
+                        if (t.t == 'Co') {
+                            # make subgroupings
+                            # < Te this in here?
+                            me&ioty,main,'%ball'
+                                .map(youLines)
+                        }
+                    }
+                }
             }
         },'ift,D'],
         #c push-7 have encoded %balls wormhole through %moves
         #   received by this %push early enough to action
-        ['push+act','7',&acgtRs{
-            $M = Rs&moves ||= [];
-            each in M {
-                n.t == 'push' and Rs&lastpush = n
-            }
-            # make diff/post acceptings in M
+        ['push','7',&acgtRs{
+            Rs&push >= 9 and return
             $t = Rs&their;
             $h = Rs&here;
+            
+            # want %moves until all done
+            $M = Rs&moves;
+            
             # last %move that was a push
             $lm = Rs&lastpush;
             # this %push when %move was started
@@ -1188,7 +1222,7 @@ Coffle: |
                 # < branch h <-> ms&h and patch onto that
                 if (!Rs&made && !tdiffs&exactly) {
                     # < explore what'll happen, run in reverse
-                    #m pull $from:t,to:h %pull,pending
+                    #m pull $from:t,to:h %pull,pending,move
                     n pending  s:pull? %hs:588
                 }
             }
@@ -1200,8 +1234,8 @@ Coffle: |
             }
             
             # checkout on init (%their to %here)
-            if (1s&runs == 1 && !M.length
-                && Rs&mayco && me&sch_ballonlyt,h ) {
+            if (1s&runs == 1 && Rs&mayco
+                && !M.length && me&sch_ballonlyt,h) {
                 m checkout $from:t,to:h %pull
             }
             
@@ -1220,32 +1254,34 @@ Coffle: |
         #c push-made
         # some complicated thing breaking out steps
         ['push+made','8',&acgtRs{
-            # m is %balls with %Copy = origin, %Ropy 
             s&bow = '3px';
             n act  $s:Rs&act %deco
+            $waits = &s{
+                n waits  $s:s
+            };
             
-            $m = Rs&made;
-            $dt = Rs&diffya;
-            $td = dt && dt.theirs;
-            if (!td) {
-                n prog  s:...
-                return
-            }
-            # less about input/their as made/steps
-            [td,dt.input].map(d => ds&sublated = 1);
+            $h = Rs&here;
+            $t = Rs&their;
+            !t and return waits('..')
             
-            # their results
-            $N = me&ioty,Rs&their,'%ball%ball';
-            if (!N.length) {
-                n prog s:..?
-                return
-            }
+            # %main is it over there
+            # Co/$here-ish/$steps+
+            !Rs&main and throw "nomain"
+            $N = me&ioty,Rs&main,'%ball'
+            !N and return waits('...')
             
+            $shrink = &k{
+                $d = Rs&diffya[k];
+                d and ds&sublated = 1
+            };
+            shrink('input'); # better understood as %made
+            shrink('theirs'); # become individual %steps
+            
+            # persist %run per:
             $birthcert = N[0] && N[0].c.s;
-            # %run per ^, named from run_0
             $r = me&rollcounty,R,'run',{per:birthcert};
             $sp = r.t+"@"+rs&count;
-            n sp  $s:sp
+            n sp  $s:sp %fs:6
             # hold parallel %steprun state
             
             # Co/Hap/ Hap v1...
@@ -1272,6 +1308,7 @@ Coffle: |
             
             n progress  R %decideprogress
         },'ift,D'],
+        #c decideprogress
         # ⧐ from the top
         # ∿ big change
         # ~ small change
@@ -1328,6 +1365,15 @@ Coffle: |
                     delete sy&current;
                 }
             }
+        },'ift,D'],
+
+        # random look
+        ['push','8',&acgtRs{
+            !Rs&boost || Rs&boost < 1 and return
+            
+            s&fs = 11;
+            s&dis = 1;
+            n thing  $s:R.sc,R %sun
         },'ift,D'],
         #c step acceptor
         ['step','4',&acgtRs{
@@ -1428,15 +1474,6 @@ Coffle: |
                 n push 12 s:accept?
             }
             
-        },'ift,D'],
-
-        # random look
-        ['push','8',&acgtRs{
-            !Rs&boost || Rs&boost < 1 and return
-            
-            s&fs = 11;
-            s&dis = 1;
-            #n thing  $s:R.sc,R %sun
         },'ift,D'],
         #c push-moves
         # 7%push sends its future self %moves to do
@@ -1586,7 +1623,7 @@ Coffle: |
         leg[0] == '' and leg.shift();
         # default $t/*
         !leg.length and leg.push('');
-        !ts&z and return []
+        !t || !ts&z and return []
         $bit = leg.shift();
         $z = ts&z.filter(l => !bit || l.sc[bit] != null);
         if (leg.length) {
@@ -2106,17 +2143,17 @@ Coffle: |
             Rs&ball = 1;
             delete Rs&ballse;
         },'ift,D'],
+        
         # knows its %pushed to
         ['ball','2',&acgtRs{
             # see ball-othering
             me&rollbs,R,'pushed,pushed_ball';
         },'ift,D'],
-        # a pattern match and squish for long skinny trees
+        
+        # squish long skinny trees
         ['ball','6',&acgtRs{
             Rs&boost and return
-            $pr = Ry&up;
-            !pr and return;
-            prs&z.filter(t => ts&ball).length != 1 and return
+            me&ioty,Ry&up,'%ball' .length != 1 and return
             delete Rs&rowish;
         },'ift'],
         # lookup %ball/*.t in G
@@ -2144,8 +2181,8 @@ Coffle: |
             # ready all s/* as R/*%balls
             me&Rsync,R;
             
-            each in Rs&z {
-                !ns&ball and continue
+            $N = me&ioty,R,'%ball';
+            each in N {
                 # posit they %push(ish) to G
                 $l = me&push,n,['/','G'],[],'lookup','mayco';
             }
