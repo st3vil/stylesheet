@@ -1132,43 +1132,18 @@ Coffle: |
                 n.t == 'push' and Rs&lastpush = n
             }
         },'ift,D'],
-            
-        
+
         ['push','59',&acgtRs{
             Rs&push >= 9 and return
-            $h = Rs&here;
-            $t = Rs&their;
-            
+            # attaching checks to its parts
+            me&suggesc,Rs&here,'Lines';
+            me&suggesc,Rs&their,'Lines';
             # %act from what it %does to get %made
+            #  engaged now so it can tamper with <6%their
             Rs&does and Rs&act = Rs&does
             
-            $youLines = &s{
-                s && ss&Lines == null and ss&Lines = 1
-            };
-            # attaching checks to its parts
-            h && youLines(h);
-            t && youLines(t);
-            if (h && t) {
-                # what you can do with both
-                if (t.t != h.t) {
-                    # when t is a container of something like h
-                    # Co/$here-ish/$steps+
-                    $main = me&ioty,t,'%ball'
-                        .filter(n=>n.t == h.t);
-                    main.length != 1 and throw "mains"
-                    main = main[0];
-                    if (main) {
-                        Rs&main = main;
-                        if (t.t == 'Co') {
-                            # make subgroupings
-                            # < Te this in here?
-                            me&ioty,main,'%ball'
-                                .map(youLines)
-                        }
-                    }
-                }
-            }
         },'ift,D'],
+        
         #c push-7 have encoded %balls wormhole through %moves
         #   received by this %push early enough to action
         ['push','7',&acgtRs{
@@ -1206,6 +1181,7 @@ Coffle: |
                 if (!Rs&made) {
                     !me[Rs&act] and throw "no me.%act "+Rs&act
                     Rs&made = me[Rs&act](A,C,G,T,R,h,t);
+                    !Rs&made and throw "act "+Rs&act+" !return"
                 }
                 if (doing) {
                     $diff = me&diffya,R,"made",Rs&made,doings&made;
@@ -1287,6 +1263,8 @@ Coffle: |
             # Co/Hap/ Hap v1...
             # a bug chaser
             # make deals across the border so
+            # zip N-results to Z-expectations,
+            #  allowing more N if all is %ok
             
             $Z = me&ioty,Rs&here,'%ball';
             
@@ -1373,7 +1351,7 @@ Coffle: |
             
             s&fs = 11;
             s&dis = 1;
-            n thing  $s:R.sc,R %sun
+            #n thing  $s:R.sc,R %sun
         },'ift,D'],
         #c step acceptor
         ['step','4',&acgtRs{
@@ -1558,6 +1536,58 @@ Coffle: |
 
     ] };
     
+    #c act
+    # %act='TeCo' gets this %made
+    #  make instructions for Co
+    me.TeCo = &acgtRhtc{
+        $r = me&Copy,R,h,26;
+        
+        $s = rc&s;
+        # remove expectations
+        rs&expect = ss&z;
+        delete ss&z;
+        $c = rc&s = G&Cye,['Co',''];
+        i $c/$s
+        # pointer to s?
+        
+        # any s&H still there replaced with contents
+        
+        delete rs&ov;
+        rs&Lines = 1;
+        # onward 3%ball Rsyncs, anything under r may ~
+        me&Ring,r;
+        each in rs&z {
+            !ns&ball and continue
+            ns&clobberypushingz = 1
+        }
+        return r
+    };
+    # where it must do a computation
+    me.Actingness = &acgtR{ return [
+        # attach checks to %their (live instance)
+        ['push+act','591',&acgtRs{
+            $h = Rs&here;
+            $t = Rs&their;
+            if (h && t && t.t != h.t) {
+                # what you can do with both
+                    # when t is a container of something like h
+                    # Co/$here-ish/$steps+
+                    $main = me&ioty,t,'%ball'
+                        .filter(n=>n.t == h.t);
+                    main.length != 1 and throw "mains"
+                    main = main[0];
+                    if (main) {
+                        Rs&main = main;
+                        if (t.t == 'Co') {
+                            # make subgroupings
+                            # < Te this in here?
+                            me&ioty,main,'%ball'
+                                .map(n => me&suggesc,n,'Lines' )
+                        }
+                    }
+            }
+        }]
+    ] };
     #c pushy
     # operate on Ghost/kvstore remotely
     # < s&H object pointers wander borders
@@ -1591,30 +1621,6 @@ Coffle: |
         }
         return Ghost
     };
-    # make instructions for Co
-    me.TeCo = &acgtRhtc{
-        $r = me&Copy,R,h,26;
-        
-        $s = rc&s;
-        # remove expectations
-        rs&expect = ss&z;
-        delete ss&z;
-        $c = rc&s = G&Cye,['Co',''];
-        i $c/$s
-        # pointer to s?
-        
-        # any s&H still there replaced with contents
-        
-        delete rs&ov;
-        rs&Lines = 1;
-        # onward 3%ball Rsyncs, anything under r may ~
-        me&Ring,r;
-        each in rs&z {
-            !ns&ball and continue
-            ns&clobberypushingz = 1
-        }
-        return r
-    };
     # io should be able to: $t/%ball/%ball or so
     #  and Bab this while loop with var sets
     me.ioty = &acgtty{
@@ -1636,6 +1642,12 @@ Coffle: |
         }
         return z
     };
+    # s.sc[k] ||= (v||1) unless 0 or ''
+    me.suggesc = &acgtskv{
+        v == null and v = 1
+        s && s.sc[k] == null and s.sc[k] = 1
+    };
+    
     #c diff balls with strings
     # setty http://xahlee.info/comp/unicode_math_operators.html
     
@@ -2205,6 +2217,7 @@ Coffle: |
         },'ift,D'],
         ... me&Copyingness ,
         ... me&Pushingness ,
+        ... me&Actingness ,
         ... me&Linesingness ,
         ... me&Diffingness ,
         #c kvstore
