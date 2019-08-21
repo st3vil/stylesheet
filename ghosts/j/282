@@ -924,6 +924,7 @@ Coffle: |
             zN(t);
         }
     };
+    #c Roll
     # roll %run per result[0] (c.lineate)
     #   and c&increment++ added to .t
     me.rollcounty = &acgtRtc{
@@ -967,6 +968,27 @@ Coffle: |
         }
         return r
     }
+    # s.sc[k] ||= (v||1) unless 0 or ''
+    me.suggesc = &acgtskv{
+        v == null and v = 1
+        s && s.sc[k] == null and s.sc[k] = 1
+    };
+    # be waiting for...
+    me.waits = &acgttsc{
+        !s and s = t; t = 'waits'
+        me&tsc,t,s,c
+    };
+    me.tsc = &acgttsc{
+        !s and s = t;
+        $n =
+        n $t  $s:s
+        $y = &b{ ex(n.sc,G&peel,b ) };
+        c == 'B' and y('hs:856,fs:17')
+        c == 'b' and y('hs:856')
+        c == 'L' and y('fs:15')
+        return n
+    };
+    
     #c Rcopy
     # returns a 2%ball cloned from s (not a %ball)
     me.Copy = &acgtRsc{
@@ -1231,27 +1253,21 @@ Coffle: |
         # < take %made/%step++ to %main/%step
         ['push+made','8',&acgtRs{
             s&bow = '3px';
+            # a layer of task built onto a push
             n act  $s:Rs&act %deco
-            $waits = &s{
-                n waits  $s:s
-            };
+            # input better understood as %made
+            # theirs become individual %steps
+            ['input','theirs'].map(k => me&suggesc,Rs&diffya[k],'sublated');
             
             $h = Rs&here;
             $t = Rs&their;
-            !t and return waits('..')
+            !t and return me&waits,'..'
             
             # %main is it over there
             # Co/$here-ish/$steps+
             !Rs&main and throw "nomain"
             $N = me&ioty,Rs&main,'%ball'
-            !N and return waits('...')
-            
-            $shrink = &k{
-                $d = Rs&diffya[k];
-                d and ds&sublated = 1
-            };
-            shrink('input'); # better understood as %made
-            shrink('theirs'); # become individual %steps
+            !N and return me&waits,'...'
             
             # persist %run per:
             $birthcert = N[0] && N[0].c.s;
@@ -1271,22 +1287,17 @@ Coffle: |
             $tot = '('+N.length+'/'+Z.length+')';
             n tot  $s:tot %hs:357
             
-            $astep = &i{
-                $k = 'step_'+i;
-                n $k  $step:i,got:N[i],exp:Z[i],R
-            };
-            each in N {
-                astep(i)
+            $i = 0;
+            while (N[i] || Z[i]) {
+                $eye = i+1;
+                $k = 'step_'+eye;
+                n $k  $step:eye,got:N[i],exp:Z[i],R
+                i++;
             }
-            while (Z[++i]) {
-                astep(i)
-            }
-            Rs&steps_exp = Z;
-            Rs&steps_got = N;
-            
-            n progress  R %decideprogress
+            # 4%step and then 5%groksteps...
+            n progress  R %groksteps
         },'ift,D'],
-        #c decideprogress
+        #c groksteps
         # ⧐ from the top
         # ∿ big change
         # ~ small change
@@ -1295,9 +1306,8 @@ Coffle: |
         # should be a %push%run thing, or even an A.4 (or is it A.9?)
         #  persistent/rollbs like %push%made
         #  per othering, which starts a test run (drops J)
-        ['decideprogress','5',&acgtRs{
+        ['groksteps','5',&acgtRs{
             $p = Ry&up;
-            
             $steps = me&ioty,p,'%step';
             Rs&ok = 1;
             Rs&more = 0;
@@ -1312,18 +1322,15 @@ Coffle: |
                 Rs&wantstep = 1;
             }
             
-            !Rs&ok &&
-                n notok  s:! %fs:17,hs:856
-            Rs&ok &&
-                n ok  s:ok
-            Rs&more &&
-                n more  s:...
+            Rs&ok and me&tsc,'ok'
+            !Rs&ok and me&tsc,'notok','!','B'
+            
+            Rs&more and me&waits,'more','...'
             
             Rs&ok && Rs&more and Rs&wantstep = 1
-            Rs&more &&
-                n more  s:≻ %fs:15
-            !Rs&more &&
-                n moreanyway  s:⊁ %fs:15
+            
+            Rs&more && me&waits,'more','≻','L'
+            !Rs&more && me&waits,'moreanyway','⊁','L'
             
             Rs&wantstep and ps&stepforward = 1
         },'ift,D'],
@@ -1375,7 +1382,7 @@ Coffle: |
             $dc = {};
             if (!g) {
                 # not yet
-                n not  s:... %fs:18
+                n notgot  s:... %fs:18
                 return
             }
             elsif (!x) {
@@ -1570,21 +1577,21 @@ Coffle: |
             $t = Rs&their;
             if (h && t && t.t != h.t) {
                 # what you can do with both
-                    # when t is a container of something like h
-                    # Co/$here-ish/$steps+
-                    $main = me&ioty,t,'%ball'
-                        .filter(n=>n.t == h.t);
-                    main.length != 1 and throw "mains"
-                    main = main[0];
-                    if (main) {
-                        Rs&main = main;
-                        if (t.t == 'Co') {
-                            # make subgroupings
-                            # < Te this in here?
-                            me&ioty,main,'%ball'
-                                .map(n => me&suggesc,n,'Lines' )
-                        }
+                # when t is a container of something like h
+                # Co/$here-ish/$steps+
+                $main = me&ioty,t,'%ball'
+                    .filter(n=>n.t == h.t);
+                main.length != 1 and throw "mains"
+                main = main[0];
+                if (main) {
+                    Rs&main = main;
+                    if (t.t == 'Co') {
+                        # make subgroupings
+                        # < Te this in here?
+                        me&ioty,main,'%ball'
+                            .map(n => me&suggesc,n,'Lines' )
                     }
+                }
             }
         }]
     ] };
@@ -1641,11 +1648,6 @@ Coffle: |
             z = Z;
         }
         return z
-    };
-    # s.sc[k] ||= (v||1) unless 0 or ''
-    me.suggesc = &acgtskv{
-        v == null and v = 1
-        s && s.sc[k] == null and s.sc[k] = 1
     };
     
     #c diff balls with strings
