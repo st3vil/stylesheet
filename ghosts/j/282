@@ -1195,21 +1195,25 @@ Coffle: |
             # the R that %made
             $h = Rs&here;
             $t = Rs&their;
+            # has %here + %made when %move was made
             $doing = Rs&doing;
             # sublates other diffs
             Rs&diffya ||= {};
             Rs&diffya.theirs = 0;
             Rs&diffya.diffs = 0;
-            # diff input from %here into act
-            #   (approx, %here when move was made)
+            # diff input from %here <-> that which %made et (approx)
             if (doing) {
                 $indiff = me&diffya,R,'input',h,doings&here;
-                if (indiff && indiffs&exactly) {
-                    # sleep %made by
-                    Rs&made = doings&made
+                if (indiff) {
+                    # input better understood as %made
+                    me&suggesc,indiff,'sublated';
+                    if (indiffs&exactly) {
+                        # sleep %made by
+                        Rs&made = doings&made
+                    }
                 }
             }
-            # do act, gets new %made
+            # %made ||= the act
             if (!Rs&made) {
                 !me[Rs&act] and throw "no me.%act "+Rs&act
                 Rs&made = me[Rs&act](A,C,G,T,R,h,t);
@@ -1220,6 +1224,7 @@ Coffle: |
                 $diff = me&diffya,R,"made",Rs&made,doings&made;
             }
         },'ift,D'],
+        
         ['push','73',&acgtRs{
             Rs&push >= 9 and return
             $h = Rs&here;
@@ -1272,7 +1277,6 @@ Coffle: |
         
         ['push+act+diffya','77',&acgtRs{
             if (Rs&act) {
-                # input better understood as %made
                 # theirs become individual %steps
                 ['input','theirs'].map(k => me&suggesc,Rs&diffya[k],'sublated');
             }
