@@ -1153,6 +1153,14 @@ Coffle: |
             each in Rs&moves {
                 n.t == 'push' and Rs&lastpush = n
             }
+            # last %move that was a push
+            $lm = Rs&lastpush;
+            if (lm) {
+                # this %push when %move was started (had the %made)
+                Rs&doing = lmc&pusher;
+                # this %push when %move was done
+                Rs&done = lmc&pushed;
+            }
         },'ift,D'],
 
         ['push','59',&acgtRs{
@@ -1173,62 +1181,79 @@ Coffle: |
             $t = Rs&their;
             $h = Rs&here;
             
-            # want %moves until all done
-            $M = Rs&moves;
-            
-            # last %move that was a push
-            $lm = Rs&lastpush;
-            # this %push when %move was started
-            $doing = lm && lmc&pusher;
-            # this %push when %move was done
-            $done = lm && lmc&pushed;
-            
             # both sides should Lines
             me&sch_didLines,R,h;
             !t || me&sch_didLines,R,t;
-            me&Mw,R,'err' .length and return me&tsc,'errrors','⊗','L'
+            if (me&Mw,R,'err' .length ) {
+                Rs&push = 9;
+                return me&tsc,'errrors','⊗','L'
+            }
+        },'ift,D'],
             
-            if (Rs&act) {
-                # with transformation in the middle
-                if (doing) {
-                    $indiff = me&diffya,R,'input',h,doings&here;
-                    if (indiff && indiffs&exactly) {
-                        Rs&made = doings&made
-                    }
-                }
-                if (!Rs&made) {
-                    !me[Rs&act] and throw "no me.%act "+Rs&act
-                    Rs&made = me[Rs&act](A,C,G,T,R,h,t);
-                    !Rs&made and throw "act "+Rs&act+" !return"
-                }
-                if (doing) {
-                    $diff = me&diffya,R,"made",Rs&made,doings&made;
+        ['push+act','72',&acgtRs{
+            Rs&push >= 9 and return
+            # the R that %made
+            $h = Rs&here;
+            $t = Rs&their;
+            $doing = Rs&doing;
+            # sublates other diffs
+            Rs&diffya ||= {};
+            Rs&diffya.theirs = 0;
+            Rs&diffya.diffs = 0;
+            # diff input from %here into act
+            #   (approx, %here when move was made)
+            if (doing) {
+                $indiff = me&diffya,R,'input',h,doings&here;
+                if (indiff && indiffs&exactly) {
+                    # sleep %made by
+                    Rs&made = doings&made
                 }
             }
-            else {
-                $diff = me&diffya,R,'diff',h,t
+            # do act, gets new %made
+            if (!Rs&made) {
+                !me[Rs&act] and throw "no me.%act "+Rs&act
+                Rs&made = me[Rs&act](A,C,G,T,R,h,t);
+                !Rs&made and throw "act "+Rs&act+" !return"
             }
+            # diff %made to %made when move was made
+            if (doing) {
+                $diff = me&diffya,R,"made",Rs&made,doings&made;
+            }
+        },'ift,D'],
+        ['push','73',&acgtRs{
+            Rs&push >= 9 and return
+            $h = Rs&here;
+            $t = Rs&their;
+            $done = Rs&done;
             
-            if (t && done) {
-                # offer rebase if t changes without our push
-                $tdiff = me&diffya,R,'theirs',t,dones&their;
-                # < branch h <-> ms&h and patch onto that
-                if (!Rs&made && !tdiffs&exactly) {
+            done && !t and me&tsc,'va','vanishing!'
+            !t and me&tsc,'notheir','⧁','L'
+            
+            # here <-> their if nothing organised
+            !Rs&diffya and me&diffya,R,'diff',h,t
+            
+            # their <-> their at the last push
+            $tdiff = t && done && me&diffya,R,'theirs',t,dones&their;
+            if (tdiff) {
+                # < handle changes we didn't push
+                # < branch here <-> dones&here, patch onto that
+                if (!tdiffs&exactly) {
                     # < explore what'll happen, run in reverse
                     #m pull $from:t,to:h %pull,pending,move
                     n pending  s:pull? %hs:588
                 }
             }
+        },'ift,D'],
             
-            if (!t) {
-                done &&
-                    n va  s:vanishing!
-                n notheir  s:⧁ %fs:22
-            }
+        ['push','77',&acgtRs{
+            Rs&push >= 9 and return
+            $h = Rs&here;
+            $t = Rs&their;
+            # collects %moves
+            $M = Rs&moves;
             
-            # checkout on init (%their to %here)
-            if (1s&runs == 1 && Rs&mayco
-                && !M.length && me&sch_ballonlyt,h) {
+            # the checkout on init trick
+            if (Rs&checkout && !M.length && me&sch_ballonlyt,h ) {
                 m checkout $from:t,to:h %pull
             }
             
@@ -1245,7 +1270,7 @@ Coffle: |
             }
         },'ift,D'],
         
-        ['push+act+diffya','72',&acgtRs{
+        ['push+act+diffya','77',&acgtRs{
             if (Rs&act) {
                 # input better understood as %made
                 # theirs become individual %steps
@@ -1655,11 +1680,13 @@ Coffle: |
     #c diff balls with strings
     # setty http://xahlee.info/comp/unicode_math_operators.html
     
-    # returned awake enough to help 7%push
+    # keep diffs around 7%push
     me.diffya = &acgtRkhtc{
         c ||= {};
         ex(c,{t:k,got:h,exp:t,diff:1});
         $dt = Rs&diffya ||= {};
+        # may be switched off:
+        dt[k] != null && !dt[k] and return
         $d = dt[k] = me&Ret,R,c;
         # can be seen to be ... already
         t && h && ts&dige == hs&dige and ds&exactly = 1
@@ -2200,7 +2227,7 @@ Coffle: |
             $N = me&ioty,R,'%ball';
             each in N {
                 # posit they %push(ish) to G
-                $l = me&push,n,['/','G'],[],'lookup','mayco';
+                $l = me&push,n,['/','G'],[],'lookup','checkout';
             }
         },'ift,D'],
         ['ball','28',&acgtRs{
