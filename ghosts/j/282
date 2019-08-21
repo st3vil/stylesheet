@@ -1119,7 +1119,7 @@ Coffle: |
             s&hue = 70;
             s&br = 1;
             s&fs = 8;
-            Rs&arrow =
+            #Rs&arrow =
             n $R.t 13 s:⇒ %fs:24
             # certain/lowlevel types of %push
             Rs&auto || Rs&hard and return Rs&push = 9
@@ -1144,9 +1144,8 @@ Coffle: |
         # %push%their = what %deliverer did (via %pushish)
         ['push+deliverer','56',&acgtRs{
             $d = Rs&deliverer;
-            !d and return
-            $de = ds&delivered;
-            de and Rs&their = de
+            $ed = d && ds&delivered
+            ed and Rs&their = ed
         },'ift,D'],
         # the %moves could lead somewhere
         ['push+moves','56',&acgtRs{
@@ -1171,7 +1170,6 @@ Coffle: |
             # %act from what it %does to get %made
             #  engaged now so it can tamper with <6%their
             Rs&does and Rs&act = Rs&does
-            
         },'ift,D'],
         
         #c push-7 have encoded %balls wormhole through %moves
@@ -1184,44 +1182,10 @@ Coffle: |
             # both sides should Lines
             me&sch_didLines,R,h;
             !t || me&sch_didLines,R,t;
+            
             if (me&Mw,R,'err' .length ) {
                 Rs&push = 9;
                 return me&tsc,'errrors','⊗','L'
-            }
-        },'ift,D'],
-            
-        ['push+act','72',&acgtRs{
-            Rs&push >= 9 and return
-            # the R that %made
-            $h = Rs&here;
-            $t = Rs&their;
-            # has %here + %made when %move was made
-            $doing = Rs&doing;
-            # sublates other diffs
-            Rs&diffya ||= {};
-            Rs&diffya.theirs = 0;
-            Rs&diffya.diffs = 0;
-            # diff input from %here <-> that which %made et (approx)
-            if (doing) {
-                $indiff = me&diffya,R,'input',h,doings&here;
-                if (indiff) {
-                    # input better understood as %made
-                    me&suggesc,indiff,'sublated';
-                    if (indiffs&exactly) {
-                        # sleep %made by
-                        Rs&made = doings&made
-                    }
-                }
-            }
-            # %made ||= the act
-            if (!Rs&made) {
-                !me[Rs&act] and throw "no me.%act "+Rs&act
-                Rs&made = me[Rs&act](A,C,G,T,R,h,t);
-                !Rs&made and throw "act "+Rs&act+" !return"
-            }
-            # diff %made to %made when move was made
-            if (doing) {
-                $diff = me&diffya,R,"made",Rs&made,doings&made;
             }
         },'ift,D'],
         
@@ -1249,7 +1213,8 @@ Coffle: |
                 }
             }
         },'ift,D'],
-            
+        
+        # %push makes %moves
         ['push','77',&acgtRs{
             Rs&push >= 9 and return
             $h = Rs&here;
@@ -1272,13 +1237,6 @@ Coffle: |
                 # the usual
                 $c =
                 m push $from:h,to:t,pusher:R
-            }
-        },'ift,D'],
-        
-        ['push+act+diffya','77',&acgtRs{
-            if (Rs&act) {
-                # theirs become individual %steps
-                ['input','theirs'].map(k => me&suggesc,Rs&diffya[k],'sublated');
             }
         },'ift,D'],
         
@@ -1403,6 +1361,7 @@ Coffle: |
     me.Actingness = &acgtR{ return [
         # attach checks to %their (live instance)
         ['push+act','591',&acgtRs{
+            Rs&push >= 9 and return
             $h = Rs&here;
             $t = Rs&their;
             if (h && t && t.t != h.t) {
@@ -1424,6 +1383,41 @@ Coffle: |
                 }
             }
         }],
+        # the R that %made
+        ['push+act','72',&acgtRs{
+            Rs&push >= 9 and return
+            $h = Rs&here;
+            $t = Rs&their;
+            # has %here + %made when %move was made
+            $doing = Rs&doing;
+            # sublates other diffs
+            Rs&diffya ||= {};
+            Rs&diffya.theirs = 0;
+            Rs&diffya.diffs = 0;
+            # diff the input that %made et (approx)
+            if (doing) {
+                $indiff = me&diffya,R,'input',h,doings&here;
+                if (indiff) {
+                    # input better understood as %made
+                    me&suggesc,indiff,'sublated';
+                    if (indiffs&exactly) {
+                        # sleep %made by
+                        Rs&made = doings&made
+                    }
+                }
+            }
+            # %made ||= the act
+            if (!Rs&made) {
+                !me[Rs&act] and throw "no me.%act "+Rs&act
+                Rs&made = me[Rs&act](A,C,G,T,R,h,t);
+                !Rs&made and throw "act "+Rs&act+" !return"
+            }
+            # diff %made to %made when move was made
+            if (doing) {
+                $diff = me&diffya,R,"made",Rs&made,doings&made;
+            }
+        },'ift,D'],
+        
         # push-made
         # some complicated thing breaking out steps
         # < take %made/%step++ to %main/%step
