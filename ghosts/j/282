@@ -924,6 +924,28 @@ Coffle: |
             zN(t);
         }
     };
+    # io should be able to: $t/%ball/%ball or so
+    #  and Bab this while loop with var sets
+    me.ioty = &acgtty{
+        $leg = [];
+        typeof y == 'string' and leg = y.split('%');
+        leg[0] == '' and leg.shift();
+        # default $t/*
+        !leg.length and leg.push('');
+        !t || !ts&z and return []
+        $bit = leg.shift();
+        $z = ts&z.filter(l => !bit || l.sc[bit] != null);
+        if (leg.length) {
+            leg = leg.join('%');
+            $Z = [];
+            each il z {
+                Z.push( ... me&ioty,l,leg );
+            }
+            z = Z;
+        }
+        return z
+    };
+    
     #c Roll
     # roll %run per result[0] (c.lineate)
     #   and c&increment++ added to .t
@@ -990,23 +1012,20 @@ Coffle: |
     };
     
     #c Rcopy
-    # returns a 2%ball cloned from s (not a %ball)
-    me.Copy = &acgtRsc{
-        $h = s;
-        s = hc&s;
-        
+    # clones s or %ball, as far as s goes
+    me.Copy = &acgtRhc{
         c ||= {};
         # Rings up to a point
         typeof c == 'number' and c = {ov:c};
         while (c.ov > 1) { c.ov *= 0.1 }
         
+        $s = hs&ball ? hc&s : h;
+        
         ex(c,{task:'ravel',ball:1,noDisplay:1});
         c.Copy = 1;
-        c.Ropy = h;
-        
-        $k = 'Copy';
-        Rs&act and k += '-> '+Rs&act
-        return me&Reis,R,k,s,c
+        h != s and c.Ropy = h
+        c.t ||= 'Copy';
+        return me&Reis,R,c.t,s,c
     };
     me.Copyingness = &acgtR{ return [
         # clones %balls for me&Copy
@@ -1343,51 +1362,56 @@ Coffle: |
     # %act='TeCo' gets this %made
     #  make instructions for Co
     me.TeCo = &acgtRhtc{
-        $r = me&Copy,R,h,26;
+        $s = hc&s;
+        # s:
+        # haps
+        #   step_1
+        #     WaTe %H:38247253
+        #       someelvising
+        #   step_2
+        #     haps %H:38231253
+        $Co = G&Cye,['Co',''];
+        i $Co/$s
+        # r is %made
+        $r = me&Copy,R,Co,26;
         
-        $s = rc&s;
-        # remove expectations
-        rs&expect = ss&z;
-        delete ss&z;
-        $c = rc&s = G&Cye,['Co',''];
-        i $c/$s
-        # pointer to s?
+        # want to just:
+        # o $Co/*:main/*:step/*:do
+        # with %ball layer, style main + do
         
-        # any s&H still there replaced with contents
+        $main = me&ioty,r,'%ball' [0];
+        # blows everything away when othered
+        mains&clobberypushingz = 1;
+        # kind of just wants to limit pushing_z with ...
+        
+        $steps = me&ioty,main,'%ball';
+        each in steps {
+            ns&isastep = 1;
+            $does = me&ioty,n,'%ball';
+            each id does {
+                $n = dc&s;
+                # whittle to instruction part
+                ns&H and ds&H = delete ns&H
+                # this will then be a %mained %step %do
+            }
+        }
+        # < any s&H still anywhere should be loaded in
+        
+        # steps ||= W:h.t
+        if (!steps.length) {
+            ~INVENTING
+            i mainc&s/step_1/#h.t
+        }
         
         delete rs&ov;
         rs&Lines = 1;
         # onward 3%ball Rsyncs, anything under r may ~
         me&Ring,r;
-        each in rs&z {
-            !ns&ball and continue
-            ns&clobberypushingz = 1
-        }
+        me&ioty,r,'%ball' .map(n => ns&clobberypushingz = 1)
         return r
     };
     # where it must do a computation
     me.Actingness = &acgtR{ return [
-        # attach checks to %their (live instance)
-        ['push+act','591',&acgtRs{
-            Rs&push >= 9 and return
-            $h = Rs&here;
-            $t = Rs&their;
-            !h || !t and return me&waits,'..'
-            
-            if (t.t != h.t && t.t == 'Co') {
-                # < as part of a %push%made%plan to make Co/%main/%steps
-                # point %main at the main thing there to see (othered from %mained)
-                $main = me&ioty,t,'%ball' .filter(n=>n.t == h.t)[0];
-                !main and return
-                Rs&main = main;
-                # make subgroupings
-                $steps = me&ioty,main,'%ball';
-                each in steps {
-                    me&suggesc,n,'Lines'
-                }
-            }
-            
-        }],
         # the R that %made
         ['push+act','72',&acgtRs{
             Rs&push >= 9 and return
@@ -1418,11 +1442,34 @@ Coffle: |
             doing and me&diffya,R,"made",Rs&made,doings&made
             
             if (t && t.t != h.t && t.t == 'Co') {
-                # %mained is othered to become %main (from 591 next time)
                 Rs&mained = me&ioty,Rs&made,'%ball' .filter(n=>n.t == h.t)[0];
                 !Rs&mained and throw "No Co/%mained thing";
             }
         },'ift,D'],
+        
+        # < as part of a %push%made%plan to make Co/%main/%steps
+        
+        # %made = Co [haps[step[do[elvis]]]]
+        # is othered to %their instead of %here, so:
+        # %mained = %made Co/haps
+        # %main = %their Co/haps
+        # two halves of living situation
+        ['push+act','591',&acgtRs{
+            Rs&push >= 9 and return
+            $h = Rs&here;
+            $t = Rs&their;
+            !h || !t and return me&waits,'..'
+            
+            if (t.t != h.t && t.t == 'Co') {
+                # locate their main thing (othered from %mained)
+                $main = me&ioty,t,'%ball' .filter(n => n.t == h.t)[0];
+                !main and return
+                Rs&main = main;
+                # Linesing per do
+                me&ioty,main,'%ball%ball' .map(d => me&suggesc,d,'Lines' );
+            }
+            
+        }],
         
         #c push-made
         # Co/Hap/ Hap v1...
@@ -1437,16 +1484,16 @@ Coffle: |
             $h = Rs&here;
             $t = Rs&their;
             $main = Rs&main;
-            
+            $ed = Rs&mained;
             # persist %run per %main%ballc&s
-            #  per clobberyothering, starts a test run (drops J)
+            #  per clobberypushingz, restarts test run (drops J)
             $r = me&rollcounty,R,'run',{per:mainc&s};
             
             # two planes
             $N = me&ioty,main,'%ball'
-            #!N.length and throw "step 1 ||= W:main.t"
-            # and mained/%ball
-            $Z = me&ioty,Rs&here,'%ball';
+            !N.length and ~STEPONENOTHING
+            $Z = me&ioty,Rs&mained,'%ball';
+            # < step/do separates
             
             # thought clock
             $sp = r.t+"@"+rs&count;
@@ -1643,28 +1690,6 @@ Coffle: |
         }
         return Ghost
     };
-    # io should be able to: $t/%ball/%ball or so
-    #  and Bab this while loop with var sets
-    me.ioty = &acgtty{
-        $leg = [];
-        typeof y == 'string' and leg = y.split('%');
-        leg[0] == '' and leg.shift();
-        # default $t/*
-        !leg.length and leg.push('');
-        !t || !ts&z and return []
-        $bit = leg.shift();
-        $z = ts&z.filter(l => !bit || l.sc[bit] != null);
-        if (leg.length) {
-            leg = leg.join('%');
-            $Z = [];
-            each il z {
-                Z.push( ... me&ioty,l,leg );
-            }
-            z = Z;
-        }
-        return z
-    };
-    
     #c diff balls with strings
     # setty http://xahlee.info/comp/unicode_math_operators.html
     
