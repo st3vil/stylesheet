@@ -1227,7 +1227,7 @@ Coffle: |
             
             if (me&Mw,R,'err' .length ) {
                 Rs&push = 9;
-                return me&tsc,'errrors','⊗','L'
+                return me&tsc,'push7_errrors','⊗','L'
             }
         },'ift,D'],
         
@@ -1272,7 +1272,14 @@ Coffle: |
             # transmit here or what we made of it
             Rs&made and h = Rs&made
             
+            
             if (Rs&shove || Rs&boost > 1) {
+                $la = M.slice(-1)[0];
+                ~PUSH: R.t, h.t
+                if (la && lac&from == h) {
+                    ~sameas
+                    #return
+                }
                 !Rs&shove and Rs&Te.sc.boost = 1;
                 Rs&shove &&
                     n shovedby  $s:Rs&shove %hs:388,deco
@@ -1403,34 +1410,34 @@ Coffle: |
         # with %ball layer, style main + do
         
         $main = me&ioty,r,'%ball' [0];
-        # blows everything away when othered
-        mains&clobberypushingz = 1;
-        # kind of just wants to limit pushing_z with ...
         
+        # ensure step_1
+        !mains&z and me&input,main,'step_1';
         $steps = me&ioty,main,'%ball';
+        $one;
         each in steps {
             ns&isastep = 1;
+            # ensure doing=main.t
+            !ns&z and me&input,n,main.t;
             $does = me&ioty,n,'%ball';
+            # ensure step_1
             each id does {
                 $n = dc&s;
                 # whittle to instruction part
                 ns&H and ds&H = delete ns&H
-                # this will then be a %mained %step %do
             }
         }
-        # < any s&H still anywhere should be loaded in
         
-        # steps ||= W:h.t
-        if (!steps.length) {
-            ~INVENTING
-            i mainc&s/step_1/#h.t
-        }
+        # < any s&H still anywhere should be loaded in
         
         delete rs&ov;
         rs&Lines = 1;
         # onward 3%ball Rsyncs, anything under r may ~
         me&Ring,r;
         me&ioty,r,'%ball' .map(n => ns&clobberypushingz = 1)
+        # blows everything away when othered
+        # kind of just wants to limit pushing_z with ...
+        ~TeCo: main.t
         return r
     };
     # where it must do a computation
@@ -1489,10 +1496,13 @@ Coffle: |
                 !main and return
                 Rs&main = main;
                 # Linesing per do
-                me&ioty,main,'%ball%ball' .map(d => me&suggesc,d,'Lines' );
+                $N = me&ioty,main,'%ball%ball';
+                each id N {
+                    #me&tsc,'indo','('+d.t+')','b';
+                    me&suggesc,d,'Lines';
+                }
             }
-            
-        }],
+        },'ift,D'],
         
         #c push-made
         # Co/Hap/ Hap v1...
@@ -1566,6 +1576,8 @@ Coffle: |
         # makes iteration by unblocking the instruction
         ['push+made','82',&acgtRs{
             if (Rs&stepforward) {
+                ~wouldstep: t.t
+                return;
                 $t = Rs&their;
                 $N = me&ioty,t,'%ball';
                 # this is W=Co's children, a shared space,
@@ -1609,16 +1621,22 @@ Coffle: |
             $dc = {};
             !x and dc.unexpected = 1
             else {
-                # test data tricks
-                $X = xc&s;
-                if (Xs&H) {
-                    # Lines/decode should do this:
-                    xs&H = xs&dige = Xs&H;
+                # a doings is made into an instruction
+                #  by moving the s&H to the %ball
+                if (xs&H) {
+                    # make it look Linesey
+                    xs&dige = xs&H;
                     # which may avoid decoding it
-                    # until contents are o'd needed for a diff:
+                    # until contents are o'd/needed for a diff:
                     dc.expGhost = &{
-                        return me&GhostOut,R,Xs&H;
+                        return me&GhostOut,R,xs&H;
                     }
+                }
+                else {
+                    ~emptyexp: ki(xs&H)
+                    dc.unexpected = 1;
+                    # replaces x inside diff with nothing
+                    dc.expGhost = &{};
                 }
                 # < decompress vastnesses
                 # < use trusted code to generate everything?
@@ -1666,15 +1684,11 @@ Coffle: |
             
             # invent them
             if (!g && !x) {
-                # unexpected non-result 1.1
-                # invent %here/%step/%doing for W=main
-                $Wt = ps&main.t;
-                me&tsc,'madeup',"W:"+Wt+"?",'L';
-                $step = me&input,ps&here,stepname;
-                $doing = me&input,step,Wt;
+                ~STEPONENOT
             }
             
             # accept change
+                
             if (g && Rs&boost > 0) {
                 !Rs&shove and Rs&Te.sc.boost = 0;
                 me&tsc,'accept',"<",'L';
@@ -1686,7 +1700,8 @@ Coffle: |
                 !gs&dige || !gs&string and throw "weird"
                 me&GhostIn,R,gs&dige,gs&string;
                 # put pointer
-                doings&H = gs&dige;
+                $ds = doingc&s;
+                dss&H = gs&dige;
                 
                 $dt = ds&Te;
                 # reset diff about to become '='
@@ -1791,7 +1806,7 @@ Coffle: |
                 obc&s = 'new!'
             }
             if (me&Mw,R,'err' .length) {
-                n errors  s:⊗ %fs:18
+                n diff3_errors  s:⊗ %fs:18
                 obc&s = '!'
             }
             if (obc&s.match(/[!=]$/)) {
@@ -2164,24 +2179,27 @@ Coffle: |
                     # a doing
                     C.y.C and continue
                     $D = me&adoing;
-                    C.y.D = D;
-                    D.y.C = C;
-                    Ss&z[i] = D
+                    # if another, keep it instead
+                    if (D && D != C) {
+                        C.y.D = D;
+                        D.y.C = C;
+                        Ss&z[i] = D
+                    }
                 }
             }
         }
     };
-    # n $s # makes sy&C = living
-    me.adoing = &acgts{
+    # n $C # returns another
+    me.adoing = &acgt{
         $q = {q:'W'};
         try {
             q.part = 'Jin';
-            me&J,s.t,q;
+            me&J,C.t,q;
             q.part = 'Jreturned';
         }
         catch (er) {
             # < powow with Ban to surf Bstack
-            C = q.C;
+            C = q.C || C;
             s&err = ki(C,2)+"   !"+q.part+"! "+er;
             ~adoing_er: s&err
         }
@@ -2617,7 +2635,6 @@ Coffle: |
             # giving a pi? real/veyd layers of sc?
             # e /T -run . %does:TeCo %boost:2
             $l = me&push,R,['/','T'],[],'run',{does:'TeCo'};
-            ls&boost = 2;
             me&introqua,l,{boost:2};
             
             return
