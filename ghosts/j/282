@@ -1658,33 +1658,40 @@ Coffle: |
                     #n thing  $s:W.y,R %sun
                 }
             }
-            elsif (!x) {
-                # unexpected non-result
-                # step 1.1?
-                me&tsc,'error',"NONOTHING",'L';
+            
+            # we have %here, find names for %step/%doing
+            $S = Ry&up;
+            $stepname = Ss&exp ? Ss&exp.t : S.t;
+            $doingname = x ? x.t : R.t;
+            
+            # invent them
+            if (!g && !x) {
+                # unexpected non-result 1.1
+                # invent %here/%step/%doing for W=main
+                $Wt = ps&main.t;
+                me&tsc,'madeup',"W:"+Wt+"?",'L';
+                $step = me&input,ps&here,stepname;
+                $doing = me&input,step,Wt;
             }
             
-            if (Rs&boost > 0) {
+            # accept change
+            if (g && Rs&boost > 0) {
                 !Rs&shove and Rs&Te.sc.boost = 0;
-                # copy h to t
-                n push  s:accept
-                # %got become the $step-th %ball under %here
-                # store object
+                me&tsc,'accept',"<",'L';
+                
+                # find us amongst %here
+                $step = me&input,ps&here,stepname;
+                $doing = me&input,step,doingname;
+                # store an object
                 !gs&dige || !gs&string and throw "weird"
                 me&GhostIn,R,gs&dige,gs&string;
-                # make pointer (io spacers cv||=0.1)
-                $po = G&Cye,[R.t,1,{},{H:gs&dige}];
-                me&input,ps&here,po;
+                # put pointer
+                doings&H = gs&dige;
                 
                 $dt = ds&Te;
-                # about to become '='
+                # reset diff about to become '='
                 dt && dts&boost and dts&boost = 0
-                #m accept  $f:g,$t:x
             }
-            elsif (Rs&boost > 0) {
-                n push 12 s:accept?
-            }
-            
         },'ift,D'],
         
 
@@ -2155,8 +2162,11 @@ Coffle: |
                 ms&pause || Ss&pause and continue
                 each iC Ss&z {
                     # a doing
-                    Cy&C and continue
-                    me&adoing
+                    C.y.C and continue
+                    $D = me&adoing;
+                    C.y.D = D;
+                    D.y.C = C;
+                    Ss&z[i] = D
                 }
             }
         }
@@ -2171,10 +2181,11 @@ Coffle: |
         }
         catch (er) {
             # < powow with Ban to surf Bstack
+            C = q.C;
             s&err = ki(C,2)+"   !"+q.part+"! "+er;
             ~adoing_er: s&err
         }
-        C.y.C = q.C;
+        return q.C;
     };
     # now we will try to make software:
     me.Ja.lobbek =
@@ -2227,7 +2238,8 @@ Coffle: |
             n T  $s:sc&Travel,R %ball,bgh:586
             # create and harvest arrangements of gear
             #  %Teing extrapolates runningness
-            n W  $lookup:s.t,R %ballse,dragelvis:projvey
+            n W  $lookup:s.t,R %ballse
+            #,dragelvis:projvey
             # to stable
             n G  $kvstore:localStorage,R %ballse
         },'ift,D'],
