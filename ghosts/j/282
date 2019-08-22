@@ -1497,11 +1497,8 @@ Coffle: |
             !N.length and ~STEPONENOTHING
             $Z = me&ioty,Rs&mained,'%ball';
             
-            # thought clock
-            $sp = r.t+"@"+rs&count;
-            n sp  $s:sp %fs:6
-            $tot = '('+N.length+'/'+Z.length+')';
-            n tot  $s:tot %hs:357
+            me&tsc,'thoughtclock',r.t+"@"+rs&count,'6'
+            me&tsc,'tot','('+N.length+'/'+Z.length+')','p'
             
             # zip N-results to Z-expectations,
             #  allowing more N if all is %ok
@@ -2126,39 +2123,50 @@ Coffle: |
     };
     me.Ja.Co = &acgt{
         me&Gomp;
-        !1s&Te and return
-        o 1s&Te/*
+        $t = 1s&Te;
+        !t and return
+        $N = ts&z;
         $A = G&Aye,'Community';
         # too late for this J to include it
-        G&yl:22,&{ me&doN,ays&s };
+        G&yl:22,&{ me&doN,N };
     };
-    # do only undone
+    # do only undone %main/%step/%doings
     me.doN = &acgtN{
-        each is N {
-            sy&current and continue
-            $q = {q:'W'};
-            if (!ss&z) {
+        each im N {
+            # a main
+            if (!ms&began) {
                 # fresh run, clear memory
-                $v = 4s&Jtv;
-                delete v[s.t];
+                delete 4s&Jtv[s.t];
             }
-            try {
-                q.part = 'Jin';
-                me&J,s.t,q;
-                q.part = 'Jreturned';
+            ms&began ||= G&time;
+            each iS ms&z {
+                # a step
+                ms&pause || Ss&pause and continue
+                each iC Ss&z {
+                    # a doing
+                    Cy&C and continue
+                    me&adoing
+                }
             }
-            catch (er) {
-                q.er = er;
-                q.ermsg = ki(q.C,2)+"   !"+q.part+"! "+er;
-                ~JCo: q.ermsg
-            }
-            C = q.C;
-            q.ermsg and s&err = q.ermsg; Cy&er = q.er;
-            ac(s,'z',C);
-            sy&current = C;
         }
     };
+    # n $s # makes sy&C = living
+    me.adoing = &acgts{
+        $q = {q:'W'};
+        try {
+            q.part = 'Jin';
+            me&J,s.t,q;
+            q.part = 'Jreturned';
+        }
+        catch (er) {
+            # < powow with Ban to surf Bstack
+            s&err = ki(C,2)+"   !"+q.part+"! "+er;
+            ~adoing_er: s&err
+        }
+        C.y.C = q.C;
+    };
     # now we will try to make software:
+    me.Ja.lobbek =
     me.Ja.happenings = &acgt{
         me&Gomp;
         $bit = 1s&bithold ||= G&Cye,['Bit',''];
