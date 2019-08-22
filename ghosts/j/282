@@ -1007,6 +1007,9 @@ Coffle: |
         $y = &b{ ex(n.sc,G&peel,b ) };
         c == 'B' and y('hs:856,fs:17')
         c == 'b' and y('hs:856')
+        c == 'D' and y('hs:675,fs:25')
+        c == 'd' and y('hs:676')
+        c == 'p' and y('hs:395')
         c == 'L' and y('fs:15')
         return n
     };
@@ -1493,7 +1496,6 @@ Coffle: |
             $N = me&ioty,main,'%ball'
             !N.length and ~STEPONENOTHING
             $Z = me&ioty,Rs&mained,'%ball';
-            # < step/do separates
             
             # thought clock
             $sp = r.t+"@"+rs&count;
@@ -1548,8 +1550,6 @@ Coffle: |
         
         # makes iteration by unblocking the instruction
         ['push+made','82',&acgtRs{
-            n thing  $s:Rs&mained,R %sun
-            
             if (Rs&stepforward) {
                 $t = Rs&their;
                 $N = me&ioty,t,'%ball';
@@ -1563,55 +1563,80 @@ Coffle: |
             }
         },'ift,D'],
         #c step acceptor
-        ['step','4',&acgtRs{
+        # %push's %step/%doings build up %ok
+        # < hang %step on the %here %ball it's for
+        ['step','2',&acgtRs{
             Rs&rowish = 1;
-            # < hang %step on the %here %ball it's for
             n step 11 s:S %hs:634
             n step 112 $s:Rs&step %hs:999,mar
             
-            # %push's %step becomes %ok
-            # modes of perception seeing acts
             $p = Ry&up;
+            !ps&push and throw "step up !push"
+            
+            !Rs&got and return me&waits,'nostep','..'
+            
+            # go main/mained %step -> %do
+            $N = me&ioty,Rs&got,'%ball';
+            $Z = me&ioty,Rs&exp,'%ball';
+            !N.length and return me&waits,'notdone','...'
+            
+            $m = me&rollcounty,R,'mem',{per:ps&run};
+            
+            $i = 0;
+            while (N[i] || Z[i]) {
+                $eye = i+1;
+                $k = 'doing_'+eye;
+                n $k  $doing:eye,got:N[i],exp:Z[i],R
+                i++;
+            }
+        },'ift,D'],
+        ['doing','4',&acgtRs{
+            n doing 11 s:. %hs:634
+            n doing 112 $s:Rs&doing %hs:999,mar
+            
+            $st = Ry&up;
+            !sts&step and throw "step up !step"
+            $p = sty&up;
+            !ps&push and throw "step up !push"
             $M = ps&moves;
+            
             $g = Rs&got;
             $x = Rs&exp;
-            !ps&push and throw "step up !push"
-            !M and throw "up push !moves"
+            !g and return me&waits,'notdoing','...'
             
-            !g and return me&waits,'notgot','...'
+            # doing state per %run
+            $m = me&rollcounty,R,'mem',{per:sts&mem};
             
+            # prepare to %diff
             $dc = {};
             !x and dc.unexpected = 1
             else {
+                # test data tricks
                 $X = xc&s;
                 if (Xs&H) {
                     # Lines/decode should do this:
                     xs&H = xs&dige = Xs&H;
                     # which may avoid decoding it
-                    # until contents are needed for a diff:
+                    # until contents are o'd needed for a diff:
                     dc.expGhost = &{
                         return me&GhostOut,R,Xs&H;
                     }
                 }
+                # < decompress vastnesses
+                # < use trusted code to generate everything?
+                #   a lobo A4 copying dispatches from a live instance
+                #   clonesyncing as it transports between them
             }
-            
-            # %mained
-            $r = ps&run;
-            # correspond this %push %step to %push%run %step
-            i $r/#R.t:s
-            $S = ya;
             
             $d = me&diffya,R,R.t,g,x,dc;
             
-            ds&new &&
-                n not 12 s:⧀ %fs:18
+            ds&new and me&tsc,'nothere','⧀','L'
             
-            if (ds&exactly) {
-                Rs&ok = 1;
-                Ss&ok = R
-            }
-            elsif (Ss&ok) {
-                # results are allowed to wander off once accepted
+            ds&exactly and Rs&ok = 1
+            
+            Rs&ok and ms&ok = R
+            elsif (ms&ok) {
+                # results are allowed to wander off once ok
                 # such info is interesting
                 # < accept/test for history-warp
                 ds&sublated = 1;
@@ -1619,16 +1644,15 @@ Coffle: |
                 Rs&ok = 3
             }
             
-            if (Rs&ok) {
-                n ok 14 s:ok %hs:395
-                return
-            }
+            Rs&ok and return me&tsc,'ok','ok','p'
             
+            # This
             $W = gc&s;
+            
             if (Ws&err) {
                 $skull = '☠';
-                n error  $s:skull %hs:674,fs:25
-                n error  $s:Ws&err %hs:676
+                me&tsc,'error',skull,'D';
+                me&tsc,'error',Ws&err,'d';
                 #n thing  $s:W.y,R %sun
             }
             
