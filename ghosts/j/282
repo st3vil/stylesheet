@@ -1009,9 +1009,29 @@ Coffle: |
         c == 'b' and y('hs:856')
         c == 'D' and y('hs:675,fs:25')
         c == 'd' and y('hs:676')
+        c == 'G' and y('hs:999,mar')
+        c == 'g' and y('hs:634')
         c == 'p' and y('hs:395')
         c == 'L' and y('fs:15')
         return n
+    };
+    # sanity/display helper for expanding joints
+    me.zoep = &acgtRptsk{
+        # find/check scheme upwards
+        if (p && p.up) {
+            $path = p.up.split('%').slice(1);
+            $r = R;
+            each il path {
+                r = ry&up;
+                !r and throw t+" !up"
+                !r.sc[l] and throw t+" up !"+l
+            }
+        }
+        # introduce this
+        me&tsc,t,s,'g';
+        k == '' and k = R.sc[t]
+        me&tsc,t,k,'G';
+        return r
     };
     
     #c Rcopy
@@ -1491,10 +1511,8 @@ Coffle: |
             # persist %run per %main%ballc&s
             #  per clobberypushingz, restarts test run (drops J)
             $r = me&rollcounty,R,'run',{per:mainc&s};
-            
-            # two planes
+            # between two planes
             $N = me&ioty,main,'%ball'
-            !N.length and ~STEPONENOTHING
             $Z = me&ioty,Rs&mained,'%ball';
             
             me&tsc,'thoughtclock',r.t+"@"+rs&count,'6'
@@ -1503,7 +1521,7 @@ Coffle: |
             # zip N-results to Z-expectations,
             #  allowing more N if all is %ok
             $i = 0;
-            while (N[i] || Z[i]) {
+            while (N[i] || Z[i] || i == 0) {
                 $eye = i+1;
                 $k = 'step_'+eye;
                 n $k  $step:eye,got:N[i],exp:Z[i],R
@@ -1564,23 +1582,15 @@ Coffle: |
         # < hang %step on the %here %ball it's for
         ['step','2',&acgtRs{
             Rs&rowish = 1;
-            n step 11 s:S %hs:634
-            n step 112 $s:Rs&step %hs:999,mar
-            
-            $p = Ry&up;
-            !ps&push and throw "step up !push"
-            
-            !Rs&got and return me&waits,'nostep','..'
+            $p = me&zoep,R,{up:'%push'},'step','S','';
+            $m = me&rollcounty,R,'mem',{per:ps&run};
             
             # go main/mained %step -> %do
             $N = me&ioty,Rs&got,'%ball';
             $Z = me&ioty,Rs&exp,'%ball';
-            !N.length and return me&waits,'notdone','...'
-            
-            $m = me&rollcounty,R,'mem',{per:ps&run};
             
             $i = 0;
-            while (N[i] || Z[i]) {
+            while (N[i] || Z[i] || i == 0) {
                 $eye = i+1;
                 $k = 'doing_'+eye;
                 n $k  $doing:eye,got:N[i],exp:Z[i],R
@@ -1588,21 +1598,12 @@ Coffle: |
             }
         },'ift,D'],
         ['doing','4',&acgtRs{
-            n doing 11 s:. %hs:634
-            n doing 112 $s:Rs&doing %hs:999,mar
-            
-            $st = Ry&up;
-            !sts&step and throw "step up !step"
-            $p = sty&up;
-            !ps&push and throw "step up !push"
+            $p = me&zoep,R,{up:'%step%push'},'doing','.','';
+            $m = me&rollcounty,R,'mem',{per:ps&run};
             $M = ps&moves;
-            
             $g = Rs&got;
             $x = Rs&exp;
-            !g and return me&waits,'notdoing','...'
-            
-            # doing state per %run
-            $m = me&rollcounty,R,'mem',{per:sts&mem};
+            x && !g and return me&waits,'notdoing','...'
             
             # prepare to %diff
             $dc = {};
@@ -1625,11 +1626,14 @@ Coffle: |
                 #   clonesyncing as it transports between them
             }
             
-            $d = me&diffya,R,R.t,g,x,dc;
-            
-            ds&new and me&tsc,'nothere','⧀','L'
-            
-            ds&exactly and Rs&ok = 1
+            # must have got something to diff
+            if (g) {
+                $d = me&diffya,R,R.t,g,x,dc;
+
+                ds&new and me&tsc,'nothere','⧀','L'
+
+                ds&exactly and Rs&ok = 1
+            }
             
             Rs&ok and ms&ok = R
             elsif (ms&ok) {
@@ -1644,13 +1648,20 @@ Coffle: |
             Rs&ok and return me&tsc,'ok','ok','p'
             
             # This
-            $W = gc&s;
+            if (g) {
+                $W = gc&s;
             
-            if (Ws&err) {
-                $skull = '☠';
-                me&tsc,'error',skull,'D';
-                me&tsc,'error',Ws&err,'d';
-                #n thing  $s:W.y,R %sun
+                if (Ws&err) {
+                    $skull = '☠';
+                    me&tsc,'error',skull,'D';
+                    me&tsc,'error',Ws&err,'d';
+                    #n thing  $s:W.y,R %sun
+                }
+            }
+            elsif (!x) {
+                # unexpected non-result
+                # step 1.1?
+                me&tsc,'error',"NONOTHING",'L';
             }
             
             if (Rs&boost > 0) {
@@ -2134,11 +2145,11 @@ Coffle: |
     me.doN = &acgtN{
         each im N {
             # a main
-            if (!ms&began) {
+            if (!my&began) {
                 # fresh run, clear memory
-                delete 4s&Jtv[s.t];
+                delete 4s&Jtv[m.t];
             }
-            ms&began ||= G&time;
+            my&began ||= G&time;
             each iS ms&z {
                 # a step
                 ms&pause || Ss&pause and continue
