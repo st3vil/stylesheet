@@ -1272,7 +1272,6 @@ Coffle: |
             # transmit here or what we made of it
             Rs&made and h = Rs&made
             
-            
             if (Rs&shove || Rs&boost > 1) {
                 $la = M.slice(-1)[0];
                 ~PUSH: R.t, h.t
@@ -1511,7 +1510,7 @@ Coffle: |
         # a layer of task built onto a push
         # some complicated thing breaking out steps
         # < take %made/%step++ to %main/%step
-        ['push+main+act','73',&acgtRs{
+        ['push+act','73',&acgtRs{
             s&bow = '3px';
             n act  $s:Rs&act %deco
             $h = Rs&here;
@@ -1520,7 +1519,7 @@ Coffle: |
             $ed = Rs&mained;
             # persist %run per %main%ballc&s
             #  per clobberypushingz, restarts test run (drops J)
-            $r = me&rollcounty,R,'run',{per:mainc&s};
+            $r = me&rollcounty,R,'run',{per:main&&mainc&s};
             # between two planes
             $N = me&ioty,main,'%ball'
             $Z = me&ioty,Rs&mained,'%ball';
@@ -1553,10 +1552,14 @@ Coffle: |
             $steps = me&ioty,p,'%step';
             Rs&ok = 1;
             Rs&more = 0;
-            each in steps {
-                !ns&got and Rs&more = 1; break
-                # results got must be ok
-                !ns&ok and Rs&ok = 0
+            each iS steps {
+                $doings = me&ioty,S,'%doing';
+                each in doings {
+                    ns&doing == 1 and return T.wide = 1
+                    !ns&got and Rs&more = 1; break
+                    # results got must be ok
+                    !ns&ok and Rs&ok = 0
+                }
             }
             
             Rs&ok and me&tsc,'ok'
@@ -1576,7 +1579,7 @@ Coffle: |
         # makes iteration by unblocking the instruction
         ['push+made','82',&acgtRs{
             if (Rs&stepforward) {
-                ~wouldstep: t.t
+                ~wouldstep: R.t
                 return;
                 $t = Rs&their;
                 $N = me&ioty,t,'%ball';
@@ -1609,13 +1612,14 @@ Coffle: |
                 i++;
             }
         },'ift,D'],
-        ['doing','4',&acgtRs{
+        ['doing','3',&acgtRs{
             $p = me&zoep,R,{up:'%step%push'},'doing','.','';
             $m = me&rollcounty,R,'mem',{per:ps&run};
             $M = ps&moves;
             $g = Rs&got;
             $x = Rs&exp;
             x && !g and return me&waits,'notdoing','...'
+            
             
             # prepare to %diff
             $dc = {};
@@ -1644,6 +1648,13 @@ Coffle: |
                 #   clonesyncing as it transports between them
             }
             
+            # helps %groksteps decide things are ready
+            Rs&doing = 3;
+            # wait for doing to be done
+            if (g) {
+                $W = gc&s;
+                !Wy&C and return me&waits,'noWyC','n...'
+            }
             # must have got something to diff
             if (g) {
                 $d = me&diffya,R,R.t,g,x,dc;
@@ -1658,7 +1669,7 @@ Coffle: |
                 # results are allowed to wander off once ok
                 # such info is interesting
                 # < accept/test for history-warp
-                ds&sublated = 1;
+                d and ds&sublated = 1
                 n accepted_before 15 s:=)
                 Rs&ok = 3
             }
@@ -1668,12 +1679,13 @@ Coffle: |
             # This
             if (g) {
                 $W = gc&s;
+                
+                #n thing  $s:W.y,R %sun
             
                 if (Ws&err) {
                     $skull = '☠';
                     me&tsc,'error',skull,'D';
                     me&tsc,'error',Ws&err,'d';
-                    #n thing  $s:W.y,R %sun
                 }
             }
             
@@ -1682,18 +1694,12 @@ Coffle: |
             $stepname = Ss&exp ? Ss&exp.t : S.t;
             $doingname = x ? x.t : R.t;
             
-            # invent them
-            if (!g && !x) {
-                ~STEPONENOT
-            }
-            
             # accept change
-                
             if (g && Rs&boost > 0) {
                 !Rs&shove and Rs&Te.sc.boost = 0;
                 me&tsc,'accept',"<",'L';
                 
-                # find us amongst %here
+                # find us from %here
                 $step = me&input,ps&here,stepname;
                 $doing = me&input,step,doingname;
                 # store an object
@@ -2178,12 +2184,12 @@ Coffle: |
                 each iC Ss&z {
                     # a doing
                     C.y.C and continue
-                    $D = me&adoing;
+                    $live = me&adoing;
                     # if another, keep it instead
-                    if (D && D != C) {
-                        C.y.D = D;
-                        D.y.C = C;
-                        Ss&z[i] = D
+                    C.y.C = live || C;
+                    if (live && live != C) {
+                        live.y.C = C;
+                        Ss&z[i] = live;
                     }
                 }
             }
@@ -2635,7 +2641,8 @@ Coffle: |
             # giving a pi? real/veyd layers of sc?
             # e /T -run . %does:TeCo %boost:2
             $l = me&push,R,['/','T'],[],'run',{does:'TeCo'};
-            me&introqua,l,{boost:2};
+            ls&boost = 2;
+            me&introqua,l,{boost:1};
             
             return
             # < io walking expressions: 
