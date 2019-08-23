@@ -351,9 +351,15 @@ Coffle: |
         
         $l = 4s&elvising;
         !l and return
-        me&J,['elvising','-feel',{s:l},'elvising,boost:sc,solvey'];
-        
+        if (0) {
+            me&J,['elvising','-feel',{s:l},'elvising,boost:sc,solvey'];
         s&mih = '14';
+        }
+        else {
+            # still feeds to osc Elvising but don't display
+            n elvising  $s:l %elvising
+        }
+        
     };
     # Elvising looks at innermost s&med on ec&slope
     # s&med=cra:
@@ -1402,40 +1408,50 @@ Coffle: |
         $Co = G&Cye,['Co',''];
         i $Co/$s
         # r is %made
-        $r = me&Copy,R,Co,26;
+        $r = me&Copy,R,Co,18;
         
         # want to just:
         # o $Co/*:main/*:step/*:do
         # with %ball layer, style main + do
         
         $main = me&ioty,r,'%ball' [0];
+        $m = mainc&s;
+        ms&Serarar = 'was';
         
         # ensure step_1
         !mains&z and me&input,main,'step_1';
         $steps = me&ioty,main,'%ball';
-        $one;
         each in steps {
-            ns&isastep = 1;
             # ensure doing=main.t
             !ns&z and me&input,n,main.t;
             $does = me&ioty,n,'%ball';
-            # ensure step_1
             each id does {
                 $n = dc&s;
                 # whittle to instruction part
+                # hiding whatever is here that is not it:
+                # - the H object it should be
                 ns&H and ds&H = delete ns&H
             }
         }
         
         # < any s&H still anywhere should be loaded in
+        # < why only now can this have effect?
+        $main = me&ioty,r,'%ball' [0];
+        $m = mainc&s;
+        ms&Here = 'was';
         
         delete rs&ov;
-        rs&Lines = 1;
-        # onward 3%ball Rsyncs, anything under r may ~
+        rs&Lines = 3;
+        # onward 2%ball Rsyncs, anything under r may ~
         me&Ring,r;
-        me&ioty,r,'%ball' .map(n => ns&clobberypushingz = 1)
-        # blows everything away when othered
-        # kind of just wants to limit pushing_z with ...
+        
+        $mains = me&ioty,r,'%ball';
+        each im mains {
+            # blows everything away when othered
+            ms&clobberypushingz = 1;
+            # limit othering of steps (to %run%currentstep?)
+            ms&pushingnoz = 1;
+        }
         ~TeCo: main.t
         return r
     };
@@ -1618,6 +1634,9 @@ Coffle: |
             $M = ps&moves;
             $g = Rs&got;
             $x = Rs&exp;
+            # helps %groksteps decide things are ready
+            # (A below should be done by the time...)
+            Rs&doing = 3;
             x && !g and return me&waits,'notdoing','...'
             
             
@@ -1648,9 +1667,8 @@ Coffle: |
                 #   clonesyncing as it transports between them
             }
             
-            # helps %groksteps decide things are ready
-            Rs&doing = 3;
             # wait for doing to be done
+            
             if (g) {
                 $W = gc&s;
                 !Wy&C and return me&waits,'noWyC','n...'
@@ -2683,13 +2701,24 @@ Coffle: |
             }
         },'ift,D'],
         #c ball-othering
+        # as %ball, consume %push+%ball from afar
+        # < disconnect/packdown? (git around it)
+        # < take the %move instead
+        #   < make a cursor for the job of applying it
+        #   < may be a search and replace or anything
+        #   < %balls as soft+fast version control
+        # some %push has put:
+        #   %othering(_ball) # incoming %push
+        #    (and the %ball it %move%from)
+        # becomes:
+        #   %pushing(_ball) # fixes fixtures
+        #     and sets up:
+        #       %pushed(_ball) # log of pushes
+        #  and(/or):
+        #   %pushing_z(_ball) to enter its children
+        #    (or itself as a child)
         ['ball','52',&acgtRs{
             Rs&ball = 6; # look before you other
-            # %othering is an incoming %pull -> %ball -> Jazz
-            # to give us/yonder %balls here:
-            #   pushing: %pull when incoming
-            #   pushed: %pull (toplevel, otherer id)
-            #   pushed_ball: %ball
             
             if (Rs&othertricks) {
                 n oth  s:othertricks
@@ -2735,7 +2764,7 @@ Coffle: |
                 # < things rupturing as they delete
                 #   themselves at the edge of the light cone
             }
-            # %pushing are active %pulls
+            # %pushing are an active %push
             each ir Rs&pushing {
                 # whose treeing %self is already here
                 $S = ac(R,'pushing',r,'ball');
@@ -2744,14 +2773,24 @@ Coffle: |
                 # and replacing the last %self
                 $l = ac(R,'pushed',r,'ball',S);
                 $Ss = Sc&s;
+                
+                # the t detail (%here can rename %their)
                 Ss.t != s.t and s.t = S.t
+                
+                # the c/sc details, per %ball%fix'd
                 each in Ss&z {
                     !ns&fix and continue
-                    Ss&othertricks && ns&fix == 'sc' and continue
-                    # < clone-out function would live on n%ball
-                    s[ns&fix][n.t] = nc&s;
+                    $gk = ns&fix;
+                    # GOING
+                    if (Ss&othertricks && gk == 'sc') {
+                        ~baresc: R.t, S.t
+                        continue
+                    }
+                    # < clone-out function would live on n%ball%fix
+                    s[gk][n.t] = nc&s;
                 }
-                
+                # for streaming contents with other %pushes, eg %main/%steps
+                Ss&pushingnoz and continue
                 ac(R,'pushing_z',r,'ball',S);
             }
             each ir Rs&pushing_z {
@@ -2768,7 +2807,7 @@ Coffle: |
                     }
                     # n thing that should be here
                     #   Rs&z +[ t%ball -> clone(nc&s)
-                    # clone() = make spacer to keep t%pushing=S to
+                    # starts with spacer, keeps t%pushing=S to it
                     $t = me&input,R,x.t;
                     ts&ball && ts&ball == '6' and debugger
                     # t%ball now in Rs&z, keep %pushing=S
