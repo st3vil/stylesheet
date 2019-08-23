@@ -1305,7 +1305,14 @@ Coffle: |
         #c push-moves
         # 7%push sends its future self %moves to do
         #   objects (esp %from and %pusher) from that time
-        # now early enough for %othering
+        # now early enough to make %ball%othering
+        # a %move is just a C, has:
+        #   c&from/c&to: most of all
+        #   c&push: %push when it started to move
+        # if you:
+        #   c&pusher: whatever/%push the move was designed in
+        #  you get:
+        #   c&pushed: yfutured/%push when move completed
         ['push+moves','4',&acgtRs{
             $M = Rs&moves;
             each in M {
@@ -1313,6 +1320,9 @@ Coffle: |
                 # with items from late last time
                 $f = nc&from;
                 $t = nc&to;
+                t ||= nc&into;
+                # us, last time
+                $p = nc&pusher;
                 nc&push = R;
                 # f is likely to be the last %here, unless reversing
                 # t (usu %their) may not be here yet:
@@ -1329,11 +1339,23 @@ Coffle: |
                 }
                 else {
                     # ensures (2-arg) it be aRound
-                    t = me&yfuture,t,R;
+                    $to = t;
+                    t = me&yfuture,t;
                     ~othering: t.t, R.t
-                    ts&ball == '6' and throw "too late to %ball"
-                    ac(t,'othering',R,'ball',f)
-                    # usu othering %pull%here,
+                    0 > Rc&N.indexOf(t) and ns&warn = 'to!cur'
+                    t == to             and ns&warn = 'to!futu'
+                    ts&ball == '6'      and ns&err = 'toolate'
+                    
+                    if (!ns&err) {
+                        # bit more pto
+                        ns&move = 1;
+                        ns&from = f;
+                        ns&to = t;
+                        #nc&into ?
+                            ac(t,'movingin',n);
+                        #    ac(t,'othering',R,'ball',f)
+                    }
+                    # usu othering %push%here,
                     # < the %moves making subcommits:
                     #   their own reselections of %ball
                 }
@@ -1342,6 +1364,7 @@ Coffle: |
                     ns&pull ? (ns&pending ? '◅' : '◄') :
                     ns&step ? '‣' :
                     (ns&pending ? '▻' : '►');
+                ns&err and ns&sym += '!'
                 ns&done = 6;
                 #n thereup  $s:ty&up,R %sun
                 # t%ball%othering should get us
@@ -1372,6 +1395,9 @@ Coffle: |
                 $sym = n.t;
                 ns&sym and sym = ns&sym
                 n $n.t  $s:sym %fs:12,hs:594
+                
+                ns&err and me&tsc,'error',ns&err,'d';
+                ns&warn and me&tsc,'warn',ns&warn,'d';
                 
                 # condenses
                 if (s.length > 5) {
@@ -1452,6 +1478,7 @@ Coffle: |
             ms&clobberypushingz = 1;
             # limit othering of steps (to %run%currentstep?)
             ms&pushingnoz = 1;
+            ms&invent_step = m.t;
         }
         ~TeCo: main.t
         return r
@@ -1523,7 +1550,7 @@ Coffle: |
             }
         },'ift,D'],
         
-        #c push-made
+        #c act-made
         # Co/Hap/ Hap v1...
         # a bug chaser
         # make deals across the border so
@@ -1598,18 +1625,46 @@ Coffle: |
         
         # makes iteration by unblocking the instruction
         ['push+made','82',&acgtRs{
+            $m = Rs&mained;
+            $M = Rs&moves;
             if (Rs&stepforward) {
-                ~wouldstep: R.t
-                return;
-                $t = Rs&their;
-                $N = me&ioty,t,'%ball';
-                # this is W=Co's children, a shared space,
-                # < look for our %made's business
-                # the Winy&current points to Wins&z[-1] == Wout
-                each in N {
-                    $s = nc&s;
-                    delete sy&current;
+                # should be ready
+                !m || !Rs&main || !M and return me&tsc,'noforward',"!main"
+                # find step with no %got
+                $N = me&ioty,R,'%step';
+                $S = N.filter(S => !Ss&got)[0];
+                if (!S) {
+                    # go beyond expectations
+                    $doing = ms&invent_step;
+                    !doing and throw "no more steps"
+                    typeof doing != 'string' and throw "doing"
+                    doing = G&Cye,[doing,''];
+                    
+                    $la = N.slice(-1)[0];
+                    $i = las&step + 1;
+                    $S = G&Cye,['step_'+i,''];
+                    S = me&Copy,R,S,18;
+                    me&input,S,doing;
+                    
+                    delete Ss&ov;
+                    Ss&Lines = 3;
+                    # onward 2%ball Rsyncs, anything under S may ~
+                    me&Ring,S;
                 }
+                else {
+                    !Ss&exp and return me&tsc,'noforward',"nextstep!exp"
+                    S = Ss&exp;
+                }
+                
+                # S is now a new %mained %step's %ball (or looks like it)
+                # push the new %step to %main
+                m step $from:S,into:Rs&main,pusher:R %step
+                S && Ss&string and me&tsc,'shipping',Ss&string,'6'
+                #n stepth  $s:Rs&main,R %sun
+                
+                #$c =
+                #m push $from:h,to:t,pusher:R
+                ~wouldstep: R.t
             }
         },'ift,D'],
         #c step acceptor
@@ -1641,7 +1696,8 @@ Coffle: |
             # helps %groksteps decide things are ready
             # (A below should be done by the time...)
             Rs&doing = 3;
-            x && !g and return me&waits,'notdoing','...'
+            x && !g and return me&waits,'nogot','...'
+            !x && !g and return me&waits,'noexpgot','..!'
             
             
             # prepare to %diff
@@ -1692,7 +1748,7 @@ Coffle: |
                 # such info is interesting
                 # < accept/test for history-warp
                 d and ds&sublated = 1
-                n accepted_before 15 s:=)
+                n accepted_before s:=)
                 Rs&ok = 3
             }
             
@@ -1714,7 +1770,10 @@ Coffle: |
             # we have %here, find names for %step/%doing
             $S = Ry&up;
             $stepname = Ss&exp ? Ss&exp.t : S.t;
-            $doingname = x ? x.t : R.t;
+            $doingname = x ? x.t : 
+                # to save an invented step/doing (!x) as got
+                g ? g.t :
+                R.t;
             
             # accept change
             if (g && Rs&boost > 0) {
@@ -2723,6 +2782,23 @@ Coffle: |
         #    (or itself as a child)
         ['ball','52',&acgtRs{
             Rs&ball = 6; # look before you other
+            
+            # take a %move
+            each in Rs&movingin {
+                $r = nc&push;
+                $putting = 'pushing';
+                if (R == rs&there) {
+                    # GOING
+                    # %push%there = %move%to, %their will inside
+                    me&tsc,'pushz','pushzthere';
+                    putting += '_z';
+                }
+                nc&into and putting += '_z';
+                !ns&move and throw "!move"
+                !ns&from and throw "move!to"
+                # < sprawl %move as it others
+                ac(R,putting,r,'ball',ns&from);
+            }
             
             if (Rs&othertricks) {
                 n oth  s:othertricks
