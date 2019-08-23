@@ -1175,6 +1175,12 @@ Coffle: |
             Rs&moves ||= []
         },'ift,D'],
         
+        # %their
+        # not currently pointed to and found:
+        #   %there + %here = %their
+        #     might mean disregard for %their state
+        #     or ignorance, as elvis might clue
+        #      with all the logistical infolation
         # ways the item 7s from afars:
         
         # %push%their = %balls reporting back
@@ -1209,6 +1215,7 @@ Coffle: |
                 Rs&done = lmc&pushed;
             }
         },'ift,D'],
+        # 
 
         ['push','59',&acgtRs{
             Rs&push >= 9 and return
@@ -1279,18 +1286,19 @@ Coffle: |
             Rs&made and h = Rs&made
             
             if (Rs&shove || Rs&boost > 1) {
-                $la = M.slice(-1)[0];
-                ~PUSH: R.t, h.t
-                if (la && lac&from == h) {
-                    ~sameas
-                    #return
-                }
                 !Rs&shove and Rs&Te.sc.boost = 1;
                 Rs&shove &&
                     n shovedby  $s:Rs&shove %hs:388,deco
+                
+                if (!t) {
+                    t = Rs&there;
+                    $into = '> '+t.t
+                }
+                ~PUSH: R.t, h.t, into||t.t
                 # the usual
                 $c =
                 m push $from:h,to:t,pusher:R
+                into and cc&into = 1
             }
         },'ift,D'],
         
@@ -1321,13 +1329,13 @@ Coffle: |
                 $f = nc&from;
                 $t = nc&to;
                 t ||= nc&into;
+                !t || !ts&ball and throw "move not sure of t%ball"
+                !t || !fs&ball and throw "move not sure of f%ball"
                 # us, last time
                 $p = nc&pusher;
                 nc&push = R;
                 # f is likely to be the last %here, unless reversing
-                # t (usu %their) may not be here yet:
-                #  R%othering %pull%there==R will z it
-                t ||= Rs&there;
+                # t (usu c&to=%their) may still be c&into=%there
                 $tp = t && ty&up;
                 if (tp && tps&pushering) {
                     tp = me&yfuture,tp;
@@ -1338,7 +1346,6 @@ Coffle: |
                     ac(tp,'pushering',R,'ball',f)
                 }
                 else {
-                    # ensures (2-arg) it be aRound
                     $to = t;
                     t = me&yfuture,t;
                     ~othering: t.t, R.t
@@ -1351,9 +1358,7 @@ Coffle: |
                         ns&move = 1;
                         ns&from = f;
                         ns&to = t;
-                        #nc&into ?
-                            ac(t,'movingin',n);
-                        #    ac(t,'othering',R,'ball',f)
+                        ac(t,'movingin',n);
                     }
                     # usu othering %push%here,
                     # < the %moves making subcommits:
@@ -1562,16 +1567,15 @@ Coffle: |
             n act  $s:Rs&act %deco
             $h = Rs&here;
             $t = Rs&their;
-            $main = Rs&main;
-            $ed = Rs&mained;
-            # persist %run per %main%ballc&s
+            # persist %run per %main%ball c&s
+            $mains = Rs&main && Rs&main.c.s;
             #  per clobberypushingz, restarts test run (drops J)
-            $r = me&rollcounty,R,'run',{per:main&&mainc&s};
+            $r = me&rollcounty,R,'run',{per:mains};
             # between two planes
-            $N = me&ioty,main,'%ball'
+            $N = me&ioty,Rs&main,'%ball'
             $Z = me&ioty,Rs&mained,'%ball';
             
-            me&tsc,'thoughtclock',r.t+"@"+rs&count,'6'
+            me&tsc,'thoughtclock',r.t+"@"+rs&count,'6' .sc.fs=7;
             me&tsc,'tot','('+N.length+'/'+Z.length+')','p'
             
             # zip N-results to Z-expectations,
@@ -1594,7 +1598,7 @@ Coffle: |
         # ~ small change
         # ☯
         # 
-        ['groksteps','5',&acgtRs{
+        ['groksteps','81',&acgtRs{
             $p = Ry&up;
             $steps = me&ioty,p,'%step';
             Rs&ok = 1;
@@ -1623,7 +1627,7 @@ Coffle: |
             Rs&wantstep and ps&stepforward = 1
         },'ift,D'],
         
-        # makes iteration by unblocking the instruction
+        # others a %main%step
         ['push+made','82',&acgtRs{
             $m = Rs&mained;
             $M = Rs&moves;
@@ -2787,7 +2791,7 @@ Coffle: |
             each in Rs&movingin {
                 $r = nc&push;
                 $putting = 'pushing';
-                if (R == rs&there) {
+                if (R == rs&there && !nc&into) {
                     # GOING
                     # %push%there = %move%to, %their will inside
                     me&tsc,'pushz','pushzthere';
