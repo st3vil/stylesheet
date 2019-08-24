@@ -1077,7 +1077,7 @@ Coffle: |
         ex(c,{task:'ravel',ball:1,noDisplay:1});
         c.Copy = 1;
         h != s and c.Ropy = h
-        c.t ||= 'Copy';
+        c.t ||= h.t;
         return me&Reis,R,c.t,s,c
     };
     me.Copyingness = &acgtR{ return [
@@ -1239,7 +1239,30 @@ Coffle: |
                 Rs&done = lmc&pushed;
             }
         },'ift,D'],
-        # 
+        
+        # an error getting fixed
+        # detects disconnected %their
+        #  searches for likely candidate
+        #   or however there/their is pointed
+        ['push+losttheir','77',&acgtRs{
+            delete Rs&losttheir;
+            !Rs&lastpush and return
+            $m = Rs&main || Rs&made || Rs&here;
+            $th = Rs&there;
+            !m || !th and throw "m-th"
+            $t = me&ioty,th,'%ball' .filter(t => t.t == m.t) [0];
+            n sun  $s:m,R %sun
+            !t and return me&tsc,'notfindable','gonetheir','d'
+            Rs&losttheir = t;
+        },'ift,D'],
+        # and puts it forth
+        ['push+moves','56',&acgtRs{
+            # for push+losttheir 77
+            $b = Rc&b;
+            $l = b && bs&losttheir;
+            l and Rs&their = me&yfuture,l
+        },'ift'],
+        
 
         ['push','59',&acgtRs{
             Rs&push >= 9 and return
@@ -1562,8 +1585,13 @@ Coffle: |
         ['push+act','591',&acgtRs{
             Rs&push >= 9 and return
             $h = Rs&here;
+            !h and return me&waits,'..h'
             $t = Rs&their;
-            !h || !t and return me&waits,'..'
+            if (!t) {
+                me&waits,'..t'
+                Rs&losttheir = 1;
+            }
+            !t and return
             
             if (t.t != h.t && t.t == 'Co') {
                 # locate their main thing (othered from %mained)
@@ -1578,7 +1606,6 @@ Coffle: |
                 }
             }
         },'ift,D'],
-        
         #c act-made
         # Co/Hap/ Hap v1...
         # a bug chaser
