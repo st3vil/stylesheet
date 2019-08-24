@@ -1857,6 +1857,14 @@ Coffle: |
             }
             else {
                 $scan = me&scan,s,R;
+                $WR = sy&R;
+                if (WR) {
+                    $on = WRs&on;
+                    if (on) {
+                        n D  $self:WR,R %displayon,maybe
+                    }
+                }
+                
                 if ((Rs&boost||0) < 1) {
                     $is = scan.is || scan.sym;
                     $t = s.t;
@@ -1864,9 +1872,8 @@ Coffle: |
                 }
                 elsif (Rs&boost < 2) {
                     # several C's with some interesting stuff in
-                    # look for anomalies
+                    # < look for anomalies
                     #   generate maps to call things
-                    $WR = sy&R;
                     $I = WR && WRy&I;
                     if (I) {
                         $head = Ic&head;
@@ -1878,7 +1885,11 @@ Coffle: |
                                 );
                             }
                             tasks = tasks.join(' ');
-                            me&tsc,'tasks',tasks,'6'
+                            if (tasks != 'C Cray Display') {
+                                # < to show it like this but click in to indiv
+                                #   pi
+                                n tasks  $self:tasks,R %sun
+                            }
                         }
                     }
                 }
@@ -1887,6 +1898,15 @@ Coffle: |
                     n thing  $self:s,R %sun:2
                 }
             }
+        },'ift,D'],
+        ['displayon','3',&acgtRs{
+            me&tsc,'displayon','D','G';
+            (Rs&boost||0) < 1 and return
+            Rs&rowish = 1;
+            s&bo = '4px dotted green';
+            s&hue = 30;
+            s&br = 0.4;
+            ac(R,'down',s||Rs&self);
         },'ift,D'],
         
         
@@ -2456,7 +2476,7 @@ Coffle: |
         # data dump R%sun
         ['sun','3',&acgtRs{
             Rs&sun == 2 and Rc&refs = []; Rc&refR = [];
-            me&Reis,R,'Cray',s||Rs&self;
+            me&Reis,R,R.t,s||Rs&self,{task:'Cray'};
         },'ift'],
         
         # the living - a situation
