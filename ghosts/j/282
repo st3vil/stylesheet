@@ -1040,6 +1040,7 @@ Coffle: |
         c == 'g' and y('hs:634')
         c == 'p' and y('hs:395')
         c == 'L' and y('fs:15')
+        c == '6' and y('fs:6')
         return n
     };
     # sanity/display helper for expanding joints
@@ -2719,11 +2720,13 @@ Coffle: |
             del > 16 and me&tsc,'delta','>'+del+'s','b';
             me&tsc,'here','@'+hs&dige,'G'
             
+            n so  $self:C,R %sun
             !Pc&s and me&tsc,'notexist','⧁','G'
             else
             !Ps&dige and throw "eiwer"
             else
             Ps&dige == hs&dige and me&tsc,'equal','=','G';
+            Pc&String == hs&string and me&tsc,'equals','==','G';
             else {
                 # we have a P for the remote's branch
                 # make it look like a ball so it can %diff
@@ -2733,7 +2736,7 @@ Coffle: |
                 $d = me&diffya,R,'upstream',h,P,{hue:90};
             }
             
-            (Rs&boost||0) < 1 and return
+            (Rs&boost||0) < 1 and return delete s&qh
             Rs&rowish = 1;
             # objects/names to copy
             $M = [];
@@ -2753,6 +2756,7 @@ Coffle: |
                 m $path  $s:string,aka:path,dige:ss&H
             }
             $qh = s&qh ||= {};
+            $abug = 0;
             each in M {
                 ns&ok = 1;
                 $doq = &ts{
@@ -2761,10 +2765,19 @@ Coffle: |
                     $P = qs&P;
                     $wai = &s{
                         ns&ok = 0;
-                        me&tsc,'waiting',t+s,'g' .sc.dis = 1;
+                        ta(s);
                     };
+                    $ta = &s{
+                        $st = t[0] == 'o' ? '6' : '';
+                        me&tsc,'waiting',t+s,st .sc.dis = 1;
+                    };
+                    # has a pull, has a result (decoded by G&ting)
                     !P and return wai('..')
-                    Pc&String == s and return
+                    Pc&String == s and return ta('!')
+                    # BUG stop it continually doing this later:
+                    #   losing P on update?
+                    #  just gets by if all updates succeed once
+                    abug = 0;
                     Pc&String ? wai('>') : wai('*');
                     # write: add s to the question for next time
                     qc&s = s;
@@ -2780,12 +2793,16 @@ Coffle: |
                     Rs&in_progress = 1;
                 }
             }
-            #n so  $self:h.sc,R %sun
+            if (abug) {
+                # see BUG ^
+                n so  $self:C,R %sun
+                return
+            }
             Rs&in_progress and return
             # change what links it all together
             Qc&s = hs&string;
             
-            delete 1s&Te.sc.boost
+            delete Rs&Te.sc.boost
         },'ift,D'],
         
         
