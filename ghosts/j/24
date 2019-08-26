@@ -220,7 +220,12 @@ NutThing: | # name of thing, outside I?
             $checks = 5;
             $check = &{
                 is_done and return;
-                !r.statusText && checks-- > 0 and return G&yl,150,check;
+                if (!r.statusText) {
+                    checks-- > 0 and return G&yl,150,check;
+                    console.log("Long wait going to: "+get)
+                    checks > -3 and return G&yl,666,check;
+                    return
+                }
                 r.statusText == 'Not Found' and throw "No way: "+t
                 r.statusText != 'OK' and throw "Weird ajaxtus: "+r.statusText
                 #~>57 waylo: t
