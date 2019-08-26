@@ -584,6 +584,7 @@ Wade: | # serve /W/$t to G&t
         
         # returns json:
         my $re = {ok=>0};
+        my $nos = 0;
         
         if (defined $s) {
             # optional safety - must replace such dige
@@ -609,7 +610,7 @@ Wade: | # serve /W/$t to G&t
                 # < (notify nearby others, who )+
                 re.ok = 'updated';
                 re.ok = 'created' if $new;
-                $s = '';
+                $nos = 1;
             }
         }
         else {
@@ -631,6 +632,8 @@ Wade: | # serve /W/$t to G&t
             if (my $ha = $c->param('have')) {
                 delete re.s if grep {$_ eq $dig} split "\t", $ha
             }
+            # or if it was a write
+            delete re.s if $nos;
         }
         $c->render(text=>sjson($re));
     };
