@@ -922,14 +922,18 @@ NutIns: | # new stuff
                 $poss = [p, s&P, P]
                     .filter(&p{ return p && pc&String && ps&dige })
                     .filter(&p{ return d.have.push(ps&dige) });
-                !d.have.length and delete d.have
-                else { d.have = d.have.join("\t") }
+                if (d.have.length) {
+                    d.have = uniq(d.have).join("\t");
+                }
+                else {
+                    delete d.have
+                }
                 
                 got = &P,s,c{
                     $r = dej(s);
                     if (r.dige) {
                         # variance in perl/js dig()?
-                        Ps&dige && Ps&dige != r.dige and debugger;
+                        Ps&dige && Ps&dige != r.dige and 'indeed'
                         Ps&dige = r.dige;
                         # dige without s if it's cached here
                         if (null == r.s) {
