@@ -1070,7 +1070,7 @@ Coffle: |
         typeof c == 'number' and c = {ov:c};
         while (c.ov > 1) { c.ov *= 0.1 }
         
-        $s = hs&ball ? hc&s : h;
+        $s = hc&N && hs&ball ? hc&s : h;
         
         ex(c,{task:'ravel',ball:1,noDisplay:1});
         c.Copy = 1;
@@ -2083,12 +2083,9 @@ Coffle: |
     };
     # empties grounda&z into M or more R
     me.endome = &acgtR{
-        $g = A.ground;
-        !g and return
-        !gs&z and return
-        $N = gs&z;
-        !N.length and return
-        gs&z = [];
+        !T.nN || !T.nN.length and return
+        $N = T.nN;
+        T.nN = [];
         $M = null;
         each in N {
             if (nc&R) {
@@ -2300,15 +2297,11 @@ Coffle: |
                 $packdown = [];
                 if (ts&D) {
                     # doming for n
-                    $g = A.ground;
-                    gs&nonz = gs&z;
-                    gs&z = [];
+                    T.nN = [];
                     packdown.push(&{
-                        # empties grounda&z into M or more R
+                        # empties T.nN into M or more R
                         me&endome,R;
-                        $g = A.ground;
-                        gs&z = gs&nonz;
-                        delete gs&nonz;
+                        delete T.nN;
                     });
                 }
 
@@ -2357,6 +2350,8 @@ Coffle: |
         # cdar extendor
         # all of them Jround here S variously, lay out trees,
         # to mix the top based on the particulars
+        $N = sc&N;
+        $h = N[0];
         
         # R motif leads to P, leads to R...
         # spring forth
@@ -2366,11 +2361,10 @@ Coffle: |
             # on the 9's A:of
             $V = swims[t] ||= me&Reis,h,t,null,{ov:0.18};
             # a pile of input
-            $r = me&Ret,V,ex(c||{},{t:R.t})
+            $r = me&Ret,V,ex(c||{},{t:R.t});
+            zN(r);
         };
         
-        $N = sc&N;
-        $h = N[0];
         hc&s != C and throw "hcs !C"
         each iR N {
             $C = Rc&s;
@@ -2383,10 +2377,12 @@ Coffle: |
             each tc swims {
                 $of = C.sc[t];
                 !of and continue
-                swim(R,t,{self:Rc&s})
+                swim(R,t,{selfer:C})
             }
             # and via Js
+            if (0) {
             each tc swims {
+                continue
                 $J = s&J;
                 !J and return
                 $op = Js&top || Jc&s;
@@ -2395,6 +2391,7 @@ Coffle: |
                     nc&W != t and continue
                     swim(R,t,{other:Rc&s})
                 }
+            }
             }
             
             s&unknown and me&sunknown,R
@@ -2414,7 +2411,7 @@ Coffle: |
             me&Ring,r
         }
     };
-    # pitch time, run time, log saming
+    #c pitch time, run time, log saming
     # < waver accepts advances in trave...
     #   once off the path that sequences of trave indicate
     #   begin a new branch of trave,
@@ -2508,14 +2505,14 @@ Coffle: |
             }
         }
     };
-    # the coder
+    #c oph the coder
     me.oph = &acgtR{ return [
         ... me&Displayingness ,
-        ['self','2',&acgtRs{
+        ['selfer','2',&acgtRs{
             $h = Rc&N[0];
             $Swim = hs&Swim ||= {};
             
-            $s = Rs&self;
+            s = Rs&selfer;
             $I = Swim[ss&oph] ||= {};
             $z = I[s.t] ||= [];
             s.y.cv ||= 0.1;
@@ -2527,17 +2524,18 @@ Coffle: |
                 if (ot.y.cv == s.y.cv) {
                     Rs&overwrites = ot;
                     z.splice(zi-1,1);
-                    me&tsc,'overwrite','<'+ot.t;
+                    me&tsc,'overwrites','<'+ot.t;
                 }
             }
-            
+            Rs&selfed = 1;
             # there is also an %other for things coming via a J
             # self would always overwrite 
         },'ift,D'],
         ['Swim','3',&acgtRs{
+            s&mb = 2;
             $D = G&Cye,[R.t,''];
             each fc Rs&Swim {
-                $F = G&Cye,[R.t,0.001,{W:R.t}];
+                $F = G&Cye,[f,{cv:0.001},{W:R.t}];
                 ac(D,'z',F);
                 each tz c {
                     each in z {
@@ -2545,18 +2543,39 @@ Coffle: |
                     }
                 }
             }
-            #$b = me&Copy,R,D,{Lines:3};
-            n made  $self:D,R %sun
+            Rs&Swimb = me&Copy,R,D,{Lines:3} .c.s;
+        },'ift,D'],
+        ['Swimb','4',&acgtRs{
+            $S = Rs&Swimb;
+            me&rollbs,R,'indige';
+            Rs&indige && Rs&indige == Ss&dige and me&rollbs,R,'Swum'
+            if (!Rs&Swum) {
+                Rs&indige = Ss&dige;
+                
+                # < send S to the server
+                # it will W=oph and encode all this stuff
+                $f = Ss&z[0].sc.z[0];
+                fc&s += "\nstamp";
+                
+                Rs&Swum = S;
+            }
+            # attach to the 9
+            $p = Ry&up;
+            ps&task != 'C' and throw "lst"
+            $s = pc&s;
+            each iF Ss&z {
+                $F = G&Cye,F;
+                $N = delete Fs&z;
+                each iD N {
+                    i $s/$F/$D
+                }
+            }
         },'ift,D'],
         ['She','7',&acgtRs{
             Rs&rowish = 1;
-            me&tsc,'here','Its.'+R.t .sc.dis = 1;
-            each in Rs&z {
-                
-            }
             
             n so  $self:R,R %sun
-        },'if:h'],
+        },'if:h,D'],
     ] };
     #c cellvey think about their state,
     # become straight, become curvy
@@ -2570,9 +2589,6 @@ Coffle: |
             uhs&task == Rs&task and return;
             # start by checking out thy name
             isC(s) && ss&ravel and R.sc[ss&ravel] = 1
-            else {
-                throw "lostR"
-            }
             Rc&dupl = 3;
         },'if:h'],
         
