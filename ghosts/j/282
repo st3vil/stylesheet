@@ -1752,7 +1752,6 @@ Coffle: |
             x && !g and return me&waits,'nogot','...'
             !x && !g and return me&waits,'noexpgot','..!'
             
-            
             # prepare to %diff
             $dc = {};
             # was no %doing
@@ -1797,8 +1796,24 @@ Coffle: |
                 Rs&ok = 3
             }
             
-            W &&
+            if (W) {
+                if (Rs&boost < 0) {
+                    # quick redo thing
+                    # < when it <G
+                    $p = g.y.up;
+                    $ps = pc&s;
+                    $pi = pss&z.indexOf(W);
+                    pi < 0 and throw "nofind"
+                    !Wy&C and throw "nooriginal"
+                    W = pss&z[pi] = Wy&C;
+                    delete Wy&C;
+                    W = null;
+                    Rs&Te.sc.boost = 0;
+                    return
+                }
+                # the object
                 n Won  $self:W,R %Cit
+            }
             
             Rs&ok and return me&tsc,'ok','ok','p'
             
@@ -2345,14 +2360,42 @@ Coffle: |
         
         # R motif leads to P, leads to R...
         # spring forth
+        # happenings by the 9 for the Cs
+        $swims = {oph:0};
+        $swim = &Rtc{
+            # on the 9's A:of
+            $V = swims[t] ||= me&Reis,h,t,null,{ov:0.18};
+            # a pile of input
+            $r = me&Ret,V,ex(c||{},{t:R.t})
+        };
         
         $N = sc&N;
+        $h = N[0];
+        hc&s != C and throw "hcs !C"
         each iR N {
             $C = Rc&s;
             
             #   yonder Displayers must y&up=R also getting Displayed
             #   to hang it on the screen
             Rc&inC = R;
+            
+            # for originals
+            each tc swims {
+                $of = C.sc[t];
+                !of and continue
+                swim(R,t,{self:Rc&s})
+            }
+            # and via Js
+            each tc swims {
+                $J = s&J;
+                !J and return
+                $op = Js&top || Jc&s;
+                !op and return
+                each in ops&z {
+                    nc&W != t and continue
+                    swim(R,t,{other:Rc&s})
+                }
+            }
             
             s&unknown and me&sunknown,R
             else
@@ -2364,6 +2407,11 @@ Coffle: |
             
             #1s&vigua and me&sunknown,R,1s&vigua; delete 1s&vigua;
             #me&Rdealings,R,r; me&Rdealings,R,R
+        }
+        each ir swims {
+            !r and continue
+            delete rs&ov;
+            me&Ring,r
         }
     };
     # pitch time, run time, log saming
@@ -2441,9 +2489,9 @@ Coffle: |
         i $b/$bit
         bits&bobs ||= 0
         bits&bobs --;
-        bits&bobs == -2 and throw "Unfielded quark"
+        #bits&bobs == -2 and throw "Unfielded quark"
         
-        n Plethoria  $s:<<'' %of:s
+        n Plethoria  $s:<<'' %oph:s
             # glampiture
             n now  s:noow %fs:54
         
@@ -2460,6 +2508,56 @@ Coffle: |
             }
         }
     };
+    # the coder
+    me.oph = &acgtR{ return [
+        ... me&Displayingness ,
+        ['self','2',&acgtRs{
+            $h = Rc&N[0];
+            $Swim = hs&Swim ||= {};
+            
+            $s = Rs&self;
+            $I = Swim[ss&oph] ||= {};
+            $z = I[s.t] ||= [];
+            s.y.cv ||= 0.1;
+            # only cv sorts
+            me&sortin,z,s;
+            $zi = z.indexOf(s);
+            if (zi-1 >= 0) {
+                $ot = z[zi-1];
+                if (ot.y.cv == s.y.cv) {
+                    Rs&overwrites = ot;
+                    z.splice(zi-1,1);
+                    me&tsc,'overwrite','<'+ot.t;
+                }
+            }
+            
+            # there is also an %other for things coming via a J
+            # self would always overwrite 
+        },'ift,D'],
+        ['Swim','3',&acgtRs{
+            $D = G&Cye,[R.t,''];
+            each fc Rs&Swim {
+                $F = G&Cye,[R.t,0.001,{W:R.t}];
+                ac(D,'z',F);
+                each tz c {
+                    each in z {
+                        ac(F,'z',n);
+                    }
+                }
+            }
+            #$b = me&Copy,R,D,{Lines:3};
+            n made  $self:D,R %sun
+        },'ift,D'],
+        ['She','7',&acgtRs{
+            Rs&rowish = 1;
+            me&tsc,'here','Its.'+R.t .sc.dis = 1;
+            each in Rs&z {
+                
+            }
+            
+            n so  $self:R,R %sun
+        },'if:h'],
+    ] };
     #c cellvey think about their state,
     # become straight, become curvy
     # have things wanting to be streamed uphill
@@ -2477,12 +2575,6 @@ Coffle: |
             }
             Rc&dupl = 3;
         },'if:h'],
-        
-        # data dump R%sun
-        ['sun','3',&acgtRs{
-            Rs&sun == 2 and Rc&refs = []; Rc&refR = [];
-            me&Reis,R,R.t,s||Rs&self,{task:'Cray'};
-        },'ift'],
         
         # the living - a situation
         # slow rolling wakeup
@@ -3173,9 +3265,15 @@ Coffle: |
             Rc&dl ||= 35;
         }],
         ['Displayingness','3',&acgtRs{
-            # this R can be clicked big/small
+            # R can be clicked big/small
             me&boostulate,R;
         }],
+        # data dump R%sun
+        ['sun','3',&acgtRs{
+            Rs&sun == 2 and Rc&refs = []; Rc&refR = [];
+            me&Reis,R,R.t,s||Rs&self,{task:'Cray'};
+        },'ift'],
+        
         ['Displayingness','9',&acgtRs{
             Rs&noDisplay and return
             $d = me&Display,R;
