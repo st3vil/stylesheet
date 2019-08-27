@@ -1890,22 +1890,33 @@ Coffle: |
         },'ift,D'],
         #c Cit/Rit
         # dive into the result
-        ['Cit','1',&acgtRs{
-            R.t = s.t
-        },'ift'],
-        ['Cit','3',&acgtRs{
-            $d = Ry&up;
-            ds&ok and Rs&ok = 1
-            $b = Rc&b;
-            # calm on coming right
-            Rs&ok && b && !bs&ok and Rs&boost--
-            me&tsc,'t','Cit','6';
+        ['Cit','13',&acgtRs{
+            # subverted ref dedup
+            s = Rc&s ||= Rs&self;
+            Rs&ot = R.t;
+            isC(s) and R.t = s.t
+            Rs&ot == R.t and delete Rs&ot
             
-            s&bo = '1px dotted green';
+            $p = Ry&up;
+            ps&Cit || ps&Citop and return
+            Rs&Citop = delete Rs&Cit;
+            
+        },'ift'],
+        # the top Cit looks it over more
+        ['Citop','6',&acgtRs{
+            $b = Rc&b;
+            $p = Ry&up;
+            ps&ok and Rs&ok = 1
+            # ok-ing overthing should calm...
+            Rs&ok && b && !bs&ok and Rs&boost--
+            # we become a pool of refs
+            Rc&refs = [];
+            Rc&refR = [];
+            
+            s&bo = '2px dotted green';
             s&hue = 30;
             s&br = 1;
-            
-            Rs&self and s = Rc&s = Rs&self
+            s&ma = 0.6;
             
             if (!isC(s)) {
                 me&tsc,'notC','Cit:notC','d'
@@ -1913,49 +1924,52 @@ Coffle: |
                 return
             }
             
-            $scan = Rs&scan = me&scan,s,R;
-            me&domesticate,R;
+            n C  $s:s,R %Cit
+            # ^ should have probes elvising:
+            $WR = sy&R;
+            if (WR) {
+                $on = WRs&on;
+                if (on) {
+                    n yRson  $self:WR,R %displayon,maybe
+                }
+            }
+        },'ift,D'],
+        ['Cit','6',&acgtRs{
+            Rs&ot and me&tsc,'ot','yRson','q' .y.cv = 0.01
+            me&domesticate,R
             
-                $WR = sy&R;
-                if (WR) {
-                    $on = WRs&on;
-                    if (on) {
-                        n D  $self:WR,R %displayon,maybe
-                    }
-                }
-                
-                if ((Rs&boost||0) < 1) {
-                    $is = scan.is || scan.sym;
-                    $t = s.t;
-                    n $t 12 $s:is %fs:15,ls:-0.1,zi:-1,hs:4955
-                }
-                elsif (Rs&boost < 2) {
-                    # several C's with some interesting stuff in
-                    # < look for anomalies
-                    #   generate maps to call things
-                    $I = WR && WRy&I;
-                    if (I) {
-                        $head = Ic&head;
-                        if (head) {
-                            $tasks = [];
-                            each ks head {
-                                tasks.push(
-                                    k+(s.length>1?'+'+s.length:'')
-                                );
-                            }
-                            tasks = tasks.join(' ');
-                            if (tasks != 'C Cray Display') {
-                                # < to show it like this but click in to indiv
-                                #   pi
-                                n tasks  $self:tasks,R %sun
-                            }
+            if ((Rs&boost||0) < 1) {
+                $is = scan.is || scan.sym;
+                $t = s.t;
+                n $t 12 $s:is %fs:15,ls:-0.1,zi:-1,hs:4955
+            }
+            elsif (Rs&boost < 2) {
+                # several C's with some interesting stuff in
+                # < look for anomalies
+                #   generate maps to call things
+                $I = WR && WRy&I;
+                if (I) {
+                    $head = Ic&head;
+                    if (head) {
+                        $tasks = [];
+                        each ks head {
+                            tasks.push(
+                                k+(s.length>1?'+'+s.length:'')
+                            );
+                        }
+                        tasks = tasks.join(' ');
+                        if (tasks != 'C Cray Display') {
+                            # < to show it like this but click in to indiv
+                            #   pi
+                            n tasks  $self:tasks,R %sun
                         }
                     }
                 }
-                else {
-                    #me&tsc,'notC','here','d'
-                    n thing  $self:s,R %sun:2
-                }
+            }
+            else {
+                #me&tsc,'notC','here','d'
+                n thing  $self:s,R %sun:2
+            }
         },'ift,D'],
         ['displayon','3',&acgtRs{
             me&tsc,'displayon','D','G';
@@ -1966,10 +1980,6 @@ Coffle: |
             s&br = 0.4;
             ac(R,'down',s||Rs&self);
         },'ift,D'],
-        
-        
-        
-
     ] };
     #c pushy
     # operate on Ghost/kvstore remotely
@@ -2385,7 +2395,7 @@ Coffle: |
         return 1;
     };
     
-    #c Flim
+    #c Graze
     # waltzing stringpasses,
     #  determine, certify version of etc involved
     # we have a village's machinery for progress
@@ -2457,7 +2467,7 @@ Coffle: |
             me&Ring,r
         }
     };
-    #c pitch time, run time, log saming
+    #c Flim pitch time, run time, log saming
     # < waver accepts advances in trave...
     #   once off the path that sequences of trave indicate
     #   begin a new branch of trave,
