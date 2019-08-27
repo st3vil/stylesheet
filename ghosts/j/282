@@ -3306,8 +3306,10 @@ Coffle: |
         }],
         # data dump R%sun
         ['sun','3',&acgtRs{
-            Rs&sun == 2 and Rc&refs = []; Rc&refR = [];
-            me&Reis,R,R.t,s||Rs&self,{task:'Cray'};
+            $c = {task:'Cray'};
+            Rs&sun == 2 and c.refpool = 1
+            Rs&dupup and c.dupup = 1
+            me&Reis,R,R.t,s||Rs&self,c;
         },'ift'],
         
         ['Displayingness','9',&acgtRs{
@@ -3315,24 +3317,40 @@ Coffle: |
             $d = me&Display,R;
         },'if:h'],
     ] };
+    # GOING
+    # applies Cee directly
     me.Cray = &acgtRs{ return [
         ... me&Displayingness ,
-        ['She','3',&acgtRs{
+        ['Ceetop','12',&acgtRs{
+            Rs&Cee ||= 1;
+        },'if:h'],
+        ... me&Ceeingness,
+    ] };
+    
+    # the full-experience yet folded light cone
+    me.Ceeingness = &acgtRs{ return [
+        ['Cee','3',&acgtRs{
             $h = Rc&N[0];
-            $p = Ry&up;
-
+            $P = me.cby(R,&r{ return !rs&Cee });
+            $depth = P.length;
+            $p = P[1];
+            
+            $Cee = &tsc{
+                c = ex(c||{},{t:t,s:s,Cee:1});
+                return me&Ret,R,c
+            };
             
             $scan = Rs&scan = me&scan,s,R;
-
-            me&domesticate,R;
+            
+            !Rs&dupup and me&domesticate,R;
 
             # decision of presentation
             p && ps&isnk || Rs&isgk and Rs&isgk = 1
-            p && ps&scan && ps&scan.sym == '[' && pc&d > 1 and Rs&isgk = 1;
+            p && ps&scan && ps&scan.sym == '[' && depth > 2 and Rs&isgk = 1;
             # boost overrides tendency to isgk weirdkeys
             Rs&isgk && Rs&boost and delete Rs&isgk; Rs&rowish = 1;
             R.t == 'y' and delete Rs&rowish;
-            Rs&boost < 0 and delete Rs&rowish; Rs&isgk = 1;
+                Rs&boost < 0 and delete Rs&rowish; Rs&isgk = 1;
             scan.sym == "'" and Rs&isgk = 1;
 
             if (Rs&isgk) {
@@ -3358,27 +3376,27 @@ Coffle: |
             wk = me&wktion,R,wk;
             
             each ik wk {
-                $n = me&Ret,R,{t:k,s:s[k],isgk:1};
+                $n = Cee(k, s [k], {isgk:1});
                 i == 0 and ns&ml = 1
             }
 
-            ks && ks.length && ks.map(&k{
-                $v = s [k];
-                me&Ret,R,{t:k,s:s[k],rowish:1}; #]
-            });
+            each ik ks {
+                Cee(k, s [k], {rowish:1});
+            }
             
-            Rs&boost > 0 && Rc&d == 0 and Rs&runny = 2
+            Rs&boost > 0 && depth == 1 and Rs&runny = 2
 
             
             if (scan.C && (Rs&runny > 1
                 ||
-                (Rs&runny || Rc&d == 0) && sy&tv && ss&z && !ss&J
+                (Rs&runny || depth == 1) && sy&tv && ss&z && !ss&J
                 )) {
                 each in ss&z {
-                    me&Ret,R,{t:i,s:n,rowish:1,runny:1}
+                    # can zoom around Cs if ^
+                    Cee(i, n, {rowish:1,runny:1});
                 }
             }
-        }],
+        },'ift'],
     ] };
     #c Cit
     # dive into the result
@@ -3386,6 +3404,7 @@ Coffle: |
     # see XVer for during
     me.Cit = &acgtR{ return [
         ... me&Displayingness ,
+        ... me&Ceeingness ,
         ['Cit','13',&acgtRs{
             # subverted refs dedup
             s = Rc&s ||= Rs&self;
@@ -3430,7 +3449,7 @@ Coffle: |
             }
         },'ift,D'],
         #c Cit
-        ['Cit','6',&acgtRs{
+        ['Cit','3',&acgtRs{
             $Cit = &tsc{
                 $n =
                 n $t  $s:s,R
@@ -3459,10 +3478,15 @@ Coffle: |
                     Cit(k,v,c)
                 }
                 me&domesticate,R
+                Rs&tiny = 1;
+            }
+            if (Rs&tiny) {
+                Rs&dis and s&dis = 1
                 return
             }
-            Rs&tiny and return
-            wastiny and Rs&dis = 1
+            elsif (wastiny) {
+                Rs&dis = 1
+            }
             if (scan.sym == '[') {
                 n open 4 s:[ %hs:489
                 
@@ -3499,7 +3523,7 @@ Coffle: |
                     sy&R and Cit('yR',sy&R,{Rit:1,dis:1});
                 }
                 if (scan.is == 'R') {
-                    $hem = {kvey:1,ma:0.3};
+                    $hem = {kvey:1,ma:0.3,dis:1};
                     Cit('y',s.y,hem);
                     Cit('c',s.c,hem);
                     Cit('sc',s.sc,hem);
@@ -3508,11 +3532,12 @@ Coffle: |
             else {
                 #me&tsc,'notC','here','d'
                 doot()
-                n $R.t  $self:s,R %sun
+                s&dis ||= 1;
+                n $R.t  $s:s,R %Cee,dupup
             }
         },'ift,D'],
         # as well as Cit-ing, shade and understand A
-        ['Rit','6',&acgtRs{
+        ['Rit','3',&acgtRs{
             !sc&N and throw "Rit !R"
             $I = sy&I;
             if (I && !Rs&isI) {
@@ -3686,7 +3711,7 @@ Coffle: |
             $nvm;
             if (Rs&dupup) {
                 # when -known also -unknown inside itself
-                RhN.length == 1 && RhN[0] == Ry&up and nvm = 1
+                RhN.indexOf(Ry&up) >= 0 and nvm = 1
             }
             if (!nvm) {
                 $dupl = Rc&dupl || 0;
@@ -3911,9 +3936,17 @@ Coffle: |
             # we become a pool of refs
             #  something about A.1-9
             #   the magnitude of a distance
-            delete c.refpool;
-            Rc&refs = [];
-            Rc&refR = [];
+            $p = delete c.refpool;
+            if (p != '1') {
+                !isC(p) || !p.y.R and throw "refpool !R"
+                Rc&refs = pc&refs;
+                Rc&refR = pc&refR;
+                
+            }
+            else {
+                Rc&refs = [];
+                Rc&refR = [];
+            }
         }
         each kv c {
             $to = k == 't' ? R : k == 's' ? R.c : R.sc;
