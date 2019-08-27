@@ -703,12 +703,19 @@ Coffle: |
                 #t == 'dub' and continue
                 # say where it originated
                 $M = me&Mw,n,'Mlimits';
+                $re =
                 m $t 89 s:♲ %deco,fs:13,lh:0.3
                 # dub = from other R0
                 if (t == 'dub' || t == 'dup') {
                     $o = ns&refR[0];
                     $nam = me&nampup,o,n;
-                    m $t 892 $s:nam %deco,fs:7,hs:999
+                    if (ns&tiny) {
+                        res&hs = '499';
+                        re.t += '@'+nam
+                    }
+                    else {
+                        m $t 892 $s:nam %deco,fs:7,hs:999
+                    }
                 }
                 continue;
             }
@@ -3443,8 +3450,22 @@ Coffle: |
             scan.is == 'C' && ss&W and scan.is = 'W'
             Rs&ma and s&ma = Rs&ma
             
+            $wastiny = Rs&tiny;
+            Rs&boost > 0 and delete Rs&tiny
+            if (Rs&kvey) {
+                each kv s {
+                    $c = {ma:0.1};
+                    c.tiny = 1;
+                    Cit(k,v,c)
+                }
+                me&domesticate,R
+                return
+            }
+            Rs&tiny and return
+            wastiny and Rs&dis = 1
             if (scan.sym == '[') {
                 n open 4 s:[ %hs:489
+                
                 each in s {
                     Cit('['+i, n, {tiny:1,ot:R.t});                
                 }
@@ -3460,22 +3481,9 @@ Coffle: |
                 return
             }
             
-            Rs&boost > 0 and delete Rs&tiny
-            if (Rs&kvey) {
-                each kv s {
-                    $c = {ma:0.1};
-                    c.tiny = 1;
-                    Cit(k,{},c)
-                }
-                me&domesticate,R
-                return
-            }
-            Rs&tiny and return
-            
             # title 1
             me&domesticate,R
             $p = Ry&up;
-            
             !Rs&dis and delete s&dis;
             
             #n swhu  $self:scan,R %sun
@@ -3639,7 +3647,7 @@ Coffle: |
         }
         return wk
     };
-    #c R-ing, collecting rays, bouncing across matter
+    #c R ing , collecting rays, bouncing across matter
     # diving gear, has a middle you can steer it from
     # like ind but leaving Rs, looking at the points across it
     # A becomes the looking
@@ -3675,15 +3683,22 @@ Coffle: |
             RN.push(R);
             # in this pool
             $RhN = RN.filter(r => h && rc&N == hc&N);
-            $dupl = Rc&dupl || 0;
-            if (RhN.length > dupl) {
-                limit('dup');
-                Rc&nofurther = 1;
+            $nvm;
+            if (Rs&dupup) {
+                # when -known also -unknown inside itself
+                RhN.length == 1 && RhN[0] == Ry&up and nvm = 1
             }
-            else {
-                
+            if (!nvm) {
+                $dupl = Rc&dupl || 0;
+                if (RhN.length > dupl) {
+                    limit('dup');
+                    Rc&nofurther = 1;
+                }
+                else {
+
+                }
+                !Rc&nofurther and limit('dub')
             }
-            !Rc&nofurther and limit('dub')
             # < to know circular links, converge
         }
         }
