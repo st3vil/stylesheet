@@ -3378,7 +3378,7 @@ Coffle: |
         ['Cit','13',&acgtRs{
             # subverted refs dedup
             s = Rc&s ||= Rs&self;
-            Rs&ot = R.t;
+            !Rs&ot and Rs&ot = R.t;
             isC(s) and R.t = s.t
             Rs&ot == R.t and delete Rs&ot
             
@@ -3419,20 +3419,39 @@ Coffle: |
             }
         },'ift,D'],
         ['Cit','6',&acgtRs{
-            Rs&ot and $v = me&tsc,'ot',Rs&ot,'q'; vy&cv = 0.01; vs&deco = 1;
             $Cit = &tsc{
                 $n =
                 n $t  $s:s,R
                 ex(n.sc,ex(c||{},{Cit:1}));
                 return n
             };
+            # title 0
+            if (Rs&ot || Rs&tiny) {
+                $v = me&tsc,'ot',(Rs&ot||R.t),'q';
+                vy&cv = 0.01;
+                vs&deco = 1;
+            }
             $scan = Rs&scan = me&scan,s;
             scan.is == 'C' && ss&W and scan.is = 'W'
             if (scan.sym == '[') {
-                s.length == 1 and return Cit('[0',s [0])
-                # continues to thing
+                n open 4 s:[ %hs:489
+                each in s {
+                    Cit('['+i, n, {tiny:1,ot:R.t});                
+                }
+                #n close 7 s:]
+                return
+            }
+            if (Rs&istw) {
+                each kv s {
+                    n $k  $s:v,R %Cit
+                }
+                return
             }
             
+            Rs&boost > 0 and delete Rs&tiny
+            Rs&tiny and return
+            
+            # title 1
             me&domesticate,R
             !Rs&dis and delete s&dis;
             
@@ -3451,26 +3470,23 @@ Coffle: |
             }
             else {
                 #me&tsc,'notC','here','d'
-                n Citful  $self:s,R %sun:2
+                n Citful  $self:s,R %sun
             }
         },'ift,D'],
         # as well as Cit-ing, shade and understand A
         ['Rit','6',&acgtRs{
             !sc&N and throw "Rit !R"
             $I = sy&I;
-            if (I) {
+            if (I && !Rs&isI) {
+                n yI  $s:I,R %Rit,Cit,isI
+            }
+            if (Rs&isI) {
                 # see the big picture
-                $head = Ic&head;
+                $head = sc&head;
                 if (head) {
-                    $tasks = [];
-                    each kN head {
-                        $eye = k+(N.length>1?'+'+N.length:'');
-                        #$t = 'yRyIchead_'+k;
-                        n $k  $s:N,R %Cit
-                    }
+                    n chead  $s:head,R %Cit,istw
                 }
             }
-        
         },'ift,D'],
         
         ['displayon','3',&acgtRs{
