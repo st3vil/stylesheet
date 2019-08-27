@@ -1849,7 +1849,7 @@ Coffle: |
                     return
                 }
                 # the object
-                me&Reis,R,'Cit',null,{self:W}
+                n Cit  $self:W,R %Reis:Cit,set:Cit
             }
             
             Rs&ok and return me&tsc,'ok','ok','p'
@@ -1890,7 +1890,13 @@ Coffle: |
                 dt && dts&boost and dts&boost = 0
             }
         },'ift,D'],
-        
+        # encloses one of these,
+        #  lest it Display before the M of Ry&up
+        ['Reis','3',&acgtRs{
+            $c = {refpool:1};
+            Rs&set and c[Rs&set] = 1;
+            Rs&ReisR = me&Reis,R,Rs&Reis,Rs&self,c;
+        },'ift,D'],
     ] };
     #c Cit
     # dive into the result
@@ -1916,14 +1922,13 @@ Coffle: |
             ps&ok and Rs&ok = 1
             # ok-ing overthing should calm...
             Rs&ok && b && !bs&ok and Rs&boost--
-            # we become a pool of refs
-            Rc&refs = [];
-            Rc&refR = [];
             
-            s&bo = '2px dotted green';
+            s&bo = '2px dotted blue';
             s&hue = 30;
             s&br = 1;
-            s&ma = 0.6;
+            s&ma = 0.3;
+            s&pa = 0.3;
+            #s&float = 'right';
             
             if (!isC(s)) {
                 me&tsc,'notC','Cit:notC','d'
@@ -1943,8 +1948,11 @@ Coffle: |
         },'ift,D'],
         ['Cit','6',&acgtRs{
             Rs&ot and me&tsc,'ot',Rs&ot,'q' .y.cv = 0.01
+            $scan = Rs&scan = me&scan,R
             me&domesticate,R
+            delete s&dis;
             
+            $WR = sy&R;
             if ((Rs&boost||0) < 1) {
                 $is = scan.is || scan.sym;
                 $t = s.t;
@@ -3731,6 +3739,14 @@ Coffle: |
             R.y.up = r; 
             rs&z ||= [];
             rs&z.push(R);
+        }
+        if (c.refpool) {
+            # we become a pool of refs
+            #  something about A.1-9
+            #   the magnitude of a distance
+            delete c.refpool;
+            Rc&refs = [];
+            Rc&refR = [];
         }
         each kv c {
             $to = k == 't' ? R : k == 's' ? R.c : R.sc;
