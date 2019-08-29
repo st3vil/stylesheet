@@ -3373,6 +3373,9 @@ Coffle: | # discussion
             $p = Ry&up;
             ps&Cit || ps&Citop and return
             Rs&Citop = delete Rs&Cit;
+            # allow %Cit to have %play 
+            #  for yon %Cee to sprawl to C
+            Rs&playsheet = {Cit: &acgtR{}};
         },'ift'],
         # the top Cit looks it over more
         ['Citop','6',&acgtRs{
@@ -3381,6 +3384,7 @@ Coffle: | # discussion
             ps&ok and Rs&ok = 1
             # ok-ing overthing should calm...
             Rs&ok && b && !bs&ok and Rs&boost--
+            
             # clicking in here should localise refresh
             if (1 && !Rs&oldR) {
             Rs&elvisrefresh = &acgtc{
@@ -3560,23 +3564,34 @@ Coffle: | # discussion
     # < json-compatible copy/paste
     me.Ceeingness = &acgtRs{ return [
         ['Cee','3',&acgtRs{
-            $h = Rc&N[0];
-            $P = me.cby(R,&r{ return !rs&Cee });
-            $depth = P.length;
-            $p = P[1];
-            
             $Cee = &tsc{
                 c = ex(c||{},{t:t,s:s,Cee:1});
                 return me&Ret,R,c
             };
-            
             $scan = Rs&scan = me&scan,s,R;
+            
+            $h = Rc&N[0];
+            $P = me.cby(R,&r{ return !rs&Cee });
+            $p = R.y.up;
+            $it = P.shift();
+            # above %plays to open all non-C
+            ps&play || ps&sprawling and Rs&sprawling = 1
+            scan.C and delete Rs&sprawling;
+            if (Rs&sprawling) {
+                delete Rs&isgk;
+                Rs&rowish = 1;
+                #Rs&sprawling and delete Rs&sprawling; Rs&isgk = 1;
+            }
+            $depth = P.length;
+            $p = R.y.up;
+            
+            
             
             !Rs&dupup and me&domesticate,R;
 
             # decision of presentation
             p && ps&isnk || Rs&isgk and Rs&isgk = 1
-            p && ps&scan && ps&scan.sym == '[' && depth > 2 and Rs&isgk = 1;
+            p && ps&scan && ps&scan.sym == '[' && depth > 1 and Rs&isgk = 1;
             # boost overrides tendency to isgk weirdkeys
             Rs&isgk && Rs&boost and delete Rs&isgk; Rs&rowish = 1;
             R.t == 'y' and delete Rs&rowish;
@@ -3693,7 +3708,7 @@ Coffle: | # discussion
             }
         }
     };
-    
+    # squished lump of thing
     me.gkness = &acgtR{
         $M = me&Mw,R,'traw';
         
@@ -3714,6 +3729,7 @@ Coffle: | # discussion
         }
         m ki 3 $s:string
     };
+    # regroup Cee's children (before they're Cee'd)
     me.wktion = &acgtRs{
         $wk = s;
         s = Rc&s;
