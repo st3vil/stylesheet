@@ -1932,10 +1932,13 @@ Coffle: | # discussion
             $gotR = [];
             $outi = [];
             each in N {
-                nc&R = me&yfuture,nc&R;
-                $ri = gotR.indexOf(nc&R);
+                $r = me&yfuture,nc&R;
+                # disconnect when yfuture but no extra push from it
+                r != nc&R and nc&discon = 1
+                nc&R = r;
+                $ri = gotR.indexOf(r);
                 if (ri < 0) {
-                    gotR[i] = nc&R;
+                    gotR[i] = r;
                 }
                 else {
                     # has a more up to date s/%Te
@@ -1952,12 +1955,19 @@ Coffle: | # discussion
             }
         },'ift,D'],
         ['spondo','3',&acgtRs{
-            me&tsc,'ya','Ya','G';
-            n spondo  $self:s,R %sun
+            Rs&rowish = 1;
+            me&domesticate,R;
+            sc&discon and me&tsc,'disconnected','unplug?','g'
+            #n spondo  $self:s,R %sun
+            #return
             $r = sc&R;
+            #rs&Te &&
+            n thingsthere  $s:rs&Te,R %ball,rowish:2
+            n thingshere  $s:Rs&Te,R %ball,rowish
             $s = rc&s;
-            n spondo  $self:s,R %Reis:Cit,set:Cit
+            n spondo  $self:s,R,TeImplant:rs&Te %Reis:Cit,set:Cit
         },'ift,D'],
+        
         
     ] };
     #c pushy
@@ -3053,7 +3063,9 @@ Coffle: | # discussion
         # squish long skinny trees
         ['ball','6',&acgtRs{
             Rs&boost and return
-            me&ioty,Ry&up,'%ball' .length != 1 and return
+            $p = Ry&up;
+            !ps&ball and return;
+            me&ioty,p,'%ball' .length != 1 and return
             delete Rs&rowish;
         },'ift'],
         ['ball','3',&acgtRs{
@@ -3062,8 +3074,10 @@ Coffle: | # discussion
             s&br = '4';
             s&bo = '0.1em dotted #543';
             
-            R.t != s.t &&
+            !s || R.t != s.t &&
                 n t 1 $s:R.t %fs:13,hs:288
+            
+            s == null and me&tsc,'nos','<null>','b'; delete Rs&ball; return
             
             $t =
             n t 11 $s:s.t %deco,fs:8,fix:t,mr:0.3
@@ -3464,7 +3478,6 @@ Coffle: | # discussion
             !Rs&Te || !Rs&Te.c and s&fs = 6;
             
             if (!isC(s)) {
-                debugger;
                 me&tsc,'notC','Cit:notC','d'
                 n notC  $self:s,R %sun
                 return
@@ -3512,17 +3525,25 @@ Coffle: | # discussion
             
             $p = Ry&up;
             $pp = p && py&up;
-            if (Rs&play && ps&Citop && pp && !pps&spondo) {
-                # defer to W:Das
-                $name = 'run step doing'.split(' ').map(&t{
-                    $r = me.cby(R,&r{ return r.sc[t] })[0];
-                    return r ? r.t : "?"
-                }).join('/');
-                name += "'s "+R.t;
-                $D = G&Cye,[name,'',{R:R,Te:Rs&Te}];
-                4s&DasN.push(D);
-                # causes a %spondo to %Reis again
-                return;
+            if (ps&Citop) {
+                if (Rs&play && pp && !pps&spondo) {
+                    # defer to W:Das
+                    $name = 'run step doing'.split(' ').map(&t{
+                        $r = me.cby(R,&r{ return r.sc[t] })[0];
+                        return r ? r.t : "?"
+                    }).join('/');
+                    name += "'s "+R.t;
+                    $D = G&Cye,[name,'',{R:R,Te:Rs&Te}];
+                    4s&DasN.push(D);
+                    # causes a %spondo to %Reis again
+                    return;
+                }
+                # TeImplant
+                if (pps&spondo || 1) {
+                    n upupspondo  $self:pp,R %sun
+                    n upCitop  $self:p,R %sun
+                    #me&tsc,'upup',ki(pp,2)
+                }
             }
             
             $wastiny = Rs&tiny;
