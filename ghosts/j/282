@@ -13,6 +13,9 @@ Coffle: | # discussion
     A   D 
       C   C
     
+    D - have to become the legs of items
+      remembering and sleeping their masses
+      having N=R of their sub-plot
     
     
     elvising coming out or going in on the X
@@ -2282,9 +2285,11 @@ Coffle: | # discussion
                 Rc&s = pc&s;
             }
         }
+        #c walk the tape, trying to do more
+        $timing = 1s&Times;
         $direct = 0;
         $indirect = 0;
-        #c walk the tape, trying to do more
+        
         $busy = 1;
         $sheer = 45000;
         $onlyt;
@@ -2351,8 +2356,16 @@ Coffle: | # discussion
                     throw "if "+ts&if
                 }
             }
-            indirect--;
-            direct++;
+            if (timing) {
+                indirect--;
+                direct++;
+                $k = h.t+'/'+t.t+'@'+t.y.cv;
+                timing[k] ||= 0;
+                $from = G&time;
+                $thestep = &{
+                    timing[k] += G&time,from
+                };
+            }
             
             if (!T.not) {
                 $packdown = [];
@@ -2376,6 +2389,7 @@ Coffle: | # discussion
                 !Rc&nofurther and cz(R,zi)
             }
             delete T.not;
+            thestep and thestep()
             if (T.wide) {
                 Rs&widenings ||= 0;
                 Rs&widenings++ > 30 and debugger;
@@ -2388,12 +2402,11 @@ Coffle: | # discussion
             onlyt = t;
             busy = 1;
         }
-        $ti = 1s&Times;
-        if (ti && 0) {
-            ti.direct ||= 0;
-            ti.indirect ||= 0;
-            ti.direct += direct;
-            ti.indirect += indirect;
+        if (timing) {
+            timing.direct ||= 0;
+            timing.indirect ||= 0;
+            timing.direct += direct;
+            timing.indirect += indirect;
         }
         the();
     };
@@ -2529,7 +2542,8 @@ Coffle: | # discussion
             $delta = G&time,starts;
             delta += 's';
             each kn 1s&Times {
-                delta += "\n"+k+": "+n+"s";
+                0.01 > n and continue
+                delta += "\n"+k+": "+G&desca,n +"s";
             }
             $done = G&time;
             $whendone = &{
@@ -2542,7 +2556,7 @@ Coffle: | # discussion
     };
     me.Ja.Pass = &acgt{
         me&Gomp;
-        #me&DeltaDelOsc;
+        me&DeltaDelOsc;
         1s&Times = {};
         
         $el = 4s&elvisory ||= G&Cye,['Elvisory',''];
