@@ -2219,6 +2219,7 @@ Coffle: | # discussion
     $Ron = &Rtsonc{
         $r = me&Re,R,{t:t,s:s};
         delete rc&refs;
+        delete rc&inC;
         rc&middle = &sR{
             # 1 scan/title
             1 && o and o(R,s);
@@ -2264,7 +2265,7 @@ Coffle: | # discussion
                     $r = s;
                     each in rs&z {
                         # wake children with pc&s
-                        $z = me&Ret,R,{t:n.t,s:n,Rthing:1};
+                        $z = me&Ret,R,{t:'z_'+n.t,s:n,Rthing:1};
                         # depth first
                         me&ing,'',z;
                     }
@@ -2305,10 +2306,27 @@ Coffle: | # discussion
                 }
             });
             
-            $rev = rc&N.slice().reverse();
-            each ir rev {
-                
-            }
+            # select moving parts
+            $N = [];
+            rc&N.slice().reverse().map(&R{
+                $se = R.t+" "+(Rs&sym||dig(''+Rs&text));
+                Rs&landscape = 
+                Rs&portrait = se;
+                each in rs&z {
+                    $is = (ns&landscape||"NOTHING:"+n.t);
+                    $at = is.split("\n")
+                        .map(&s{ return "  "+s })
+                        .join("\n");
+                    Rs&landscape += "\n"+at;
+                }
+                $b = Rc&b;
+                if (b && Rs&Rthing) {
+                    if (bs&landscape != Rs&landscape) {
+                        N.unshift(R);
+                    }
+                }
+            });
+            Rs&moving = N;
             
             # scan pc&s and %z/c&s
             #  2 deep from anything ^
@@ -2318,7 +2336,7 @@ Coffle: | # discussion
             #    beginning gets
             #    middle gets alternative Rs
             
-            n slepe  $self:rc&N,R %Reis:Cit,set:Cit
+            n slepe  $self:r,R %Reis:Cit,set:Cit
         },'ift,D'],
         ... me&Actingness ,
     ]};
@@ -2786,16 +2804,19 @@ Coffle: | # discussion
             if (ps&Citop) {
                 if (Rs&play && !ps&Implant) {
                     # defer to W:Das
+                    $nah;
                     $name = 'run step doing'.split(' ').map(&t{
                         $r = me.cby(R,&r{ return r.sc[t] })[0];
-                        !r and throw "implant from upwards no "+t
+                        !r and return nah = 1
                         return r.t
                     }).join('/');
-                    name += "'s "+R.t;
-                    $D = G&Cye,[name,'',{R:R,Te:Rs&Te}];
-                    4s&DasN.push(D);
-                    # causes a %spondo to %Reis again elsewhere
-                    return;
+                    if (!nah) {
+                        name += "'s "+R.t;
+                        $D = G&Cye,[name,'',{R:R,Te:Rs&Te}];
+                        4s&DasN.push(D);
+                        # causes a %spondo to %Reis again elsewhere
+                        return;
+                    }
                 }
             }
             
@@ -3063,7 +3084,9 @@ Coffle: | # discussion
         $pow = 2;
         Rs&boost and pow = 4;
         $string = ki(Rc&s,pow);
-        if (string.length > 100) {
+        $limit = 100;
+        Rs&boost > 1 and limit *= Rs&boost;
+        if (string.length > limit) {
             string = string.substr(0,100)
               +'..'+(string.length - 100)
         }
