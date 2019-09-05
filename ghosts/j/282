@@ -2249,7 +2249,15 @@ Coffle: | # discussion
             sy&Real and me&tsc,'Real','R','g'
         },'ift,D'],
     =cut
-        ['slep','4',&acgtRs{
+        ['slep','7',&acgtRs{
+            $oR = R;
+            
+            each in Rs&z {
+                # not slep/other
+                n == oR and continue
+                
+            }
+            
             s&fs = 14;
             Rs&rowish = 1;
             $p = Ry&up;
@@ -2258,12 +2266,18 @@ Coffle: | # discussion
                 return N.length;
             };
             $oR = R;
-            $r = Ron(R,'slepn',p,0,&Rs{
-                Rc&d == 0 and Rs&Rthing = 1
+            $r = Ron(R,p.t,p,0,&Rs{
+                if (Rc&d == 0) {
+                    Rs&Rthing = 1;
+                    Rc&dl = 99;
+                    delete Rc&dupl;
+                }
+                Rc&N.push(R);
                 Rc&N.length > 100 and throw "Manyslepn";
                 # 2
                 if (Rs&Rthing) {
                     $r = s;
+                    me&Ret,R,{t:'cs',s:rc&s};
                     each in rs&z {
                         # not slep/other
                         n == oR and continue
@@ -2272,8 +2286,6 @@ Coffle: | # discussion
                         # depth first
                         me&ing,'',z;
                     }
-                    # then see what ^ doesn't claim
-                    me&Ret,R,{t:'cs',s:sc&s};
                     return
                 }
                 elsif (typeof s == 'object') {
@@ -2295,28 +2307,46 @@ Coffle: | # discussion
                         : ki(s);
                     return
                 }
+                $rl = Rs&refR;
+                if (rl) {
+                    $l = rl[0];
+                    Rs&plain = 'dup:'+me&nampup,l,R;
+                }
                 
                 # 5 size
-                if (uptil(R,'Rthing') > 4 &&
-                    uptil(R,'Cthing') > 2) {
-                    return Rs&ltd = 1
+                if (uptil(R,'Rthing') > 6 &&
+                    uptil(R,'Cthing') > 5) {
+                        ~at: R.t
+                    return Rs&ltd = '>'
                 }
                 
                 # 6 more values
                 $l = haks(s);
                 each ik l {
-                    $v = s[v];
+                    $v = s [k];
                     me&Ret,R,{t:k,s:v}
                 }
             });
             
-            # select moving parts
-            $N = [];
-            rc&N.slice().reverse().map(&R{
-                $se = R.t+" "+(Rs&sym||dig(''+Rs&text));
+            #c select moving parts
+            $M = [];
+            $talk = [];
+            $surb = &R{
+                #sa
+            };
+            $N = rc&N.slice().reverse(); 
+            N.map(&R{
+                $se = R.t+" "+(Rs&sym||'');
+                Rs&text != null and se += dig(''+Rs&text)
+                Rs&plain != null and se += ' '+Rs&plain
+                
+                $ind = [];
+                while (ind.length < Rc&d) { ind.push("  ") }
+                talk.unshift(ind.join('')+se);
+                
                 Rs&landscape = 
                 Rs&portrait = se;
-                each in rs&z {
+                each in Rs&z {
                     $is = (ns&landscape||"NOTHING:"+n.t);
                     ns&ltd and is += " Ltd"
                     $at = is.split("\n")
@@ -2342,6 +2372,7 @@ Coffle: | # discussion
             #    middle gets alternative Rs
             
             n slepe  $self:r,R %Reis:Cit,set:Cit
+            n talkse  $self:talk,R %sun
         },'ift,D'],
         ... me&Actingness ,
     ]};
@@ -3198,7 +3229,7 @@ Coffle: | # discussion
         # accepted into the list of atoms
         # < out of order mode
         # < place more carefully under Ryup and its z
-        Rc&N.push(R);
+        Rc&N.indexOf(R) == -1 and Rc&N.push(R)
         
         Rc&nofurther || !Rs&z and return
         
