@@ -2218,6 +2218,7 @@ Coffle: | # discussion
     
     $Ron = &Rtsonc{
         $r = me&Re,R,{t:t,s:s};
+        delete rc&refs;
         rc&middle = &sR{
             # 1 scan/title
             1 && o and o(R,s);
@@ -2252,14 +2253,26 @@ Coffle: | # discussion
             Rs&rowish = 1;
             $p = Ry&up;
             $uptil = &Rk{
-                $N = me.cby(R,&s{ return s.sc[k] });
+                $N = me.cby(R,&s{ return s == R || s.sc[k] });
                 return N.length;
             };
             $r = Ron(R,'slepn',p,0,&Rs{
-                Rc&d == 0 and Rs&Rthing
-                $b = Rc&b;
-                !b and Rs&new = 1
-                if (typeof s == 'object') {
+                Rc&d == 0 and Rs&Rthing = 1
+                Rc&N.length > 100 and throw "Manyslepn";
+                # 2
+                if (Rs&Rthing) {
+                    $r = s;
+                    each in rs&z {
+                        # wake children with pc&s
+                        $z = me&Ret,R,{t:n.t,s:n,Rthing:1};
+                        # depth first
+                        me&ing,'',z;
+                    }
+                    # then see what ^ doesn't claim
+                    me&Ret,R,{t:'cs',s:sc&s};
+                    return
+                }
+                elsif (typeof s == 'object') {
                     if (s.Constructor == 'Array') {
                         Rs&sym = '[';
                     }
@@ -2272,15 +2285,30 @@ Coffle: | # discussion
                     }
                 }
                 else {
-                    # at a value
-                    
+                    # 4 at a value
+                    Rs&text = typeof s == 'number' ? ''+s
+                        : typeof s == 'string' ? ''+s
+                        : ki(s);
+                    return
                 }
-                if (uptil(R,'Rthing') < 4) {
-                    # then Cthings
+                
+                # 5 size
+                if (uptil(R,'Rthing') > 4 &&
+                    uptil(R,'Cthing') > 2) {
+                    return
                 }
-                uptil(R,'Rthing') > 4 and return
-                ~Finking: ki(s);
+                
+                # 6 more values
+                $l = haks(s);
+                each kv l {
+                    me&Ret,R,{t:k,s:v}
+                }
             });
+            
+            $rev = rc&N.slice().reverse();
+            each ir rev {
+                
+            }
             
             # scan pc&s and %z/c&s
             #  2 deep from anything ^
@@ -2290,10 +2318,11 @@ Coffle: | # discussion
             #    beginning gets
             #    middle gets alternative Rs
             
-            n slepe  $self:p,R %Reis:Cit,set:Cit
+            n slepe  $self:rc&N,R %Reis:Cit,set:Cit
         },'ift,D'],
         ... me&Actingness ,
     ]};
+    #c rovo
     me.rovo = &acgtR{ return [
         ... me&DisplayTwoness ,
         #... me&Displayingness ,
@@ -3080,6 +3109,8 @@ Coffle: | # discussion
         R ||= {t:'ing',y:{},c:{s:s,N:[]},sc:{}};
         cb and Rc&middle = cb;
         $s = Rc&s;
+        # a way to depth-first, see slep
+        Rc&N && Rc&N.indexOf(R) > -1 and return
         
         # limits want workarounds
         $limit = &s{ me&Rec,R,s };
