@@ -2249,15 +2249,9 @@ Coffle: | # discussion
             sy&Real and me&tsc,'Real','R','g'
         },'ift,D'],
     =cut
+        # make scans for somethingers
         ['slep','7',&acgtRs{
             $oR = R;
-            
-            each in Rs&z {
-                # not slep/other
-                n == oR and continue
-                
-            }
-            
             s&fs = 14;
             Rs&rowish = 1;
             $p = Ry&up;
@@ -2269,11 +2263,10 @@ Coffle: | # discussion
             $r = Ron(R,p.t,p,0,&Rs{
                 if (Rc&d == 0) {
                     Rs&Rthing = 1;
-                    Rc&dl = 99;
+                    Rc&dl = 6;
                     delete Rc&dupl;
                 }
                 Rc&N.push(R);
-                Rc&N.length > 100 and throw "Manyslepn";
                 # 2
                 if (Rs&Rthing) {
                     $r = s;
@@ -2288,7 +2281,7 @@ Coffle: | # discussion
                     }
                     return
                 }
-                elsif (typeof s == 'object') {
+                elsif (typeof s == 'object' && s != null) {
                     if (s.Constructor == 'Array') {
                         Rs&sym = '[';
                     }
@@ -2311,11 +2304,12 @@ Coffle: | # discussion
                 if (rl) {
                     $l = rl[0];
                     Rs&plain = 'dup:'+me&nampup,l,R;
+                    return Rs&ltd = '<'
                 }
                 
                 # 5 size
-                if (uptil(R,'Rthing') > 6 &&
-                    uptil(R,'Cthing') > 5) {
+                if (uptil(R,'Rthing') > 4 &&
+                    uptil(R,'Cthing') > 2) {
                         ~at: R.t
                     return Rs&ltd = '>'
                 }
@@ -2334,11 +2328,12 @@ Coffle: | # discussion
             $surb = &R{
                 #sa
             };
-            $N = rc&N.slice().reverse(); 
+            $N = rc&N.slice().reverse();
             N.map(&R{
                 $se = R.t+" "+(Rs&sym||'');
                 Rs&text != null and se += dig(''+Rs&text)
                 Rs&plain != null and se += ' '+Rs&plain
+                Rs&ltd and se += ' '+Rs&ltd
                 
                 $ind = [];
                 while (ind.length < Rc&d) { ind.push("  ") }
@@ -2357,19 +2352,18 @@ Coffle: | # discussion
                 $b = Rc&b;
                 if (b && Rs&Rthing) {
                     if (bs&landscape != Rs&landscape) {
-                        N.unshift(R);
+                        M.unshift(R);
                     }
                 }
             });
-            Rs&moving = N;
+            # put in top-down order
+            rs&moving = rc&N.filter(n => M.indexOf(n) > -1);
+            # for the origin
+            rs&moving = rs&moving.map(n => nc&s);
             
-            # scan pc&s and %z/c&s
-            #  2 deep from anything ^
-            #  and then another 2 for Cs there
-            #  and all z/%things
-            #   a little R-ing
-            #    beginning gets
-            #    middle gets alternative Rs
+            # scan happens early and late:
+            # late first, Long/** is awake, scan boosted around Rthings
+            # early thence, scan boosted from before
             
             n slepe  $self:r,R %Reis:Cit,set:Cit
             n talkse  $self:talk,R %sun
@@ -2788,7 +2782,6 @@ Coffle: | # discussion
                     }
                 }
             }
-            
             n $R.t  $s:s,R %Cit
             
             !isC(s) and return
