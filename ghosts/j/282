@@ -2268,6 +2268,7 @@ Coffle: | # discussion
                     delete Rc&dupl;
                 }
                 Rc&N.push(R);
+                $p = Ry&up;
                 # 2
                 if (Rs&Rthing) {
                     $r = s;
@@ -2283,7 +2284,7 @@ Coffle: | # discussion
                     return
                 }
                 elsif (typeof s == 'object' && s != null) {
-                    if (s.Constructor == 'Array') {
+                    if (s.constructor == Array) {
                         Rs&sym = '[';
                     }
                     elsif (isC(s)) {
@@ -2299,6 +2300,9 @@ Coffle: | # discussion
                     }
                     else {
                         Rs&sym = '{';
+                        if (R.t == 'y' && ps&Cthing) {
+                            Rc&shrinky = 1;
+                        }
                     }
                 }
                 else {
@@ -2310,28 +2314,48 @@ Coffle: | # discussion
                     into.length > 1 and Rs&text = '"'+into[0]+'..dige:'+dig(Rs&text);
                     return
                 }
+                #c 5 size
+                # near a data fog value
+                $pp = py&up;
+                $Rdist = uptil(R,'Rthing');
+                Rs&plain ||= '';
+                # apply a schema,
+                # to decide whether to 6
+                
                 $rl = Rs&refR;
                 if (rl) {
                     $l = rl[0];
                     Rs&plain = 'dup:'+me&nampup,l,R;
-                    
-                    if (!ls&ltd) {
-                        return Rs&ltd = '<'
-                    }
+                    !ls&ltd and Rs&ltd = '<'
                 }
                 
-                # 5 size
-                # near a data fog value
-                $p = Ry&up;
+                #   unless very near R
+                if (!Rs&ltd && Rdist > 3) {
+                    # one layer after A or y/%Cthing
+                    ps&Athing and Rs&ltd = '>A'
+                    pp && pps&Cthing && Rc&shrinky and Rs&ltd = 'y>'
+                }
                 
-                $Rdist = uptil(R,'Rthing');
-                Rs&plain ||= '';
-                # apply a schema
-                # one layer of stuff after A, unless very near R
-                Rdist > 3 && ps&Athing and return Rs&ltd = '>A'
                 # or farouts
-                if (Rdist > 6 || Rdist > 3 && uptil(R,'Cthing') > 2) {
+                if (!Rs&ltd && (Rdist > 6 ||
+                    Rdist > 3 && uptil(R,'Cthing') > 3)) {
                     Rs&ltd = '>';
+                }
+                # if limited, describe the edge of the pile
+                if (Rs&ltd) {
+                    if (Rs&Cthing) {
+                        Rs&text = ':'+s.t;
+                    }
+                    elsif (Rs&sym == '{') {
+                        $ks = haks(s);
+                        $limit = 50;
+                        Rs&text = ks.length > limit+5 ?
+                            ks.slice(0,limit-1).join(',')+'..'+ks.length
+                        : ks.join(',');
+                    }
+                    elsif (Rs&sym == '[') {
+                        Rs&text = 'x'+s.length
+                    }
                     return
                 }
                 
@@ -2354,10 +2378,6 @@ Coffle: | # discussion
                 Rs&plain != null and se += ' '+Rs&plain
                 Rs&ltd and se += ' '+Rs&ltd
                 
-                $ind = [];
-                while (ind.length < Rc&d) { ind.push("  ") }
-                talk.unshift(ind.join('')+se);
-                
                 Rs&landscape = 
                 Rs&portrait = se;
                 each in Rs&z {
@@ -2368,6 +2388,10 @@ Coffle: | # discussion
                         .join("\n");
                     Rs&landscape += "\n"+at;
                 }
+                $ind = [];
+                while (ind.length < Rc&d) { ind.push("  ") }
+                talk.unshift(ind.join('')+se);
+                
                 $b = Rc&b;
                 if (b && Rs&Rthing) {
                     if (bs&landscape != Rs&landscape) {
@@ -2387,6 +2411,7 @@ Coffle: | # discussion
             
             n slepe  $self:r,R %Reis:Cit,set:Cit
             n pare  $self:p,R %Reis:Cit,set:Cit
+            $l = rs&landscape.split("\n");
             n talkse  $self:talk,R %sun
         },'ift,D'],
         ... me&Actingness ,
