@@ -2347,7 +2347,11 @@ Coffle: | # discussion
                 }
                 if (!Rs&ltd && Rs&sym == '{') {
                     # dom elements
-                    s instanceof Element and Rs&ltd = s.constructor.name
+                    # < any .constructor.name != 'Object'
+                    if (s instanceof Element) {
+                        Rs&ltd = '>'+(s.constructor.name||'Element')
+                        Rs&sym = '<>';
+                    }
                 }
                 if (!Rs&ltd && Rdist > 3) {
                     # one layer after A or y/%Cthing
