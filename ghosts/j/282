@@ -2256,14 +2256,15 @@ Coffle: | # discussion
             Rs&rowish = 1;
             $p = Ry&up;
             $uptil = &Rk{
-                $N = me.cby(R,&s{ return s == R || s.sc[k] });
-                return N.length;
+                $N = me.cby(R,&s{ return s == oR || s.sc[k] });
+                return N.length
             };
             $oR = R;
             $r = Ron(R,p.t,p,0,&Rs{
                 if (Rc&d == 0) {
                     Rs&Rthing = 1;
-                    Rc&dl = 6;
+                    Rc&dl = 9;
+                    Rc&nl = 4000;
                     delete Rc&dupl;
                 }
                 Rc&N.push(R);
@@ -2288,6 +2289,13 @@ Coffle: | # discussion
                     elsif (isC(s)) {
                         Rs&Cthing = 1;
                         Rs&sym = 'C';
+                        if (s.y == s) {
+                            Rs&Athing = 1;
+                            Rs&sym = 'A';
+                            s.1 == s and Rs&sym = 'J';
+                        }
+                        else
+                        s.y.R && s.y.R == s and Rs&sym = 'R';
                     }
                     else {
                         Rs&sym = '{';
@@ -2296,22 +2304,35 @@ Coffle: | # discussion
                 else {
                     # 4 at a value
                     Rs&text = typeof s == 'number' ? ''+s
-                        : typeof s == 'string' ? ''+s
+                        : typeof s == 'string' ? '"'+s
                         : ki(s);
+                    $into = Rs&text.split("\n");
+                    into.length > 1 and Rs&text = '"'+into[0]+'..dige:'+dig(Rs&text);
                     return
                 }
                 $rl = Rs&refR;
                 if (rl) {
                     $l = rl[0];
                     Rs&plain = 'dup:'+me&nampup,l,R;
-                    return Rs&ltd = '<'
+                    
+                    if (!ls&ltd) {
+                        return Rs&ltd = '<'
+                    }
                 }
                 
                 # 5 size
-                if (uptil(R,'Rthing') > 4 &&
-                    uptil(R,'Cthing') > 2) {
-                        ~at: R.t
-                    return Rs&ltd = '>'
+                # near a data fog value
+                $p = Ry&up;
+                
+                $Rdist = uptil(R,'Rthing');
+                Rs&plain ||= '';
+                # apply a schema
+                # one layer of stuff after A, unless very near R
+                Rdist > 3 && ps&Athing and return Rs&ltd = '>A'
+                # or farouts
+                if (Rdist > 6 || Rdist > 3 && uptil(R,'Cthing') > 2) {
+                    Rs&ltd = '>';
+                    return
                 }
                 
                 # 6 more values
@@ -2328,7 +2349,8 @@ Coffle: | # discussion
             $N = rc&N.slice().reverse();
             N.map(&R{
                 $se = R.t+" "+(Rs&sym||'');
-                Rs&text != null and se += dig(''+Rs&text)
+                # text == firstline + dig if \n
+                Rs&text != null and se += ''+Rs&text
                 Rs&plain != null and se += ' '+Rs&plain
                 Rs&ltd and se += ' '+Rs&ltd
                 
@@ -2357,12 +2379,14 @@ Coffle: | # discussion
             rs&moving = rc&N.filter(n => M.indexOf(n) > -1);
             # for the origin
             rs&moving = rs&moving.map(n => nc&s);
+            rs&talk = talk;
             
             # scan happens early and late:
             # late first, Long/** is awake, scan boosted around Rthings
             # early thence, scan boosted from before
             
             n slepe  $self:r,R %Reis:Cit,set:Cit
+            n pare  $self:p,R %Reis:Cit,set:Cit
             n talkse  $self:talk,R %sun
         },'ift,D'],
         ... me&Actingness ,
