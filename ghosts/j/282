@@ -2327,9 +2327,16 @@ Coffle: | # discussion
                     $l = rl[0];
                     Rs&plain = 'dup:'+me&nampup,l,R;
                     # other side was limited, try express it here
-                    ls&ltd and delete Rc&nofurther; Rs&refR.reverse();
-                    else {
-                        Rs&ltd = '<'
+                    if (!Rs&ltd) {
+                        if (ls&ltd) {
+                            # do here instead
+                            delete Rc&nofurther;
+                            # be the main instance
+                            Rs&refR.reverse();
+                        }
+                        else {
+                            Rs&ltd = '<'
+                        }
                     }
                 }
                 
@@ -2337,9 +2344,10 @@ Coffle: | # discussion
                 if (!Rs&ltd && Rdist > 2) {
                     # A.I
                     ps&Athing && Rs&sym == '{' && R.t == 'I' and Rs&ltd = '>I'
-                    else
-                    # the s&on = dom element
-                    Rs&sym == '{' && s instanceof Element and Rs&ltd = s.constructor.name
+                }
+                if (!Rs&ltd && Rs&sym == '{') {
+                    # dom elements
+                    s instanceof Element and Rs&ltd = s.constructor.name
                 }
                 if (!Rs&ltd && Rdist > 3) {
                     # one layer after A or y/%Cthing
