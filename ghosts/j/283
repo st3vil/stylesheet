@@ -512,7 +512,14 @@ Packle: |
             !s.sc and debugger;
             $hop = ['C','nofurtherDisplay'];
             each it hop {
+                # may be modulat, ie Ds&C = display stuff of D
                 s.sc[t] and R.sc[t] = s.sc[t]
+            }
+            if (!Rs&modulat) {
+                # to an R
+                Ry&origin = s;
+                ss&sleeping and Rs&originsleeping = 1
+                ss&down and Rs&down ||= []; Rs&down.push(...ss&down);
             }
             each iD ss&M {
                 me&Ret,R,{t:D.t,s:D,modulat:1}
@@ -522,11 +529,6 @@ Packle: |
                 ss&J and Rs&J = ss&J; continue
                 $r = me&Ret,R,{t:D.t,s:D};
                 Rs&modulat and rs&modulat = 1;
-            }
-            if (!Rs&modulat) {
-                # original atom, s = R
-                Ry&origin = s;
-                ss&down and Rs&down ||= []; Rs&down.push(...ss&down);
             }
             #$C = Rs&C;
         });

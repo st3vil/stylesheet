@@ -1413,7 +1413,11 @@ Coffle: | # discussion
             
             # deciding
             $T = {};
-            if (ts&ifs) {
+            if (Rs&sleeping) {
+                # misses everything but sleeping spells
+                !ts&sleeping and T.not = 'sleeping'
+            }
+            if (ts&ifs && !T.not) {
                 each ik ts&ifs {
                     R.sc[k] == null and T.not='ifs'
                 }
@@ -2541,8 +2545,10 @@ Coffle: | # discussion
 
             if (res&sleepy) {
                 me&tsc,'maysleep','---'+ps&ci+'/'+Rs&ci,'g';
+                (Rs&boost||0) < 0 and return
                 
-                ps&sleeping = R;
+                #ps&sleeping = R; Rs&theysleep = 1;
+                
             }
             (Rs&boost||0) < 1 and return
             # here we do the entire Ceeing instantly
@@ -2570,9 +2576,9 @@ Coffle: | # discussion
                 Rs&z.push(n);
             }
             
-            # Ring not
+            Rs&nofurtherDisplay = 1;
             # Display
-        },'ift,D'],
+        },'ift,D,sleeping'],
         ['sleeping+ball','28',&acgtRs{
             me&rollbs,R,'string,dige';
             # + make me.sch_didLines accept %sleeping !%Lines
@@ -2580,6 +2586,7 @@ Coffle: | # discussion
         },'ift,D'],
         
         ['slep','7',&acgtRs{
+            Rs&theysleep and return
             $oR = R;
             $p = Ry&up;
             # we may not need to get here if res&sleepy
@@ -2598,6 +2605,7 @@ Coffle: | # discussion
             (Rs&boost||0) < 2 and return
             n slepe  $self:r,R %Reis:Cit,set:Cit
             n pare  $self:p,R %Reis:Cit,set:Cit
+            4s&sleperp = p;
             $l = rs&landscape.split("\n");
             #n lands  $self:l,R %sun
         },'ift,D'],
@@ -2637,6 +2645,10 @@ Coffle: | # discussion
             
             if (D.t == 'ajaying') {
                 n vising  $self:A,R %Reis:Cit,set:Cit
+                
+                $p = 4s&sleperp;
+                p &&
+                n pare  $self:p,R %Reis:Cit,set:Cit
             }
         },'ift,D'],
         # tray of icons to do tricks
