@@ -1340,6 +1340,9 @@ Coffle: | # discussion
             #  growing q.onlyRupto
             q.inside and q.onlyRupto = [q.inside];
             q.ov and q.ov = G&scaly,q.ov
+            # < R indexed by cv
+            # or otherwise grouped for meaningful disruptability
+            #  TimeWaves
         }
         
         $busy = 1;
@@ -1352,6 +1355,16 @@ Coffle: | # discussion
             else { hs&iN++ }
             # select what up to
             $R = hc&N[hs&iN];
+            if (q && R && q.onlyRupto) {
+                R == q.inside and continue
+                $not = q.onlyRupto.indexOf(R) < 0;
+                if (not && Rs&ci == null &&
+                    q.onlyRupto.indexOf(Ry&up) >= 0) {
+                    q.onlyRupto.push(R);
+                    not = 0;
+                }
+                not and continue
+            }
             if (!R) {
                 !hc&N[hs&iN - 1] and debugger
                 # end of tape
@@ -1382,6 +1395,7 @@ Coffle: | # discussion
             #onlyt && t != onlyt and continue
             
             hs&ov && hs&ov < ty&cv and continue
+            q && q.ov && q.ov < ty&cv and continue
             # from here is going to accept the step as done
             #  except if T.wide, late abort/comebacklater
             #   for when your dependencies haven't filled out
@@ -2910,7 +2924,7 @@ Coffle: | # discussion
             Rs&ok && b && !bs&ok and Rs&boost--
             
             # clicking in here should localise refresh
-            if (1 && !Rs&oldR) {
+            if (0 && !Rs&oldR) {
             Rs&elvisrefresh = &acgtc{
                 # c.Te = new Rs&Te, prevents looking for it
                 c = ex(c||{},Rs&rec);
