@@ -2277,6 +2277,8 @@ Coffle: | # discussion
         1 && c and rc&N.map(R => c(R,Rc&s))
         return r
     };
+    # there are two slep/scans
+    # sharing history (cancelRbitX on early)
     me.leplandscape = &acgtRpc{
         c ||= {};
         $uptil = &Rkd{
@@ -2288,15 +2290,15 @@ Coffle: | # discussion
         $firstRthing = p;
         
         $h;
-        $r = Ron(R,p.t,pc&s,0,&Rs{
+        $r = Ron(R,'scan',pc&s,0,&Rs{
             if (Rc&d == 0) {
                 h = R;
                 if (c.early) {
                     hs&early = 1;
                     $b = Rc&b;
                     !b and throw "early no hist"
+                    # early one inherits %late
                     if (bs&late) {
-                        # usual
                         !bs&early and ~late->early: R.t
                         Rs&late = bs&late;
                         ~early & late: R.t
@@ -2341,7 +2343,9 @@ Coffle: | # discussion
                     : typeof s == 'string' ? '"'+s
                     : ki(s);
                 $into = Rs&text.split("\n");
-                into.length > 1 and Rs&text = '"'+into[0]+'..dige:'+dig(Rs&text);
+                if (into.length > 1) {
+                    Rs&text = '"'+into[0]+'..dige:'+dig(Rs&text)
+                }
                 return
             }
             # 4 or a thing we can feel out way to
@@ -2569,24 +2573,8 @@ Coffle: | # discussion
             $l = Rs&sleeping;
             $b = Rc&b;
             # keeps history of unhad children
-            # Long has [slep, Cit]
-            #  slep kept from now - sleep map rolls
-            #   by being in Rc&X
-            #  Cit brought from bc&X.x.Cit
-            $ig = [];
-            each bit,oV bc&X.x {
-                # no support for dupes, which share X
-                # would take merging the new over the old or so,
-                Rc&X.x[bit] and continue
-                Rc&X.x[bit] = oV;
-                ig.push(... oV.z);
-            }
-            # and links to their last selves
-            each in bs&z {
-                ig.indexOf(n) >= 0 and continue
-                Rs&z.push(n);
-            }
-            
+            #  and adds them to Rs&z
+            me&recycleRbitXz,R;
             # Display - avoids Rs&sleeping
             #   must put its bs&on y&up
         },'ift,D,sleeping'],
@@ -2626,6 +2614,30 @@ Coffle: | # discussion
         },'ift,D'],
         ... me&Actingness ,
     ]};
+    # keeps history of unhad children
+    #  and adds them to Rs&z
+    me.recycleRbitXz = &acgtR{
+        $b = Rc&b;
+        !b and throw "recycle !hist"
+        $ig = [];
+        each bit,oV bc&X.x {
+            # no support for dupes, which share X
+            # would take merging the new over the old or so,
+            Rc&X.x[bit] and continue
+            Rc&X.x[bit] = oV;
+            ig.push(... oV.z);
+        }
+        # and links to their last selves
+        # < io may notice the z !tv
+        #   me&ioty just looks at z
+        each in bs&z {
+            ig.indexOf(n) >= 0 and continue
+            Rs&z.push(n);
+        }
+    };
+    # remove thing from its present history
+    # causing identity crosswiring, an interesting area...
+    #  so the early slep/scan inherits the later
     me.cancelRbitX = &acgtR{
         $X = Rc&X;
         $ri = X.z.indexOf(R);
