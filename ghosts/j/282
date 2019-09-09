@@ -2287,8 +2287,19 @@ Coffle: | # discussion
         $oR = R;
         $firstRthing = p;
         
+        $h;
         $r = Ron(R,p.t,pc&s,0,&Rs{
             if (Rc&d == 0) {
+                h = R;
+                if (c.early) {
+                    hs&early = 1;
+                    $b = Rc&b;
+                    !b and throw "early no hist"
+                    bs&early and ~Early not substracting late history:
+                    else {
+                        ~histgood
+                    }
+                }
                 Rs&Rthing = firstRthing;
                 Rc&dl = 99;
                 Rc&nl = 4444;
@@ -2348,18 +2359,21 @@ Coffle: | # discussion
             # 4 or a thing we can feel out way to
             $pp = py&up;
             if (c.early) {
-                # no origin Rs beyond first
+                # once early, %Rthing-ness comes from history
+                #   vis. the same position of names
+                # there are no origin Rs beyond first
                 # download them from history
                 !Rs&Rthing and me&rollbs,R,'Rthing'
+                Rs&Rthing and hs&Rthings ||= 0; hs&Rthings++;
             }
             if (Rs&Rthing) {
                 $Rdist = 1;
             }
             else {
+                # detect c&s in the Rthing's pool
+                # %Rthings are the origin R, have c&s we bump into
                 $N = uptil(R,'Rthing',1);
                 $Rthing = N[0];
-                # %Rthings are the origin R
-                #   have c&s, we will find
                 $or = Rthings&Rthing;
                 !or and debugger;
                 $ri = orc&refs.indexOf(s);
@@ -2540,7 +2554,8 @@ Coffle: | # discussion
             $p = Ry&up;
             $b = Rc&b;
             !b and return me&tsc,'isnew','*','g'
-            $re = me&leplandscape,R,p;
+            $re = me&leplandscape,R,p,{early:1};
+            me&Reis,R,'Cray',re;
             Rs&sleplandR = re;
 
             if (res&sleepy) {
@@ -2554,7 +2569,6 @@ Coffle: | # discussion
             # here we do the entire Ceeing instantly
             #  in general, knowing if the A is for a queue or for right now
             #me&Reis,R,'Cit',0,{t:'splepl',self:p,Cit:1};
-            me&Reis,R,'Cray',p;
         },'ift,D'],
         
         # things' sleepcheck has an answer
@@ -2563,6 +2577,7 @@ Coffle: | # discussion
         ['sleeping+Cee','28',&acgtRs{
             $l = Rs&sleeping;
             $b = Rc&b;
+            throw "IShere";
             # keeps history of unhad children
             $ig = [];
             each iX bc&X.x {
@@ -2591,12 +2606,12 @@ Coffle: | # discussion
             $p = Ry&up;
             # we may not need to get here if res&sleepy
             #   
-            
             # leave one slep/$R, or early will only trust early's map
             $re = Rs&sleplandR;
             #re and me&cancelRbitX,re;
             
             $r = me&leplandscape,R,p;
+            me&Reis,R,'Cray',r;
             
             # scan happens early and late:
             # late first, Long/** is awake, scan boosted around Rthings
@@ -2607,7 +2622,7 @@ Coffle: | # discussion
             n pare  $self:p,R %Reis:Cit,set:Cit
             4s&sleperp = p;
             $l = rs&landscape.split("\n");
-            #n lands  $self:l,R %sun
+            n lands  $self:l,R %sun
         },'ift,D'],
         ... me&Actingness ,
     ]};
@@ -2749,8 +2764,9 @@ Coffle: | # discussion
             $V = Rc&V && Rc&V.x && Rc&V.x[bit] || {};
             # X (new) must hold which V (old) z we're up to
             $b;
-            if (V && V.z && V.z.length) {
+            if (V && V.z && V.z[i-1]) {
                 b = V.z[i-1];
+                # V is an X becoming the past
                 bc&X != V and throw "bcX != V"
                 # let yfuture find b->R if not commit
                 # not for anything else
