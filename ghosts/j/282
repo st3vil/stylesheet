@@ -2295,9 +2295,14 @@ Coffle: | # discussion
                     hs&early = 1;
                     $b = Rc&b;
                     !b and throw "early no hist"
-                    bs&early and ~Early not substracting late history:
+                    if (bs&late) {
+                        # usual
+                        !bs&early and ~late->early: R.t
+                        Rs&late = bs&late;
+                        ~early & late: R.t
+                    }
                     else {
-                        ~histgood
+                        ~Early not substracting late history:
                     }
                 }
                 Rs&Rthing = firstRthing;
@@ -2308,24 +2313,7 @@ Coffle: | # discussion
             Rc&N.push(R);
             $p = Ry&up;
             # 2
-            if (Rs&Rthing && 0) {
-                # GONE: diving Rthings first
-                #   makes landscape dependent on Rthings
-                # < diving Rthings and data in parallel
-                #   Resonance = streaming Ring+
-                $r = s;
-                me&Ret,R,{t:'cs',s:rc&s};
-                each in rs&z {
-                    # not slep/other
-                    n == oR and continue
-                    # wake children with pc&s
-                    $z = me&Ret,R,{t:'z_'+n.t,s:n,Rthing:1};
-                    # depth first
-                    me&ing,'',z;
-                }
-                return
-            }
-            elsif (typeof s == 'object' && s != null) {
+            if (typeof s == 'object' && s != null) {
                 if (s.constructor == Array) {
                     Rs&sym = '[';
                 }
@@ -2515,6 +2503,7 @@ Coffle: | # discussion
         };
         gump(r);
         
+        !rc&b and ~Nohist
         # put in top-down order
         rs&moving = rc&N.filter(n => M.indexOf(n) > -1);
         # for the origin
@@ -2562,9 +2551,11 @@ Coffle: | # discussion
                 me&tsc,'maysleep','---'+ps&ci+'/'+Rs&ci,'g';
                 (Rs&boost||0) < 0 and return
                 
-                #ps&sleeping = R; Rs&theysleep = 1;
-                
+                ps&sleeping = R;
+                Rs&theysleep = 1;
             }
+            
+            
             (Rs&boost||0) < 1 and return
             # here we do the entire Ceeing instantly
             #  in general, knowing if the A is for a queue or for right now
@@ -2577,13 +2568,19 @@ Coffle: | # discussion
         ['sleeping+Cee','28',&acgtRs{
             $l = Rs&sleeping;
             $b = Rc&b;
-            throw "IShere";
             # keeps history of unhad children
+            # Long has [slep, Cit]
+            #  slep kept from now - sleep map rolls
+            #   by being in Rc&X
+            #  Cit brought from bc&X.x.Cit
+            ~Sleeping: R.t
             $ig = [];
-            each iX bc&X.x {
-                each in X.z {
-                    X.newz && X.newz[i] and ig.push(n); continue
-                }
+            each bit,oV bc&X.x {
+                # no support for dupes, which share X
+                # would take merging the new over the old or so,
+                Rc&X.x[bit] and continue
+                Rc&X.x[bit] = oV;
+                ig.push(... oV.z);
             }
             # and links to their last selves
             each in bs&z {
@@ -2591,8 +2588,8 @@ Coffle: | # discussion
                 Rs&z.push(n);
             }
             
-            Rs&nofurtherDisplay = 1;
-            # Display
+            # Display - avoids Rs&sleeping
+            #   must put its bs&on y&up
         },'ift,D,sleeping'],
         ['sleeping+ball','28',&acgtRs{
             me&rollbs,R,'string,dige';
@@ -2601,6 +2598,7 @@ Coffle: | # discussion
         },'ift,D'],
         
         ['slep','7',&acgtRs{
+            Rs&theysleep and ~Theysleep
             Rs&theysleep and return
             $oR = R;
             $p = Ry&up;
@@ -2608,10 +2606,11 @@ Coffle: | # discussion
             #   
             # leave one slep/$R, or early will only trust early's map
             $re = Rs&sleplandR;
-            #re and me&cancelRbitX,re;
+            re and me&cancelRbitX,re;
             
             $r = me&leplandscape,R,p;
-            me&Reis,R,'Cray',r;
+            rs&late = 1;
+            #me&Reis,R,'Cray',r;
             
             # scan happens early and late:
             # late first, Long/** is awake, scan boosted around Rthings
@@ -2761,6 +2760,8 @@ Coffle: | # discussion
             $i = X.z.push(R);
 
             # someone gave you V that used to be X
+            # but let's depend on X.z being as it was, not X.x
+            #  to make history easier to forge
             $V = Rc&V && Rc&V.x && Rc&V.x[bit] || {};
             # X (new) must hold which V (old) z we're up to
             $b;
@@ -2804,7 +2805,7 @@ Coffle: | # discussion
                         }
                     }
                 }
-                Rs&gone and me&chR,R,'Goners:'+ki(Rs&gone)
+                Rs&gone and me&chR,R,'Goners:'+ki(Rs&gone,4)
                 !b and me&chR,R,'new!'
             }
         },'if:h'],
