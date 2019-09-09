@@ -502,6 +502,15 @@ Soogle: |
             $C = Rs&C || Rc&s;
             Rs&on ||= b && bs&on;
             # originsleeping and ..?
+            if (Rs&originsleeping) {
+                !b and throw "Disleep !b"
+                Rs&J and throw "Disleep J"
+                Rs&on !== bs&on and throw "Disleep ons not exactly"
+                # keep css state
+                me&rollCscon,R;
+                # and Rs&down later in Cupon
+                continue
+            }
             Rs&on ||= $("<stylehouse>")[0];
             
             # each A.1 does os, plants sequencer of 
@@ -512,15 +521,14 @@ Soogle: |
                 Rs&in = Jc&on || Js&on;
                 b && Rs&in != bs&in and me&chR,R,'Jin'
                 continue
-            }
-            # more to think mode?
-            if (s&J) {
+                # more to think mode?
                 # expand/see into Js&v, write on this atom
             }
-            # C.sc etc decorate
+            # C.sc decorate
             me&Cscon,R;
         }
     };
+    #c Cscon
     # apply styles to html.. expand unto copies of this thing,
     #   allowing a compressed notation to turn into styles,
     #     giving space to dream of altering the situation
@@ -530,6 +538,10 @@ Soogle: |
     #   into css styles
     $verbose = 0; # causes window.styletos to list styles
     $robust = 0; # applies all css properties every time
+    # state things, see also Rs&down
+    me.rollCscon = &acgtR{
+        me&rollbs,R,'attr,tag,css,html,text'
+    };
     me.Cscon = &acgtR{
         $isnew = !Rc&b;
         # past self
@@ -569,16 +581,12 @@ Soogle: |
             }
             !hak(Rs&attr) and delete Rs&attr
         }
-        # more simpler translatoes
         $css = {};
+        $st = 4s&styler ||= me&styler;
         # ^ merge into me&styler:
         # also s&cod/NutText
         # and Stylaplicants's dropdown
-        
-        $st = 4s&styler ||= me&styler;
-        
         st(C,css);
-        
         
         # css stamped on on
         if (hak(css) || bs&css) {
@@ -594,7 +602,7 @@ Soogle: |
             hak(css) and Rs&css = css
         }
         
-        #c Cs say their c&s
+        # Cs say their c&s
         if (s&draggable) {
             # < needs a spacer or absolute space
             $(Rs&on).udraggable({stop:&ev{
@@ -683,10 +691,16 @@ Soogle: |
         
         $rev = N.slice().reverse();
         each iR rev {
-            #R.t == 's ' and debugger;
             Rs&on.C = Rc&s;
             Rc&s.y.A and Rs&on.A = Rc&s.y.A;
             Rc&s.y.Display = R;
+            if (Rs&originsleeping) {
+                # will be !Rs&cha, keep Rs&down 
+                $b = Rc&b;
+                # < allow some awakers to merge over historicals
+                Rs&down ||= [];
+                Rs&down.push(... bs&down);
+            }
             !Rs&cha and continue
             # what is
             $had = Rs&on.childNodes;
