@@ -523,6 +523,75 @@ Coffle: | # discussion
         =cut
         
         
+    #c push - %ball's establishment of an outgoing projection
+    # < working via elvising hung near
+    # < better pointering & grabbing styles
+    #    remember what things looked like,
+    #    be generating grammars/I off the screen
+    # in a %push on this %ball, rolling through time,
+    # < disconnecting once the cause (me&push call) stops
+    # 
+    # returns the %pull (which will Ring soonish) unless:
+    #  %pull%auto:
+    #    %their = me&input,%there,%herec&s
+    #    returns %their = %ball holding %herec&s under %there
+    # 
+    me.push = &acgtRpqtc{
+        # the named %push + its mode (%auto if t,!c args)
+        c ||= {auto:1};
+        typeof c == 'string' and c = G&peel,c
+        t and ex(c,typeof t == 'string' ? {t:t} : t)
+        c.push ||= 1;
+        !hak(c,'t') and c.t = ki(p,2)+' = '+ki(q,2)
+        $l = me&Ret,R,c;
+            me&zN,l;
+        
+        # and its items, from here
+        # path to receiver %ball (inflated)
+        #  < elvis pointing such that name changes/bits blow away when pushed
+        $t = ls&there = me&pushpath,R,p;
+        # the thing itself, where it is (also inflated)
+        $h = ls&here = isC(q) ? q : me&pushpath,R,q;
+        !t || !h and throw "falliball"
+        
+        # < pipelining of here as it goes there via ...
+        #   so it can wander through a network started here
+        
+        # begin othering:
+        if (ls&hard) {
+            ac(t,'pushering',l)
+        }
+        elsif (ls&auto) {
+            $thing = hc&s;
+            ls&their = me&input,ls&there,thing;
+            return ls&their
+        }
+        else {
+            # no-push link (elviser knows who's nearly elvised them)
+            ac(t,'pushish',l)
+        }
+        # %ball pushed to %there, practically
+        # < %othering to %there,
+        #   saving %balls of here/there for Cdar diff
+        #   the %there%balls noticing our %push vanish
+        return l
+    };
+    # %ball input limb, extra pathy
+    # < to hang push intentions on %ball
+    #   or on speculative balls for slow ...
+    me.pushpath = &acgtRp{
+        $r = R;
+        each is p {
+            $nr = s == '/' ?
+                me.cby(r,&r{ return rs&gee })[0]
+                :
+                me&input,r,s
+            !nr and throw "No "+s+" after "+r.t+" along "+ki(p)
+            r = nr;
+        }
+        return r;
+    };
+    
     #c push
     me.Pushingness = &acgtR{ return [
         # %push = cv awake
@@ -1691,43 +1760,6 @@ Coffle: | # discussion
     
     #c PassDasCo
     # host attachable T with W + G around
-    me.findRef = &acgtRs{
-        !(R && R.y && R.y.R == R) and throw "!R"
-        $i = Rc&refs.indexOf(s);
-        return Rc&refR[i][0]
-    }
-    me.Timethe = &acgts{
-        $ti = 1s&Times;
-        !ti and return &{}
-        $starts = G&time;
-        return &{
-            $delta = G&time,starts;
-            ti[s] ||= 0;
-            ti[s] += delta;
-        };
-    };
-    me.DeltaDelOsc = &acgt{
-        $starts = G&time;
-        $d =
-        n delta  s:... %dis:1,float:right
-        1s&OscDoneHook = &h{
-            $R = me&findRef,h,d;
-            $on = Rs&on;
-            $delta = G&time,starts;
-            delta += 's';
-            each kn 1s&Times {
-                0.01 > n and continue
-                delta += "\n"+k+": "+G&desca,n +"s";
-            }
-            $done = G&time;
-            $whendone = &{
-                done = G&time,done;
-                delta += "\ndone: "+done+"s";
-                $(on).text(delta);
-            };
-            G&yl,0,whendone;
-        };
-    };
     me.Ja.Fours = &acgt{
         me&Gomp;
         n 4sDasN  $s:4s&Jtv %rovo:ning
@@ -2853,7 +2885,6 @@ Coffle: | # discussion
             }
         },'ift,D'],
     ] };
-
     #c DisplayTwo-RbitX
     =pod
     
