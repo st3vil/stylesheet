@@ -2048,7 +2048,7 @@ Soogle: |
         }
         $l = 4s&elvising;
         !l and return
-        0 and s&mih = '14'; me&J,['elvising','-feel',{s:l},'elvising,boost:sc,solvey'];
+        1 and s&mih = '14'; me&J,['elvising','-feel',{s:l},'elvising,boost:sc,solvey'];
         else {
             n elvising  $s:l %elvising
         }
@@ -2389,11 +2389,12 @@ Soogle: |
         !v and return
         1s&Te = v;
     };
-    # Rs receive Te
-    # $k - Tes&$k given to Rs&$k
-    # $d - '1' to oncer/consume that sc
+    # R gets %Te and/or rolls:
+    #  $k - Tes&$k given to Rs&$k
+    #  $d - '1' to oncer/consume that sc
     # can resume pointering across Rs that don't Tie
     # < intro much more: throat's ability to pause/step etc.
+    #     see tangulate for hotwiring R creation
     # < checks all pointers were found,
     # < find hidden lands
     me.Tie = &acgtRkd{
@@ -2421,19 +2422,20 @@ Soogle: |
             }
             Tet and Rs&Te = Tet
         }
-        $v = Rs&Te;
-        !v || !v.c and return
-        !k and return
-        # once located, muddle with opportunity
-        
-        #vs&cb && vs&cb,R,t
-        if (hak(v.sc,k)) {
-            $V = v.sc[k];
-            k == 'boost' and V *= 1
-            R.sc[k] = V;
+        $Te = Rs&Te;
+        !Te || !Te.c and return
+        # return the Rs&Te if it is real (see error-avoidance ^)
+        if (k) {
+            # roll sc from Te to R
+            if (hak(Te.sc,k)) {
+                $V = Te.sc[k];
+                k == 'boost' and V *= 1
+                R.sc[k] = V;
+            }
+            # oncer
+            d == '1' and delete Te.sc[k]
         }
-        # oncer
-        d == '1' and delete v.sc[k]
+        return Te
     };
     # make Te for N pointer/solvey path
     # < a pile of travel, io T points to look at

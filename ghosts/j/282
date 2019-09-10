@@ -2289,11 +2289,15 @@ Coffle: | # discussion
             return N.length
         };
         $oR = R;
+        
         # you can ignore a y.*
         ps&sland_igy and c.igy = ps&sland_igy
         # or put + ignore dige of the thing in the thing
         # < param this on the slep tool
-        ps&slandigey and c.igy = c.digeity = ps&slandigey;
+        $digey = ps&slandigey;
+        digey == '1' and digey = 'slandige'
+        digey and c.igy = c.digeity = digey
+        
         $firstRthing = p;
         $ot = p.t;
         
@@ -2321,13 +2325,14 @@ Coffle: | # discussion
                 }
                 Rs&Rthing = firstRthing;
                 
-                $igy = firstRthings&sland_igy;
                 Rc&dl = 99;
                 Rc&nl = 4444;
                 delete Rc&dupl;
             }
             Rc&N.push(R);
+            # < within the sland'ing, as uptil()
             $p = Ry&up;
+            $pp = py&up;
             #c 2
             if (typeof s == 'object' && s != null) {
                 if (s.constructor == Array) {
@@ -2480,7 +2485,6 @@ Coffle: | # discussion
         
         #c select moving parts
         $M = [];
-        $talk = [];
         $seen = [];
         # in z order
         $gump = &R{
@@ -2508,15 +2512,12 @@ Coffle: | # discussion
                     .join("\n");
                 Rs&landscape += "\n"+at;
                 
-                if (c.digeity && ns&Rthing) {
-                    # put + ignore dige of the thing in the thing
-                    $s = nc&s;
-                    s.y[c.digeity] = dig(Rs&landscape)
-                }
             }
-            $ind = [];
-            while (ind.length < Rc&d) { ind.push("  ") }
-            talk.unshift(ind.join('')+se);
+            if (c.digeity && Rs&Rthing && Rs&Cthing) {
+                # put + ignore dige of the thing in the thing
+                $s = Rc&s;
+                s.y [c.digeity] = dig(Rs&landscape)
+            }
             
             $b = Rc&b;
             if (b && Rs&Rthing) {
@@ -2530,14 +2531,10 @@ Coffle: | # discussion
         };
         gump(r);
         
-        # put in top-down order
-        rs&moving = rc&N.filter(n => M.indexOf(n) > -1);
-        # for the origin
-        rs&moving = rs&moving.map(n => ns&Rthing);
+        # for the origin (%slander?)
         rs&moving = M;
-        rs&talk = talk;
         rs&talk = rs&landscape.split("\n");
-        
+        # check dl/nl
         me&safer,r;
         
         return r;
@@ -2559,6 +2556,10 @@ Coffle: | # discussion
             sy&Real and me&tsc,'Real','R','g'
         },'ift,D'],
     =cut
+        # scan happens early and late:
+        # late first, Long/** is awake, scan boosted around Rthings
+        # early thence, scan boosted (%Rthing'd) from before
+        
         # Display 27 gets tangulate,
         # they Ring ov=3 before it continues
         # TheirSleepStrategy 28 gets this intel
@@ -2566,21 +2567,25 @@ Coffle: | # discussion
             s&fs = 14;
             s&bo = '1px dotted green';
             me&tsc,'slep-ing','slep','6';
-            
+            # the top of the constellation of R with c&s
             $p = Ry&up;
+            # early should always receive history from late
             $b = Rc&b;
-            #here
-            #ps&slandigey = 'digel';
             !b and return me&tsc,'isnew','*','g'
-            $re = me&sland,R,p,{early:1};
-            !rec&b and ~Nohist early:
             
-            # sits outside the %sleeping
-            $disr = me&Reis,p,'Cray',re;
-            me&deleteRbitX,disr;
+            $re = me&sland,R,p,{early:1};
+            !rec&b and throw "slep Nohist early"
             Rs&sleplandR = re;
+            # not a child of p
             ps&slan = re;
-
+            
+            # must sit outside the %sleeping
+            #  (Display pushes s&down outside p)
+            $disr = me&Reis,p,'Cray',re;
+            # don't confuse p with this extra child
+            me&deleteRbitX,disr;
+            # < G&c/T'ing messages to a debug channel
+            
             if (res&sleepable) {
                 me&tsc,'maysleep','---'+ps&ci+'/'+Rs&ci,'g';
                 (Rs&boost||0) < 0 and return
@@ -2590,7 +2595,7 @@ Coffle: | # discussion
             
             (Rs&boost||0) < 1 and return
             # here we do the entire Ceeing instantly
-            #  in general, knowing if the A is for a queue or for right now
+            # < in general, knowing if the A is for a queue or for right now
             #me&Reis,R,'Cit',0,{t:'splepl',self:p,Cit:1};
         },'ift,D'],
         
@@ -2620,9 +2625,7 @@ Coffle: | # discussion
             $p = Ry&up;
             ~>3 Lately: p.t
             $oR = R;
-            # we may not need to get here if res&sleepy
-            #   
-            # leave one slep/$R, or early will only trust early's map
+            # leave one slep/sland, early trusts late's map
             $re = Rs&sleplandR;
             re and me&deleteRbitX,re;
             
@@ -2630,14 +2633,10 @@ Coffle: | # discussion
             rc&b and ~hist late:
             rs&late = 1;
             
-            # scan happens early and late:
-            # late first, Long/** is awake, scan boosted around Rthings
-            # early thence, scan boosted from before
-            
             (Rs&boost||0) < 2 and return
             n slepe  $self:r,R %Reis:Cit,set:Cit
             n pare  $self:p,R %Reis:Cit,set:Cit
-            4s&sleperp = p;
+            # doesn't work:
             $l = rs&landscape.split("\n");
             n lands  $self:l,R %sun
         },'ift,D'],
@@ -2651,6 +2650,25 @@ Coffle: | # discussion
         ... me&Rscinsideness,'rovo' ,
         ... me&Ballingness ,
         ... me&Slepingness ,
+        # sleeperate the other thing
+        # eg Elvisory%ball (or **)
+        #  have a %slep injected by tangulate 27
+        #  which checks %balls' input early with hindsight
+        #    that means crawling around any %ball c&s
+        #      < and the C%ball itself?
+        #    and all other inputs
+        #      which in the future
+        #        all fall under Elvising
+        #          and act like travelling X/V in tandem
+        # %ball may %slandigey:
+        #   digs the landscape of each %ball down,
+        #    into c&s.y.slandige
+        #    and sland ignores it (or landscape would always change)
+        # so then any Rs&Te.y.slandige is digs current elvising
+        #   which can be saved with the work
+        #     Ry&Te_slandige = Rs&Te.y.slandige
+        #   which if conserving objects like Elvisory does,
+        #     can be used to check if updates are within
         ['ning','3',&acgtRs{
             Rs&rowish = 1;
             $p = Ry&up;
@@ -2666,8 +2684,7 @@ Coffle: | # discussion
                     #4s&modeen = me&yfuture,4s&modeen;
                     n modeen  $s:4s&modeen,R %sun
                 }
-                # the other thing to sleeperate
-                n vising  $s:4s&elvisory,R %ball
+                n vising  $s:4s&elvisory,R %ball,slandigey
             }
             
             if (D.t == 'ajaying') {
@@ -2676,6 +2693,8 @@ Coffle: | # discussion
                 $p = 4s&sleperp;
                 p &&
                 n pare  $self:p,R %Reis:Cit,set:Cit
+                
+                n visoring  $self:4s&elvisory,R %Reis:Cit,set:Cit
             }
         },'ift,D'],
         # tray of icons to do tricks
@@ -2904,10 +2923,10 @@ Coffle: | # discussion
         }],
         ['Displayingness','27',&acgtRs{
             Rs&elvis = 'Gazel';
-            # somewherish
             !1s&Te and return;
-            # posits for R
-            me&Tie,R;
+            $Te = me&Tie,R;
+            !Te and return
+            Tey&slandige and Ry&Te_slandige = Tey&slandige
             # mean variously
             me&playstulate,R;
             me&boostulate,R;
