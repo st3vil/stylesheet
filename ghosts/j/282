@@ -2718,7 +2718,7 @@ Coffle: | # discussion
     
     #c Slepingness
     #   once tests...
-    # gives Te.y.Real = real thing # GONER?
+    # gives Te.y.Real = instance, see also tangulate
     me.ElvisingRealness = &acgtR{ return [
         ['Cany','41',&acgtRs{
             $Te = Rs&Te;
@@ -2734,7 +2734,6 @@ Coffle: | # discussion
     me.Slepingness = &acgtR{ return [
         ['sunn','2',&acgtRs{
             me&tsc,'sunn','sunn','q' .sc.bg = '#000';
-            #n whatsup  $self:Ry&up,R %Cit
             me&Reis,R,'Cray',Ry&up,{refpool:1}
         },'ift,D'],
         # allow for %Cit & Realism to use Displays
@@ -2752,10 +2751,24 @@ Coffle: | # discussion
             
             $ons = [];
             ss&on and ons.push(s)
-            else
-            # for a !Display(ed yet?) R holding others
-            ss&down and ss&down.map(n => ns&on && ons.push(n))
-            !ons.length and throw "No bits to display"
+            else {
+                # for a !Display(ed yet?) R holding others
+                each in ss&down {
+                    ns&on && ons.push(n)
+                }
+            }
+            if (!ons.length) {
+                # interface to ask things to Display more
+                if (ss&enlum != null) {
+                    if ((Rs&boost||0) < 2)
+                        return me&tsc,'canbegot','?','b'
+                    me&introqua,s,{enlum:1};
+                    me&tsc,'canbegot','...','b'
+                }
+                else {
+                    me&tsc,'nobits','!D','6'
+                }
+            }
             
             $Te = Rs&Te;
             each in ons {
@@ -2782,6 +2795,8 @@ Coffle: | # discussion
                 n.t == 't' and ns&bri = 4
             }}
         },'ift,D'],
+        
+        #c Slep
         # scan happens early and late:
         #   late first, Long/** is awake, scan boosted around Rthings
         #   early thence, scan boosted (%Rthing'd) from before
@@ -2802,9 +2817,15 @@ Coffle: | # discussion
             !rec&b and throw "slep Nohist early"
             Rs&sleplandR = re;
             # not a child of p
+            # < it reusing this scan for whatever its doing
             ps&slan = re;
             
-            if (res&sleepable && 0) {
+            # can be asked to display more
+            Rs&enlum ||= 0;
+            me&Tie,R,'enlum' &&
+                me&Reis,R,'Cray',re;
+            
+            if (res&sleepable) {
                 me&tsc,'maysleep','---'+ps&ci+'/'+Rs&ci,'g';
                 (Rs&boost||0) < 0 and return
                 
