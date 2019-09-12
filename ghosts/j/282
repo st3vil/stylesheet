@@ -2737,6 +2737,10 @@ Coffle: | # discussion
             #n whatsup  $self:Ry&up,R %Cit
             me&Reis,R,'Cray',Ry&up,{refpool:1}
         },'ift,D'],
+        # hilight changing %balls
+        # change style stays on once sleeping,
+        #   time-limited styles?
+        #   < style til new time for a frame but no frame
         ['ball','35',&acgtRs{
             !sy&slandige and return
             Ry&slandige = sy&slandige;
@@ -2748,10 +2752,10 @@ Coffle: | # discussion
             }}
         },'ift,D'],
         # scan happens early and late:
-        # late first, Long/** is awake, scan boosted around Rthings
-        # early thence, scan boosted (%Rthing'd) from before
-        # Display 27 gets tangulate,
-        # they Ring ov=3 before it continues
+        #   late first, Long/** is awake, scan boosted around Rthings
+        #   early thence, scan boosted (%Rthing'd) from before
+        # Display 27 gets tangulate:
+        #   they Ring ov=33 (ahead of slepy&up)
         # TheirSleepStrategy 28 gets this intel
         ['slep','3',&acgtRs{
             s&fs = 14;
@@ -2769,12 +2773,7 @@ Coffle: | # discussion
             # not a child of p
             ps&slan = re;
             
-            # < G&c/T'ing messages to a debug channel
-            # must sit outside the %sleeping
-            $disr = me&Reis,py&up,'Cray',re;
-            
-            
-            if (res&sleepable) {
+            if (res&sleepable && 0) {
                 me&tsc,'maysleep','---'+ps&ci+'/'+Rs&ci,'g';
                 (Rs&boost||0) < 0 and return
                 
@@ -2829,6 +2828,45 @@ Coffle: | # discussion
     ]};
     
     #c Toolingness
+    # ein medo:modeen, click tool then thing to drop it on
+    me.modeen = &acgts{
+        $R = me&anRfromelC,s;
+        Rs&modeen and return Rs&modeen(A,C,G,T,s);
+        ~NOTHING: R.t
+        4s&modeen = R;
+    };
+    me.anRfromelC = &acgts{
+        !isC(s) and throw "notC";
+        $r = sy&R == s ? s :
+            # Display's C
+            s.y.Display;
+        !r and throw "no idea";
+        # out of some M (which get R's each under Display)
+        rs&modulat and r = ry&up;
+        # out of Display
+        ry&origin and r = ry&origin;
+        return me&yfuture,r
+    };
+    # input R%Te with %Rz and %z=[C:$l]
+    me.Tein = &acgtRcn{
+        typeof c == 'string' and c = G&peel,c
+        n = G&Cye,n;
+        if (nc&R && nc&R != '1' && typeof nc&R == 'string') {
+            # c&R='mode' becomes sc.$mode = 1
+            # < ongoing type-of-name smurgery
+            n.sc[nc&R] = 1;
+            nc&R = 1;
+        }
+        # get Rs&Te + qua to open R-in-z awareness
+        $poi = me&introqua,R,{Rz:1};
+        if (!poi) {
+            ~failtoel: R.t
+            4s&modeen = R;
+            return;
+        }
+        i $poi/$n
+        return n
+    };
     me.Toolingness = &acgtR{ return [
         # tray of icons to do tricks
         # < elvising to the local Tool to coordinate:
@@ -2843,19 +2881,11 @@ Coffle: | # discussion
                 4s&eloncer = &acgts{
                     # the above is already thus
                     $r = me&anRfromelC,s;
-                    # Elvisorise it has R to do in its Tes&z
-                    $poi = me&introqua,r,{Rz:1};
-                    if (!poi) {
-                        ~failtoel: r.t
-                        4s&modeen = r;
-                        return;
-                    }
-                    $n = G&Cye,[mode,6,{R:1}];
-                    n.sc[mode] = 1;
-                    i $poi/$n
+                    # elvise probes into R
+                    $n = me&Tein,r,'Rz',[mode,6,{R:mode}];
                     # keep together in %Tool
                     $ser = 'plug:'+Rs&serial++;
-                    m $ser  $r:r,s:n
+                    m $ser  $r:r,Te:n
                     # bug:
                     T.wake = 1;
                 };
@@ -2885,11 +2915,12 @@ Coffle: | # discussion
             # wander?
             n play  s:▶ %fs:22
         },'ift,D'],
+        #c aTool
         ['aTool','3',&acgtRs{
             Rs&rowish = 1;
-            
+            # looks like elvising
             $r = sc&r = me&yfuture,sc&r;
-            $n = sc&s;
+            $n = sc&Te;
             
             me&tsc,'plugin',s.t;
             me&tsc,'to',r.t,'G';
@@ -2897,11 +2928,15 @@ Coffle: | # discussion
             
             (Rs&boost||0) < 1 and return
             
+            # make the probe (Te - recipe) catch its R
+            # see also ElvisingRealness
+            ny&Real ||= 1;
+            
             # the probed
             n theR  $s:r,R %Cit
             $z =
             # the probe
-            n then  $s:n,R %ball
+            n Te  $s:n,R %ball,Telife
             
             # < M-anagement, its lifecycle of crud
             # < io.i futurism, putting/syncing to many places
@@ -2915,25 +2950,20 @@ Coffle: | # discussion
                 i Ry&up.sc.Te/-Rs&Te
             };
         },'ift,D'],
+        ['Telife','3',&acgtRs{
+            # on Tool's %ball of it, find Real
+            $se = ki(sy&Real,3)
+            me&tsc,'Real','Real:'+se,6;
+        },'ift,D'],
+        # to show the slep in progress,
+        # must sit outside the %sleeping, or have its Display adopted
+        # < G&c/T'ing messages to a debug channel
+        # inject R-ing to the 
+        ['Telife','35',&acgtRs{
+            #$disr = me&Reis,R,'Cray',re;
+            #me&Reis,R,'Cray',Rs&down;
+        },'ift,D'],
     ] };
-    me.anRfromelC = &acgts{
-        !isC(s) and throw "notC";
-        $r = sy&R == s ? s :
-            # Display's C
-            s.y.Display;
-        !r and throw "no idea";
-        # out of some M (which get R's each under Display)
-        rs&modulat and r = ry&up;
-        # out of Display
-        ry&origin and r = ry&origin;
-        return me&yfuture,r
-    };
-    me.modeen = &acgts{
-        $R = me&anRfromelC,s;
-        Rs&modeen and return Rs&modeen(A,C,G,T,s);
-        ~NOTHING: R.t
-        4s&modeen = R;
-    };
     
     #c rovo, mounts current problem
     me.rovo = &acgtR{ return [
@@ -3088,6 +3118,7 @@ Coffle: | # discussion
                 each kv V.x {
                     $x = X.x[k];
                     if (!x || x.z.length < v.z.length) {
+                        # < filter to goners yup==Rc&b
                         Rs&gone ||= [];
                         Rs&gone.push(... v.z.slice(x ? x.z.length : 0));
                     }
@@ -3208,7 +3239,11 @@ Coffle: | # discussion
             each in RN {
                 n $n
             }
-            T.Rq = {inside:R,ov:3};
+            T.Rq = {inside:R,ov:33};
+        }
+        if (Tey&Real) {
+            # tracks latest R for this Te
+            Tey&Real = R
         }
     };
     #c Displayingness
