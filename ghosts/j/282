@@ -2469,8 +2469,8 @@ Coffle: | # discussion
                 }
                 Rs&Rthing = firstRthing;
                 
-                Rc&dl = 99;
-                Rc&nl = 4444;
+                Rc&dl = 144;
+                Rc&nl = 2211;
                 delete Rc&dupl;
             }
             Rc&N.push(R);
@@ -2575,8 +2575,15 @@ Coffle: | # discussion
             # apply a schema,
             # to decide whether to 6
             
+            # shouldn't be looking at R
+            # < complain eloquently
+            !Rs&ltd && Rs&sym == 'R' and Rs&ltd = '>R'
+            !Rs&ltd && pps&sym == 'R' and Rs&ltd = '>R**'
+            
+            
+            # share refs
             $rl = Rs&refR;
-            if (rl) {
+            if (!Rs&ltd && rl) {
                 $l = rl[0];
                 Rs&plain = 'dup:'+me&nampup,l,R;
                 # other side was limited, try express it here
@@ -2593,9 +2600,9 @@ Coffle: | # discussion
                 }
             }
             
-            #   unless very near R
+            # unless very near R
             if (!Rs&ltd && Rdist > 2) {
-                # A.I
+                # don't A.I
                 ps&Athing && Rs&sym == '{' && R.t == 'I' and Rs&ltd = '>I'
             }
             if (!Rs&ltd && Rs&sym == '{') {
@@ -2666,7 +2673,7 @@ Coffle: | # discussion
             $rt = Rs&Rthing;
             if (rt) {
                 # anything else from the Rthing
-                se += ' R ';
+                se += ' %R ';
                 if (rty&Te_slandige) {
                     # R receives Tey&slandige
                     se += "Te_slandige:"+rty&Te_slandige
@@ -4072,8 +4079,16 @@ Coffle: | # discussion
     me.Rec = &acgtRs{
         $h = Rc&N[0] || R;
         $a = hc&ha ||= {};
-        $m = a[s] ||= [];
-        m.push(R);
+        if (s.length == 2) {
+            # dl or nl count
+            a[s] ||= 0;
+            a[s]++;
+        }
+        else {
+            # others list nodes of trouble
+            $m = a[s] ||= [];
+            m.push(R);
+        }
     }
     # s collects pile of reasons for Rs&cha
     # < R-centricism, layered change, to phases
