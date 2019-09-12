@@ -2414,6 +2414,7 @@ Coffle: | # discussion
         me&goneRbitX,r;
         # 5- up to thou
         1 && c and rc&N.map(R => c(R,Rc&s))
+        me&applyRbitX,r;
         return r
     };
     # there are two slep/scans
@@ -2463,7 +2464,8 @@ Coffle: | # discussion
                     }
                 }
                 else {
-                    b && bs&early and throw "!early b %early"
+                    # as if deleteRbitX didn't work?
+                    b && bs&early and ~notearly b%early:
                 }
                 Rs&Rthing = firstRthing;
                 
@@ -2771,8 +2773,6 @@ Coffle: | # discussion
             # must sit outside the %sleeping
             $disr = me&Reis,py&up,'Cray',re;
             
-            (Rs&boost||0) < 1 and return
-            me&tsc,'landscape',res&landscape,'6' .sc.dis = 1;
             
             if (res&sleepable) {
                 me&tsc,'maysleep','---'+ps&ci+'/'+Rs&ci,'g';
@@ -2783,6 +2783,7 @@ Coffle: | # discussion
             }
             
             (Rs&boost||0) < 1 and return
+            me&tsc,'landscape',res&landscape,'6' .sc.dis = 1;
         },'ift,D'],
         
         # things' sleepcheck has an answer
@@ -2830,9 +2831,12 @@ Coffle: | # discussion
     #c Toolingness
     me.Toolingness = &acgtR{ return [
         # tray of icons to do tricks
+        # < elvising to the local Tool to coordinate:
+        #     wait for pattern
         ['Tool','3',&acgtRs{
             Rs&rowish = 1;
-            me&rollbs,R,'Mout';
+            me&rollbs,R,'Mout,serial';
+            Rs&serial ||= 0;
             $M = Rs&Mout ||= [];
             Rs&modeen = &acgts{
                 $mode = s.t;
@@ -2849,7 +2853,9 @@ Coffle: | # discussion
                     $n = G&Cye,[mode,6,{R:1}];
                     n.sc[mode] = 1;
                     i $poi/$n
-                    m plugin  $R:r,n:n
+                    # keep together in %Tool
+                    $ser = 'plug:'+Rs&serial++;
+                    m $ser  $r:r,s:n
                     # bug:
                     T.wake = 1;
                 };
@@ -2859,12 +2865,21 @@ Coffle: | # discussion
             n slep  s:● %fs:22,medo:modeen
             n sunn  s:● %fs:22,medo:modeen,inv
             
+            # controls for Tooling out there
+            # < generalised M-anagement
+            # you must boost %aTool to get %ball of the probe,
+            #   then %ball%boost<-1 to delete 
             each in M {
-                $te = i+': '+n.t;
-                n $te  $s:n,R %aTool
+                $z =
+                n $n.t  $s:n,R %aTool
+                zs&remova = &{
+                    each im M {
+                        m != n and continue
+                        M.splice(i,1);
+                        break
+                    }
+                };
             }
-            
-             #n $Rs&mode  $s:Rs&sele,R %sun
             #n stop  s:■
             #n redo  s:◀
             # wander?
@@ -2872,11 +2887,33 @@ Coffle: | # discussion
         },'ift,D'],
         ['aTool','3',&acgtRs{
             Rs&rowish = 1;
-            $r = sc&R;
-            $n = sc&n;
+            
+            $r = sc&r = me&yfuture,sc&r;
+            $n = sc&s;
+            
             me&tsc,'plugin',s.t;
             me&tsc,'to',r.t,'G';
             me&tsc,'do',n.t;
+            
+            (Rs&boost||0) < 1 and return
+            
+            # the probed
+            n theR  $s:r,R %Cit
+            $z =
+            # the probe
+            n then  $s:n,R %ball
+            
+            # < M-anagement, its lifecycle of crud
+            # < io.i futurism, putting/syncing to many places
+            zs&remova = &{
+                $Te = rs&Te;
+                # remove Te probe
+                i $Te/-$n
+                # remove Tool's probe
+                Rs&remova();
+                # and the elvising for it
+                i Ry&up.sc.Te/-Rs&Te
+            };
         },'ift,D'],
     ] };
     me.anRfromelC = &acgts{
