@@ -2737,6 +2737,37 @@ Coffle: | # discussion
             #n whatsup  $self:Ry&up,R %Cit
             me&Reis,R,'Cray',Ry&up,{refpool:1}
         },'ift,D'],
+        # allow for %Cit & Realism to use Displays
+        # link elvising to origin
+        ['displayon','3',&acgtRs{
+            me&tsc,'displayon','D','G';
+            (Rs&boost||0) < 1 and return
+            
+            Rs&rowish = 1;
+            s&bo = '4px dotted green';
+            s&hue = 30;
+            s&br = 0.4;
+            
+            $s = s||Rs&self;
+            
+            $ons = [];
+            ss&on and ons.push(s)
+            else
+            # for a !Display(ed yet?) R holding others
+            ss&down and ss&down.map(n => ns&on && ons.push(n))
+            !ons.length and throw "No bits to display"
+            
+            $Te = Rs&Te;
+            each in ons {
+                ac(R,'down',n);
+                # link elvising to origin
+                $r = ny&origin;
+                !r and throw "R:Display !yorigin"
+                $ot = me&introqua,r;
+                i $Te/$ot
+            }
+        },'ift,D'],
+    
         # hilight changing %balls
         # change style stays on once sleeping,
         #   time-limited styles?
@@ -2951,6 +2982,7 @@ Coffle: | # discussion
                 i Ry&up.sc.Te/-Rs&Te
             };
         },'ift,D'],
+        
         # on Tool's %ball of it, find Real
         ['yRealism','3',&acgtRs{
             $r = sy&Real;
@@ -2958,14 +2990,17 @@ Coffle: | # discussion
             $se = ki(sy&Real,4);
             n yReal  $s:r,R %Realism
         },'ift,D'],
+        
         # in Tool's %ball, for Real
         ['Realism','3',&acgtRs{
             Rs&rowish = 1;
             me&boostulate,R;
             me&tsc,'yReal','Real','q';
-            #n its  $self:s,R %Reis:Cit,set:Cit
-            me&Reis,R,'Cray',s;
+            n its  $self:s,R %Reis:Cit,set:Cit
+            #me&Reis,R,'Cray',s;
+            n show  $self:s,R %displayon
         },'ift,D'],
+        
         # to show the slep in progress,
         # must sit outside the %sleeping, or have its Display adopted
         # < G&c/T'ing messages to a debug channel
@@ -3256,7 +3291,9 @@ Coffle: | # discussion
             each in RN {
                 $z =
                 n $n
-                zs&Recipe = n
+                zs&Recipe = n;
+                # anticipate wanting to
+                ny&Real = 1;
             }
             # insides get ahead
             T.Rq = {inside:R,ov:33};
@@ -3603,16 +3640,6 @@ Coffle: | # discussion
             }
         },'ift,D'],
         
-        ['displayon','3',&acgtRs{
-            me&tsc,'displayon','D','G';
-            (Rs&boost||0) < 1 and return
-            Rs&rowish = 1;
-            s&bo = '4px dotted green';
-            s&hue = 30;
-            s&br = 0.4;
-            ac(R,'down',s||Rs&self);
-        },'ift,D'],
-    
     ] };
     
     #c Cee the truth (with folded edge)
