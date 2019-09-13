@@ -1393,14 +1393,22 @@ Coffle: | # discussion
         $M = null;
         each in N {
             if (nc&R) {
-                # spawn R?
                 $parent = R;
-                $s = nc&R;
-                if (s && Rc&N.indexOf(s) >= 0) {
-                    parent = s;
-                    s = null;
+                if (nc&R != '1' && typeof nc&R == 'string') {
+                    # c&R='mode' becomes sc.$mode = 1
+                    # < ongoing type-of-name smurgery
+                    n.sc[nc&R] = 1;
+                    nc&R = 1;
+                }
+                else {
+                    $s = nc&R;
+                    if (s && Rc&N.indexOf(s) >= 0) {
+                        parent = s;
+                        s = null;
+                    }
                 }
                 delete nc&R;
+                # > R=$s sometimes
                 nc&s and s = nc&s; delete nc&s
                 ex(n.sc,n.c);
                 $r = me&Ret,parent,ex({t:n.t,s:s},n.sc);
@@ -2928,12 +2936,6 @@ Coffle: | # discussion
     me.Tein = &acgtRcn{
         typeof c == 'string' and c = G&peel,c
         n = G&Cye,n;
-        if (nc&R && nc&R != '1' && typeof nc&R == 'string') {
-            # c&R='mode' becomes sc.$mode = 1
-            # < ongoing type-of-name smurgery
-            n.sc[nc&R] = 1;
-            nc&R = 1;
-        }
         # get Rs&Te + qua to open R-in-z awareness
         $poi = me&introqua,R,{Rz:1};
         if (!poi) {
