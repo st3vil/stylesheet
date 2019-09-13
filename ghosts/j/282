@@ -2847,10 +2847,8 @@ Coffle: | # discussion
             
             $re = me&slan,R,p,{early:1};
             !rec&b and throw "slep Nohist early"
-            Rs&sleplandR = re;
-            # not a child of p
             # < it reusing this scan for whatever its doing
-            ps&slan = re;
+            Rs&slan = ps&slan = re;
             
             # can be asked to display more, if you displayon for it
             Rs&nofurtherDisplay = 1;
@@ -2891,16 +2889,14 @@ Coffle: | # discussion
         },'ift,D'],
         
         ['slep','89',&acgtRs{
-            #Rs&theysleep and ~Theysleep
             Rs&theysleep and return
             $p = Ry&up;
             ~>3 Lately: p.t
-            $oR = R;
             # leave one slep/slan, early trusts late's map
-            $re = Rs&sleplandR;
-            re and me&deleteRbitX,re;
+            Rs&slan and me&deleteRbitX,Rs&slan;
             
             $r = me&slan,R,p;
+            Rs&slan = ps&slan = r
             #rc&b and ~hist late:
             rs&late = 1;
             
@@ -2914,8 +2910,21 @@ Coffle: | # discussion
         #c slep_aTool configures a %slep in %aTool
         ['slep_aTool','3',&acgtRs{
             s&ma = 0.2;
+            s&fs = 17;
             $p = Ry&up;
-            # various adjustables on ps&tOn, tRecipe, tReal
+            $P = ps&tRecipe;
+            $r = ps&tReal;
+            $D = rs&slan;
+            
+            
+            
+            $they = rs&theysleep ? "ᛍ" : "ᛟ";
+            me&tsc,'theysleep',they;
+            me&tsc,'configure',"☞",'G';
+            
+            (Rs&boost||0) < 1 and return
+            
+            # various adjustables
             # wiring Time-things onto the Real or the On,
             #  for it has already begun,
             #   elvising must get any tampering to it prior
@@ -2924,15 +2933,14 @@ Coffle: | # discussion
             #   then once having %ball/%fix, embed knobs
             #     enriching the soil
             
-            n t  $s:R.t %hs:789
-            n beawake  s:!! %fs:22,medo:modeen
-            n differ  s:<> %fs:22,medo:modeen,inv
+            n beawake  s:ᛟ %medo:modeen
+            n differ  s:ᛄ %medo:modeen,to:P
             
-            $D = ps&tRecipe;
             
             Rs&modeen = &acgtr{
                 $mode = r.t;
-                D.sc[mode] = D.sc[mode] ? 0 : 1;
+                
+                P.sc[mode] = P.sc[mode] ? 0 : 1;
             };
         },'ift,D'],
     ]};
