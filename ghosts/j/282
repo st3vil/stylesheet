@@ -2921,7 +2921,6 @@ Coffle: | # discussion
         # ᛤ cealc - dige
         # ᛄ ger - diff
         # ᛜ ingwaz - differ
-        $ingwaz = 'ᛜ';
         ['slep_aTool','3',&acgtRs{
             s&ma = 0.2;
             s&fs = 17;
@@ -2955,42 +2954,58 @@ Coffle: | # discussion
                 $v = to.sc[mode] = to.sc[mode] ? 0 : 1;
                 ~modeen: mode+" = "+v
             };
-            ss&differ &&
-                n differ  $self:D %R:differ
+            if (ss&differ) {
+                !D and return me&tsc,'nos',"noD(slan)?",'B'
+                n differ  $s:D %R:differ,refpool
+            }
             
         },'ift,D'],
         # branching difference
-        # M = [
-        #   
-        ['differ','3',&acgtRs{
+        # %differ M = [
+        #   %differing
+        #     c&s = slan
+        #     backups [ more slans
+        ['differ','7',&acgtRs{
             Rs&rowish = 1;
-            $s = Rc&s ||= Rc&self;
-            $M = me&rollbs,R,'Min';
+            !s and return me&tsc,'nos',"s?",'B'
+            $ingwaz = 'ᛜ';
+            me&tsc,'differ',"☞",'G' .sc.fs=20;
+            
+            $M = Rs&Min = me&rollbs,R,'Min' || [];
             # < any large string, choose ways to make string
             $k = ss&landscape ? 'landscape' : 'string';
-            $ok = 0;
-            each in M {
-                $z = nc&s;
-                !z.sc[k] || !s.sc[k] and ok--; break
-                z.sc[k] != s.sc[k] and continue
-                ac(n,'z',s);
-                ok++; break
+            $include = &s{
+                $ok = 0;
+                each in M {
+                    $z = nc&s;
+                    !z.sc[k] || !s.sc[k] and ok--; break
+                    z.sc[k] != s.sc[k] and continue
+                    ac(n,'backups',s);
+                    ok++; break
+                }
+                ok<0 and return me&tsc,'notcompable',"s\&string?",'B'
+                ok<1 &&
+                    m $ingwaz  $s:s,R %differing
+            };
+            if (!M.length) {
+                # start knowing as much history as possible
+                $N = me.cby(s,0,&s{ return sc&b }).reverse();
+                N.map(b => b && include(b));
             }
-            ok<0 and return me&tsc,'notcompable',"s\&string?",'B'
-            ok<1 &&
-                m $ingwaz  $self:s,R %differing
+            # this look
+            include(s);
+            
             each in M {
                 $d =
                 n $n
+                dy&C = n
             }
             ds&current = 1;
-            
-            # ᛜ
-            me&tsc,'diff',"☞",'G' .sc.fs=20;
         },'ift,D'],
         ['differing','3',&acgtRs{
-            $s = Rc&s ||= Rc&self;
+            me&tsc,'t',R.t,'G'
             
+            me&tsc,'dige',ss&dige,'6'
         },'ift,D'],
     ]};
     # medo for attachey/toggley %ball%fixes
@@ -3123,6 +3138,7 @@ Coffle: | # discussion
             #   and this, if deleted, sticks on the screen
             n On  $self:r,R %Reis:Cit,set:Cit
             
+            # %slep_aTool out there
             $k = n.t+'_aTool';
             n Perspect  $R:k
             
@@ -3326,7 +3342,7 @@ Coffle: | # discussion
         }
     };
     # commits the wiring of past to future at 91
-    #  almost at the same time I will
+    #  almost at the same time osc/I will
     # before Display
     me.applyRbitX = &acgtR{
         R != Rc&N[0] and throw "!head"
@@ -3348,6 +3364,8 @@ Coffle: | # discussion
     #c RbitX etc
     # keeps history of unhad children
     #  and adds them to Rs&z
+    # used by Display too, shouldn't need to...
+    #   needs that X.x ||= {}
     me.recycleRbitXz = &acgtR{
         $b = Rc&b;
         !b and throw "recycle !hist"
@@ -3355,7 +3373,8 @@ Coffle: | # discussion
         each bit,oV bc&X.x {
             # no support for dupes, which share an X
             # would take merging the new over the old or so,
-            Rc&X.x[bit] and continue
+            Rc&X.x && Rc&X.x[bit] and continue
+            Rc&X.x ||= {};
             Rc&X.x[bit] = oV;
             ig.push(... oV.z);
         }
