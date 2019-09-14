@@ -2958,7 +2958,7 @@ Coffle: | # discussion
                 ~modeen: mode+" = "+v
             };
             if (ss&differ) {
-                !D and return me&tsc,'nos',"noD(slan)?",'B'
+                !D and return me&tsc,'noD(slan)?',"!D",'B'
                 n differ  $s:D %R:differ,refpool
             }
             
@@ -2974,11 +2974,12 @@ Coffle: | # discussion
             $ingwaz = 'ᛜ';
             me&tsc,'differ',"☞",'G' .sc.fs=20;
             
-            $M = Rs&Min = me&rollbs,R,'Min' || [];
+            $M = Rs&Min = me&rollbs,R,'seriala,Min' || [];
+            Rs&seriala ||= 0;
             # < any large string, choose ways to make string
             $k = ss&landscape ? 'landscape' : 'string';
             $current;
-            $include = &s{
+            $include = &sc{
                 $ok = 0;
                 each in M {
                     $z = nc&s;
@@ -2986,6 +2987,9 @@ Coffle: | # discussion
                     z.sc[k] != s.sc[k] and continue
                     current = n;
                     ac(n,'backups',z);
+                    while (ns&backups.length > 5) {
+                        ns&backups.shift();
+                    }
                     nc&s = s;
                     ok++; break
                 }
@@ -2993,12 +2997,14 @@ Coffle: | # discussion
                 if (ok<1) {
                     current =
                     m $ingwaz  $s:s,R %differing
+                    currents&serial = Rs&seriala++;
+                    c and ex(current.sc,c)
                 }
             };
             if (!M.length) {
                 # start knowing as much history as possible
                 $N = me.cby(s,0,&s{ return sc&b }).reverse();
-                N.map(b => b && include(b));
+                N.map(b => b && include(b,{pre_history:1}));
             }
             # this look
             include(s);
@@ -3009,12 +3015,14 @@ Coffle: | # discussion
                 n $n
                 n == current and ds&current = 1;
                 dy&C = n
+                i == 0 and ns&initial = 1
             }
         },'ift,D'],
         ['differing','3',&acgtRs{
             $t = me&tsc,'t',R.t,'G';
             Rs&current and ts&fs = 20;
-            me&tsc,'dige',ss&dige,'6'
+            me&tsc,'dige',ss&dige,'6';
+            me&tsc,'serial',''+Rs&serial,'b';
         },'ift,D'],
     ]};
     # medo for attachey/toggley %ball%fixes
