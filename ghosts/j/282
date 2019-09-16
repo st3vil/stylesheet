@@ -2931,8 +2931,8 @@ Coffle: | # discussion
             s&ma = 0.2;
             s&fs = 17;
             $p = Ry&up;
-            $P = ps&tRecipe;
-            $r = ps&tReal;
+            $P = ps&Recipe;
+            $r = ps&Real;
             $D = rs&slan;
             $s = pc&s;
             
@@ -3045,13 +3045,30 @@ Coffle: | # discussion
                 }
                 ok<0 and return me&tsc,'notcompable',"s\&string?",'B'
                 if (ok<1) {
+                    $serial = Rs&seriala++;
                     current =
-                    m $ingwaz  $s:s,R %differing
-                    currents&serial = Rs&seriala++;
+                    m $serial  $s:s,R %differing
                 }
                 $b = Rc&b;
                 if (b) {
-                    # put current
+                    # < knowing more instances of %slan
+                    #   sharing dimensions of self,
+                    #   pulled into tree order...
+                    # tries to get order making sense,
+                    #  single branch only, may loop
+                    $parent = bs&current;
+                    parent != current and currents&parent = parent
+                    $ci = M.indexOf(current);
+                    $pi = M.indexOf(parent);
+                    ci == 0 && pi+1 == M.length and 'end to end'
+                    else
+                    pi == 0 && ci+1 == M.length and 'end to end'
+                    else
+                    ci == pi+1 and 'follows'
+                    else {
+                        M.splice(ci,1);
+                        M.splice(pi,0,current);
+                    }
                 }
             };
             if (!M.length) {
@@ -3120,9 +3137,10 @@ Coffle: | # discussion
             Rs&string = s.sc[k];
             !Rs&dige || !Rs&string and return me&tsc,'digestring',"?s?",'B';
             
-            $gl = Rs&current ? "◆" : R.t;
+            # serial number or commit message
+            $t = me&tsc,'t',R.t,'G';
+            Rs&current and ts&bg = '#000'
             R.t = "the "+ss&dige;
-            $t = me&tsc,'t',gl,'G';
         },'ift,D'],
     ]};
     # medo for attachey/toggley %ball%fixes
