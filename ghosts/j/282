@@ -107,6 +107,22 @@ Coffle: | # discussion
     
     o test gonerism (XV)
       with extra bits of %Cit asserting deeply
+     error in %push:
+       state falls apart too easily:
+        %ball%pushed has to give them %their every time
+        %push%moves also,
+      are hanging on me&rollbs, which depends on b
+        apparently bogus
+      cant be pushed back together with the other side because:
+        push%move after the fall ends up Co inside Co
+          not knowing about the Co/$Redo thing
+          is a setup for the %testrun:
+            A.5erver (Co) gives you a fresh A.4 (XV),
+              which you push steps to
+            could be clearer than:
+             %move,from:Co,to:T,into
+             %move,from:Co,to:Co *
+       
     o test sleepology
       with extra tools for Pass to:
         rec/play elvising:
@@ -893,6 +909,12 @@ Coffle: | # discussion
                 ns&err and me&tsc,'error',ns&err,'d';
                 ns&warn and me&tsc,'warn',ns&warn,'d';
                 
+                if ((Rs&boost||0) > 0) {
+                    # TEST doesn't get out?
+                    $t = "Cit:"+n.t;
+                    n $t  $self:n,R %Reis:Cit,set:Cit
+                }
+                
                 # condenses
                 if (s.length > 5) {
                     $ne = s [i+1];
@@ -1105,7 +1127,6 @@ Coffle: | # discussion
                     !ns&ok and Rs&ok = 0
                 }
             }
-            
             Rs&ok and me&tsc,'ok'
             !Rs&ok and me&tsc,'notok','!','B'
             
@@ -1124,9 +1145,20 @@ Coffle: | # discussion
         ['push+made','82',&acgtRs{
             $m = Rs&mained;
             $M = Rs&moves;
+            # < become %aTool in the nearest %Tool,
+            #   gently raised exception, shoulding to disappear
+            $problem = 0;
+            $prob = &s{
+                problem = 1;
+                return me&tsc,'noforward',s,'B'
+            };
             if (Rs&stepforward) {
                 # should be ready
-                !m || !Rs&main || !M and return me&tsc,'noforward',"!main"
+                !m and prob('!mained')
+                !Rs&main and prob('!main')
+                !M and prob('!moves')
+                problem and return
+                
                 # find step with no %got
                 $N = me&ioty,R,'%step';
                 $S = N.filter(S => !Ss&got)[0];
@@ -2905,8 +2937,15 @@ Coffle: | # discussion
                 ac(R,'down',n);
                 # link elvising to origin
                 $r = ny&origin;
-                !r and throw "R:Display !yorigin"
-                !r and throw "R:Display !yorigin"
+                if (!r) {
+                    if (ss&task == 'C') {
+                        # does R:Display in itself
+                        r = R
+                    }
+                    else {
+                        throw "R:Display !yorigin"
+                    }
+                }
                 $ot = me&introqua,r;
                 i $Te/$ot
                 # if multiple $ot to the same tv:
