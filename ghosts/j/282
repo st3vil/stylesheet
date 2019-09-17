@@ -756,10 +756,10 @@ Coffle: | # discussion
             done && !t and me&tsc,'va','vanishing!'
             !t and me&tsc,'notheir','⧁','L'
             
-            # here <-> their if nothing organised
+            # here <-> their if nothing organised (by 72%act)
             !Rs&diffya and me&diffya,R,'diff',h,t
             
-            # their <-> their at the last push
+            # their <-> their at the last push (negated by 72%act)
             $tdiff = t && done && me&diffya,R,'theirs',t,dones&their;
             if (tdiff) {
                 # < handle changes we didn't push
@@ -768,6 +768,17 @@ Coffle: | # discussion
                     # < explore what'll happen, run in reverse
                     #m pull $from:t,to:h %pull,pending,move
                     n pending  s:pull? %hs:588
+                }
+            }
+            
+            $dy = Rs&diffya;
+            $diff = dy && dy.diff;
+            if (diff) {
+                # the main diff
+                if (diffs&exactly) {
+                    # %push%exactly if the diff named diff is exactly
+                    #   used to find %push leaving equilibrium
+                    Rs&exactly = 1;
                 }
             }
         },'ift,D'],
@@ -808,7 +819,14 @@ Coffle: | # discussion
         # random look
         ['push','8',&acgtRs{
             Rs&act and s&dis = 1
-            (Rs&boost||0) < 1 and return
+            $b = Rc&b;
+            if ((Rs&boost||0) < 1) {
+                # grow if leaving being exactly equal
+                if (b && bs&exactly && !Rs&exactly) {
+                    Rs&introqua,R,{boost:1}
+                }
+                return
+            }
             
             s&fs = 13;
             s&dis = 1;
@@ -1003,16 +1021,15 @@ Coffle: | # discussion
     # ie an elvising that sleeps
     me.Actingness = &acgtR{ return [
         # the R that %made
-        ['push+act','72',&acgtRs{
+        ['push+act','721',&acgtRs{
             Rs&push >= 9 and return
             $h = Rs&here;
             $t = Rs&their;
             # this R with %here + %made when %move was made
             $doing = Rs&doing;
-            # sublates other diffs
+            # negates theirs diffs
             Rs&diffya ||= {};
             Rs&diffya.theirs = 0;
-            Rs&diffya.diffs = 0;
             
             # diff the input with %made's input
             $mh = me&rollbs,R,'made_here';
@@ -1021,7 +1038,6 @@ Coffle: | # discussion
                 # input better understood as %made
                 indiffs&sublated = 1;
                 indiffs&exactly and Rs&made = Rc&b.sc.made
-                else { me&tsc,'rollmade','⧁','L' }
             }
             
             # %made ||= the act
@@ -1031,7 +1047,7 @@ Coffle: | # discussion
             }
             
             # diff %made to %made when move was made
-            doing and me&diffya,R,"made",Rs&made,doings&made
+            doing and me&diffya,R,"diff",Rs&made,doings&made
             
             if (t && t.t != h.t && t.t == 'Co') {
                 Rs&mained = me&ioty,Rs&made,'%ball' .filter(n=>n.t == h.t)[0];
