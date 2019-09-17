@@ -1016,19 +1016,20 @@ Coffle: | # discussion
             Rs&diffya.theirs = 0;
             Rs&diffya.diffs = 0;
             
-            # diff the input that %made et (approx)
+            # diff the input with %made's input et (approx)
             doing and $indiff = me&diffya,R,'input',h,doings&here
             if (indiff) {
                 # input better understood as %made
                 indiffs&sublated = 1;
                 if (indiffs&exactly) {
                     # sleep %made by
-                    Rs&made = doings&made
+                    $m = Rs&made = doings&made;
                 }
             }
             
             # %made ||= the act
             Rs&made ||= me&domething,Rs&act,{acgt:[R,h,t],returns:1};
+            Rs&Thingwithmade = 1;
             
             # diff %made to %made when move was made
             doing and me&diffya,R,"made",Rs&made,doings&made
@@ -1475,8 +1476,8 @@ Coffle: | # discussion
     };
     
     # while the R.t == mind of this pool
-    $osu = &R{
-        $task = Rs&task || R.t;
+    $osu = &Rt{
+        $task = t || Rs&task || R.t;
         !me[task] and debugger;
         
         # bit of caching on the w.t=Coffle, closured from eval
@@ -1926,12 +1927,14 @@ Coffle: | # discussion
     };
     me.Ja.seeI = &acgt{
         me&Gomp;
-        each kN ws&makesI {
+        $Is = ['ravel','Cit'];
+        each ik Is {
+            $N = osu(C,k);
             $l =
             n $k 3
             ls&z = [];
             each iI N {
-                G&m,ls&z,[I.t,Iy&cv];
+                G&m,ls&z,[I.t,Iy&cv,{},{ci:i}];
             }
         }
     };
@@ -2669,7 +2672,7 @@ Coffle: | # discussion
             ny&Real ||= 1;
             ny&Real && isC(ny&Real) and Rs&Real = ny&Real
             # will probably turn up soon?
-            !Rs&Real and return T.wide = 1
+            #!Rs&Real and return T.wide = 1
             
             me&tsc,'to',r.t,'G';
             me&tsc,'do',n.t;
@@ -2966,15 +2969,9 @@ Coffle: | # discussion
                 ac(R,'down',n);
                 # link elvising to origin
                 $r = ny&origin;
-                if (!r) {
-                    if (ss&task == 'C') {
-                        # does R:Display in itself
-                        r = R
-                    }
-                    else {
-                        throw "R:Display !yorigin"
-                    }
-                }
+                # R:C does R:Display in itself
+                !r && ss&task == 'C' and r = R
+                !r and throw "R:Display !yorigin"
                 $ot = me&introqua,r;
                 i $Te/$ot
                 # if multiple $ot to the same tv:
