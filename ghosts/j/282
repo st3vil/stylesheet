@@ -105,23 +105,32 @@ Coffle: | # discussion
     
     back to Pass...
     
+    o general Passness
+       BUG: %push with vanishing %exactly should half open
+       call it Doing/Done, keywords...
+    
     o test gonerism (XV)
-      with extra bits of %Cit asserting deeply
-     error in %push:
-       state falls apart too easily:
-        %ball%pushed has to give them %their every time
-        %push%moves also,
-      are hanging on me&rollbs, which depends on b
-        apparently bogus
-      cant be pushed back together with the other side because:
-        push%move after the fall ends up Co inside Co
-          not knowing about the Co/$Redo thing
-          is a setup for the %testrun:
-            A.5erver (Co) gives you a fresh A.4 (XV),
-              which you push steps to
-            could be clearer than:
-             %move,from:Co,to:T,into
-             %move,from:Co,to:Co *
+    < with extra bits of %Cit asserting deeply
+        'fixed' error in %push:
+          R:C wasnt using the transactional RbitX
+          was:
+           state falls apart too easily after error:
+            %ball%pushed has to give them %their every time
+            %push%moves also,
+           are hanging on me&rollbs, which depends on b
+            apparently bogus
+           cant be pushed back together with the other side because:
+            push%move after the fall ends up Co inside Co
+              not knowing about the Co/$Redo thing
+              is a setup for the %testrun:
+                A.5erver (Co) gives you a fresh A.4 ($Redo),
+                  which you push steps to
+                could be clearer than:
+                 %move,from:Co,to:T,into
+                 %move,from:Co,to:Co *
+              TeCo could express such strategy,
+                besides what is to be.
+          Remember to avoid that next rebuild.
        
     o test sleepology
       with extra tools for Pass to:
@@ -690,9 +699,9 @@ Coffle: | # discussion
             $lm = Rs&lastpush;
             if (lm) {
                 # this %push when %move was started (had the %made)
-                Rs&doing = lmc&pusher;
+                Rs&Doing = lmc&pusher;
                 # this %push when %move was done
-                Rs&done = lmc&pushed;
+                Rs&Done = lmc&pushed;
             }
         },'ift,D'],
         
@@ -751,19 +760,20 @@ Coffle: | # discussion
             Rs&push >= 9 and return
             $h = Rs&here;
             $t = Rs&their;
-            $done = Rs&done;
+            $Done = Rs&Done;
             
-            done && !t and me&tsc,'va','vanishing!'
+            Done && !t and me&tsc,'va','vanishing!'
             !t and me&tsc,'notheir','⧁','L'
             
             # here <-> their if nothing organised (by 72%act)
             !Rs&diffya and me&diffya,R,'diff',h,t
             
             # their <-> their at the last push (negated by 72%act)
-            $tdiff = t && done && me&diffya,R,'theirs',t,dones&their;
+            $tdiff = t && Done && me&diffya,R,'theirs',t,Dones&their;
             if (tdiff) {
                 # < handle changes we didn't push
-                # < branch here <-> dones&here, patch onto that
+                # < branch here <-> Dones&here, patch onto that
+                # < a %differ tangle, wakes up to sort out a %push gone awry
                 if (!tdiffs&exactly) {
                     # < explore what'll happen, run in reverse
                     #m pull $from:t,to:h %pull,pending,move
@@ -823,6 +833,7 @@ Coffle: | # discussion
             if ((Rs&boost||0) < 1) {
                 # grow if leaving being exactly equal
                 if (b && bs&exactly && !Rs&exactly) {
+                    # BUG doesn't work?
                     Rs&introqua,R,{boost:1}
                 }
                 return
@@ -1026,7 +1037,7 @@ Coffle: | # discussion
             $h = Rs&here;
             $t = Rs&their;
             # this R with %here + %made when %move was made
-            $doing = Rs&doing;
+            $Doing = Rs&Doing;
             # negates theirs diffs
             Rs&diffya ||= {};
             Rs&diffya.theirs = 0;
@@ -1047,7 +1058,7 @@ Coffle: | # discussion
             }
             
             # diff %made to %made when move was made
-            doing and me&diffya,R,"diff",Rs&made,doings&made
+            Doing and me&diffya,R,"diff",Rs&made,Doings&made
             
             if (t && t.t != h.t && t.t == 'Co') {
                 Rs&mained = me&ioty,Rs&made,'%ball' .filter(n=>n.t == h.t)[0];
