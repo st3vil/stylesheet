@@ -106,8 +106,9 @@ Coffle: | # discussion
     back to Pass...
     
     o general Passness
-       BUG: %push with vanishing %exactly should half open
-       call it Doing/Done, keywords...
+      %push:
+        vanishing %exactly should half open
+        call itself on move start/end Doing/Done, etc
     
     o test gonerism (XV)
     < with extra bits of %Cit asserting deeply
@@ -830,14 +831,18 @@ Coffle: | # discussion
         ['push','8',&acgtRs{
             Rs&act and s&dis = 1
             $b = Rc&b;
-            if ((Rs&boost||0) < 1) {
-                # grow if leaving being exactly equal
-                if (b && bs&exactly && !Rs&exactly) {
-                    # BUG doesn't work?
-                    Rs&introqua,R,{boost:1}
+            if (b) {
+                # grow/shrink if leave/become exactly equal
+                if (b && bs&exactly && !Rs&exactly && !Rs&boost) {
+                    me&introqua,R,{boost:1};
+                    Rs&boost = 1;
                 }
-                return
+                if (b && !bs&exactly && Rs&exactly && Rs&boost == '1') {
+                    me&introqua,R,{boost:0};
+                    Rs&boost = 0;
+                }
             }
+            (Rs&boost||0) < 1 and return
             
             s&fs = 13;
             s&dis = 1;
