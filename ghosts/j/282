@@ -757,7 +757,7 @@ Coffle: | # discussion
             l and Rs&their = me&yfuture,l
         },'ift'],
         
-
+        # the 59%push%does becomes %act
         ['push','59',&acgtRs{
             Rs&push >= 9 and return
             # attaching checks to its parts
@@ -1070,6 +1070,15 @@ Coffle: | # discussion
         ['push+act','721',&acgtRs{
             Rs&push >= 9 and return
             $h = Rs&here;
+            # marked by %testrun, noop for the mo
+            # < wandering around each %testrun
+            if (!hs&testrun) {
+                # < rollbs onto %ball
+                $hs = hc&s;
+                !hss&testrun and ~turning%testrun: hs.t
+                hss&testrun = 1;
+                hs&testrun = 1;
+            }
             $t = Rs&their;
             # this R with %here + %made when %move was made
             $Doing = Rs&Doing;
@@ -3824,6 +3833,43 @@ Coffle: | # discussion
         ... me&Ceeingness,
     ] };
     #c Tool-ish R:Cit mobility
+    $keywords = 'testrun run step doing'.split(' ');
+    # find bunch of upwards R by sc
+    me.nameup = &Rlc{
+        c = ex(c||{fatal:1},{wander:1});
+        c.tight and delete c.wander
+        # < *-match
+        # < off the side of io, match + select,
+        #   parallel dimensions
+        $h = {};
+        l = l ? l.split(' ') : keywords;
+        $kw = l.slice();
+        # from R going up
+        $N = me.cby(R);
+        N.reverse(); kw.reverse();
+        h.N ||= [];
+        $twas = [];
+        each in N {
+            !kw[0] and break
+            if (c.any) {
+                # < any order
+            }
+            elsif(!n.sc[kw[0]]) {
+                !c.wander and break
+                continue
+            }
+            $k = kw.shift();
+            h[k] = n;
+            h.N.push(n);
+            twas.push(k);
+        }
+        if (c.fatal && twas.length != l.length) {
+            throw "nameup got: "+ki(twas)+'   exp:'+ki(l)
+        }
+        # h.N becomes top-down
+        h.t = h.N.reverse().map(n => n.t).join("/");
+        return h
+    };
     me.Implantingness = &acgtR{ return [
         # %Cit mobility to Das Tape
         ['Cit+play','29',&acgtRs{
@@ -3831,21 +3877,16 @@ Coffle: | # discussion
             $pp = p && py&up;
             if (ps&Citop) {
                 if (Rs&play && !ps&Implant) {
-                    # defer to W:Das
-                    $nah;
-                    $name = 'run step doing'.split(' ').map(&t{
-                        $r = me.cby(R,&r{ return r.sc[t] })[0];
-                        !r and return nah = 1
-                        return r.t
-                    }).join('/');
-                    if (!nah) {
-                        name += "'s "+R.t;
-                        $D = G&Cye,[name,'',{R:R,Te:Rs&Te}];
-                        4s&DasN.push(D);
-                        # causes a %spondo to %Reis again elsewhere
-                        delete Rs&Cit;
-                        Rs&Outplanted = 'Cit';
-                    }
+                    # defer to W:Das every time
+                    # map what's around here for them
+                    $hn = me.nameup(R,'testrun run step doing');
+                    # < less fatal, %spondo may only look for...
+                    $name = hn.t +"'s "+R.t;
+                    $D = G&Cye,[name,'',{R:R,Te:Rs&Te,nameup:hn}];
+                    4s&DasN.push(D);
+                    # causes a %spondo to %Reis again elsewhere
+                    delete Rs&Cit;
+                    Rs&Outplanted = 'Cit';
                 }
             }
         },'ift,D'],
@@ -3891,6 +3932,7 @@ Coffle: | # discussion
             sc&discon and Rs&remova()
             #n spondo  $self:s,R %sun
             #return
+            #each in 
             $r = sc&R;
             $s = rc&s;
             n Te  $s:rs&Te,R %ball,rowish
