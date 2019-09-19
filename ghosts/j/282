@@ -1862,11 +1862,11 @@ Coffle: | # discussion
     # inside W:Wobulus, after W:Fourier
     me.do_main = &acgt{
         if (1) {
-            me&J,'Pass','W';
+            me&J,['Pass','W',{},{timing:0}]
             me&J,'Das','W';
             me&J,'Co','W';
         }
-        me&J,['edges','W',{},{timing:0}];
+        #me&J,['edges','W',{},{timing:0}];
         #me&J,'Fours','W';
     };
     
@@ -1892,9 +1892,9 @@ Coffle: | # discussion
     me.Ja.City = &acgt{
         me&Gomp;
         $z = delete s&z;
-        $Te = z.shift();
+        $Te = z[0];
         $te =
-        n Citey  $s:c&s %ravel:Citying
+        n Citey  $s:c&s,thisis:4 %ravel:Citying
         tey&TeImplant = Te;
     };
     # provide n to %main/%step/%doings
@@ -1945,7 +1945,7 @@ Coffle: | # discussion
         $q = {q:'W'};
         try {
             q.part = 'Jin';
-            me&J,C.t,q;
+            me&J,C,q;
             q.part = 'Jreturned';
         }
         catch (er) {
@@ -2806,6 +2806,7 @@ Coffle: | # discussion
             c.t = k[0];
             k[1] != null and Rs&set = k[1] || c.t;
             Rs&set and c[Rs&set] = 1;
+            Rs&theirTe and c.Te = Rs&theirTe; 1s&Te = {};
             c.rec = ex({},c);
             Rs&ReisR = me&Reis,R,c.t,null,c;
         },'ift,D'],
@@ -3986,7 +3987,7 @@ Coffle: | # discussion
             n Te  $s:rs&Te,R %ball,rowish
             
             # < inherit test's refpool
-            n spondo  $self:s,R,TeImplant:rs&Te %Reis:Cit,set:Cit
+            n spondoReis  $self:s,R,TeImplant:rs&Te %Reis:Cit%
         },'ift,D'],
         # display the thing from me.nameup
         ['nameup','3',&acgtRs{
@@ -3997,8 +3998,7 @@ Coffle: | # discussion
                 $k = h.twas[i];
                 i > 0 and me&tsc,'upwardsof','/','y';
                 me&tsc,'%'+k,n.t;
-                # BUG never shows?
-                n $k  $self:n,R %Cit
+                #n $k  $self:n,R %Cit
             }
             if (h.doing && h.step) {
                 # the %doing
@@ -4047,14 +4047,23 @@ Coffle: | # discussion
                 n spondto  $self:Rs&gleep,R %Reis:Cit%,refpool
                 return
             }
+            # the R:C for...
             $p = Ry&up;
-            $c = Rs&self || pc&s;
-            $Te = c.y.TeImplant;
+            # Citey s=thing %ravel:Citying
+            $c = pc&s;
+            !cc&s and me&tsc,'nos','nos','B';
+            # %ravel gives s=thing here
+            cc&s != s and me&tsc,'sdiff','sdiff(R/C)','B';
             #debugger;
-            #me&Reis,R,'Cray',p;
             $z =
-            n spondto  $self:c,R %Reis:Cit%,refpool
-            #Te and zs&Te = Te;
+            n CityingReis  $self:cc&s,R %Reis:Cit%,refpool
+            # (dont) give Rs&Te directly,
+            #  TeImplant would cause it to hang around,
+            #  < could be alright if Co/$main ran its own W Te
+            #  < then main-main could extract updates naturally?
+            #  < click in test's displayon should re%doing it
+            $Te = c.y.TeImplant;
+            Te and zs&TeImplant = Te;
             
             # clone this Rs&C/** into R:C's Cs&z
             Rs&printDisplay = 1;
@@ -4145,15 +4154,18 @@ Coffle: | # discussion
             }
             
             $pp = py&up;
-            if (pps&spondo) {
-                if (ps&TeImplant) {
-                    Rs&Implant = 1;
-                    $Te = ps&TeImplant;
-                    if (!Rs&Te || !Rs&Te.sc.Implanted) {
-                        $el = me&introqua,R,{Implanted:1};
+            if (ps&Reis && ps&TeImplant) {
+                Rs&Implant = 1;
+                $Te = ps&TeImplant;
+                if (!Rs&Te || !Rs&Te.sc.Implanted) {
+                    $el = me&introqua,R,{Implanted:1};
+                    if (1 || pps&spondo) {
                         i $el/$Te
-                        Rs&Te = el;
                     }
+                    else {
+                        ex(el.sc,Te.sc);
+                    }
+                    Rs&Te = el;
                 }
             }
             n $R.t  $s:s,R %Cit,fromsitop
