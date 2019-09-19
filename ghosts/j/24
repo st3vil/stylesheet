@@ -604,7 +604,7 @@ Wade: | # serve /W/$t to G&t
                 my $new = !-f $f;
                 $s = "$s\n" if $s !~ /\n$/;
                 # we journal! can't trust anything
-                write_file("$f\.1",$s);
+                write_file("$f\.1",encode_utf8($s));
                 `mv $f\.1 $f`;
                 # < (notify nearby others, who )+
                 re.ok = 'updated';
@@ -614,7 +614,7 @@ Wade: | # serve /W/$t to G&t
         }
         else {
             if (-f $f) {
-                $s = read_file($f);
+                $s = decode_utf8(read_file($f));
                 re.ok = 'found';
             }
             else {
