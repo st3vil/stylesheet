@@ -98,6 +98,7 @@ Coffle: | # discussion
        if it were a different J:
         enter it, changes input to thisJ
         decide to redome thisJ to involve that,
+          seeing our change come back to us
       redo R building on changed elvisory?
       see 'rebuild %push to use e'
        %push currently injects the remote %ball%movingin
@@ -1017,8 +1018,12 @@ Coffle: | # discussion
     
     #c Lines
     me.Linesingness = &acgtR{ return [
+        # c&s decodes, gets %dige, %string
         ['Lines','22',&acgtRs{
+            # %Lines=3 skips decode
             Rs&Lines == '3' and return Rs&Lines = 1
+            # < we should have a %dige to check s against
+            #   or ref $s implies %Lines=3 if not there
             !s and ns&notfound = 1; return
             
             $b = Rc&b;
@@ -1034,24 +1039,27 @@ Coffle: | # discussion
             }
             Rc&s = Rs&decoded;
             Rs&intoa and Rs&Lines = 0; R.sc[Rs&intoa] = 1
-            # are now %ball continued
+            # R now %ball not %Lines
         },'ift,D'],
-        
-        # %Lines recurses, a list of toplevels to push R to
+        # %Lines=1 set on %ball later
+        # %Lines=[tops] is/inherits
+        # tops accumulate LinesN of Linesers
+        # < rename Linesers
+        # < make that clearer with iobab
         ['Lines','6',&acgtRs{
-            !Rs&ball && !ns&Copy and throw "Lines!ball"
+            !Rs&ball && !Rs&Copy and throw "Lines!ball"
+            # a top
             Rs&Lines == '1' and Rs&Lines = [R]
-            each ir Rs&Lines {
-                rs&LinesN ||= [];
-                rs&LinesN.push(R);
-            }
-            # if this %ball dups, head to origin
+            # < dup would be fatal?
+            Rs&Lines.map(r => ac(r,'LinesN',R));
+            # < if this %ball dups, head to best dup?
             # which only happens now
             # should have more singular drawings from
             each in Rs&z {
                 !ns&ball && !ns&Copy and continue
                 $toppy = ns&Lines == '1';
                 ns&Lines = Rs&Lines.slice();
+                # tops accumulate
                 toppy and ns&Lines.push(n);
             }
             $the = me&Timethe,'toLines';
@@ -1083,7 +1091,7 @@ Coffle: | # discussion
             }
             the();
         },'ift,D'],
-        
+        #c gathering Linesers
         # build a LinesN for decoded Lines too,
         # to look more like Lines, so LinesN/%H can be found
         # < a more A'd to/readLines with each chunk a %ball
@@ -1107,7 +1115,17 @@ Coffle: | # discussion
                 $i = 0;
                 $dent = rc&d - Rc&d;
                 while (i < dent) { ind += '  '; i++ }
+                $s = rc&s;
                 $say = rs&toLines;
+                $lv = s.y.lv;
+                if (lv) {
+                    !lvs&Lines and throw "!Linesy"
+                    say = lvs&string;
+                    # s&strings have a trailing \n,
+                    #  toLines/LinesForSomeone don't
+                    say = say.replace(/\n\s*$/,'');
+                    #~>4 LV: r.t, say.length
+                }
                 say == null and say = '[error} null %toLines: '+r.t
                 $l = say.split("\n")
                     .map(l => ind+l).join("\n");

@@ -2601,6 +2601,10 @@ Soogle: |
             ~Removed: R.t, n.t
         }
         each in ba {
+            if (Rc&nofurther) {
+                ~Rsyncnofurther: R.t, n.t
+                continue
+            }
             V &&
             ~Included: R.t, n.t
             $t = me&Ret,R,{t:n.t,s:n,ball:1};
@@ -2796,12 +2800,20 @@ Soogle: |
                 return
             }
             
-            if (sc&J || ss&H) {
+            if (sc&J || ss&H || s.y.lv) {
                 # should become or is a separate object
                 #  H being dig(toLines(object))
-                $sym = sc&J ? 'J' : 'H';
-                n $sym  $s:sym %fs:14,hs:966
-                
+                #  y&lv having %Lines better than s does
+                sc&J &&
+                n J  s:J %fs:14,hs:966
+                ss&H &&
+                n H  s:H %fs:14,hs:966
+                if (s.y.lv) {
+                    n lv  s:lv %fs:12,hs:965
+                    # resists any innards
+                    Rc&nofurther = 1;
+                }
+                # resists displaying innards
                 Rs&boost > 0 and 'open'
                 else {
                     Rs&nofurtherDisplay = 1;
@@ -2832,7 +2844,7 @@ Soogle: |
                 n typeball  R %etype:ball
             }
             me&endome,R;
-            ss&z and me&Rsync,R;
+            ss&z && !Rc&nofurther and me&Rsync,R;
         },'ift,D'],
         #c ballope
         # < sprout usual inquisitivity/saveness?
