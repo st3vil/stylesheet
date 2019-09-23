@@ -118,9 +118,12 @@ Coffle: | # discussion
     # monday:
       random niceups
       all %testruns at once
+        # nah, many %play at once instead
+        # should be priority on the next Pass
         awaking only the relevant stuff each time
         %push gives T(..Co..) five clicks to find J,
           then it is woken up
+    # tuesday:
       testing slep
         doesnt need a %Tool inside?
     # thursday:
@@ -1402,6 +1405,10 @@ Coffle: | # discussion
                 : me&waits,'moreanyway','⊁','L';
             
             if (Rs&ok && Rs&more) {
+                if (ps&almost) {
+                    me&tsc,'almost','>-'
+                    return
+                }
                 ~okmore: R.t
                 ps&boost >= 1 and Rs&wantstep = 1
             }
@@ -2362,6 +2369,7 @@ Coffle: | # discussion
             Rs&playsheet = {
                 ball: &acgtR{
                     $l = me&push,R,['/','T'],[],'run',{does:'TeCo'};
+                    Rs&Te && Rs&Te.sc.almost and ls&almost = 1;
                     ls&boost = 2;
                     me&introqua,l,{boost:1},'ifel1'
                 },
@@ -3013,11 +3021,12 @@ Coffle: | # discussion
             Rs&ReisR = me&Reis,R,c.t,null,c;
         },'ift,D'],
         
+        #c testruns
         ['testruns','6',&acgtRs{
             $p = Ry&up;
             !ps&ball and throw "for %ball"
             $M = [];
-            # get %testruns in a few layers of %ball
+            # find any %testrun in a few layers of %ball
             $lookfortestruns = &pd{
                 d ||= 0;
                 d++;
@@ -3042,6 +3051,13 @@ Coffle: | # discussion
             asyncily without any async,
             unless something !ok, then stops.
             
+            BUT THEN,
+             it looks like all the %plays simultaneously works ok
+            and besides, its complicated and subject to change.
+            averted by tes&almost, all this other complicated stuff.
+              wants T itself and really good visual A debugger.
+            how clearly that thing could unfold in a namepond...
+            
             =cut
             Rs&rowish = 1;
             me&tsc,'testruns';
@@ -3054,22 +3070,47 @@ Coffle: | # discussion
             
             $current;
             $began = G&time;
+            # %play them all (but dont start %moving (if almost))
+            # collect %pushes 
+            $P = [];
+            $start_testruns = &{
+                each in M {
+                    $te = me&introqua,n,{};
+                    # on and off?
+                    tes&play and delete tes&play; delete tes&almost;
+                    else {
+                        tes&play = 1;
+                        #tes&almost = 1
+                    }
+                    # collect the 8%push
+                    $cb = tey&pushable_cb = &r{ P[i] = r }
+                }
+                # last one, callback with %moves made?
+                tey&pushable_cb = &{
+                    cb();
+                    ~starts: R.t
+                    next_testrun();
+                };
+            };
+            # ^ async v
+            # per %push, do out of time
             $next_testrun = &{
                 current == null and current = 0
                 else { current++ }
                 $n = M[current];
-                !n and return Rs&testcomplete = G&time,$began;
-                ns&play and throw "Test "+n.t+" already"
-                # play %play
-                $te = me&introqua,n,{play:1};
+                !n and return done_testing();
                 # hijack the %push
-                $l = me&push,n,['/','T'],[],'run',{does:'TeCo'};
                 
-                ls&boost = 2;
-                me&Ring,l,{und:l};
+                #ls&boost = 2;
+                #me&Ring,l,{und:l};
                 #me&Reis,R,'ravel',nc&s
+                
             };
-            next_testrun();
+            $done_testing = &{
+                Rs&testcomplete = G&time,$began;
+                ~Done testing:
+            }
+            start_testruns();
         },'ift,D'],
         
         #c differ
