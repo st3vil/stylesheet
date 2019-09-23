@@ -1223,6 +1223,7 @@ Coffle: | # discussion
             ms&clobberypushingz = 1;
             # limit othering of steps (to %run%currentstep?)
             ms&pushingnoz = 1;
+            # if new steps are wanted, what W?
             ms&invent_step = m.t;
         }
         ~TeCo: main.t
@@ -2057,11 +2058,17 @@ Coffle: | # discussion
     };
     # do only undone %main/%step/%doings
     me.doN = &acgtN{
+        $Js = 1s&mainJs ||= {};
         each im N {
             # a main
+            $mainJs = Js[m.t];
             if (!my&began) {
                 # fresh run, clear memory
-                delete 4s&Jtv[m.t];
+                each ti mainJs {
+                    ~Cleans: m.t, t
+                    delete 4s&Jtv[t];
+                }
+                mainJs = Js[m.t] = {};
             }
             my&began ||= G&time;
             each iS ms&z {
@@ -2081,6 +2088,7 @@ Coffle: | # discussion
                         !c&s and s&err = "No points: "+c&points; continue
                     }
                     $live = me&adoing;
+                    lives&W and mainJs[C.t] = 1
                     # if another, keep it instead
                     tw[C.t] = C.y.D = live || C;
                     if (live && live != C) {
