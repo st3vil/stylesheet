@@ -1788,9 +1788,10 @@ Coffle: | # discussion
         #  the parent Acv > the child sometimes matters:
         #   to get Cit3/slep2 to be Cit27(getslep)/slep2
         if (q) {
-            # on those q.inside=$R
+            # on those q.inside=$R (or und, includes R)
             #  growing q.onlyRupto
-            q.inside and q.onlyRupto = [q.inside];
+            q.und and q.onlyRupto = [q.und]
+            q.inside and q.onlyRupto = [q.inside]
             q.ov and q.ov = G&sca,q.ov
             # < R indexed by cv
             # or otherwise grouped for meaningful disruptability
@@ -1809,7 +1810,7 @@ Coffle: | # discussion
             else { hs&iN++ }
             # select what up to
             $R = hc&N[hs&iN];
-            if (q && R && q.onlyRupto) {
+            if (q && R && q.onlyRupto && R != q.und) {
                 R == q.inside and continue
                 $not = q.onlyRupto.indexOf(R) < 0;
                 if (not && Rs&ci == null &&
@@ -3029,21 +3030,46 @@ Coffle: | # discussion
                 }
             };
             lookfortestruns(p);
-            =pod asyncily without any async
-            play %pushes
-            T%ball receives %moves
-            W:Co
-            T%ball again,
-              for some %step/%doings
-                which each have been waiting since play %pushes
-              which causes more %moves, goto 20
+            =pod
+            o play %pushes
+            o T%ball receives %moves
+            o W:Co
+            o T%ball again,
+               for some %step/%doings
+                 which each have been waiting since play %pushes
+               which causes more %moves, goto 20
+            
+            asyncily without any async,
+            unless something !ok, then stops.
+            
             =cut
             Rs&rowish = 1;
             me&tsc,'testruns';
             me&tsc,'count',M.length,'g';
             each in M {
-                n n.t  $s:n.t %ma:0.5
+                n n.t  $s:n.t %ma:0.5,fs:8
             }
+            (Rs&boost||0) < 1 and return me&tsc,'dotestruns','?','G'
+            delete Rs&Te.sc.boost;
+            
+            $current;
+            $began = G&time;
+            $next_testrun = &{
+                current == null and current = 0
+                else { current++ }
+                $n = M[current];
+                !n and return Rs&testcomplete = G&time,$began;
+                ns&play and throw "Test "+n.t+" already"
+                # play %play
+                $te = me&introqua,n,{play:1};
+                # hijack the %push
+                $l = me&push,n,['/','T'],[],'run',{does:'TeCo'};
+                
+                ls&boost = 2;
+                me&Ring,l,{und:l};
+                #me&Reis,R,'ravel',nc&s
+            };
+            next_testrun();
         },'ift,D'],
         
         #c differ
