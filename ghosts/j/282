@@ -2044,10 +2044,16 @@ Coffle: | # discussion
         $Te = z[0];
         $te =
         n Citey  $s:c&s,thisis:4 %ravel:Citying
+        me&clearTe,1s&Te;
         tey&TeImplant = Te;
         # quiets T/City, about to get ^
         1s&runs == 1 &&
             me&sublatePassT,A.1.t;
+    };
+    me.clearTe = &acgtt{
+        !t || !t.c and return
+        delete ts&z;
+        delete ty&tv;
     };
     # provide n to %main/%step/%doings
     me.Ja.Co = &acgt{
@@ -4085,11 +4091,13 @@ Coffle: | # discussion
             if (ps&Citop) {
                 if (Rs&play && !ps&Implant) {
                     # defer to W:Das every time
+                    $b = Rc&b;
+                    b && !bs&play and 1s&pausing = 1
                     # map what's around here for them
                     $hn = me.nameup(R,'testrun run step doing');
                     # < less fatal, %spondo may only look for...
                     $name = hn.t +"'s "+R.t;
-                    $D = G&Cye,[name,'',{R:R,Te:Rs&Te,nameup:hn}];
+                    $D = G&Cye,[name,'',{R:R,Te:Rs&Te,nameup:hn,J:A.1}];
                     4s&DasN.push(D);
                     # causes a %spondo to %Reis again elsewhere
                     delete Rs&Cit;
@@ -4097,7 +4105,8 @@ Coffle: | # discussion
                 }
             }
         },'ift,D'],
-            
+        
+        # linking elvising from elsewhere
         ['Citop','52',&acgtRs{
             $p = Ry&up;
             $pp = py&up;
@@ -4137,6 +4146,8 @@ Coffle: | # discussion
                 }
             }
             outi.reverse().map(i => N.splice(i,1));
+            
+            !Rc&b and me&sublatePassT,A.1.t;
             #n rec  s:●
             #n stop  s:■
             #n redo  s:◀
@@ -4153,7 +4164,7 @@ Coffle: | # discussion
             $h = sc&nameup;
             !h and me&domesticate,R
             else {
-                n nameup  $s:h,R,aTe:rs&Te %nameup
+                n nameup  $s:h,R,aTe:rs&Te,Spondo:s %nameup
                 
             }
             sc&discon and me&tsc,'disconnected','unplug?','g'
@@ -4180,11 +4191,23 @@ Coffle: | # discussion
                 # the %doing
                 (Rs&boost||0) < 1 and return me&tsc,'Upplantscheme','(+doing?)','g'
                 delete Rs&Te.sc.boost;
+                
                 $expco = &k{
                     $d = h[k];
                     $dex = ds&exp;
                     return dexs&Copy;
                 };
+                $s = Rs&Spondo;
+                !s and throw "DasN thing !self"
+                # unpause the source J
+                $J = sc&J;
+                !J and throw "DasN thing !J"
+                me&JPause,J,0;
+                # unDasinate the source R
+                $Te = Rs&aTe;
+                delete Tes&play;
+                # boost also, later
+                
                 $S = expco('step');
                 # insert doing to step
                 i $S/City:s
@@ -4193,7 +4216,9 @@ Coffle: | # discussion
                 $d = expco('doing');
                 Dc&points = d.t;
                 # awkwardly pass in %Te as s&z to City
-                $Te = Rs&aTe;
+                # un-push to Das,
+                #   and save Te without the extra %play
+                #   which will cancel out with %TeImplanted on arrival
                 if ('how' && Te) {
                     # gives you a little time to muck with it
                     $r = me&Copy,R,Te,16;
@@ -4204,6 +4229,9 @@ Coffle: | # discussion
                     me&Ring,r;
                     i $D/rc&s
                 }
+                # now the City takes the boost/gutsprawl
+                #   inner boosts are still there
+                delete Tes&boost;
             }
             else {
                 me&tsc,'noUpplantscheme','(?)','g';
