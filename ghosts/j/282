@@ -1936,7 +1936,7 @@ Coffle: | # discussion
     me.Ja.City = &acgt{
         me&Gomp;
         $z = delete s&z;
-        $Te = z[0];
+        $Te = C.y.zTe = z[0];
         $te =
         n Citey  $s:c&s,thisis:4 %ravel:Citying
         me&clearTe,1s&Te;
@@ -2909,7 +2909,7 @@ Coffle: | # discussion
             
             # < ensure this Display gets somewhere
             if (sc&Host) {
-                Rs&Host = sc&Host;
+                Rs&Host = sc&Host = me&yfuture,sc&Host;
                 if (sc&As) {
                     Rs&As = sc&As;
                     $tem =
@@ -2925,7 +2925,87 @@ Coffle: | # discussion
             $p = ny&up; # %aTool
             $s = pc&s; # Tool%M lug
             
-            me&tsc,'sunn','PuTe...','q' .sc.bg = '#000';
+            # find a step to put this in
+            #   up to %run/%step/%doing
+            #     or %ball(%testrun/(%step))
+            # < new steps if %run
+            $S;
+            $N = me.cby(sc&Host,&r{
+                $p = ry&up;
+                !p and return
+                $s = pc&s;
+                if (rs&doing || rs&step || rs&run) {
+                    return S = r
+                }
+                if (ps&ball && rs&ball && ss&testrun) {
+                    return S = r
+                }
+            });
+            if (!S) {
+                n StepNotFound  $self:N,R %Reis:Cit%
+                #and throw "context "+R.t
+                return
+            }
+            if (!Ss&ball) {
+                if (Ss&run) {
+                    throw "new step %run?";
+                    # S = make-new-step, as %push does
+                    # then DoingFor = its doing (%ball)
+                }
+                if (Ss&doing) {
+                    # PuTe before a doing
+                    !Ss&exp and throw "doingnoexp"
+                    sc&DoingFor = S
+                    S = Sy&up;
+                    !Ss&step and throw "!Step"
+                }
+                if (Ss&step) {
+                    # PuTe before step's doings
+                    !Ss&exp and throw "doingnoexp"
+                    S = Ss&exp;
+                }
+                else {
+                    throw "Nonball/step"
+                }
+            }
+            !Ss&ball and throw "Not at ball"
+            $D = sc&DoingFor;
+            if (D) {
+                $g = Ds&got;
+                !g and throw "DoingFor!got"
+                $x = Ds&exp;
+                !x and throw "DoingFor!exp"
+                if (x.t == 'City') {
+                    # forget nabbed thing?
+                    #   update City/(*) got->exp
+                    $z = gc&s;
+                    $zTe = zy&zTe;
+                    !zTe and return me&tsc,'?'
+                    $Te = me&Copy,R,zTe,18 .c.s;
+                    # < stream, differ?
+                    !xs&ball and throw "x!ball"
+                    # that is the one after TeCo,
+                    #  goes directly to W/.../$exp s:
+                    x = xs&Copy;
+                    !x and throw "no prior"
+                    !xs&z and throw "unz"
+                    i $x/-#$Te
+                    i $x/$Te
+                    while (xs&z.length > 10) {
+                        xs&z.shift();
+                    }
+                    x = [x];
+                    n zTe_updated  $self:x,R %Reis:Cit%
+                    return
+                }
+                if (x.t == 'PuTe') {
+                    throw "update itself"
+                }
+                #n DoingFor  $self:D,R %Reis:Cit%
+                # might be !ball
+                n DoingFor  $self:D,R %Reis:Cit%
+            }
+            n Step  $self:S,R %Reis:Cit%
         },'ift,D'],
         
         # < put somewhere else:
