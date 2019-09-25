@@ -4258,7 +4258,14 @@ Coffle: | # discussion
             }
             
             $foret = R.t;
-            !Rs&Citop && isC(s) and R.t = s.t
+            if (!Rs&Citop && isC(s)) {
+                if (Rs&tiny) {
+                    # path in != title once there
+                    Rs&RXbit = R.t;
+                }
+                # use inner title
+                R.t = s.t
+            }
             if (Rs&ot == '1' || !Rs&ot && foret != R.t) {
                 delete Rs&ot
                 foret != 'Cit' and Rs&ot = foret
@@ -4385,8 +4392,10 @@ Coffle: | # discussion
                 n open 4 s:[ %hs:489
                 
                 each in s {
+                    # BUG this titling situ of z [ z,z,z,z
                     Cit('['+i, n, {tiny:1,ot:R.t});                
                 }
+                # < Display M<=6 R/* M>6
                 #n close 7 s:]
                 return
             }
@@ -4752,7 +4761,7 @@ Coffle: | # discussion
     };
     # at Display 17
     me.RbitX = &acgtR{
-        $bit = R.t;
+        $bit = Rs&RXbit != null ? Rs&RXbit : R.t;
         # $X = {x:{$bit:$X},z:[R+]}
         # X.x.$bit = another X, inwards a $bit
         # X.z=[R that are here
