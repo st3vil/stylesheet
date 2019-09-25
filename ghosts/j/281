@@ -1723,21 +1723,23 @@ Soogle: |
     Gs&elvrupto =
     me.elvrupto = &acgt{
         $Y = me.uY;
-        c&Jat[0] != Y.4 and c&Jat.shift();
-        c&Jat[0] == Y.4 and c&Jat.shift();
-        # <body>
-        c&path.shift();
-        A = Y;
-        # < push for immediacy
-        c&JC = c&Jat.map(&J{ return Jc&s });
-        # on.C = C
-        $full = c&path.slice();
-        c&path_yon and full.push(...c&path_yon);
-        c&slope = [];
-        each in full {
-            $c = n.C;
-            !c || c == c&slope.slice(-1)[0] and continue
-            c&slope.push(c);
+        if (c&path) {
+            c&Jat[0] != Y.4 and c&Jat.shift();
+            c&Jat[0] == Y.4 and c&Jat.shift();
+            # <body>
+            c&path.shift();
+            A = Y;
+            # < push for immediacy
+            c&JC = c&Jat.map(&J{ return Jc&s });
+            # on.C = C
+            $full = c&path.slice();
+            c&path_yon and full.push(...c&path_yon);
+            c&slope = [];
+            each in full {
+                $c = n.C;
+                !c || c == c&slope.slice(-1)[0] and continue
+                c&slope.push(c);
+            }
         }
         me&handelvis,'';
     };
@@ -1759,20 +1761,6 @@ Soogle: |
                 dif.length and c&dragslope = dif;
             }
         }
-        
-        $srv = &{
-            T.wake and G&yl,0.001,4c&callback; delete T.wake
-        };
-
-        # go up C path until bingoed
-        $lop = c&slope.slice().reverse();
-        # unless attention already grabbed
-        $elo = delete 4s&eloncer;
-        if (elo) {
-            elo(A,C,G,T,lop[0]);
-            srv();
-            return
-        }
         if (c&key == 'esc') {
             # gone too far
             # < and you know...
@@ -1785,6 +1773,20 @@ Soogle: |
             # < say it's vaguely related to...
             G&yl,0,4c&callback;
             event.preventDefault();
+            return
+        }
+        
+        $srv = &{
+            T.wake and G&yl,0.001,4c&callback; delete T.wake
+        };
+
+        # go up C path until bingoed
+        $lop = c&slope && c&slope.slice().reverse();
+        # unless attention already grabbed
+        $elo = delete 4s&eloncer;
+        if (elo) {
+            elo(A,C,G,T,lop[0]);
+            srv();
             return
         }
         
