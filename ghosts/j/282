@@ -2989,6 +2989,8 @@ Coffle: | # discussion
             # < ^ should be a few lines max
             !Ss&ball and throw "Not at ball"
             $D = sc&DoingFor;
+            # locate the %doing in W/...
+            $before;
             if (D) {
                 $g = Ds&got;
                 !g and throw "DoingFor!got"
@@ -3017,12 +3019,65 @@ Coffle: | # discussion
                     n zTe_updated  $self:x,R %Reis:Cit%
                     return
                 }
-                if (x.t == 'PuTe') {
-                    throw "update itself"
-                }
-                #n DoingFor  $self:D,R %Reis:Cit%
-                # might be !ball
+                $xo = xs&Ropy;
+                !xo and throw "DoingFor exp !Ropy"
+                !xos&ball and throw "Doing exp Ropy !ball";
+                before = xoc&s;
+                
+                # might be !ball?
                 n DoingFor  $self:D,R %Reis:Cit%
+            }
+            #c and the %step in W/...
+            $st = Ss&Ropy;
+            !st and throw "Step !Ropy"
+            $step = stc&s;
+            !step and throw "Step Ropy !C"
+            # < looking at stc&ss&z (C) in sts&z (R)
+            #   io handling A/C
+            
+            # wants a PuTe%doing:
+            $P = G&Cye,['PuTe',''];
+            Ps&giveCfrom = 'sc&Remote';
+            #Ps&z = [
+            
+            # PuTe%doing maybe already there
+            $already;
+            # or to be spliced into where %doing is (in W/.../%stepc&ss&z)
+            $xi;
+            if (before) {
+                # ^ the W/.../%doingc&s for a %doing we clicked
+                # put PuTe before this %doing
+                xi = steps&z.indexOf(before);
+                xi < 0 and throw "No such doing in step"
+                $xa = steps&z[xi-1];
+                # update self:
+                before.t == 'PuTe' and already = before
+                else
+                # update self, clicked %doing after it
+                xa && xa.t == 'PuTe' and already = xa
+            }
+            else {
+                # beginning of %step
+                xi = 0;
+                $xa = steps&z && steps&z[xi];
+                xa && xa.t == 'PuTe' and already = xa; xo = null
+            }
+            if (already) {
+                # see io z dupe bug in displayon
+                i $step/-#$already
+                i $step/$P
+            }
+            else {
+                i $step/$P
+                if (xi != null) {
+                    $inow = steps&z.indexOf(P);
+                    inow < 0 and throw "fail"
+                    if (inow != xi) {
+                        ~Spliced: xi
+                        steps&z.splice(inow,1);
+                        steps&z.splice(xi,0,P);
+                    }
+                }
             }
             # etc and just noticed:
             # BUG via testruns stops acceptance applying...
