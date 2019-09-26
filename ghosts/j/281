@@ -1921,7 +1921,10 @@ Soogle: |
         a.push(...to);
         return {f:from,v:la,to:to,a:a};
     };
-    # similar to solveR 
+    # looks like a chunk of solveR, for one
+    # < go up while modulat...? may change R0...
+    #   this is interesting to know where our path leads,
+    #   in the invisible world we act with in waves
     me.anRfromelC = &acgts{
         !isC(s) and throw "notC";
         $r = sy&R == s ? s :
@@ -1930,6 +1933,7 @@ Soogle: |
         !r and throw "no idea";
         # out of some M (which get R's each under Display)
         rs&modulat and r = ry&up;
+        rs&modulat and throw "Many modulats deep";
         # out of Display
         ry&origin and r = ry&origin;
         return me&yfuture,r
@@ -2197,7 +2201,7 @@ Soogle: |
             me&tsc,'Rlimits',k+'*'+s,'B'
         }
     };
-    #c Te receive Te
+    #c getTe receive Te
     # drive wiring from above
     # < check every point was found
     me.JT = &acgts{
@@ -2294,7 +2298,7 @@ Soogle: |
         }
         return el
     };
-    #c set Te
+    #c setTe
     #  for setting boost that can then wander off as per
     # or just materialise the Teing to $R and return it
     me.introqua = &acgtRcq{
@@ -2335,12 +2339,7 @@ Soogle: |
     };
     #c structuR
     me.namup = &acgts{
-        !s and return
-        $nam = [s.t];
-        while (s = s.y.up) {
-            nam.push(s.t);
-        }
-        return nam.reverse();
+        return s && me.cby(s).map(n => n.t)
     };
     # show path between two R
     me.nampup = &acgton{
@@ -2365,21 +2364,43 @@ Soogle: |
         $nam = pup.join('/');
         return nam
     };
-    # pick an R by name, from ...
-    #   io wants to know R, loadup qualities...
-    me.bit = &acgtRtf{
-        typeof t != 'object' and t = [t]
-        !f and f = R
-        f == 'h' and f = Rc&N[0]
-        each in t {
-            #$fz = fc&X && fc&X.x[n] && fc&X.x[n].z;
-            $fz = fs&z && fs&z.filter(t => t.t == n);
-            !fz and throw "problem"
-            fz.length < 1 and throw "notfound"
-            fz.length > 1 and throw "many"
-            f = fz[0];
+    $keywords = 'testrun run step doing'.split(' ');
+    # find bunch of upwards R by sc
+    me.nameup = &Rlc{
+        c = ex(c||{fatal:1},{wander:1});
+        c.tight and delete c.wander
+        # < *-match
+        # < off the side of io, match + select,
+        #   parallel dimensions
+        $h = {};
+        l = l ? l.split(' ') : keywords;
+        $kw = l.slice();
+        # from R going up
+        $N = me.cby(R);
+        N.reverse(); kw.reverse();
+        h.N ||= [];
+        h.twas = [];
+        each in N {
+            !kw[0] and break
+            if (c.any) {
+                # < any order
+            }
+            elsif(!n.sc[kw[0]]) {
+                !c.wander and break
+                continue
+            }
+            $k = kw.shift();
+            h[k] = n;
+            h.N.push(n);
+            h.twas.push(k);
         }
-        return f
+        if (c.fatal && h.twas.length != l.length) {
+            throw "nameup got: "+ki(h.twas)+'   exp:'+ki(l)
+        }
+        # h.N becomes top-down
+        h.t = h.N.reverse().map(n => n.t).join("/");
+        h.twas.reverse();
+        return h
     };
     # path finder
     me.cby = &sfzdo{
@@ -2592,7 +2613,6 @@ Soogle: |
         $n =
         n $t  $s:s
         $y = &b{ ex(n.sc,G&peel,b ) };
-        b and y(b)
         c == 'B' and y('hs:856,fs:17')
         c == 'b' and y('hs:856')
         c == 'D' and y('hs:675,fs:25')
@@ -2604,6 +2624,7 @@ Soogle: |
         c == 'y' and y('hs:296')
         c == 'L' and y('fs:15')
         c == '6' and y('fs:6')
+        b and y(b)
         return n
     };
     # sanity/display helper for expanding joints
