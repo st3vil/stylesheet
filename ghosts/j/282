@@ -1227,7 +1227,7 @@ Coffle: | # discussion
                 }
             }
         },'ift,D'],
-        #c act-made
+        #c push+act=made
         # Co/Hap/ Hap v1...
         # a bug chaser
         # make deals across the border so
@@ -1304,6 +1304,7 @@ Coffle: | # discussion
             Rs&wantstep and ps&stepforward = 1
         },'ift,D'],
         
+        #c push+made=moves?
         # others a %main%step
         ['push+made','82',&acgtRs{
             $m = Rs&mained;
@@ -1356,7 +1357,7 @@ Coffle: | # discussion
                 
                 #$c =
                 #m push $from:h,to:t,pusher:R
-                ~wouldstep: R.t
+                #~wouldstep: R.t
             }
         },'ift,D'],
         #c step acceptor
@@ -2742,10 +2743,49 @@ Coffle: | # discussion
         }
     };
     
-    me.Rzinc = &acgtR{
-        
-    
+    # prop up M, ensures a lug.c like c
+    me.RMount = &acgtRc{
+        $M = Rs&Mout;
+        !M and throw "NoMout"
+        $found = 0;
+        each in M {
+            # c checks n.c
+            $ok = 1;
+            each kv c {
+                n.c[k] != v and ok = 0
+                if (!ok) {
+                    # just yfuture?
+                    if (typeof v == 'object' &&
+                        v.t == n.c[k].t) {
+                        ~Samet: v.t
+                    }
+                    break
+                }
+            }
+            !ok and continue
+            found = 1;
+            break
+        }
+        #found and ~>4 Found:
+        found and return
+        #~>4 Lugging:
+        lug = Rs&modlug();
+        # put identifying things into lug.c
+        ex(lug.c,c);
+        # put lug in M (permanent)
+        lug =
+        m $lug
+        # put lug in Rc&s for %aTool etc
+        Rs&Middle(lug);
     };
+    # get local Tool, may search
+    # see 2%Tool "t'ing it out"
+    me.RTool = &acgtR{
+        !Rc&Tool and me.cby(R,&r{ return Rc&Tool = rc&Tool });
+        $t = Rc&Tool;
+        !t and throw "NoTool"
+        return Rc&Tool;
+    }
     
     me.Toolingness = &acgtR{ return [
         # %Cit shows a thing
@@ -2759,23 +2799,19 @@ Coffle: | # discussion
         # < elvising to the local Tool to coordinate:
         #     wait for pattern
         
-        # somewhere, made by its %Recipe
+        # Real somewhere, made by %Recipe
+        # insists on being in %Tool's M
         #   4%aTool gets %Recipe (later),
-        #     also has %Remote, which we are now:
+        #     also has %Remote, now Ry&up:
         ['Recipe','3',&acgtRs{
             $p = Ry&up;
-            # sync to local Tool
-            # see 2%Tool "t'ing it out"
-            !Rc&Tool and me.cby(R,&r{ return Rc&Tool = rc&Tool });
-            $t = Rc&Tool;
-            !t and throw "NoTool"
-            
             $r = Rs&Recipe;
             ry&Real != R and throw "NotRecipeReal"
-            
-            
-            ~Recipeoutthere: p.t, '/', R.t
-            t and ~Havetool: t.t
+            $t = me&RTool,R;
+            #~>4 Recipeoutthere: p.t, '/', R.t
+            # %Tool's M must have something like:
+            $c = {Remote:p,Recipe:r,tool:R.t};
+            me&RMount,t,c;
         },'ift,D'],
         
         
@@ -2784,7 +2820,7 @@ Coffle: | # discussion
             Rs&rowish = 1;
             $J = A.1;
             Js&serial ||= 0;
-            $M = Js&ToolMout ||= [];
+            $M = Rs&Mout = Js&ToolMout ||= [];
             # controls for Tooling out there
             # < know dups with the scene but don't create any more
             # < generalised M-anagement
@@ -2793,13 +2829,16 @@ Coffle: | # discussion
             # < t'ing it out, so it can become to R already departed
             me.cby(R).filter(r => rc&Tool = R);
             
+            Rs&modlug = &{
+                return G&Cye,['plug:'+(Js&serial++),'']
+            };
             Rs&modeen = &acgtr{
                 # r is not R
                 $atool = r.t;
                 $mode = rs&pickel || 'probe';
                 # captures the next click
                 T.pickel = &acgtr{
-                    $lug = G&Cye,['plug:'+(Js&serial++),''];
+                    $lug = Rs&modlug();
                     lugc&tool = atool;
                     lugc&Remote = r;
                     lugc&Pointer = C;
@@ -2818,10 +2857,10 @@ Coffle: | # discussion
                     else {
                         throw "what pickel mode: "+mode
                     }
-                    # keep together in %Tool
-                    m $lug
                     # bug:
                     T.wake = 1;
+                    # keep together in %Tool
+                    m $lug
                 };
                 ~picking: mode
             };
@@ -2831,14 +2870,16 @@ Coffle: | # discussion
             n nab  s:∝ %fs:22,medo:modeen,inv:0.7,pickel:nab
             n testruns  s:⊧ %fs:22,medo:modeen,inv:0.5
             
-            # %aTool%boost<-1 removes it
-            # Recipe%ball%boost<-1 if a probe,
-            #   then %ball%boost<-1 to delete 
-            each in M {
+            Rs&Middle = &n{
                 !n.t and debugger;
-                $z =
-                n $n.t  $s:n,R %aTool,refpool
-                # < sort out that CyC leads sourceward, CyO where it went? or D?
+                $z = me&Ret,R,{t:n.t,s:n,aTool:1,refpool:1};
+                # < Ring/ing clarify particle onramp
+                me&zN,z;
+                #n $n.t  $s:n,R %aTool,refpool
+                # < sort out that CyC leads sourceward,
+                #   CyO where it went? or D?
+                #  we have z.y.R = R created by z
+                # %aTool%boost<-1 removes it
                 zs&remova = &{
                     each im M {
                         m != n and continue
@@ -2847,11 +2888,14 @@ Coffle: | # discussion
                     }
                     # and any elvising configuring it
                     i Ry&up.sc.Te/-Rs&Te
-                    # through the doming
+                    # through the doming?
                     z = zy&R;
                     # %aTool packdown/deprobe
                     zs&alsoremova and zs&alsoremova();
                 };
+            };
+            each in M {
+                Rs&Middle(n);
             }
             #n stop  s:■
             #n redo  s:◀
