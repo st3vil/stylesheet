@@ -86,7 +86,7 @@ Coffle: | # discussion
      < unicode everywhere. plants: 💮 🌸 🌷 🌹  🌺 🌻 🌼 🥀  🎕 ⚘ 🏵 🏶  🌱 🌽 🌾  ⸙ 🌰 🌿 🍀 🍁 🍂 🍃  🌵 🌴  🎋 🎄 🌲 🌳
      < Cye takes y=o89 -> ycv=0.089
      < put sdiff and dup etc in 11-ish (dup 1189)
-     < sc/css compressions, in Line or not
+     < C/sc/css compressions, in Line or not
      
     Tool openness
       configures those injectoids
@@ -132,6 +132,12 @@ Coffle: | # discussion
         doesnt need a %Tool inside?
     # thursday:
       finish %Cit below, make lots of tests.
+      slepology
+      new A4,
+        < starts from a single /js/ with
+          one screenful of prior knowledge
+        A calmly pulls in its deps, sets foot...
+        
     # friday:
       new I compiled fore-way,
         composited and storaged in Pass
@@ -2940,18 +2946,27 @@ Coffle: | # discussion
                     ~Pluycks
                 };
             };
-            n PuTe  s:%PuTe? %fs:11,medo:modeen
             
             # < ensure this Display gets somewhere
             if (sc&Host) {
+                $reselect = me&rollbs,R,'Host' && sc&Host != Rs&Host;
                 Rs&Host = sc&Host = me&yfuture,sc&Host;
+                n Host  $self:Rs&Host,R %Reis:Cit%
+                
                 if (sc&As) {
+                    $t = '%'+sc&As+':';
+                    n $sc&As  $s:t %fs:11,medo:modeen
                     Rs&As = sc&As;
                     $tem =
                     n $Rs&As  R:1
                     tem.sc['nab_'+Rs&As] = 1
+                    reselect and tems&reselect = 1
+                    reselect and me&tsc,'reselect',null,'g'
                 }
-                n Host  $self:Rs&Host,R %Reis:Cit%
+            }
+            else {
+                # picks action; picks Host
+                n PuTe  s:%PuTe? %fs:11,medo:modeen
             }
         },'ift,D'],
         
@@ -2996,9 +3011,11 @@ Coffle: | # discussion
                     return S = r
                 }
             });
+            $puts = &ts{
+                n $t  $self:s,R %Reis:Cit%
+            };
             if (!S) {
-                n StepNotFound  $self:N,R %Reis:Cit%
-                return
+                return puts('StepNotFound',N)
             }
             if (!Ss&ball) {
                 if (Ss&run) {
@@ -3008,14 +3025,17 @@ Coffle: | # discussion
                 }
                 if (Ss&doing) {
                     # PuTe before a doing
-                    !Ss&exp and throw "doingnoexp"
+                    if (!Ss&exp) {
+                        return puts('DoingNoExp',S)
+                        #and throw "doingnoexp"
+                    }
                     sc&DoingFor = S;
                     S = Sy&up;
                     !Ss&step and throw "!Step"
                 }
                 if (Ss&step) {
                     # PuTe before step's doings
-                    !Ss&exp and throw "doingnoexp"
+                    !Ss&exp and throw "stepnoexp"
                     S = Ss&exp;
                 }
                 else {
@@ -3029,7 +3049,7 @@ Coffle: | # discussion
             $before;
             if (D) {
                 $g = Ds&got;
-                !g and throw "DoingFor!got"
+                !g and me&tsc,"DoingFor!got",null,'6'
                 $x = Ds&exp;
                 !x and throw "DoingFor!exp"
                 if (x.t == 'City') {
@@ -3081,7 +3101,11 @@ Coffle: | # discussion
             before &&
             n before  $self:before,R %Reis:Cit%
             
-            P && (Rs&boost||0) < 1 and return
+            if (Rs&reselect) {
+                P = null;
+                
+            }
+            P && (Rs&boost||0) < 1 and return me&tsc,'stop','stop','g' .y.cv=0.7
             
             # wants a PuTe%doing:
             $P = Rs&PuTe = G&Cye,['PuTe',1];
@@ -3098,6 +3122,13 @@ Coffle: | # discussion
                 # ^ the W/.../%doingc&s for a %doing we clicked
                 # put PuTe before this %doing
                 xi = steps&z.indexOf(before);
+                if (xi < 0) {
+                    # try harder, resolve by name instead
+                    o $step/#$before
+                    before = ays&before[0];
+                    !before and debugger
+                    xi = steps&z.indexOf(before);
+                }
                 xi < 0 and debugger;
                 # throw "No such doing in step"
                 $xa = steps&z[xi-1];
@@ -3121,14 +3152,14 @@ Coffle: | # discussion
             else {
                 i $step/-#$P
                 i $step/$P
-                if (xi != null) {
-                    $inow = steps&z.indexOf(P);
-                    inow < 0 and throw "fail"
-                    if (inow != xi) {
-                        ~Spliced: xi
-                        steps&z.splice(inow,1);
-                        steps&z.splice(xi,0,P);
-                    }
+            }
+            
+            if (xi != null) {
+                $inow = steps&z.indexOf(P);
+                inow < 0 and throw "fail"
+                if (inow != xi) {
+                    steps&z.splice(inow,1);
+                    steps&z.splice(xi,0,P);
                 }
             }
             # etc and just noticed:
@@ -3248,7 +3279,7 @@ Coffle: | # discussion
             }}
         },'ift,D'],
         
-        #c Slep, a Tool for checking sameness of a Dome/anything
+        # Slep, a Tool for checking sameness of a Dome/anything
         # scan happens early and late:
         #   late first, Long/** is awake, scan boosted around Rthings
         #   early thence, scan boosted (%Rthing'd) from before
