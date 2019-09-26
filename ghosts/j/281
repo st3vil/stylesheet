@@ -3169,13 +3169,16 @@ Soogle: |
         },'ift,D'],
         ['Lines','67',&acgtRs{
             !Rs&LinesN and return
-            $rN = Rs&LinesN.slice().reverse();
+            # LinesN nonbeyond R%sleeping
+            $rN = Rs&LinesN.slice();
             # Ring may distort the order of Rs&z
-            each ir rN {
+            $i = 0;
+            while (rN[i]) {
+                $r = rN[i];
                 $ind = '';
-                $i = 0;
+                $ini = 0;
                 $dent = rc&d - Rc&d;
-                while (i < dent) { ind += '  '; i++ }
+                while (ini < dent) { ind += '  '; ini++ }
                 $s = rc&s;
                 $say = rs&toLines;
                 $lv = s.y.lv;
@@ -3192,28 +3195,66 @@ Soogle: |
                     .map(l => ind+l).join("\n");
                 #l += "\n";
                 rs&LinesForSomeone = l;
+                i++;
             }
             # o {%Lines} $R/**:
             #  leave(rN)
             #  have(%LinesForSomeone):%LinesBunch +[ %z's
             # < should do all this:
-            $all = rN.slice();
+            $l = [];
+            Rs&Bunchology = [];
+            # without duping strings in memory,
+            # Bunchology[LinesN i] = [3,6] # are LinesBunch i
+            # slice(start,end) doesn't include the end
             $stitch = &r{
-                $ri = rN.indexOf(r);
-                0 > ri and throw "wandering stitch"
-                rN.splice(ri,1);
-                $l = [rs&LinesForSomeone];
+                $ri = Rs&LinesN.indexOf(r);
+                if (0 > ri) {
+                    $ok = 0;
+                    if (rs&sleeping) {
+                        $b = Rc&b;
+                        $d = rc&b;
+                        !b && !d and throw "sleeping nob"
+                        #ds&sleeping and throw "sleepingbsleeping"
+                        $di = bs&LinesN.indexOf(d);
+                        di < 0 and throw "oldLinesN !old r"
+                        $li = bs&Bunchology[di];
+                        !li and throw "oldBunchology!"+di
+                        $bunch = bs&LinesBunch.slice(li[0],li[1]);
+                        # recycle into...
+                        ri = Rs&LinesN.push(r)-1;
+                        $sl = Rs&Bunchology[ri] = [];
+                        sl[0] = l.length;
+                        l.push(...bunch);
+                        sl[1] = l.length;
+                        return;
+                        ok = 1;
+                    }
+                    !ok and throw "wandering stitch"
+                }
+                # rN should empty, Ringwarped order
+                rN[ri] = null;
+                # LinesBunch grows
+                l.push(rs&LinesForSomeone);
+                # track indices of LinesBunch each LinesN encompasses,
+                #   helps fill in chunk when %sleeping
+                # < histogram density vs depth
+                $sl = Rs&Bunchology[ri] = [];
+                
+                sl[0] = l.length-1;
                 delete rs&LinesForSomeone;
-                !l[0] and throw r.t+" !LFS"
+                
                 # < ss&z ordered... gets parent correct for now
+                # depth first
                 each in rs&z {
                     !ns&Lines || 0 > ns&Lines.indexOf(R) and continue
-                    l.push(...stitch(n))
+                    stitch(n);
                 }
+                sl[1] = l.length;
                 return l
             };
-            Rs&LinesBunch = stitch(R).slice();
-            rN.length and throw "unfound Linesers"
+            stitch(R);
+            Rs&LinesBunch = l.slice();
+            rN.filter(n=>n).length and throw "unfound Linesers"
             Rs&string = Rs&LinesBunch.join("\n")+"\n";
             Rs&dige = dig(Rs&string);
         },'ift,D'],
