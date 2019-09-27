@@ -618,6 +618,7 @@ Packle: |
         # eg above wants lv patches along with C,
         #   to give it dimension
         # or lv wants to compress destructively
+        $taskof = &R{ return Rc&N[0].sc.task };
 
         # rebuild from Rs&C/Rs&down
         # < stop/conjoin at y&lv in there...
@@ -631,8 +632,18 @@ Packle: |
             !C and throw "non sC:"+R.t
             $c = G&Cye,C;
             # < cy&C=C?
-            cs&z and debugger;
+            if (cs&z) {
+                # opt in to destroying C that was there,
+                # looks like it might be ours if double-sleping?
+                c.t == 'patch' and delete cs&z
+                else {
+                    # lv over a builtup looking Rs&C
+                    debugger;
+                }
+            }
             each in Rs&down {
+                # check we're still in R:Dispaly?
+                nc&N != Rc&N && taskof(n) != taskof(R) and debugger;
                 ac(c,'z',pD(n));
             }
             return c

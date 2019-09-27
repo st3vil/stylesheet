@@ -141,6 +141,7 @@ Coffle: | # discussion
       differ looks to have gone weird.
       definitely want easy reaccepting changes already seen
       seeI 1.2: is one of the Is Mlimits diags wrong?
+      a slep inside a slep has some history issue, keeps spawning
     # friday:
       new A4,
         < starts from a single /js/ with
@@ -1943,12 +1944,14 @@ Coffle: | # discussion
     #     each named phase of things moresoer
     # inside W:Wobulus, after W:Fourier
     me.do_main = &acgt{
-        if (1) {
+        if (0) {
             me&J,['Pass','W',{},{timing:0}]
             me&J,'Das','W';
             me&J,'Co','W';
         }
-        #me&J,['edges','W',{},{timing:0}];
+        else {
+            me&J,['edges','W',{},{timing:0}];
+        }
         #me&J,'Fours','W';
     };
     # PassDasCo
@@ -2770,7 +2773,11 @@ Coffle: | # discussion
                         me&yfuture,s == v and ok = 1
                         else
                         me&yfuture,v == s and ok = 1
+                        #!ok and debugger;
+                        # a slep inside a slep has some history issue
+                        # keeps spawning
                         !ok and ~RMount nonmatch, same t: v.t
+                        ok = 1;
                     }
                     !ok and break
                 }
@@ -2792,11 +2799,12 @@ Coffle: | # discussion
         Rs&Middle(lug);
     };
     # get local Tool, may search
+    # < fatal
     # see 2%Tool "t'ing it out"
     me.RTool = &acgtR{
         !Rc&Tool and me.cby(R,&r{ return Rc&Tool = rc&Tool });
         $t = Rc&Tool;
-        !t and throw "NoTool"
+        #!t and throw "NoTool"
         return Rc&Tool;
     }
     
@@ -2821,6 +2829,8 @@ Coffle: | # discussion
             $r = Rs&Recipe;
             ry&Real != R and throw "NotRecipeReal"
             $t = me&RTool,R;
+            !t and ~RecipeNoTool: p.t, '/', R.t
+            !t and return
             #~>4 Recipeoutthere: p.t, '/', R.t
             # %Tool's M must have something like:
             $c = {Remote:p,Recipe:r,tool:R.t};
@@ -4449,6 +4459,8 @@ Coffle: | # discussion
                     Rs&RXbit = R.t;
                 }
                 # use inner title
+                # < leave R.t, invent another %ot for t inside R.t
+                #   may target by s.t sometimes, eg an array of C
                 R.t = s.t
             }
             if (Rs&ot == '1' || !Rs&ot && foret != R.t) {
@@ -4628,7 +4640,11 @@ Coffle: | # discussion
                 doot(1);
                 # some strangeness or the thing we're interested in
                 s&dis ||= 1;
+                $le =
                 n $R.t  $s:s,R %Cee,dupup
+                # if Cit is only a Cee, put title inside:
+                # < computed overall, paint out vagueness
+                ps&Citop and les&wanttitle = 1
             }
         },'ift,D'],
         #c as well as Cit-ing, shade and understand A
@@ -4675,9 +4691,8 @@ Coffle: | # discussion
             $depth = P.length;
             $p = R.y.up;
             
-            
-            
-            !Rs&dupup and me&domesticate,R;
+            Rs&wanttitle and debugger;
+            Rs&wanttitle || !Rs&dupup and me&domesticate,R;
 
             # decision of presentation
             p && ps&isnk || Rs&isgk and Rs&isgk = 1
@@ -4948,7 +4963,9 @@ Coffle: | # discussion
     };
     # at Display 17
     me.RbitX = &acgtR{
-        $bit = Rs&RXbit != null ? Rs&RXbit : R.t;
+        # too many places guess R.t
+        #$bit = Rs&RXbit != null ? Rs&RXbit : R.t;
+        $bit = R.t;
         # $X = {x:{$bit:$X},z:[R+]}
         # X.x.$bit = another X, inwards a $bit
         # X.z=[R that are here
