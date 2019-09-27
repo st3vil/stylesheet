@@ -3015,39 +3015,119 @@ Coffle: | # discussion
         
         ['nab_aTool','3',&acgtRs{
             $p = Ry&up;
+            Rs&Remote = ps&Remote;
+            !Rs&Remote and debugger;
             $s = pc&s;
             Rs&modeen = &acgtr{
-                # r could be in a %step or in W
+                # r could be in a %run/%step or in W
                 $template = r.t;
+                if (rs&Hostup) {
+                    $re = Rs&Remote;
+                    !re and debugger;
+                    sc&Host = rey&up;
+                    sc&As = template;
+                    return
+                }
                 # captures the next click
                 T.pickel = &acgtr{
-                    !ry&R == R and throw "pick an R"
+                    !ry&R == r and throw "pick an R"
                     sc&Host = r;
                     sc&As = template;
                     ~Pluycks
                 };
             };
-            
+            # < re-find Host and Remote by path,
+            #   < continuous push Te/edges->latest PuTe
+            # < and copying the latest %step%ok,
+            #   to keep %H so diff is of changes
+            # < porting these to io knowing A%ball/C first-ish
+            $mez = {
+                forballs: &acgtR{
+                    if (!Rs&ball) {
+                        # to origin
+                        Rs&push and R = Rs&here
+                        else
+                        Rs&exp and R = Rs&exp
+                        
+                        Rs&Ropy and R = Rs&Ropy
+                    }
+                    !Rs&ball and throw "No a ball: "+R.t
+                    return Rc&s
+                },
+                link: &acgtR{
+                    $h = mez&forballs,Rs&Host;
+                    $r = mez&forballs,Rs&Remote;
+                    i $h/$r
+                    return r
+                },
+                move: &acgtR{
+                    $r = mez&link,R;
+                    $re = Rs&Remote;
+                    re = mez&forballs,rey&up;
+                    i $re/-$r
+                    i $h/$r
+                },
+                clone: &acgtRc{
+                    c ||= {};
+                    $h = mez&forballs,Rs&Host;
+                    $r = mez&forballs,Rs&Remote;
+                    $s = me&Copy,R,r,12 .c.s;
+                    c.aftCopy and c.aftCopy(s)
+                    i $h/$s
+                    return s
+                },
+                step: &acgtR{
+                    # has set Host = Remotey&up %step
+                    $c = {aftCopy:&s{
+                        # rename/number increment before io.i (tv)
+                        $title = s.t.split('_');
+                        $n = isnum(title.slice(-1)[0]) && title.pop() || 0;
+                        n++;
+                        title.push(n);
+                        s.t = title.join('_');
+                    }};
+                    mez&clone,R,c;
+                },
+            };
             # < ensure this Display gets somewhere
             if (sc&Host) {
-                $reselect = me&rollbs,R,'Host' && sc&Host != Rs&Host;
+                $reselect = me&rollbs,R,'Host' != sc&Host && Rs&Host;
                 Rs&Host = sc&Host = me&yfuture,sc&Host;
                 n Host  $self:Rs&Host,R %Reis:Cit%
                 
                 if (sc&As) {
-                    $t = '%'+sc&As+':';
-                    n $sc&As  $s:t %fs:11,medo:modeen
                     Rs&As = sc&As;
-                    $tem =
-                    n $Rs&As  R:1
-                    tem.sc['nab_'+Rs&As] = 1
-                    reselect and tems&reselect = 1
-                    reselect and me&tsc,'reselect',null,'g'
+                    $t = Rs&As+':';
+                    $k = 'nab_'+Rs&As;
+                    $mo =
+                    n $Rs&As  $s:t %fs:11,medo:modeen
+                    if (mez[Rs&As]) {
+                        # some kinda...
+                        me&rollbs,R,'done' and return me&tsc,"Done"
+                        mez[Rs&As](A,C,G,T,R);
+                        Rs&done = 1;
+                    }
+                    else {
+                        # makes an R%nab_$As,
+                        #  probably making an %$As:
+                        moc&s = '%'+moc&s;
+                        $tem =
+                        n $Rs&As  R:1
+                        tem.sc[k] = 1
+                        reselect and tems&reselect = 1
+                        reselect and me&tsc,'reselect',null,'g'
+                    }
                 }
             }
             else {
-                # picks action; picks Host
+                # add/update %testrun %step W:PuTe%doing
                 n PuTe  s:%PuTe? %fs:11,medo:modeen
+                # copy somewhere
+                n link  s:link %fs:9,ma:1,medo:modeen
+                n move  s:move %fs:9,ma:1,medo:modeen
+                n clone  s:clone %fs:9,ma:1,medo:modeen
+                # not picking, set Host = Remotey&up
+                n step  s:step %fs:9,ma:1,medo:modeen,Hostup
             }
         },'ift,D'],
         
