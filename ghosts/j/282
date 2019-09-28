@@ -1502,6 +1502,14 @@ Coffle: | # discussion
                 }
                 # the object
                 n Cit  $self:W,R %Reis:Cit,set:Cit
+                
+                # and the Co-sync scan that might have failed on its own:
+                $gs = gc&s;
+                $tr = gsy&triedcopy;
+                if (tr) {
+                    n Tried  $self:tr,R %Reis:Cit,set:Cit,hue:90
+                    me&diffya,R,"triedtospeed",tr,x,dc;
+                }
             }
             Rs&ok and return me&tsc,'ok','ok','p'
             
@@ -2063,6 +2071,7 @@ Coffle: | # discussion
             }
             my&began ||= G&time;
             $ii = 0;
+            !ms&z and return;
             while (ms&z[ii]) {
                 # a step
                 $S = ms&z[ii];
@@ -2106,15 +2115,19 @@ Coffle: | # discussion
                     
                     $doings = me&ioty,step,'%doing';
                     Ss&z.length != doings.length and continue
-                    $R = me&Resurrect,'CoCopy';
+                    
+                    $R = rc&N[0].y.I;
+                    R = me&Re,R,'nothings';
+                    Rc&N = [R];
                     $ok = 1;
                     each in doings {
                         !ns&exp and throw "doing!exp"
                         n = ns&exp;
                         $C = Ss&z[i];
-                        $c = me&Copy,R,C,{ball:0,Lines:3,ov:8};
+                        $c = me&Copy,R,C,{ball:9,Lines:3,ov:8};
                         cs&dige != ns&H and ~test2notok: S.t, C.t, cs&dige, ns&H
                         cs&dige != ns&H and ok = 0
+                        !ok and C.y.triedcopy = c;
                         !ok and break
                     }
                     !ok and continue
@@ -4861,7 +4874,6 @@ Coffle: | # discussion
             $depth = P.length;
             $p = R.y.up;
             
-            Rs&wanttitle and debugger;
             Rs&wanttitle || !Rs&dupup and me&domesticate,R;
 
             # decision of presentation
