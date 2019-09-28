@@ -2771,14 +2771,26 @@ Coffle: | # discussion
                     # just yfuture?
                     if (typeof v == 'object' &&
                         v.t == s.t) {
-                        me&yfuture,s == v and ok = 1
-                        else
-                        me&yfuture,v == s and ok = 1
-                        # < if cby .t are the same
+                        ok = 1;
+                        if (v.y.R) {
+                            ok = 0;
+                            # should be able to be precise as yfuture,
+                            me&yfuture,s == v and ok = 1
+                            else
+                            me&yfuture,v == s and ok = 1
+                            # or maybe J/path/
+                            if (!ok &&
+                                me&namup,s,1 .join('/') ==
+                                me&namup,v,1 .join('/')) {
+                                ok = 1;
+                                $was = me&namup,s,1 .join('/');
+                                ~RMount resorts to path match: was
+                            }
+                        }
                         #!ok and debugger;
                         # a slep inside a slep has some history issue
                         # keeps spawning
-                        !ok and ~RMount nonmatch, same t: v.t
+                        #!ok and ~RMount nonmatch, same t: v.t
                         #ok = 1;
                     }
                     !ok and break
