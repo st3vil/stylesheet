@@ -159,6 +159,7 @@ Coffle: | # discussion
            and $W:edges is further inside, etc
              find refs for $W:City/*
           possibly need more %Lines gathering points
+           or a function to gather them on demand
        < diffing T/$W:edges <-> W:PuTe/$W:edges,
          producing R in T/$W that have the change,
           and those that are merely transporting it
@@ -2313,6 +2314,8 @@ Coffle: | # discussion
             step ||= s
         });
         S.t != step.t and throw "Herestept"
+        # don't check the last step, %run is about to
+        !stepn and return G&yl,0,4c&callback
 
         $doings = me&ioty,step,'%doing';
         Ss&z.length != doings.length and return
@@ -3006,7 +3009,59 @@ Coffle: | # discussion
     #c Toolingness
     # medo for attachey/toggley %ball%fixes
     # < applying styles
-    
+    me.ballio = &acgtR{
+        !R and throw "!youR"
+        # < porting these to io knowing A%ball/C
+        return {
+            # finds %ball.c.s
+            forballs: &acgtR{
+                if (!Rs&ball) {
+                    # to origin
+                    Rs&push and R = Rs&here
+                    else
+                    Rs&exp and R = Rs&exp
+
+                    Rs&Ropy and R = Rs&Ropy
+                }
+                !Rs&ball and throw "No a ball: "+R.t
+                return Rc&s
+            },
+            link: &acgtR{
+                $h = mez&forballs,Rs&Host;
+                $r = mez&forballs,Rs&Remote;
+                i $h/$r
+                return r
+            },
+            move: &acgtR{
+                $r = mez&forballs,Rs&Remote;
+                $re = Rs&Remote;
+                re = mez&forballs,rey&up;
+                i $re/-$r
+                $r = mez&link,R;
+            },
+            clone: &acgtRc{
+                c ||= {};
+                $h = mez&forballs,Rs&Host;
+                $r = mez&forballs,Rs&Remote;
+                $s = me&Copy,R,r,12 .c.s;
+                c.aftCopy and c.aftCopy(s)
+                i $h/$s
+                return s
+            },
+            step: &acgtR{
+                # has set Host = Remotey&up %step
+                $c = {aftCopy:&s{
+                    # rename/number increment before io.i (tv)
+                    $title = s.t.split('_');
+                    $n = isnum(title.slice(-1)[0]) && title.pop() || 0;
+                    n++;
+                    title.push(n);
+                    s.t = title.join('_');
+                }};
+                mez&clone,R,c;
+            },
+        }
+    };
     me.tangulate = &acgtR{
         $Te = Rs&Te;
         !Te and return
@@ -3027,7 +3082,7 @@ Coffle: | # discussion
         }
     };
     
-    # prop up M, ensures a lug.c like c
+    #c prop up M, ensures a lug.c like c
     me.RMount = &acgtRc{
         $M = Rs&Mout;
         !M and throw "NoMout"
@@ -3346,55 +3401,7 @@ Coffle: | # discussion
             #   < continuous push Te/edges->latest PuTe
             # < and copying the latest %step%ok,
             #   to keep %H so diff is of changes
-            # < porting these to io knowing A%ball/C first-ish
-            $mez = {
-                forballs: &acgtR{
-                    if (!Rs&ball) {
-                        # to origin
-                        Rs&push and R = Rs&here
-                        else
-                        Rs&exp and R = Rs&exp
-                        
-                        Rs&Ropy and R = Rs&Ropy
-                    }
-                    !Rs&ball and throw "No a ball: "+R.t
-                    return Rc&s
-                },
-                link: &acgtR{
-                    $h = mez&forballs,Rs&Host;
-                    $r = mez&forballs,Rs&Remote;
-                    i $h/$r
-                    return r
-                },
-                move: &acgtR{
-                    $r = mez&forballs,Rs&Remote;
-                    $re = Rs&Remote;
-                    re = mez&forballs,rey&up;
-                    i $re/-$r
-                    $r = mez&link,R;
-                },
-                clone: &acgtRc{
-                    c ||= {};
-                    $h = mez&forballs,Rs&Host;
-                    $r = mez&forballs,Rs&Remote;
-                    $s = me&Copy,R,r,12 .c.s;
-                    c.aftCopy and c.aftCopy(s)
-                    i $h/$s
-                    return s
-                },
-                step: &acgtR{
-                    # has set Host = Remotey&up %step
-                    $c = {aftCopy:&s{
-                        # rename/number increment before io.i (tv)
-                        $title = s.t.split('_');
-                        $n = isnum(title.slice(-1)[0]) && title.pop() || 0;
-                        n++;
-                        title.push(n);
-                        s.t = title.join('_');
-                    }};
-                    mez&clone,R,c;
-                },
-            };
+            $mez = me&ballio,R;
             # < ensure this Display gets somewhere
             if (sc&Host) {
                 $reselect = me&rollbs,R,'Host' != sc&Host && Rs&Host;
@@ -3410,7 +3417,7 @@ Coffle: | # discussion
                     if (mez[Rs&As]) {
                         # some kinda...
                         me&rollbs,R,'done' and return me&tsc,"Done"
-                        mez[Rs&As](A,C,G,T,R);
+                        mez[Rs&As](A,C,G,T,Rs&Host,Rs&Remote);
                         Rs&done = 1;
                     }
                     else {
