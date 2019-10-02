@@ -1590,10 +1590,14 @@ Coffle: | # discussion
         #c step acceptor
         # %push's %step/%doings build up %ok
         # < hang %step on the %here %ball it's for
-        ['step','2',&acgtRs{
+        ['step','3',&acgtRs{
             Rs&rowish = 1;
             $p = me&zoep,R,{up:'%push'},'step','S','';
             $m = me&rollcounty,R,'mem',{per:ps&run};
+            
+            # if no elvising around here, complete steps fold
+            !Rs&Te || !Rs&Te.c and me&rollbs,R,'whileago'
+            Rs&whileago and return me&tsc,'whileago','-----------------',6
             
             # go main/mained %step -> %do
             $N = me&ioty,Rs&got,'%ball';
@@ -1607,6 +1611,36 @@ Coffle: | # discussion
                 i++;
             }
         },'ift,D'],
+        ['step','8',&acgtRs{
+            Rs&whileago and return
+            # our %doings must be ok
+            # < o %doing{all:%ok}
+            #  < the all: being a grouping function
+            $N = me&ioty,R,'%doing';
+            $ok = 1;
+            each ir N {
+                !rs&ok and ok = 0
+            }
+            !ok and return
+            # %step%ok
+            Rs&ok = 1;
+        },'ift,D'],
+        ['step','82',&acgtRs{
+            Rs&whileago and return
+            # must be a %step%ok after us
+            # < o ../$R,{%step%ok}
+            #  < knowing that %ok is imperative to the next %step
+            #     don't mind if there's random stuff between %steps
+            #     they should be strewn through documentation
+            $p = Ry&up;
+            $N = me&ioty,p,'%step';
+            while (N[0] != R) { N.shift() }
+            N.shift();
+            $aft = N.shift();
+            !aft || !afts&ok and return
+            Rs&whileago = 1;
+        },'ift,D'],
+        #c %doing
         ['doing','3',&acgtRs{
             $p = me&zoep,R,{up:'%step%push'},'doing','.','';
             $m = me&rollcounty,R,'mem',{per:ps&run};
