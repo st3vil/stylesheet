@@ -2224,9 +2224,22 @@ Soogle: | # start from Sevo
         $p = A.1 == A.3 ? 4s&elvisory : 2s&Te;
         !p and return
         $t = C.t;
-        $v = p&tv $t;
-        !v and return
-        1s&Te = v;
+        $Te = p&tv $t;
+        !Te and return
+        1s&Te = Te;
+        me&TeyReal,Te,A.1;
+    };
+    # TeyReal sometimes a J
+    # < it's our holding of this Te that has the c&cel
+    #   and could it be on Te.c? shows sleep map
+    me.TeyReal = &acgtts{
+        ty&Real == s and return
+        
+        # Te's first lifecycling:
+        !ty&Real and ty&cel = 1
+        else { delete ty&cel }
+        
+        ty&Real = s;
     };
     # R gets %Te and/or rolls:
     #  $k - Tes&$k given to Rs&$k
@@ -2249,6 +2262,7 @@ Soogle: | # start from Sevo
         Ry&R == R && Rc&N[0] && Rc&N[0].sc.task == 'C' and t = Rc&s.t
         return t
     };
+    # makes yReal if found
     me.Tie = &acgtRkd{
         Ry&R != R and throw "notR"
         if (!Rs&Te) {
@@ -2277,6 +2291,8 @@ Soogle: | # start from Sevo
         }
         $Te = Rs&Te;
         !Te || !Te.c and return
+        
+        me&TeyReal,Te,R;
         # return the Rs&Te if it is real (see error-avoidance ^)
         if (k) {
             # roll sc from Te to R
@@ -2317,21 +2333,31 @@ Soogle: | # start from Sevo
     #  for setting boost that can then wander off as per
     # or just materialise the Teing to $R and return it
     me.introqua = &acgtRcq{
+        # for A.1
+        R ||= [A.1.t];
+        c && typeof c == 'string' and c = G&peel,c
+        # c&el, the part of C lifecycle
+        $cel = q;
         $N;
         if (R.constructor == Array) {
+            # for ['path','s']
             N = R
         }
         else {
+            # for Rs&Te, resolved if not:
             me&Tie,R;
-            $h = Rs&Te;
-            # h && h.c means it was already
-            #  to push some init state to begin a Te
-            'ifel1' == q && h && h.c and return
             # randomly check I...R uplinkage
             N = me.cby(R);
             N.shift().t != 'I' and throw "I!=0"
         }
         $el = me&stackTe,N;
+        
+        # yReal means it was already
+        #  to push some init state to begin a Te
+        cel == '@1' and ely&cel != '1' and c = {}
+        else
+        cel and throw "cel:"+cel
+        
         each kv c {
             el.sc[k] = v
         }
@@ -3354,11 +3380,12 @@ Soogle: | # start from Sevo
                 return
             }
             
-            if (sc&J || ss&H || s.y.lv) {
+            # exciting modes in the landscape
+            if (ss&J || ss&H || s.y.lv || ss&quiet) {
                 # should become or is a separate object
                 #  H being dig(toLines(object))
                 #  y&lv having %Lines better than s does
-                sc&J &&
+                ss&J &&
                 n J  s:J %fs:14,hs:966
                 ss&H &&
                 n H  s:H %fs:14,hs:966
@@ -3367,8 +3394,10 @@ Soogle: | # start from Sevo
                     # resists any innards
                     Rc&nofurther = 1;
                 }
+                ss&quiet &&
+                n quiet  s:q %fs:14,hs:966
                 # resists displaying innards
-                Rs&boost > 0 and 'open'
+                Rs&boost > 0 and Rs&boost--
                 else {
                     Rs&nofurtherDisplay = 1;
                     ss&z &&
