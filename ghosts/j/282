@@ -1303,7 +1303,7 @@ Coffle: | # discussion
                 $t = nc&to;
                 t ||= nc&into;
                 !t || !ts&ball and throw "move not sure of t%ball"
-                !t || !fs&ball and throw "move not sure of f%ball"
+                !f || !fs&ball and throw "move not sure of f%ball"
                 # us, last time
                 $p = nc&pusher;
                 nc&push = R;
@@ -2701,6 +2701,22 @@ Coffle: | # discussion
     me.sublatePassT = &acgtt{
         me&introqua,['Pass','Ha','ravel','T',t],{boost:-1}
     };
+    # some %ball %fix%play
+    me.fixstate = &acgtR{
+        $p = Ry&up;
+        $s = pc&s;
+        if (Rs&fix == 'sc') {
+            if (R.t == 'W') {
+                $v = ss&W;
+                # becomes signpost leading in
+                $l = me.cbu(R,'openness');
+                ls&openness.push(p);
+                me&tsc,'%play','Vis:'+l.t
+            }
+            else { me&tsc,'%play?' }
+        }
+        else { me&tsc,'%play?' }
+    };
     me.ravel = &acgtR{ return [
         #... me&Displayingness ,
         ... me&DisplayTwoness ,
@@ -2722,6 +2738,7 @@ Coffle: | # discussion
                     ls&boost = 2;
                     me&introqua,l,{boost:1},'ifel1'
                 },
+                fix: &acgtR{  },
             };
             # A.4 to/run/from, shared
             # is the local stage, our gear projected on
@@ -2736,21 +2753,39 @@ Coffle: | # discussion
             n Tool  R %Tool
             
             # < the openness
-            $op = {
-                W:'Ha',
-                #Ww:'large_edges',
-            };
-            each kv op {
-                # open textfile
-                n $k  $lookup:v,R %ballse
+            $opN = me&rollbs,R,'openness' || [];
+            opN.unshift('Pass');
+            each in opN {
+                if (typeof n == 'string') {
+                    # open textfile
+                    n $n  $lookup:n,R %ballse
+                }
+                else {
+                    # some %ball s&W%fix%play becomes signpost leading in
+                    !ns&ball and throw "openness !%ball"
+                    $s = nc&s;
+                    $k = s.t;
+                    if (!localStorage[k]) {
+                        !ns&toLines and throw "ball to store !toLines"
+                        localStorage[k] = ns&toLines+"\n";
+                        # < upgrading n%ball to separate storage,
+                        #   taking its innards
+                        # not working? could be much better expressed,
+                        # in a desire with many pull/push parts
+                        #!me&sch_gotstring,R,n and debugger;
+                        #localStorage[k] = ns&string;
+                    }
+                    n $k  $lookup:k,R %ballse
+                }
                 #,dragelvis:projvey
             }
-            
+            # re-elect
+            Rs&openness = [];
             
             n G  $kvstore:localStorage,R %ballse
         },'ift,D'],
         
-        # lookup %ball/*.t in G
+        #c lookup %ball/*.t in G
         # assorted W you asked for, bay of incoming remotes
         #   elvising/G&t-ish interface to mysterious places
         ['lookup','2',&acgtRs{
