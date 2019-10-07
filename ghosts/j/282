@@ -2428,6 +2428,7 @@ Coffle: | # discussion
                 mainJs = Js[m.t] = {};
             }
             my&began ||= G&time;
+            my&began_stepping = G&time;
             $ii = 0;
             !ms&z and return;
             while (ms&z[ii]) {
@@ -2449,7 +2450,10 @@ Coffle: | # discussion
                         c&s = tw[c&points];
                         !c&s and s&err = "No points: "+c&points; continue
                     }
+                    
+                    # 6
                     $live = me&adoing;
+                    
                     lives&W and mainJs[C.t] = 1
                     # if another, keep it instead
                     tw[C.t] = C.y.D = live || C;
@@ -2459,9 +2463,11 @@ Coffle: | # discussion
                     }
                 }
                 ii++;
+                
+                # Co speed
                 dideverything && ms&testrun == '2'
                     && !my&nospeeding
-                    && me&doN_speeding,m,S;
+                    && me&doN_speeding,m,S
             }
         }
     };
@@ -2481,13 +2487,17 @@ Coffle: | # discussion
         }
         return q.C;
     };
-    # for %testrun=2, check got exp and pull next step
-    # < know if we want to pause somewhere?
+    #c Co speed for %testrun=2
+    # check got exp and pull next step
+    #  steps&boost pauses
+    # < put next to the step puller
+    #   configurable step puller?
+    #    is the step with cognition on it, many appliables
     me.doN_speeding = &acgtmS{
         # has the foreign Affair W...%run
-        if (G&time,my&began > 19) {
+        if (G&time,my&began_stepping > 5) {
             ~>6 Speeding longtime: m.t
-            return
+            return 1
         }
         $r = my&run;
         $step = null;
@@ -2499,9 +2509,10 @@ Coffle: | # discussion
         });
         S.t != step.t and throw "Herestept"
         # don't check the last step, %run is about to
-        !stepn and return G&yl,0,4c&callback
+        !stepn and G&yl,0,4c&callback; return
         
-        steps&boost and return;
+        # steps&boost pauses
+        steps&boost and return
 
         $doings = me&ioty,step,'%doing';
         Ss&z.length != doings.length and return
@@ -2520,7 +2531,6 @@ Coffle: | # discussion
             #!ok and C.y.triedcopy = c;
             !ok and break
         }
-        !ok and my&nospeeding = 1
         !ok and return
         # add another step
         $step = stepn;
@@ -2703,10 +2713,8 @@ Coffle: | # discussion
             #n so  $self:s,R %sun
         },'if:h,D'],
     ] };
-    #c ravel about their state,
-    # become straight, become curvy, cellvey
-    # have things wanting to be streamed uphill
-    # showing interfaces where things can come across
+    #c ravelabhion straight curvy cellvey
+    # have wanting uphill showing where come
     
     # h's ss&rovo='atype' -> Rs&atype = 1
     me.Rscinsideness = &acgtk{
@@ -2794,6 +2802,10 @@ Coffle: | # discussion
             n sp  s:\n
         }
     };
+    #c ravel about their state,
+    # become straight, become curvy, cellvey
+    # have things wanting to be streamed uphill
+    # showing interfaces where things can come across
     me.ravel = &acgtR{ return [
         #... me&Displayingness ,
         ... me&DisplayTwoness ,
@@ -2810,6 +2822,7 @@ Coffle: | # discussion
             #  e /T -run . %does:TeCo %boost:2
             Rs&playsheet = {
                 ball: &acgtR{
+                    ~Ballplay: ki(Rc&s)
                     $l = me&push,R,['/','T'],[],'run',{does:'TeCo'};
                     Rs&Te && Rs&Te.sc.almost and ls&almost = 1;
                     ls&boost = 2;
