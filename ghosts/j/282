@@ -2743,22 +2743,6 @@ Coffle: | # discussion
         },'if:h']
         ]
     };
-    # some %ball %fix%play
-    me.fixstate = &acgtR{
-        $p = Ry&up;
-        $s = pc&s;
-        if (Rs&fix == 'sc') {
-            if (R.t == 'W') {
-                $v = ss&W;
-                # becomes signpost leading in
-                $l = me.cbu(R,'openness');
-                ls&openness.push(p);
-                me&tsc,'%play','Vis:'+l.t
-            }
-            else { me&tsc,'%play?' }
-        }
-        else { me&tsc,'%play?' }
-    };
     # < bright future of the backroom
     # < for the enclosing %gee
     me.Ja.gc = &acgt{
@@ -2834,7 +2818,7 @@ Coffle: | # discussion
     };
     # makes D for q, thing attachment mode specifics
     #  D also gets how to act
-    Be.cutch = &acgtRsqc{
+    Be.cutch = &acgtqc{
         $D = G&Cye,[q.tatch,5,c||{}];
         !D.t and throw "!t"
         # sc from matching
@@ -2843,10 +2827,25 @@ Coffle: | # discussion
         Be[D.t] and ex(D.c,Be[D.t])
         return D
     };
+    
+    # 27%play + ^^%playsheet -> 
+    Be.plays = &acgtRs{
+        Be&scan,R,s
+            .map(q => Be&cutch,q )
+            .map(D => Be&playit,R,s,D );
+    };
+    Be.playit = &acgtRsD{
+        Dc&play and Dc&play(A,C,G,T,R,s)
+        else {
+            # < thing's sc wants upgrading mode
+            me&tsc,"unknown-%ball-%play"
+        }
+    };
+    
     # 3%ball sprawls to thing:
     Be.lums = &acgtRs{
         Be&scan,R,s
-            .map(q => Be&cutch,R,s,q,{ohm:1} )
+            .map(q => Be&cutch,q,{ohm:1} )
             .map(D => Be&lumit,R,s,D )
     };
     Be.lumit = &acgtRsD{
@@ -2857,7 +2856,8 @@ Coffle: | # discussion
         nc&s.length > 5 and Dc&symbolsize ||= -5
         Dc&symbolsize and ns&fs += Dc&symbolsize
         
-        # c&nofurther may resist any more
+        # c&nofurther - stop adding R under this one
+        #  recursion control
         Dc&exRc and ex(R.c,Dc&exRc);
         
         # %play things tend to hide/represent in-%balls
@@ -2875,39 +2875,65 @@ Coffle: | # discussion
         # do more display?
         # look up for a qua ac?
     };
+    
+    # R%ball r%fix (already matched)
+    # < reuse D via R
+    Be.fixs = &acgtrq{
+        $R = ry&up;
+        !Rs&ball and throw "What"
+        $D = Be&cutch,q;
+        # Be&lumit,R,s,D;
+        # insist on ...
+        Dc&play && rc&s == '1' and me&tsc,'onething','=1'
+        ~fixs: Dc&play, D.t, rc&s
+    };
+    
+    #c Bersons
     Be.sc = {};
+    # s&J
+    # probably a J:1,
+    # < make W from the elvisory
     Be.sc.J = 'sJ';
+    # s&H
+    # stored object
+    # < know exactly where it is (/G/*)
+    # < know history of it across history of s
+    # < history of s vs. history of R, getbetween.
+    #   values exist somewhere fractionable in Domes,
+    #   pinned down every so often from various angles
+    #    and resolutions yada
+    #   simply have to play lv in reverse, watching path
+    #    lv must play from an el<3
+    #    to know it has everything in the situ,
+    #     which could be localised to part of the path
+    #     < lv requests should serve grep into paths
+    #       thence almost-Lines wants to end up in a database
     Be.sc.H = 'sH';
+    # s&quiet
+    # eg a Js&Te doing usual work
     Be.sc.quiet = 'squiet';
     Be.squiet = {symbol:'q'};
     Be.y = {};
+    # y&lv
+    #  boundary to a done thing that will join to us
+    #  eg. your %Lines hoists the s.y.lv as itself
     Be.y.lv = 'ylv';
     Be.ylv = {symbolsize:-2,exRc:{nofurther:1}};
+    
     Be.sc.testrun = 'stestrun';
     Be.stestrun = {play:&acgtRs{
         $l = me&push,R,['/','T'],[],'run',{does:'TeCo'};
         Rs&Te && Rs&Te.sc.almost and ls&almost = 1
         me&introqua,l,'boost:2','@1'
     }};
+    
     Be.sc.W = 'sW';
     Be.sW = {play:&acgtRs{
-        
+        # becomes signpost leading in
+        $l = me.cbu(R,'openness');
+        ls&openness.push(p);
+        me&tsc,'%play','Vis:'+l.t
     }};
-    
-    # 27%play + ^^%playsheet -> 
-    Be.plays = &acgtRs{
-        Be&scan,R,s
-            .map(q => Be&cutch,R,s,q )
-            .map(D => Be&playit,R,s,D );
-    };
-    Be.playit = &acgtRsD{
-        # 
-        Dc&play and Dc&play(A,C,G,T,R,s)
-        else {
-            # < thing's sc wants upgrading mode
-            me&tsc,"unknown-%ball-%play"
-        }
-    };
     
     
     
