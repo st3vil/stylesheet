@@ -2818,25 +2818,35 @@ Coffle: | # discussion
     };
     # makes D for q, thing attachment mode specifics
     #  D also gets how to act
-    Be.cutch = &acgtqc{
+    Be.cutch = &acgtRqc{
         $D = G&Cye,[q.tatch,5,c||{}];
         !D.t and throw "!t"
         # sc from matching
         q and ex(D.sc,q)
         # c from matched, the how
         Be[D.t] and ex(D.c,Be[D.t])
+        # known properties on %ball%Be
+        if (Ds&nk && Ds&gk) {
+            # < Rc&X.Be.nk_gk for:   and Dc&b...
+            $be = Rs&Be ||= {};
+            be = be[Ds&nk] ||= {};
+            be[Ds&gk] = D;
+        }
         return D
     };
     
     # 27%play + ^^%playsheet -> 
     Be.plays = &acgtRs{
         Be&scan,R,s
-            .map(q => Be&cutch,q )
+            .map(q => Be&cutch,R,q )
             .map(D => Be&playit,R,s,D );
     };
     Be.playit = &acgtRsD{
+        !Rs&ball and throw "What"
         Dc&play and Dc&play(A,C,G,T,R,s)
         else {
+            # vaguely know it, not a c&play-er
+            # < later check some Be used the %play
             # < thing's sc wants upgrading mode
             me&tsc,"unknown-%ball-%play"
         }
@@ -2845,7 +2855,7 @@ Coffle: | # discussion
     # 3%ball sprawls to thing:
     Be.lums = &acgtRs{
         Be&scan,R,s
-            .map(q => Be&cutch,q,{ohm:1} )
+            .map(q => Be&cutch,R,q,{ohm:1} )
             .map(D => Be&lumit,R,s,D )
     };
     Be.lumit = &acgtRsD{
@@ -2878,13 +2888,14 @@ Coffle: | # discussion
     
     # R%ball r%fix (already matched)
     # < reuse D via R
-    Be.fixs = &acgtrq{
+    Be.fixit = &acgtrsD{
         $R = ry&up;
+        !rs&fix and throw "What"
         !Rs&ball and throw "What"
-        $D = Be&cutch,q;
-        # Be&lumit,R,s,D;
-        # insist on ...
-        Dc&play && rc&s == '1' and me&tsc,'onething','=1'
+        if (Dc&play) {
+            # likely to show %fixs
+            s == '1' and me&tsc,'onething','=1'
+        }
         ~fixs: Dc&play, D.t, rc&s
     };
     
@@ -2931,7 +2942,7 @@ Coffle: | # discussion
     Be.sW = {play:&acgtRs{
         # becomes signpost leading in
         $l = me.cbu(R,'openness');
-        ls&openness.push(p);
+        ls&openness.push(R);
         me&tsc,'%play','Vis:'+l.t
     }};
     
