@@ -4263,58 +4263,83 @@ Coffle: | # discussion
         }
         return R
     };
-    #c Rbitology. history, ...
+    #c RbitX
+    =pod
+    
+    Receive the past (V) and make a now (X)
+    
     # X is the space index...
     #  of X.x.$bit = X (inwards)
     #     X.z = [ R nodes
-    #
-    # clone for destructive history
-    me.RbitXtend = &acgtV{
-        V = ex({},V);
-        V.z and V.z = V.z.slice()
-        V.x and V.x = ex({},V.x)
-        return V
-    };
-    # at Display 17
-    me.RbitX = &acgtR{
-        # too many places guess R.t
-        #$bit = Rs&RXbit != null ? Rs&RXbit : R.t;
-        $bit = R.t;
-        # $X = {x:{$bit:$X},z:[R+]}
-        # X.x.$bit = another X, inwards a $bit
-        # X.z=[R that are here
-        Rc&X ||= {};
-        Rc&X.x ||= {};
-        $X = Rc&X = Rc&X.x[bit] ||= {};
+    simply inherited, moved into, children made with
+    cX/V is carelessly inherited
+    each R goes inside each
+     toplevel R=I, r=C, makes IcX
+    
+      Re gives children:
+        # X - names for history
+        rc&X = Rs&X ||= {};
+        $b = Rc&b;
+        # V - names from history
+        rc&V = b && bs&X ? me&RbitXtend,bs&X : {};
+      
+    =cut
+    
+    me.RbitXingness = &acgt{ return [
+        ['RbitX','17',&acgtRs{ me&arriveRbitX,R,R.t },'if:RcX'],
+        ['RbitX','4',&acgtRs{  me&goneRbitX,R },'if:h'],
+        ['RbitX','91',&acgtRs{ me&applyRbitX,R },'if:h'],
+    ] };
+    # the named self resolves in 17:
+    me.arriveRbitX = &acgtR,bit{
+        # X goes inside
+        #  RcX = Rs&X = {} at Resurrect
+        #   Re inherits us RcX and RcV,
+        #    we simply move into the name we are
+        $X = Rc&X ||= {};
+        # < X.up more conducive to simple transplants
+        X.top ||= {};
+        X.x ||= {};
+        X = Rc&X = X.x[bit] ||= {top:X.top};
+        X.x ||= {};
         X.z ||= [];
-        if (X.z.length) {
-            # dups allowed, assumes same ordering
-            if (X.z[0] == s) {
-                ~duup: ki(s,3), ki(X.z[0],3)
-            }
-        }
-        X.z.push(R);
-        
-        # history at te top
-        Rc&V ||= {};
-        Rc&V.x ||= {};
+        X.z.length and 'dups allowed'
+        $i = X.z.push(R);
+        # me&Re gives children X from this point
+        Rs&X = X;
+        # < the simple inheritance isn't simply implemented
+
         # someone gave you V that used to be X
-        $V = Rc&V.x[bit] || {};
-        $b = V && V.z && V.z.shift();
-        # only goners remain
-        b && !V.z.length and delete Rc&V.x[bit]
-        # children inherit the bit past
+        # but let's depend on X.z being as it was, not X.x
+        #  to make history easier to forge
+        $V = Rc&V && Rc&V.x && Rc&V.x[bit] || {};
+        # X (new) must hold which V (old) z we're up to
+        $b;
+        if (V && V.z && V.z[i-1]) {
+            b = V.z[i-1];
+            # V is an X becoming the past
+            bc&X != V and throw "bcX != V"
+            # let yfuture find b->R if not commit
+            # not for anything else
+            V.newz ||= [];
+            V.newz[i-1] = R;
+        }
         # care to leave history
-        Rc&V = V = V ? me&RbitXtend,V : {};
+        # = V ? me&RbitXtend,V : {};
+        Rc&V = V;
         if (b) {
             Rc&b = b;
-            by&future = R;
             # no further back
             bc&b and bc&b;
         }
     };
-    # at Display 4
-    me.RbitXgonism = &acgtR{
+    
+    # and is supposed to be completed by 4
+    # < by the time it is 4?
+    # < decide moves by new/gone pairs with similar appearance
+    #   the thing producing changes may be willing to help
+    me.goneRbitX = &acgtR{
+        R != Rc&N[0] and throw "!head"
         # atoms in locations, another lives
         $N = Rc&N;
         each iR N {
@@ -4322,17 +4347,83 @@ Coffle: | # discussion
             $s = Rc&s;
 
             $V = Rc&V;
+            $X = Rc&X;
             if (V) {
-                V.z && !V.z.length and delete V.z
-                each ip V.x {
-                    Rs&gone ||= [];
-                    Rs&gone.push(p);
+                each kv V.x {
+                    $x = X.x[k];
+                    # @93, R:Display, not around yet
+                    k == 'Display' and continue
+                    if (!x || x.z.length < v.z.length) {
+                        # < filter to goners yup==Rc&b
+                        Rs&gone ||= [];
+                        Rs&gone.push(... v.z.slice(x ? x.z.length : 0));
+                    }
                 }
             }
-            Rs&gone and me&chR,R,'Goners:'+ki(Rs&gone)
+            Rs&gone and me&chR,R,'Goners:'+(Rs&gone.length)
             !b and me&chR,R,'new!'
         }
     };
+    # commits the wiring of past to future at 91
+    #  almost at the same time osc/I will
+    # before Display
+    me.applyRbitX = &acgtR{
+        R != Rc&N[0] and throw "!head"
+        $N = Rc&N;
+        each iR N {
+            $b = Rc&b;
+            !b and continue
+            # check this is still our history?
+            # eg. the second slep/slan takes over X.newz
+            #   after a deleteRbitX reduces X.z
+            #Rc&V.newz.indexOf(R) >= 0 and continue
+            by&future = R;
+            # no further back
+            !bc&b and continue
+            b = bc&b;
+            delete bc&b;
+        }
+    };
+    #c RbitX etc
+    # keeps history of unhad children
+    #  and adds them to Rs&z
+    # used by Display too, shouldn't need to...
+    #   needs that X.x ||= {}
+    me.recycleRbitXz = &acgtR{
+        $b = Rc&b;
+        !b and throw "recycle !hist"
+        $ig = [];
+        each bit,oV bc&X.x {
+            # no support for dupes, which share an X
+            # would take merging the new over the old or so,
+            Rc&X.x && Rc&X.x[bit] and continue
+            Rc&X.x ||= {};
+            Rc&X.x[bit] = oV;
+            ig.push(... oV.z);
+        }
+        # and links to their last selves
+        # < io may notice the z !tv
+        #   me&ioty just looks at z
+        each in bs&z {
+            ig.indexOf(n) >= 0 and continue
+            Rs&z.push(n);
+        }
+    };
+    # remove thing from its present history
+    # causing dup identities to crosswire, an interesting area...
+    #  so the early slep/scan inherits the later
+    me.deleteRbitX = &acgtr{
+        $R = ry&up;
+        $X = Ry&up.c.X;
+        each bit,oX Rc&X.x {
+            oX == rc&X and delete Rc&X.x[bit]; break
+            # also no support for dupes, which share an X
+            #  would be a deep search for $R/**
+            #   splicing out of X.z
+        }
+    };
+    
+
     
     #c growing R
     
@@ -4367,21 +4458,6 @@ Coffle: | # discussion
         }
     };
     
-    # definitions available to -od
-    # < A = R about here? if Ring allows?
-    # < 
-    me.sc = {};
-    me.sc.ha = &acgtRs{
-        #S 3
-        each tN s {
-            # before group
-            each iR N {
-                # the tower
-                me&Ret,R,{t:'Dupism',s:R}
-            }
-            # after group
-        }
-    };
     # of Rc&ha being R with hoistables
     
     # Rodulat pool coms
