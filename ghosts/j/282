@@ -2821,7 +2821,7 @@ Coffle: | # discussion
     # < I, a W of qualities and how to use them
     $Be = me.Be = {};
     Be.scan = &acgtRs{
-        $M = [];
+        $M = []; # q+
         each kt Be.sc {
             !hak(s.sc,k) and continue
             M.push({tatch:t,nk:'sc',gk:k})
@@ -2832,38 +2832,48 @@ Coffle: | # discussion
         }
         return M
     };
-    # 3%ball sprawls to thing:
-    Be.lums = &acgtRs{
-        Be&scan,R,s .map(q => Be&lumit,R,s,q )
-    };
-    Be.lumit = &acgtRsq{
-        $D = G&Cye,[q.tatch,5,{ohm:1}];
+    # makes D for q, thing attachment mode specifics
+    #  D also gets how to act
+    Be.cutch = &acgtRsqc{
+        $D = G&Cye,[q.tatch,5,c||{}];
         !D.t and throw "!t"
         # sc from matching
         q and ex(D.sc,q)
-        # c from matched
+        # c from matched, the how
         Be[D.t] and ex(D.c,Be[D.t])
-        
+        return D
+    };
+    # 3%ball sprawls to thing:
+    Be.lums = &acgtRs{
+        Be&scan,R,s
+            .map(q => Be&cutch,R,s,q,{ohm:1} )
+            .map(D => Be&lumit,R,s,D )
+    };
+    Be.lumit = &acgtRsD{
         # symbol blocks the way
         $n =
         n $D.t  $s:Ds&gk %fs:14,hs:966
         Dc&symbol and nc&s = Dc&symbol
+        nc&s.length > 5 and Dc&symbolsize ||= -5
         Dc&symbolsize and ns&fs += Dc&symbolsize
         
         # c&nofurther may resist any more
         Dc&exRc and ex(R.c,Dc&exRc);
         
+        # %play things tend to hide/represent in-%balls
+        Dc&play and Dc&hbb ||= 1
         # otherwise it costs 1 boost
-        Rs&boost = (Rs&boost||0) - Dc&ohm;
-        Rs&boost >= 0 and 'open'
+        Rs&boost > 0 and 'open'
         else {
-            Rs&boost = 0;
-            Rs&nofurtherDisplay = 1;
-            # alive but not on screen
-            # very high level view of what else scans interest:
+            # tend to hide every R inside...
+            !Dc&hbb and Rs&nofurtherDisplay = 1
+            # very high level view of what else scans interesting
             ss&z &&
             n withz  s:z %fs:14,hs:966
         }
+        Dc&hbb and Rs&hideballsballs = 1
+        # do more display?
+        # look up for a qua ac?
     };
     Be.sc = {};
     Be.sc.J = 'sJ';
@@ -2873,12 +2883,30 @@ Coffle: | # discussion
     Be.y = {};
     Be.y.lv = 'ylv';
     Be.ylv = {symbolsize:-2,exRc:{nofurther:1}};
+    Be.sc.testrun = 'stestrun';
+    Be.stestrun = {play:&acgtRs{
+        $l = me&push,R,['/','T'],[],'run',{does:'TeCo'};
+        Rs&Te && Rs&Te.sc.almost and ls&almost = 1
+        me&introqua,l,'boost:2','@1'
+    }};
+    Be.sc.W = 'sW';
+    Be.sW = {play:&acgtRs{
+        
+    }};
+    
     # 27%play + ^^%playsheet -> 
     Be.plays = &acgtRs{
-        Be&scan,R,s .map(q => Be&playit,R,s,q );
+        Be&scan,R,s
+            .map(q => Be&cutch,R,s,q )
+            .map(D => Be&playit,R,s,D );
     };
-    Be.playit = &acgtRs{
+    Be.playit = &acgtRsD{
         # 
+        Dc&play and Dc&play(A,C,G,T,R,s)
+        else {
+            # < thing's sc wants upgrading mode
+            me&tsc,"unknown-%ball-%play"
+        }
     };
     
     
@@ -2911,16 +2939,15 @@ Coffle: | # discussion
         ['gee','3',&acgtRs{
             Rs&rowish = 1;
             Rc&nl = 90000;
-            # %balls get shot into T
+            # %ball %play-sers shot into T
             #  giving a pi? real/veyd layers of sc?
             #  e /T -run . %does:TeCo %boost:2
             Rs&playsheet = {
                 ball: &acgtR{
                     ~Ballplay: ...haks(Rc&s.sc)
-                    $l = me&push,R,['/','T'],[],'run',{does:'TeCo'};
-                    Rs&Te && Rs&Te.sc.almost and ls&almost = 1;
-                    ls&boost = 2;
-                    me&introqua,l,'boost','@1'
+                    $Be = me.Be;
+                    !Be and throw "NoBe";
+                    Be&plays,R,Rc&s;
                 },
                 fix: &acgtR{  },
             };
