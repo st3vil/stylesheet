@@ -4121,12 +4121,16 @@ Coffle: | # discussion
         },'ift,D'],
         
         
-        #c testruns
+        #c testruns GOING?
         ['testruns','6',&acgtRs{
             $p = Ry&up;
             !ps&ball and throw "for %ball"
             $M = [];
             # find any %testrun in a few layers of %ball
+            # similar to me.cbu but down, for %ball and then ss&testrun
+            # < me.cbu(p,'ball','z','testrun') ?
+            # < o **%ball$%testrun
+            # < %balls may look in known/Berson gov/central index
             $lookfortestruns = &pd{
                 d ||= 0;
                 d++;
@@ -4163,54 +4167,18 @@ Coffle: | # discussion
             me&tsc,'testruns';
             me&tsc,'count',M.length,'g';
             each in M {
-                n n.t  $s:n.t %ma:0.5,fs:8
+                n $n.t  $s:n.t %ma:0.5,fs:8
             }
             (Rs&boost||0) < 1 and return me&tsc,'dotestruns','?','G'
             delete Rs&Te.sc.boost;
             
             $current;
             $began = G&time;
-            # %play them all (but dont start %moving (if almost))
-            # collect %pushes 
-            $P = [];
-            $start_testruns = &{
-                each in M {
-                    $te = me&introqua,n,{};
-                    # on and off?
-                    tes&play and delete tes&play; delete tes&almost;
-                    else {
-                        tes&play = 1;
-                        #tes&almost = 1
-                    }
-                    # collect the 8%push
-                    $cb = tey&pushable_cb = &r{ P[i] = r }
-                }
-                # last one, callback with %moves made?
-                tey&pushable_cb = &{
-                    cb();
-                    ~starts: R.t
-                    next_testrun();
-                };
-            };
-            # ^ async v
-            # per %push, do out of time
-            $next_testrun = &{
-                current == null and current = 0
-                else { current++ }
-                $n = M[current];
-                !n and return done_testing();
-                # hijack the %push
-                
-                #ls&boost = 2;
-                #me&Ring,l,{und:l};
-                #me&Reis,R,'ravel',nc&s
-                
-            };
-            $done_testing = &{
-                Rs&testcomplete = G&time,$began;
-                ~Done testing:
+            each in M {
+                # %play them all
+                $te = me&introqua,n,{play:1}
             }
-            start_testruns();
+            # collects nothing
         },'ift,D'],
         
     ]};
