@@ -3089,10 +3089,11 @@ Coffle: | # discussion
         ['ws_pool','3',&acgtRs{
             s&bo = '1px dotted green';
             
-            n digwaypoll  R:mundws
+            n digwaypoll  R:mundws,Ghocoline,Ghostway
             n bollock  R:mundws
         
         },'ift,D'],
+        
         # holds an A:ws
         # < push/pull of C living across the boundary
         ['mundws','3',&acgtRs{
@@ -3102,30 +3103,102 @@ Coffle: | # discussion
             $ws = me&rollbs,R,'Sock';
             ws = Rs&Sock = me&ws,t,ws;
             $WS = wsc&ws;
-            
-            
         },'ift,D'],
+        
+        # Ghocoline - tricks with Lving
+        ['Ghocoline','32',&acgtRs{
+            $lowlev = /[^ \w"]/; #"
+            Rs&receive = &sD{
+                typeof s != 'string' and throw "receive !string"
+                
+                if (!s.match(/[ \w"]/)) {
+                    # "tricks with Lving
+                    throw "strange"
+                }
+                elsif (s.match(/^ /)) {
+                    # Lving -> last message's cursor
+                    throw "floating start"
+                }
+                elsif (0 && 'readLines') {
+                    # make R to deLines then ein?
+                    #$N = me&readLines,s;
+                }
+                else {
+                    # splits lines, batch of something
+                    $l = s.split("\n");
+                    l.slice(-1)[0] == '' and l.pop()
+                    
+                    Rs&eout(l);
+                }
+            };
+            $send = Rs&send;
+            !send and throw "no Ghocoline proxy send()"
+            Rs&send = &s{
+                # tricks with Lving
+                # ^ might have a repeat compression
+                #   eg keeping at an indent across frames of Lines
+                #      for lots of el:8 leading in
+                send(s);
+            };
+            Rs&open = &{
+                $L = Rs&Lving;
+                L && Lc&b and 'el=7 for %sent_dige'
+            };
+        },'ift,D'],
+        # specific case, asks for way notifies, gets them
+        # knows how little we can talk to get it done
+        ['Ghostway','33',&acgtRs{
+            $open = Rs&open;
+            !open and throw "no Ghostway proxy open()"
+            Rs&open = &s{
+                open(s);
+                # wants to let ^ complete before
+                # our layer of protocol opens:
+                $ways = haks(A.5.I.w.y.tw);
+                Rs&ei(ways);
+            };
+            
+            # e out change a ghost
+            # < decoded Lines
+            Rs&eout = &l{
+                each is l {
+                    #me&upghost,s
+                    ~said: s
+                }
+            };
+            
+            # e in things we want to know about
+            Rs&ein = &z{
+                each in z {
+                    $t = typeof n == 'string' ? n : n.t;
+                    ~Sending: t
+                    me&waytime,t,null;
+                    Rs&send(t);
+                }
+            };
+        },'ift,D'],
+        
+        
+        
         # at LVing avail
         ['mundws','4',&acgtRs{
             Rs&rowish = 1;
-            # < these ways to assume arguments want fibre
-            $t = s || R.t;
-            $ws = me&rollbs,R,'Sock';
-            ws = Rs&Sock = me&ws,t,ws;
-            $WS = wsc&ws;
-            
             
             # current state
+            $ws = Rs&Sock;
             
             # /path
             me&tsc,'mundws','ws:','b';
             me&tsc,'path',wsc&s
             me&tsc,'state',wss&state,'6';
+            
+            Rs&Lving &&
+            n Lving  $self:Rs&Lving,R %Cit
         },'ift,D'],
-        # R%Sock <-> A:ws
+        #c A%Sock <-> A:ws
         # at both ends of the deal
         # < push/pull of C living across the boundary
-        ['Sock','3',&acgtRs{
+        ['Sock','31',&acgtRs{
             $ws = Rs&Sock;
             $WS = wsc&ws;
             !WS and throw "Sock"
@@ -3136,61 +3209,93 @@ Coffle: | # discussion
             
             # our A:ws.c hooks
             # this should A:session
+            #   reflecting a scene across it
+            #   they might hold objects for us,
+            #     as we talk to them
+            #   or show objects we talk about
             $L = me&rollbs,R,'Lving';
-            # Line+ protocol may allow:
+            # the first character of any Line is [ \w"]
+            #  so there's room for some protocol in there:
+            
             # Lc&resumable - do you remember?
+            #   rolls Ls&z - the state buildup
+            #     computation on that must sleep while we try to:
+            #   negotiate what they know with el=7
+            #     might know our Ls&sent_dige
+            #     or stuff on the ground
+            #       exploratory W nature
+            #       eg check state of everything in Toys:
+            #         Toys el:7%dige:358i0f
+            #       may not include %dige on request,
+            #         but then the server could pre-empt our:
+            #           what has what become,
+            #            and what can be patched
+            #   they remember the conversation
+            
             # Lc&responsey - expect one receive per send
-                # the last message we got from them,
-                #   when we sent this
-                # < slowing/Aing out time to understand message
-            wsc&open = &w{
-                L = me&rollbsc,R,'Lving','b,increment';
-                Ls&received = 0;
-                Ls&sent = 0;
-                $b = Lc&b;
-                if (Lc&b && Lc&resumable) {
-                    # try resume bs&z -> Ls&z:
-                    #   if they know our Ls&sent_dige
-                    #   they remember the conversation
+            #   informs you if getting out of order
+            #   link them
+            #   the last message we got from them,
+            #     when we sent this
+            #   < slowing/Aing out time to understand message
+            
+            # try leak chatter
+            $ch = wsc&chatter = &t,ev{
+                # < io-param-like + styles of message with object in
+                $l = [wsc&s,
+                    wsc&deter('code',ev.code),
+                    ev.reason,
+                ];
+                each in l {
+                    l[i] = '>'+(3+(i*2))+' '+(n||'')
                 }
-                # Ls&z should attract
-                # assert what we care about
-                each ti me.importo {
-                    me&waytime,t,null;
-                    wsc&send(t);
-                }
-            };
-            wsc&send = &s{
-                !L and throw "ws:L:send!open"
-                # L logs sends
-                $c = {};
-                c.now = G&now;
-                c.received = Ls&received;
-                ac(L,'sent', me&tsc,'sent',s,{now:now} );
-                # ^ might have a repeatation compression
-                #   eg keeping at an indent across frames of Lines
-                #      for lots of el:8 leading in
-                
-                WS.send(s);
-                Ls&dige
-                Ls&sent++;
-            };
-            wsc&receives = &l{
-                !L and throw "ws:L:receive!open"
-                $c = {};
-                c.now = G&now;
-                c.sent = Ls&sent;
-                ac(L,'sent', me&tsc,'sent',s,{now:now} );
-                
-                each is l {
-                    me&upghost,s
-                }
-                
-                Ls&received++;
+                G&c:'>1 '+t,l
             };
             
+            $roll = &Ltso{
+                # accumulating dige
+                $digek = t+'_dige';
+                L.sc[digek] = dig((L.sc[digek]||'')+s);
+                
+                # point in time log
+                $c = {};
+                c.now = G&time;
+                # opposite direction's count
+                # last in when this went out, etc.
+                1 && o and c[o] = L.sc[o+"_i"]
+                # tsc causes n ... deep within out of time
+                $D = me&tsc,t,s,c;
+                ac(L,t, D );
+                
+                # count
+                $ik = t+'_i';
+                L.sc[ik] ||= 0;
+                L.sc[ik]++;
+                
+                return D
+            };
+            
+            wsc&open = &{
+                L = me&rollbsc,R,'Lving','b,increment';
+                Rs&open();
+            };
+            Rs&send = wsc&send = &s{
+                $L = Rs&Lving;
+                !L and throw "ws:L:send!open"
+                # L logs
+                roll(L,'send',s,'receive');
+                # never fails?
+                WS.send(s);
+            };
+            wsc&receive = &s{
+                $L = Rs&Lving;
+                !L and throw "ws:L:receive!open"
+                $D = roll(L,'receive',s,'send');
+                Rs&receive(s,D);
+            };
             
             # put in A:ws, when G&c redone...
+            
             
             wsc&proto = {
               state: {
@@ -3215,29 +3320,18 @@ Coffle: | # discussion
             wss&state = wsc&deter('state',WS.readyState);
             
             # WebSocket hooks
-            # try leak chatter
-            $st = &t,ev{
-                # < io-param-like + styles of message with object in
-                $l = [wsc&s,
-                    wsc&deter('code',ev.code),
-                    ev.reason,
-                ];
-                each in l {
-                    l[i] = '>'+(3+(i*2))+' '+(n||'')
-                }
-                G&c:'>1 '+t,l
-            };
+            
             WS.onopen = &ev,{
                 WS != wsc&ws and debugger;
-                WS != wsc&ws and return st('sockdupe', ev);
-                st('open', ev);
-                A&open and return A&open(ws)
+                WS != wsc&ws and return ch('sockdupe', ev);
+                ch('open', ev);
+                wsc&open and wsc&open()
             };
             WS.onclose = &ev,{
-              st(ev.wasClean ? 'closing' : 'close', ev)
+              ch(ev.wasClean ? 'closing' : 'close', ev)
             };
             WS.onerror = &ev,{
-              st(ev.wasClean ? 'err' : 'errs', ev)
+              ch(ev.wasClean ? 'err' : 'errs', ev)
             };
             
         },'ift,D'],
