@@ -3060,7 +3060,7 @@ Coffle: | # discussion
         ['mund','3',&acgtRs{
             Rs&rowish = 1;
             s&bo = '7px dotted green';
-            s&hue = 70;
+            s&hue = -70;
             s&br = 1;
             Rs&unDoming = [];
             
@@ -3087,8 +3087,6 @@ Coffle: | # discussion
         },'ift,D'],
         
         ['ws_pool','3',&acgtRs{
-            Rs&rowish = 1;
-            me&tsc,'WebSockets:';
             s&bo = '1px dotted green';
             
             n digwaypoll  R:mundws
@@ -3101,44 +3099,100 @@ Coffle: | # discussion
             Rs&rowish = 1;
             # < these ways to assume arguments want fibre
             $t = s || R.t;
-            $ws = me&rollbs,R,'ws';
-            ws = Rs&ws = me&ws,t,ws;
+            $ws = me&rollbs,R,'Sock';
+            ws = Rs&Sock = me&ws,t,ws;
             $WS = wsc&ws;
             
-            # when R el=9
-            $dom = me.cbu(R,'unDoming');
-            dom && ac(dom,'unDoming',&{
-                WS.close(1000,'lum')
-            });
             
-            # A:ws.c hooks
-            wsc&open = &w{
-                # assert what we care about
-                each ti me.importo {
-                    me&waytime,t,null;
-                    w.send(t);
-                }
-            };
-            wsc&receives = &l{
-                each is l {
-                    me&upghost,s
-                }
-            };
+        },'ift,D'],
+        # at LVing avail
+        ['mundws','4',&acgtRs{
+            Rs&rowish = 1;
+            # < these ways to assume arguments want fibre
+            $t = s || R.t;
+            $ws = me&rollbs,R,'Sock';
+            ws = Rs&Sock = me&ws,t,ws;
+            $WS = wsc&ws;
+            
             
             # current state
             
             # /path
-            me&tsc,'ws:'+wsc&s
-            
-            # put in A:ws:
-            wss&state = deter('state',WS.readyState);
+            me&tsc,'mundws','ws:','b';
+            me&tsc,'path',wsc&s
             me&tsc,'state',wss&state,'6';
+        },'ift,D'],
+        # R%Sock <-> A:ws
+        # at both ends of the deal
+        # < push/pull of C living across the boundary
+        ['Sock','3',&acgtRs{
+            $ws = Rs&Sock;
+            $WS = wsc&ws;
+            !WS and throw "Sock"
+            # when R el=9
+            me.cbuac(R,'unDoming',&{
+                WS.close(1000,'lum')
+            });
             
+            # our A:ws.c hooks
+            # this should A:session
+            $L = me&rollbs,R,'Lving';
+            # Line+ protocol may allow:
+            # Lc&resumable - do you remember?
+            # Lc&responsey - expect one receive per send
+                # the last message we got from them,
+                #   when we sent this
+                # < slowing/Aing out time to understand message
+            wsc&open = &w{
+                L = me&rollbsc,R,'Lving','b,increment';
+                Ls&received = 0;
+                Ls&sent = 0;
+                $b = Lc&b;
+                if (Lc&b && Lc&resumable) {
+                    # try resume bs&z -> Ls&z:
+                    #   if they know our Ls&sent_dige
+                    #   they remember the conversation
+                }
+                # Ls&z should attract
+                # assert what we care about
+                each ti me.importo {
+                    me&waytime,t,null;
+                    wsc&send(t);
+                }
+            };
+            wsc&send = &s{
+                !L and throw "ws:L:send!open"
+                # L logs sends
+                $c = {};
+                c.now = G&now;
+                c.received = Ls&received;
+                ac(L,'sent', me&tsc,'sent',s,{now:now} );
+                # ^ might have a repeatation compression
+                #   eg keeping at an indent across frames of Lines
+                #      for lots of el:8 leading in
+                
+                WS.send(s);
+                Ls&dige
+                Ls&sent++;
+            };
+            wsc&receives = &l{
+                !L and throw "ws:L:receive!open"
+                $c = {};
+                c.now = G&now;
+                c.sent = Ls&sent;
+                ac(L,'sent', me&tsc,'sent',s,{now:now} );
+                
+                each is l {
+                    me&upghost,s
+                }
+                
+                Ls&received++;
+            };
             
             
             # put in A:ws, when G&c redone...
             
-            $proto = {
+            wsc&proto = {
               state: {
                 0:'connecting',
                 1:'open',
@@ -3153,19 +3207,19 @@ Coffle: | # discussion
                 1011:'500',
               },
             };
-            $deter = &tk{
+            wsc&deter = &tk{
                 k == null and return ''
-                return proto[t][k] || t+'?'+k
+                return wsc&proto[t][k] || t+'?'+k
             };
             
-            me&tsc,'state',deter('state',WS.readyState),'6';
+            wss&state = wsc&deter('state',WS.readyState);
             
             # WebSocket hooks
             # try leak chatter
             $st = &t,ev{
                 # < io-param-like + styles of message with object in
                 $l = [wsc&s,
-                    deter('code',ev.code),
+                    wsc&deter('code',ev.code),
                     ev.reason,
                 ];
                 each in l {
