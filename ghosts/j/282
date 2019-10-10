@@ -2885,10 +2885,17 @@ Coffle: | # discussion
     Be.storun = {play:&acgtRs{
         $k = ss&torun;
         k == '1' and k = s.t
-        Rs&torunning = 1;
-        $n =
-        n $s.t  R:1
-        n.sc[k] = 1
+        # as a %Reis, instant to the enclosing Ring
+        $c = {};
+        c.task = 'rovo';
+        c.t = s.t;
+        c[k] = 1;
+        $r = me&Reis,R,0,0,c;
+        ac(R,'unplaycb', &{
+            each in rs&unDoming {
+                n()
+            }
+        });
     }};
     
     # s&W
@@ -3052,11 +3059,19 @@ Coffle: | # discussion
       # manage more %torun/things they do
         ['mund','3',&acgtRs{
             Rs&rowish = 1;
-            s&bo = '1px dotted green';
+            s&bo = '7px dotted green';
             s&hue = 70;
             s&br = 1;
+            Rs&unDoming = [];
             
-            me&tsc,"mund"
+            me&tsc,"mund";
+            
+            n A4smind  $self:A.4.sc.mind %R:Cit
+            n A5Iw  $self:A.5.I.w %R:Cit
+            # these'll have any z?
+            # J8 must check its Jtv for their 1s&N
+            n A4sN  $self:4s&N %R:Cit
+            n A1sN  $self:1s&N %R:Cit
             
             # lay out the things that matter:
             #  A.5.I.w         ws:digwaypoll
@@ -3067,6 +3082,110 @@ Coffle: | # discussion
             
             # w can be trusted if digwaypoll
             # end up with typed storage, Lis action
+            
+            n ws_pool  R:ws_pool
+        },'ift,D'],
+        
+        ['ws_pool','3',&acgtRs{
+            Rs&rowish = 1;
+            me&tsc,'WebSockets:';
+            s&bo = '1px dotted green';
+            
+            n digwaypoll  R:mundws
+            n bollock  R:mundws
+        
+        },'ift,D'],
+        # holds an A:ws
+        # < push/pull of C living across the boundary
+        ['mundws','3',&acgtRs{
+            Rs&rowish = 1;
+            # < these ways to assume arguments want fibre
+            $t = s || R.t;
+            $ws = me&rollbs,R,'ws';
+            ws = Rs&ws = me&ws,t,ws;
+            $WS = wsc&ws;
+            
+            # when R el=9
+            $dom = me.cbu(R,'unDoming');
+            dom && ac(dom,'unDoming',&{
+                WS.close(1000,'lum')
+            });
+            
+            # A:ws.c hooks
+            wsc&open = &w{
+                # assert what we care about
+                each ti me.importo {
+                    me&waytime,t,null;
+                    w.send(t);
+                }
+            };
+            wsc&receives = &l{
+                each is l {
+                    me&upghost,s
+                }
+            };
+            
+            # current state
+            
+            # /path
+            me&tsc,'ws:'+wsc&s
+            
+            # put in A:ws:
+            wss&state = deter('state',WS.readyState);
+            me&tsc,'state',wss&state,'6';
+            
+            
+            
+            # put in A:ws, when G&c redone...
+            
+            $proto = {
+              state: {
+                0:'connecting',
+                1:'open',
+                2:'closing',
+                3:'closed',
+              },
+              code: {
+                1000:'closing',
+                1006:'close',
+                1001:'leaving',
+                1009:'toobig',
+                1011:'500',
+              },
+            };
+            $deter = &tk{
+                k == null and return ''
+                return proto[t][k] || t+'?'+k
+            };
+            
+            me&tsc,'state',deter('state',WS.readyState),'6';
+            
+            # WebSocket hooks
+            # try leak chatter
+            $st = &t,ev{
+                # < io-param-like + styles of message with object in
+                $l = [wsc&s,
+                    deter('code',ev.code),
+                    ev.reason,
+                ];
+                each in l {
+                    l[i] = '>'+(3+(i*2))+' '+(n||'')
+                }
+                G&c:'>1 '+t,l
+            };
+            WS.onopen = &ev,{
+                WS != wsc&ws and debugger;
+                WS != wsc&ws and return st('sockdupe', ev);
+                st('open', ev);
+                A&open and return A&open(ws)
+            };
+            WS.onclose = &ev,{
+              st(ev.wasClean ? 'closing' : 'close', ev)
+            };
+            WS.onerror = &ev,{
+              st(ev.wasClean ? 'err' : 'errs', ev)
+            };
+            
         },'ift,D'],
     ] };
     #c ravel about their state,
@@ -3191,7 +3310,7 @@ Coffle: | # discussion
         
         ... me&Slepingness ,
         ... me&Toolingness ,
-        ... me&Beepingness ,
+        #... me&Beepingness ,
         #c kvstore
         # accept %pushish as a name lookup first
         #  names %decode'd and pushed here
@@ -3512,6 +3631,7 @@ Coffle: | # discussion
         ... me&Slepingness ,
         ... me&Actingness ,
         ... me&Toolingness ,
+        ... me&Beepingness ,
         # sleeperate the other thing
         # eg Elvisory%ball (or **)
         #  have a %slep injected by tangulate 27
@@ -4612,7 +4732,7 @@ Coffle: | # discussion
         Rc&X = Rs&X = {};
         # children (Re) will V = upc&bs&X || {}
         r and Rc&b = r
-        # a spiral of names coming back on itself once
+        # a spiral of names coming back to itselves
         r && rc&b and delete rc&b
         # children should not .y.up = I
         Ry&R = Ry&I = R;
@@ -4625,8 +4745,16 @@ Coffle: | # discussion
     # R is basically an exploration of A
     #  lets get pictures of the R joining first
     # $r = me&Reis,I,'C',C;
+    #  R.t='C', Rc&s=C
+    #   then me&Re will Rs&task||=R.t
+    #     then early I:C changes R.t to tv-bit
+    #  Rc&s = C
+    # or:
+    # $r = me&Reis,R,{task:'rovo',t:'bit'}
     me.Reis = &acgtRtsc{
-        $r = me&Re,R,ex(c||{},{t:t,s:s});
+        c = typeof t == 'object' ? t
+            : ex({t:t,s:s},c||{})
+        $r = me&Re,R,c;
         me&Ring,r;
         return r
     };
