@@ -1504,20 +1504,31 @@ Soogle: | # start from Sevo
         };
         wsc&receives = &l{
             each is l {
-                me&upghost,s
+                $s = s.split('%');
+                $t = s[0];
+                $c = G&peel,s[1];
+                me&upghost,t,c.dige
             }
         };
     }
-    me.waytime = &acgtts{
+    me.wayta = &acgtts{
         $wa = A.5.I.w; # alien stash
         !wa and throw "no wa", t
-        $w = wa.y.tw[t]; # has G&ways we use
+        # G&way uses
+        return wa.y.tw[t];
+    }
+    me.waytime = &acgtts{
+        $w = me&wayta,t;
         !w and return
         !w and throw "no w", t
         s == null and s = G&time + 3600
         ws&now = s; # unixtime, forces update
     };
-    me.upghost = &acgtt{
+    me.upghost = &acgttd{
+        $dige = d;
+        $w = me&wayta,t;
+        # these don't match yet...
+        w && ws&dige == dige and return
         t ||= 'Soogle';
         me&waytime,t,1;
         4s&upghost ||= [];

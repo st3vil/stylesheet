@@ -240,6 +240,7 @@ Coffle: | # discussion
     so 1 can know what A it has in progress...
      AndContinue shall come again
       building W&Lis
+      !
     have R that can simply keep Ringing?
      < osc must get us back into whatever Ring:
        init: Ring@1 everything (Graze)
@@ -3073,6 +3074,7 @@ Coffle: | # discussion
             n A4sN  $self:4s&N %R:Cit
             n A1sN  $self:1s&N %R:Cit
             
+            
             # lay out the things that matter:
             #  A.5.I.w         ws:digwaypoll
             #  A.4.sc.mind     /js/ ?
@@ -3082,16 +3084,10 @@ Coffle: | # discussion
             
             # w can be trusted if digwaypoll
             # end up with typed storage, Lis action
-            
-            n ws_pool  R:ws_pool
-        },'ift,D'],
-        
-        ['ws_pool','3',&acgtRs{
-            s&bo = '1px dotted green';
-            
             n digwaypoll  R:mundws,Ghocoline,Ghostway
             n bollock  R:mundws
-        
+            
+            
         },'ift,D'],
         
         # holds an A:ws
@@ -3105,31 +3101,80 @@ Coffle: | # discussion
             $WS = wsc&ws;
         },'ift,D'],
         
+        
+        # at LVing avail
+        ['mundws','4',&acgtRs{
+            Rs&rowish = 1;
+            
+            # current state
+            $ws = Rs&Sock;
+            
+            # /path
+            me&tsc,'mundws','ws:','b';
+            me&tsc,'path',wsc&s
+            me&tsc,'state',wss&state,'6';
+            
+            Rs&Lving &&
+            n Lving  $self:Rs&Lving,R %Cit
+        },'ift,D'],
+
+        
+        #c Gho* protocol
         # Ghocoline - tricks with Lving
+        # A:ws Lines+ send/receive <-> R:* C-things Rs&ein/out
         ['Ghocoline','32',&acgtRs{
             $lowlev = /[^ \w"]/; #"
             Rs&receive = &sD{
                 typeof s != 'string' and throw "receive !string"
                 
-                if (!s.match(/[ \w"]/)) {
-                    # "tricks with Lving
-                    throw "strange"
+                Rs&tinyLines and Rs&someLines ||= 1
+                Rs&someLines and Rs&contLines ||= 1
+                
+                if (Rs&contLines) {
+                    # can know how to nest another protocol
+                    if (!s.match(/[ \w"]/)) {
+                        # "tricks with Lving
+                        throw "strange"
+                    }
+                    elsif (s.match(/^ /)) {
+                        # Lving -> last message's cursor
+                        throw "floating start"
+                    }
                 }
-                elsif (s.match(/^ /)) {
-                    # Lving -> last message's cursor
-                    throw "floating start"
+                else {
+                    throw "!contLines?"
                 }
-                elsif (0 && 'readLines') {
+                
+                # string tricks
+                $l = [s];
+                if (Rs&someLines) {
+                    # splits lines, batch of something
+                    # < by next Line d=0?
+                    l = s.split("\n");
+                    l.slice(-1)[0] == '' and l.pop()
+                }
+                
+                # parsed
+                $z = l.slice();
+                if (Rs&tinyLines) {
+                    # parse Ghost%dige:4827848
+                    each is l {
+                        $s = s.split('%');
+                        s [0].split("\t").length > 1 and throw "comp"
+                        z[i] = G&Cye,[s[0],'',{},s[1]];;
+                    }
+                }
+                elsif (Rs&contLines) {
+                    throw "readLines wanted"
                     # make R to deLines then ein?
                     #$N = me&readLines,s;
                 }
-                else {
-                    # splits lines, batch of something
-                    $l = s.split("\n");
-                    l.slice(-1)[0] == '' and l.pop()
-                    
-                    Rs&eout(l);
-                }
+                
+                # iterated
+                Rs&esout and Rs&esout(z)
+                else
+                Rs&eout and z.map(s => Rs&eout(s,z))
+                
             };
             $send = Rs&send;
             !send and throw "no Ghocoline proxy send()"
@@ -3155,16 +3200,18 @@ Coffle: | # discussion
                 # wants to let ^ complete before
                 # our layer of protocol opens:
                 $ways = haks(A.5.I.w.y.tw);
-                Rs&ei(ways);
+                Rs&ein(ways);
             };
             
+            Rs&tinyLines = 1;
             # e out change a ghost
             # < decoded Lines
-            Rs&eout = &l{
-                each is l {
-                    #me&upghost,s
-                    ~said: s
-                }
+            Rs&eout = &s{
+                # Ghost%dige:thritty
+                # could guess from t/y=hash
+                #me&upghost,s
+
+                ~got: ki(s)
             };
             
             # e in things we want to know about
@@ -3172,29 +3219,12 @@ Coffle: | # discussion
                 each in z {
                     $t = typeof n == 'string' ? n : n.t;
                     ~Sending: t
-                    me&waytime,t,null;
+                    #me&waytime,t,null;
                     Rs&send(t);
                 }
             };
         },'ift,D'],
         
-        
-        
-        # at LVing avail
-        ['mundws','4',&acgtRs{
-            Rs&rowish = 1;
-            
-            # current state
-            $ws = Rs&Sock;
-            
-            # /path
-            me&tsc,'mundws','ws:','b';
-            me&tsc,'path',wsc&s
-            me&tsc,'state',wss&state,'6';
-            
-            Rs&Lving &&
-            n Lving  $self:Rs&Lving,R %Cit
-        },'ift,D'],
         #c A%Sock <-> A:ws
         # at both ends of the deal
         # < push/pull of C living across the boundary
@@ -3295,7 +3325,6 @@ Coffle: | # discussion
             };
             
             # put in A:ws, when G&c redone...
-            
             
             wsc&proto = {
               state: {
