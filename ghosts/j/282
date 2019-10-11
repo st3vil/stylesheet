@@ -240,7 +240,7 @@ Coffle: | # discussion
     so 1 can know what A it has in progress...
      AndContinue shall come again
       building W&Lis
-      !
+      ...
     have R that can simply keep Ringing?
      < osc must get us back into whatever Ring:
        init: Ring@1 everything (Graze)
@@ -3084,31 +3084,22 @@ Coffle: | # discussion
             
             # w can be trusted if digwaypoll
             # end up with typed storage, Lis action
-            n digwaypoll  R %mundws,Ghocoline,Ghostway
-            n ifd  R %follow_diffdige
-            n wats  $s:A.5.I.w,R %Idoubleyou
+            n digwaypoll  R %mundws,Ghocoline,tinyLines
+            n ifd  R %Ghostway
+            $ways = 
+            n wats  $s:A.5.I.w,R %Idoubleyou,ball,childy:tw
         },'ift,D'],
         # 4 handlers/types are in place
         # use diges that don't match to roll attention at w
         # can then download the w and see its true s&dige
-        ['follow_diffdige','4',&acgtRs{
-            #.y.tw
-            # < i <^%eout:src
-            $p = Ry&up;
-            $S = Rs&src = ps&z[ps&z.indexOf(R)-1];
-            $g = Rs&aga = ps&z[ps&z.indexOf(R)+1];
-            $d = Rs&perc
-            
-        },'ift,D'],
         
         #c mundws holds an A:ws
         # < push/pull of C living across the boundary
         ['mundws','3',&acgtRs{
             Rs&rowish = 1;
             # < these ways to assume arguments want fibre
-            $t = s || R.t;
             $ws = me&rollbs,R,'Sock';
-            ws = Rs&Sock = me&ws,t,ws;
+            ws = Rs&Sock = me&ws,R.t,ws;
             $WS = wsc&ws;
         },'ift,D'],
         
@@ -3130,45 +3121,84 @@ Coffle: | # discussion
         
 
         # Ghostway - asks for way notifies, gets them
-        # provides %eout(), %ein() %open()
+        # provides %eout(), %ein() %eope()
         #   for C sloshing in or out
         #   to staging, to iterate into here
-        # < %open() is el=1ing everything
-        #   may not be called if Ghocoline el=7s
         # knows how to talk ws:s/digwaypoll
         ['Ghostway','33',&acgtRs{
-            $open = Rs&open;
-            !open and throw "no Ghostway proxy open()"
-            Rs&open = &s{
-                open(s);
-                # wants to let ^ complete before
-                # our layer of protocol opens:
-                $ways = haks(A.5.I.w.y.tw);
-                Rs&ein(ways);
-            };
+            #.y.tw
+            # < i <^%eout:src
+            $p = Ry&up;
+            $S = Rs&src = ps&z[ps&z.indexOf(R)-1];
+            $g = Rs&aga = ps&z[ps&z.indexOf(R)+1];
+            $Way = gc&s;
+            $Ghost = Rs&perc = me&rollbsc,R,'Ghost';
+            # the 'here', a join
+            n Ghost  $s:Ghost,R %ball
             
-            Rs&tinyLines = 1;
-            # e out change a ghost
-            # < decoded Lines
-            Rs&eout = &s{
-                # Ghost%dige:thritty
-                # could guess from t/y=hash
-                #me&upghost,s
-
-                ~got: ki(s)
+            # e inits some state (usually)
+            Ss&eope = &{
+                # el=2 everything
+                # sync Lving z <-> 
+                me&ioty,g,'%ball'
+                    .map(n => Ss&ein(n))
             };
-            
             # e in things we want to know about
-            Rs&ein = &z{
-                each in z {
-                    $t = typeof n == 'string' ? n : n.t;
-                    ~Sending: t
-                    #me&waytime,t,null;
-                    Rs&send(t);
-                }
+            Ss&tinyLines = 1;
+            
+            # a t/dige only variety of tinyLines encoding:
+            Ss&ein = &n{
+                # Way%ball to string
+                !ns&ball and throw "ein ball"
+                $s = nc&s;
+                ns&toLines = s.t;
+                ss&dige and ns&toLines += '%dige:'+ss&dige
+                
+                ~Sending: ns&toLines
+                Ss&send(n);
             };
+            # e changes of ghost
+            # < decoded Lines
+            Ss&eout = &l{
+                # a = C ~ Ghost%dige:thritty
+                # oscing in:
+                i $Ghost/apparently/#$l:s
+                # ~dige -> /seek/
+                yas&dige == ls&dige and ~Sleepway: l.t
+                else {
+                    yas&dige = ls&dige;
+                    i $Ghost/seek/$ya
+                }
+                
+                ~got: l.t
+            };
+            
+            
+            o $Ghost/seek/*
+            each in ays&s {
+                $w = G&ting,'way',n.t;
+                
+                !w and continue
+                
+                n seen  $self:w %Cit
+                # permanent
+                i $Ghost/est/$w
+                # while changing
+                i $Ghost/ing/$w
+            }
+            
+            # permanent thing, subject to rumours
+            o $Ghost/est/*:w
+            each iw ays&w {
+                ws&now = G&time + 3600;
+            }
+            
+            # things changing, code to redo
+            o $Ghost/ing/*:w
+            each iw ays&w {
+                ~Ghostway: w.t
+            }
         },'ift,D'],
-        
         
         #c Ghocoline - tricks with Lving
         # provides %receive() and wraps %send()
@@ -3229,6 +3259,25 @@ Coffle: | # discussion
             $send = Rs&send;
             !send and throw "no Ghocoline proxy send()"
             Rs&send = &s{
+                $string = s;
+                if (isC(s)) {
+                    if (s.y.R == s) {
+                        if (ss&ball) {
+                            ss&toLines and string = ss&toLines
+                            else {
+                                throw "send R%ball!%toLines"
+                            }
+                        }
+                        else {
+                            throw "send R!%ball"
+                        }
+                    }
+                    else {
+                        throw "send C !R"
+                    }
+                }
+                else
+                typeof s == 'object' and throw "obj->string"
                 # tricks with Lving
                 # ^ might have a repeat compression
                 #   eg keeping at an indent across frames of Lines
@@ -3238,6 +3287,7 @@ Coffle: | # discussion
             Rs&open = &{
                 $L = Rs&Lving;
                 L && Lc&b and 'el=7 for %sent_dige'
+                Rs&eope and Rs&eope()
             };
         },'ift,D'],
         #c A%Sock <-> A:ws
