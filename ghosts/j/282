@@ -3084,9 +3084,20 @@ Coffle: | # discussion
             
             # w can be trusted if digwaypoll
             # end up with typed storage, Lis action
-            n digwaypoll  R:mundws,Ghocoline,Ghostway
-            n bollock  R:mundws
-            
+            n digwaypoll  R %mundws,Ghocoline,Ghostway
+            n ifd  R %follow_diffdige
+            n wats  $s:A.5.I.w,R %Idoubleyou
+        },'ift,D'],
+        # 4 handlers/types are in place
+        # use diges that don't match to roll attention at w
+        # can then download the w and see its true s&dige
+        ['follow_diffdige','4',&acgtRs{
+            #.y.tw
+            # < i <^%eout:src
+            $p = Ry&up;
+            $S = Rs&src = ps&z[ps&z.indexOf(R)-1];
+            $g = Rs&aga = ps&z[ps&z.indexOf(R)+1];
+            $d = Rs&perc
             
         },'ift,D'],
         
@@ -3118,6 +3129,46 @@ Coffle: | # discussion
         },'ift,D'],
         
 
+        # Ghostway - asks for way notifies, gets them
+        # provides %eout(), %ein() %open()
+        #   for C sloshing in or out
+        #   to staging, to iterate into here
+        # < %open() is el=1ing everything
+        #   may not be called if Ghocoline el=7s
+        # knows how to talk ws:s/digwaypoll
+        ['Ghostway','33',&acgtRs{
+            $open = Rs&open;
+            !open and throw "no Ghostway proxy open()"
+            Rs&open = &s{
+                open(s);
+                # wants to let ^ complete before
+                # our layer of protocol opens:
+                $ways = haks(A.5.I.w.y.tw);
+                Rs&ein(ways);
+            };
+            
+            Rs&tinyLines = 1;
+            # e out change a ghost
+            # < decoded Lines
+            Rs&eout = &s{
+                # Ghost%dige:thritty
+                # could guess from t/y=hash
+                #me&upghost,s
+
+                ~got: ki(s)
+            };
+            
+            # e in things we want to know about
+            Rs&ein = &z{
+                each in z {
+                    $t = typeof n == 'string' ? n : n.t;
+                    ~Sending: t
+                    #me&waytime,t,null;
+                    Rs&send(t);
+                }
+            };
+        },'ift,D'],
+        
         
         #c Ghocoline - tricks with Lving
         # provides %receive() and wraps %send()
@@ -3189,41 +3240,6 @@ Coffle: | # discussion
                 L && Lc&b and 'el=7 for %sent_dige'
             };
         },'ift,D'],
-        # specific case, asks for way notifies, gets them
-        # knows how little we can talk to get it done
-        ['Ghostway','33',&acgtRs{
-            $open = Rs&open;
-            !open and throw "no Ghostway proxy open()"
-            Rs&open = &s{
-                open(s);
-                # wants to let ^ complete before
-                # our layer of protocol opens:
-                $ways = haks(A.5.I.w.y.tw);
-                Rs&ein(ways);
-            };
-            
-            Rs&tinyLines = 1;
-            # e out change a ghost
-            # < decoded Lines
-            Rs&eout = &s{
-                # Ghost%dige:thritty
-                # could guess from t/y=hash
-                #me&upghost,s
-
-                ~got: ki(s)
-            };
-            
-            # e in things we want to know about
-            Rs&ein = &z{
-                each in z {
-                    $t = typeof n == 'string' ? n : n.t;
-                    ~Sending: t
-                    #me&waytime,t,null;
-                    Rs&send(t);
-                }
-            };
-        },'ift,D'],
-        
         #c A%Sock <-> A:ws
         # at both ends of the deal
         # provides Rs&Lving and Rs&send()
@@ -3252,6 +3268,9 @@ Coffle: | # discussion
             #     computation on that must sleep while we try to:
             #   negotiate what they know with el=7
             #     might know our Ls&sent_dige
+            #       or a previous one:
+            #         retransmit bits of Ls&send
+            #         is TCP reliability
             #     or stuff on the ground
             #       exploratory W nature
             #       eg check state of everything in Toys:
