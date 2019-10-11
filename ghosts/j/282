@@ -3136,17 +3136,25 @@ Coffle: | # discussion
             # the 'here', a join
             n Ghost  $s:Ghost,R %ball
             
-            # e inits some state (usually)
-            Ss&eope = &{
-                # el=2 everything
-                # sync Lving z <-> 
-                me&ioty,g,'%ball'
-                    .map(n => Ss&ein(n))
+            # e syncs i L/* o Way/* with %ein()
+            # could check against $L/#$n if it clones,
+            # or de-noise by n%toLines with S%uniqsend:
+            Ss&Lvact = &{
+                o $Way/*
+                ays&s.map(n => Ss&ein(n));
             };
-            # e in things we want to know about
-            Ss&tinyLines = 1;
+            # e inits some state (usually)
+            # el=2 everything
+            Ss&eope = &{
+                Ss&Lvact()
+            };
+            # el=2 changing
             
+            # may not make it through send() if same
+            Ss&uniqsend = 1;
             # a t/dige only variety of tinyLines encoding:
+            Ss&tinyLines = 1;
+            # e in things we want to know about
             Ss&ein = &n{
                 # Way%ball to string
                 !ns&ball and throw "ein ball"
@@ -3172,14 +3180,34 @@ Coffle: | # discussion
                 
                 ~got: l.t
             };
+            #c reacte in things we want to know about
             
+            # make sure it's in/out of date
+            $waying = &sk{
+                o $Way/#s.t:s
+                !ya and yas&didntknow = 1; return
+                
+                k == 'drop' and yas&now = G&time - 3600
+                else
+                k == 'keep' and yas&now = G&time + 3600
+                else {
+                    throw "mod waying "+k
+                }
+            }
             
+            # knowing digway, find current ws&dige
             o $Ghost/seek/*
-            each in ays&s {
-                $w = G&ting,'way',n.t;
+            $seeking = ays&s;
+            each is seeking {
+                $was = waying(s,'drop');
+                $w = G&ting,'w',s.t;
+                if (!w) {
+                    # keep working until here
+                    waying(s,'keep');
+                    continue
+                }
                 
-                !w and continue
-                
+                i $Ghost/seek/-$s
                 n seen  $self:w %Cit
                 # permanent
                 i $Ghost/est/$w
@@ -3188,15 +3216,17 @@ Coffle: | # discussion
             }
             
             # permanent thing, subject to rumours
-            o $Ghost/est/*:w
-            each iw ays&w {
+            o $Ghost/est/*
+            each iw ays&s {
                 ws&now = G&time + 3600;
             }
             
             # things changing, code to redo
-            o $Ghost/ing/*:w
-            each iw ays&w {
+            o $Ghost/ing/*
+            $inging = ays&s;
+            each iw inging {
                 ~Ghostway: w.t
+                i $Ghost/ing/-$w
             }
         },'ift,D'],
         
@@ -3260,10 +3290,24 @@ Coffle: | # discussion
             !send and throw "no Ghocoline proxy send()"
             Rs&send = &s{
                 $string = s;
+                # ex Lving.sc:
+                $c = {};
                 if (isC(s)) {
                     if (s.y.R == s) {
                         if (ss&ball) {
-                            ss&toLines and string = ss&toLines
+                            if (ss&toLines) {
+                                string = ss&toLines;
+                                if (Rs&uniqsend) {
+                                    # Way/$s stabilises
+                                    c.self = s;
+                                    # against its last send
+                                    $L = Rs&Lvism;
+                                    o $L/#$s
+                                    yas&toLines == string and ~sletoLines
+                                    yas&toLines == string and return
+                                    # s attached to the boundary
+                                    i $L/$s
+                                }
                             else {
                                 throw "send R%ball!%toLines"
                             }
@@ -3282,7 +3326,7 @@ Coffle: | # discussion
                 # ^ might have a repeat compression
                 #   eg keeping at an indent across frames of Lines
                 #      for lots of el:8 leading in
-                send(s);
+                send(string,c);
             };
             Rs&open = &{
                 $L = Rs&Lving;
@@ -3351,13 +3395,16 @@ Coffle: | # discussion
                 G&c:'>1 '+t,l
             };
             
-            $roll = &Ltso{
+            $roll = &tsoc{
+                $L = Rs&Lving;
+                !L and throw "ws:L:send!open"
+                
                 # accumulating dige
                 $digek = t+'_dige';
                 L.sc[digek] = dig((L.sc[digek]||'')+s);
                 
                 # point in time log
-                $c = {};
+                c ||= {};
                 c.now = G&time;
                 # opposite direction's count
                 # last in when this went out, etc.
@@ -3378,18 +3425,14 @@ Coffle: | # discussion
                 L = me&rollbsc,R,'Lving','b,increment';
                 Rs&open();
             };
-            Rs&send = wsc&send = &s{
-                $L = Rs&Lving;
-                !L and throw "ws:L:send!open"
+            Rs&send = wsc&send = &sc{
                 # L logs
-                roll(L,'send',s,'receive');
+                roll('send',s,'receive',c);
                 # never fails?
                 WS.send(s);
             };
-            wsc&receive = &s{
-                $L = Rs&Lving;
-                !L and throw "ws:L:receive!open"
-                $D = roll(L,'receive',s,'send');
+            wsc&receive = &sc{
+                $D = roll('receive',s,'send',c);
                 Rs&receive(s,D);
             };
             
