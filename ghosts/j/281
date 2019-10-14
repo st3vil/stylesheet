@@ -543,7 +543,7 @@ Soogle: | # start from Sevo
         $isnew = !Rc&b;
         # past self
         $b = Rc&b || {c:{},sc:{}};
-        if (s&e) {
+        if (s&e && s&e != 2) {
             s&tag = 'input';
             s&inv = 1;
             c&s == null and c&s = '';
@@ -633,6 +633,8 @@ Soogle: | # start from Sevo
                     $(Rs&on).on('blur',&{ G&gev });
                     $(Rs&on).on('focus',&{ 4c&pause = 1 });
                 }
+                else
+                s&e == '2' and G&yl:22,&{ me&codemirror,R,b };
                 else {
                     throw "other e type"
                 }
@@ -649,7 +651,85 @@ Soogle: | # start from Sevo
             # which is why to cause Rs&cha? might work without
             # supposing the element will surely be there...
         }
-    }
+    };
+    #c codemirror
+    # https://codemirror.net/doc/manual.html
+    # < should mostly in osc, high level fork important
+    me.codemirror = &acgtRb{
+        Rs&cm ||= bs&cm;
+        Rs&cm ||= CodeMirror(
+            Rs&on,
+            {mode:'perl',theme:'midnight',
+            lineWrapping:true,indentUnit:4,smartIndent:0}
+        );
+        $cm = Rs&cm;
+
+        # sets value
+        if (c&s != null) {
+            # a string starts or updates
+            $is = cm.getValue();
+            if (is != c&s) {
+                if (is) {
+                    # merge/merge.js
+                }
+                cm.setValue(c&s);
+                cm.refresh();
+                G&yl:400,&{ cm.refresh() };
+            }
+            # ? = s&dige;
+        }
+
+        # gives value
+        # < softly on bunch of changes: cm.signal('changes',...)
+        # < hard on esc-key
+        # < as different intensities,cm.getchanges, do branching in time...
+        #   differ everything we code up, suggest types...
+        Rs&on.eintro = &e{
+            e.t = 'says';
+            ec&s = cm.getValue();
+            s&digs and ec&parent = s&digs
+            # we default to ec&s = $(on).val()
+            # unless wanting to watch typing as it happens,
+            # throws out events like click, keypress other than esc/enter
+            ec&noisyinput = 1;
+            4c&pause = 0;
+        };
+
+        # 8
+        $sav = &{ G&gev };
+        cm.setOption('extraKeys', {
+            'Esc': sav,
+            'Tab': &c{
+                c.getSelection().length ? 
+                    c.execCommand('indentMore')
+                    : c.replaceSelection("    ")
+            },
+            'Shift-Tab': &c{
+                c.execCommand('indentLess');
+            },
+            "Ctrl-Enter": sav,
+
+            # TODO doesn't work?
+            "Ctrl-Q": &cm,{ cm.foldCode(cm.getCursor()); },
+        });
+
+        # when markers can be used for these things:
+        # cm.setOption('lineNumbers',true);
+        # cm.setOption('foldGutter',true);
+        # cm.setOption('gutters',
+        #["CodeMirror-foldgutter"]);
+
+        # TODO use/upload/download markers, fold with them
+        # have them able to be open or closed to the next marker of same dp..
+        # cm.foldCode(CodeMirror.Pos(21, 0));
+
+        cm.on('focus',function(){G.clof();G.keof();});
+        cm.on('click',function(){G.clof();G.keof();});
+        cm.on('blur',function(ev,of,inn){G.clon();G.keon();sav();});
+
+        #    $('#'+id).css('width','15em','max-height','70%','overflow','scroll');
+        #   $('#'+id+' > .CodeMirror');//.css('height','auto');
+    };
     #c Cup-on 8html output: put each in another
     # the html elements are closer to the C this time,
     #  used to always output a C-patch
