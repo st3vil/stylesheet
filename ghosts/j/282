@@ -3239,7 +3239,7 @@ Coffle: | # discussion
             Ss&tinyscLines = 'dige';
             
             # < param objects as known
-            $ch = Rs&chatter;
+            $ch = Rs&chatter = Ss&chatter;
             # make sure it's in/out of date
             $waying = &sk{
                 o $Way/#s.t:s
@@ -3313,7 +3313,7 @@ Coffle: | # discussion
         
         #c %Again (C/%ball source) -> %ein()
         # e inits some state (usually)
-        ['Again','34',&acgtRs{
+        ['Again','35',&acgtRs{
             !Rs&Again.sc.ball and throw "Again!ball"
             Rs&Lvact = &{
                 $N = me&ioty,Rs&Again,'%ball';
@@ -3371,6 +3371,7 @@ Coffle: | # discussion
                 return ok
             };
             
+            $ch = Rs&chatter;
             Rs&ein = &n{
                 !ns&ball and throw "!ball: "+ki(n)
                 $c = {}; # L%send[D.sc
@@ -3381,7 +3382,6 @@ Coffle: | # discussion
                     c.toLines += '%'+G&depeel,sc
                 }
                 
-                ~Sending: c.toLines
                 Rs&send(n,c);
             };
             Rs&eout = &l{
@@ -3390,7 +3390,7 @@ Coffle: | # discussion
                 
                 # their opinion is arriving
                 i Rs&Opinion/#$l:s
-                Rs&hasonlysc(ya,l) and ~Sleepway: l.t
+                Rs&hasonlysc(ya,l) and ch('sleep',['way',l.t])
                 else {
                     # changes go %Further
                     i Rs&Further/$ya
@@ -3431,6 +3431,8 @@ Coffle: | # discussion
         ['Ghocoline','32',&acgtRs{
             Rs&receive = &sD{
                 typeof s != 'string' and throw "receive !string"
+                $ch = Rs&chatter;
+                ch and ch('receive',[ki(s,3)])
                 
                 Rs&tinyLines and Rs&someLines ||= 1
                 Rs&someLines and Rs&contLines ||= 1
@@ -3495,16 +3497,15 @@ Coffle: | # discussion
                             #   smelting toLines' intel,
                             #   what to do with lots of el:8 etc.
                             if (Rs&uniqsend && Ls&send) {
-                                $i = Ls&send.length;
+                                $i = Ls&send.length-1;
                                 while (Ls&send[i]) {
-                                    $D = Ls&send[i];
-                                    # < by .t?
-                                    if (Ds&origin == s &&
-                                        Dc&s == string) {
-                                        ~sletoLines: s.t
-                                        return
+                                    $D = Ls&send[i--];
+                                    !Ds&origin and continue
+                                    if (Ds&origin != s) {
+                                        # by .t?
+                                        Ds&origin.t != s.t and continue
                                     }
-                                    i--;
+                                    Dc&s == string and return
                                 }
                             }
                         }
@@ -3519,6 +3520,9 @@ Coffle: | # discussion
                 }
                 else
                 typeof s == 'object' and throw "obj->string"
+                
+                $ch = Rs&chatter;
+                ch and ch('send',[ki(string,3)])
                 send(string,c);
             };
             Rs&open = &{
