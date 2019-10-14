@@ -2848,10 +2848,13 @@ Coffle: | # discussion
         #  recursion control
         Dc&exRc and ex(R.c,Dc&exRc);
         
+        Dc&BeX and Be&BeX,R,s,D
+        
         # %play things tend to hide/represent in-%balls
         Dc&play and Dc&hbb ||= 1
         # otherwise it costs 1 boost
-        Rs&boost > 0 and 'open'
+        # < consumable if Tie remembers
+        !Dc&ohm || Rs&boost > 0 and 'open'
         else {
             # tend to hide every R inside...
             !Dc&hbb and Rs&nofurtherDisplay = 1
@@ -2862,21 +2865,6 @@ Coffle: | # discussion
         Dc&hbb and Rs&hideballsballs = 1
         # do more display?
         # look up for a qua ac?
-    };
-    
-    # R%ball r%fix (already matched)
-    Be.fixit = &acgtrsD{
-        $R = ry&up;
-        !rs&fix and throw "What"
-        !Rs&ball and throw "What"
-        # < symbol's styles fitting into %fix n t
-        #     might be too complex to read
-        #       sprout as necessary
-        if (Dc&play) {
-            # can %play sometimes (via the %ball)
-            # likely to show %fix t/s?
-            s == '1' and me&tsc,'onething','=1'
-        }
     };
     
     #c Bersons
@@ -2974,11 +2962,74 @@ Coffle: | # discussion
         ac(R,'unplaycb', &{ me&Ravelvis,R,s.t,9 })
     }};
     
+    #c BeGhost
+    # R%ball r%fix
+    Be.fixit = &acgtrsD{
+        $R = ry&up;
+        !rs&fix and throw "What"
+        !Rs&ball and throw "What"
+        # apply styles to r%fix
+        $st = 'inputmode viewvia'.split(' ');
+        each in st {
+            !D.c[n] and continue
+            r.sc[n] = D.c[n];
+        }
+        # < symbol's styles fitting into %fix n t
+        #     might be too complex to read
+        #       sprout as necessary
+        if (Dc&play) {
+            # can %play sometimes (via the %ball)
+            # likely to show %fix t/s?
+            s == '1' and me&tsc,'onething','=1'
+        }
+    };
     
-    
-    
-    
-    
+    # s&of
+    # code, generally compiles
+    Be.sc.of = 'sof';
+    # sets up openable codon on s%fix
+    Be.sof = {BeX:{
+        's%fix':{inputmode:2,viewvia:'size'}
+    }};
+    # set properties of children that don't exist yet
+    Be.BeX = &acgtRsD{
+        each kc Dc&BeX {
+            $name = D.t+' '+k;
+            k = k.split('%');
+            $t = k[0];
+            k = k[1];
+            # cousin of R.c.X/V
+            $X = Rs&BeX ||= {};
+            $tk = X.xtk ||= {};
+            tk[t] ||= {};
+            $oX = tk[t][k] ||= {};
+            # where .x=[more R.t],.xtk=[more nk/gk]
+            # and things are:
+            $sc = oX.exRsc ||= {};
+            # rogue generation of D
+            # < use cutch, make complicated Be[t]s
+            sc.BeD = G&Cye,[name,5,c];
+        }
+    };
+    # X.xtk = R.t, R.sc gk
+    Be.BeXarrive = &acgtRsl{
+        $p = Ry&up;
+        $X = ps&BeX;
+        !X and return
+        # walk a path of x to X
+        $x = X.xtk;
+        each in l {
+            x = x[n];
+            !x and return
+        }
+        Rs&BeX and throw "Already at RsBeX"
+        Rs&BeX = x;
+        # check in
+        x.z ||= [];
+        x.z.indexOf(R) < 0 and x.z.push(R)
+        # apply
+        x.exRsc and ex(R.sc,x.exRsc);
+    }
     
     
     
