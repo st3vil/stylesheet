@@ -139,8 +139,10 @@ Coffle: | # discussion
        since W&edges is too large
      
      unseparated W&Ha starts taking Rc&N>1000 to check out
-      they could be holding all that elvising as string
-       such shapes par importo A=A
+      its the elvising:
+       < to be lv change only
+       < not deLinesing to Wing, wait til Ting
+      such shapes par importo A=A
       
     W&large_edges:
       W&edges:
@@ -3218,13 +3220,8 @@ Coffle: | # discussion
             }
         },'ift,D'],
         
-        #c %Again (C/%ball source), %tinyscLines
+        #c %Again (C/%ball source) -> %ein()
         ['Again','34',&acgtRs{
-            # < auto Rs&Src -> L
-            
-            # e syncs i L/* o Way/* with %ein()
-            # could check against $L/#$n if it clones,
-            # or de-noise by n%toLines if S%uniqsend:
             Rs&Lvact = &{
                 # < o $Way/* (want %ball)
                 $N = me&ioty,Rs&Again,'%ball';
@@ -3241,17 +3238,18 @@ Coffle: | # discussion
             # el=2 changing
             Rs&Lvism and Rs&Lvact()
         },'ift,D'],
+        # %ein() C only t and certain sc
+        # %eout() C into %Opinion
+        #   and into %Further if certain sc change
         ['tinyscLines','34',&acgtRs{
-            #   with a proper tinyLines encoder
-            # may not make it through send() if same
+            # Lving: may not make it through send() if same
             Rs&uniqsend = 1;
             # a t/dige only variety of tinyLines encoding:
             Rs&tinyLines = 1;
             
-            # e things they need to know
+            # only certain sc taken
             $only = Rs&tinyscLines;
             only = only && only != '1' && only.split(',')
-            # from here
             Rs&takeonlysc = &s{
                 $sc = {};
                 if (only) {
@@ -3285,41 +3283,62 @@ Coffle: | # discussion
             };
             
             Rs&ein = &n{
-                # Way%ball, not its .c.s
-                !ns&ball and throw "ein ball: "+ki(n)
-                
+                !ns&ball and throw "!ball: "+ki(n)
+                $c = {}; # L%send[D.sc
                 $s = nc&s;
-                ns&toLines = s.t;
-                # limit to %dige?
+                c.toLines = s.t;
                 $sc = Rs&takeonlysc(s);
                 if (haks(sc).length) {
-                    ns&toLines += '%'+G&depeel,sc
+                    c.toLines += '%'+G&depeel,sc
                 }
                 
-                ~Sending: ns&toLines
-                Rs&send(n);
+                ~Sending: c.toLines
+                Rs&send(n,c);
             };
-            # e changes of ghost, $t%dige only?
             Rs&eout = &l{
                 !Rs&Opinion and throw "give Opinion"
                 !Rs&Further and throw "give Further"
                 
-                # l is their opinion arriving
+                # their opinion is arriving
                 i Rs&Opinion/#$l:s
-                # ~dige -> /seek/
                 Rs&hasonlysc(ya,l) and ~Sleepway: l.t
                 else {
-                    # queue thing
+                    # changes go %Further
                     i Rs&Further/$ya
                 }
             };
         },'ift,D'],
-        #c Ghocoline - tricks with Lving
-        # provides %receive() and wraps %send()
-        #   their in/out through some formatting
-        # uses %eout()/%esout()
-        # < push/pull of C living across the boundary
-        # A:ws Lines+ send/receive <-> R:* C-things Rs&ein/out
+        #c Ghocoline - C<->string envelope
+        # provides %receive(), wraps %send()
+        #   en/decoding some string format
+        # Lving @31 logs a %send/receive[D+]
+        # see 'Lving' around here, it may also:
+        # < Ls&z clone C we sent them?
+        #     would allow better %resumable
+        #     %uniqsend dedupes for now
+        # the @34 do push/pull C across a boundary stuff
+        # the @32 is C<->string:
+        # all Lines =~ /^[ \w"]/
+        #  so there's room for some protocol in there:
+        # < Rs&resumable - do you remember? rolls state:
+        #   - roll Ls&send if %uniqsend, dedupes
+        #   - know Ls&z and lv-sense to your app
+        #   app must sleep while we try to:
+        #   negotiate what they know with el=7
+        #     might know our/previous Ls&sent_dige
+        #       retransmit Ls&send
+        #     or stuff on the ground
+        #       exploratory W nature,
+        #       eg check state of everything in Toys:
+        #         Toys el:7%dige:358i0f
+        #       may not include %dige on request,
+        #         but then the server could pre-empt our:
+        #           what has what become,
+        #            and what can be patched
+        # Rs&responsey - expect one receive per send
+        #   link them, ordering if many backends
+        #   responses not in requested order
+        #   < slowing/Aing out time to understand message
         ['Ghocoline','32',&acgtRs{
             Rs&receive = &sD{
                 typeof s != 'string' and throw "receive !string"
@@ -3373,34 +3392,35 @@ Coffle: | # discussion
             
             $send = Rs&send;
             !send and throw "no Ghocoline proxy send()"
-            Rs&send = &s{
+            Rs&send = &sc{
                 $string = s;
-                # ex Lving.sc:
-                $c = {};
+                # the Lving%send/$D .sc
+                c ||= {};
                 if (isC(s)) {
                     if (s.y.R == s) {
-                        if (ss&ball) {
-                            if (ss&toLines) {
-                                string = ss&toLines;
-                                if (Rs&uniqsend) {
-                                    # Way/$s stabilises
-                                    c.self = s;
-                                    # against its last send
-                                    $L = Rs&Lving;
-                                    o $L/#$s
-                                    if (ya && yas&toLines == string) {
+                        if (ss&ball && ss&toLines || c.toLines) {
+                            string = c.toLines || ss&toLines;
+                            c.origin = s;
+                            $L = Rs&Lving;
+                            # < Lving: repeat string/diff/compression
+                            #   smelting toLines' intel,
+                            #   what to do with lots of el:8 etc.
+                            if (Rs&uniqsend && Ls&send) {
+                                $i = Ls&send.length;
+                                while (Ls&send[i]) {
+                                    $D = Ls&send[i];
+                                    # < by .t?
+                                    if (Ds&origin == s &&
+                                        Dc&s == string) {
                                         ~sletoLines: s.t
                                         return
                                     }
-                                    # s attached to the boundary
-                                    i $L/$s
+                                    i--;
                                 }
-                            }
-                            else {
-                                throw "send R%ball!%toLines"
                             }
                         }
                         else {
+                            ss&ball and throw "send R%ball!%toLines"
                             throw "send R!%ball"
                         }
                     }
@@ -3410,15 +3430,11 @@ Coffle: | # discussion
                 }
                 else
                 typeof s == 'object' and throw "obj->string"
-                # tricks with Lving
-                # ^ might have a repeat compression
-                #   eg keeping at an indent across frames of Lines
-                #      for lots of el:8 leading in
                 send(string,c);
             };
             Rs&open = &{
                 $L = Rs&Lving;
-                L && Lc&b and 'el=7 for %sent_dige'
+                L && Lc&b && Rs&resumable and 'Lvism el=7 for %sent_dige'
                 Rs&eope and Rs&eope()
             };
         },'ift,D'],
@@ -3442,33 +3458,6 @@ Coffle: | # discussion
             #     as we talk to them
             #   or show objects we talk about
             $L = me&rollbs,R,'Lving';
-            # the first character of any Line is [ \w"]
-            #  so there's room for some protocol in there:
-            
-            # Lc&resumable - do you remember?
-            #   rolls Ls&z - the state buildup
-            #     computation on that must sleep while we try to:
-            #   negotiate what they know with el=7
-            #     might know our Ls&sent_dige
-            #       or a previous one:
-            #         retransmit bits of Ls&send
-            #         is TCP reliability
-            #     or stuff on the ground
-            #       exploratory W nature
-            #       eg check state of everything in Toys:
-            #         Toys el:7%dige:358i0f
-            #       may not include %dige on request,
-            #         but then the server could pre-empt our:
-            #           what has what become,
-            #            and what can be patched
-            #   they remember the conversation
-            
-            # Lc&responsey - expect one receive per send
-            #   informs you if getting out of order
-            #   link them
-            #   the last message we got from them,
-            #     when we sent this
-            #   < slowing/Aing out time to understand message
             
             # try leak chatter
             $ch = wsc&chatter = &t,ev{
@@ -3483,6 +3472,7 @@ Coffle: | # discussion
                 G&c:'>1 '+t,l
             };
             
+            # L logs a %send/receive[D+]
             $roll = &tsoc{
                 $L = Rs&Lving;
                 !L and throw "ws:L:send!open"
@@ -3509,15 +3499,12 @@ Coffle: | # discussion
                 return D
             };
             
-            
-            
             wsc&open = &{
                 L = me&rollbsc,R,'Lving','b,increment';
                 Rs&open();
             };
             Rs&send = wsc&send = &sc{
-                # L logs
-                roll('send',s,'receive',c);
+                $D = roll('send',s,'receive',c);
                 # never fails?
                 WS.send(s);
             };
