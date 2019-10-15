@@ -1124,21 +1124,26 @@ Foogla: |
             
             # these sleep forever if async
             try {
-                $c = {t:'mundine',mundine:1,task:'rovo',ov:1};
+                $c = {t:'mundine',mundine:1,task:'rovo',ov:0.1};
                 $r = me&Reis,R,c;
                 delete rs&ov;
+                me&Ring,r;
             }
             catch (er) {
                 rs&sleeping = 'async';
+                me&Display,r;
+                
                 $async = (er.message || er).match(/^async/);
                 # doming marked through as async?
-                me&tsc,'explosion';
+                me&tsc,'explosion',G;
                 $n = G&Cye,[Ac&sip,'',{s:er.message,er:er}];
                 ns&now = G&time;
+                ns&A = A;
+                ns&B = Gc&B;
                 erN.push(n);
             }
             
-            n erN  $self:erN,R %Cit
+            n Errors  $s:erN,R %NError,expirez:30
             
         },'ift,D'],
         ['Idoubleyou','4',&acgtRs{
@@ -1149,49 +1154,78 @@ Foogla: |
         # scan N on the way in and out
         ['foreigN','4',&acgtRs{
             Rs&rowish = 1;
-            me&tsc,'towe3ba'
+            me&tsc,'ffe';
             s&fs = 14;
             me&domesticate,R;
-            n 4  $self:4s&N %R:NAttend
-            n 1  $self:1s&N %R:NAttend
-            me&ioty,R,'%ball'
-                .map(n => n.sc['continuity markers'] = 1);
+            n 4  $s:4s&N %R:NAttend
+            n 1  $s:1s&N %R:NAttend
+            #me&ioty,R,'%ball'
+            #    .map(n => n.sc['continuity markers'] = 1);
         },'ift,D'],
         
         ['NAttend','4',&acgtRs{
             me&domesticate,R;
-            each iY Rs&self {
+            Rs&expirez = 30;
+            each iY s {
                 Y.y != Y and throw "NAttend !A"
-                n $Yc&sip  $self:Y %R:Attend
+                n $Yc&sip  $s:Y %R:Attend
             }
         },'ift,D'],
         
-        ['NAttend','7',&acgtRs{
-            $N = me&ioty,R,'%Attend';
-            each in N {
-                !ns&oldnews and continue
-                $Y = ns&self;
-                !ns&nthirteen and continue
-                $Yi = Rs&self.indexOf(Y);
+        # expiry of care about old A
+        # < kind of time we can pause
+        # R(cs=[n+]) with r(cs=n)+ self-cleaning
+        ['expirez','7',&acgtRs{
+            $outi = [];
+            each in s {
+                $r = Rs&z.filter(r=>rc&s==n)[0];
+                !r and throw "No R for "+n.t
+                # are %keepers
+                rs&keeper and continue
+                
+                # give %began
+                rs&began = me&rollbs,r,'began' || G&time;
+                $much = G&time,rs&began;
+                
+                $out = much - Rs&expirez;
+                out < 0 and continue
+                # < relative scales into styles
+                $C = rs&C;
+                out < Rs&expirez/4 and s&fs = 8; s&sat = 0.4
+                out < Rs&expirez/3 and s&fs = 6; s&sat = 0.2
+                out < Rs&expirez/2 and continue
+                
+                $Yi = s.indexOf(n);
                 Yi < 0 and me&tsc,'nofindY'
-                Yi >= 0 and Rs&self.splice(Yi,1)
+                else { outi.push(Yi) }
             }
+            outi.reverse().map(Yi => s.splice(Yi,1));
         },'ift,D'],
         
         ['Attend','4',&acgtRs{
-            $Y = Rs&self;
-            # expiry of care about old A
-            # < kind of time we can pause
-            Rs&began = me&rollbs,R,'began' || G&time;
-            G&time,Rs&began > 30 and Rs&oldnews = 1
-            Rs&oldnews and s&fs = 8; s&sat = 0.4
+            $Y = s;
             
             $nth = Y.t == 'n' && Y.y.cv == 0.13;
             nth && Yc&s.t == 'Pass' and Rs&nthirteen = 1
+            !Rs&nthirteen and Rs&keeper = 1
             
             n Y  $self:Y %R:Cit
         },'ift,D'],
-    #c mundine, be its own 4
+
+        ['NError','4',&acgtRs{
+            me&domesticate,R;
+            Rs&expirez = 30;
+            each i,er s {
+                n $er.t  $s:er %R:Error
+            }
+        },'ift,D'],
+        ['Error','4',&acgtRs{
+            Rs&rowish = 1;
+            me&tsc,'message',sc&s,'B';
+            n er  $self:s %R:Cit
+        },'ift,D'],
+        
+    #c mundine, be its own 4 plot
         ['mundine','3',&acgtRs{
             # these'll have any z?
             # J8 must check its Jtv for their 1s&N
@@ -1222,7 +1256,7 @@ Foogla: |
             me&introqua,[R,'ifd','Ghost','est'],{boost:-1},'@1';
             me&introqua,[R,'wats'],{boost:-1},'@1';
             
-            n NutMachine  R %ting:w
+            #n NutMachine  R %ting:w
             
             n A4smind  $self:A.4.sc.mind %R:Cit
             # < /W/ReI/* as a $w space
