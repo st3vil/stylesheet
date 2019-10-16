@@ -3,7 +3,7 @@ Foogla: |
     !me and throw "no me";
     $io = me.io;
     
-    ~Huff
+    ~HuEff
     =head1 #prepare to A=A
     
     some goals:
@@ -1108,7 +1108,7 @@ Foogla: |
     # have wanting uphill showing where come
     # manage more %torun/things they do
     # set off an experiential perspective:
-    #  A locality of thing availability
+    # A locality of thing availability
         ['mund','3',&acgtRs{
             Rs&rowish = 1;
             s&bo = '7px dotted green';
@@ -1116,7 +1116,7 @@ Foogla: |
             s&br = 1;
             Rs&unDoming = [];
             
-            me&tsc,"mund-e";
+            me&tsc,"mund-bar";
             
             $fore =
             me&Reis,R,{t:'iN',foreigN:1,task:'rovo'};
@@ -1285,7 +1285,7 @@ Foogla: |
                 }
             };
             4c&nodigway = Rs&nodigway;
-            ac(R,'unDoming',&{ 4c&nodigway =  0 });
+            #ac(R,'unDoming',&{ 4c&nodigway =  0 });
             
             # w can be trusted if digwaypoll
             n digwaypoll  R %mundws,Ghocoline,tinyLines
@@ -1391,14 +1391,15 @@ Foogla: |
             
             # reads t + dige
             Ss&tinyscLines = 'dige';
-            # into a pile over time
+            # the same dige at different lengths
+            Ss&mightsctrunc = 'dige'
+            # pile from both ends over time
             i s:{ Ss&Opinion=C } $Ghost/apparently:s
             # and changes go further
             i s:{ Ss&Further=C } $Ghost/seek:s
             
             Rs&seeketh = &s,was{
                 $cb = &t,ar,w{
-                    ~Seekback: w.t
                     # Iw has $w, make permanent
                     ws&now = G&time + 3600;
                     
@@ -1409,11 +1410,17 @@ Foogla: |
                     # permanent
                     i $Ghost/est/$w
                     # < dige for non-comments? (lower cv image)
-                    if (was && wass&dige == ws&dige) {
-                        ch("Seeksame",[w.t]);
-                        return
+                    $com = [w.t];
+                    if (was) {
+                        if (wass&dige == ws&dige) {
+                            ch("Seeksame",[w.t]);
+                            return
+                        }
                     }
-                    ch("Seekback",[w.t]);
+                    else {
+                        com.push("@1");
+                    }
+                    ch("Seekback",com);
                     # while changing
                     i $Ghost/ing/$w
                 };
@@ -1421,6 +1428,7 @@ Foogla: |
                 ch("seeking...",[s.t]);
                 G&way,s.t,{},cb,'nottl';
             };
+            
             
             # /apparently/ selected for /seek/
             # lookup w after knowing digway
@@ -1514,19 +1522,23 @@ Foogla: |
                 return sc
             };
             
-            # their opinion arriving again
+            # their Opinion arriving
             Rs&hasonlysc = &sl{
-                # copy sc, if compare only ones for awake
-                $ks = only;
-                ks ||= haks(s.sc);
+                $ks = only || haks(s.sc);
                 $ok = 1;
+                # checks how different it is
                 each ik ks {
                     $was = s.sc[k];
-                    if (was != l.sc[k]) {
-                        ok = 0;
-                        was and ch('scut',[l.t, k, was, '->', l.sc[k]])
-                    }
+                    $is = l.sc[k];
+                    $com = [l.t, k, was, '->', is];
+                    !is and ch('nullsc',com); return 1
+                    was != is and ok = 0
+                    #!ok and debugger;
+                    ok ||= Rs&mightsctrunc == k &&
+                        was.includes(is);
+                    !ok && was and ch('scut',com)
                 }
+                # applies!
                 each kv l.sc {
                     s.sc[k] = v
                 }
@@ -1538,12 +1550,14 @@ Foogla: |
                 !ns&ball and throw "!ball: "+ki(n)
                 $c = {}; # L%send[D.sc
                 $s = nc&s;
-                c.toLines = s.t;
-                $sc = Rs&takeonlysc(s);
-                if (haks(sc).length) {
-                    c.toLines += '%'+G&depeel,sc
+                $C = G&Cye,[s.t,1,{},Rs&takeonlysc(s)];
+                # Opinion is one piled from both ends
+                #   so it can come back same the first time
+                i Rs&Opinion/$C
+                c.toLines = C.t;
+                if (haks(C.sc).length) {
+                    c.toLines += '%'+G&depeel,C.sc
                 }
-                
                 Rs&send(n,c);
             };
             Rs&eout = &l{
@@ -1706,6 +1720,13 @@ Foogla: |
             me.cbuac(R,'unDoming',&{
                 WS.close(1000,'lum')
             });
+            $X = window.websocks ||= {};
+            X[wsc&s] = ws;
+            $sockdup = &{
+                X[wsc&s] == ws and return
+                WS.close(1000,'lum');
+                return 1
+            };
             
             # our A:ws.c hooks
             # this should A:session
@@ -1767,6 +1788,7 @@ Foogla: |
                 WS.send(s);
             };
             wsc&receive = &sc{
+                sockdup() and return
                 $D = roll('receive',s,'send',c);
                 Rs&receive(s,D);
             };
