@@ -3,7 +3,6 @@ Foogla: |
     !me and throw "no me";
     $io = me.io;
     
-    ~HuEff
     =head1 #prepare to A=A
     
     some goals:
@@ -1108,7 +1107,7 @@ Foogla: |
     # have wanting uphill showing where come
     # manage more %torun/things they do
     # set off an experiential perspective:
-    # A locality of thing availability
+    # A locality of thing availability!
         ['mund','3',&acgtRs{
             Rs&rowish = 1;
             s&bo = '7px dotted green';
@@ -1116,14 +1115,14 @@ Foogla: |
             s&br = 1;
             Rs&unDoming = [];
             
-            me&tsc,"mund-bar";
+            me&tsc,"mund";
             
             $fore =
             me&Reis,R,{t:'iN',foreigN:1,task:'rovo'};
             
             $erN = me&rollbs,R,'erN',[];
             
-            # these sleep forever if async
+            # these sleep forever if async!
             try {
                 $c = {t:'mundine',mundine:1,task:'rovo',ov:0.1};
                 $r = me&Reis,R,c;
@@ -1188,7 +1187,7 @@ Foogla: |
         
 
         
-        #c datamity
+        #c NzR, expirez
         # spread many R for each N
         ['NzR','4',&acgtRs{
             Rs&dubquiet = 1;
@@ -1228,7 +1227,6 @@ Foogla: |
         },'ift,D'],
         
         # expiry of care about old A
-        
         # < kind of time we can pause
         # R(cs=[n+]) with r(cs=n)+ self-cleaning
         ['expirez','7',&acgtRs{
@@ -1376,13 +1374,14 @@ Foogla: |
             # place to talk
             $S = Rs&Upstream = ps&z[ps&z.indexOf(R)-1];
             $ch = Rs&chatter = Ss&chatter;
-            # insured memories
+            # insured memories via %Again
             $g = Ss&Again = ps&z[ps&z.indexOf(R)+1];
             # < tractorbeam $Way into Ghost/Way,
             #   this Ghost's best guess for those ways
             #   leaving the hoisting to $Way/5Iw up to mund
             #   and providing data on dupover, etc.
             #   and helping lay things out, ref phylogen
+            # < dige for non-comments? (lower cv image)
             $Way = gc&s;
             
             # the 'here', a join
@@ -1391,93 +1390,127 @@ Foogla: |
             
             # reads t + dige
             Ss&tinyscLines = 'dige';
-            # the same dige at different lengths
-            Ss&mightsctrunc = 'dige'
+            # allow dige at different lengths >= 8
+            Ss&mightsctrunc = 'dige';
             # pile from both ends over time
             i s:{ Ss&Opinion=C } $Ghost/apparently:s
             # and changes go further
             i s:{ Ss&Further=C } $Ghost/seek:s
             
-            Rs&seeketh = &s,was{
-                $cb = &t,ar,w{
-                    # Iw has $w, make permanent
-                    ws&now = G&time + 3600;
-                    
-                    i $Ghost/seek/-$s
-                    # < should know time is up for this ground,
-                    #   get it attached via Tsome
-                    #n seen  $self:w %Cit
-                    # permanent
-                    i $Ghost/est/$w
-                    # < dige for non-comments? (lower cv image)
-                    $com = [w.t];
-                    if (was) {
-                        if (wass&dige == ws&dige) {
-                            ch("Seeksame",[w.t]);
-                            return
-                        }
+            # on change, queue:
+            Ss&do_Further = &{
+                # /apparently/* changing creates /seek/*
+                # to look it up since that dige changed
+                o $Ghost/seek/*
+                $seeking = ays&s;
+                Rs&seeking = seeking.slice();
+                each is seeking {
+                    o $Way/#$s
+                    if (!ya) {
+                        ch("didn't know",[s.t])
+                        continue
                     }
-                    else {
-                        com.push("@1");
-                    }
-                    ch("Seekback",com);
-                    # while changing
-                    i $Ghost/ing/$w
-                };
-                # keeps working until here
-                ch("seeking...",[s.t]);
-                G&way,s.t,{},cb,'nottl';
+                    Rs&seeketh(s,ya)
+                }
             };
             
-            
-            # /apparently/ selected for /seek/
-            # lookup w after knowing digway
-            o $Ghost/seek/*
-            $seeking = ays&s;
-            each is seeking {
-                # get a new $w
-                # < async completion of all /seek/*
-                
+            Rs&seeketh = &s,was{
+                ch("seeking...",[s.t]);
                 # < G&ting forcing question/remote check
                 #$w = G&ting,'w',s.t;
                 #   currently takes old-G&t shortcut,
-                #   returns way without checking ttl
-                
-                # set ttl so it renews (async)
-                o $Way/#s.t:s
-                was = ya;
-                !was and ch("didn't know",[s.t]); continue
-                
-                Rs&seeketh(s,was);
-                
-            }
+                #    returns way without checking ttl
+                $cb = &t,ar,w{
+                    Rs&seekend(w,s,was);
+                };
+                # noop='nottl' so it renews
+                G&way,s.t,{},cb,'nottl';
+            };
             
-            # permanent things, subject to rumours
+            # attaches Rs&One callback!!
+            # does only if still the Rs&One
+            me.sccb = &acgtRky{
+                $cb;
+                cb = R.sc[k] = &{
+                    R.sc[k] == cb && y ();
+                };
+                return cb
+            };
+            
+            # thing is got
+            Rs&seekend = &w,s,was{
+                Ss&sleep_Further &&
+                    Ss&sleep_Further(w,s);
+                
+                $com = [w.t];
+                !was and com.push("@1")
+                else
+                if (wass&dige == ws&dige) {
+                    return ch("Seeksame",[w.t])
+                }
+                ch("Seekback",com);
+                # while changing!!
+                i $Ghost/ing/$w
+                # once after the batch (ish)
+                $si = Rs&seeking.indexOf(s);
+                si >= 0 and Rs&seeking.slice(si,1);
+                # wait up to 30ms if more might seekend
+                $delay = Rs&seeking.length ? 30 : 0;
+                # joining seekends near in time
+                $cb = me&sccb,R,'seekingdone',Rs&do_ing;
+                G&yl,delay,cb
+            };
+            
+            #c 7 thing is fine, either way
+            #!
+            Ss&sleep_Further = &ws{
+                if (!w) {
+                    # from eout that sleeps
+                    o $Way/#$s
+                    w = ya;
+                    !w and return ch("didn't know sleeping",[s.t])
+                }
+                # Iw has $w, make permanent!
+                ws&now = G&time + 3600;
+
+                i $Ghost/seek/-#$s
+                # < should know time is up for this ground,
+                #   get it attached via Tsome
+                #n seen  $self:w %Cit
+                # permanent
+                i $Ghost/est/$w
+            };
+            
+            # keep permanent!
+            # the only in-time operation
             # < scan for not in Iw
+            # < dige sleep on init may not get things here:
             o $Ghost/est/*
             each iw ays&s {
                 ws&now = G&time + 3600;
             }
             
-            # things changing, code to redo!
-            o $Ghost/ing/*
-            $inging = ays&s;
-            # < otherwise G&ting evals?
-            $doers = 'Soogle Packle Coffle Foogla'.split(' ');
-            each iw inging {
-                if (doers.indexOf(w.t) >= 0) {
-                    # me.codes containers should run
-                    ch("Ghostwayer",[w.t]);
-                    G&way,w.t
+            Rs&do_ing = &{
+                # things changing, code to redo!
+                o $Ghost/ing/*
+                $inging = ays&s;
+                # < otherwise G&ting evals?
+                $doers = 'Soogle Packle Coffle Foogla'.split(' ');
+                each iw inging {
+                    if (doers.indexOf(w.t) >= 0) {
+                        # me.codes containers should run
+                        ch("Ghostwayer",[w.t]);
+                        G&way,w.t
+                    }
+                    else {
+                        ch("Ghostway",['',w.t]);
+                    }
+                    i $Ghost/ing/-$w
+                    # then anything dependent on the way
+                    #  eg I, J...
+                    #  diff way to wake a .Ja. is not impossible
                 }
-                else {
-                    ch("Ghostway",['',w.t]);
-                }
-                i $Ghost/ing/-$w
-                # then anything dependent on the way
-                #  eg I, J...
-                #  diff way to wake a .Ja. is not impossible
-            }
+            };
         },'ift,D'],
         
         #c %Again (C/%ball source) -> %ein()
@@ -1531,11 +1564,13 @@ Foogla: |
                     $was = s.sc[k];
                     $is = l.sc[k];
                     $com = [l.t, k, was, '->', is];
-                    !is and ch('nullsc',com); return 1
+                    !is and ch('nullsc',com); return -1
+                    
                     was != is and ok = 0
+                    
                     #!ok and debugger;
                     ok ||= Rs&mightsctrunc == k &&
-                        was.includes(is);
+                        was && was.includes(is);
                     !ok && was and ch('scut',com)
                 }
                 # applies!
@@ -1566,11 +1601,19 @@ Foogla: |
                 
                 # their opinion is arriving
                 i Rs&Opinion/#$l:s
-                Rs&hasonlysc(ya,l) and ch('sleep',['way',l.t])
+                $ok = Rs&hasonlysc(ya,l);
+                ok < 0 and 'said error'
+                elsif (ok) {
+                    ch('sleep',['way',l.t]);
+                    Rs&sleep_Further &&
+                        Rs&sleep_Further(null,l)
+                }
                 else {
-                    # changes go %Further
+                    # changes go %Further once per receive
                     ch((!ya?'new':'wake'),['way',l.t])
                     i Rs&Further/$ya
+                    Rs&do_Further &&
+                        ac(R,'Finally',Rs&do_Further)
                 }
             };
         },'ift,D'],
@@ -1656,6 +1699,8 @@ Foogla: |
                 else
                 Rs&eout and z.map(s => Rs&eout(s,z))
                 
+                $Fin = delete Rs&Finally;
+                Fin && Fin.map(cb=>cb());
             };
             
             $send = Rs&send;
