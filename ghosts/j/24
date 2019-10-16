@@ -172,10 +172,11 @@ NutThing: | # name of thing, outside I?
     #    so resources can be loaded before J:6, which should sleep
     #     and only happen when it needs to, in tiny ordered parts, etc.
     # < assume w without s&now live forever?
-    way: %acgt:t ar cb
+    way: %acgt:t ar cb noop
         $w = typeof t == 'object' ? t : G&t,'w',t;
         $ttl = 4c&ttl || 5;
         !(w && ws&now && G&time,ws&now,ttl) and w = null
+        noop == 'nottl' and w = null
         
         if (!w) {
             cb == 'noop' and cb = &{};
@@ -272,7 +273,7 @@ NutThing: | # name of thing, outside I?
             }
             args and wc&code_args = args;
         }
-        cb == 'noop' and return
+        noop || cb == 'noop' and return
         $arm = [];
         $ark = args.split(',');
         each ik ark {

@@ -1273,7 +1273,7 @@ Foogla: |
             # be %gee-like, belief relay
             $n =
             n nodigway  s:● %fs:22,medo:modeen,togla
-            me&rollbs,R,'nodigway';
+            me&rollbs,R,'nodigway',1;
             !Rs&nodigway and ns&fs = 11
             Rs&modeen = &acgtr{
                 T.wake = 1;
@@ -1285,10 +1285,10 @@ Foogla: |
                 }
             };
             4c&nodigway = Rs&nodigway;
+            ac(R,'unDoming',&{ 4c&nodigway =  0 });
             
             # w can be trusted if digwaypoll
             n digwaypoll  R %mundws,Ghocoline,tinyLines
-            ac(R,'unDoming',&{ 4c&nodigway =  0 });
             
             n ifd  R %Ghostway
             # < ^ having its own compile,
@@ -1374,39 +1374,53 @@ Foogla: |
         ['Ghostway','33',&acgtRs{
             $p = Ry&up;
             # place to talk
-            # loaded with our modes, %ein/out
-            $S = Rs&Woll = ps&z[ps&z.indexOf(R)-1];
-            # what to talk about
+            $S = Rs&Upstream = ps&z[ps&z.indexOf(R)-1];
+            $ch = Rs&chatter = Ss&chatter;
+            # insured memories
             $g = Ss&Again = ps&z[ps&z.indexOf(R)+1];
+            # < tractorbeam $Way into Ghost/Way,
+            #   this Ghost's best guess for those ways
+            #   leaving the hoisting to $Way/5Iw up to mund
+            #   and providing data on dupover, etc.
+            #   and helping lay things out, ref phylogen
             $Way = gc&s;
-            # in process
-            $Ghost = Rs&perc = me&rollbsc,R,'Ghost';
             
             # the 'here', a join
+            $Ghost = Rs&perc = me&rollbsc,R,'Ghost';
             n Ghost  $s:Ghost,R %ball,childy
-            #Ss&Opinion = # < io babz set ya
-            i $Ghost/apparently:s
-            Ss&Opinion = ya;
-            i $Ghost/seek:s
-            Ss&Further = ya;
             
+            # reads t + dige
             Ss&tinyscLines = 'dige';
+            # into a pile over time
+            i s:{ Ss&Opinion=C } $Ghost/apparently:s
+            # and changes go further
+            i s:{ Ss&Further=C } $Ghost/seek:s
             
-            # < param objects as known
-            $ch = Rs&chatter = Ss&chatter;
-            # make sure it's in/out of date
-            $waying = &sk{
-                o $Way/#s.t:s
-                !ya and ch("didn't know",[s.t]); return
-                
-                k == 'drop' and yas&now = G&time - 3600
-                else
-                k == 'keep' and yas&now = G&time + 3600
-                else {
-                    throw "mod waying "+k
-                }
-                return ya
-            }
+            Rs&seeketh = &s,was{
+                $cb = &t,ar,w{
+                    ~Seekback: w.t
+                    # Iw has $w, make permanent
+                    ws&now = G&time + 3600;
+                    
+                    i $Ghost/seek/-$s
+                    # < should know time is up for this ground,
+                    #   get it attached via Tsome
+                    #n seen  $self:w %Cit
+                    # permanent
+                    i $Ghost/est/$w
+                    # < dige for non-comments? (lower cv image)
+                    if (was && wass&dige == ws&dige) {
+                        ch("Seeksame",[w.t]);
+                        return
+                    }
+                    ch("Seekback",[w.t]);
+                    # while changing
+                    i $Ghost/ing/$w
+                };
+                # keeps working until here
+                ch("seeking...",[s.t]);
+                G&way,s.t,{},cb,'nottl';
+            };
             
             # /apparently/ selected for /seek/
             # lookup w after knowing digway
@@ -1422,33 +1436,12 @@ Foogla: |
                 #   returns way without checking ttl
                 
                 # set ttl so it renews (async)
-                $was = waying(s,'drop');
-                $cb = &t,ar,w{
-                    # Iw has $w, make permanent
-                    ws&now = G&time + 3600;
-                    
-                    i $Ghost/seek/-$s
-                    # < should know time is up for this ground,
-                    #   get it attached via Tsome
-                    n seen  $self:w %Cit
-                    # permanent
-                    i $Ghost/est/$w
-                    # < dige for non-comments? (lower cv image)
-                    if (was && wass&dige == ws&dige) {
-                        ch("Seeksame",[w.t]);
-                        continue
-                    }
-                    # while changing
-                    i $Ghost/ing/$w
-                };
-                G&way,s.t,{},cb;
+                o $Way/#s.t:s
+                was = ya;
+                !was and ch("didn't know",[s.t]); continue
                 
-                if ('ting' == 'async') {
-                    # keep working until here
-                    ch("seeking...",[s.t]);
-                    waying(s,'keep');
-                    continue
-                }
+                Rs&seeketh(s,was);
+                
             }
             
             # permanent things, subject to rumours
@@ -1457,7 +1450,6 @@ Foogla: |
             each iw ays&s {
                 ws&now = G&time + 3600;
             }
-            
             
             # things changing, code to redo!
             o $Ghost/ing/*
@@ -1522,7 +1514,6 @@ Foogla: |
                 return sc
             };
             
-            
             # their opinion arriving again
             Rs&hasonlysc = &sl{
                 # copy sc, if compare only ones for awake
@@ -1564,7 +1555,7 @@ Foogla: |
                 Rs&hasonlysc(ya,l) and ch('sleep',['way',l.t])
                 else {
                     # changes go %Further
-                    ch('wake',['way',l.t])
+                    ch((!ya?'new':'wake'),['way',l.t])
                     i Rs&Further/$ya
                 }
             };
