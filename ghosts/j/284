@@ -427,6 +427,8 @@ Foogla: |
      mund%torun: de-lies fact piles
        various eg %Ghostways produce stuff
        they each become a Ghost unto further ...
+       < parts have error and T/(1|4)s&N plumbing
+       
        %Ghostways:
          insures /way/$t via %mundws:digwaypoll
          < tractorbeam $Way into Ghost/Way,
@@ -448,7 +450,7 @@ Foogla: |
         < tree -> table mode as we cross the line,
           smoky action -> seeing office mode
        
-       # do next
+       # do next!
        %ting:
          a search or put, any type
          < explains G&ting
@@ -1138,29 +1140,38 @@ Foogla: |
             
             $erN = me&rollbs,R,'erN',[];
             
-            # these sleep forever if async!
-            try {
-                $c = {t:'mundine',mundine:1,task:'rovo',ov:0.1};
-                $r = me&Reis,R,c;
-                delete rs&ov;
-                me&Ring,r;
-            }
-            catch (er) {
-                rs&sleeping = 'async';
-                $ce = rs&C;
-                ces&sat = 2;
-                me&Display,r;
-                
-                $async = (er.message || er).match(/^async/);
-                # doming marked through as async?
-                me&tsc,'explosion',G;
-                $n = G&Cye,[Ac&sip,'',{s:er.message,er:er}];
-                ns&now = G&time;
-                ns&A = A;
-                ns&B = Gc&B;
-                ns&R = R;
-                erN.push(n);
-            }
+            # catch errors per dome of resilience
+            # < %Reis with error handlers,
+            #   pausible
+            # < er + Ring cursor
+            Rc&Rom = &Rc{
+                typeof c == 'string' and c = {t:c}; c[c.t] = 1
+                c.task ||= 'rovo';
+                try {
+                    $r = me&Re,R,c;
+                    me&Ring,r;
+                }
+                catch (er) {
+                    if (rc&b) {
+                        # keep last display
+                        # < warn shadow?
+                        rs&sleeping = 'async';
+                        me&Display,r;
+                    }
+                    $async = (er.message || er).match(/^async/);
+                    # doming marked through as async?
+                    me&tsc,'explosion',null,'G';
+                    $n = G&Cye,[Ac&sip,'',{s:er.message,er:er}];
+                    ns&now = G&time;
+                    ns&A = A;
+                    ns&B = Gc&B;
+                    ns&p = R;
+                    ns&R = r;
+                    erN.push(n);
+                }
+            };
+            
+            Rc&Rom(R,'munding');
             
             me&Reis,R,{t:'oN',foreigN:1,task:'rovo',erN:erN,fore:fore};
             
@@ -1197,7 +1208,9 @@ Foogla: |
 
         ['Error','4',&acgtRs{
             Rs&rowish = 1;
-            me&tsc,'message',sc&s,'B';
+            $skull = '☠';
+            me&tsc,'error',skull,'D';
+            me&tsc,'message',sc&s,'d';
             n er  $self:s %R:Cit
         },'ift,D'],
         
@@ -1273,7 +1286,7 @@ Foogla: |
         },'ift,D'],
         
     #c mundine, be its own 4 plot
-        ['mundine','3',&acgtRs{
+        ['munding','3',&acgtRs{
             # these'll have any z?
             # J8 must check its Jtv for their 1s&N
              
@@ -1317,7 +1330,7 @@ Foogla: |
             me&introqua,[R,'ifd','Ghost','est'],{boost:-1},'@1';
             me&introqua,[R,'wats'],{boost:-1},'@1';
             
-            n NutMachine  R %ting:w
+            Rc&Rom(R,{t:'NutMachine',ting:'w'});
             
             n A4smind  $self:A.4.sc.mind %R:Cit
             # < /W/ReI/* as a $w space
@@ -1342,11 +1355,9 @@ Foogla: |
         
         #c ting gets domethings
         # push/pull of C living across the boundary
-        
         ['ting','3',&acgtRs{
             Rs&rowish = 1;
             $t = Rs&Live = G&ting,Rs&ting,R.t;
-            
         },'ift,D'],
         
         # at LVing avail
@@ -1553,15 +1564,11 @@ Foogla: |
             $only = Rs&tinyscLines;
             only = only && only != '1' && only.split(',')
             Rs&takeonlysc = &s{
+                !only and return ex({},s.sc)
                 $sc = {};
-                if (only) {
-                    each ik only {
-                        s.sc[k] == null and continue
-                        sc[k] = s.sc[k]
-                    }
-                }
-                else {
-                    ex(sc,s.sc)
+                each ik only {
+                    s.sc[k] == null and continue
+                    sc[k] = s.sc[k]
                 }
                 return sc
             };
