@@ -1172,6 +1172,7 @@ Foogla: |
                     $async = (er.message || er).match(/^async/);
                     # doming marked through as async?
                     me&tsc,'explosion',null,'G';
+                    ~Explo: r.t, er.message
                     $n = G&Cye,[Ac&sip,'',{s:er.message,er:er}];
                     ns&now = G&time;
                     ns&A = A;
@@ -1203,10 +1204,12 @@ Foogla: |
             # 2 self from 
             $j = me.cbu(R,'JRomt') || R;
             $mt = me&rollbs,j,'JRomt',{};
-            $d = mt[R.t];
+            $b = mt[R.t];
             $D = mt[R.t] = G&Cye,[R.t,1,{},{}];
-            d and Dc&b = d
-            Ds&count = (d && ds&count || 0) + 1;
+            b and Dc&b = b
+            Ds&amongst = b && bs&amongst || [];
+            Ds&amongst.unshift(D);
+            Ds&count = (b && bs&count || 0) + 1;
             D.t = "D."+Ds&count;
             
             # 4 pic for before/after
@@ -1223,7 +1226,7 @@ Foogla: |
             $c = Rs&JRom;
             
             
-            Rc&Rom(R,'Rom',c);
+            $r = Rc&Rom(R,'Rom',c);
             
             # 7
             # s&N
@@ -1245,8 +1248,8 @@ Foogla: |
             erN.length and Ds&erN = erN;
             
             # all but topmost should tend to sleep...
-            #Rc&Rom(R,D.t,{s:D,Domed:1});
-            n $D.t  $s:D,R %Domed
+            Rc&Rom(R,'Domeds',{s:Ds&amongst,NzR:'Domed',glamp:12});
+            #n $D.t  $s:D,R %Domed
             
             # erN
         },'ift,D'],
@@ -1313,34 +1316,19 @@ Foogla: |
         #  do expirez
         ['NzR','4',&acgtRs{
             Rs&dubquiet = 1;
-            #Rs&expirez = 30;
+            # trims to 30s timeframe, not %keepers
+            Rs&glamp and Rs&expirez = 30
             $t = me&domesticate,R;
             
             $p = Ry&up;
-            $fore = ps&fore;
-            if (fore) {
-                # fore%foreigN $R.t%NzR
-                $NzRs = me&ioty,fore,'%NzR';
-                $fo = NzRs.filter(n => n.t == R.t)[0];
-                if (fo) {
-                    # later look at this, only news
-                    $filt = &Y{
-                        $ok = 1;
-                        each in fos&z {
-                            nc&s == Y and ok = 0
-                        }
-                        return ok
-                    };
-                }
-            }
             $outi = [];
             each iY s {
-                #s.indexOf(Y) != i and outi.push(i); continue
-                filt && !filt(Y) and continue
                 $t = Y.y == Y ? Yc&sip : Y.t;
                 $z =
                 n $t  $s:Y,R
                 z.sc[Rs&NzR] = 1;
+                # inners like a log tail
+                Rs&glamp and zs&glampi = i;
             }
             outi.reverse().map(Yi => s.splice(Yi,1));
             
@@ -1364,7 +1352,14 @@ Foogla: |
                 $much = G&time,rs&began;
                 
                 $out = much - Rs&expirez;
-                out < 0 and continue
+                if (out < 0) {
+                    if (Rs&glamp && i >= Rs&glamp) {
+                        out = Rs&expirez;
+                    }
+                    else {
+                        continue
+                    }
+                }
                 # < relative scales into styles
                 $C = rs&C;
                 out < Rs&expirez/4 and s&fs = 8; s&sat = 0.4
