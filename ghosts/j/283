@@ -350,6 +350,7 @@ Packle: |
                 ps&sleeping = re;
                 Rs&theysleep = 1;
                 # keeps history/z of unhad children
+                # < TEST why do this on this R
                 me&recycleRbitXz,R;
                 # R:Display knows Rs&sleeping
                 # implement a %sleeping%whatever to etc
@@ -365,17 +366,23 @@ Packle: |
         # thing-specific reasoning/management
         # but mostly the %slep and things involved know/do all else:
         #   keeps history/z of unhad children
-        #   R:Display knows Rs&sleeping
+        # R:Display also knows Rs&sleeping
         ['sleeping+Cee','28',&acgtRs{
             $l = Rs&sleeping;
             $b = Rc&b;
             # Display - avoids Rs&sleeping
             #   must put its bs&on y&up
         },'ift,D'],
+        ['sleeping','28',&acgtRs{
+            me&recycleRbitXz,R;
+            ~Sletrip: R.t
+        },'ift,D'],
+        
+        # the R%sleeping itself doesn't rollbs
+        # < sleeping more fully, so every Rc&b = last awake
+        #   recycleRbitXz on this R does so for children
         ['sleeping+ball','28',&acgtRs{
             me&rollbs,R,'string,dige';
-            # + make me.sch_didLines accept %sleeping !%Lines
-            me&recycleRbitXz,R;
         },'ift,D'],
         
         ['slep','89',&acgtRs{
@@ -869,9 +876,11 @@ Packle: |
         ['Displayingness','93',&acgtRs{
             Rs&noDisplay and return
             $the = me&Timethe,'Display';
+            Rs&sleeping and ~>5 sleDisplay: R.t
+            Rs&sleeping and debugger;
             $d = me&Display,R;
             the();
-        },'if:h'],
+        },'if:h,sleeping'],
     ] };
     
     #c boost/play
