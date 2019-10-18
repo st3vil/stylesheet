@@ -1165,8 +1165,6 @@ Foogla: |
             
             me&tsc,"mund";
             
-            $fore =
-            me&Reis,R,{t:'iN',foreigN:1,task:'rovo'};
             
             $erN = me&rollbs,R,'erN',[];
             
@@ -1225,8 +1223,8 @@ Foogla: |
                     }
                     $async = (er.message || er).match(/^async/);
                     # doming marked through as async?
-                    me&tsc,'explosion',null,'G';
-                    ~Explo: r.t, er.message
+                    #me&tsc,'explosion',null,'G';
+                    #~Explo: r.t, er.message
                     $n = G&Cye,[Ac&sip,'',{s:er.message,er:er}];
                     ns&now = G&time;
                     ns&A = A;
@@ -1243,8 +1241,6 @@ Foogla: |
             
             Rc&Rom(R,'munding');
             
-            me&Reis,R,{t:'oN',foreigN:1,task:'rovo'};
-            
         },'ift,D'],
         
         #c safe/pausible R,
@@ -1259,12 +1255,25 @@ Foogla: |
             # 1 wave matter
             $c = Rs&JRom;
             
-            # 2 self from 
-            $j = me.cbu(R,'JRomt') || R;
-            $mt = me&rollbs,j,'JRomt',{};
-            $b = mt[R.t];
-            $D = mt[R.t] = G&Cye,[R.t,1,{},{}];
+            # 2 self, from 
+            $D = G&Cye,[R.t,1,{},{}];
+            $j = me.cbu(R,'JRomD');
+            $b;
+            if (!j) {
+                $b = me&rollbs,R,'JRomD';
+                ~Jselfon: R.t, b?"b":1
+            }
+            else {
+                j = js&JRomD;
+                jy&tw ||= {};
+                $b = jy&tw[R.t];
+                ~Jon: j.t, R.t, b?"b":1
+                jy&tw[R.t] = D;
+            }
+            Rs&JRomD = D;
+            
             b and Dc&b = b
+            b && by&tw and Dy&tw = by&tw
             Ds&amongst = b && bs&amongst || [];
             Ds&amongst.unshift(D);
             Ds&count = (b && bs&count || 0) + 1;
@@ -1290,12 +1299,16 @@ Foogla: |
             
             # 6 do innard
             $began = G&time;
+            
             $r = Rc&Rom(R,'Rom',c);
+            
             # pause if slow
             $delta = G&time,began;
+            each tn Dy&tw {
+                ns&delta and delta -= ns&delta
+            }
             delta > 0.5 and me&introqua,R,{boost:-1}
-            else
-            delta > 0.004 and Ds&delta = delta
+            Ds&delta = delta
             Ds&R = r;
             
             # 7
@@ -1365,7 +1378,11 @@ Foogla: |
                     n $k  $s:v,R %NzR:Attend
                 }
             }
-            Ds&delta and me&tsc,'delta',(Ds&delta*1000)+'ms',6
+            
+            if (Ds&delta && Ds&delta > 0.04) {
+                $say = G&thime,Dsδ
+                me&tsc,'delta',say,6
+            }
             
             # errors we caught!!!
             if (Ds&erN) {
@@ -1483,6 +1500,7 @@ Foogla: |
             Rc&Rom(R,'GhodigWap');
             
             Rc&Rom(R,'GhoNut');
+            Rc&Rom(R,'JRomnotes');
             
             # < /W/ReI/* as a $w space
             #   have to keep what's there indexed
@@ -1503,6 +1521,7 @@ Foogla: |
         # use diges that don't match to roll attention at w
         # can then download the w and see its true s&dige
         
+        # manage and hold for remixing the old NutMachine
         ['GhoNut','3',&acgtRs{
             # current $w, non-G&way grab (future?)
             Rc&Rom(R,{t:'NutMachine',ting:'w'});
@@ -1512,6 +1531,20 @@ Foogla: |
             $f = A.5[4];
             n A54er  $self:f %R:Cit
             n A545er  $self:f.5 %R:Cit
+            
+        },'ift,D'],
+        
+        # at LVing avail
+        ['JRomnotes','4',&acgtRs{
+            $s = me.cbu(R,'JRomD');
+            n essenttia  $self:ss&JRomD.y.tw,R %Reis:Cit%
+            s = me.cbu(s.y.up,'JRomD');
+            n teol  $self:ss&JRomD.y.tw,R %Reis:Cit%
+            s = me.cbu(s.y.up,'JRomD');
+            !s and return;
+            n fafa  $self:ss&JRomD.y.tw,R %Reis:Cit%
+            #s = me.cbu(s.y.up,'JRomD');
+            #n fur  $self:s,R %Reis:Cit%
         },'ift,D'],
         #c ting gets domethings
         # push/pull of C living across the boundary
