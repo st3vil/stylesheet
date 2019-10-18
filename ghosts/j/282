@@ -3378,6 +3378,8 @@ Coffle: | # discussion
         #   Re inherits us RcX and RcV,
         #    we simply move into the name we are
         $X = Rc&X ||= {};
+        # %sleeping %notsleeping should unrecycle
+        X.recycled and me&unrecycleRbitX,Ry&up,bit,R
         # < X.up more conducive to simple transplants
         X.top ||= {};
         X.x ||= {};
@@ -3468,8 +3470,7 @@ Coffle: | # discussion
     #c RbitX etc
     # keeps history of unhad children
     #  and adds them to Rs&z
-    # used by Display too, shouldn't need to...
-    #   needs that X.x ||= {}
+    # they may still arrive: unrecycle
     me.recycleRbitXz = &acgtR{
         $b = Rc&b;
         !b and throw "recycle !hist"
@@ -3480,13 +3481,13 @@ Coffle: | # discussion
             Rc&X.x && Rc&X.x[bit] and continue
             Rc&X.x ||= {};
             Rc&X.x[bit] = oV;
-            ig.push(... oV.z);
         }
+        # %sleeping %notsleeping should unrecycle
+        Rc&X.recycled = 1;
         # and links to their last selves
         # < io may notice the z !tv
         #   me&ioty just looks at z
         each in bs&z {
-            #ig.indexOf(n) >= 0 and continue
             # < of there being a future of it already?
             ac(R,'z',n);
         }
@@ -3509,14 +3510,25 @@ Coffle: | # discussion
     # eg removes recycled Display, anything awake for %sleeping
     #  %sleeping .y.Display gets set
     # < more proper... R%sleeping spawns r:%notsleeping?
-    me.unrecycleRbitX = &acgtRt{
+    me.unrecycleRbitX = &acgtRtr{
         $bit = t;
         $oV = Rc&X.x[bit];
         !oV and return
         delete Rc&X.x[bit];
-        each ir oV.z {
-            $ri = Rs&z && Rs&z.indexOf(r);
-            ri >= 0 and Rs&z.splice(ri,1)
+        !Rs&z and return
+        each in oV.z {
+            $ni = Rs&z.indexOf(n);
+            ni < 0 and continue
+            Rs&z.splice(ni,1);
+            !r and continue
+            # also, put the new r where the old one was
+            # keeping order of things dappled awake
+            # < N-order, is overcome by placeness (Lines, etc)
+            $ri = Rs&z.indexOf(r);
+            # ri must be after ni,
+            ri < 0 || ri < ni and debugger
+            Rs&z.splice(ri,1);
+            Rs&z.splice(ni,0,r);
         }
     }
 
