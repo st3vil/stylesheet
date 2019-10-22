@@ -1580,12 +1580,17 @@ Foogla: |
         # for using thing = $of/$t on an ongoing basis
         #  gets I.$of.$t
         #  some $of (W/w/js) may network, contain more I
+        # usually 
+        #   is $t still $dige?
+        #   its $dige, here: $s
+        # we may get an el/lv/anything-known about things that change
+        # the set of Questions you have:
+        #   looks like Writer's .5 deps: $type/$name%details
         ['Search','4',&acgtRs{
             $Ghost = Rs&perc = me&rollbsc,R,'Ghost';
             n Ghost  $s:Ghost,R %ball,childy
             
-            # In/$of/$P is pulled (or pushed and pulled)
-            #  looks like Writer's .5 deps: $type/$name%details
+            # $P (or pushed and pulled)
             i $Ghost/In
             # Pushing/$of/$C with c&s
             i $Ghost/Pushing
@@ -1595,36 +1600,138 @@ Foogla: |
             # a many arg'd entrypoint
             #  ting becomes the reduce for io's map
             Rs&_ting = &stz{
+                ~Search: s, t
                 # Question - may come with ...
                 $C = isC(s) ? s : G&Cye,[t,1,{of:s}];
-                $P = Rs&Question_to_Pull(C);
-                s&P && s&P != P and throw "Cs&P not of/t/P"
-                Ps&wantcheck || c&s and Rs&Pull_Check(C,P)
-                Ps&wantdecode and Rs&Pull_Decode(C,P)
-                # 
-                # dige/v hoists into P
-                # Pc&s = D - digital object
-            };
-            Rs&Question_to_Pull = &C{
-                # Cs&P = Pull - state to hoist, for 1s&in, to hoist
+                # Cs&P = Pull - state to hoist
                 #   the ghost of the thing captures the P-state,
                 #   so we can see it change
+                $P = Rs&Question_to_Pull(C);
+                s&P && s&P != P and throw "Cs&P not of/t/P"
+                # in/out of time bit
+                Rs&Pull_a(C,P);
+                # 
+                # dige/v hoists into C?
+                # provide async hooks for working ting's s&in
+                # scan a 1ss&in/$of/$t/$P by _ting C:$t $of %$P
+                # Pc&s = D - digital object
+                return Pc&s
+
+                # c&async and c&async(); throw "async didnt async"
+                # returning undef (later) means nothing found
+                # could c&l = netslopes (above 5) to look up... lumit
+                #G&TuneTimeMachine,c&of+':'+t
+            };
+            # pull per thing
+            Rs&Question_to_Pull = &C{
                 o $Ghost/In/#Cc&of/#C.t:s
                 $P = ya;
                 if (P) {
-                    Ps&wantcheck and return P
-                    # expires
-                    Ps&now && G&time,Ps&now > 5 and Ps&wantcheck = 1
+                    Ps&Want_Check and return P
+                    # they expire
+                    Ps&now && G&time,Ps&now > 5 and Ps&Want_Check = 1
                     return P
                 }
-                # creates one global pull
                 P = G&Cye,[C.t,1,{of:c&of},{}];
                 i $Ghost/In/#Cc&of/-#C.t
                 i $Ghost/In/#Cc&of/$P
-                Ps&wantcheck = 1;
+                Ps&Want_Check = 1;
                 return P
             };
-            Rs&Pull_Decode = &CP{
+            # shunt P - can progress (decode response) out of time
+            Rs&Pull_a = &CP{
+                # < make s&string mean write string, our thing in c&s
+                if (Ps&Want_Check || c&s) {
+                    # waiting on P
+                    o $Ghost/Pulling/#Cc&of/#C.t:s
+                    if (ya) {
+                        # don't shunt Pull_a
+                        return me&chatter,'dupreq',[Cc&of,C.t]
+                    }
+                    # receiver
+                    i $Ghost/Pulling/#Cc&of/$C
+                    $T = Pc&T = {};
+                    # shunts Pull_a when ready
+                    T.cb_gen = &CP{
+                        delete Ps&Want_Check;
+                        Rs&Pull_a(C,P);
+                    };
+                    # sends
+                    Rs&Pull_Check(T,C,P);
+                }
+                !T.ok and return
+                # < modes of decode: dl/Xpath, allowing yaml code
+                s&wantdecode and Ps&Want_Decode = 1
+                Ps&Want_Decode and Rs&Pull_Decode(T,C,P)
+                !T.ok and return
+                
+                s&P = P;
+                # may now be two headed
+                $changey = s&dige != Ps&dige || s&v != Ps&v;
+                # for a while
+                c&stay and changey = 0
+                if (changey) {
+                    s&dige = Ps&dige;
+                    # C never gets s&string unless it makes it
+                }
+                # specific continuation
+                c&ready and c&ready(C,P)
+            };
+            #c PullCheck
+            Rs&Pull_Check = &TCP{
+                T.waits and throw "PullCheck while waits"
+                # they may have their own ways to use dige/v, p/P/s&P
+                # Pc&get how to ask,
+                # Pc&got loads response into P
+                $Do = Rs&Talks[c&of];
+                !Do and throw "!Talk "+c&of
+                Do(C,P);
+                !(Pc&get && Pc&got) and throw "!Talk handlers "+c&of
+                
+                T.cb = &sc{
+                    T.ok = 1;
+                    # every pulling happened now
+                    Ps&now = G&time;
+                    # specific stuff moves from the response to P and Pc&s
+                    #  can !T.ok...
+                    Pc&got(P,s,c);
+                    # out of time plumb
+                    T.cb_gen and T.cb_gen(C,P)
+                };
+                Rs&TCP(T,C,P);
+            };
+            # rebuild tcp
+            # < have A, so async in handler gets retried
+            #    (or G&way noop deps just before handling)
+            # < get or ws
+            # retry, expire
+            # c == r
+            Rs&question = &acgtdy{
+                typeof data == 'function' and cb = data; data = null;
+                data and get = {url:get,data:data};
+            };
+            # uses T.cb=&sc{
+            Rs&TCP = &TCP{
+                $r = T.r = $.ajax(Pc&get);
+                T.waits = G&time;
+                r.done(&s,how,c{
+                    !T.waits and return
+                    T.waited = G&time,T.waits;
+                    delete T.waits;
+                    r.status != '200' and return T.status = r.status
+                    T.cb(s,c);
+                });
+                if (0) {
+                    $checks = 5;
+                    $check = &{
+                        is_done and return
+                        !r.status && checks-- > 0 and return G&yl,150,check
+                        done(r.responseText, 'maybe', r)
+                    };
+                    check();
+                }
+            };
+            Rs&Pull_Decode = &TCP{
                 # Pc&el becomes interesting to the Client,
                 #   2-3 were our will carried out
                 #   6-7 to merge
@@ -1632,165 +1739,196 @@ Foogla: |
                 #   while we are in the clone factory
                 #   faster to separate with io than many readLines?
                 #   but how much safer?
-                if (s) {
-                    $N = G&readLines,s;
+                try {
+                    !Ps&string and throw "P!%string"
+                    $N = G&readLines,Ps&string;
                     N.length != 1 and throw "Weird tW lines", s
                     s = N[0];
                     s.y.P = P;
                 }
+                catch (er) {
+                    T.er = er
+                }
                 Pc&s = s
             };
-            #c PullCheck
-            Rs&Pull_Check = &CP{
-                # see if we already made this request
-                o $Ghost/Pulling/#Cc&of/#C.t:s
-                ya and return me&chatter,'dupreq',[Cc&of,C.t]
-                i $Ghost/Pulling/#Cc&of/$C
-                
-                $get; # how to ask
-                $got; # loads response -> P/c&s
-
-                # they may have their own ways to use dige/v, p/P/s&P
-                # w|js
-                
-                if (c&of == 'w') {
-                    # < Babz mode: none, normal, BQ-inclusive
-                    get = '/way/'+C.t;
-                    got = &Psc{
-                        $w = Pc&s = G&Cye,[C.t,1];
-                        wc&s = s;
-                        ws&of = 'w';
-                        # hash of the source, compiled in s
-                        ws&dige = c.getResponseHeader('Dige');
-                    };
-                }
-                if (c&of == 'js') {
-                    # I in a .js script (+ a little about the 9)
-                    get = '/js/'+C.t;
-                    # T would put this c&v to wind back from bugs
-                    # hazardily shared P having the branch reset,
-                    #   put the -$v in C.t already to have a specific P be there
-                    c&v and get += += '-'+c&v;
-                    # < if c&v forced/trusted (via Wover),
-                    #   use the exact url to add_script
-                    # < does the rewritten Location mean the second XHR caches?
-                    got = &Psc{
-                        $src = c.getResponseHeader('Location');
-                        $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
-                        $W = Pc&s = G&Cye,[m[1],1];
-                        Ws&I = {};
-                        Ps&v = Ws&v = m[2];
-                        # /js/ 
-                        # nest callback
-                        $ready = delete c&ready;
-                        $callback = &script,e{
-                            me&tocfunc_script,W;
-                            ready();
-                        };
-                        G&add_script,src,callback;
-                    };
-                }
-                #c Wmode
-                if (c&of == 'W') {
-                    get = {url:'/W/'+C.t};
-                    $d = get.data = {};
-                    # clue them to Hobs for it we have around
-                    # the current HEAD:
-                    Ps&dige and d.have = Ps&dige
-                    # the first "can you hold on to..."
-                    if (c&s != null) {
-                        # wants to write, '' to delete
-                        get.type = 'post';
-                        d.s = c&s;
-                        if (d.s.length && d.s == Ps&string) {
-                            # keep expecting it
-                            !d.have and throw "sleeping write !Psdige"
-                            delete d.s;
-                        }
-                        # < get the average size of codes down,
-                        #   mix them locally (A:u)
-                        c&patch and throw "< patches"
-                        # continuity check, also for deletes
-                        # < d.parent=null means it should be new
-                        s&P and d.parent = s&P.sc.dige;
-                    }
-                    got = &Psc{
-                        $r = dej(s);
-                        # dige find things we d.have
-                        if (r.dige && r.s == null) {
-                            r.dige == Ps&dige and r.s = Ps&string
-                            else
-                            c&s && r.dige == dig(c&s) and r.s = c&s
-                            r.s == null and throw "get/W implied we know", r, P
-                        }
-                        $el;
-                        r.ok == 'found' and el = 1
-                        r.ok == 'created' and el = 2
-                        r.ok == 'updated' and el = 3
-                        # 6 is 3 from beyond 5! matters
-                        r.ok == 'forward' and el = 6
-                        r.er == 'not ffwd' and el = 7
-                        r.ok == 'deleted' and el = 9; Ps&departs = Ps&dige
-                        r.er == 'not found' and el = 9
-                        if (el == 9) {
-                            # watch for undelete?
-                            r.s and throw "what"
-                            delete Pc&s;
-                            delete Ps&dige;
-                            delete Ps&string;
-                            # plumb? like an elvisory
-                            return
-                        }
-                        if (el == 7) {
-                            # notify push failed?
-                            c&rebase and c&rebase(P,r)
-                            else {
-                                throw "not ffwd: "+C.t, r
-                            }
-                        }
-                        !el and throw "tW er", r.er, P, r
-                        if (r.s && r.s != Ps&string) {
-                            Pc&el = el;
-                            Pc&s = null;
-                            Ps&dige = r.dige;
-                            Ps&string = r.s;
-                            Ps&wantdecode = 1;
-                        }
-                    };
-                }
-                #c PullChecked
-                # ask,return
-                $done = &s,c{
-                    # every pulling happened now
-                    Ps&now = G&time;
-                    # specific stuff moves from the response to P and Pc&s
-                    got(P,s,c);
-                    # stash the P on 5s&in
-                    Pc&p == null and Pc&p = '';
-                    thing[Pc&p] = P;
-                    # and on Cuestion
-                    s&P = P;
-                    # specific continuation
-                    c&ready and c&ready()
-                };
-                G&question,get,done;
-
-                c&async and c&async(); throw "async didnt async"
-                # returning undef (later) means nothing found
-                # could c&l = netslopes (above 5) to look up... lumit
-                G&TuneTimeMachine,c&of+':'+t
-            };
             
-            # provide async hooks for working ting's s&in
+        
+            #c Talks to server
+            Rs&Talks = {};
+            Rs&Talks.w = &CP{
+                # < Babz mode: none, normal, BQ-inclusive
+                Pc&get = '/way/'+C.t;
+                Pc&got = &Psc{
+                    $w = Pc&s = G&Cye,[C.t,1];
+                    wc&s = s;
+                    ws&of = 'w';
+                    # hash of the source, compiled in s!
+                    ws&dige = c.getResponseHeader('Dige');
+                };
+            };
+            Rs&Talks.js = &CP{
+                # I in a .js script (+ a little about the 9)
+                Pc&get = '/js/'+C.t;
+                # T would put this c&v to wind back from bugs
+                # hazardily shared P having the branch reset,
+                #   put the -$v in C.t already to have a specific P be there
+                c&v and get += '-'+c&v;
+                # < if c&v forced/trusted (via Wover),
+                #   use the exact url to add_script
+                # < does the rewritten Location mean the second XHR caches?
+                Pc&got = &Psc{
+                    $src = c.getResponseHeader('Location');
+                    $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
+                    $W = Pc&s = G&Cye,[m[1],1];
+                    Ws&I = {};
+                    Ps&v = Ws&v = m[2];
+                    # /js/ 
+                    # nest callback
+                    T.ok = 0;
+                    T.waits = G&time;
+                    $callback = &script,e{
+                        T.waited_script = G&time,T.waits;
+                        T.ok = 1;
+                        me&tocfunc_script,W;
+                        ready();
+                    };
+                    G&add_script,src,callback;
+                };
+            };
+            Rs&Talks.W = &CP{
+                Pc&get = {url:'/W/'+C.t};
+                $d = Pc&get.data = {};
+                # clue them to Hobs for it we have around
+                # the current HEAD:
+                Ps&dige and d.have = Ps&dige
+                # the first "can you hold on to..."
+                if (c&s != null) {
+                    # wants to write, '' to delete
+                    Pc&get.type = 'post';
+                    d.s = c&s;
+                    if (d.s.length && d.s == Ps&string) {
+                        # keep expecting it
+                        !d.have and throw "sleeping write !Psdige"
+                        delete d.s;
+                    }
+                    # < get the average size of codes down,
+                    #   mix them locally (A:u)
+                    c&patch and throw "< patches"
+                    # continuity check, also for deletes
+                    # < d.parent=null means it should be new
+                    s&P and d.parent = s&P.sc.dige;
+                }
+                Pc&got = &Psc{
+                    $r = dej(s);
+                    # dige find things we d.have
+                    if (r.dige && r.s == null) {
+                        r.dige == Ps&dige and r.s = Ps&string
+                        else
+                        c&s && r.dige == dig(c&s) and r.s = c&s
+                        r.s == null and throw "get/W implied we know", r, P
+                    }
+                    $el;
+                    r.ok == 'found' and el = 1
+                    r.ok == 'created' and el = 2
+                    r.ok == 'updated' and el = 3
+                    # 6 is 3 from beyond 5! matters
+                    r.ok == 'forward' and el = 6
+                    r.er == 'not ffwd' and el = 7
+                    r.ok == 'deleted' and el = 9; Ps&departs = Ps&dige
+                    r.er == 'not found' and el = 9
+                    if (el == 9) {
+                        # watch for undelete?
+                        r.s and throw "what"
+                        delete Pc&s;
+                        delete Ps&dige;
+                        delete Ps&string;
+                        # plumb? like an elvisory
+                        return
+                    }
+                    if (el == 7) {
+                        # notify push failed?
+                        c&rebase and c&rebase(P,r)
+                        else {
+                            throw "not ffwd: "+C.t, r
+                        }
+                    }
+                    !el and throw "tW er", r.er, P, r
+                    if (r.s && r.s != Ps&string) {
+                        Pc&el = el;
+                        Pc&s = null;
+                        Ps&dige = r.dige;
+                        Ps&string = r.s;
+                        Ps&wantdecode = 1;
+                    }
+                };
+            };
+         
+            
+            #c way/js questions as C
+            # public interfaces
+            # shows how to plug their async gear into ting's
+            # the wandering part of G&way
+            Rs&quest_w = &acgttry{
+                $ar = r;
+                $cb = y;
+                $Q = G&Cye,[t,'',{of:'w'}];
+                Qc&ready = &{
+                    # Jin should accept this A again
+                    # < never set to 0, might speed it up if...
+                    a&ready = 1;
+                    # so wait for it...
+                    !cb and return
+                    if (G&arfgunc,cb == "s") {
+                        # way randomly happens, give return value to cb
+                        # without A lining up around it (it may do so itself)
+                        # see G&waylay for use case as delayed call
+                        $s = G&way,t,ar,'already_async';
+                        cb(s);
+                    }
+                    else {
+                        # containing a sync G&way call
+                        # or a way to get the context revisted?
+                        cb(t,ar,w);
+                    }
+                };
+                Qc&async = &{
+                    cb == 'noop' and cb = &{}
+                    else
+                    typeof cb == 'string' and throw "Cant go async: "+cb
+
+                    # Jin should avoid this A for a while
+                    a&ready = 0;
+                    # and throw/abort if no callback
+                    !cb and G&TuneTimeMachine,'w:'+t
+                };
+                $w = Rs&_ting,Q;
+                return w
+            };
+
+            Rs&quest_js = &acgtt{
+                $Q = G&Cye,[t,'',{of:'js'}];
+                Qc&ready = &{
+                    A.cv = 0.4;
+                    # Jin should accept this A again
+                    # < never set to 0, might speed it up if...
+                    a&ready = 1;
+                };
+                Qc&async = &{
+                    a&ready = 0;
+                    4s&N.push(A);
+                    T.not = 1;
+                };
+                $W = Rs&_ting,Q;
+                #a&I = Ws&I;
+                #a&v = Ws&v;
+                return W
+            };
+
          
         },'ift,D'],
         
-        # scan a 1ss&in/$of/$t/$P by _ting C:$t $of %$P
-        
-        
-        
-        
     ] };
+    #c tingtools
     # G&c but harvested by Tool
     #  as coming from this R, in/out of time,
     #   talking about other R, to make acts shimmer
