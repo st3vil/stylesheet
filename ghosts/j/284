@@ -1241,7 +1241,7 @@ Foogla: |
                     $erN = JRs&erN;
                     erN.push(n);
                 }
-                return r
+                return rs&returns || r
             };
             
             Rc&Rom(R,'munding');
@@ -1304,6 +1304,8 @@ Foogla: |
             $began = G&time;
             
             $r = Rc&Rom(R,'Rom',c);
+            # return inner Rom from the Rc&Rom() that becomes JRom
+            Rs&returns = r;
             
             # pause if slow
             $delta = G&time,began;
@@ -1529,6 +1531,8 @@ Foogla: |
         ['GhoNut','3',&acgtRs{
             Rs&Inn = Rc&Rom(R,'Search');
             Rc&Rom(R,{t:'NutMachine',ting:'w'});
+            Rc&Rom(R,{t:'NutMachine',ting:'js'});
+            Rc&Rom(R,{t:'NutMachine',ting:'W'});
             # sidechaining also ju compiles,
             #   A:u testing how we J-J mix I
             n A4smind  $self:A.4.sc.mind %R:Cit
@@ -1561,10 +1565,11 @@ Foogla: |
         ['ting','3',&acgtRs{
             Rs&rowish = 1;
             $r = me.cbu(R,'Inn');
+            $r = r && rs&Inn;
             !r and throw "no way Inn"
             
-            $t = Rs&Live = G&ting,Rs&ting,R.t;
-            
+            $t = Rs&Live = rs&_ting(Rs&ting,R.t)
+            #n Ceto  $self:r,R %Cit
         },'ift,D'],
         
         # at LVing avail
@@ -1576,7 +1581,7 @@ Foogla: |
             n Live  $self:Rs&Live,R %Cit
         },'ift,D'],
         
-        # the centralising of stuff going in
+        # the centralising of stuff going in!
         # for using thing = $of/$t on an ongoing basis
         #  gets I.$of.$t
         #  some $of (W/w/js) may network, contain more I
@@ -1587,6 +1592,11 @@ Foogla: |
         # the set of Questions you have:
         #   looks like Writer's .5 deps: $type/$name%details
         ['Search','4',&acgtRs{
+            # an h call muddies T
+            $Gtime = &d{ return G&time,d };
+            # similar!
+            $ch = &tl{ me&chatter,t,l };
+            
             $Ghost = Rs&perc = me&rollbsc,R,'Ghost';
             n Ghost  $s:Ghost,R %ball,childy
             
@@ -1600,7 +1610,6 @@ Foogla: |
             # a many arg'd entrypoint
             #  ting becomes the reduce for io's map
             Rs&_ting = &stz{
-                ~Search: s, t
                 # Question - may come with ...
                 $C = isC(s) ? s : G&Cye,[t,1,{of:s}];
                 # Cs&P = Pull - state to hoist
@@ -1622,14 +1631,14 @@ Foogla: |
                 # could c&l = netslopes (above 5) to look up... lumit
                 #G&TuneTimeMachine,c&of+':'+t
             };
-            # pull per thing
+            #c Question-Pull
             Rs&Question_to_Pull = &C{
                 o $Ghost/In/#Cc&of/#C.t:s
                 $P = ya;
                 if (P) {
                     Ps&Want_Check and return P
                     # they expire
-                    Ps&now && G&time,Ps&now > 5 and Ps&Want_Check = 1
+                    Ps&now && Gtime(Ps&now) > 5 and Ps&Want_Check = 1
                     return P
                 }
                 P = G&Cye,[C.t,1,{of:c&of},{}];
@@ -1644,12 +1653,16 @@ Foogla: |
                 if (Ps&Want_Check || c&s) {
                     # waiting on P
                     o $Ghost/Pulling/#Cc&of/#C.t:s
+                    if (ya && Gtime(yas&since) > 5) {
+                        i $Ghost/Pulling/#Cc&of/-$P:s
+                    }
                     if (ya) {
                         # don't shunt Pull_a
-                        return me&chatter,'dupreq',[Cc&of,C.t]
+                        return ch('dupreq',[Cc&of,C.t])
                     }
+                    Ps&since = Gtime();
                     # receiver
-                    i $Ghost/Pulling/#Cc&of/$C
+                    i $Ghost/Pulling/#Cc&of/$P
                     $T = Pc&T = {};
                     # shunts Pull_a when ready
                     T.cb_gen = &CP{
@@ -1659,11 +1672,17 @@ Foogla: |
                     # sends
                     Rs&Pull_Check(T,C,P);
                 }
+                $T = Pc&T;
+                !T and throw "unstarted P"
                 !T.ok and return
                 # < modes of decode: dl/Xpath, allowing yaml code
                 s&wantdecode and Ps&Want_Decode = 1
                 Ps&Want_Decode and Rs&Pull_Decode(T,C,P)
                 !T.ok and return
+                
+                # pulling done re. $Ghost, but not $C
+                i $Ghost/Pulling/#Cc&of/-$P
+                
                 
                 s&P = P;
                 # may now be two headed
@@ -1685,19 +1704,22 @@ Foogla: |
                 # Pc&got loads response into P
                 $Do = Rs&Talks[c&of];
                 !Do and throw "!Talk "+c&of
-                Do(C,P);
+                Do(T,C,P);
                 !(Pc&get && Pc&got) and throw "!Talk handlers "+c&of
                 
                 T.cb = &sc{
+                    ~TCPback
                     T.ok = 1;
                     # every pulling happened now
-                    Ps&now = G&time;
+                    Ps&now = Gtime();
                     # specific stuff moves from the response to P and Pc&s
                     #  can !T.ok...
                     Pc&got(P,s,c);
                     # out of time plumb
+                    # may be stolen by got if more requests (/js)
                     T.cb_gen and T.cb_gen(C,P)
                 };
+                ~TCPouting
                 Rs&TCP(T,C,P);
             };
             # rebuild tcp
@@ -1712,16 +1734,20 @@ Foogla: |
             };
             # uses T.cb=&sc{
             Rs&TCP = &TCP{
+                ~TZP
+                ch("tcp:"+Pc&get);
+                debugger;
                 $r = T.r = $.ajax(Pc&get);
-                T.waits = G&time;
+                T.waits = Gtime();
                 r.done(&s,how,c{
+                    ch("tcpDONE")
                     !T.waits and return
-                    T.waited = G&time,T.waits;
+                    T.waited = Gtime(T.waits);
                     delete T.waits;
                     r.status != '200' and return T.status = r.status
                     T.cb(s,c);
                 });
-                if (0) {
+                if (1) {
                     $checks = 5;
                     $check = &{
                         is_done and return
@@ -1739,12 +1765,14 @@ Foogla: |
                 #   while we are in the clone factory
                 #   faster to separate with io than many readLines?
                 #   but how much safer?
+                $s = null;
                 try {
                     !Ps&string and throw "P!%string"
                     $N = G&readLines,Ps&string;
                     N.length != 1 and throw "Weird tW lines", s
                     s = N[0];
                     s.y.P = P;
+                    Pc&s = s;
                 }
                 catch (er) {
                     T.er = er
@@ -1755,7 +1783,7 @@ Foogla: |
         
             #c Talks to server
             Rs&Talks = {};
-            Rs&Talks.w = &CP{
+            Rs&Talks.w = &TCP{
                 # < Babz mode: none, normal, BQ-inclusive
                 Pc&get = '/way/'+C.t;
                 Pc&got = &Psc{
@@ -1766,36 +1794,37 @@ Foogla: |
                     ws&dige = c.getResponseHeader('Dige');
                 };
             };
-            Rs&Talks.js = &CP{
+            Rs&Talks.js = &TCP{
                 # I in a .js script (+ a little about the 9)
                 Pc&get = '/js/'+C.t;
-                # T would put this c&v to wind back from bugs
+                # T would put this c&dige to wind back from bugs
                 # hazardily shared P having the branch reset,
-                #   put the -$v in C.t already to have a specific P be there
-                c&v and get += '-'+c&v;
+                #   put the -$dige in C.t already to have a specific P be there
+                c&dige and get += '-'+c&dige;
                 # < if c&v forced/trusted (via Wover),
                 #   use the exact url to add_script
                 # < does the rewritten Location mean the second XHR caches?
+                $cb_gen = delete T.cb_gen;
                 Pc&got = &Psc{
                     $src = c.getResponseHeader('Location');
                     $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
                     $W = Pc&s = G&Cye,[m[1],1];
                     Ws&I = {};
-                    Ps&v = Ws&v = m[2];
+                    Ps&dige = Ws&dige = m[2];
                     # /js/ 
                     # nest callback
                     T.ok = 0;
-                    T.waits = G&time;
+                    T.waits = Gtime();
                     $callback = &script,e{
-                        T.waited_script = G&time,T.waits;
+                        T.waited_script = Gtime(T.waits);
                         T.ok = 1;
                         me&tocfunc_script,W;
-                        ready();
+                        cb_gen(C,P);
                     };
                     G&add_script,src,callback;
                 };
             };
-            Rs&Talks.W = &CP{
+            Rs&Talks.W = &TCP{
                 Pc&get = {url:'/W/'+C.t};
                 $d = Pc&get.data = {};
                 # clue them to Hobs for it we have around
@@ -1858,7 +1887,7 @@ Foogla: |
                         Pc&s = null;
                         Ps&dige = r.dige;
                         Ps&string = r.s;
-                        Ps&wantdecode = 1;
+                        Ps&Want_Decode = 1;
                     }
                 };
             };
@@ -1928,7 +1957,7 @@ Foogla: |
         },'ift,D'],
         
     ] };
-    #c tingtools
+    #c me&chatter
     # G&c but harvested by Tool
     #  as coming from this R, in/out of time,
     #   talking about other R, to make acts shimmer
@@ -1936,7 +1965,7 @@ Foogla: |
     #  muted when recognised
     # < io-param-like + styles of message with object in
     me.chatter = &acgtts{
-        !s.constructor != Array and throw "send array"
+        s.constructor != Array and throw "send array"
         $l = s;
         each in l {
             l[i] = '>'+(3+(i*2))+' '+(n||'')
@@ -1960,11 +1989,11 @@ Foogla: |
     # D & C in here refer to the of & the of/t
     # < check for errors from that script?
     me.tocfunc_script = &acgtW{
-        $tocfunc = W.t+'_'+Ws&v;
+        $tocfunc = W.t+'_'+Ws&dige;
         !window[tocfunc] and throw "Notocfunc: "+tocfunc;
         $toc = window[tocfunc]();
         $D;
-        each il toc {
+        each iv toc {
             $ind = v[0];
             $C = G&Cye,[v[1],v[2],v[3],v[4]];
             if (ind == '') {
