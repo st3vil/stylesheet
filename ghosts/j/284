@@ -1741,6 +1741,7 @@ Foogla: |
                 Rs&TCP(T,C,P);
             };
             # rebuild tcp
+            # < https://javascript.info/xmlhttprequest
             # < have A, so async in handler gets retried
             #    (or G&way noop deps just before handling)
             # < get or ws
@@ -1750,7 +1751,6 @@ Foogla: |
                 $tcp = T.tcp = ch("tcp",[T.get.url,'.','.','.','']);
                 
                 $done = &s,how,c{
-                    tcp.set('l4',how+r.status );
                     !T.waits and return
                     T.waited = Gtime(T.waits);
                     delete T.waits;
@@ -1763,16 +1763,6 @@ Foogla: |
                 $r = T.r = $.ajax(T.get).done(done);
                 T.waits = Gtime();
                 
-                if (1) {
-                    $checks = 5;
-                    $check = &d{
-                        !T.waits and return
-                        !r.status && checks-- > 0 and return G&yl,150,check
-                        !d and d = &{ check(1) }; G&yl,150,d
-                        done(r.responseText, 'maybe', r)
-                    };
-                    check();
-                }
             };
             Rs&Pull_Decode = &TCP{
                 T.ok = 0;
@@ -1838,14 +1828,13 @@ Foogla: |
             };
             Rs&Talks.js = &TCP{
                 # I in a .js script (+ a little about the 9)
-                #  first request only to find the dige,
-                #  so we can write a unique <script src=toit>
-                T.get.url = '/js/'+C.t;
+                # first request: only to find the dige,
+                # then we can write a unique <script src=toit>
+                # < if we know what version don't do this first request
                 # T would put this c&dige to wind back from bugs
                 # hazardily shared P having the branch reset,
                 #   put the -$dige in C.t already to have a specific P be there
-                c&dige and T.get.url += '-'+c&dige
-                T.get.data.not = ''
+                T.get.url = '/js/'+C.t+'-'+(c&dige||'head');
                 # < if c&v forced/trusted (via Wover),
                 #   use the exact url to add_script
                 # < does the rewritten Location mean the second XHR caches?
