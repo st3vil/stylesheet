@@ -1285,6 +1285,7 @@ Foogla: |
             # 3 what doing
             if ((Rs&boost||0) < 0) {
                 me&tsc,'JRom-paused','paused','6';
+                s&boc = '888';
                 c.wantsleep = 1;
             }
             
@@ -1529,10 +1530,11 @@ Foogla: |
         # manage and hold for remixing the old NutMachine
         # current $w, non-G&way grab (future?)
         ['GhoNut','3',&acgtRs{
+            s&hue = -70;
             Rs&Inn = Rc&Rom(R,'Search');
             Rc&Rom(R,{t:'NutMachine',ting:'w'});
             Rc&Rom(R,{t:'NutMachine',ting:'js'});
-            Rc&Rom(R,{t:'NutMachine',ting:'W'});
+            Rc&Rom(R,{t:'Pass',ting:'W'});
             # sidechaining also ju compiles,
             #   A:u testing how we J-J mix I
             n A4smind  $self:A.4.sc.mind %R:Cit
@@ -1576,7 +1578,6 @@ Foogla: |
         ['ting','4',&acgtRs{
             Rs&rowish = 1;
             
-            
             Rs&Live &&
             n Live  $self:Rs&Live,R %Cit
         },'ift,D'],
@@ -1595,7 +1596,7 @@ Foogla: |
             # an h call muddies T
             $Gtime = &d{ return G&time,d };
             # similar!
-            $ch = &tl{ me&chatter,t,l };
+            $ch = &tl{ return me&chatter,t,l||[] };
             
             $Ghost = Rs&perc = me&rollbsc,R,'Ghost';
             n Ghost  $s:Ghost,R %ball,childy
@@ -1652,17 +1653,19 @@ Foogla: |
                 # < make s&string mean write string, our thing in c&s
                 if (Ps&Want_Check || c&s) {
                     # waiting on P
-                    o $Ghost/Pulling/#Cc&of/#C.t:s
-                    if (ya && Gtime(yas&since) > 5) {
-                        i $Ghost/Pulling/#Cc&of/-$P:s
+                    o $Ghost/Pulling/#Pc&of/#$P:s
+                    # don't trust stagnant Pulling
+                    if (ya && Gtime(yas&Pulling_since) > 5) {
+                        i $Ghost/Pulling/#Pc&of/-#$P:s
                     }
                     if (ya) {
-                        # don't shunt Pull_a
+                        # don't shunt Pull_a from outside its own callbacks
+                        #  which will have ensured they don't reoccur
                         return ch('dupreq',[Cc&of,C.t])
                     }
-                    Ps&since = Gtime();
+                    Ps&Pulling_since = Gtime();
                     # receiver
-                    i $Ghost/Pulling/#Cc&of/$P
+                    i $Ghost/Pulling/#Pc&of/$P
                     $T = Pc&T = {};
                     # shunts Pull_a when ready
                     T.cb_gen = &CP{
@@ -1675,14 +1678,28 @@ Foogla: |
                 $T = Pc&T;
                 !T and throw "unstarted P"
                 !T.ok and return
+                
+                #s&wantdecode and Ps&Want_Decode = 1
                 # < modes of decode: dl/Xpath, allowing yaml code
-                s&wantdecode and Ps&Want_Decode = 1
                 Ps&Want_Decode and Rs&Pull_Decode(T,C,P)
+                
                 !T.ok and return
+                delete Ps&Want_Decode;
                 
                 # pulling done re. $Ghost, but not $C
                 i $Ghost/Pulling/#Cc&of/-$P
+                delete Ps&Pulling_since;
+                # wait since request response
+                #  (subsequent requests and parsing)
+                if (T.aft_waits) {
+                    T.aft_waited = Gtime(T.aft_waits);
+                    delete T.aft_waits;
+                    $tcp = T.tcp;
+                    tcp.set('l2',G&thime,T.aft_waited );
+                }
                 
+                # P being able to be surprised etc is per C
+                Pc&el and tcp.set('l3',Pc&el)
                 
                 s&P = P;
                 # may now be two headed
@@ -1699,6 +1716,7 @@ Foogla: |
             #c PullCheck
             Rs&Pull_Check = &TCP{
                 T.waits and throw "PullCheck while waits"
+                T.ok = 0;
                 # they may have their own ways to use dige/v, p/P/s&P
                 # Pc&get how to ask,
                 # Pc&got loads response into P
@@ -1708,7 +1726,6 @@ Foogla: |
                 !(Pc&get && Pc&got) and throw "!Talk handlers "+c&of
                 
                 T.cb = &sc{
-                    ~TCPback
                     T.ok = 1;
                     # every pulling happened now
                     Ps&now = Gtime();
@@ -1719,7 +1736,6 @@ Foogla: |
                     # may be stolen by got if more requests (/js)
                     T.cb_gen and T.cb_gen(C,P)
                 };
-                ~TCPouting
                 Rs&TCP(T,C,P);
             };
             # rebuild tcp
@@ -1734,23 +1750,27 @@ Foogla: |
             };
             # uses T.cb=&sc{
             Rs&TCP = &TCP{
-                ~TZP
-                ch("tcp:"+Pc&get);
-                debugger;
-                $r = T.r = $.ajax(Pc&get);
-                T.waits = Gtime();
-                r.done(&s,how,c{
-                    ch("tcpDONE")
+                $get = Pc&get;
+                $url = get.url || get;
+                $tcp = T.tcp = ch("tcp",[url,'.','.','.']);
+                
+                $done = &s,how,c{
                     !T.waits and return
                     T.waited = Gtime(T.waits);
                     delete T.waits;
+                    tcp.set('l1',G&thime,T.waited );
+                    T.aft_waits = Gtime();
                     r.status != '200' and return T.status = r.status
                     T.cb(s,c);
-                });
+                };
+                
+                $r = T.r = $.ajax(get).done(done);
+                T.waits = Gtime();
+                
                 if (1) {
                     $checks = 5;
                     $check = &{
-                        is_done and return
+                        !T.waits and return
                         !r.status && checks-- > 0 and return G&yl,150,check
                         done(r.responseText, 'maybe', r)
                     };
@@ -1758,6 +1778,8 @@ Foogla: |
                 }
             };
             Rs&Pull_Decode = &TCP{
+                T.ok = 0;
+                ch('decode?',[P.t]);
                 # Pc&el becomes interesting to the Client,
                 #   2-3 were our will carried out
                 #   6-7 to merge
@@ -1777,7 +1799,8 @@ Foogla: |
                 catch (er) {
                     T.er = er
                 }
-                Pc&s = s
+                Pc&s = s;
+                s && !T.er and T.ok = 1;
             };
             
         
@@ -1791,7 +1814,7 @@ Foogla: |
                     wc&s = s;
                     ws&of = 'w';
                     # hash of the source, compiled in s!
-                    ws&dige = c.getResponseHeader('Dige');
+                    ws&dige = Ps&dige = c.getResponseHeader('Dige');
                 };
             };
             Rs&Talks.js = &TCP{
@@ -1810,7 +1833,7 @@ Foogla: |
                     $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
                     $W = Pc&s = G&Cye,[m[1],1];
                     Ws&I = {};
-                    Ps&dige = Ws&dige = m[2];
+                    Ws&dige = Ps&dige = m[2];
                     # /js/ 
                     # nest callback
                     T.ok = 0;
@@ -1865,6 +1888,7 @@ Foogla: |
                     r.er == 'not ffwd' and el = 7
                     r.ok == 'deleted' and el = 9; Ps&departs = Ps&dige
                     r.er == 'not found' and el = 9
+                    Pc&el = el;
                     if (el == 9) {
                         # watch for undelete?
                         r.s and throw "what"
@@ -1883,7 +1907,6 @@ Foogla: |
                     }
                     !el and throw "tW er", r.er, P, r
                     if (r.s && r.s != Ps&string) {
-                        Pc&el = el;
                         Pc&s = null;
                         Ps&dige = r.dige;
                         Ps&string = r.s;
@@ -1964,13 +1987,12 @@ Foogla: |
     #  available as verbosity, debug points
     #  muted when recognised
     # < io-param-like + styles of message with object in
-    me.chatter = &acgtts{
-        s.constructor != Array and throw "send array"
-        $l = s;
+    me.chatter = &acgttl{
+        l.constructor != Array and throw "send array"
         each in l {
-            l[i] = '>'+(3+(i*2))+' '+(n||'')
+            l[i] = '>'+(3+(i*2))+':l'+i+' '+(n||'')
         }
-        G&c:'>1 '+t,l
+        return G&c:'>1 '+t,l
     };
     # implant code as .js
     #  should be able to receive any ting,
