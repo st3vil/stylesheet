@@ -1722,8 +1722,10 @@ Foogla: |
                 # Pc&got loads response into P
                 $Do = Rs&Talks[c&of];
                 !Do and throw "!Talk "+c&of
+                T.get = {};
+                T.get.data = {};
                 Do(T,C,P);
-                !(Pc&get && Pc&got) and throw "!Talk handlers "+c&of
+                !T.get.url || !T.got and throw "!Talk handlers "+c&of
                 
                 T.cb = &sc{
                     T.ok = 1;
@@ -1731,7 +1733,7 @@ Foogla: |
                     Ps&now = Gtime();
                     # specific stuff moves from the response to P and Pc&s
                     #  can !T.ok...
-                    Pc&got(P,s,c);
+                    T.got(P,s,c);
                     # out of time plumb
                     # may be stolen by got if more requests (/js)
                     T.cb_gen and T.cb_gen(C,P)
@@ -1743,18 +1745,12 @@ Foogla: |
             #    (or G&way noop deps just before handling)
             # < get or ws
             # retry, expire
-            # c == r
-            Rs&question = &acgtdy{
-                typeof data == 'function' and cb = data; data = null;
-                data and get = {url:get,data:data};
-            };
-            # uses T.cb=&sc{
+            # uses T.get -> T.cb()
             Rs&TCP = &TCP{
-                $get = Pc&get;
-                $url = get.url || get;
-                $tcp = T.tcp = ch("tcp",[url,'.','.','.']);
+                $tcp = T.tcp = ch("tcp",[T.get.url,'.','.','.','']);
                 
                 $done = &s,how,c{
+                    tcp.set('l4',how+r.status );
                     !T.waits and return
                     T.waited = Gtime(T.waits);
                     delete T.waits;
@@ -1764,14 +1760,15 @@ Foogla: |
                     T.cb(s,c);
                 };
                 
-                $r = T.r = $.ajax(get).done(done);
+                $r = T.r = $.ajax(T.get).done(done);
                 T.waits = Gtime();
                 
                 if (1) {
                     $checks = 5;
-                    $check = &{
+                    $check = &d{
                         !T.waits and return
                         !r.status && checks-- > 0 and return G&yl,150,check
+                        !d and d = &{ check(1) }; G&yl,150,d
                         done(r.responseText, 'maybe', r)
                     };
                     check();
@@ -1779,7 +1776,8 @@ Foogla: |
             };
             Rs&Pull_Decode = &TCP{
                 T.ok = 0;
-                ch('decode?',[P.t]);
+                $type = Ps&Want_Decode;
+                ch('decode',[P.t,type,'']);
                 # Pc&el becomes interesting to the Client,
                 #   2-3 were our will carried out
                 #   6-7 to merge
@@ -1787,12 +1785,29 @@ Foogla: |
                 #   while we are in the clone factory
                 #   faster to separate with io than many readLines?
                 #   but how much safer?
+                
                 $s = null;
                 try {
-                    !Ps&string and throw "P!%string"
-                    $N = G&readLines,Ps&string;
-                    N.length != 1 and throw "Weird tW lines", s
-                    s = N[0];
+                    if (type == 'Lines') {
+                        !Ps&string and throw "P!%string"
+                        $N = G&readLines,Ps&string;
+                        N.length != 1 and throw "Weird tW lines", s
+                        s = N[0];
+                    }
+                    elsif (type == 'way') {
+                        $w = G&Cye,[C.t,1];
+                        wc&s = Ps&string;
+                        ws&of = 'w';
+                        # dige is for s before compiled
+                        ws&dige = Ps&dige;
+                        s = w;
+                    }
+                    elsif (type == 'js') {
+                        # tocfunction
+                    }
+                    else {
+                        throw "Decode type "+type
+                    }
                     s.y.P = P;
                     Pc&s = s;
                 }
@@ -1800,7 +1815,7 @@ Foogla: |
                     T.er = er
                 }
                 Pc&s = s;
-                s && !T.er and T.ok = 1;
+                s && !T.er and T.ok = 1
             };
             
         
@@ -1808,27 +1823,34 @@ Foogla: |
             Rs&Talks = {};
             Rs&Talks.w = &TCP{
                 # < Babz mode: none, normal, BQ-inclusive
-                Pc&get = '/way/'+C.t;
-                Pc&got = &Psc{
-                    $w = Pc&s = G&Cye,[C.t,1];
-                    wc&s = s;
-                    ws&of = 'w';
-                    # hash of the source, compiled in s!
-                    ws&dige = Ps&dige = c.getResponseHeader('Dige');
+                T.get.url = '/way/'+C.t;
+                Ps&dige and T.get.data.have = Ps&dige
+                T.got = &Psc{
+                    $dige = c.getResponseHeader('Dige');
+                    !s && Ps&dige == dige and s = Ps&string
+                    if (s != Ps&string) {
+                        Pc&s = null;
+                        Ps&dige = dige;
+                        Ps&string = s;
+                        Ps&Want_Decode = 'way';
+                    }
                 };
             };
             Rs&Talks.js = &TCP{
                 # I in a .js script (+ a little about the 9)
-                Pc&get = '/js/'+C.t;
+                #  first request only to find the dige,
+                #  so we can write a unique <script src=toit>
+                T.get.url = '/js/'+C.t;
                 # T would put this c&dige to wind back from bugs
                 # hazardily shared P having the branch reset,
                 #   put the -$dige in C.t already to have a specific P be there
-                c&dige and get += '-'+c&dige;
+                c&dige and T.get.url += '-'+c&dige
+                T.get.data.not = ''
                 # < if c&v forced/trusted (via Wover),
                 #   use the exact url to add_script
                 # < does the rewritten Location mean the second XHR caches?
                 $cb_gen = delete T.cb_gen;
-                Pc&got = &Psc{
+                T.got = &Psc{
                     $src = c.getResponseHeader('Location');
                     $m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
                     $W = Pc&s = G&Cye,[m[1],1];
@@ -1848,15 +1870,15 @@ Foogla: |
                 };
             };
             Rs&Talks.W = &TCP{
-                Pc&get = {url:'/W/'+C.t};
-                $d = Pc&get.data = {};
+                T.get.url = '/W/'+C.t;
+                $d = T.get.data = {};
                 # clue them to Hobs for it we have around
                 # the current HEAD:
                 Ps&dige and d.have = Ps&dige
                 # the first "can you hold on to..."
                 if (c&s != null) {
                     # wants to write, '' to delete
-                    Pc&get.type = 'post';
+                    T.get.type = 'post';
                     d.s = c&s;
                     if (d.s.length && d.s == Ps&string) {
                         # keep expecting it
@@ -1870,7 +1892,7 @@ Foogla: |
                     # < d.parent=null means it should be new
                     s&P and d.parent = s&P.sc.dige;
                 }
-                Pc&got = &Psc{
+                T.got = &Psc{
                     $r = dej(s);
                     # dige find things we d.have
                     if (r.dige && r.s == null) {
@@ -1910,7 +1932,7 @@ Foogla: |
                         Pc&s = null;
                         Ps&dige = r.dige;
                         Ps&string = r.s;
-                        Ps&Want_Decode = 1;
+                        Ps&Want_Decode = 'Lines';
                     }
                 };
             };
