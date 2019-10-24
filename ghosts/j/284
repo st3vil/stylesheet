@@ -440,6 +440,7 @@ Foogla: |
        %JRom:
          encapsulates activity, Doming in and outs
          parts have error and (1|4)s&N plumbing
+         < %balls in have slep/io-sense
          < T plumbing
          < pausing if time/sheer Ring intensive
            could control infinite loops in the same Ring
@@ -1573,7 +1574,6 @@ Foogla: |
             
         },'ift,D'],
         ['ForThe','3',&acgtRs{
-            s&hue = -70;
             
             n NutMachine  R %ting:w
             n NutMachine  R %ting:js
@@ -1602,8 +1602,15 @@ Foogla: |
             !r and throw "no way Inn"
             
             me&rollbs,R,'Q';
-            $Q = Rs&Q ||= G&Cye,[R.t,'',{of:Rs&ting}];
-            $t = Rs&Live = rs&_ting(Q);
+            $C = Rs&Q ||= G&Cye,[R.t,'',{of:Rs&ting}];
+            c&async = &{
+                me&tsc,'async'
+            };
+            # c&canwait = 1;
+            c&ready = &CP{
+                
+            };
+            $t = Rs&Live = rs&_ting(C);
             #n Ceto  $self:r,R %Cit
         },'ift,D'],
         
@@ -1657,31 +1664,57 @@ Foogla: |
             
             # a many arg'd entrypoint
             #  ting becomes the reduce for io's map
-            
+            # 
             Rs&_ting = &stz{
                 # Question - may come with ...
                 $C = isC(s) ? s : G&Cye,[t,1,{of:s}];
+                
+                # the G.t variety?
+                
                 # Cs&P = Pull - state to hoist
                 #   the ghost of the thing captures the P-state,
                 #   so we can see it change
                 $P = Rs&Question_to_Pull(C);
-                s&P && s&P != P and throw "Cs&P not of/t/P"
+                s&P && s&P != P and s&oP = delete s&P
                 # in/out of time bit
-                Rs&Pull_a(C,P);
-                # dige/v hoists into C?
-                # provide async hooks for working ting's s&in
-                # scan a 1ss&in/$of/$t/$P by _ting C:$t $of %$P
-                # Pc&s = D - digital object
                 
-                # keeps Pc&s while update is looked for
-                Pc&s && Ps&Pulling_since && c&canwait and 'waits'
-                else
-                Pc&s and return Pc&s
+                $ok = Rs&Pull_a(C,P);
+                # don't wait for the async check
+                # Pc&s only null if never found,
+                #  or new string is got but not decoded
+                !ok && Pc&s && !c&canwait and ok = 1
                 
-                # can prevent async:
-                c&async and c&async()
+                if (!ok) {
+                    # go async
+                    s&ready = 0;
+                    # after, c&ready() climbs back to C time
+                    c&ready and ac(P,'readyingC',C)
+                    c&async and c&async()
+                    else {
+                        G&TuneTimeMachine,c&of+':'+C.t
+                    }
+                }
                 else {
-                    G&TuneTimeMachine,c&of+':'+C.t
+                    # C is, Pc&s == null must be intentional
+                    s&ready = 1;
+                    
+                    # C <dige> P, may surprise
+                    # el=1/8 basically
+                    c&el = Pc&el;
+                    if (!c&el || c&el == 1) {
+                        c&el = s&dige != Ps&dige ? (s&dige ? 2 : 1)
+                            : 8
+                    }
+                    c&el && Py&decidedel && Py&decidedel(c&el);
+                    
+                    s&dige = Ps&dige;
+                    c&s = Pc&s;
+                    # C never gets s&string unless it makes it
+
+                    # keeps Pc&s while update is looked for
+                    Pc&s && Ps&Pulling_since && c&canwait and ~waitscan
+                    else
+                    Pc&s and return Pc&s
                 }
             };
             #c Question-Pull
@@ -1698,26 +1731,25 @@ Foogla: |
                 Ps&Want_Check = 1;
                 return P
             };
-                
             
             # shunt P - can progress (decode response) out of time
+            # returns 1 when done
             Rs&Pull_a = &CP{
                 # < make s&string mean write string, our thing in c&s
-                if (Ps&Want_Check || c&s) {
+                if (Ps&Want_Check || s&string) {
                     # waiting on P
                     $ya = Pio.what('Pulling',P);
                     # don't trust stagnant Pulling
                     if (ya && Gtime(yas&Pulling_since) > 5) {
                         ya = Pio.not('Pulling',P);
                     }
-                    if (ya) {
-                        # don't shunt Pull_a from outside its own callbacks
-                        #  which will have ensured they don't reoccur
-                        return ch('dupreq',[Cc&of,C.t])
-                    }
+                    # don't shunt Pull_a from outside its own callbacks
+                    #  which will have ensured they don't reoccur
+                    ya and ch('dupreq',[Cc&of,C.t]); return
+                    
                     Ps&Pulling_since ||= Gtime();
-                    # receiver
                     Pio.is('Pulling',P);
+                    
                     $T = Pc&T = {};
                     # shunts Pull_a when ready
                     T.cb_gen = &CP{
@@ -1743,29 +1775,17 @@ Foogla: |
                 # pulling done re. $Ghost, but not $C
                 !Pc&s and throw "no ting Pcs"
                 
-                # wait since request response
-                #  (subsequent requests and parsing)
-                $tcp = T.tcp;
-                
-                
                 s&P = P;
-                # el=1/8 basically
-                # < per thing (D?) the P is pulling -> C
-                if (!Pc&el || Pc&el == 1) {
-                    s&dige != Ps&dige and Pc&el = s&dige ? 2 : 1
-                    else {
-                        Pc&el = 8
-                    }
-                }
-                # P being able to be surprised etc is per C
-                Pc&el and tcp.set('l3',Pc&el)
+                Py&decidedel = &n{ T.tcp.set('l3',n) };
                 
-                # C gets dige, c&s?
-                !c&stay and s&dige = Ps&dige
-                # C never gets s&string unless it makes it
-                    
-                # specific continuation
-                c&ready and c&ready(C,P)
+                each iC Ps&readying {
+                    # P completed async, get back to C time
+                    #   no longer awaiting yon return 1
+                    c&ready and c&ready(C,P)
+                }
+                delete Ps&readying;
+                
+                return 1
             };
             #c PullCheck
             Rs&Pull_Check = &TCP{
@@ -1821,7 +1841,7 @@ Foogla: |
             Rs&Pull_Decode = &TCP{
                 T.ok = 0;
                 $type = Ps&Want_Decode;
-                ch('decode',[P.t,type,'']);
+                $de = ch('decode',[P.t,type,'','']);
                 # Pc&el becomes interesting to the Client,
                 #   2-3 were our will carried out
                 #   6-7 to merge
@@ -1847,7 +1867,7 @@ Foogla: |
                         s = w;
                     }
                     elsif (type == 'js') {
-                        # tocfunction
+                        # < tocfunction
                     }
                     else {
                         throw "Decode type "+type
@@ -1856,7 +1876,9 @@ Foogla: |
                     Pc&s = s;
                 }
                 catch (er) {
-                    T.er = er
+                    T.er = er;
+                    de.set('l2','Error!');
+                    de.set('l3',er);
                 }
                 Pc&s = s;
                 s && !T.er and T.ok = 1
@@ -1926,10 +1948,10 @@ Foogla: |
                 # the current HEAD:
                 Ps&dige and d.have = Ps&dige
                 # the first "can you hold on to..."
-                if (c&s != null) {
+                if (s&string != null) {
                     # wants to write, '' to delete
                     T.get.type = 'post';
-                    d.s = c&s;
+                    d.s = s&string;
                     if (d.s.length && d.s == Ps&string) {
                         # keep expecting it
                         !d.have and throw "sleeping write !Psdige"
@@ -1948,7 +1970,7 @@ Foogla: |
                     if (r.dige && r.s == null) {
                         r.dige == Ps&dige and r.s = Ps&string
                         else
-                        c&s && r.dige == dig(c&s) and r.s = c&s
+                        s&string && r.dige == dig(s&string) and r.s = s&string
                         r.s == null and throw "get/W implied we know", r, P
                     }
                     $el;
@@ -2091,7 +2113,7 @@ Foogla: |
             $ind = v[0];
             $C = G&Cye,[v[1],v[2],v[3],v[4]];
             if (ind == '') {
-                D = Ws&I[t] = C;
+                D = Ws&I[C.t] = C;
                 D.y.tw = {};
                 D.y.tv = {};
                 Ds&z ||= [];
