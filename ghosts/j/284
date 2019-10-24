@@ -1634,11 +1634,9 @@ Foogla: |
             $Ghost = Rs&perc = me&rollbsc,R,'Ghost';
             n Ghost  $s:Ghost,R %ball,childy
             
-            # $P (or pushed and pulled)
+            # of/t=$P
             i $Ghost/In
-            # Pushing/$of/$C with c&s
-            i $Ghost/Pushing
-            # Pulling/$of/$P
+            # of/t=$P in motion
             i $Ghost/Pulling
             
             # a many arg'd entrypoint
@@ -1653,17 +1651,21 @@ Foogla: |
                 s&P && s&P != P and throw "Cs&P not of/t/P"
                 # in/out of time bit
                 Rs&Pull_a(C,P);
-                # 
                 # dige/v hoists into C?
                 # provide async hooks for working ting's s&in
                 # scan a 1ss&in/$of/$t/$P by _ting C:$t $of %$P
                 # Pc&s = D - digital object
-                return Pc&s
-
-                # c&async and c&async(); throw "async didnt async"
-                # returning undef (later) means nothing found
-                # could c&l = netslopes (above 5) to look up... lumit
-                #G&TuneTimeMachine,c&of+':'+t
+                
+                # keeps Pc&s while update is looked for
+                Pc&s && Ps&Pulling_since && c&canwait and 'waits'
+                else
+                Pc&s and return Pc&s
+                
+                # can prevent async:
+                c&async and c&async()
+                else {
+                    G&TuneTimeMachine,c&of+':'+C.t
+                }
             };
             #c Question-Pull
             Rs&Question_to_Pull = &C{
@@ -1722,6 +1724,7 @@ Foogla: |
                 # pulling done re. $Ghost, but not $C
                 i $Ghost/Pulling/#Cc&of/-$P
                 delete Ps&Pulling_since;
+                !Pc&s and throw "no ting Pcs"
                 
                 # wait since request response
                 #  (subsequent requests and parsing)
@@ -2118,6 +2121,11 @@ Foogla: |
             me&tsc,'path',R.t
             me&tsc,'state',ws.state,'6';
             
+            # %Again
+            $z = Rs&Opinion && Rs&Opinion.sc.z;
+            $len = z && z.length;
+            z and me&tsc,'Opinion.length','('+len+')';
+            
             Rs&Lving &&
             n Lving  $self:Rs&Lving,R %Cit
         },'ift,D'],
@@ -2328,14 +2336,10 @@ Foogla: |
                 }
             };
             # el=2 everything
-            $oped = me&rollbs,R,'oped';
-            !oped and me&tsc,'no-eope'
-            Rs&eope = &{
-                Rs&oped = 1;
-                ~Eope
-                Rs&Lvact() };
+            Rs&eope = &{ Rs&Lvact() };
             # el=2 changing
             Rs&Lving and Rs&Lvact()
+            
         },'ift,D'],
         # %ein() C only t and certain sc
         # %eout() C into %Opinion
