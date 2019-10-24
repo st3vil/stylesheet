@@ -1649,7 +1649,7 @@ Foogla: |
             i $Ghost/Pulling
             
             
-            $Pio = {};
+            $Pio = Rs&Pio = {};
             Pio.what = &tP{
                 o $Ghost/#$t/#Pc&of/#$P:s
                 return ya
@@ -1662,7 +1662,7 @@ Foogla: |
                 i $Ghost/#$t/#Pc&of/$P:s
             };
             
-            # a many arg'd entrypoint
+            #c _ting - a many arg'd entrypoint
             #  ting becomes the reduce for io's map
             # 
             Rs&_ting = &stz{
@@ -1670,15 +1670,21 @@ Foogla: |
                 $C = isC(s) ? s : G&Cye,[t,1,{of:s}];
                 
                 # the G.t variety?
+                # if !found of a Talky of:
                 
-                # Cs&P = Pull - state to hoist
-                #   the ghost of the thing captures the P-state,
-                #   so we can see it change
-                $P = Rs&Question_to_Pull(C);
+                # C in the field, P in the store
+                $P = Pio.what('In',C);
+                if (!P) {
+                    P = G&Cye,[C.t,1,{of:c&of},{}];
+                    Pio.is('In',P);
+                    Ps&Want_Check = 1;
+                }
+                Ps&now && Gtime(Ps&now) > 5 and Ps&Want_Check = 1
                 s&P && s&P != P and s&oP = delete s&P
-                # in/out of time bit
                 
+                # in/out of time bit, lost in the store
                 $ok = Rs&Pull_a(C,P);
+                
                 # don't wait for the async check
                 # Pc&s only null if never found,
                 #  or new string is got but not decoded
@@ -1717,20 +1723,7 @@ Foogla: |
                     Pc&s and return Pc&s
                 }
             };
-            #c Question-Pull
-            Rs&Question_to_Pull = &C{
-                $P = Pio.what('In',C);
-                if (P) {
-                    Ps&Want_Check and return P
-                    # they expire
-                    Ps&now && Gtime(Ps&now) > 5 and Ps&Want_Check = 1
-                    return P
-                }
-                P = G&Cye,[C.t,1,{of:c&of},{}];
-                Pio.is('In',P);
-                Ps&Want_Check = 1;
-                return P
-            };
+            #c Pull_a
             
             # shunt P - can progress (decode response) out of time
             # returns 1 when done
