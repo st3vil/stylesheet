@@ -432,7 +432,6 @@ Foogla: |
      lvhashave%torun:
        test Element replacement with minimal add/remove
        currently will $(Rs&on).empty(); on any change
-       
      
      mund%torun: de-lies fact piles
        various eg %Ghostways produce stuff
@@ -906,7 +905,7 @@ Foogla: |
     # s&torun
     # does an Rz kinda thing
     # saving input/output like %push,
-    #  similar to s&testrun but less remote
+    #  similar to s&testrun but less remote!!
     Be.sc.torun = 'storun';
     Be.storun = {play:&acgtRs{
         $k = ss&torun;
@@ -1578,12 +1577,6 @@ Foogla: |
             n Woth  $self:N,R %Reis:Cit%
         },'ift,D'],
         
-        # at LVing avail
-        ['Search','4',&acgtRs{
-            $N = me.cby(R).filter(n => ns&JRomD);
-            n Woth  $self:N,R %Reis:Cit%
-        },'ift,D'],
-        
         
     ] };
     #c ting gets domethings
@@ -1604,10 +1597,12 @@ Foogla: |
             #n Ceto  $self:r,R %Cit
         },'ift,D'],
         
-        # at LVing avail
+        # at LVing avail!
         ['ting','4',&acgtRs{
             Rs&rowish = 1;
             
+            Rs&Q &&
+            n Q  $self:Rs&Q,R %Cit
             Rs&Live &&
             n Live  $self:Rs&Live,R %Cit
         },'ift,D'],
@@ -1729,17 +1724,19 @@ Foogla: |
                     tcp.set('l2',G&thime,T.aft_waited );
                 }
                 
-                # P being able to be surprised etc is per C
-                Pc&el and tcp.set('l3',Pc&el)
                 
                 s&P = P;
                 # el=1/8 basically
-                if (!Pc&el || Pc&el == '1') {
+                # < per thing (D?) the P is pulling -> C
+                if (!Pc&el || Pc&el == 1) {
                     s&dige != Ps&dige and Pc&el = s&dige ? 2 : 1
                     else {
                         Pc&el = 8
                     }
                 }
+                # P being able to be surprised etc is per C
+                Pc&el and tcp.set('l3',Pc&el)
+                
                 # C gets dige, c&s?
                 !c&stay and s&dige = Ps&dige
                 # C never gets s&string unless it makes it
@@ -1843,7 +1840,7 @@ Foogla: |
             };
             
         
-            #c Talks to server
+            #c Talks w/js/W to server
             Rs&Talks = {};
             Rs&Talks.w = &TCP{
                 # < Babz mode: none, normal, BQ-inclusive
@@ -2098,9 +2095,7 @@ Foogla: |
         ['mundws','3',&acgtRs{
             Rs&rowish = 1;
             # < these ways to assume arguments want fibre
-            $ws = me&rollbs,R,'Sock';
-            ws = Rs&Sock = me&ws,R.t,ws;
-            $WS = wsc&ws;
+            $ws = me&rollbs,R,'Sock',1;
         },'ift,D'],
         
         # at LVing avail
@@ -2112,8 +2107,8 @@ Foogla: |
             
             # /path
             me&tsc,'mundws','ws:','b';
-            me&tsc,'path',wsc&s
-            me&tsc,'state',wss&state,'6';
+            me&tsc,'path',R.t
+            me&tsc,'state',ws.state,'6';
             
             Rs&Lving &&
             n Lving  $self:Rs&Lving,R %Cit
@@ -2138,7 +2133,7 @@ Foogla: |
                 }
             };
             4c&nodigway = Rs&nodigway;
-            ac(R,'unDoming',&{ 4c&nodigway =  0 });
+            me.cbuac(R,'unDoming',&{ 4c&nodigway =  0 });
             
             
             # $w as heard about, seekended and living (Iw)
@@ -2314,7 +2309,7 @@ Foogla: |
         },'ift,D'],
         
         #c %Again (C/%ball source) -> %ein()
-        # e inits some state (usually)
+        # e inits some state (usually)!
         ['Again','35',&acgtRs{
             !Rs&Again.sc.ball and throw "Again!ball"
             Rs&Lvact = &{
@@ -2325,7 +2320,12 @@ Foogla: |
                 }
             };
             # el=2 everything
-            Rs&eope = &{ Rs&Lvact() };
+            $oped = me&rollbs,R,'oped';
+            !oped and me&tsc,'no-eope'
+            Rs&eope = &{
+                Rs&oped = 1;
+                ~Eope
+                Rs&Lvact() };
             # el=2 changing
             Rs&Lving and Rs&Lvact()
         },'ift,D'],
@@ -2385,6 +2385,7 @@ Foogla: |
                 $C = G&Cye,[s.t,1,{},Rs&takeonlysc(s)];
                 # Opinion is one piled from both ends
                 #   so it can come back same the first time
+                i Rs&Opinion/-#$C
                 i Rs&Opinion/$C
                 c.toLines = C.t;
                 if (haks(C.sc).length) {
@@ -2500,7 +2501,7 @@ Foogla: |
                 $Fin = delete Rs&Finally;
                 Fin && Fin.map(cb=>cb());
             };
-            
+            #c send!!
             $send = Rs&send;
             !send and throw "no Ghocoline proxy send()"
             Rs&send = &sc{
@@ -2549,23 +2550,27 @@ Foogla: |
                 Rs&eope and Rs&eope()
             };
         },'ift,D'],
-        #c A%Sock <-> A:ws
+        #c A%Sock <-> A:ws!
         # at both ends of the deal
         # provides Rs&Lving and Rs&send()
         # uses Rs&open() and Rs&receive()
         ['Sock','31',&acgtRs{
             $ws = Rs&Sock;
-            $WS = wsc&ws;
-            !WS and throw "Sock"
+            if (ws == 1) {
+                $url = 'ws://'+location.host+'/'+R.t;
+                ws = Rs&Sock = new WebSocket(url);
+                ws.url = url;
+            }
+            
             # when R el=9
             me.cbuac(R,'unDoming',&{
-                WS.close(1000,'lum')
+                ws.close(1000,'lum')
             });
             $X = window.websocks ||= {};
-            X[wsc&s] = ws;
+            X[ws.url] = ws;
             $sockdup = &{
-                X[wsc&s] == ws and return
-                WS.close(1000,'dup');
+                X[ws.url] == ws and return
+                ws.close(1000,'dup');
                 return 1
             };
             
@@ -2581,9 +2586,9 @@ Foogla: |
             $ch = Rs&chatter = &t,ev{
                 # < io-param-like + styles of message with object in
                 $l = ev.constructor == Array ?
-                    [wsc&s, ... ev] :
-                    [wsc&s,
-                    wsc&deter('code',ev.code),
+                    [R.t, ... ev] :
+                    [R.t,
+                    ws.deter('code',ev.code),
                     ev.reason,
                 ];
                 each in l {
@@ -2619,24 +2624,38 @@ Foogla: |
                 return D
             };
             
-            wsc&open = &{
+            # open/close/explode
+            ws.onopen = &ev,{
+                ch('open', ev);
                 L = me&rollbsc,R,'Lving','b,increment';
                 Rs&open();
             };
-            Rs&send = wsc&send = &sc{
+            ws.onclose = &ev,{
+              ch(ev.wasClean ? 'closing' : 'close', ev);
+              ws.deter('code',ev.code) != 'bad' and return
+              # will re-new when R wakes
+              delete Rs&Sock
+            };
+            ws.onerror = &ev,{
+              ch(ev.wasClean ? 'err' : 'errs', ev)
+            };
+            
+            # send/receive
+            Rs&send = &sc{
                 $D = roll('send',s,'receive',c);
                 # never fails?
-                WS.send(s);
+                ws.send(s);
+                return D
             };
-            wsc&receive = &sc{
+            ws.onmessage = &ev,{
                 sockdup() and return
-                $D = roll('receive',s,'send',c);
+                $s = ev.data;
+                $D = roll('receive',s,'send');
                 Rs&receive(s,D);
             };
             
-            # put in A:ws, when G&c redone...
-            
-            wsc&proto = {
+            # interpret the machine
+            ws.proto = {
               state: {
                 0:'connecting',
                 1:'open',
@@ -2645,34 +2664,17 @@ Foogla: |
               },
               code: {
                 1000:'closing',
-                1006:'close',
+                1006:'bad',
                 1001:'leaving',
                 1009:'toobig',
                 1011:'500',
               },
             };
-            wsc&deter = &tk{
+            ws.deter = &tk{
                 k == null and return ''
-                return wsc&proto[t][k] || t+'?'+k
+                return ws.proto[t][k] || t+'?'+k
             };
-            
-            wss&state = wsc&deter('state',WS.readyState);
-            
-            # WebSocket hooks
-            
-            WS.onopen = &ev,{
-                WS != wsc&ws and debugger;
-                WS != wsc&ws and return ch('sockdupe', ev);
-                ch('open', ev);
-                wsc&open and wsc&open()
-            };
-            WS.onclose = &ev,{
-              ch(ev.wasClean ? 'closing' : 'close', ev)
-            };
-            WS.onerror = &ev,{
-              ch(ev.wasClean ? 'err' : 'errs', ev)
-            };
-            
+            ws.state = ws.deter('state',ws.readyState);
         },'ift,D'],
     ] };
     
