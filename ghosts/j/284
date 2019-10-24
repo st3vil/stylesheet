@@ -1548,8 +1548,10 @@ Foogla: |
              < NutIns - G&ting becomes:
                auto hoist R:Search@4  into /js/$Search:
                 G&tingup to make Rs&_ting etc at #runtime
-                  without io
+                without io
+                needs jquery, isC and G.t for G&time/Cye/thime
                 G&ting proxies Rs&_ting
+                Rs&_ting proxies G&t
              
              + io and me at #runtime
              + A:n J as me.J is
@@ -1639,8 +1641,23 @@ Foogla: |
             # of/t=$P in motion
             i $Ghost/Pulling
             
+            
+            $Pio = {};
+            Pio.what = &tP{
+                o $Ghost/#$t/#Pc&of/#$P:s
+                return ya
+            };
+            Pio.not = &tP{
+                i $Ghost/#$t/#Pc&of/-#$P:s
+            };
+            Pio.is = &tP{
+                i $Ghost/#$t/#Pc&of/-#$P:s
+                i $Ghost/#$t/#Pc&of/$P:s
+            };
+            
             # a many arg'd entrypoint
             #  ting becomes the reduce for io's map
+            
             Rs&_ting = &stz{
                 # Question - may come with ...
                 $C = isC(s) ? s : G&Cye,[t,1,{of:s}];
@@ -1669,8 +1686,7 @@ Foogla: |
             };
             #c Question-Pull
             Rs&Question_to_Pull = &C{
-                o $Ghost/In/#Cc&of/#C.t:s
-                $P = ya;
+                $P = Pio.what('In',C);
                 if (P) {
                     Ps&Want_Check and return P
                     # they expire
@@ -1678,29 +1694,30 @@ Foogla: |
                     return P
                 }
                 P = G&Cye,[C.t,1,{of:c&of},{}];
-                i $Ghost/In/#Cc&of/-#C.t
-                i $Ghost/In/#Cc&of/$P
+                Pio.is('In',P);
                 Ps&Want_Check = 1;
                 return P
             };
+                
+            
             # shunt P - can progress (decode response) out of time
             Rs&Pull_a = &CP{
                 # < make s&string mean write string, our thing in c&s
                 if (Ps&Want_Check || c&s) {
                     # waiting on P
-                    o $Ghost/Pulling/#Pc&of/#$P:s
+                    $ya = Pio.what('Pulling',P);
                     # don't trust stagnant Pulling
                     if (ya && Gtime(yas&Pulling_since) > 5) {
-                        i $Ghost/Pulling/#Pc&of/-#$P:s
+                        ya = Pio.not('Pulling',P);
                     }
                     if (ya) {
                         # don't shunt Pull_a from outside its own callbacks
                         #  which will have ensured they don't reoccur
                         return ch('dupreq',[Cc&of,C.t])
                     }
-                    Ps&Pulling_since = Gtime();
+                    Ps&Pulling_since ||= Gtime();
                     # receiver
-                    i $Ghost/Pulling/#Pc&of/$P
+                    Pio.is('Pulling',P);
                     $T = Pc&T = {};
                     # shunts Pull_a when ready
                     T.cb_gen = &CP{
@@ -1721,19 +1738,14 @@ Foogla: |
                 !T.ok and return
                 delete Ps&Want_Decode;
                 
-                # pulling done re. $Ghost, but not $C
-                i $Ghost/Pulling/#Cc&of/-$P
+                Pio.not('Pulling',P);
                 delete Ps&Pulling_since;
+                # pulling done re. $Ghost, but not $C
                 !Pc&s and throw "no ting Pcs"
                 
                 # wait since request response
                 #  (subsequent requests and parsing)
                 $tcp = T.tcp;
-                if (T.aft_waits) {
-                    T.aft_waited = Gtime(T.aft_waits);
-                    delete T.aft_waits;
-                    tcp.set('l2',G&thime,T.aft_waited );
-                }
                 
                 
                 s&P = P;
@@ -1770,7 +1782,7 @@ Foogla: |
                 !T.get.url || !T.got and throw "!Talk handlers "+c&of
                 
                 T.cb = &sc{
-                    T.ok = 1;
+                    T.aft_waits = Gtime();
                     # every pulling happened now
                     Ps&now = Gtime();
                     # specific stuff moves from the response to P and Pc&s
@@ -1778,6 +1790,7 @@ Foogla: |
                     T.got(P,s,c);
                     # out of time plumb
                     # may be stolen by got if more requests (/js)
+                    T.ok = 1;
                     T.cb_gen and T.cb_gen(C,P)
                 };
                 Rs&TCP(T,C,P);
@@ -1797,7 +1810,6 @@ Foogla: |
                     T.waited = Gtime(T.waits);
                     delete T.waits;
                     tcp.set('l1',G&thime,T.waited );
-                    T.aft_waits = Gtime();
                     r.status != '200' and return T.status = r.status
                     T.cb(s,c);
                 };
@@ -1848,6 +1860,13 @@ Foogla: |
                 }
                 Pc&s = s;
                 s && !T.er and T.ok = 1
+                
+                if (T.ok && T.aft_waits) {
+                    T.aft_waited = Gtime(T.aft_waits);
+                    delete T.aft_waits;
+                    $tcp = T.tcp;
+                    tcp.set('l2',G&thime,T.aft_waited );
+                }
             };
             
         
