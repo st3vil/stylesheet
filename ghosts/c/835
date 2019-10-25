@@ -95,7 +95,10 @@ Phot: | # SCREENSHOOT, store photo of now
     $d .= '/'.$1 if c&day && $t =~ /^(\d+_\d+_\d+)/;
     `mkdir -p $d` unless -d $d;
     my $f = "$d/$t";
-    `xwd -root | convert - c&im $f`;
+    `xwd -root -out ${f}.xwd`;
+    `xrefresh`;
+    `convert ${f}.xwd c&im $f`;
+    `rm ${f}.xwd`
 Vido: |
     `sudo mount /dev/mmcblk0p1 ~/mmc`;
     say "Name of thetalk/* <";
