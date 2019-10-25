@@ -1550,7 +1550,7 @@ Foogla: |
                auto hoist R:Search@4  into /js/$Search:
                 G&tingup to make Rs&_ting etc at #runtime
                 without io
-                needs jquery, isC and G.t for G&time/Cye/thime
+                needs jquery, isC and G.t for G&time/Cye/thime/c/intag
                 G&ting proxies Rs&_ting
                 Rs&_ting proxies G&t
              
@@ -1590,6 +1590,21 @@ Foogla: |
         
     ] };
     #c ting gets domethings
+    
+    # G&c but harvested by Tool
+    #  as coming from this R, in/out of time,
+    #   talking about other R, to make acts shimmer
+    #  available as verbosity, debug points
+    #  muted when recognised
+    # < io-param-like + styles of message with object in
+    me.chatter = &acgttl{
+        l.constructor != Array and throw "send array"
+        each in l {
+            l[i] = '>'+(3+(i*2))+':l'+i+' '+(n||'')
+        }
+        return G&c:'>1 '+t,l
+    };
+    
     # Guxily for thing, got via stately e
     #  W it pulls in may clue changes to other W
     #  per remote place, which may already have its catalogue here
@@ -1679,6 +1694,7 @@ Foogla: |
                     Pio.is('In',P);
                     Ps&Want_Check = 1;
                 }
+                # validate cache
                 Ps&now && Gtime(Ps&now) > 5 and Ps&Want_Check = 1
                 s&P && s&P != P and s&oP = delete s&P
                 
@@ -1725,25 +1741,31 @@ Foogla: |
             };
             #c Pull_a
             
-            # shunt P - can progress (decode response) out of time
-            # returns 1 when done
+            Rs&Pulling_already = &P{
+                $ya = Pio.what('Pulling',P);
+                # don't trust stagnant Pulling
+                if (ya && Gtime(yas&Pulling_since) > 5) {
+                    ya = Pio.not('Pulling',P);
+                }
+                # don't shunt Pull_a from outside its own callbacks
+                #  which will have ensured they don't reoccur
+                ya and ch('dupreq',[Cc&of,C.t]); return
+                return ya
+            };
+            
+            # shunt P - can progress out of time
+            # then returns 1 and/or calls c&ready
             Rs&Pull_a = &CP{
                 # < make s&string mean write string, our thing in c&s
                 if (Ps&Want_Check || s&string) {
                     # waiting on P
-                    $ya = Pio.what('Pulling',P);
-                    # don't trust stagnant Pulling
-                    if (ya && Gtime(yas&Pulling_since) > 5) {
-                        ya = Pio.not('Pulling',P);
-                    }
-                    # don't shunt Pull_a from outside its own callbacks
-                    #  which will have ensured they don't reoccur
-                    ya and ch('dupreq',[Cc&of,C.t]); return
+                    Rs&Pulling_already(P) and return
                     
+                    # become Pulling
                     Ps&Pulling_since ||= Gtime();
                     Pio.is('Pulling',P);
-                    
                     $T = Pc&T = {};
+                    
                     # shunts Pull_a when ready
                     T.cb_gen = &CP{
                         delete Ps&Want_Check;
@@ -1763,6 +1785,9 @@ Foogla: |
                 !T.ok and return
                 delete Ps&Want_Decode;
                 
+                # < way getting args/wrapping/eval as Pull_Transcode?
+                #   it's ting's business if things want to share
+                
                 Pio.not('Pulling',P);
                 delete Ps&Pulling_since;
                 # pulling done re. $Ghost, but not $C
@@ -1771,12 +1796,12 @@ Foogla: |
                 s&P = P;
                 Py&decidedel = &n{ T.tcp.set('l3',n) };
                 
-                each iC Ps&readying {
+                each iC Ps&readyingC {
                     # P completed async, get back to C time
                     #   no longer awaiting yon return 1
                     c&ready and c&ready(C,P)
                 }
-                delete Ps&readying;
+                delete Ps&readyingC;
                 
                 return 1
             };
@@ -1860,7 +1885,8 @@ Foogla: |
                         s = w;
                     }
                     elsif (type == 'js') {
-                        # < tocfunction
+                        s = Pc&s;
+                        Rs&Decode.js(s);
                     }
                     else {
                         throw "Decode type "+type
@@ -1887,6 +1913,7 @@ Foogla: |
         
             #c Talks w/js/W to server
             Rs&Talks = {};
+            Rs&Decode = {};
             Rs&Talks.w = &TCP{
                 # < Babz mode: none, normal, BQ-inclusive
                 T.get.url = '/way/'+C.t;
@@ -1902,6 +1929,7 @@ Foogla: |
                     }
                 };
             };
+            #c Talks.js
             Rs&Talks.js = &TCP{
                 # I in a .js script (+ a little about the 9)
                 # first request: only to find the dige,
@@ -1925,15 +1953,65 @@ Foogla: |
                     # nest callback
                     T.ok = 0;
                     T.waits = Gtime();
-                    $callback = &script,e{
+                    $callback = &s,e{
                         T.waited_script = Gtime(T.waits);
                         T.ok = 1;
-                        me&tocfunc_script,W;
+                        Ps&script = s;
+                        Ps&Want_Decode = 'js';
                         cb_gen(C,P);
                     };
-                    G&add_script,src,callback;
+                    Rs&add_script(src,callback);
                 };
             };
+            # implant code as .js
+            #  should be able to receive any ting,
+            #  esp way, is more stack/debugger findable loaded like so:
+            Rs&add_script = &src,cb{
+                $have = $('body script[src="'+src+'"]');
+                have.length and return cb(have[0])
+                $s = document.createElement('script');
+                s.setAttribute('src', src);
+                s.setAttribute('type', 'text/javascript');
+                cb and s.onload = &e{ cb(s,e) };
+                document.body.appendChild(s);
+                return s
+            };
+            Rs&Decode.js = &W{
+                $tocfunc = W.t+'_'+Ws&dige;
+                !window[tocfunc] and throw "Notocfunc: "+tocfunc;
+                $toc = window[tocfunc]();
+                $D;
+                each iv toc {
+                    $ind = v[0];
+                    $C = G&Cye,[v[1],v[2],v[3],v[4]];
+                    if (ind == '') {
+                        D = Ws&I[C.t] = C;
+                        D.y.tw = {};
+                        D.y.tv = {};
+                        Ds&z ||= [];
+                    }
+                    else if (ind == '  ') {
+                        D.t != s&js and throw "Csjs not last D", C, D;
+                        c&code = window[s&name];
+                        typeof c&code != 'function' and throw "Cccode not function", C, D;
+                        # grow I
+                        D.y.tv[C.t] ||= {};
+                        D.y.tv[C.t][C.y.cv] = C;
+                        D.y.tw[C.t] = C;
+                        $l = Ds&z.slice(-1);
+                        l[0] and l[0].y.next = C;
+                        Ds&z.push(C);
+                        D.y.in ||= C;
+                        if (D.t === 'i' && (C.t === 'h' || C.t === 't')) {
+                            G[C.t] = c&code;
+                        }
+                    }
+                    else {
+                        throw "deep C: "+W+"/"+t, v
+                    }
+                }
+            }
+            #c Talks.W
             Rs&Talks.W = &TCP{
                 T.get.url = '/W/'+C.t;
                 $d = T.get.data = {};
@@ -2067,73 +2145,7 @@ Foogla: |
         },'ift,D'],
         
     ] };
-    #c me&chatter
-    # G&c but harvested by Tool
-    #  as coming from this R, in/out of time,
-    #   talking about other R, to make acts shimmer
-    #  available as verbosity, debug points
-    #  muted when recognised
-    # < io-param-like + styles of message with object in
-    me.chatter = &acgttl{
-        l.constructor != Array and throw "send array"
-        each in l {
-            l[i] = '>'+(3+(i*2))+':l'+i+' '+(n||'')
-        }
-        return G&c:'>1 '+t,l
-    };
-    # implant code as .js
-    #  should be able to receive any ting,
-    #  esp way, is more stack/debugger findable loaded like so:
-    me.add_script = &acgt,src,cb{
-        $have = $('body script[src="'+src+'"]');
-        have.length and return cb()
-        $s = document.createElement('script');
-        s.setAttribute('src', src);
-        s.setAttribute('type', 'text/javascript');
-        cb and s.onload = &e{ cb(s,e) };
-        document.body.appendChild(s);
-        return s
-    };
-    # implanted .js code -> I
-    # D & C in here refer to the of & the of/t
-    # < check for errors from that script?
-    me.tocfunc_script = &acgtW{
-        $tocfunc = W.t+'_'+Ws&dige;
-        !window[tocfunc] and throw "Notocfunc: "+tocfunc;
-        $toc = window[tocfunc]();
-        $D;
-        each iv toc {
-            $ind = v[0];
-            $C = G&Cye,[v[1],v[2],v[3],v[4]];
-            if (ind == '') {
-                D = Ws&I[C.t] = C;
-                D.y.tw = {};
-                D.y.tv = {};
-                Ds&z ||= [];
-            }
-            else if (ind == '  ') {
-                D.t != s&js and throw "Csjs not last D", C, D;
-                c&code = window[s&name];
-                typeof c&code != 'function' and throw "Cccode not function", C, D;
-                # grow I
-                D.y.tv[C.t] ||= {};
-                D.y.tv[C.t][C.y.cv] = C;
-                D.y.tw[C.t] = C;
-                $l = Ds&z.slice(-1);
-                l[0] and l[0].y.next = C;
-                Ds&z.push(C);
-                D.y.in ||= C;
-                if (D.t === 'i' && (C.t === 'h' || C.t === 't')) {
-                    G[C.t] = c&code;
-                }
-            }
-            else {
-                throw "deep C: "+W+"/"+t, v
-            }
-        }
-    };
-    
-    
+
     #c %mundws holds an A:ws
     me.Socketingness = &acgtR{ return [
         # < push/pull of C living across the boundary
