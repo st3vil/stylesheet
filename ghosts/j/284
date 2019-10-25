@@ -1121,6 +1121,8 @@ Foogla: |
             s&hue = -70;
             s&br = 1;
             Rs&unDoming = [];
+            # inner domes
+            Rs&timetopause = 18;
             
             me&tsc,"munde";
             
@@ -1261,11 +1263,12 @@ Foogla: |
             Rs&returns = r;
             
             # pause if slow
+            $max = rs&timetopause || 0.5;
             $delta = G&time,began;
             each tn Dy&tw {
                 ns&delta and delta -= ns&delta
             }
-            delta > 0.5 and me&introqua,R,{boost:-1}
+            delta > max and me&introqua,R,{boost:-1}
             Ds&delta = delta
             Ds&R = r;
             
@@ -1585,8 +1588,8 @@ Foogla: |
         # make a bunch of %tings!
         ['ForThe','3',&acgtRs{
             # source
-            n spot/je/Stylehut  R %ting:W
-            n spot/ju/NutMachine  R %ting:W
+            n Stylehut  R %ting:W,directory:spot/je/
+            n NutMachine  R %ting:W,directory:spot/ju/
             n Foogla  R %ting:w
             # random
             n Pass  R %ting:W
@@ -1594,10 +1597,10 @@ Foogla: |
             # destination
             #  for /way/
             #   to start Rs&_ting from an eval
-            n Rew/ChangeInto  R %ting:W
+            n Rew/ChangeInto  R %ting:W,directory:Rejs/
             #  for /js/ that must hack up a bit
             #   sweep eye into i
-            n Rejs/ChangeInto  R %ting:W
+            n Rejs/ChangeInto  R %ting:W,directory:Rew/
             # < get that done now, to 6
             #S /@6
         },'ift,D'],
@@ -1628,21 +1631,47 @@ Foogla: |
         #  the question should roll+clone
         #    to transact by the dependent process?!
         ['ball+tightly','3',&acgtRs{
-            Rc&dl = Rc&d+1;
+            #Rc&dl = Rc&d+1;
+            ac(R,'inheritsc','tightly');
+            
+            $p = Ry&up;
+            ps&ting && ps&species and Rs&tightly = ps&species
+            
+            # if they s&W (%sc may be talking about sc)
+            $onW = Rs&tightly == 4 && ss&sc.includes('W')
+                || Rs&tightly == 5 && ss&W;
+            # ting it!
+            onW && me&rolltog,R,'W?',0 &&
+                n $s.t  R %ting:2
         },'ift,D'],
         ['ting','3',&acgtRs{
             Rs&rowish = 1;
             Rc&dubquiet = 1;
             $p = Ry&up;
-            Rs&ting == '1' and Rs&ting = ps&ting
+            $t = null;
+            $inheritp = &p{
+                Rs&ting = ps&ting;
+                t = p.t;
+                ps&directory and Rs&directory = ps&directory
+            };
+            Rs&ting == '1' and inheritp(p)
+            elsif (Rs&ting == '2') {
+                # after a cloud of balls pointing to
+                # another $W in the same place
+                $ti = me.cbu(p,'ting');
+                !ti and throw "noting2"
+                inheritp(ti);
+                t = R.t;
+            }
             !Rs&ting and throw "!%ting";
+            t ||= R.t;
+            Rs&directory and t = Rs&directory+t;
             
             $what = Rs&ting;
-            $t = R.t;
             if (Rs&species) {
                 # the .5 instead of .1
                 what += '.'+Rs&species;
-                t = p.t+'/'+Rs&species;
+                t += '/'+Rs&species;
             }
             me&tsc,'%ting-of',what .sc.fs = 11
             
@@ -1655,24 +1684,27 @@ Foogla: |
             c&async = &{};
             # c&canwait = 1;
             c&ready = &CP{};
-            $t = Rs&Live = rs&_ting(C);
+            $s = Rs&Live = rs&_ting(C);
             
             n Q  $self:C,R %Cit,ot
-            t &&
-                n Live  $self:t,R %Cit,ot
+            if (s) {
+                n Live  $self:s,R %Cit,ot
+                $ti = t.indexOf(s.t);
+                Rs&directory = t.slice(0,ti);
+            }
             
             c&el and me&tsc,'elvis',c&el .y.cv = 0.8
             !s&ready and me&tsc,'!ready','...' .y.cv = 0.8
             
             # more tinging as a subspecies for the same thing
-            if (Rs&boost > 0 || Rs&andGive) {
-                if (Rs&species) {
-                    # small enough to %ball
-                    n Live  $s:t,R %ball,tightly
-                }
-                else {
+            
+            me&rolltog,R,'toball',0 &&
+                n Live  $s:s,R %ball,tightly,refpool
+            if (!Rs&species) {
+                me&rolltog,R,'/4',0 &&
+                    n Hive  R %ting,species:4
+                me&rolltog,R,'/5',0 &&
                     n Give  R %ting,species:5
-                }
             }
         },'ift,D'],
         
@@ -2217,6 +2249,29 @@ Foogla: |
     ] };
 
     #c %mundws holds an A:ws
+    me.rolltog = &acgtRkdy{
+        # y(s) assigns
+        y ||= &{};
+        $n =
+        n $k  s:● %fs:22,medo:modeen,togla
+
+        me&rollbs,R,k,d;
+        !R.sc[k] and ns&fs = 11
+        # < merge to Tool's
+        Rs&modeen = &acgtr{
+            T.wake = 1;
+            if (rs&togla) {
+                $v = R.sc[r.t] = R.sc[r.t] ? 0 : 1;
+                y (v)
+            }
+            else {
+                throw "What? "+r.t
+            }
+        };
+        y (R.sc[k]);
+        me.cbuac(R,'unDoming',&{ y (0); });
+        return R.sc[k]
+    }
     me.Socketingness = &acgtR{ return [
         # < push/pull of C living across the boundary
         ['mundws','3',&acgtRs{
@@ -2249,23 +2304,7 @@ Foogla: |
         # one aspect of news about $ways, from g/\w+/\d+
         ['GhodigWap','3',&acgtRs{
             # replaces J:digwaypoll
-            $n =
-            n nodigway  s:● %fs:22,medo:modeen,togla
-            
-            me&rollbs,R,'nodigway',1;
-            !Rs&nodigway and ns&fs = 11
-            # < merge to Tool's
-            Rs&modeen = &acgtr{
-                T.wake = 1;
-                if (rs&togla) {
-                    R.sc[r.t] = 4c&nodigway = R.sc[r.t] ? 0 : 1
-                }
-                else {
-                    throw "What? "+r.t
-                }
-            };
-            4c&nodigway = Rs&nodigway;
-            me.cbuac(R,'unDoming',&{ 4c&nodigway =  0 });
+            me&rolltog,R,'nodigway',1,&s{4c&nodigway=s};
             
             
             # $w as heard about, seekended and living (Iw)
