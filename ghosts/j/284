@@ -1775,8 +1775,10 @@ Foogla: |
             
             (Rs&boost||0) <= 1 and return
             
-            me&rollbs,R,'sent_string';
-            Rs&sent_string = Qs&string = hs&string;
+            if (!me&rollbs,R,'sent_string' ) {
+                Rs&sent_string = Qs&string = hs&string;
+                Rs&_ting(Q)
+            }
             Ps&string != hs&string and return me&tsc,'pushing'
             me&tsc,'pushed';
             delete Rs&Te.sc.boost
@@ -2020,7 +2022,7 @@ Foogla: |
             Rs&Pull_a = &CP{
                 # < make s&string mean write string, our thing in c&s
                 if (Ps&Want_Check || s&string) {
-                    if (Ps&Redo_Check) {
+                    if (Ps&Want_Check == 2) {
                         s&string and ch("Redo+string")
                         delete s&string;
                     }
@@ -2036,12 +2038,13 @@ Foogla: |
                     # shunts Pull_a when ready
                     T.cb_gen = &CP{
                         if (T.redo) {
-                            Ps&Redo_Check and throw "redo x2"
-                            Ps&Redo_Check = delete T.redo;
+                            ch('Redoing',[P.t]);
+                            Ps&Want_Check == 2 and throw "redo x2"
+                            Ps&Want_Check = 2;
+                            delete T.redo;
                         }
                         else {
                             delete Ps&Want_Check;
-                            delete Ps&Redo_Check;
                         }
                         Rs&Pull_a(C,P);
                     };
@@ -2317,7 +2320,7 @@ Foogla: |
                         r.dige == Ps&dige and r.s = Ps&string
                         else
                         d.s && r.dige == dig(d.s) and r.s = d.s
-                        r.s == null and $nors = 1
+                        r.s == null and $nors = 1;
                     }
                     $el;
                     r.ok == 'found' and el = 1
@@ -2340,7 +2343,7 @@ Foogla: |
                     }
                     if (nors) {
                         # < different perl/javascript dig
-                        el == 3 and T.redo = 1
+                        el == 3 and return T.redo = 1
                         else {
                             throw "get/W implied we know", r, P
                         }
