@@ -1121,8 +1121,6 @@ Foogla: |
             s&hue = -70;
             s&br = 1;
             Rs&unDoming = [];
-            # inner domes
-            Rs&timetopause = 18;
             
             me&tsc,"munde";
             
@@ -1251,7 +1249,7 @@ Foogla: |
             elsif ((Rs&boost||0) < 0) {
                 me&tsc,'JRom-paused','paused','6';
                 s&boc = '888';
-                c.wantsleep = 1;
+                Dc&b and c.wantsleep = 1
             }
             
             # 4 map matters for before/after
@@ -1525,6 +1523,8 @@ Foogla: |
     # these'll have any z?
     # J8 must check its Jtv for their 1s&N
         ['munding','3',&acgtRs{
+            # inner domes
+            Rs&timetopause = 18;
             # news from the 5 year old editor
             Rc&Rom(R,'GhodigWap');
             Rc&Rom(R,'GhoNut');
@@ -1711,12 +1711,9 @@ Foogla: |
                 n Live  $s:s,R %ball,tightly,refpool
             if (Rs&species) {
                 if (!Rs&toball) {
-                    # 
                     sy&N ||= me&sunN,s;
                     me&tsc,'Csize','x'+sy&N.length,'b'
-                    each in sy&N {
-                        
-                    }
+                    n inspecto $s:s,R %inspecto
                 }
             }
             else {
@@ -1729,20 +1726,63 @@ Foogla: |
                     n Give  R %ting,species:5
             }
         },'ift,D'],
-        
-        # see up
-        ['JRomnotes','4',&acgtRs{
-            $N = me.cby(R).filter(n => ns&JRomD);
-            n Woth  $self:N,R %Reis:Cit%
+        #c %ting/*
+        ['ting','5',&acgtRs{
+            each in Rs&More {
+                n $n
+            }
         },'ift,D'],
-        
-        
+        ['inspecto','3',&acgtRs{
+            Rs&rowish = 1;
+            $p = me.cbu(R,'ting');
+            each in sy&N {
+                (ps&species == 5 && ny&up && ny&up.t == 'W' ||
+                ps&species == 4 && ns&sc && ns&sc.includes('W')) &&
+                    n $n.t  $s:n,R %itemo:W
+                ps&species == 4 && ns&c && ns&c.includes('W') &&
+                    n $n.t  $s:n,R %itemo:cW
+            }
+        },'ift,D'],
+        ['itemo','3',&acgtRs{
+            s&ma = 0.4;
+            $p = me.cbu(R,'ting');
+            me&tsc,'itemo',Rs&itemo,'6' .y.cv = 0.08
+            me&domesticate,R;
+            ss&zs and me&tsc,'zsize','x'+ss&zs,'b'
+            
+            !Rs&boost and return
+            # open it in the .1
+            ps&species and p = me.cbu(py&up,'ting')
+            !p || ps&species and throw "!pp !species"
+            $M = ps&More ||= [];
+            
+            if (Rs&itemo == 'W') {
+                s.t == 'Stylands' and ~Seelands: ps&Q.t
+                m $s.t  R:1 %ting,toW
+            }
+            else {
+                $es = ps&Live;
+                $z = es && ess&z;
+                $ok = 0;
+                each in z {
+                    n.t != s.t and continue
+                    $ok = 1;
+                    m $n.t  $s:n,R:1 %Cit
+                    m $n.t  $s:n,R:1 %ball,tightly
+                }
+                !ok and return me&tcs,'!Live/t'
+            }
+        },'ift,D'],
     ] };
+    # like G&ind, or Rc&s=C climbing
+    #   returning Rc&N.map(Rc&s)
+    # and setting yup
     me.sunN = &acgtsd{
         d ||= 1;
-        d > 3 and return []
+        d > 5 and return []
         $N = [s];
         each in ss&z {
+            ny&up = s;
             N.push( ... me&sunN,n,d+1 )
         }
         return N
