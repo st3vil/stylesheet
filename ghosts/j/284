@@ -925,6 +925,7 @@ Foogla: |
     # s&of
     # code, generally compiles
     Be.sc.of = 'sof';
+    Be.sc.js = 'sof';
     # sets up openable codon on s%fix
     Be.sof = {BeX:{
         's%fix':{inputmode:2,viewvia:'size'}
@@ -1641,8 +1642,20 @@ Foogla: |
         },'ift,D'],
         
         #c ting for Composite of other tings
-        # Merge.js etc
+        =pod Merge.js etc
         
+        tools to Mix Stylehut + NutMachine
+         with sessions of map building on top
+          select what to include
+          or edit, or delete
+          knowing how it mixes already,
+           if this of/t dige is included
+         to Mix
+        
+        #   as we go into Stylehut, notice cW in NutMachine
+        #   in several sessions, build a map on top of Stylehut
+        #     of what to disinclude
+        =cut
         # push/pull of C living across the boundary
         #  the question should roll+clone
         #    to transact by the dependent process?!
@@ -1677,15 +1690,24 @@ Foogla: |
             }
             !Rs&ting and throw "!%ting";
             t ||= R.t;
-            Rs&directory and t = Rs&directory+t;
+                
             
             $what = Rs&ting;
             if (Rs&species) {
                 # the .5 instead of .1
-                what += '.'+Rs&species;
+                what = '.'+Rs&species;
                 t += '/'+Rs&species;
             }
             me&tsc,'%ting-of',what .sc.fs = 11
+            
+            # notice entering a directory/since last %ting
+            $p = me.cbu(Ry&up,'ting');
+            (p ? ps&directory != Rs&directory : Rs&directory) &&
+                me&tsc,'directory',(Rs&directory||'/'),'B';
+            
+            !Rs&species and me&tsc,'%ting-t',t,'G' .sc.fs = 11
+            Rs&directory and t = Rs&directory+t;
+            
             
             $r = me.cbu(R,'Inn');
             $r = r && rs&Inn;
@@ -1698,16 +1720,20 @@ Foogla: |
             c&ready = &CP{};
             $s = Rs&Live = rs&_ting(C);
             
-            n Q  $self:C,R %Cit,ot
+            me&rolltog,R,'%Q',0 &&
+                n Q  $self:C,R %Cit,ot
             
             c&el and me&tsc,'elvis',c&el,'b'
             !s&ready and me&tsc,'!ready','...'
             
             !s and return
-            n Live  $self:s,R %Cit,ot
+            # look in
+            me&rolltog,R,'%Live',0 &&
+                n Live  $self:s,R %Cit,ot
             
             me&rolltog,R,'toball',0 &&
                 n Live  $s:s,R %ball,tightly,refpool
+            
             if (Rs&species) {
                 if (!Rs&toball) {
                     sy&N ||= me&sunN,s;
@@ -1719,6 +1745,7 @@ Foogla: |
                 # %ting/%ting subspecies of same
                 #  4 is low resolutions of the data
                 #  5 is an of/t %Giveness
+                Rs&autospecies and R.sc['/'+Rs&autospecies] = 1
                 me&rolltog,R,'/4',0 &&
                     n Hive  R %ting,species:4
                 me&rolltog,R,'/5',0 &&
@@ -1755,13 +1782,17 @@ Foogla: |
             (Rs&boost||0) < 1 and return
             
             # open it in the .1
+            $wasp = p
             ps&species and p = me.cbu(py&up,'ting')
             !p || ps&species and throw "!pp !species"
+            p == wasp and was = null;
             $M = ps&More ||= [];
             
             if (Rs&itemo == 'W') {
                 s.t == 'Stylands' and ~Seelands: ps&Q.t
+                $n =
                 m $s.t  R:1 %ting,toW
+                wasp and ns&autospecies = wasps&species;
             }
             else {
                 $es = ps&Live;
@@ -1770,7 +1801,6 @@ Foogla: |
                 each in z {
                     n.t != s.t and continue
                     $ok = 1;
-                    m $n.t  $s:n,R:1 %Cit
                     m $n.t  $s:n,R:1 %ball,tightly
                 }
                 !ok and return me&tcs,'!Live/t'
@@ -2327,7 +2357,7 @@ Foogla: |
         y ||= &{};
         $n =
         n $k  s:● %fs:22,medo:modeen,togla,hue:30
-        k.length < 5 and nc&s = k; ns&fs = 15
+        k.length < 6 and nc&s = k; ns&fs = 15
 
         me&rollbs,R,k,d;
         !R.sc[k] and ns&fs = 11
