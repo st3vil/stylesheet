@@ -1744,8 +1744,9 @@ Foogla: |
         #c %ting%Gens that auto-balls, makes pushes
         ['Gens','31',&acgtRs{
             $Q = Rs&Q;
-            Qc&el < 3 and Rs&self = me&Copy,R,Pc&s;
+            $P = Qs&P;
             me&rollbs,R,'self';
+            Qc&el < 3 and Rs&self = me&Copy,R,Pc&s .c.s;
             if (!Rs&self) {
                 $S = Rs&self = G&Cye,[R.t,'',{},{Gens:Rs&Gens}];
                 i $S/Kn:s
@@ -1764,6 +1765,7 @@ Foogla: |
             $Q = Rs&Q;
             $P = Qs&P;
             !P and return me&tsc,'!P'
+            !Qs&ready and return me&tsc,'!ready'
             $h = Rs&Here;
             
             n here  $self:h,R %Cit
@@ -1773,7 +1775,8 @@ Foogla: |
             
             (Rs&boost||0) <= 1 and return
             
-            Qs&string = hs&string;
+            me&rollbs,R,'sent_string';
+            Rs&sent_string = Qs&string = hs&string;
             Ps&string != hs&string and return me&tsc,'pushing'
             me&tsc,'pushed';
             delete Rs&Te.sc.boost
@@ -2018,7 +2021,8 @@ Foogla: |
                 # < make s&string mean write string, our thing in c&s
                 if (Ps&Want_Check || s&string) {
                     if (Ps&Redo_Check) {
-                        s&string and throw "Redo should !string"
+                        s&string and ch("Redo+string")
+                        delete s&string;
                     }
                     else {
                         # waiting on P
