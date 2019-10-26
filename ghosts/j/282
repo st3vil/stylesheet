@@ -1393,11 +1393,13 @@ Coffle: | # discussion
 
     #c Ring mind, doming
     # empties grounda&z into M or more R
-    me.endome = &acgtR{
+    me.endome = &acgtRt{
         !T.nN || !T.nN.length and return
+        $spawnDt = t && t.t || '?';
         $N = T.nN;
         T.nN = [];
         $M = null;
+        $genR = 0;
         each in N {
             !nc&R && ns&R and nc&R = delete ns&R
             if (nc&stv) {
@@ -1428,13 +1430,15 @@ Coffle: | # discussion
                 parent != R and me&zN,r
                 # to $r = n ... %R, follow:
                 n.y.R = r;
+                genR++
             }
             else {
                 # otherwise this mindthing grows M
-                M ||= me&Mw,R,t.t;
+                M ||= me&Mw,R,spawnDt;
                 M.push(n)
             }
         }
+        return genR
     };
     
     # while the R.t == mind of this pool
@@ -1664,6 +1668,7 @@ Coffle: | # discussion
                 };
             }
             
+            $genR;
             if (!T.not) {
                 $packdown = [];
                 if (ts&D) {
@@ -1671,7 +1676,7 @@ Coffle: | # discussion
                     T.nN = [];
                     packdown.push(&{
                         # empties T.nN into M or more R
-                        me&endome,R;
+                        genR = me&endome,R,t;
                         delete T.nN;
                     });
                 }
@@ -1687,6 +1692,11 @@ Coffle: | # discussion
             }
             delete T.not;
             thestep and thestep()
+            if (T.ziter && genR) {
+                $ov = delete T.ziter;
+                ov == 1 and ov = 0.3
+                me&Ring,R,{inside:R,ov:ov};
+            }
             if (T.Rq) {
                 $TRq = delete T.Rq;
                 me&Ring,R,TRq;
