@@ -1764,12 +1764,19 @@ Foogla: |
             $Q = Rs&Q;
             $P = Qs&P;
             !P and return me&tsc,'!P'
-            Ps&string ||= '';
             $h = Rs&Here;
             
             n here  $self:h,R %Cit
             n Pull  $self:P,R %Cit
+            me&introqua,[R,'diff'],'boost','@1';
             me&diffya,R,'diff',h,P;
+            
+            (Rs&boost||0) <= 1 and return
+            
+            Qs&string = hs&string;
+            Ps&string != hs&string and return me&tsc,'pushing'
+            me&tsc,'pushed';
+            delete Rs&Te.sc.boost
         },'ift,D'],
         
         
@@ -2010,17 +2017,28 @@ Foogla: |
             Rs&Pull_a = &CP{
                 # < make s&string mean write string, our thing in c&s
                 if (Ps&Want_Check || s&string) {
-                    # waiting on P
-                    Rs&Pulling_already(P) and return
-                    
-                    # become Pulling
-                    Ps&Pulling_since ||= Gtime();
-                    Pio.is('Pulling',P);
-                    $T = Pc&T = {};
-                    
+                    if (Ps&Redo_Check) {
+                        s&string and throw "Redo should !string"
+                    }
+                    else {
+                        # waiting on P
+                        Rs&Pulling_already(P) and return
+                        # become Pulling
+                        Ps&Pulling_since ||= Gtime();
+                        Pio.is('Pulling',P);
+                        Pc&T = {};
+                    }
+                    $T = Pc&T;
                     # shunts Pull_a when ready
                     T.cb_gen = &CP{
-                        delete Ps&Want_Check;
+                        if (T.redo) {
+                            Ps&Redo_Check and throw "redo x2"
+                            Ps&Redo_Check = delete T.redo;
+                        }
+                        else {
+                            delete Ps&Want_Check;
+                            delete Ps&Redo_Check;
+                        }
                         Rs&Pull_a(C,P);
                     };
                     # sends
@@ -2275,7 +2293,7 @@ Foogla: |
                 if (s&string != null) {
                     # wants to write, '' to delete
                     T.get.type = 'post';
-                    d.s = s&string;
+                    d.s = delete s&string;
                     if (d.s.length && d.s == Ps&string) {
                         # keep expecting it
                         !d.have and throw "sleeping write !Psdige"
@@ -2294,8 +2312,8 @@ Foogla: |
                     if (r.dige && r.s == null) {
                         r.dige == Ps&dige and r.s = Ps&string
                         else
-                        s&string && r.dige == dig(s&string) and r.s = s&string
-                        r.s == null and throw "get/W implied we know", r, P
+                        d.s && r.dige == dig(d.s) and r.s = d.s
+                        r.s == null and $nors = 1
                     }
                     $el;
                     r.ok == 'found' and el = 1
@@ -2315,6 +2333,13 @@ Foogla: |
                         delete Ps&string;
                         # plumb? like an elvisory
                         return
+                    }
+                    if (nors) {
+                        # < different perl/javascript dig
+                        el == 3 and T.redo = 1
+                        else {
+                            throw "get/W implied we know", r, P
+                        }
                     }
                     if (el == 7) {
                         # notify push failed?
