@@ -1171,16 +1171,21 @@ Foogla: |
                     }
                 }
                 catch (er) {
+                    $msg = er.message || er+'';
+                    $async = msg.match(/^async/);
                     # can it sleep?
                     $b = rc&b;
                     if (b && by&Display) {
                         # keep last display
                         # < warn shadow?
-                        rs&sleeping = 'errors';
-                        me&Display,r;
+                        try {
+                            rs&sleeping = 'errors';
+                            me&Display,r;
+                        }
+                        catch (err) {
+                            msg = '!sle! '+msg
+                        }
                     }
-                    $msg = er.message || er+'';
-                    $async = msg.match(/^async/);
                     # doming marked through as async?
                     #me&tsc,'explosion',null,'G';
                     #~Explo: r.t, er.message
@@ -1237,7 +1242,13 @@ Foogla: |
             D.t = ''+Ds&count;
             
             # 3 what doing
-            if ((Rs&boost||0) < 0) {
+            if ((Rs&boost||0) < -1) {
+                delete Rs&Te.sc.boost;
+                me&tsc,'JRom-reset','reset','6';
+                s&boc = '858';
+                c.igV = 1;
+            }
+            elsif ((Rs&boost||0) < 0) {
                 me&tsc,'JRom-paused','paused','6';
                 s&boc = '888';
                 c.wantsleep = 1;
@@ -1690,8 +1701,6 @@ Foogla: |
             n Q  $self:C,R %Cit,ot
             if (s) {
                 n Live  $self:s,R %Cit,ot
-                $ti = t.indexOf(s.t);
-                Rs&directory = t.slice(0,ti);
             }
             
             c&el and me&tsc,'elvis',c&el .y.cv = 0.8
