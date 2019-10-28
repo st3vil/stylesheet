@@ -1176,15 +1176,15 @@ Foogla: |
             
             
             $td = [
-                'jus g/twan jus',
-                's van to dich/ze van dich toat to',
+                #'jus g/twan jus',
+                #'s van to dich/ze van dich toat to',
                 'toad transfer lich/fur lich trom toad',
                 # < to=6,dich=8, its exp order
-                'sle sla van to dich/sla van sla dich sla toat to',
-                'further towards ye goal goal/no further goal shall goal ye',
-                'test data shall/test shall gall data',
+                #'sle sla van to dich/sla van sla dich sla toat to',
+                #'further towards ye goal goal/no further goal shall goal ye',
+                #'test data shall/test shall gall data',
                 # < flong el=8, its el=6 is early, latency of prepend[]
-                'test to nuf fla flong/fla test flo flong to nuf',
+                #'test to nuf fla flong/fla test flo flong to nuf',
             ].map(&s{ return s.split('/').map(&s{
                     return s.split(' ')
                 }) });
@@ -1205,7 +1205,7 @@ Foogla: |
                 # what for each have,
                 #  may be el9+prepend = [all new]
                 $re = [];
-                $ret = &tc{
+                $ret = &tcn{
                     t = G&Cye,[t,'',{},c||{}];
                     re.push(t);
                     return t
@@ -1240,8 +1240,9 @@ Foogla: |
                         $hi = null;
                         $have_from = 0;
                         while (hi == null) {
-                            hi = d.slice(have_from).indexOf(x);
-                            hi >= 0 and hi += have_from
+                            hi = d.slice(have_from).indexOf(s);
+                            hi < 0 and return -1
+                            hi += have_from
                             $no = ig[hi];
                             no and have_from = hi+1; hi = null
                         }
@@ -1251,6 +1252,7 @@ Foogla: |
                 };
                 $gothi = {};
                 $selhave = selecto(have,gothi);
+                $lastsame = 0;
                 each ix exp {
                     $hi = selhave(x);
                     if (hi < 0) {
@@ -1258,6 +1260,14 @@ Foogla: |
                     }
                     elsif (hi != i) {
                         ~move: x, hi, i
+                        if (hi < lastsame) {
+                            # an 8 walls drift down move
+                            i < lastsame and throw "allow?"
+                            have.splice(hi,1);
+                            ret(x,{el:9});
+                            prepend.push(x);
+                            continue
+                        }
                         #, ki(gothi), ki(prepend)
                         # < shall has its place once data leaves
                         #x == 'shall' and ~>4 mohave: ki(have)
@@ -1267,6 +1277,7 @@ Foogla: |
                     }
                     else {
                         ~same: x, hi, i, ki(prepend)
+                        hi > lastsame and lastsame = hi
                         gothi[hi] = 1+prepend.length;
                         each in prepend {
                             ret(n,{el:2});
@@ -1285,27 +1296,38 @@ Foogla: |
                 me&tsc,'wanted',exp.join('-'),'1b'
                 
                 #c tidylv the el6-1 where possible
+                # move el9s to beginning
+                $ninegr = re.filter(n => ns&el == 9);
+                each in ninegr {
+                    re.splice(re.indexOf(n),1);
+                }
+                re.unshift(...ninegr);
+                
+                
                 # lasti=n.t
                 $latrei = [];
-                #$sellat = selecto(latrei);
+                $res = re.slice().map(n => n.t);
+                $sellfrom = selecto(res);
+                $sellat = selecto(latrei);
                 # rei(movestart)=rei(moveto) voidable
                 $nvm = [];
                 # rei-> sc talk n
-                $V = 1;
+                $V = 2;
                 $shrinki = [];
-                exp[0] == 'fla' and V = 2;
+                exp[0] == 'fur' and V = 2;
                 each in re {
                     $t = '  '+n.t;
                     V && me&tsc,'changeto',t,'6';
                     $was = latrei.indexOf(n.t);
                     $r = null;
-                    was >= 0 and r = re[was]; delete latrei[was]
+                    was >= 0 and r = re[was]; delete latrei[was];
                     latrei[i] = n.t;
                     if (r && ns&el <3 && rs&el == 6) {
-                        $between = re.slice(was+1, i-was+1);
+                        $wast = sellfrom(n.t);
+                        $between = re.slice(wast, i-was);
                         # things we may not end up in front of
                         $outof = [];
-                        V>1 && me&tsc,'tween',was+'-'+i,'y';
+                        V>1 && me&tsc,'tveen',wast+'-'+i,'y';
                         between.map(&b{
                             if (bs&el <3 || bs&el == 6
                                 || bs&el == 9) {
@@ -1315,7 +1337,7 @@ Foogla: |
                                 outof.push(b.t)
                             }
                             $s = '  '+ki(b);
-                            V>1 && me&tsc,'between',s,'1q'
+                            V>1 && me&tsc,'between',s,'1q';
                         });
                         if (!outof.length) {
                             nvm[was] = i;
@@ -1338,37 +1360,75 @@ Foogla: |
                 }
                 #c test apply
                 $lvd = got.slice();
+                $sellv = selecto(lvd);
                 $gap = [];
                 $la = null;
                 $prepend = [];
                 $cha = [];
+                $lvi = 0;
                 each in lv {
                     if (V) {
                     me&tsc,'lv',ns&el,'d';
                     me&tsc,'lvto',n.t+"\n",'6';
                     }
-                    $was = lvd.indexOf(n.t);
+                    $was = sellv(n.t);
+                    if ((ns&el <3 || ns&el>=8)
+                        && !la && prepend.length) {
+                        lvd.splice(lvi,0,... prepend);
+                        prepend.map(&t{
+                            cha.push(t+'<-'+n.t)
+                            lvi++;
+                        });
+                        prepend = [];
+                    }
                     if (ns&el == '9') {
                         lvd.splice(was,1);
                         cha.push('-'+n.t);
                         continue
                     }
                     elsif (ns&el <3) {
-                        cha.push('('+ns&el+':'+n.t+')')
+                        if (la) {
+                            lvd.splice(lvi,0,n.t);
+                            cha.push(la+'->'+n.t)
+                        }
+                        else {
+                            prepend.push(n.t);
+                            continue
+                        }
                     }
                     else {
+                        lvi = was;
+                        #debugger;
                         cha.push('('+ns&el+':'+n.t+')')
                     }
+                    lvi += 1;
                     la = n.t
                 }
+                prepend.map(&t{
+                    cha.push(la+'<---'+t)
+                });
+                each in cha {
+                    me&tsc,'elementing',n,'1b'
+                }
                 
+                ;
+                
+                exp.join('-') == lvd.join('-') ?
+                    me&tsc,'elementingok','OK.elementing',1
+                :
+                    me&tsc,'started',got.join('-'),'1d'
+                    &&
+                    me&tsc,'exp',exp.join('-'),'1p'
+                    &&
+                    me&tsc,'element',lvd.join('-'),'1b'
                 
                 
                 exp.join('-') == have.join('-') ?
-                    me&tsc,'outputok','OK.brute'
+                    me&tsc,'outputok','OK.brute',1
                 :
                     me&tsc,'output',have.join('-'),'1p'
-                    
+                
+                me&tsc,'---',null,'1'
             }
             
             
