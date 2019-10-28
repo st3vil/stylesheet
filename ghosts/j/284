@@ -1130,9 +1130,11 @@ Foogla: |
             $td = [
                 's van to dich/ze van dich toat to',
                 'toad transfer lich/fur lich trom toad',
+                # < to=6,dich=8, its exp order
                 'sle sla van to dich/sla van sla dich sla toat to',
                 'further towards ye goal goal/no further goal shall goal ye',
                 'test data shall/test shall gall data',
+                # < flong el=8, its el=6 is early, latency of prepend[]
                 'test to nuf fla flong/fla test flo flong to nuf',
             ].map(&s{ return s.split('/').map(&s{
                     return s.split(' ')
@@ -1224,28 +1226,88 @@ Foogla: |
                 me&tsc,'input',got.join('-'),'1d'
                 me&tsc,'wanted',exp.join('-'),'1b'
                 
+                #c tidylv the el6-1 where possible
+                # lasti=n.t
                 $latrei = [];
+                # rei(movestart)=rei(moveto) voidable
+                $nvm = [];
+                # rei-> sc talk n
+                $V = 1;
+                $shrinki = [];
+                exp[0] == 'fla' and V = 2;
                 each in re {
                     $t = '  '+n.t;
-                    me&tsc,'changeto',t,'6';
-                    me&tsc,'changes',ki(n.sc)+"\n",'d';
+                    V && me&tsc,'changeto',t,'6';
                     $was = latrei.indexOf(n.t);
                     $r = null;
                     was >= 0 and r = re[was]; delete latrei[was]
-                    latrei[i] = n.t
+                    latrei[i] = n.t;
                     if (r && ns&el <3 && rs&el == 6) {
-                        $between = re.slice(was+1, 1+i-was);
+                        $between = re.slice(was+1, i-was+1);
+                        # things we may not end up in front of
+                        $outof = [];
+                        V>1 && me&tsc,'tween',was+'-'+i,'y';
                         between.map(&b{
+                            if (bs&el <3 || bs&el == 6
+                                || bs&el == 9) {
+                                # fine where we are
+                            }
+                            else {
+                                outof.push(b.t)
+                            }
                             $s = '  '+ki(b)+"\n";
-                            me&tsc,'between',s
+                            V>1 && me&tsc,'between',s,'1q'
                         });
+                        if (!outof.length) {
+                            nvm[was] = i;
+                            $dn = shrinki[was];
+                            dn and dns&fs = 6;
+                            ns&el = 5;
+                        }
+                    }
+                    if (V) {
+                    shrinki[i] =
+                    me&tsc,'changes',ki(n.sc)+"\n",'d';
+                    }
+                }
+                # 6/5 pairs become 9/1 or 8/nothing
+                $lv = [];
+                each in re {
+                    ns&el == 5 and ns&el = 8
+                    ns&el == 6 and ns&el = 9
+                    !nvm[i] and lv.push(n)
+                }
+                # test apply
+                $lvd = got.slice();
+                $gap = [];
+                $la = null;
+                $prepend = [];
+                $cha = [];
+                each in lv {
+                    if (V) {
+                    me&tsc,'changes',ns&el,'d';
+                    me&tsc,'changeto',n.t+"\n",'6';
+                    }
+                    $was = lvd.indexOf(n.t);
+                    if (ns&el == '9') {
+                        lvd.splice(was,1);
+                        cha.push('-'+was);
+                        continue
+                    }
+                    else {
+                        ns&el <3
+                        ns&el == '8'
+                        la = n.t
                     }
                 }
                 
+                
+                
                 exp.join('-') == have.join('-') ?
-                    me&tsc,'outputok','OK'
+                    me&tsc,'outputok','OK.brute'
                 :
                     me&tsc,'output',have.join('-'),'1p'
+                    
             }
             
             
