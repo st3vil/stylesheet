@@ -1134,21 +1134,25 @@ Foogla: |
             n t/lvhashave  R %ting:W,Quploadsc:Quest,noDecode
             
             $c = {};
-            me&rolltog,R,'Checkin',0 and c.lv = 2
+            me&rollbs,R,'Sampled';
+            me&rolltog,R,'Checkin',0 and c.Sampley = 2
+            else {
+                delete Rs&Sampled;
+            }
+            Rs&Sampled and c.pause = 1;
+            $r = !c.pause && Rc&Rom(R,'%lvhashave',c);
+            # r.sc will not roll when pause/sleep
+            r && rs&Sampled and Rs&Sampled = rs&Sampled
             
-            $r = Rc&Rom(R,'%lvhashave',c);
-            
-            if (c.lv && Q) {
+            if (Rs&Sampled && Q) {
                 $P = Qs&P;
-                $C = ry&lv;
-                $lv = C && Cy&lv;
-                !lv and return me&tsc,'lv...'
-                !P and return me&tsc,'P...'
                 
-                $h = lv;
+                $h = Rs&Sampled;
                 n here  $self:h,R %Cit
                 n Pull  $self:P,R %Cit
-                me&introqua,[R,'diff'],'boost','@1';
+                !P and return me&tsc,'P...'
+                !h and return me&tsc,'h...'
+                #me&introqua,[R,'diff'],'boost','@1';
                 me&diffya,R,'diff',h,P;
 
                 !me&rolltog,R,'Push?',0 and return
@@ -1170,8 +1174,9 @@ Foogla: |
             Rs&lv and s&lv = Rs&lv;
             
             
+            
             $td = [
-                'jus/twan jus',
+                'jus g/twan jus',
                 's van to dich/ze van dich toat to',
                 'toad transfer lich/fur lich trom toad',
                 # < to=6,dich=8, its exp order
@@ -1184,7 +1189,6 @@ Foogla: |
                     return s.split(' ')
                 }) });
             
-            ~>3 lvhashave:
             each in td {
                 ~>3 case: i
                 $got = n[0];
@@ -1310,7 +1314,7 @@ Foogla: |
                             else {
                                 outof.push(b.t)
                             }
-                            $s = '  '+ki(b)+"\n";
+                            $s = '  '+ki(b);
                             V>1 && me&tsc,'between',s,'1q'
                         });
                         if (!outof.length) {
@@ -1340,8 +1344,8 @@ Foogla: |
                 $cha = [];
                 each in lv {
                     if (V) {
-                    me&tsc,'changes',ns&el,'d';
-                    me&tsc,'changeto',n.t+"\n",'6';
+                    me&tsc,'lv',ns&el,'d';
+                    me&tsc,'lvto',n.t+"\n",'6';
                     }
                     $was = lvd.indexOf(n.t);
                     if (ns&el == '9') {
@@ -1376,7 +1380,28 @@ Foogla: |
             
             
             
-            
+            if (Rs&Sampley) {
+                $s = '';
+                each in T.nN {
+                    ns&R || nc&R and continue
+                    $headed = 0;
+                    if (n.t.includes('lv') == 0 ||
+                        n.t.includes('change') == 0) {
+                        'swathe'
+                    }
+                    else {
+                        s += "\n"+n.t+": ";
+                        headed = 1;
+                    }
+                    s.substr(-1) == "\n" and headed = 1
+                    ns&dis && !headed and s += "\n";
+                    nc&s and s += nc&s
+                    ns&dis and s += "\n";
+                }
+                $c = G&Cye,[R.t,'',{sample:s}];
+                $l = me&Copy,R,c,{t:'Sampley_lv',ball:0,Lines:3};
+                Rs&Sampled = l;
+            }
             
             
             
@@ -1524,7 +1549,7 @@ Foogla: |
                 s&boc = '858';
                 c.igV = 1;
             }
-            elsif ((Rs&boost||0) < 0) {
+            elsif ((Rs&boost||0) < 0 || c.pause) {
                 me&tsc,'JRom-paused','paused','6';
                 s&boc = '888';
                 Dc&b and c.wantsleep = 1
@@ -1550,7 +1575,7 @@ Foogla: |
             Rs&returns = r;
             
             # pause if slow
-            $max = rs&timetopause || 0.5;
+            $max = rs&timetopause || 2.5;
             $delta = G&time,began;
             each tn Dy&tw {
                 ns&delta and delta -= ns&delta
