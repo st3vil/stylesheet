@@ -1117,8 +1117,8 @@ Foogla: |
             delete Rs&Te.sc.boost;
         },'ift,D'],
     #c lvhashave%torun:
-    #   place Cupon better
     #   test Element replacement with minimal add/remove
+    #   Cupon changes a sentence with minimal typesetting
     #   currently will $(Rs&on).empty(); on any change
     #   'moving elements only as needed'
         ['lvhashave','3',&acgtRs{
@@ -1126,19 +1126,81 @@ Foogla: |
             s&bo = '7px dotted green';
             s&hue = -70;
             
-            $td = ['van to dich/ze van dich toat to']
-                .map(&s{ return s.split('/').map(&s{
+            $td = [
+                's van to dich/ze van dich toat to',
+                'toad transfer lich/fur lich trom toad',
+                'sle sla van to dich/sla van sla dich sla toat to',
+                'further towards ye goal goal/no further goal shall goal ye',
+                'test data shall/test shall gall data',
+            ].map(&s{ return s.split('/').map(&s{
                     return s.split(' ')
                 }) });
             
+            ~>3 lvhashave:
             each in td {
+                ~>3 case: i
                 $got = n[0];
                 $exp = n[1];
                 $have = got.slice();
+                # as Element objects probably unique
+                #  can handle many same using gothi to mask have
+                # < lovely fuzzy matches, el7 (moves, duplinks)
+                # < fallback to empty()+append()
+                # < see 'shall has its place once data leaves'
+                #    find them while applying the instructions?
+                #   prefer keeping things moving earlier
                 
-                each in have {
-                    
+                # hi/h to delete
+                $drop = [];
+                # insert before an h
+                $prepend = [];
+                # reorder = drop+prepend
+                $move = [];
+                $dif = have.length != exp.length;
+                each ih have {
+                    exp[i] == h and continue
+                    dif = 1;
+                    $ei = exp.indexOf(h);
+                    ei >= 0 and continue
+                    drop.push(i)
                 }
+                # 
+                $re = [];
+                drop.reverse().map(&hi,{
+                    ~Drops: hi, have[hi]
+                    have.splice(hi,1)
+                });
+                drop = [];
+                # have consumed
+                $gothi = {};
+                each ix exp {
+                    $hi = null;
+                    $have_from = 0;
+                    while (hi == null) {
+                        hi = have.slice(have_from).indexOf(x);
+                        hi >= 0 and hi += have_from
+                        $no = gothi[hi];
+                        no and have_from = hi+1; hi = null
+                    }
+                    if (hi < 0) {
+                        prepend.push(x)
+                    }
+                    elsif (hi != i) {
+                        ~move: x, hi, i
+                        #, ki(gothi), ki(prepend)
+                        # < shall has its place once data leaves
+                        #x == 'shall' and ~>4 mohave: ki(have)
+                        have.splice(hi,1);
+                        prepend.push(x)
+                    }
+                    else {
+                        ~same: x, hi, i, ki(prepend)
+                        gothi[hi] = 1+prepend.length;
+                        have.splice(hi,0,... prepend);
+                        prepend = []
+                    }
+                }
+                have.push(... prepend);
                 
                 me&tsc,'input',got.join('-'),'1d'
                 me&tsc,'wanted',exp.join('-'),'1b'
@@ -1580,7 +1642,8 @@ Foogla: |
             Rs&timetopause = 18;
             # news from the 5 year old editor
             Rc&Rom(R,'GhodigWap');
-            Rc&Rom(R,'GhoNut');
+            #Rc&Rom(R,'GhoNut');
+            Rc&Rom(R,'lvhashave');
             #Rc&Rom(R,'JRomnotes');
             
             
