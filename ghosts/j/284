@@ -1119,6 +1119,7 @@ Foogla: |
     #c lvhashave%torun:
     #   test Element replacement with minimal add/remove
     #   Cupon changes a sentence with minimal typesetting
+    #   a writable Element.childNodes
     #   currently will $(Rs&on).empty(); on any change
     #   'moving elements only as needed'
         ['lvhashave','3',&acgtRs{
@@ -1132,6 +1133,7 @@ Foogla: |
                 'sle sla van to dich/sla van sla dich sla toat to',
                 'further towards ye goal goal/no further goal shall goal ye',
                 'test data shall/test shall gall data',
+                'test to nuf fla flong/fla test flo flong to nuf',
             ].map(&s{ return s.split('/').map(&s{
                     return s.split(' ')
                 }) });
@@ -1150,22 +1152,31 @@ Foogla: |
                 #    find them while applying the instructions?
                 #   prefer keeping things moving earlier
                 
+                # what for each have,
+                #  may be el9+prepend = [all new]
+                $re = [];
+                $ret = &tc{
+                    t = G&Cye,[t,'',{},c||{}];
+                    re.push(t);
+                    return t
+                }
+                
                 # hi/h to delete
                 $drop = [];
                 # insert before an h
                 $prepend = [];
                 # reorder = drop+prepend
                 $move = [];
+                
                 $dif = have.length != exp.length;
                 each ih have {
                     exp[i] == h and continue
                     dif = 1;
                     $ei = exp.indexOf(h);
                     ei >= 0 and continue
-                    drop.push(i)
+                    drop.push(i);
+                    ret(h,{el:9});
                 }
-                # 
-                $re = [];
                 drop.reverse().map(&hi,{
                     ~Drops: hi, have[hi]
                     have.splice(hi,1)
@@ -1191,19 +1202,46 @@ Foogla: |
                         # < shall has its place once data leaves
                         #x == 'shall' and ~>4 mohave: ki(have)
                         have.splice(hi,1);
-                        prepend.push(x)
+                        prepend.push(x);
+                        ret(x,{el:6});
                     }
                     else {
                         ~same: x, hi, i, ki(prepend)
                         gothi[hi] = 1+prepend.length;
+                        each in prepend {
+                            ret(n,{el:2});
+                        }
+                        ret(x,{el:8});
                         have.splice(hi,0,... prepend);
-                        prepend = []
+                        prepend = [];
                     }
                 }
                 have.push(... prepend);
+                each in prepend {
+                    ret(n,{el:1});
+                }
                 
                 me&tsc,'input',got.join('-'),'1d'
                 me&tsc,'wanted',exp.join('-'),'1b'
+                
+                $latrei = [];
+                each in re {
+                    $t = '  '+n.t;
+                    me&tsc,'changeto',t,'6';
+                    me&tsc,'changes',ki(n.sc)+"\n",'d';
+                    $was = latrei.indexOf(n.t);
+                    $r = null;
+                    was >= 0 and r = re[was]; delete latrei[was]
+                    latrei[i] = n.t
+                    if (r && ns&el <3 && rs&el == 6) {
+                        $between = re.slice(was+1, 1+i-was);
+                        between.map(&b{
+                            $s = '  '+ki(b)+"\n";
+                            me&tsc,'between',s
+                        });
+                    }
+                }
+                
                 exp.join('-') == have.join('-') ?
                     me&tsc,'outputok','OK'
                 :
