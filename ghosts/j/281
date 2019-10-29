@@ -1752,12 +1752,20 @@ Soogle: | # start from Sevo
     
     # suggest y.cv of 30i+
     me.cvdeal = &acgtMv{
+        # should never get to 4
         v ||= 3;
         v >= 1 and v /= 10
+        $amount = 0.001;
+        $amounted = 0;
         each in M {
             n.y.cv and continue
             n.y.cv = G&desca,v,8;
-            v += 0.001;
+            v += amount;
+            # final cent goes far
+            # < doesn't make dupes?
+            #  < change condensing this
+            ++amounted == 99 and amount /= 1000
+            ++amounted == 99000 and amount /= 1000
         }
     };
     
@@ -1812,7 +1820,7 @@ Soogle: | # start from Sevo
             $s = z[i];
             !s and return z.push(C)
             C.y.cv < s.y.cv and return z.splice(i,0,C)
-            i > 600 and debugger;
+            i > 2600 and debugger;
             i++;
         }
     };
