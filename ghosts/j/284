@@ -1162,29 +1162,38 @@ Foogla: |
                 $got = n[0];
                 $exp = n[1];
                 
+                $D = G&Cye,["case_"+i,''];
+                Ds&got = got;
+                Ds&exp = exp;
+                Ds&V = 1;
+                #exp[0] == 'fur' and V = 2;
+                
                 # 6
+                me&lvhashave,D;
                 
                 # 7
-                each in cha {
+                each in Ds&cha {
                     me&tsc,'elementing',n,'1b'
                 }
                 
-                ;
                 
-                exp.join('-') == lvd.join('-') ?
+                if (!Ds&actn || Ds&fail_elementing) {
+                    me&tsc,'started',got.join('-'),'1d';
+                    me&tsc,'exp',exp.join('-'),'1p';
+                    me&tsc,'element',Ds&lvd.join('-'),'1b';
+                }
+                else {
                     me&tsc,'elementingok','OK.elementing',1
-                :
-                    me&tsc,'started',got.join('-'),'1d'
-                    &&
-                    me&tsc,'exp',exp.join('-'),'1p'
-                    &&
-                    me&tsc,'element',lvd.join('-'),'1b'
+                }
                 
-                
-                exp.join('-') == have.join('-') ?
+                if (!Ds&have || Ds&fail_brute) {
+                    me&tsc,'output',Ds&have.join('-'),'1p'
+                }
+                else {
                     me&tsc,'outputok','OK.brute',1
-                :
-                    me&tsc,'output',have.join('-'),'1p'
+                }
+                
+                Ds&fail and me&tsc,'%fail'
                 
                 me&tsc,'---',null,'1'
             }
@@ -1199,9 +1208,10 @@ Foogla: |
         $very = arguments.slice(5);
         $s = D;
         each in very {
-            typeof n != 'string' throw "!s"
+            typeof n != 'string' and throw "!s"
             # should know where D%in.$tv=C
             #  or D%in=in/C or D/in/C or Dc&X...
+            # by the D it's in
             $v = sy&tv $n
             v ||= s.sc[n];
             s = v;
@@ -1210,34 +1220,65 @@ Foogla: |
         return s
     };
     
+    # have consumed array
+    #  < sel(thing,i), returns i of thing now and adds it at i
+    me.selecto = &acgtdl{
+        $whatread = !l;
+        $ig = l || {};
+        $sel = &s{
+            $hi = null;
+            $have_from = 0;
+            while (hi == null) {
+                hi = d.slice(have_from).indexOf(s);
+                hi < 0 and return -1
+                hi += have_from
+                $no = ig[hi];
+                no and have_from = hi+1; hi = null
+            }
+            whatread && hi >= 0 and ig[hi] = 1
+            return hi
+        };
+        return sel
+    };
+    
     # deal acts to change set
     #  < primary function of the A/D.t=lvhashave,
     # its writeup includes that:
-    #  Ds&V verbosity=0, test data 1, debug 2
     me.lvhashave = &acgtD{
         # < got/exp=[s+] -> has/have=[D+]
         #   D being A being D
         $got = Ds&got;
         $exp = Ds&exp;
+        # Ds&V verbosity=0, test data 1, debug 2
+        # < size of (tee)veeing available
+        $V = Ds&V;
         
-        $have = got.slice();
-        # what for each have,
-        #  may be el9+prepend = [all new]
+        $have = Ds&have = got.slice();
+        #c simple add/remove
+        
+        # what for each have
         $re = [];
         $ret = &tcn{
             t = G&Cye,[t,'',{},c||{}];
             re.push(t);
             return t
         }
-
-        # hi/h to delete
-        $drop = [];
-        # insert before an h
-        $prepend = [];
-        # reorder = drop+prepend
-        $move = [];
-
+        
+        # will make true:
+        $sameset = &exp,have{
+            $ok = have.length == exp.length;
+            each ih have {
+                exp[i] == h and continue
+                ok = 0
+            }
+            return ok
+        };
+        
+        sameset(exp,have) and return Ds&same = 1
+        
         $dif = have.length != exp.length;
+        # el=9 what isn't anymore
+        $drop = [];
         each ih have {
             exp[i] == h and continue
             dif = 1;
@@ -1246,41 +1287,36 @@ Foogla: |
             drop.push(i);
             ret(h,{el:9});
         }
+        if (drop.length == have.length) {
+            # < 100% change should skip lvhashave
+            Ds&total_change = 1;
+            # the option to empty() and reinput taken
+            Dc&may_totally_change and return
+        }
         drop.reverse().map(&hi,{
-            ~Drops: hi, have[hi]
             have.splice(hi,1)
         });
         drop = [];
-        #c have consumed array
-        #  < sel(thing,i), returns i of thing now and adds it at i
-        $selecto = &dl{
-            $whatread = !l;
-            $ig = l || {};
-            return &s{
-                $hi = null;
-                $have_from = 0;
-                while (hi == null) {
-                    hi = d.slice(have_from).indexOf(s);
-                    hi < 0 and return -1
-                    hi += have_from
-                    $no = ig[hi];
-                    no and have_from = hi+1; hi = null
-                }
-                whatread && hi >= 0 and ig[hi] = 1
-                return hi
-            };
-        };
-        $gothi = {};
-        $selhave = selecto(have,gothi);
+        # $dif is now sleepable - Cupon might
+
+        # el=9/1 what moves, el=1/2 come, 8 stay
+        # insert before next locatable thing
+        $prepend = [];
+        # know earlier same thing
+        # < selecto must be told when the hi changes due to prepend,
+        #   setting it to manual entry:
+        $have_once = {};
+        $ihave = me&selecto,have,have_once;
         $lastsame = 0;
         each ix exp {
-            $hi = selhave(x);
+            $hi = ihave(x);
             if (hi < 0) {
                 prepend.push(x)
             }
             elsif (hi != i) {
-                ~move: x, hi, i
+                #~move: x, hi, i
                 if (hi < lastsame) {
+                    # < redundant/lies?
                     # an 8 walls drift down move
                     i < lastsame and throw "allow?"
                     have.splice(hi,1);
@@ -1295,9 +1331,9 @@ Foogla: |
                 ret(x,{el:6});
             }
             else {
-                ~same: x, hi, i, ki(prepend)
+                #~same: x, hi, i, ki(prepend)
                 hi > lastsame and lastsame = hi
-                gothi[hi] = 1+prepend.length;
+                have_once[hi] = 1+prepend.length;
                 each in prepend {
                     ret(n,{el:2});
                 }
@@ -1310,35 +1346,40 @@ Foogla: |
         each in prepend {
             ret(n,{el:1});
         }
-
-        me&tsc,'input',got.join('-'),'1d'
-        me&tsc,'wanted',exp.join('-'),'1b'
+        
+        !sameset(exp,have) and Ds&fail = Ds&fail_brute = 1
         #c tidylv the el6-1 where possible
         # move el9s to beginning
+        # < redundant?
         $ninegr = re.filter(n => ns&el == 9);
         each in ninegr {
             re.splice(re.indexOf(n),1);
         }
         re.unshift(...ninegr);
 
+        if (V) {
+            me&tsc,'input',got.join('-'),'1d'
+            me&tsc,'wanted',exp.join('-'),'1b'
+        }
 
         # lasti=n.t for dupe things
         $latrei = [];
         $res = re.slice().map(n => n.t);
-        $sellat = selecto(latrei);
-        # rei(movestart)=rei(moveto) voidable
+        # < to selecto, to always work in sets of previum?
+        $sellat = me&selecto,latrei;
+        # rei(movestart)=rei(moveto) voidable el=6
         $nvm = [];
         # rei-> sc talk n
-        $V = 1;
         $shrinki = [];
-        exp[0] == 'fur' and V = 2;
         each in re {
             $t = '  '+n.t;
             V && me&tsc,'changeto',t,'6';
+            
             $was = latrei.indexOf(n.t);
             $r = null;
             was >= 0 and r = re[was]; delete latrei[was];
             latrei[i] = n.t;
+            
             # at the recreation end of a move
             if (r && ns&el <3 && rs&el == 6) {
                 $between = re.slice(was, i);
@@ -1385,31 +1426,30 @@ Foogla: |
             ns&el == 6 and ns&el = 9
             !nvm[i] and lv.push(n)
         }
-        #c Element.* acts
-        
-        # test application to:
-        $lvd = got.slice();
-        
-        $sellv = selecto(lvd);
-        $gap = [];
+        #c Element.* acts -> n-domefor
+        $actn = Ds&actn = [];
+        $cha = Ds&cha = [];
+        # and test apply to:
+        $lvd = Ds&lvd = got.slice();
+        # < selecto
+        $sellv = me&selecto,lvd;
+        # last thing
         $la = null;
         $prepend = [];
-        $cha = [];
         $lvi = 0;
-        # step it up
-        V = 2
         each in lv {
             if (V) {
-            me&tsc,'lv',ns&el,'d';
-            me&tsc,'lvto',n.t+"\n",'6';
+                me&tsc,'lv',ns&el,'d';
+                me&tsc,'lvto',n.t+"\n",'6';
             }
+            
             $was = lvd.indexOf(n.t);
-            $t = n.t;
             $el = ns&el;
             if ((ns&el <3 || ns&el>=8)
                 && !la && prepend.length) {
                 lvd.splice(lvi,0,... prepend);
                 prepend.map(&t{
+                    actn.push([t,'insertBefore',n.t]);
                     cha.push(t+'<-'+n.t)
                     lvi++;
                     was++;
@@ -1418,12 +1458,14 @@ Foogla: |
             }
             if (ns&el == '9') {
                 lvd.splice(was,1);
+                actn.push([n.t,'remove']);
                 cha.push('-'+n.t);
                 continue
             }
             elsif (ns&el <3) {
                 if (la) {
                     lvd.splice(lvi+1,0,n.t);
+                    actn.push([n.t,'insertAfter',la]);
                     cha.push(la+'->'+n.t)
                 }
                 else {
@@ -1432,16 +1474,34 @@ Foogla: |
                 }
             }
             else {
-                # < allow gaps? el=7 8 with implicit delete until
+                # < allow gaps? 8 with delete until
                 lvi = was-1;
                 cha.push('('+ns&el+':'+n.t+')')
             }
             lvi += 1;
             la = n.t
         }
-        prepend.map(&t{
-            cha.push(la+'<---'+t)
-        });
+        if (!la && prepend.length) {
+            # < 100% change should skip lvhashave
+            $lastnine = actn.pop();
+            !lastnine || lastnine[1] != 'remove' and throw "Noel9?"
+            $lastninecha = cha.pop();
+            $n = lastnine[0];
+            prepend.map(&t{
+                actn.push([t,'insertBefore',n]);
+                cha.push(t+'<--'+n.t)
+            });
+            actn.push(lastnine);
+            cha.push(lastninecha);
+        }
+        else {
+            prepend.map(&t{
+                actn.push([t,'insertAfter',la]);
+                cha.push(la+'<---'+t)
+            });
+        }
+        
+        !sameset(exp,lvd) and Ds&fail = Ds&fail_elementing = 1
     };
     #c Doming...
     me.Sampley = &acgtR{
