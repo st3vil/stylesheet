@@ -1167,6 +1167,14 @@ Foogla: |
             }
             
         },'ift,D'],
+        
+        # as Element objects probably unique
+        #  can handle many same using gothi to mask have
+        # prefer keeping things moving left/up
+        # < 
+        # < fallback to empty()+append()
+        # < generalise
+        # < lovely fuzzy matches, el7 (moves, duplinks)
         ['lvhashave','3',&acgtRs{
             Rs&rowish = 1;
             s&bo = '7px dotted green';
@@ -1178,9 +1186,9 @@ Foogla: |
             $td = [
                 #'jus g/twan jus',
                 #'s van to dich/ze van dich toat to',
-                'toad transfer lich/fur lich trom toad',
+                #'toad transfer lich/fur lich trom toad',
                 # < to=6,dich=8, its exp order
-                #'sle sla van to dich/sla van sla dich sla toat to',
+                'sle sla van to dich/sla van sla dich sla toat to',
                 #'further towards ye goal goal/no further goal shall goal ye',
                 #'test data shall/test shall gall data',
                 # < flong el=8, its el=6 is early, latency of prepend[]
@@ -1194,13 +1202,6 @@ Foogla: |
                 $got = n[0];
                 $exp = n[1];
                 $have = got.slice();
-                # as Element objects probably unique
-                #  can handle many same using gothi to mask have
-                # < lovely fuzzy matches, el7 (moves, duplinks)
-                # < fallback to empty()+append()
-                # < see 'shall has its place once data leaves'
-                #    find them while applying the instructions?
-                #   prefer keeping things moving earlier
                 
                 # what for each have,
                 #  may be el9+prepend = [all new]
@@ -1268,8 +1269,7 @@ Foogla: |
                             prepend.push(x);
                             continue
                         }
-                        #, ki(gothi), ki(prepend)
-                        # < shall has its place once data leaves
+                        # shall has its place once data leaves
                         #x == 'shall' and ~>4 mohave: ki(have)
                         have.splice(hi,1);
                         prepend.push(x);
@@ -1304,10 +1304,9 @@ Foogla: |
                 re.unshift(...ninegr);
                 
                 
-                # lasti=n.t
+                # lasti=n.t for dupe things
                 $latrei = [];
                 $res = re.slice().map(n => n.t);
-                $sellfrom = selecto(res);
                 $sellat = selecto(latrei);
                 # rei(movestart)=rei(moveto) voidable
                 $nvm = [];
@@ -1322,16 +1321,26 @@ Foogla: |
                     $r = null;
                     was >= 0 and r = re[was]; delete latrei[was];
                     latrei[i] = n.t;
+                    # at the recreation end of a move
                     if (r && ns&el <3 && rs&el == 6) {
-                        $wast = sellfrom(n.t);
-                        $between = re.slice(wast, i-was);
+                        $between = re.slice(was, i);
                         # things we may not end up in front of
                         $outof = [];
-                        V>1 && me&tsc,'tveen',wast+'-'+i,'y';
+                        V>1 && me&tsc,'tveen',was+'-'+i,'y';
                         between.map(&b{
                             if (bs&el <3 || bs&el == 6
                                 || bs&el == 9) {
                                 # fine where we are
+                            }
+                            elsif (bs&el == 5) {
+                                # bow to elements moving left
+                                # ensure b's 6 started left of n
+                                # < not dupeable
+                                $bi = got.indexOf(b.t);
+                                $ni = got.indexOf(n.t);
+                                bi<0 || ni<0 and throw "nofind"
+                                bi==ni and throw "bini"
+                                bi > ni and outof.push(b.t)
                             }
                             else {
                                 outof.push(b.t)
@@ -1366,12 +1375,16 @@ Foogla: |
                 $prepend = [];
                 $cha = [];
                 $lvi = 0;
+                # step it up
+                V = 2
                 each in lv {
                     if (V) {
                     me&tsc,'lv',ns&el,'d';
                     me&tsc,'lvto',n.t+"\n",'6';
                     }
-                    $was = sellv(n.t);
+                    $was = lvd.indexOf(n.t);
+                    $t = n.t;
+                    $el = ns&el;
                     if ((ns&el <3 || ns&el>=8)
                         && !la && prepend.length) {
                         lvd.splice(lvi,0,... prepend);
@@ -1388,7 +1401,7 @@ Foogla: |
                     }
                     elsif (ns&el <3) {
                         if (la) {
-                            lvd.splice(lvi,0,n.t);
+                            lvd.splice(lvi+1,0,n.t);
                             cha.push(la+'->'+n.t)
                         }
                         else {
@@ -1397,8 +1410,8 @@ Foogla: |
                         }
                     }
                     else {
+                        n.t == 'van' and debugger
                         lvi = was;
-                        #debugger;
                         cha.push('('+ns&el+':'+n.t+')')
                     }
                     lvi += 1;
