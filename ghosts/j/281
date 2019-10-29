@@ -838,7 +838,7 @@ Soogle: | # start from Sevo
             !Rs&cha and continue
             
             # what is
-            $had = Rs&on.childNodes;
+            $has = Rs&on.childNodes;
             # text/html (first)
             Rs&text != null and have.unshift($('<cs>').text(Rs&text)[0]);
             Rs&html != null and have.unshift('<cs>'+Rs&html+'</cs>');
@@ -854,20 +854,29 @@ Soogle: | # start from Sevo
             #   rebuilding dom annoys stately insides (cm, video)
             #     whose continuity (history + cursor + focus)
             #       could be made up somehow
-            # hadnt - what we didn't know was there
+            # hasnt - what we didn't know was there
             # havent - what goes
             # leaving it open to elements being rearranged by the user?
             # rearrange, carefully. or just:
             $dif = 0;
             each i,on have {
-                $ha = had[i];
+                $ha = has[i];
                 on == ha and continue
                 # this is probably expensive:
+                # < redundant?
                 typeof on == 'string' && ha && on == ha.outerHTML and continue
                 # different...
                 dif++;
             }
-            if (1 || dif) {
+            # only !Rs&cha can sleep,
+            #  html always disturbed if so
+            !4s&Cupondif and dif = 1
+            
+            if (dif && 4s&Cuponhashave) {
+                # true if it works/is done
+                dif = ! me&Cuponhashave,R,has,have
+            }
+            if (dif) {
                 $(Rs&on).empty();
                 each i,on have {
                     $(Rs&on).append(on);
