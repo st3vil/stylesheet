@@ -1220,226 +1220,228 @@ Foogla: |
         $got = Ds&got;
         $exp = Ds&exp;
         
-                $have = got.slice();
-                # what for each have,
-                #  may be el9+prepend = [all new]
-                $re = [];
-                $ret = &tcn{
-                    t = G&Cye,[t,'',{},c||{}];
-                    re.push(t);
-                    return t
-                }
-                
-                # hi/h to delete
-                $drop = [];
-                # insert before an h
-                $prepend = [];
-                # reorder = drop+prepend
-                $move = [];
-                
-                $dif = have.length != exp.length;
-                each ih have {
-                    exp[i] == h and continue
-                    dif = 1;
-                    $ei = exp.indexOf(h);
-                    ei >= 0 and continue
-                    drop.push(i);
-                    ret(h,{el:9});
-                }
-                drop.reverse().map(&hi,{
-                    ~Drops: hi, have[hi]
-                    have.splice(hi,1)
-                });
-                drop = [];
-                #c have consumed array
+        $have = got.slice();
+        # what for each have,
+        #  may be el9+prepend = [all new]
+        $re = [];
+        $ret = &tcn{
+            t = G&Cye,[t,'',{},c||{}];
+            re.push(t);
+            return t
+        }
+
+        # hi/h to delete
+        $drop = [];
+        # insert before an h
+        $prepend = [];
+        # reorder = drop+prepend
+        $move = [];
+
+        $dif = have.length != exp.length;
+        each ih have {
+            exp[i] == h and continue
+            dif = 1;
+            $ei = exp.indexOf(h);
+            ei >= 0 and continue
+            drop.push(i);
+            ret(h,{el:9});
+        }
+        drop.reverse().map(&hi,{
+            ~Drops: hi, have[hi]
+            have.splice(hi,1)
+        });
+        drop = [];
+        #c have consumed array
         #  < sel(thing,i), returns i of thing now and adds it at i
-                $selecto = &dl{
-                    $whatread = !l;
-                    $ig = l || {};
-                    return &s{
-                        $hi = null;
-                        $have_from = 0;
-                        while (hi == null) {
-                            hi = d.slice(have_from).indexOf(s);
-                            hi < 0 and return -1
-                            hi += have_from
-                            $no = ig[hi];
-                            no and have_from = hi+1; hi = null
-                        }
-                        whatread && hi >= 0 and ig[hi] = 1
-                        return hi
-                    };
-                };
-                $gothi = {};
-                $selhave = selecto(have,gothi);
-                $lastsame = 0;
-                each ix exp {
-                    $hi = selhave(x);
-                    if (hi < 0) {
-                        prepend.push(x)
-                    }
-                    elsif (hi != i) {
-                        ~move: x, hi, i
-                        if (hi < lastsame) {
-                            # an 8 walls drift down move
-                            i < lastsame and throw "allow?"
-                            have.splice(hi,1);
-                            ret(x,{el:9});
-                            prepend.push(x);
-                            continue
-                        }
-                        # shall has its place once data leaves
-                        #x == 'shall' and ~>4 mohave: ki(have)
-                        have.splice(hi,1);
-                        prepend.push(x);
-                        ret(x,{el:6});
-                    }
-                    else {
-                        ~same: x, hi, i, ki(prepend)
-                        hi > lastsame and lastsame = hi
-                        gothi[hi] = 1+prepend.length;
-                        each in prepend {
-                            ret(n,{el:2});
-                        }
-                        ret(x,{el:8});
-                        have.splice(hi,0,... prepend);
-                        prepend = [];
-                    }
+        $selecto = &dl{
+            $whatread = !l;
+            $ig = l || {};
+            return &s{
+                $hi = null;
+                $have_from = 0;
+                while (hi == null) {
+                    hi = d.slice(have_from).indexOf(s);
+                    hi < 0 and return -1
+                    hi += have_from
+                    $no = ig[hi];
+                    no and have_from = hi+1; hi = null
                 }
-                have.push(... prepend);
+                whatread && hi >= 0 and ig[hi] = 1
+                return hi
+            };
+        };
+        $gothi = {};
+        $selhave = selecto(have,gothi);
+        $lastsame = 0;
+        each ix exp {
+            $hi = selhave(x);
+            if (hi < 0) {
+                prepend.push(x)
+            }
+            elsif (hi != i) {
+                ~move: x, hi, i
+                if (hi < lastsame) {
+                    # an 8 walls drift down move
+                    i < lastsame and throw "allow?"
+                    have.splice(hi,1);
+                    ret(x,{el:9});
+                    prepend.push(x);
+                    continue
+                }
+                # shall has its place once data leaves
+                #x == 'shall' and ~>4 mohave: ki(have)
+                have.splice(hi,1);
+                prepend.push(x);
+                ret(x,{el:6});
+            }
+            else {
+                ~same: x, hi, i, ki(prepend)
+                hi > lastsame and lastsame = hi
+                gothi[hi] = 1+prepend.length;
                 each in prepend {
-                    ret(n,{el:1});
+                    ret(n,{el:2});
                 }
-                
-                me&tsc,'input',got.join('-'),'1d'
-                me&tsc,'wanted',exp.join('-'),'1b'
-                
-                #c tidylv the el6-1 where possible
-                # move el9s to beginning
-                $ninegr = re.filter(n => ns&el == 9);
-                each in ninegr {
-                    re.splice(re.indexOf(n),1);
-                }
-                re.unshift(...ninegr);
-                
-                
-                # lasti=n.t for dupe things
-                $latrei = [];
-                $res = re.slice().map(n => n.t);
-                $sellat = selecto(latrei);
-                # rei(movestart)=rei(moveto) voidable
-                $nvm = [];
-                # rei-> sc talk n
-                $V = 1;
-                $shrinki = [];
-                exp[0] == 'fur' and V = 2;
-                each in re {
-                    $t = '  '+n.t;
-                    V && me&tsc,'changeto',t,'6';
-                    $was = latrei.indexOf(n.t);
-                    $r = null;
-                    was >= 0 and r = re[was]; delete latrei[was];
-                    latrei[i] = n.t;
-                    # at the recreation end of a move
-                    if (r && ns&el <3 && rs&el == 6) {
-                        $between = re.slice(was, i);
-                        # things we may not end up in front of
-                        $outof = [];
-                        V>1 && me&tsc,'tveen',was+'-'+i,'y';
-                        between.map(&b{
-                            if (bs&el <3 || bs&el == 6
-                                || bs&el == 9) {
-                                # fine where we are
-                            }
-                            elsif (bs&el == 5) {
-                                # bow to elements moving left
-                                # ensure b's 6 started left of n
-                                # < not dupeable
-                                $bi = got.indexOf(b.t);
-                                $ni = got.indexOf(n.t);
-                                bi<0 || ni<0 and throw "nofind"
-                                bi==ni and throw "bini"
-                                bi > ni and outof.push(b.t)
-                            }
-                            else {
-                                outof.push(b.t)
-                            }
-                            $s = '  '+ki(b);
-                            V>1 && me&tsc,'between',s,'1q';
-                        });
-                        if (!outof.length) {
-                            nvm[was] = i;
-                            $dn = shrinki[was];
-                            dn and dns&fs = 6;
-                            ns&el = 5;
-                        }
+                ret(x,{el:8});
+                have.splice(hi,0,... prepend);
+                prepend = [];
+            }
+        }
+        have.push(... prepend);
+        each in prepend {
+            ret(n,{el:1});
+        }
+
+        me&tsc,'input',got.join('-'),'1d'
+        me&tsc,'wanted',exp.join('-'),'1b'
+        #c tidylv the el6-1 where possible
+        # move el9s to beginning
+        $ninegr = re.filter(n => ns&el == 9);
+        each in ninegr {
+            re.splice(re.indexOf(n),1);
+        }
+        re.unshift(...ninegr);
+
+
+        # lasti=n.t for dupe things
+        $latrei = [];
+        $res = re.slice().map(n => n.t);
+        $sellat = selecto(latrei);
+        # rei(movestart)=rei(moveto) voidable
+        $nvm = [];
+        # rei-> sc talk n
+        $V = 1;
+        $shrinki = [];
+        exp[0] == 'fur' and V = 2;
+        each in re {
+            $t = '  '+n.t;
+            V && me&tsc,'changeto',t,'6';
+            $was = latrei.indexOf(n.t);
+            $r = null;
+            was >= 0 and r = re[was]; delete latrei[was];
+            latrei[i] = n.t;
+            # at the recreation end of a move
+            if (r && ns&el <3 && rs&el == 6) {
+                $between = re.slice(was, i);
+                # things we may not end up in front of
+                $outof = [];
+                V>1 && me&tsc,'tveen',was+'-'+i,'y';
+                between.map(&b{
+                    if (bs&el <3 || bs&el == 6
+                        || bs&el == 9) {
+                        # fine where we are
                     }
-                    if (V) {
-                    shrinki[i] =
-                    me&tsc,'changes',ki(n.sc)+"\n",'d';
-                    }
-                }
-                # 6/5 pairs become 9/1 or 8/nothing
-                $lv = [];
-                each in re {
-                    ns&el == 5 and ns&el = 8
-                    ns&el == 6 and ns&el = 9
-                    !nvm[i] and lv.push(n)
-                }
-                #c test apply
-                $lvd = got.slice();
-                $sellv = selecto(lvd);
-                $gap = [];
-                $la = null;
-                $prepend = [];
-                $cha = [];
-                $lvi = 0;
-                # step it up
-                V = 2
-                each in lv {
-                    if (V) {
-                    me&tsc,'lv',ns&el,'d';
-                    me&tsc,'lvto',n.t+"\n",'6';
-                    }
-                    $was = lvd.indexOf(n.t);
-                    $t = n.t;
-                    $el = ns&el;
-                    if ((ns&el <3 || ns&el>=8)
-                        && !la && prepend.length) {
-                        lvd.splice(lvi,0,... prepend);
-                        prepend.map(&t{
-                            cha.push(t+'<-'+n.t)
-                            lvi++;
-                            was++;
-                        });
-                        prepend = [];
-                    }
-                    if (ns&el == '9') {
-                        lvd.splice(was,1);
-                        cha.push('-'+n.t);
-                        continue
-                    }
-                    elsif (ns&el <3) {
-                        if (la) {
-                            lvd.splice(lvi+1,0,n.t);
-                            cha.push(la+'->'+n.t)
-                        }
-                        else {
-                            prepend.push(n.t);
-                            continue
-                        }
+                    elsif (bs&el == 5) {
+                        # bow to elements moving left
+                        # ensure b's 6 started left of n
+                        # < not dupeable
+                        $bi = got.indexOf(b.t);
+                        $ni = got.indexOf(n.t);
+                        bi<0 || ni<0 and throw "nofind"
+                        bi==ni and throw "bini"
+                        bi > ni and outof.push(b.t)
                     }
                     else {
-                        # < allow gaps? el=7 8 with implicit delete until
-                        lvi = was-1;
-                        cha.push('('+ns&el+':'+n.t+')')
+                        outof.push(b.t)
                     }
-                    lvi += 1;
-                    la = n.t
-                }
-                prepend.map(&t{
-                    cha.push(la+'<---'+t)
+                    $s = '  '+ki(b);
+                    V>1 && me&tsc,'between',s,'1q';
                 });
+                if (!outof.length) {
+                    nvm[was] = i;
+                    $dn = shrinki[was];
+                    dn and dns&fs = 6;
+                    ns&el = 5;
+                }
+            }
+            if (V) {
+            shrinki[i] =
+            me&tsc,'changes',ki(n.sc)+"\n",'d';
+            }
+        }
+        # 6/5 pairs become 9/1 or 8/nothing
+        $lv = [];
+        each in re {
+            ns&el == 5 and ns&el = 8
+            ns&el == 6 and ns&el = 9
+            !nvm[i] and lv.push(n)
+        }
+        #c Element.* acts
+        
+        # test application to:
+        $lvd = got.slice();
+        
+        $sellv = selecto(lvd);
+        $gap = [];
+        $la = null;
+        $prepend = [];
+        $cha = [];
+        $lvi = 0;
+        # step it up
+        V = 2
+        each in lv {
+            if (V) {
+            me&tsc,'lv',ns&el,'d';
+            me&tsc,'lvto',n.t+"\n",'6';
+            }
+            $was = lvd.indexOf(n.t);
+            $t = n.t;
+            $el = ns&el;
+            if ((ns&el <3 || ns&el>=8)
+                && !la && prepend.length) {
+                lvd.splice(lvi,0,... prepend);
+                prepend.map(&t{
+                    cha.push(t+'<-'+n.t)
+                    lvi++;
+                    was++;
+                });
+                prepend = [];
+            }
+            if (ns&el == '9') {
+                lvd.splice(was,1);
+                cha.push('-'+n.t);
+                continue
+            }
+            elsif (ns&el <3) {
+                if (la) {
+                    lvd.splice(lvi+1,0,n.t);
+                    cha.push(la+'->'+n.t)
+                }
+                else {
+                    prepend.push(n.t);
+                    continue
+                }
+            }
+            else {
+                # < allow gaps? el=7 8 with implicit delete until
+                lvi = was-1;
+                cha.push('('+ns&el+':'+n.t+')')
+            }
+            lvi += 1;
+            la = n.t
+        }
+        prepend.map(&t{
+            cha.push(la+'<---'+t)
+        });
     };
     #c Doming...
     me.Sampley = &acgtR{
