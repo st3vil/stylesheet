@@ -1662,6 +1662,53 @@ Foogla: |
         return N
     };
     
+    # cell wall style
+    # < dome for geometry adjustement on its own
+    me.walla = &acgthc{
+        R = Cy&R;
+        $x;
+        typeof h == 'number' and x = {m:h}; h = null
+        c ||= h || {};
+        typeof c == 'string' and c = G&peel,c
+        x and ex(c,x)
+        
+        c.m == null || c.r and Rs&rowish = 1
+        
+        # mass/space from others
+        c.m and s&ma = c.m
+        
+        c.hu and s&hue = c.hu * 10
+        if (c.wi) {
+            # wider than parent
+            $f = (100*c.wi);
+            s&wi = f+'%';
+            f > 120 and s&ml = (-(f-120))+'%'
+        }
+        c.bd and c.b ||= c.bd
+        c.ba and c.b ||= c.ba
+        if (c.b) {
+            # (border px).(rounded em)
+            $s = (''+c.b).split('h');
+            $geo = s [0].split('.');
+            
+            $px = geo[0] || 0;
+            $round = geo[1];
+            
+            $colour = 'blue';
+            if (s [1]) {
+                # < unify as hue
+                colour = s [1] == '5' ? 'green'
+                    : 'white'
+            }
+            $style = c.bd && "dotted"
+                || c.ba && "dashed"
+                || "solid";
+                
+            s&bo = px+'px '+style+' '+colour;
+            round and s&br = round
+        }
+    };
+    
     # e thingers
     # e as far as ravel goes
     # W: $t/R/[path] of Remote
@@ -1949,8 +1996,7 @@ Foogla: |
             $p = Ry&up;
             # p%NzR cs=[D%Domed+]
             $D = s;
-            s&bo = '3px solid blue';
-            s&br = 1;
+            me&walla,0,'b:3.1';
             $t = me&domesticate,R;
             ts&hs = '635';
             Rs&sym = "";
@@ -2086,8 +2132,7 @@ Foogla: |
         
         #c %WestCases
         ['WestCases','3',&acgtRs{
-            Rs&rowish = 1;
-            s&bo = '7px dotted green';
+            me&walla,'bd:3.1h5';
             
             $n = Rs&Inn = Rc&Rom(R,'Search');
             Rs&_ting = ns&_ting;
@@ -2259,14 +2304,13 @@ Foogla: |
         =cut
         ['Loscba','3',&acgtRs{
             me&domesticate,R
-            n A4smind  $self:4s&hashavefail %R:Cit
+            n hashavefail  $self:4s&hashavefail %R:Cit
         },'ift,D'],
         ['GhoNut','3',&acgtRs{
-            s&hue = 170;
-            s&wi = '170%';
-            s&ml = '-30%';
+            me&walla,'hu:17,wi:1.7';
             s&bgh = '111';
-            Rs&rowish = 1;
+            
+            n CofGho  $self:C %R:Cit,refpool
             # watch for errors from that lv thing
             Rs&Inn = Rc&Rom(R,'Loscba');
             
@@ -2492,7 +2536,7 @@ Foogla: |
         
         # look through 4/5 for links
         ['inspecto','3',&acgtRs{
-            Rs&rowish = 1;
+            me&walla;
             $p = me.cbu(R,'ting');
             each in sy&N {
                 (ps&species == 5 && ny&up && ny&up.t == 'W' ||
@@ -2504,7 +2548,7 @@ Foogla: |
         },'ift,D'],
         
         ['itemo','3',&acgtRs{
-            s&ma = 0.4;
+            me&walla,0.4;
             $p = me.cbu(R,'ting');
             me&tsc,'itemo',Rs&itemo,'6' .y.cv = 0.08
             $t = me&domesticate,R;
