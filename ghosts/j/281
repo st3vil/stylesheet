@@ -536,7 +536,7 @@ Soogle: | # start from Sevo
     $robust = 0; # applies all css properties every time
     # state things, see also Rs&down
     me.rollCscon = &acgtR{
-        me&rollbs,R,'attr,tag,css,html,text,value'
+        me&rollbs,R,'attr,tag,css,html,text,value,hands'
     };
     me.Cscon = &acgtR{
         $isnew = !Rc&b;
@@ -637,7 +637,7 @@ Soogle: | # start from Sevo
         # already set what we wanted
         #  leaves room for h to wander,
         # avoids setting what was submit
-        bs&value != v and ~Valuecha: ki(bs&value),'->',ki(v)
+        #bs&value != v and ~Valuecha: ki(bs&value),'->',ki(v)
         bs&value != v and return 1
         h != v and ~Value: ki(h),'<-',ki(v)
     };
@@ -672,8 +672,37 @@ Soogle: | # start from Sevo
         $(Rs&on).trigger('onkeydown');
 
         # leave valuec
-        $(Rs&on).on('blur',&{ G&gev });
-        $(Rs&on).on('focus',&{ 4c&pause = 1 });
+        
+        $hands = {
+            blur: &{ G&gev },
+            focus: &{ 4c&pause = 1 }
+        };
+        me&hands,R,Rs&on,hands;
+    };
+    me.hands = &acgtRlh{
+        Rs&hands and throw "many layers of handlers"
+        # notice leaving
+        $b = Rc&b;
+        if (b && bs&hands) {
+            each ty bs&hands {
+                h[t] ||= 0;
+            }
+        }
+        Rs&hands = h;
+        
+        $cm = l instanceof CodeMirror && l;
+        each ty h {
+            if (cm) {
+                # cm.off() requires the exact t/y again
+                cm._handlers and delete cm._handlers[t];
+                # cm.off(t);
+                y && cm.on(t,y);
+            }
+            else {
+                $(l).off(t);
+                y && $(l).on(t,y);
+            }
+        }
     };
     #c codemirror
     # https://codemirror.net/doc/manual.html
@@ -719,9 +748,9 @@ Soogle: | # start from Sevo
         };
 
         # 8
-        $sav = &{ G&gev };
+        $save = &{ G&gev };
         cm.setOption('extraKeys', {
-            'Esc': sav,
+            'Esc': save,
             'Tab': &c{
                 c.getSelection().length ? 
                     c.execCommand('indentMore')
@@ -730,7 +759,7 @@ Soogle: | # start from Sevo
             'Shift-Tab': &c{
                 c.execCommand('indentLess');
             },
-            "Ctrl-Enter": sav,
+            "Ctrl-Enter": save,
 
             # TODO doesn't work?
             "Ctrl-Q": &cm,{ cm.foldCode(cm.getCursor()); },
@@ -743,12 +772,16 @@ Soogle: | # start from Sevo
         #["CodeMirror-foldgutter"]);
 
         # TODO use/upload/download markers, fold with them
-        # have them able to be open or closed to the next marker of same dp..
+        # have them able to be open or closed
+        #   to the next marker of same ind..
         # cm.foldCode(CodeMirror.Pos(21, 0));
-
-        cm.on('focus',function(){G.clof();G.keof();});
-        cm.on('click',function(){G.clof();G.keof();});
-        cm.on('blur',function(ev,of,inn){G.clon();G.keon();sav();});
+        
+        $hands = {
+            focus: &{ G.clof();G.keof(); },
+            click: &{ G.clof();G.keof(); },
+            blur:  &{ G.clon();G.keon(); save(); },
+        };
+        me&hands,R,cm,hands;
 
         #    $('#'+id).css('width','15em','max-height','70%','overflow','scroll');
         #   $('#'+id+' > .CodeMirror');//.css('height','auto');
