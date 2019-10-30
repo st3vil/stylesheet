@@ -628,6 +628,7 @@ Soogle: | # start from Sevo
             # supposing the element will surely be there...
         }
     };
+    
     me.valuecha = &acgtRhv{
         $b = Rc&b;
         !b and return 1
@@ -639,7 +640,20 @@ Soogle: | # start from Sevo
         bs&value != v and ~Valuecha: ki(bs&value),'->',ki(v)
         bs&value != v and return 1
         h != v and ~Value: ki(h),'<-',ki(v)
-        
+    };
+    me.valuesays = &acgtRe{
+        e.t = 'says';
+        ec&noisyinput = &{
+            # called once accepted as un-noisy
+            # avoids setting what was submit,
+            #   keeping your typing
+            $r = me&yfuture,R;
+            rs&value = ec&s;
+        };
+        # we default to ec&s = $(on).val()
+        # unless wanting to watch typing as it happens,
+        # throws out events like click, keypress other than esc/enter
+        4c&pause = 0;
     };
     me.textinput = &acgtRb{
         # sets value
@@ -648,20 +662,8 @@ Soogle: | # start from Sevo
                 Rs&on.value = c&s
             }
         }
-
         # gives value
-        Rs&on.eintro = &e{
-            e.t = 'says';
-            # we default to ec&s = $(on).val()
-            # avoids setting what was submit
-            $r = me&yfuture,R;
-            ec&s and rs&value = ec&s;
-            ec&s and ~Submit: ec&s
-            # unless wanting to watch typing as it happens,
-            # throws out events like click, keypress other than esc/enter
-            ec&noisyinput = 1;
-            4c&pause = 0;
-        };
+        Rs&on.eintro = &e{ me&valuesays,R,e };
 
         # stretched by value
         Rs&on.onkeydown = &ev,{
@@ -689,9 +691,9 @@ Soogle: | # start from Sevo
         if (c&s != null) {
             # a string starts or updates
             $is = cm.getValue();
-            if (is != c&s) {
+            if (me&valuecha,R,is,c&s ) {
                 if (is) {
-                    ~CMover
+                    ~CMerge
                     # merge/merge.js
                 }
                 cm.setValue(''+c&s);
@@ -702,19 +704,18 @@ Soogle: | # start from Sevo
         }
 
         # gives value
+        # < S/C/A-esc doing different things
         # < softly on bunch of changes: cm.signal('changes',...)
-        # < hard on esc-key
-        # < as different intensities,cm.getchanges, do branching in time...
+        #   cursor moves
+        # < select if for syntax restructuring options
+        # < 
+        # < as different intensities, cm.getchanges, do branching in time...
         #   differ everything we code up, suggest types...
+        #   
         Rs&on.eintro = &e{
-            e.t = 'says';
             ec&s = cm.getValue();
             s&digs and ec&parent = s&digs
-            # we default to ec&s = $(on).val()
-            # unless wanting to watch typing as it happens,
-            # throws out events like click, keypress other than esc/enter
-            ec&noisyinput = 1;
-            4c&pause = 0;
+            me&valuesays,R,e;
         };
 
         # 8
