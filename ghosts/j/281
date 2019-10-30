@@ -536,7 +536,7 @@ Soogle: | # start from Sevo
     $robust = 0; # applies all css properties every time
     # state things, see also Rs&down
     me.rollCscon = &acgtR{
-        me&rollbs,R,'attr,tag,css,html,text'
+        me&rollbs,R,'attr,tag,css,html,text,value'
     };
     me.Cscon = &acgtR{
         $isnew = !Rc&b;
@@ -628,17 +628,35 @@ Soogle: | # start from Sevo
             # supposing the element will surely be there...
         }
     };
+    me.valuecha = &acgtRhv{
+        $b = Rc&b;
+        !b and return 1
+        # untyped into
+        Rs&value = v;
+        # already set what we wanted
+        #  leaves room for h to wander,
+        # avoids setting what was submit
+        bs&value != v and ~Valuecha: ki(bs&value),'->',ki(v)
+        bs&value != v and return 1
+        h != v and ~Value: ki(h),'<-',ki(v)
+        
+    };
     me.textinput = &acgtRb{
         # sets value
         if (c&s != null) {
-            ~inputover
-            Rs&on.value = c&s
+            if (me&valuecha,R,Rs&on.value,c&s ) {
+                Rs&on.value = c&s
+            }
         }
 
         # gives value
         Rs&on.eintro = &e{
             e.t = 'says';
             # we default to ec&s = $(on).val()
+            # avoids setting what was submit
+            $r = me&yfuture,R;
+            ec&s and rs&value = ec&s;
+            ec&s and ~Submit: ec&s
             # unless wanting to watch typing as it happens,
             # throws out events like click, keypress other than esc/enter
             ec&noisyinput = 1;
