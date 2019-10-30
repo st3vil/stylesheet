@@ -413,6 +413,7 @@ Foogla: |
        such that search engines will see it
          $Cs&W.html becomes the href=""
          going to build a lot of piles of <stylehouse>
+    < jsBabz should S to an indent, work in R
     
     W:Pass %ball web surfing
      < keep openness from last time - part of:
@@ -1331,32 +1332,62 @@ Foogla: |
     };
     
     # have consumed array
-    #  < sel(thing,i), returns i of thing now and adds it at i
+    # indexOf with mask
+    # $sel = selecto(N)
+    #  sel(thing) gives thing's i in N, once
+    #  sel(thing,-1) doesn't count as a once
+    #  sel(thing,i) puts another at i
+    #  sel(thing,*,from) i must > from
     me.selecto = &acgtdl{
-        $whatread = !l;
+        d ||= [];
+        $ignoreonceread = !l;
         $ig = l || {};
-        $sel = &s{
+        $sel = &sif{
             $hi = null;
+            # doesn't count as a read
+            i != null && i < 0 and $noig = 1
             $have_from = 0;
             while (hi == null) {
                 hi = d.slice(have_from).indexOf(s);
-                hi < 0 and return -1
+                hi < 0 and break
                 hi += have_from
                 $no = ig[hi];
+                noig and no = 0
+                f && f >= hi and no = 1
                 no and have_from = hi+1; hi = null
             }
-            whatread && hi >= 0 and ig[hi] = 1
+            if (hi >= 0) {
+                # read that only once
+                ignoreonceread && hi >= 0 && !noig and ig[hi] = 1
+            }
+            # stash again/at i/make readable again
+            i != null && i >= 0 and d[i] = s; delete ig[i]
             return hi
         };
         return sel
     };
     me.sameset = &acgtMN{
+        !M || !N and return
         $ok = M.length == N.length;
         each ih M {
             N[i] == h and continue
             ok = 0
         }
         return ok
+    };
+    # like G&ind, or Rc&s=C climbing
+    #   returning Rc&N.map(Rc&s)
+    # and setting yup
+    me.sunN = &acgtsdl{
+        d ||= 1;
+        l ||= 5;
+        d > l and return []
+        $N = [s];
+        each in ss&z {
+            ny&up = s;
+            N.push( ... me&sunN,n,d+1,l )
+        }
+        return N
     };
     
     # soul olympics
@@ -1420,7 +1451,7 @@ Foogla: |
         $prepend = [];
         # know earlier same thing
         # < selecto must be told when the hi changes due to prepend,
-        #   setting it to manual entry:
+        #   setting it to manual ig
         $have_once = {};
         $ihave = me&selecto,have,have_once;
         $lastsame = 0;
@@ -1476,11 +1507,9 @@ Foogla: |
             me&tsc,'wanted',exp.join('-'),'1b'
         }
 
-        # lasti=n.t for dupe things
-        $latrei = [];
         $res = re.slice().map(n => n.t);
         # < to selecto, to always work in sets of previum?
-        $sellat = me&selecto,latrei;
+        $latere = me&selecto;
         # rei(movestart)=rei(moveto) voidable el=6
         $nvm = [];
         # rei=sc talk n
@@ -1489,10 +1518,9 @@ Foogla: |
             $t = '  '+n.t;
             V && me&tsc,'changeto',t,'6';
             
-            $was = latrei.indexOf(n.t);
-            $r = null;
-            was >= 0 and r = re[was]; delete latrei[was];
-            latrei[i] = n.t;
+            # last same thing's i in re
+            $was = latere(n.t,i);
+            $r = was >= 0 ? re[was] : null;
             
             # at the recreation end of a move
             if (r && ns&el <3 && rs&el == 6) {
@@ -1548,11 +1576,10 @@ Foogla: |
         $cha = Ds&cha = [];
         # and test apply to:
         $lvd = Ds&lvd = got.slice();
-        # < selecto
-        $sellv = me&selecto,lvd;
         # last thing
         $la = null;
         $prepend = [];
+        # follows lvd[lvi] = what lv[i] is about
         $lvi = 0;
         Ds&talklv = [];
         each in lv {
@@ -1562,6 +1589,7 @@ Foogla: |
                 me&tsc,'lvto',n.t+"\n",'6';
             }
             
+            # < selecto splicing+reading lvd
             $was = lvd.indexOf(n.t);
             $el = ns&el;
             if ((ns&el <3 || ns&el>=8)
@@ -1648,19 +1676,6 @@ Foogla: |
         Rs&Sampley and Rs&Sampled = l
         return l
     }
-    # like G&ind, or Rc&s=C climbing
-    #   returning Rc&N.map(Rc&s)
-    # and setting yup
-    me.sunN = &acgtsd{
-        d ||= 1;
-        d > 5 and return []
-        $N = [s];
-        each in ss&z {
-            ny&up = s;
-            N.push( ... me&sunN,n,d+1 )
-        }
-        return N
-    };
     
     # cell wall style
     # < dome for geometry adjustement on its own
@@ -1709,7 +1724,7 @@ Foogla: |
         }
     };
     
-    # e thingers
+    #c e thingers
     # e as far as ravel goes
     # W: $t/R/[path] of Remote
     # D: the item to deliver
@@ -1891,8 +1906,7 @@ Foogla: |
         # a Dome, holding things to resume
         ['JRom','3',&acgtRs{
             Rs&rowish = 1;
-            s&bo = '2px dotted green';
-            s&br = 0.6;
+            me&walla,'bd:2.1h5';
             me&domesticate,R;
             
             # 1 wave matter
@@ -1933,6 +1947,7 @@ Foogla: |
                 s&bg = '#002';
                 Dc&b and c.wantsleep = 1
             }
+            c.hidey and s&mah = 30; s&over = 2
             
             # 4 map matters for before/after
             # < down to the gate, know enough to know
@@ -2146,7 +2161,7 @@ Foogla: |
             # while checking in, 
             me&rolltog,R,'Checkin',0 and c.Sampley = 2
             else { delete Rs&Sampled }
-            Rs&Sampled and c.pause = 1;
+            Rs&Sampled and c.pause = 1; c.hidey = 1;
             
             $r = !c.pause && Rc&Rom(R,'%lvhashave',c);
             
@@ -2254,8 +2269,8 @@ Foogla: |
             # news from the 5 year old editor
             4s&Cuponhashave = 1;
             Rc&Rom(R,'GhodigWap');
-            Rc&Rom(R,'GhoNut');
-            #Rc&Rom(R,'WestCases');
+            #Rc&Rom(R,'GhoNut');
+            Rc&Rom(R,'WestCases');
             #4s&Cuponhashave = 0;
             #Rc&Rom(R,'JRomnotes');
             
