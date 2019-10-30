@@ -803,6 +803,9 @@ Soogle: | # start from Sevo
         #c C have
         $rev = N.slice().reverse();
         each iR rev {
+            $b = Rc&b;
+            !b && !Rs&cha and throw "Nota"
+            
             # memory leaker:
             # < use famous[sip] and title = ty for event target
             Rs&on.C = Rc&s;
@@ -810,34 +813,24 @@ Soogle: | # start from Sevo
             Rc&s.y.Display = R;
             
             if (Rs&originsleeping) {
-                # will be !Rs&cha, keep Rs&down 
-                $b = Rc&b;
+                # will be !Rs&cha, keep Rs&down
                 # < allow some awakers to merge over historicals
                 Rs&down ||= [];
                 Rs&down.push(... bs&down);
             }
+            
             # what will be
-            $have = [];
-            # children
-            each ir Rs&down {
-                have.push(rs&on);
-            }
+            #  want to D that r, let it swim rs&on
+            $have = (Rs&down||[]).map(r => rs&on);
             have.length and Rs&havedown = have.slice();
             
-            $b = Rc&b;
             if (!Rs&cha && b && (Rs&havedown || bs&havedown)) {
                 # BUG: there is some place where a %downer is not %cha'd
                 #  atop a Cray...
-                if ((Rs&havedown||[]).length != 
-                    (bs&havedown||[]).length) {
-                    Rs&cha = 1
-                }
-                else {
-                    each in Rs&havedown {
-                        n !== bs&havedown[i] and Rs&cha = 1; break
-                    }
-                }
+                # < fixed by 2ac202656a2?
+                Rs&cha = ! me&sameset,Rs&havedown,bs&havedown;
             }
+            
             $orig = R.y.origin;
             $talky = orig && origs&Cupon_talky;
             if (talky) {
@@ -896,40 +889,47 @@ Soogle: | # start from Sevo
                 }
             }
         }
-        #$move = N.filter(R => Rs&cha);
-        #$(Rs&on).append('<p>~ '+
-        #move.length and ~moveing: ki(A&chR)
-        #move.map(R => Rc&s.t).join(', ')
-        #~move: A.1.t, ki(move), '/', A&R.length
         
+        # 8
+        
+        # < is h always R?
         $h = N[0];
         $c = hc&s;
-        if (c && c.sc && cs&directDisplay) {
-            $b = hc&b;
-            !b and ~only works once:
-            b and $(bs&on).replaceWith(hs&on);
-        }
-        # chanbge
-        hc&s.sc.J == A.1 && 1s&OscDoneHook and 1s&OscDoneHook(h);
-        
-        $on = hs&on;
-        if (A.2 == A.4) {
-            !A.4.on and throw "No A4on"
-            if (!A.4.on.contains(on)) {
-                ~>2 Fours: A.1.t
-                $(on).appendTo(A.4.on);
-                # if it was already, take it as an unplug?
-                # or find new parent, get adopted
+        # < is c ever !C?
+        if (c && c.sc) {
+            if (cs&directDisplay) {
+                # Implantingness sneaking awake
+                $b = hc&b;
+                !b and ~only works once:
+                b and $(bs&on).replaceWith(hs&on);
+            }
+            if (cs&J == A.1) {
+                # for this J
+                1s&OscDoneHook and 1s&OscDoneHook(h);
             }
         }
+        
+        # < when A.1 == A.3?
+        A.2 == A.4 and me&Cup24,h
+    };
+    # A.3 attaches to A.4
+    me.Cup24 = &acgtR{
+        $on = Rs&on;
+        $onto = A.4.on;
+        !onto and throw "No A4on"
+        onto.contains(on) and return
+        ~>2 Cup24: A.1.t
+        onto.appendChild(on)
+        # if it was already, take it as an unplug?
+        # or find new parent, get adopted
     };
     # play with Cupon's awareness of change
     me.stuffsomewhere = &acgtR{
         ~>6 Bleepso:
         me&tsc,'forcest',null,'1G';
-        me&tsc,'sources',null,'1B';
         me&tsc,'bleep',null,'1G';
         me&tsc,'forcest',null,'1G';
+        me&tsc,'sources',null,'1B';
         Rs&Cupon_talky = 1;
     };
     
@@ -3687,6 +3687,7 @@ Soogle: | # start from Sevo
                 n obj  $self:s,R %Reis:Cit%
                 return
             }
+            s += '';
             $cm =
             n s 1 $s:s %e:1
             # < Besk options, to merge with locals
