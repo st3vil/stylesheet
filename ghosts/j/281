@@ -3225,25 +3225,29 @@ Soogle: | # start from Sevo
         
         # default *
         !leg.length and leg.push('');
-        !t || !ts&z and return []
+        !t and return []
+        $N = t.constructor == Array ? t : ts&z;
+        !N and return []
         
-        $N = [t];
-        $Z = [];
+        $Z
         each i,bit leg {
             $t = M[i];
             bit == '*' and bit = ''
             t == '*' and t = ''
-            each in N {
-                !ns&z and continue
-                Z.push( ... ns&z
-                    .filter(l => !bit || l.sc[bit] != null)
-                    .filter(l => !t || (c.st ? lc&s.t : l.t) == t)
-                );
+            if (Z) {
+                N = [];
+                each in Z {
+                    ns&z && N.push(...ns&z)
+                }
             }
-            N = Z;
             Z = [];
+            each il N {
+                bit && l.sc[bit] == null and continue
+                t && (c.st ? lc&s.t : l.t) != t and continue
+                Z.push(l);
+            }
         }
-        return N
+        return Z
     };
     
     #c Roll
