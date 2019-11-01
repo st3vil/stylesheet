@@ -2047,7 +2047,8 @@ Foogla: |
             # < %ForThe is ephemeral, loads many W&ForThe
             # W&ForThe/Know populates %ForThe withs %tings
             # which starts as an other-%ting attractor:
-            $K = me&likez,R,'Know',{ususc:{trac:2}};
+            # < suggestive n
+            $K = me&likez,R,'Know',{ususc:{trac:'ting'}};
             # < %trac-tion should occur when %Gens%play,
             #     mutex at %tingspot
             K and me&tracto,K,'ball','ting'
@@ -2135,31 +2136,82 @@ Foogla: |
         }
         return R.sc[k]
     }
-    # %ball<->%ting
-    me.tracto = &acgtRkt{
-        $spot = t+'spot';
-        $sp = me.cbu(R,spot);
-        !sp and return me&tsc,'no'+spot,'!t','B'
-        # %ball gathers %tracs
-        sp.sc['trac'+k] = R;
-        Rs&tractioning = t;
-        # %ball/%balls remember %tings
-        $N = me&ioty,R,'%ball';
-        each in N {
-            n.sc['trac'+t]= 1
+    #c Know/%ball<->ForThe/%ting
+    # local %tings hangout
+    me.spotfor = &acgtRt{
+        $l = [t,'the'];
+        $s
+        each it l {
+            $spot = t+'spot';
+            s = me.cbu(R,spot);
+            s and return s
         }
+        me&tsc,'no'+spot,'!t','B' 
     };
-    me.tracfrom = &acgtRkt{
-        $spot = t+'spot';
-        $sp = me.cbu(R,spot);
-        !sp and return me&tsc,'no'+spot,'!t','B'
-        # %ball gathers %tracs
-        sp.sc['trac'+k] = R;
+    # %balls gather %ting
+    me.tracto = &acgtRkt{
+        # Know glows
         Rs&tractioning = t;
-        # %ball/%balls remember %tings
-        $N = me&ioty,R,'%ball';
-        each in N {
-            n.sc['trac'+t]= 1
+        
+        # Know/%balls remember to %tracting
+        me&ioty,R,'%'+k
+            .map(n => n.sc['trac'+t] = 1)
+        
+        # %tings notice upward %tracting
+        $F = me&spotfor,R,t;
+        !F and return
+        $f = F.sc['trac'+t];
+        f and return me&tsc,"alreadytrac"+t,"oc:"+r.t
+        F.sc['trac'+t] = R;
+    };
+    # roll R%tracting current
+    me.rollbsy = &acgtRk{
+        $r = me&rollbs,R,k;
+        r and R.sc[k] = r = me&yfuture,r
+        return r
+    };
+    # < look more like RbitXing
+    # < or connect each %ting on the path
+    #   up to a certain distance...
+    #    should T.allow about going further than ...
+    #   the things up the embryo...
+    #   branches of %tings could be skipped?
+    #    as far as the insides gravity is independent
+    #      may stick around because you saw it once,
+    #       culture style,
+    #      or be mechanical exactitude eg I,
+    #       things vanishing noted but immediately effective
+    #     memory compresses, making usual shapes
+    # %ting finds %tracting above
+    me.tracfrom = &acgtRts{
+        $tracting = 'trac'+t;
+        # keeps our %tracting once found
+        $w = me&rollbsy,R,tracting;
+            
+        # thing must be live
+        !s and return
+        
+        # ForThe%tracting -> %MindInto/Know
+        $t = me.cbu(Ry&up,tracting);
+        !t and return
+        t == R and return
+        
+        # last above
+        $tb = t.sc[tracting];
+        !tbs&ball and throw "tracting!ball"
+        $r = me&ioty,tb,'%ball',{st:s.t} [0];
+        if (r) {
+            r != w and throw '%ball moved? climb last Te'
+            !r || !rs&ball and throw "Noballtrac"
+            # assume
+            R.sc[tracting] = r
+        }
+        else {
+            # create?
+            if (me&rolltog,R,'^trac',0 ) {
+                me&input,tb,s.t;
+                me&tsc,'connected','OK',6
+            }
         }
     };
     #c Tongingness %ting %trac* %Gens
@@ -2170,51 +2222,20 @@ Foogla: |
         # %trac*
         
         # Gen/Know/**%ball syncs %tings/etc
-        # < at what spot? eg select %ouds
-        ['ball+tractioning','6',&acgtRs{
+        ['tractioning','6',&acgtRs{
             me&tsc,'istractioning','vtrac:';
             me&tsc,'istractioning','%'+Rs&tractioning,'g';
             me&walla,'ba:2h3'
         },'ift,D'],
         
-        # %tracball above finds our others
-        # RbitXing/Xpathing to %tings to connect to %balls
-        # %ting tracs %ball
+        # %tracting/...%ting
+        # RbitXing/Xpathing connect to %balls
         ['ting','6',&acgtRs{
-            me&rollbs,R,'tracball';
-            $Q = Rs&Q;
-            $s = Qc&s;
-            !s and return
-            # ForThe%tracball -> %MindInto/Know
-            $t = me.cbu(R,'tracball');
-            !t and return
-            if (t != R) {
-                # inside last thing tracked above
-                # < look more like RbitXing
-                # < or connect each %ting on the path
-                #   up to a certain distance...
-                #    should T.allow about going further than ...
-                #   the things up the embryo...
-                $tb = ts&tracball;
-                !tbs&ball and throw "tracball!ball"
-                $r = me&ioty,tb,'%ball'
-                    .filter(n => n.t == s.t)[0];
-                if (!r) {
-                    # create?
-                    if (me&rolltog,R,'^trac',0 ) {
-                        i tbc&s/#$s
-                        me&tsc,'connected',null,6
-                    }
-                }
-                else {
-                    # assume
-                    !r || !rs&ball and throw "Noballtrac"
-                    Rs&tracball = r;
-                }
-            }
-            !Rs&tracball and return
-            $tb = Rs&tracball = me&yfuture,Rs&tracball;
-            
+            me&tracfrom,R,'ting',Rs&Live;
+        },'ift,D'],
+        # things you can do with
+        ['ting+tracting','6',&acgtRs{
+            $tb = Rs&tracting
             $z = tbc&s;
             me&tsc,'trac',null,'y'
             if (!zs&el) {
@@ -2225,8 +2246,7 @@ Foogla: |
             }
             #n trac  $s:tbc&s,R %ball,tightly
         },'ift,D'],
-        
-        # %trac)%ball tracs %ting
+        # ball end
         # hang off latest up%ball%trac looks itself up,
         ['ball+tracting','34',&acgtRs{
             delete Rs&tracting;
