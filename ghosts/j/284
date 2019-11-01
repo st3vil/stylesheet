@@ -1036,15 +1036,13 @@ Foogla: |
             }
         });
     }};
-    
-    
     # %Gens)%ball open %SomeProcess
     Be.sc.Gens = 'sGens';
     Be.sGens = {ohm:0,play:&acgtRs{
         R.sc[ss&Gens] = 1;
         s&boc = 858;
     }};
-    # %trac)%ball open %ting tractorbeam
+    # GONER, will be aTool before need again?
     Be.sc.trac = 'strac';
     Be.strac = {ohm:0,play:&acgtRs{
         $sp = me.cbu(R,'tingspot');
@@ -2046,16 +2044,14 @@ Foogla: |
      + t that looks at me.$i, me.Ja.$w
     =cut
         ['MindInto','33',&acgtRs{
-            me&tsc,'ishere' .sc.dis = 3;
             # < %ForThe is ephemeral, loads many W&ForThe
             # W&ForThe/Know populates %ForThe withs %tings
             # which starts as an other-%ting attractor:
             $K = me&likez,R,'Know',{ususc:{trac:2}};
             # < %trac-tion should occur when %Gens%play,
             #     mutex at %tingspot
-            each in me&ioty,R,'%ball' {
-                ns&tracting = 1;
-            }
+            K and me&tracto,K,'ball','ting'
+            s&boc = 588;
             #  populate what is now %ForThe besides W&ForThe
             # knowing the W&ForThe should populate what is now %ForThe
             # < slep into:
@@ -2075,17 +2071,8 @@ Foogla: |
             #   surge open if different - need all %tracballs
             #   and check for unknown children here not in %tracballs
         },'ift,D'],
-        # converse to %ting%tracball
-        # %ball looks itself up,
-        ['ball+tracting','34',&acgtRs{
-            delete Rs&tracting;
-            $r = me&rollbs,R,'tracting';
-            $sp = me.cbu(R,'tingspot');
-            # similar. headful.
-            # if different, wills its children to do the same
-            # over a few Domings, since Ring A-time is not precise
-        },'ift,D'],
     ] };
+    #c func
     # %ball or nearby process suggests creating itself
     me.likez = &acgtRtc{
         $got = Rs&ball ? me&ioty,R,'%ball',t [0] : R.sc[t];
@@ -2148,13 +2135,39 @@ Foogla: |
         }
         return R.sc[k]
     }
+    # %ball<->%ting
+    me.tracto = &acgtRkt{
+        $spot = t+'spot';
+        $sp = me.cbu(R,spot);
+        !sp and return me&tsc,'no'+spot,'!t','B'
+        # %ball gathers %tracs
+        sp.sc['trac'+k] = R;
+        Rs&tractioning = t;
+        # %ball/%balls remember %tings
+        $N = me&ioty,R,'%ball';
+        each in N {
+            n.sc['trac'+t]= 1
+        }
+    };
+    me.tracto = &acgtRkt{
+        $spot = t+'spot';
+        $sp = me.cbu(R,spot);
+        !sp and return me&tsc,'no'+spot,'!t','B'
+        # %ball gathers %tracs
+        sp.sc['trac'+k] = R;
+        Rs&tractioning = t;
+        # %ball/%balls remember %tings
+        $N = me&ioty,R,'%ball';
+        each in N {
+            n.sc['trac'+t]= 1
+        }
+    };
     #c Tongingness %ting for Compositing of/other tings
     # the R life of %Search%_ting(Q)/G&ting/G&t
     # extra tricks here
-    
-    
     me.Tongingness = &acgtR{ return [
-        #c %ting%Gens %ball, save/make automata
+        # %ting%Gens / %Gens)%ball, save/make automata
+        # action occurs on the %ball, once %Gens)%play
         ['Gens','31',&acgtRs{
             $Q = Rs&Q;
             $P = Qs&P;
@@ -2200,14 +2213,22 @@ Foogla: |
             delete Rs&Te.sc.boost
         },'ift,D'],
         
-        #c %Gens/...%trac may switch on (have local %play?)
-        #   and do RbitXing/Xpathing to things to connect
+        #c %trac*
+        # %ball/Know gives meaning to %tings
+        # RbitXing/Xpathing to %tings to connect to %balls
+        
+        ['ball+tractioning','6',&acgtRs{
+            me&tsc,'istractioning','vtrac:';
+            me&tsc,'istractioning','%'+Rs&tractioning,'g';
+            me&walla,'ba:2h3'
+        },'ift,D'],
+        # %tracball above finds our others
         ['ting','6',&acgtRs{
             me&rollbs,R,'tracball';
             $Q = Rs&Q;
             $s = Qc&s;
             !s and return
-            
+            # ForThe%tracball -> %MindInto/Know
             $t = me.cbu(R,'tracball');
             !t and return
             if (t != R) {
@@ -2248,7 +2269,17 @@ Foogla: |
             #n trac  $s:tbc&s,R %ball,tightly
         },'ift,D'],
         
-        #c %ting/* vision in
+        # %trac)%ball tracs %ting
+        # hang off latest up%ball%trac looks itself up,
+        ['ball+tracting','34',&acgtRs{
+            delete Rs&tracting;
+            $r = me&rollbs,R,'tracting';
+            $sp = me.cbu(R,'tingspot');
+            # similar. headful.
+            # if different, wills its children to do the same
+            # over a few Domings, since Ring A-time is not precise
+        },'ift,D'],
+        #c %ting/%ting vision in
         ['ting','5',&acgtRs{
             each in Rs&More {
                 n $n
