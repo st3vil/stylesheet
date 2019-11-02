@@ -1025,8 +1025,6 @@ Foogla: |
         # re Domingness, slope
         $level = &{
             $p = me.cby(R,&s{ return Rs&Doming })[0];
-            #c.t == 'Elvs' and debugger;
-            #c.t == 'Elvs' and debugger;
             !p and return 4
             # be under another.
             # eg. W:ForThe/.../Elvis%R:Save,visoria
@@ -2499,22 +2497,34 @@ Foogla: |
             n Gens  $s:Rs&self,R %ball,tightly
         },'ift,D'],
         
-        # Rs&Q is for saving Rs&Here, which Lines
-        ['Save','321',&acgtRs{
+        # Rs&Q is for saving Rs&Here, which Liness
+        ['Save','289',&acgtRs{
             # %Save(=%$gk)?=R w/ %string
-            $gk = Rs&Save;
-            typeof gk != 'string' and gk = 'Save'
-            $h = R.sc[gk] = me&yfuture,R.sc[gk];
-            Rs&Here = h;
+            $gk = Rs&Save_gk =
+                Rs&Save == 1 ? '' :
+                !isC(Rs&Save) ? Rs&Save :
+                'Save';
+            $h = Rs&Save = R.sc[Rs&Save_gk=gk||'Save'] =
+                me&yfuture,gk?R.sc[gk]:R;
+            
+            # want to have a %ting
+            Rs&Saveting =
+                # %ting%Save itself
+                Rs&ting ? R :
+                # %Save/%ting
+                n $R.t  R %ting:W
+            
             (Rs&boost||0) <= 0 and return
+            
             # check in
             hs&Lines = 3
         },'ift,D'],
         ['Save','71',&acgtRs{
             (Rs&boost||0) <= 0 and return
-            # sometimes we are the %ting already
-            $ting = Rs&ting ? R : 0;
-            !ting and me&tsc,'Mkting';
+            
+            $h = Rs&Save;
+            $ting = Rs&Saveting = me&yfuture,Rs&Saveting;
+            !ting and return me&tsc,'Save!ting';
             
             $Q = tings&Q;
             $P = Qs&P;
@@ -2522,8 +2532,8 @@ Foogla: |
             !Qs&ready and return me&tsc,'!ready'
             $h = Rs&Here;
             
-            me&zu,'here',h
-            me&zu,'here',P
+            me&zu,'here',h;
+            me&zu,'their',P;
             
             me&introqua,[R,'diff'],'boost','@1';
             me&diffya,R,'diff',h,P;
@@ -2532,7 +2542,7 @@ Foogla: |
             
             if (!me&rollbs,R,'sent_string' ) {
                 Rs&sent_string = Qs&string = hs&string;
-                Rs&_ting(Q)
+                tings&_ting(Q)
             }
             Ps&string != hs&string and return me&tsc,'pushing'
             me&tsc,'pushed';
