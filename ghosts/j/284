@@ -2807,6 +2807,7 @@ Foogla: |
             $f = Rs&Fun;
             
             
+            
             #c make auto keep this thing's elvising
             # Their/.../Rs&Te is coming in here,
             # make it not part of *load
@@ -2819,10 +2820,15 @@ Foogla: |
             # and make it a non-overwritable,non-leaver
             ts&pol = fs&pol = {
                 NotThisTe: {
+                    # this path in either t/h
                     forTepath: N.map(r => r.t),
+                    either: 1,
+                    # will cause t to have
                     nonleaving: 1,
                     nonoverwrite: 1,
-                    abouthere: 1
+                    # which could go as far as nonewt
+                    #  to force talking about such thing
+                    #  or onlynewt to make first-in lock
                 }
             };
             
@@ -2831,7 +2837,17 @@ Foogla: |
                 $p = '';
                 $i = 0;
                 while(N.length>i) {i++; p += '%ball'}
-                return me&ioty,r,p,{st:N};
+                return me&ioty,r,p,{st:N,zvia:'s'};
+            };
+            $ishad = &tN{
+                # < partial matches
+                N = fabioty(t,N);
+                N.length < 1 and return
+                N.length > 1 and throw "many"
+                $f = {r:t,N:N};
+                # they to where they had it
+                f.row = me.cby(N[0],&r{ return r == t });
+                return f
             };
             $polify = &vr{
                 !rs&ball and throw "delt!ball"
@@ -2841,61 +2857,72 @@ Foogla: |
                 each it vr {
                     $h = t == r ? v : r;
                     $s = hc&s;
-                    ~polit: t.t, h.t, s.t
                     $po = t;
                     each kc pos&pol {
+                        # po = t
                         # i $t/* y o $h/*
                         # where anyone can have policies for ...
-                        #  - keeping $t/Elvisforthis only in t
+                        # eg keeping $t/Elvisforthis only in $t
                         
                         # has to check each place,
                         #  hooks may depend on finding stuff here or there
-                        each it vr {
-                            $h = t == r ? v : r;
-                            c.abouthere && t != po and lo.igs = v.t; continue;
-                            #polificate(r,v,t,h,k,c)
+                        $fort = c.forTepath.slice();
+                        $inwhat = '('+fort.join('/');
+                        
+                        loc&has = ishad(t,fort);
+                        loc&have = c.either || c.their ? ishad(h,fort) : {};
+                        lo.mat = c;
+                        
+                        !loc&has && !loc&have and continue
+                        
+                        # sync $h...$verily
+                        $sync = &fy{
+                            $bet = f.row.slice();
+                            # < code these more positively: $t is= bet.shift()
+                            f.r != bet.shift() and throw "here not t", "bet.shift()"
+                            # the thing we're going to something
+                            $verily = bet.pop();
+                            todo.push(&{
+                                # < many f.rows
+                                $n = fabioty(f.r,bet.map(t=>tc&s.t)) [0];
+                                # couldn't find the point after cloning
+                                !n and debugger;
+                                # do something
+                                y (n,verily)
+                            });
+                        }
+                        if (c.nonleaving && t != po) {
+                            # < avoid cloning out things that don't move
+                            #   Copy untils, to catch the same tving sesh
+                            # they might have something to preserve
+                            loc&have && sync(loc&have,&nv{
+                                # unoverwrite what was there
+                                ac(lo,'todo',["unoverwrite:",h,n,v]);
+                            })
+                            ||
+                            loc&has && sync(loc&has,&nv{
+                                # ensure v's deleted once there
+                                $cs = nc&s;
+                                $ks = vc&s;
+                                #i $cs/-#$ks
+                                #me&Rsync,n;
+                                ac(lo,'todo',["Drops:",h,n,v]);
+                            });
                             
-                            $N = fabioty(t,c.forTepath);
-                            lo.join = c.forTepath;
-                            !N.length and ac(lo,'notthe',t); continue
-                            N.length > 1 and throw "many"
-
-                            # they to where they had it?
-                            $row = me.cby(N[0],&r{ return r == t });
-                            lo.row = row;
-                            lo.mat = c;
-
-                            $inwhat = '('+c.forTepath.join('/');
-                            if (t == r) {
-                                los&We = 'leaving';
-                                if (c.nonleaving) {
-                                    $bet = row.slice();
-                                    $keep = bet.pop();
-                                    # code these more positively: $h is= bet.shift()
-                                    h != bet.shift() and throw "here not h", "bet.shift()"
-                                    todo.push(&{
-                                        $n = fabioty(t,bet.map(t=>tc&s.t)) [0];
-                                        #i $s/-#nc&s.t
-                                        me&Rsync,s;
-                                        
-                                    });
-                                    ac(lo,'todo',"delete: "+h.t+inwhat)
-                                }
-                            }
-                            else {
-                                los&We = 'arriving';
-                                if (c.nonoverwrite) {
-                                    $bet = row.slice();
-                                    $keep = bet.pop();
-                                    h != bet.shift() and throw "here not h"
-                                    # sync what $h...$keep
-                                    todo.push(&{
-                                        $n = fabioty(h,bet.map(t=>tc&s.t)) [0];
-                                        me&input,n,keepc&s;
-                                    });
-                                    ac(lo,'todo',"nonover: "+t.t+inwhat)
-                                }
-                            }
+                            ac(lo,'todo',"nonleaving: "+h.t+"'s "+inwhat)
+                        }
+                        if (c.nonoverwrite && t == po) {
+                            loc&has && sync(loc&has,&nv{
+                                $cs = nc&s;
+                                $ks = vc&s;
+                                i $cs/#$ks:s
+                                i $cs/-#$ks
+                                me&input,n,ks;
+                                $clue = !loc&have ? " the only" : "";
+                                ac(lo,'todo',["Keeps"+clue+":",t,n,v]);
+                                ac(lo,'todo',[yas&play,'->',kss&play]);
+                            });
+                            ac(lo,'todo',"nonover: "+t.t+"'s "+inwhat)
                         }
                     }
                 }
@@ -2912,6 +2939,7 @@ Foogla: |
             
             $polout = &vr{
                 haks(lo).map(k => delete lo[k]);
+                lo.c = {};
                 lo.sc = {};
                 
                 # r/* is a land cloning into v/*
