@@ -1625,10 +1625,16 @@ Foogla: |
                     msg = '!sle! '+msg
                 }
             }
-            # doming marked through as async?
-            #me&tsc,'explosion',null,'G';
-            #~Explo: r.t, er.message
-            $n = G&Cye,[Ac&sip,'',{s:msg,er:er}];
+            # < packdowns for whatever can't continue,
+            #   doming marked through as async?
+            #    keep some, G&T/thro may resync from B stack
+            
+            $n = G&Cye,[Ac&sip,'',{}];
+            nc&s = msg;
+            nc&er = er;
+            # bunch of artifaces, < (t,$s)+
+            er.tc and nc&M = er.tc
+            
             ns&now = G&time;
             ns&A = A;
             ns&B = Gc&B;
@@ -1831,10 +1837,21 @@ Foogla: |
         },'ift,D'],
 
         ['Error','4',&acgtRs{
-            #Rs&rowish = 1;
+            #Rs&rowish = 1;#
             $skull = '☠';
-            me&tsc,'error',skull,'D';
+            $bigger = me&rolltog,R,{may:skull,tsc:'D',once:1},0;
+            
             me&tsc,'message',sc&s,'d';
+            
+            each in sc&M {
+                $n = me&zu,i+1,n;
+            }
+            
+            (Rs&boost||0) > 0 || !bigger and return
+            me&introqua,R,{boost:1}
+            
+            s&fs = 13
+            
             n er  $self:s %R:Cit
             
         },'ift,D'],
@@ -2767,12 +2784,12 @@ Foogla: |
                 each ir N {
                     if (k == 'Look') {
                         # resists mess
-                        $show = me&rolltog,r,{maydo:'Look'},0;
+                        $show = me&rolltog,r,{may:'Look'},0;
                         !show and rs&nofurtherDisplay = 1
                     }
                     else {
                         # Rs&$k takes the ball, once?
-                        $c = {maydo:k,once:1};
+                        $c = {may:k,once:1};
                         #k == 'Upload' and delete c.once;
                         $doing = me&rolltog,r,c,0;
                         doing and M.push(r);
