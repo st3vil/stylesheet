@@ -2046,7 +2046,7 @@ Foogla: |
         # the 5
         ['mund','29',&acgtRs{
             me&walla,'hu:7';
-            Rs&timetopause = 18;
+            Rs&timetopause = 3418;
             # remotes
             # news from the old editor
             me&Rom,R,'GhodigWap';
@@ -2748,6 +2748,7 @@ Foogla: |
                 typeof c == 'string' and c = G&peel,c
                 ex(c,{t:t,s:s,ball:1,tightly:1});
                 $r = me&Ret,R,c;
+                rc&dupl = 5;
                 R.sc[t] = r;
             };
             
@@ -2847,30 +2848,35 @@ Foogla: |
                 return f
             };
             #c polify
-            # i $t/* y o $h/*
+            # i $h/* y o $t/*
             # where anyone can have policies for ...
             # eg keeping $t/Elvisforthis only in $t
+            # < discover any overlap, hardwire decisions
             me.polify = &acgtDvr{
                 Dy&R != Cy&R and throw "D!R";
                 !vs&ball and throw "delt!ball"
                 !rs&ball and throw "dealing!ball"
                 $vr = [v,r];
-                $todo = [];
-                each it vr {
-                    $h = t == r ? v : r;
-                    $po = t;
+                
+                
+                each ih vr {
+                    $t = h == r ? v : r;
+                    $po = h;
                     each kc pos&pol {
-                        # po = t, t = v/r when cloning in/out(leaving)
-                        # h is the !t v/r
-                        # has is for t, have for h
+                        # po always h(ere), where polcify applies
+                        # h is v going in, r going out
+                        #   me&clone,v,r flows <--
+                        # t(heir) is the other
+                        # has is for h, have for t
                         
-                        # check path from policy in each place,
+                        # check for path
                         #  hooks may depend on finding stuff here or there
                         $fort = c.forTepath.slice();
                         $inwhat = '('+fort.join('/');
                         
-                        $has = me&ishad,t,fort;
-                        $have = (c.either || c.their) && me&ishad,h,fort;
+                        # later referred to as f
+                        $has = me&ishad,h,fort;
+                        $have = (c.either || c.their) && me&ishad,t,fort;
                         
                         !(has || have) and continue
                         
@@ -2878,84 +2884,123 @@ Foogla: |
                         $lo = G&Cye,[k,1,c];
                         c&pi = 'polify';
                         ac(D,'z',lo);
-                        los&has = has;
-                        # < backwards
-                        los&their = t;
-                        los&here = h;
-                        los&have = have;
-                        t == r and los&leaving = 1
+                        # builds an act, for in/around cloning
+                        # f (has|have), el=s, r? (if!=f.r), callback?
+                        $sync = me&polsync,lo;
                         
-                        # sync $h...$verily
-                        $sync = &fyr{
-                            # this f/row can be tried somewhere it wasn't:
-                            typeof y != 'function' and f.or = y; y = r;
-                            $bet = f.row.slice();
-                            # < code these more positively: $t is= bet.shift()
-                            f.r != bet.shift() and throw "here not t", "bet.shift()"
-                            # the thing we're going to something
-                            $verily = bet.pop();
-                            todo.push(&{
-                                # < many f.rows
-                                $n = me&fabioty,(f.or||f.r),bet.map(t=>tc&s.t) [0];
-                                # couldn't find the point after cloning
-                                !n and debugger;
-                                # do something
-                                y (n,verily)
-                            });
-                            return 1
-                        }
+                        los&here = h;
+                        los&has = has;
+                        
+                        los&their = t;
+                        los&have = have;
+                        
+                        h == r and los&leaving = 1
+                        
                         if (los&leaving) {
                             # have something, protect them from it?
                         if (loc&nonleaving) {
                             # < avoid cloning out things that don't move
                             #   Copy untils, to catch the same tving sesh
                             # they might have something to preserve
-                            have && sync(have,&nv{
-                                # unoverwrite what was there
-                                ac(lo,'todo',["unoverwrite there:",h,n,v]);
-                                # el:4 leaves things,
-                                # < may move subjectiver experience
-                                loc&el = 4;
-                            })
+                            have && sync(have,4)
                             ||
-                            has && sync(has,h,&nv{
-                                # ensure v is deleted once there
-                                $cs = nc&s;
-                                $ks = vc&s;
-                                i $cs/-#$ks
-                                me&Rsync,n;
-                                loc&el = 9;
-                                ac(lo,'todo',["Drops:",h,n,v]);
-                            });
+                            # climb has there and delete
+                            has && sync(has,9,t);
                         }
                         }
                         else {
                             # given something, protect us from it?
                         if (loc&nonoverwrite) {
-                            has && sync(has,&nv{
-                                $cs = nc&s;
-                                $ks = vc&s;
-                                o $cs/#$ks:s
-                                # $ya is after clone
-                                i $cs/-#$ks
-                                me&input,n,ks;
-                                me&Rsync,n;
-                                loc&el = 4;
-                                ac(lo,'todo',"Unoverwrite: "+(ya&&yas&play)+'->'+kss&play);
-                            })
+                            has && sync(has,4)
                             ||
-                            have && sync(have,t,&nv{
-                                $ks = vc&s;
-                                loc&el = 2;
-                                ac(lo,'todo',"Accepted over nothing: "+kss&play);
-                            });
+                            have && sync(have,2,h);
                         }
                         }
                     }
                 }
-                return &{
-                    todo.map(cb => cb())
-                };
+            };
+            #c polifate
+            me.polsync = &acgt,lo{
+                return &fsry{
+                    loc&sync || loc&el and throw "doublesync"
+                    !s and throw "no el"
+                    loc&el = s;
+                    $sy = loc&sync = {f:f};
+                    typeof r == 'function' and y = r; r = null
+                    # this f/row can be tried somewhere it wasn't:
+                    r and sy.r = r
+                    y and sy.cb = y
+                    return 1
+                }
+            };
+            # post-clonial
+            me.polifate = &acgtD{
+                each i,lo Ds&z {
+                    $sy = loc&sync;
+                    if (sy) {
+                        $f = sy.f;
+                        $bet = f.row.slice();
+                        # the thing before
+                        $v = bet.pop();
+                        
+                        # < code these more positively: $t is= bet.shift()
+                        f.r != bet.shift() and throw "here not t", "bet.shift()"
+                        
+                        # the thing we change
+                        $r = sy.r || f.r;
+                        # walk almost there
+                        # < many f.rows
+                        $n = me&fabioty,r,bet.map(t=>tc&s.t) [0];
+                        if (!n && loc&el == 4) {
+                            # rebuild between r and v
+                            $rr = r;
+                            each it bet {
+                                n = me&fabioty,rr,tc&s.t [0];
+                                1 && n and rr = n; continue
+                                # < input,rr,t recycle/refology/fork
+                                n = me&input,rr,tc&s;
+                                rr = n;
+                            }
+                        }
+                        if (n) {
+                            # grab what is there now
+                            $cs = nc&s;
+                            $ks = vc&s;
+                            # < should know it's a Copy
+                            $si = me&fabioty,n,[ks.t] [0];
+                            $is = si && sic&s;
+                        }
+                        
+                        # do something
+                        if (loc&el == 2) {
+                            ac(lo,'todo',"Accepted over nothing: "+kss&play);
+                        }
+                        elsif (loc&el == 4) {
+                            !n and throw "Deep 4"
+                            # el:4 leaves things,
+                            # < may move subjectiver experience
+                            # unoverwrite what was there
+                            if (is) {
+                                los&removed = is;
+                                i $cs/-$is
+                            }
+                            $en = me&input,n,ks;
+                            me&Rsync,en;
+                            ac(lo,'todo',"Unoverwrite: "+(is&& iss&play)+'->'+kss&play);
+                        }
+                        elsif (loc&el == 9) {
+                            !n and throw "Deep 9 ok?"
+                            # ensure v is deleted once there
+                            los&removed = is;
+                            i $cs/-$is
+                            me&Rsync,n;
+                            ac(lo,'todo',["Drops:",r,n,v]);
+                        }
+                        else {
+                            throw "sync el "+loc&el
+                        }
+                    }
+                }
             };
 
             
@@ -2968,14 +3013,15 @@ Foogla: |
                 ac(R,'loaded',D);
                 
                 # r/* is a land cloning into v/*
-                $cb = me&polify,D,v,r;
+                me&polify,D,v,r;
                 me&ioty,r,'%ball' .map(&s{
                     ac(D,'cloned_z',s);
+                    # < check in to D, do el4/9 better
                     $S = mez&clone,v,s;
                     ac(D,'clone_z',S);
                     me&Rsync,v
                 });
-                cb(v);
+                me&polifate,D;
             };
             
             me&rollbs,R,'loaded';
