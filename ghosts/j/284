@@ -2482,7 +2482,7 @@ Foogla: |
     #     memory compresses, making usual shapes
     
     # local %tings hangout
-    me.spotfor = &acgtRt{
+    me.thespot = &acgtRt{
         $l = [t,'the'];
         $s
         each it l {
@@ -2490,29 +2490,51 @@ Foogla: |
             s = me.cbu(R,spot);
             s and return s
         }
-        me&tsc,'no'+spot,'!t','B' 
+        me&tsc,'no'+spot,'!t','B'
     };
+    
+    # me.cbu having a boundary
+    #  eg find %ting between %ting and %tingspot
+    me.cbub = &Rkbc{
+        c ||= {};
+        typeof b == 'string' and c.neggk = b; b = null
+        b && !isC(b) and c = b; b = null
+        b and c.bound = b
+        $alongthe = &s{
+            c.bound && s == c.bound
+            || c.neggk && s.sc[c.neggk]
+        };
+        $N = me.cby(R,&s{ return alongthe(s)
+            # k may be an inclusive boundary, returns path
+            || typeof k == 'object' ? s == k : s.sc[k]
+        });
+        # hit boundary, no path
+        alongthe(N[0]) and return
+        return N[0]
+    }
     
     # %balls gather %ting
     me.tracto = &acgtRkt{
+        $tracting = 'trac'+t;
         # Know glows
         Rs&tractioning = t;
         
         # Know/%balls remember to %tracting
         me&ioty,R,'%'+k
-            .map(n => n.sc['trac'+t] = 1)
+            .map(n => n.sc[tracting] = 1)
         
         # %tings notice upward %tracting
-        $F = me&spotfor,R,t;
+        $F = me&thespot,R,t;
         !F and return
-        $f = F.sc['trac'+t];
+        $f = F.sc[tracting];
         f and return me&tsc,"alreadytrac"+t,"oc:"+r.t
-        F.sc['trac'+t] = R;
+        F.sc[tracting] = R;
     };
     
-    # %ting intos %tracting
+    # %ting finds %tracting
     me.tracfrom = &acgtRts{
         $tracting = 'trac'+t;
+        $F = me&thespot,R,t;
         
         $eithering = &rR{ r.sc[tracting] = R };
         # keeps our %tracting once found
@@ -2523,9 +2545,8 @@ Foogla: |
         !s and return
         
         # ForThe%tracting -> %MindInto/Know
-        $t = me.cbu(Ry&up,tracting);
+        $t = me.cbub(Ry&up,tracting,F);
         !t and return
-        t == R and return
         
         # last above
         $tb = t.sc[tracting];
@@ -2571,24 +2592,36 @@ Foogla: |
         r == R and throw "tracting self"
         $c = Be.trac[t];
         !c and throw "!Be.trac."+t
+        $F = me&thespot,R,t;
         
+        $duab = &k{
+            $f = {};
+            f.rp = me.cbub(ry&up,k,F);
+            f.p = me.cbub(Ry&up,k,F);
+            return f;
+        };
+        
+        # elvis landing on the remote
         if (!isme) {
             if (r == 1) {
+                # not there yet
                 r = null;
-                # boot a %ting
-                #  + sc it would remember for maingk
-                # we know $t='ting' already,
-                #  from Know...(%trac=ting...$R
                 me&tsc,'Dow'+t+'?'
                 return
             }
             # checks it has the non-.t details right
             if (!me&rollbs,'booted' ) {
-                me&tsc,'isit?'+c.upargo;
-                $p = me.cbu(ry&up,'ting');
-                $z = me&zu,"zowl",p
-                me&zu,"zowle",z
-                return
+                if (c.upargo) {
+                    $f = duab('ting');
+                    
+                    me&tsc,'isit?'+c.upargo;
+
+                    $z = me&zu,"zowl",f;
+                    return
+                    Rc&noKnowC = 1;
+                    me&zu,"zowle",z
+                    return
+                }
             }
             me&tsc,'done';
         }
@@ -2673,7 +2706,7 @@ Foogla: |
         !Rs&isC || !Rs&Cit and throw "uwhat"
         $s = Rc&s;
         $h = {};
-        return;
+        Rc&noKnowC and return
         # have an R:$gk
         h.r = {}; 
         each ir Rs&z {
