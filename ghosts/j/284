@@ -2773,15 +2773,13 @@ Foogla: |
                 ~focus
                 4s&paused = 0;
             });
+            # finds r = t/** at depth p
+            #  adds to their rs&Mw.rolltog about may:k
+            #  returns list of r with k=on
             me.iostyle = &acgttpk{
-                $R = Cy&R;
-                if (p >= 1) {
-                    $id = 1*p;
-                    $i = 0;
-                    p = '';
-                    while(id>i) {i++; p += '%ball'}
-                }
-                $N = p == 0 ? [t] : me&ioty,t,p;
+                # < p for path, [y,M] for ioty
+                typeof p != 'number' and throw "Set depth p"
+                $N = me&ioty,t,p;
                 $M = [];
                 each ir N {
                     if (k == 'Look') {
@@ -2827,21 +2825,17 @@ Foogla: |
                     nonleaving: 1,
                     nonoverwrite: 1,
                     # which could go as far as nonewt
-                    #  to force talking about such thing
-                    #  or onlynewt to make first-in lock
+                    #  to force talking about existing things
+                    #  or onlynewt to make first-in locks
                 }
             };
-            
-            # N=['path','somewhere']
-            $fabioty = &rN{
-                $p = '';
-                $i = 0;
-                while(N.length>i) {i++; p += '%ball'}
-                return me&ioty,r,p,{st:N,zvia:'s'};
+            # r/**%balls N=['path','somewhere']
+            me.fabioty = &acgtrN{
+                return me&ioty,r,N.length,{st:N,zvia:'s'};
             };
-            $ishad = &tN{
+            me.ishad = &acgttN{
                 # < partial matches
-                N = fabioty(t,N);
+                N = me&fabioty,t,N;
                 N.length < 1 and return
                 N.length > 1 and throw "many"
                 $f = {r:t,N:N};
@@ -2849,8 +2843,13 @@ Foogla: |
                 f.row = me.cby(N[0],&r{ return r == t });
                 return f
             };
-            $polify = &vr{
-                !rs&ball and throw "delt!ball"
+            #c polify
+            # i $t/* y o $h/*
+            # where anyone can have policies for ...
+            # eg keeping $t/Elvisforthis only in $t
+            me.polify = &acgtDvr{
+                Dy&R != Cy&R and throw "D!R";
+                !vs&ball and throw "delt!ball"
                 !rs&ball and throw "dealing!ball"
                 $vr = [v,r];
                 $todo = [];
@@ -2859,21 +2858,27 @@ Foogla: |
                     $s = hc&s;
                     $po = t;
                     each kc pos&pol {
-                        # po = t
-                        # i $t/* y o $h/*
-                        # where anyone can have policies for ...
-                        # eg keeping $t/Elvisforthis only in $t
+                        # po = t, t = v/r when cloning in/out(leaving)
+                        # h is the !t v/r
+                        # has is for t, have for h
                         
-                        # has to check each place,
+                        # check path from policy in each place,
                         #  hooks may depend on finding stuff here or there
                         $fort = c.forTepath.slice();
                         $inwhat = '('+fort.join('/');
                         
-                        loc&has = ishad(t,fort);
-                        loc&have = c.either || c.their ? ishad(h,fort) : {};
-                        lo.mat = c;
+                        $has = me&ishad,t,fort;
+                        $have = (c.either || c.their) && me&ishad,h,fort;
                         
-                        !loc&has && !loc&have and continue
+                        !(has || have) and continue
+                        
+                        # adds a polification
+                        $lo = G&Cye,[k,1,c];
+                        c&pi = 'polify';
+                        ac(D,'z',lo);
+                        los&has = has;
+                        los&have = have;
+                        t == r and los&leaving = 1
                         
                         # sync $h...$verily
                         $sync = &fyr{
@@ -2886,7 +2891,7 @@ Foogla: |
                             $verily = bet.pop();
                             todo.push(&{
                                 # < many f.rows
-                                $n = fabioty((f.or||f.r),bet.map(t=>tc&s.t)) [0];
+                                $n = me&fabioty,(f.or||f.r),bet.map(t=>tc&s.t) [0];
                                 # couldn't find the point after cloning
                                 !n and debugger;
                                 # do something
@@ -2894,16 +2899,18 @@ Foogla: |
                             });
                             return 1
                         }
-                        if (c.nonleaving && t == r) {
+                        if (los&leaving) {
+                            # have something, protect them from it?
+                        if (loc&nonleaving) {
                             # < avoid cloning out things that don't move
                             #   Copy untils, to catch the same tving sesh
                             # they might have something to preserve
-                            loc&have && sync(loc&have,&nv{
+                            have && sync(have,&nv{
                                 # unoverwrite what was there
                                 ac(lo,'todo',["unoverwrite there:",h,n,v]);
                             })
                             ||
-                            loc&has && sync(loc&has,h,&nv{
+                            has && sync(has,h,&nv{
                                 # ensure v's deleted once there
                                 $cs = nc&s;
                                 $ks = vc&s;
@@ -2914,8 +2921,11 @@ Foogla: |
                             
                             ac(lo,'todo',"nonleaving: "+h.t+"'s "+inwhat)
                         }
-                        if (c.nonoverwrite && t == v) {
-                            loc&has && sync(loc&has,&nv{
+                        }
+                        else {
+                            # given something, protect us from it?
+                        if (loc&nonoverwrite) {
+                            has && sync(has,&nv{
                                 $cs = nc&s;
                                 $ks = vc&s;
                                 o $cs/#$ks:s
@@ -2928,61 +2938,63 @@ Foogla: |
                                 ac(lo,'todo',[ya&&yas&play,'->',kss&play]);
                             })
                             ||
-                            loc&have && sync(loc&have,t,&nv{
+                            have && sync(have,t,&nv{
                                 $ks = vc&s;
                                 ac(lo,'todo',"el:2: "+kss&play);
                             });
                             ac(lo,'todo',"nonover: "+t.t+"'s "+inwhat)
                         }
+                        }
                     }
                 }
-                lo.vee = v.t;
-                lo.arr = r.t;
-                #nonleaving
-                return &v{
+                return &{
                     todo.map(cb => cb())
                 };
             };
-            #c Elvisoir
-            me&rollbs,R,'loaded';
-            $lo = Rs&loaded ||= {};
+
             
-            $polout = &vr{
-                haks(lo).map(k => delete lo[k]);
-                lo.c = {};
-                lo.sc = {};
+            #c Elvisoir
+            me.polout = &acgtvr{
+                $R = Cy&R;
+                $D = G&Cye,['apolout',{R:R}];
+                ac(R,'loaded',D);
                 
                 # r/* is a land cloning into v/*
-                $cb = polify(v,r);
-                lo.s = [];
+                $cb = me&polify,D,v,r;
                 me&ioty,r,'%ball' .map(&s{
-                    lo.s.push(s);
-                    mez&clone,v,s;
+                    ac(D,'cloned_z',s);
+                    $S = mez&clone,v,s;
+                    ac(D,'clone_z',S);
                     me&Rsync,v
                 });
                 cb(v);
             };
             
-            
+            me&rollbs,R,'loaded';
+            $lo = Rs&loaded ||= [];
             
             me&iostyle,t,0,'Look';
             me&iostyle,t,0,'Download' .map(&r{
                 $v = me&input,h,'Thus';
-                polout(v,r);
+                me&polout,v,r;
             });
             me&iostyle,f,0,'Look';
             me&iostyle,f,0,'Download' .map(&r{
                 $v = me&input,h,'Thyse';
-                polout(v,r);
+                me&polout,v,r;
             });
             me&iostyle,h,1,'Look';
             me&iostyle,h,1,'Upload' .map(&r{
-                polout(f,r);
+                me&polout,f,r;
             });
             me&iostyle,h,1,'U!' .map(&r{
-                polout(t,r);
+                me&polout,t,r;
             });
             
+            # if anything lo'd this time,
+            if (Rs&loaded.filter(l => ly&R == R).length) {
+                Rs&loaded = Rs&loaded.filter(l => ly&R == R);
+            }
             me&zu,'lo',lo,'';
             
             $s = me&rollbs,R,'Cloni';
