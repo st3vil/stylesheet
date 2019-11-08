@@ -2483,9 +2483,11 @@ Foogla: |
         !t && !s and s = R; t = 'R'
         c.t = t || s && s.t;
         !c.t || s && c.t == s.t and c.t='zun'
-        $t = 'zu'+c.t;
-        $n =
-        n $t  $self:s,R %Cit,tightly,reneg
+        $t = ' '+c.t;
+        c.t = t;
+        c.self = s;
+        c.Cit = c.tightly = c.reneg = 1;
+        $n = me&Ret,R,c;
         
         return n
     };
@@ -2626,9 +2628,6 @@ Foogla: |
             if (r == 1) {
                 # not there yet
                 r = null;
-                me&zu,F;
-                me&tsc,'Dow'+t+'?'
-                return
             }
             else {
             # this %ball should inherit from
@@ -2734,10 +2733,11 @@ Foogla: |
         scgk:'tightly,inheritsc',
     };
     $nks = 'y,c,sc'.split(',');
-    each K,Kn Be.C {
+    each K,Kc Be.C {
+        Kc.K = K;
         each ik nks {
             k += 'gk';
-            Kn[k] and Kn[k] = Kn[k].split(',');
+            Kc[k] and Kc[k] = Kc[k].split(',');
         }
     }
     #c KnowC
@@ -2765,20 +2765,21 @@ Foogla: |
         
         # have K/nk/gk
         h.a = {};
-        each K,Kn Be.C {
+        each K,Kc Be.C {
             each nk,r h.r {
-                $l = Kn[nk+'gk'];
+                $l = Kc[nk+'gk'];
                 !l and continue
                 $g = s [nk];
                 each gk,v g {
                     l.indexOf(gk) < 0 and continue
                     $has = h.a[K] ||= {nkgk:{}};
                     $nks = has.nkgk[nk] ||= {};
-                    nks[gk] = 1
+                    $Ks = nks[gk] ||= {};
+                    $Ka = {K:K,Kc:Kc,nk:nk,gk:gk};
+                    Ks[K] = Ka;
                 }
             }
         }
-        #s.t == 'zuR' and me&zu,"Flipse",h
         
         # those across hemispheres especially,
         # crescent moon shaped,
@@ -2787,18 +2788,18 @@ Foogla: |
         # have K/nk/gk
         h.prog = {};
         each nk,r h.r {
-            # as a group in each wing!
+            # as y,c,sc/*
             # which may be as R or modulat,
             # wanting to apply as much effect to either
             $N = [];
             $q = h.prog[r.t] = G&Cye,[r.t,1];
-            qc&dez = [];
-            qc&demod = [];
+            
             each K,has h.a {
-                $Kn = Be.C[K];
+                $Kc = Be.C[K];
                 $M = N;
                 $Km =
                 m $K 1 sa
+                Kmc&Kc = Kc;
                 $M = Kms&z = [];
                 
                 # K found C.*.*
@@ -2806,65 +2807,128 @@ Foogla: |
                     # those across hemispheres
                     Knk != nk and continue
                     
-                    m KnowC ooo1 $s:K %hs:684,fs:7,mt:-1
+                    m KnowC_K oo1 $s:K %hs:684,fs:7,mt:-1
                     # hash order: s for gks,
                     #  per K spec for Kgks
-                    $l = Kn[nk+'gk'];
+                    $l = Kc[nk+'gk'];
                     each i,gk l {    
                         # suggest it?
-                        !gks[gk] and continue
+                        $Ks = gks[gk];
+                        !Ks and continue
+                        $Ka = Ks[K];
+                        !Ka and throw "notoutK"
+                        
                         $v = Rc&s[nk][gk];
-                        #gk == 'd' and debugger
-                        # find r(nk)/gkr($v
-                        $gkr = me&ioty,r,'Cit',gk [0]
+                        # find r(nk)/n($v
+                        $n = me&ioty,r,'Cit',gk [0]
+                        
                         # < should always Rbit by path out of over
                         #   otherwise its Rname, sometimes preferred
                         || v && typeof v == 'object'
                             && me&ioty,r,'Cit'
                                 .filter(r => rc&s == v)[0];
-                        # may not be in the picture
-                        if (gkr) {
-                            # put R inside a modulat about its grouping?
-                            qc&dez.push(gkr);
-                            ac(Km,'z',gkr);
-                            continue
+                        
+                        # attempt to claim the n
+                        $Kn = 
+                        m $gk 1 $s:gk,Ka:Ka %fs:7,mar:0.3
+                        $M = Kns&z ||= [];
+                        
+                        if (n) {
+                            (ns&boost||0) > 0 and 'let it be'
+                            else {
+                                ac(q,'zuction',n,'K',0)
+                                    .push(Kn);
+                            }
                         }
-                        m $gk 1 $s:gk %fs:7,mar:0.3
+                        else {
+                            me&tsc,"gathermodulats"
+                        }
                     }
                 }
             }
+            # delete those not up to KnowC_K
             N = N.filter(n => ns&z && ns&z.length);
             
-            
-            
+            #c having noticed $r/* they want
             Rc&dupl = 7;
-            each in qc&dez {
-                $zi = rs&z.indexOf(n);
-                if (zi <= 0) {
-                    ac(q,'deznot',n);
-                    $M = ns&M ||= [];
-                    m notinupz  s:?
-                    
-                    continue
+            each in qs&zuction {
+                $refK = ac(q,'zuction',n,'K',0);
+                $Win;
+                each i,Kn refK {
+                    $M = Kns&z;
+                    if (i == 0) {
+                        # grouping modulat hosts
+                        $zi = rs&z.indexOf(n);
+                        if (zi <= 0) {
+                            if (nc&nofurther) {
+                                $M = ns&M ||= [];
+                                m zucted  s:8
+                                'can move in'
+                                $M = Kns&z;
+                            }
+                            else {
+                                # undetected double zuc?
+                                ac(q,'deznot',n);
+                                $M = ns&M ||= [];
+                                m notinupz  s:?
+                                continue
+                            }
+                        }
+                        else {
+                            rs&z.splice(zi,1);
+                        }
+                        M.push(n);
+                    }
+                    else {
+                        m AlsohadbyK  s:~
+                    }
                 }
-                rs&z.splice(zi,1);
             }
             
-            # Mw KnowC M KnowC
+            # Mw KnowC M KnowC%cell
             # < ^ Babz into:
-            $M = me&Mw,r,'KnowC';
+            $KM = me&Mw,r,'KnowC';
+            $M = KM;
             $n =
             m KnowC 4
-            ns&wi = '50%';
-            ns&dis = 4;
             $M = ns&z = [];
             
             each i,Km N {
                 me&walls,Km,'bd:1.4,hu:3'
-                Kms&dis = 4;
                 m $Km
             }
-            m KnowC 5 s:) %fs:25
+            # where it becomes unknown
+            rs&z && rs&z.filter(r => rs&Cit).length &&
+                m KnowC 5 s:) %fs:25
+            
+            
+            # make cells
+            # continue
+            $cells = &n{
+                ns&dis = 4;
+                ns&bg = 344;
+            };
+            cells(n);
+            #$n = rs&C;
+            
+            me&Mw,r,'traw' .map(n => cells(n) );
+            
+            each i,Km KM {
+                cells(Km)
+            }
+            
+            # zRC
+            rs&z && rs&z
+                .filter(r => !qs&deznot || 0 > qs&deznot.indexOf(r))
+                .map(r => rs&C )
+                .map(n => cells(n) );
+            
+            qs&deznot && qs&deznot
+                .map(r => rs&C )
+                .map(n => cells(n) );
+            
+            
+            # r the row
             #r.t == 'c' and me&zu,"Jam"+r.t,rs&z;
         }
         me&zu,"has",h
@@ -2911,6 +2975,16 @@ Foogla: |
         ['ball+tracting','6',&acgtRs{
             $t = me&trachas,R,'ting';
             
+            $s = me&thespot,R,'ting';
+            
+            t and return
+            
+            $zu = me&zu,s;
+            Rc&noKnowC = 0;
+            me&zu,'FCit',zu;
+            Rc&noKnowC = 1;
+            me&tsc,'Dow'+t+'?'
+
             # similar. headful.
             # loads up our %tings
             # if different, wills its children to do the same
