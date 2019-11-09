@@ -2765,6 +2765,37 @@ Foogla: |
             }
         }
     };
+    me.KnowKn = &acgthsc{
+        each K,has h.a {
+            $Kc = Be.C[K];
+            
+            $Km = null;
+            
+            # K found C.*.*
+            each nk,gks has.nkgk {
+                # those across hemispheres
+                c.onlynk && nk != c.onlynk and continue
+
+                # hash order: s for gks,
+                #  per K spec for Kgks
+                $l = Kc[nk+'gk'];
+                each i,gk l {    
+                    # suggest it?
+                    $Ks = gks[gk];
+                    !Ks and continue
+                    $Ka = Ks[K];
+                    !Ka and throw "notoutK"
+                    
+                    $v = s[nk][gk];
+                    
+                    Km ||= c.enKm && c.enKm(K,Kc);
+                    
+                    Km && c.enKn && c.enKn(Km,nk,gk,v,Ka);
+                }
+            }
+        }
+    };
+    #c KnowC
     me.KnowC = &acgtR{
         !Rs&isC || !Rs&Cit and throw "uwhat"
         $s = Rc&s;
@@ -2773,6 +2804,16 @@ Foogla: |
         # have an R:$gk
         h.r = {}; 
         $behind = &r{ return !rs&ci || rs&ci < Rs&ci };
+        # read spacey t, or insert C = y()
+        $fio = &qty{
+            !isC(q) and throw "NotC"
+            qs&z ||= [];
+            qy&tw ||= {};
+            typeof t == 'object' and y = t; t = y[0];
+            t = qy&tw[t] ||= y ? G&Cye,y : G&Cye,[t,1]
+            ts&z ||= [];
+            return t
+        };
         
         each ir Rs&z {
             $waits = behind(r) || rs&z && rs&z
@@ -2787,209 +2828,200 @@ Foogla: |
         
         Rc&noKnowC = 1;
         
-        # have K/nk/gk
+        #c raw knowing have K/nk/gk
         h.a = {};
         me&Knowa,h,s;
-        
-        
-        # those across hemispheres especially,
-        # crescent moon shaped,
-        # so the c can have its sc near it
+        # getting baked into:
+        # top/groupr(r(gk))/groupology()/grouping(Km)/groupthing(gk)
+        $top = h.top = G&Cye,["KnowC",1];
+        # which unifies C.* so we can style it up
+        # across hemispheres especially,
+        #   crescent moon shaped, so the c can have its sc near it
         # should gather at the edge
-        # have K/nk/gk
-        h.prog = {};
-        $qu = &nk,{
-            $r = h.r[nk];
-            !r and throw "dont r for nk="+nk
-            $q = h.prog[r.t] ||= G&Cye,[r.t,1];
-        };
+        
         each nk,r h.r {
             # as y,c,sc/*
             # which may be as R or modulat,
             # wanting to apply as much effect to either
-            $N = [];
-            $q = h.prog[r.t] = G&Cye,[r.t,1];
-            
-            each K,has h.a {
-                $Kc = Be.C[K];
-                $M = N;
-                $Km =
-                m $K 1 sa
-                Kmc&Kc = Kc;
-                $M = Kms&z = [];
+            $c = {};
+            c.onlynk = nk;
+            c.enKm = &K,Kc{
+                # r/*
+                $q = fio(h.top,r.t,[r.t,1,{r:r},'groupr']);
+                # r/* known
+                $k = fio(q,'known'); ks&groupology = 1;
+                # r/* known by K
+                # C for the grouping (Be.C.*)
+                $Km = fio(q,K,[K,1,{Kc:Kc},'grouping']);
+                return Km
+            };
+            c.enKn = &Km,nk,gk,v,Ka{
+                $Kn = fio(Km,gk,[gk,1,{s:gk,Ka:Ka},'groupthing,fs:7,mar:0.3']);
                 
-                # K found C.*.*
-                each Knk,gks has.nkgk {
-                    # those across hemispheres
-                    Knk != nk and continue
-                    
-                    m KnowC_K oo1 $s:K,K %hs:684,fs:7,mt:-1
-                    # hash order: s for gks,
-                    #  per K spec for Kgks
-                    $l = Kc[nk+'gk'];
-                    each i,gk l {    
-                        # suggest it?
-                        $Ks = gks[gk];
-                        !Ks and continue
-                        $Ka = Ks[K];
-                        !Ka and throw "notoutK"
-                        
-                        $v = Rc&s[nk][gk];
-                        # find r(nk)/n($v
-                        $n = me&ioty,r,'Cit',gk [0]
-                        
-                        # < should always Rbit by path out of over
-                        #   otherwise its Rname, sometimes preferred
-                        || v && typeof v == 'object'
-                            && me&ioty,r,'Cit'
-                                .filter(r => rc&s == v)[0];
-                        
-                        # attempt to claim the n
-                        $M = Kms&z;
-                        $Kn = 
-                        m $gk 1 $s:gk,Ka:Ka %fs:7,mar:0.3
-                        $M = Kns&z ||= [];
-                        
-                        if (n) {
-                            (ns&boost||0) > 0 and 'let it be'
-                            else {
-                                ac(q,'zuction',n,'K',0)
-                                    .push(Kn);
-                            }
-                        }
-                        else {
-                            me&tsc,"gathermodulatsof:"+gk
-                        }
-                    }
-                }
-            }
-            # delete those not up to KnowC_K
-            N = N.filter(n => ns&z && ns&z.length);
-            
-            #c having noticed $r/* they want
-            Rc&dupl = 7;
-            $zuct = &Kn,r,n{
-                $M = Kns&z ||= [];
-                # grouping modulat hosts
-                $zi = rs&z.indexOf(n);
-                if (zi <= 0) {
-                    # weird. must have just been there,
-                    # but now ain't? will be in Display...
-                    # < Test it out. sync GET will DIY debug.
-                    #   and/or Ring-bisecting watch data
-                    $M = ns&M ||= [];
-                    $wasnt = 'notinupz';
-                    Knc&Ka and wasnt += '_'+Knc&Ka.K;
-                    #m $wasnt  s:? %fs:22
-                    $M = Kns&z;
-                    if (nc&nofurther) {
-                        #m can_move  s:nofurther
-                    }
+                # find r(nk)/n($v
+                $n = me&ioty,r,'Cit',gk [0]
+
+                # < should always Rbit by path out of over
+                #   otherwise its Rname, sometimes preferred
+                || v && typeof v == 'object'
+                    && me&ioty,r,'Cit'
+                        .filter(r => rc&s == v)[0];
+
+                if (n) {
+                    # ground relating to this gk
+                    # < %Cit%isC%ot should be the gk path?
+                    Knc&n = n;
+                    # attempt to claim the n
+                    # < while recently boosty?
+                    ns&boost and Knc&boosty = 1
                     else {
-                        $M = Kns&z;
-                        #m can_move  s:notinz
+                        ac(top,'zuction',n,'K',0)
+                            .push(Kn);
                     }
                 }
                 else {
-                    #rs&z.splice(zi,1);
+                    me&tsc,"gathermodulatsof:"+gk
                 }
-                ns&zuctedto = Kn;
-                delete Knc&s;
-                M.push(n);
-            };
-            each in qs&zuction {
-                $refK = ac(q,'zuction',n,'K',0);
-                $Win;
-                each i,Kn refK {
+            }
+            me&KnowKn,h,s,c;
+        }
+        
+        #c zuct having noticed $r/* they want
+        $zuct = &Kn,r,n{
+            $M = Kns&z ||= [];
+            # grouping modulat hosts
+            $zi = rs&z.indexOf(n);
+            if (zi <= 0) {
+                # weird. must have just been there,
+                # but now ain't? will be in Display...
+                # < Test it out. sync GET will DIY debug.
+                #   and/or Ring-bisecting watch data
+                $M = ns&M ||= [];
+                $wasnt = 'notinupz';
+                Knc&Ka and wasnt += '_'+Knc&Ka.K;
+                #m $wasnt  s:? %fs:22
+                $M = Kns&z;
+                if (nc&nofurther) {
+                    #m can_move  s:nofurther
+                }
+                else {
                     $M = Kns&z;
-                    if (i == 0) {
-                        zuct(Kn,r,n)
-                    }
-                    else {
-                        Kns&Alsohadby = refK
-                            .filter(n => Kn != n);
-                        $known = "Alsohadby:"+Kns&Alsohadby
-                            .map(n => nc&Ka.K).join('|');
-                        m $known  s:* %hs:296,fs:6
-                        Kns&fs = 6;
-                        #me&zu,refK;
-                    }
+                    #m can_move  s:notinz
                 }
             }
-            
-            # Mw KnowC M KnowC%cell
-            # < ^ Babz into:
-            $KM = me&Mw,r,'KnowC';
-            $M = KM;
-            $n =
-            m KnowC 4
-            $M = ns&z = [];
-            
-            each i,Km N {
-                me&walls,Km,'bd:1.4,hu:3'
-                M.push(Km);
+            else {
+                #rs&z.splice(zi,1);
             }
+            #ns&zuctedto = Kn;
+            delete Knc&s;
+            $M = Kns&z ||= [];
+            M.push(n);
+        };
+        
+        each in tops&zuction {
+            $refK = ac(top,'zuction',n,'K',0);
+            each i,Kn refK {
+                $M = Kns&z;
+                if (i == 0) {
+                    zuct(Kn,r,n)
+                }
+                else {
+                    Kns&Alsohadby = refK.filter(n => Kn != n);
+                    $known = "Alsohadby:"+Kns&Alsohadby
+                        .map(n => nc&Ka.K).join('|');
+                    m $known  s:* %hs:296,fs:6
+                    Kns&fs = 6;
+                }
+            }
+        }
+        
+        # zuct remaining r/* into unknown
+        $N = me&ioty,top,'groupr';
+        each iq N {
+            $r = qc&r;
             
-            $M = KM;
-            # unclassified pile
             $out = rs&z && rs&z
                 .filter(r => rs&Cit && !rs&zuctedto);
-            if (out.length) {
-                m KnowC 5 s:) %fs:25,ma:-0.4
             
-                $Knot =
-                m unknowns 51
-                Knotc&unknowns = 1;
+            if (out.length) {
+                fio(q,['KnowC-bound',5,{s:')'},'fs:25,ma:-0.4']);
+                
+                # < might want %groupology
+                $Kn = fio(q,['unknown',51,{},'unknowns']);
+                
                 each in out {
-                    zuct(Knot,r,n);
+                    zuct(Kn,r,n);
                 }
             }
+        }
+        
+        # give groupr to its r
+        $N = me&ioty,top,'groupr';
+        each iq N {
+            $r = qc&r;
+            # q/* wants to end up in:
+            $KM = me&Mw,r,'KnowC';
+            KM.splice(0,0,...qs&z);
+            qs&z = KM;
+        }
+        
+        # title/style the Kms
+        $N = me&ioty,top,'groupr%groupology%grouping';
+        each i,Km N {
+            $M = Kms&z;
             
-            #c make cells
-            # continue
+            # title
+            m KnowC_K oo1 $s:Km.t,K %hs:684,fs:7,mt:-1
+            # < sort modulat/**
+            #  < Cye oo1 -> 0.001
+            M.push(M.pop());
+            
+            me&walls,Km,'bd:1.4,hu:3'
+        }
+        
+        #c make cells
+        # < same form between c/sc?
+        
+        # top/groupr(r(gk))/groupology()/grouping(Km)/groupthing(gk)
+        $N = me&ioty,top,'groupr';
+        each iq N {
+            $r = qc&r;
+            
             $cells = &nc{
                 ny&R == n and n = ns&C;
+                
                 ns&dis = 4;
+                ns&va = 1;
+                c && ex(n.sc,c);
+                
                 # debug obvium
                 #return;
                 me&walls,n,'bd:3.4,hu:2'
                 ns&bgh = 341;
                 #ns&hue = 30;
-                ns&va = 1;
                 c && ex(n.sc,c);
             };
-            cells(n);
-            #$n = rs&C;
+            # cells(n);
             
+            # qs&z is r%Mw.KnowC
+            # < zuct modulats?
+            #   supposing compressors go looking for traw
+            # < put higher than groupologies,
+            #   to spew open !%ha
             me&Mw,r,'traw' .map(n => cells(n) );
-            
-            each i,Km KM {
-                cells(Km)
-            }
             
             # < places where the layout can use/learn
             #   more x: one/two lines of groups and ungr.
             #     could smushwrapout nicely
             #   more y: column of groups
             # main problem is expansion getting stuck in a cell
-            
-            $int = 1
+            $KM = me&ioty,q,'groupology%grouping';
             each i,Km KM {
-                #i == int and int += 2; Kms&dis = 3
+                cells(Km);
+                
                 $breakin = 0;
                 each i,Kn Kms&z {
                     $len = Kns&z && Kns&z.length;
-                    if (Kmc&unknowns) {
-                        # the other tray
-                        # apply cruder mechanisms
-                        # < object/nonobject
-                        $into = {};
-                        each i,n Kns&z {
-                            # cells(n);
-                        }
-                         cells(Kn,{float:'left'});
-                        continue
-                    }
                     # tries to put long groups on their own line,
                     # or every now and again
                     # < 'the partitioning problem'
@@ -3007,7 +3039,18 @@ Foogla: |
                     }
                 }
             }
-            h[r.t+'_KM'] = KM;
+            # the other tray, short branch
+            # < apply cruder mechanisms
+            #  < object/nonobject
+            #  < hash key order split around z
+            $KM = me&ioty,q,'unknowns%';
+            each i,Kn KM {
+                each i,n Kns&z {
+                    # cells(n);
+                }
+                cells(Kn,{float:'left'});
+                continue
+            }
         }
         me&zu,"has",h
     };
