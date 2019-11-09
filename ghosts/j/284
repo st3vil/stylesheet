@@ -2810,8 +2810,10 @@ Foogla: |
             qs&z ||= [];
             qy&tw ||= {};
             typeof t == 'object' and y = t; t = y[0];
+            y != null && y == 0 and $readonly = 1
+            
             $s = qy&tw[t];
-            if (!s) {
+            if (!s && !readonly) {
                 s = y ? G&Cye,y : G&Cye,[t,1];
                 qs&z.push(s);
                 qy&tw[t] = s;
@@ -2878,11 +2880,8 @@ Foogla: |
                     Knc&n = n;
                     # attempt to claim the n
                     # < while recently boosty?
-                    ns&boost and Knc&boosty = 1
-                    else {
-                        ac(top,'zuction',n,'K',0)
-                            .push(Kn);
-                    }
+                    ac(top,'zuction',n,'K',0)
+                        .push(Kn);
                 }
                 else {
                     me&tsc,"gathermodulatsof:"+gk
@@ -2950,16 +2949,18 @@ Foogla: |
                 .filter(r => rs&Cit && !rs&zuctedto);
             
             if (out.length) {
-                fio(q,['KnowC-bound',5,{s:')'},'fs:25,ma:-0.4,separator']);
+                fio(q,['KnowC-bound',5,{s:')'},
+                    'fs:25,ma:-0.4,separator']);
                 
-                # < might want %groupology
+                # unknowns instead of groupology
                 $k = fio(q,['unknown',51,{},'unknowns']);
-                # some may have doming to clue its exit from this C
-                $Km = fio(q,['unknown',1,{},'grouping']);
-                # what is usually Kn is R!
-                #  is not via groupology
+                # some may have doming to clue its exity from this C
+                $Km = fio(k,['unknown',1,{},'grouping,wideas']);
+                # Kn(r)/r
                 each in out {
-                    zuct(Km,r,n);
+                    $Kn = fio(Km,n.t,[n.t,1,{s:n.t,n:n},
+                        'groupthing,fs:7,mar:0.3']);
+                    zuct(Kn,r,n);
                 }
             }
         }
@@ -3006,6 +3007,7 @@ Foogla: |
             ns&dis = 4;
             ns&va = 1;
             c && ex(n.sc,c);
+            #return;
 
             # debug obvium
             #return;
@@ -3014,6 +3016,7 @@ Foogla: |
             #ns&hue = 30;
             c && ex(n.sc,c);
         };
+        
         
         # top/groupr(r(gk))/groupology/grouping(Km)/groupthing(gk)
         #  groupology may also be unknowns|label
@@ -3032,16 +3035,19 @@ Foogla: |
             me&ioty,q,''
                 .map(k => cells(k));
             
-            $KM = me&ioty,q,'groupology';
-            each i,Km KM {
-                
-                cells(Km);
-                h.Kms ||= [];
-                h.Kms.push(Km);
-                
+            # hide separator
+            $sn = me&ioty,q,'separator'
+            sn.map(k => ks&dis = 0);
+            
+            $possibleK = me&ioty,q,'groupology%grouping';
+            # groupology always, gets shaped
+            $kM = me&ioty,q,'groupology';
+            each i,k kM {
+                cells(k);
+                $KM = me&ioty,k,'grouping';
                 $breakin = 0;
-                each i,Kn Kms&z {
-                    $len = Kns&z && Kns&z.length;
+                each i,Km KM {
+                    $len = Kms&z && Kms&z.length;
                     # tries to put long groups on their own line,
                     # or every now and again
                     # < 'the partitioning problem'
@@ -3051,26 +3057,96 @@ Foogla: |
                     else {
                         breakin += len;
                         # cells(Kn,{float:'left'});
-                        cells(Kn);
-                        each i,n Kns&z {
+                        cells(Km);
+                        each i,n Kms&z {
                             !nc&K and continue
                             cells(n);
                         }
                     }
                 }
             }
-            # the other tray, short branch
+            
+            # non-groupology, the other tray
+            $uKM = me&ioty,q,'unknowns%grouping';
+            possibleK.push(... uKM);
+            
+            # < o $q/*/%grouping/%groupthing
+            #   having rs&z order for Knc&n
+            
+            #c those leaping out of here, infinitree
             # < apply cruder mechanisms
             #  < object/nonobject
             #  < hash key order split around z
-            $KM = me&ioty,q,'unknowns';
-            each i,Km KM {
+            $trailing = [];
+            each i,Km possibleK {
+                $burst = [];
                 each i,Kn Kms&z {
                     # are R
+                    $n = Knc&n;
+                    !n and continue
+                    
+                    # if recently boosty
+                    $b = nc&b;
+                    !ns&boost && (!b || !bs&boost) and continue
+                    
+                    # the unknown may hold until rs&z appear
+                    Kms&wideas && !ns&z and continue
+                    
+                    #~Bursting: Kn.t, ns&z?ns&z.length:"modulative"
+                    burst.push(Kn);
+                }
+                if (burst.length) {
+                    # get out of unknowns/
+                    burst.map(Kn => Kms&z.indexOf(Kn))
+                        .reverse()
+                        .map(i => Kms&z.splice(i,1));
+                    each i,Kn burst {
+                        # are R
+                        $n = Knc&n;
+                        ns&zuctedto != Kn and throw "Kn r burst !zuctedto Kn"
+                    }
+                    trailing.push(...burst)
+                }
+            }
+            if (trailing.length) {
+                # fold knowC, stretch label
+                $l = fio(q,'label',0);
+                !l and throw "nolabel"
+                $qz = qs&z.filter(k => k != l);
+                delete qy&tw;
+                # relayout the groupr
+                qs&z = [l];
+                $rs = fio(q,'oneandinfinityrows');
+                $und = fio(rs,'undercontrol');
+                unds&z.push(...qz);
+                if ('infinitin'=='label') {
+                    #$f = fio(rs,'infinity');
+                }
+                else {
+                    $f = q;
+                }
+                each i,Kn trailing {
+                    fs&z.push(Kn);
+                    # indent like Rs&rowish
+                    Kns&pl = 1;
+                    # was Km
+                    Kns&zuctedto = f;
+                }
+                
+                cells(rs);
+                cells(und);
+                # cells(f);
+                h.label = l;
+                ls&va = 2;
+                #fs&dis = 1;
+            }
+            #c you
+            each i,Km uKM {
+                each i,Kn Kms&z {
                     cells(Kn,{float:'left'});
                 }
-                continue
             }
+            
         }
         
         # give groupr to its r
