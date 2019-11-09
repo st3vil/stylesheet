@@ -2810,9 +2810,14 @@ Foogla: |
             qs&z ||= [];
             qy&tw ||= {};
             typeof t == 'object' and y = t; t = y[0];
-            t = qy&tw[t] ||= y ? G&Cye,y : G&Cye,[t,1]
-            ts&z ||= [];
-            return t
+            $s = qy&tw[t];
+            if (!s) {
+                s = y ? G&Cye,y : G&Cye,[t,1];
+                qs&z.push(s);
+                qy&tw[t] = s;
+            }
+            ss&z ||= [];
+            return s
         };
         
         each ir Rs&z {
@@ -2852,7 +2857,7 @@ Foogla: |
                 $k = fio(q,'known'); ks&groupology = 1;
                 # r/* known by K
                 # C for the grouping (Be.C.*)
-                $Km = fio(q,K,[K,1,{Kc:Kc},'grouping']);
+                $Km = fio(k,K,[K,1,{Kc:Kc},'grouping']);
                 return Km
             };
             c.enKn = &Km,nk,gk,v,Ka{
@@ -2912,7 +2917,7 @@ Foogla: |
             else {
                 #rs&z.splice(zi,1);
             }
-            #ns&zuctedto = Kn;
+            ns&zuctedto = Kn;
             delete Knc&s;
             $M = Kns&z ||= [];
             M.push(n);
@@ -2937,6 +2942,7 @@ Foogla: |
         
         # zuct remaining r/* into unknown
         $N = me&ioty,top,'groupr';
+        h.the = N;
         each iq N {
             $r = qc&r;
             
@@ -2944,26 +2950,20 @@ Foogla: |
                 .filter(r => rs&Cit && !rs&zuctedto);
             
             if (out.length) {
-                fio(q,['KnowC-bound',5,{s:')'},'fs:25,ma:-0.4']);
+                fio(q,['KnowC-bound',5,{s:')'},'fs:25,ma:-0.4,separator']);
                 
                 # < might want %groupology
-                $Kn = fio(q,['unknown',51,{},'unknowns']);
-                
+                $k = fio(q,['unknown',51,{},'unknowns']);
+                # some may have doming to clue its exit from this C
+                $Km = fio(q,['unknown',1,{},'grouping']);
+                # what is usually Kn is R!
+                #  is not via groupology
                 each in out {
-                    zuct(Kn,r,n);
+                    zuct(Km,r,n);
                 }
             }
         }
-        
-        # give groupr to its r
-        $N = me&ioty,top,'groupr';
-        each iq N {
-            $r = qc&r;
-            # q/* wants to end up in:
-            $KM = me&Mw,r,'KnowC';
-            KM.splice(0,0,...qs&z);
-            qs&z = KM;
-        }
+        #c < same form between c/sc?
         
         # title/style the Kms
         $N = me&ioty,top,'groupr%groupology%grouping';
@@ -2974,50 +2974,70 @@ Foogla: |
             m KnowC_K oo1 $s:Km.t,K %hs:684,fs:7,mt:-1
             # < sort modulat/**
             #  < Cye oo1 -> 0.001
-            M.push(M.pop());
+            M.unshift(M.pop());
             
             me&walls,Km,'bd:1.4,hu:3'
         }
         
-        #c make cells
-        # < same form between c/sc?
-        
-        # top/groupr(r(gk))/groupology()/grouping(Km)/groupthing(gk)
+        # label, 'c{', path in
         $N = me&ioty,top,'groupr';
         each iq N {
             $r = qc&r;
             
-            $cells = &nc{
-                ny&R == n and n = ns&C;
-                
-                ns&dis = 4;
-                ns&va = 1;
-                c && ex(n.sc,c);
-                
-                # debug obvium
-                #return;
-                me&walls,n,'bd:3.4,hu:2'
-                ns&bgh = 341;
-                #ns&hue = 30;
-                c && ex(n.sc,c);
-            };
-            # cells(n);
+            # non-%groupology
+            # < put higher than groupologies,
+            #   to spew open !%va
+            # < ongoing eat everything in Rs&M/Mw
+            $l = fio(q,'label');
+            ls&label = 1;
+            qs&z.unshift(qs&z.pop());
             
-            # qs&z is r%Mw.KnowC
             # < zuct modulats?
             #   supposing compressors go looking for traw
-            # < put higher than groupologies,
-            #   to spew open !%ha
-            me&Mw,r,'traw' .map(n => cells(n) );
+            me&Mw,r,'traw' .map(n => ls&z.push(n) );
+            delete rs&Mw.traw;
+        }
+        
+        #c make cells
+        
+        $cells = &nc{
+            ny&R == n and n = ns&C;
+
+            ns&dis = 4;
+            ns&va = 1;
+            c && ex(n.sc,c);
+
+            # debug obvium
+            #return;
+            me&walls,n,'bd:3.8,hu:2'
+            ns&bgh = 341;
+            #ns&hue = 30;
+            c && ex(n.sc,c);
+        };
+        
+        # top/groupr(r(gk))/groupology/grouping(Km)/groupthing(gk)
+        #  groupology may also be unknowns|label
+        $N = me&ioty,top,'groupr';
+        each iq N {
+            $r = qc&r;
+            
+            cells(q)
             
             # < places where the layout can use/learn
             #   more x: one/two lines of groups and ungr.
             #     could smushwrapout nicely
             #   more y: column of groups
             # main problem is expansion getting stuck in a cell
-            $KM = me&ioty,q,'groupology%grouping';
+            # label, groupology, separator or unknowns
+            me&ioty,q,''
+                .map(k => cells(k));
+            
+            $KM = me&ioty,q,'groupology';
             each i,Km KM {
+                
                 cells(Km);
+                h.Kms ||= [];
+                h.Kms.push(Km);
                 
                 $breakin = 0;
                 each i,Kn Kms&z {
@@ -3043,16 +3063,26 @@ Foogla: |
             # < apply cruder mechanisms
             #  < object/nonobject
             #  < hash key order split around z
-            $KM = me&ioty,q,'unknowns%';
-            each i,Kn KM {
-                each i,n Kns&z {
-                    # cells(n);
+            $KM = me&ioty,q,'unknowns';
+            each i,Km KM {
+                each i,Kn Kms&z {
+                    # are R
+                    cells(Kn,{float:'left'});
                 }
-                cells(Kn,{float:'left'});
                 continue
             }
         }
-        me&zu,"has",h
+        
+        # give groupr to its r
+        $N = me&ioty,top,'groupr';
+        each iq N {
+            $r = qc&r;
+            # q/* wants to end up in:
+            $KM = me&Mw,r,'KnowC';
+            KM.push(...qs&z);
+        }
+        
+        Rs&C.t == ' Firstly' and me&zu,"has",h
     };
     #c Tongingness %ting %trac* %Gens
     # %ting* for Compositing of/other tings
