@@ -742,7 +742,7 @@ Foogla: |
     #c Be.C - group C.*.*
     # see %Cit/KnowC
     # < I, a W of qualities and how to use them
-    $Be = me.Be = {};
+    $Be = me.Be ||= {};
     # < more C
     Be.C = {};
     Be.C.Cit = {
@@ -2928,8 +2928,8 @@ Foogla: |
         $tb = t.sc[tracting];
         !tbs&ball and throw "tracting!ball"
         $r = me&ioty,tb,'%ball',{st:s.t} [0];
-        w && r != w and me&zu,'losttrac',w
-        w && r != w and me&tsc,'losttrac',null,'G'
+        #w && r != w and me&zu,'losttrac',w
+        w && r != w and me&tsc,'losttrac',0,'G';
             # throw '%ball moved? climb last Te'
         if (r) {
             !r || !rs&ball and throw "Noballtrac"
@@ -2939,7 +2939,7 @@ Foogla: |
         }
         else {
             # create?
-            if (me&rolltog,R,'^trac',0 ) {
+            if (me&rolltog,R,{k:'^trac',Mw:'trac'},0 ) {
                 me&input,tb,s.t;
                 me&tsc,'connected','OK',6
             }
@@ -2977,24 +2977,18 @@ Foogla: |
                 r = null;
             }
             else {
-            # this %ball should inherit from
-            $f = {};
+            # this %ball tracks the general recipe for %ting
             
-            # upwards from this %ball
+            # expression inherits from the last:
+            #   %ball%tracting - when establishing %ting
+            #   %ting%tracting - when learning %ball
+            # upwards from this %ball%tracting:
             $pb = me.cbub(Ry&up,tracting,F);
-            if (pb) {
-                !pbs&ball and debugger;
-                # the last %ball %tracting
-                f.ballup = pb;
-                # could F%ting if nothing else
-                #  live with the code
-            }
+            pb && !pbs&ball and debugger;
             
-            # upwards from that %ting
+            # upwards from that %ting%tracting
             $pt = me.cbub(ry&up,tracting,F);
-            if (pt && pt != pb) {
-                f.tingup = pt;
-            }
+            pt == pb and pt = null
             
             # checks it has the non-.t details right
             $s = Rc&s;
@@ -3062,8 +3056,6 @@ Foogla: |
         # Gen/Know/**%ball syncs %tings/etc
         # < use Mwty to replace %fix's similar display
         ['tractioning','6',&acgtRs{
-            me&tsc,'istractioning','vtrac:';
-            me&tsc,'istractioning','%'+Rs&tractioning,'g';
             me&walla,'ba:2h3'
         },'ift,D'],
         
@@ -3078,6 +3070,7 @@ Foogla: |
             $t = me&trachas,R,'ting';
             
             !t and return
+            # upload/glean recipe
             
             $z = tc&s;
             if (!zs&el) {
