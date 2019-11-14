@@ -2962,7 +2962,7 @@ Foogla: |
         $S = me.cbub(Ry&up,tracting,Sy&up);
         !S and return
         $t = S.sc[tracting];
-        ty&W != S and throw "cbub^^%tracting!=fyW", S, t
+        #ty&W != S and throw "cbub^^%tracting!=fyW", S, t
         
         # t = F at the top, then the previous f
         R.sc[tracting] = t;
@@ -2989,15 +2989,15 @@ Foogla: |
         # while persisting %tracting=f over (under) t
         $F = me&rollbsy,R,tracting;
         if (t != F) {
-            ~>3 rolling: k, R.t
-            # is rolling, double check via f tv
+            #~>3 rolling: k, R.t
+            # double check via f tv
             $f = fio(t,R.t);
             # the F may replace?
             f != F and me&tsc,'Freplace'; F = t
         }
         if (t == F) {
-            ~>3 growing: k, R.t
-            # grows f from F
+            #~>3 growing: k, R.t
+            # grows f from spread F
             $f = fio(t,R.t);
             fy&up = F;
             fy&top = Fy&top;
@@ -3017,6 +3017,9 @@ Foogla: |
                 delete f.y [k];
                 return
             }
+            # r%ball s=C
+            # r%ting could have an s=C leading to the Question
+            f.c [k] = rc&s;
             r == R and return 1
         };
         
@@ -3032,39 +3035,20 @@ Foogla: |
         
         t != fy&up and throw "t !fyup"
         $ok = !isting ? 'W' : 'G';
-        $type = fy&top.c[k+'type'];
-        $otype = fy&top.c[ok+'type'];
-        # the previous thing on the other side
-        $p = fy&up.y [ok];
+        $F = fy&top;
+        $type = F.c[k+'type'];
+        $otype = F.c[ok+'type'];
+        # the previous thing on either side
+        $op = fy&up.y [ok];
+        $p = fy&up.y [k];
         # which may start however
-        $istop = fy&top.y [ok] == p;
-        # then be a cloud of this expected other type
-        !istop && !p.sc[otype] and throw "need "+otype
+        $istop = F.y [ok] == op;
+        # then be of the other type
+        !istop && !op.sc[otype] and throw "need "+otype
         #c having f, connect either
-        # < when tracarri stops happening?
-        
-        # < some use for predicting eg %tracting it doesn't have yet
-        #     with doming depending on it appearing
-        # expecting to see the W first
-        sync('W');
-        # G may be given %tracting when on above
-        sync('G');
-        f.y [k] && f.y [k] != R and throw "already fy"+k
-        f.y [k] = R;
-        
-        t != fy&up and throw "t !fyup"
-        $ok = !isting ? 'W' : 'G';
-        $type = fy&top.c[k+'type'];
-        $otype = fy&top.c[ok+'type'];
-        # the previous thing on the other side
-        $p = fy&up.y [ok];
-        # which may start however
-        $istop = fy&top.y [ok] == p;
-        # then be a cloud of this expected other type
-        !istop && !p.sc[otype] and throw "need "+otype
-        
-        # f state (reset when?)
+        # using this elvisory
         T.Mw = 'trac';
+        # f state (reset when?)
         fy&ov ||= 0;
         if (fy&ov == 0) {
             # look for the other
@@ -3084,7 +3068,7 @@ Foogla: |
                 #  requiring all these interations to be suspended
                 #  over the judders
                 otype != 'ball' and throw "lookG !ball"
-                $N = me&fabioty,p,[R.t];
+                $N = me&fabioty,op,[R.t];
                 N[0] and fy&ov = 0.1
             }
         }
@@ -3094,20 +3078,30 @@ Foogla: |
         }
         if (fy&ov == 0.1) {
             # to create the other
+            $direction = (ok == 'G' ? '<-' : '->');
+            ~>6 Enter: ok, op.t, direction, k, f.t
             if (ok == 'G') {
-                ~>6 EnterG: k, p.t, '/', R.t, f.t
                 otype != 'ball' and throw "enterG !ball"
-                f.y [ok] = me&input,p,f.t;
+                f.y [ok] = me&input,op,f.t;
                 me&tsc,'connected','OK',6
                 fy&ov = 0.2;
             }
             else {
-                ~>6 EnterW: k, p.t, '/', R.t, f.t
+                otype != 'ting' and throw "enterG !ball"
+                # < Ravelvis it
+                #me&Ravelvis,R,op,'M',
+                me&zu,"Growin",p
             }
         }
+        if (fy&ov > 0) {
+            $con = me&rolltog,R,{may:'trac',tsc:'l'};
+            fy&ov < 0.2 and me&tsc,'@'+fy&ov,'...'
+            !con and return
+            me&zu,"Growon",p
+        }
         if (fy&ov == 0.2) {
-            # connect to either/* now
-            me&rolltog,R,{may:'trac',tsc:'l'} and me&tsc,'otherism'
+            # spread to either/* now
+            k == 'G' and Fc&indive(R,type)
             # is on
             return f;
         }
