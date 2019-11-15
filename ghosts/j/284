@@ -3082,8 +3082,11 @@ Foogla: |
         #  over the judders
         
         # rync when Look/Create finds an r
+        $lr;
         $rync = &r{
             !r and return
+            r == lr and return
+            lr = r;
             # eg W can find/create the fyG from fyupyG/f.t
             # which should become fy&[ok]
             $exp = f.y [ok+"_exp"];
@@ -3211,27 +3214,125 @@ Foogla: |
         
         $F = fy&top;
         $ting = Fc&Wtype;
+        $tracting = 'trac'+ting;
         # < Wtype:* brings everything,
         #   to where osc watches osc
+        $Kc = Be.C[ting];
         
-        # upwards from this %ball%tracting:
-            $pb = me.cbub(Ry&up,tracting,F);
-            pb && !pbs&ball and debugger;
+        $p = fy&up;
+        $g = fy&G;
+        $w = fy&W;
+        g != R and throw "cup !G"
+        g.sc[type] || w.sc[otype] and throw "cup G/W type"
+        
+        # Thing = whole needs make Thing amongst Stuff about it
+        #   Stuff our G/W system (typed %ball/%trac) isn't after
+        #  ie ghost is Thinging embedded in Stuff to know
+        #   the Cing of it all may not be all Thinging
+        #    digitised known bits in a sea of analogue
+        #     is how it sees itself and its other
+        $gp = gy&up;
+        $wp = wy&up;
+        # < see variation ^ v # many ghostbits per Thing
+        $gp = fy&up.y.G;
+        $wp = fy&up.y.W;
+        # < see variation ^ v # many tings per Thing etc
+        $gp = me.cbub(gy&up,tracting,F);
+        $wp = me.cbub(wy&up,tracting,F);
+        # < don't run into ForThe%tingspot%tracting?
+        gp.sc[type] || wp.sc[otype] and throw "cup G/W type"
+        
+        gp == wp and ~>8 converge: k, '->', ok, p.t+'/'+f.t
+        gp == wp and return
+        #c checks it has the non-.t details right
+        # for writing on the ghost
+        # %ting inherits them, has explicit ws&$k
+        # %ball implies them being inherited
+        $s = gc&s;
+        # the stuff that matters
+        #   nulls imply implied
+        $lasc = fs&tracuploadsc;
+        # stuff to Gify this time
+        $sc ||= {};
+        # initial guzzle
+        $forming = !lasc;
+        
+        each i,k Kc.scgk {
+            # on %ting%$k
+            $got = w.sc[k];
+            # which is inheriting ^^%tracting
+            # or not, if many tings per Thing,
+            #  needing more explicit bits in recipe
+            #  but something weirder might be afoot
+            $exp = wp && wp.sc[k];
+            # or not if it doesn't do that
+            !c.scinherit and exp = null
             
-            # upwards from that %ting%tracting
-            $pt = me.cbub(ry&up,tracting,F);
-            pt == pb and pt = null
+            $was = s.sc[k];
             
-            # checks it has the non-.t details right
-            $s = Rc&s;
-            each ik c.upargo {
-                $got = r.sc[k];
-                $exp = pt && pt.sc[k];
-                
-                got != exp and s.sc[k] = got
-                # < push the desire to change because ...
+            $value = got;
+            # G implies what is implied
+            if (exp != null && got == exp) {
+                # not noted
+                !was and value = null
+                # or was explicitly something else
+                elsif (was != got) {
+                    debugger
+                    throw k+' implied was !got'
+                }
+                else {
+                    ~>7 redundant: f.t, '%'+otype, '%'+k
+                    value = null;
+                }
             }
-            # me&zu,[k,got,exp];
+            
+            sc[k] = value
+        }
+        
+        $differs = [];
+        each kv sc {
+            v == null and s.sc[k] != null and differs.push(k)
+            else
+            v != s.sc[k] and differs.push(k)
+        }
+        $lies = [];
+        each ik differs {
+            s.sc[k] != null and lies.push(k);
+            
+        }
+        # make the change
+        $auto = forming;
+        if (lies.length) {
+            # want extra carevision
+            auto = 0;
+        }
+        delete fs&tracuploadsc_differs;
+        if (differs.length) {
+            fs&tracuploadsc_differs = differs;
+            # < mod Tool for pulling as branch
+            #   something differ can understand
+            #   all terrain replication vehicle
+            if (conform) {
+                # should not be changing
+                auto = 0
+                me&tsc,"recipe-doesnt-conform",'exp!',6
+            }
+            if (auto) {
+                each ik differs {
+                    me&tsc,'~'+k,0,6;
+                    $v = sc[k];
+                    $was = s.sc[k];
+                    if (was != null && v == null) {
+                        ~>7 redundant: f.t, '%'+otype, '%'+k
+                    }
+                    v == null and delete s.sc[k]
+                    else {
+                        s.sc[k] = v
+                    }
+                }
+            }
+        }
+        fs&tracuploadsc = sc;
     };
     # up/downable essential identity
     Be.C.ting = {
@@ -3242,7 +3343,7 @@ Foogla: |
         #  these sc inherit from above
         # < cause Ravelvis to recreate if changed
         #   eg %ting must start fresh to add %directory
-        uplosive: 1,
+        scinherit: 1,
         # look mode (ov<=4) implies:
         sclook: {species:4},
         # then the main %species we need to fully awake:
