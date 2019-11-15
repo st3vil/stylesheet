@@ -769,14 +769,18 @@ Foogla: |
     Be.C.fun = {
         scgk:'tightly,inheritsc',
     };
+    
     Be.nks = 'y,c,sc'.split(',');
-    each K,Kc Be.C {
-        Kc.K = K;
-        each ik Be.nks {
-            k += 'gk';
-            Kc[k] and Kc[k] = Kc[k].split(',');
+    me.BeCload = &{
+        each K,Kc Be.C {
+            Kc.K = K;
+            each ik Be.nks {
+                k += 'gk';
+                !Kc[k] || typeof Kc[k] != 'string' and continue
+                Kc[k] = Kc[k].split(',');
+            }
         }
-    }
+    };
     #c Beings arrive, find C.*.*
     me.Bear = &acgtRsk{
         k == 'play' and Be&plays,R,s
@@ -2984,7 +2988,7 @@ Foogla: |
         !t and return
         # for now, it goes ForThe%ForThe/ForThe%ting
         Rs&ForThe and return
-        # avoid self knowledge
+        # avoid self knowledge at the top?
         ty&W == R || ty&G == R and debugger; return
         # while persisting %tracting=f over (under) t
         $F = me&rollbsy,R,tracting;
@@ -3002,8 +3006,9 @@ Foogla: |
             fy&up = F;
             fy&top = Fy&top;
         }        
-        # the shared objects, about each climbing
+        # the shared object, about each climbing
         R.sc[tracting] = f;
+        # know about shared etc
         
         # wonder which one we are
         # sharing f, connect either
@@ -3028,8 +3033,10 @@ Foogla: |
         #     with doming depending on it appearing
         # expecting to see the W first
         sync('W');
+        sync('W_exp');
         # G may be given %tracting when on above
         sync('G');
+        sync('G_exp');
         f.y [k] && f.y [k] != R and throw "already fy"+k
         f.y [k] = R;
         
@@ -3045,69 +3052,171 @@ Foogla: |
         $istop = F.y [ok] == op;
         # then be of the other type
         !istop && !op.sc[otype] and throw "need "+otype
-        #c having f, connect either
+        #c A:f-ness, connect either
         # using this elvisory
         T.Mw = 'trac';
         # f state (reset when?)
         fy&ov ||= 0;
-        if (fy&ov == 0) {
-            # look for the other
+        
+        # between fio(F...), fabioty(p..., Rc&X, Rs&Te
+        #  we have a few ways to gravitate the elvising made
+        #  something somewhere in the equation of Waltz
+        #  knows exactly why things changed,
+        #  holds and spreads knowledge of the move
+        #  which may be done out there as:
+        #    lv with an el:9, el:6 ?
+        #     6 implying recycle the last 9,
+        #       or some specific one,
+        #       or resurrect recently deleted...
+        #      similar logic to:
+        #      Lc&responsey - expect one receive per send
+        #  requiring all these interations to be suspended
+        #  over the judders
+        
+        # rync when Look/Create finds an r
+        $rync = &r{
+            !r and return
+            # eg W can find/create the fyG from fyupyG/f.t
+            # which should become fy&[ok]
+            $exp = f.y [ok+"_exp"];
+            $got = f.y [ok];
+            if (got) {
+                f.y [ok] and ~>4 rready: k, '->', ok, f.t
+                if (exp) {
+                    exp == got and delete f.y [ok+"_exp"]
+                    else {
+                        throw "not rready predicted"
+                    }
+                }
+            }
+            
+            # probably already r%tracting=f spread from upyG
+            rs&tracting ||= f
+            [f,fy&up].indexOf(rs&tracting) < 0 and throw "difftracting"
+            
+            # and is soon to be fy&[ok]
+            exp && exp != r and throw "change exp "+ok
+            f.y [ok+"_exp"] = r;
+            
+            # may be already
+            # go to being entered/having been entered
+            fy&ov < 0.1 and fy&ov = 0.1
+        }
+        
+        # Look for the other (slightly all the time?)
+        if (fy&ov <= 0.2) {
             if (ok == 'G') {
-                # between fio(F...), fabioty(p..., Rc&X, Rs&Te
-                #  we have a few ways to gravitate the elvising made
-                #  something somewhere in the equation of Waltz
-                #  knows exactly why things changed,
-                #  holds and spreads knowledge of the move
-                #  which may be done out there as:
-                #    lv with an el:9, el:6 ?
-                #     6 implying recycle the last 9,
-                #       or some specific one,
-                #       or resurrect recently deleted...
-                #      similar logic to:
-                #      Lc&responsey - expect one receive per send
-                #  requiring all these interations to be suspended
-                #  over the judders
                 otype != 'ball' and throw "lookG !ball"
-                $N = me&fabioty,op,[R.t];
-                N[0] and fy&ov = 0.1
+                $N = me&fabioty,op,[f.t];
+                N[0] and $r = N[0]
+            }
+            else {
+                otype != 'ting' and throw "enterW !ting"
+                # via ForThe or so? collector of masses of %tings
+                me&tsc,"Findting?"
+                
             }
         }
+        
+        rync(r);
+        # Click (or so) to other
         if (fy&ov == 0) {
-            # click to other
             me&rolltog,R,{may:'^trac'} and fy&ov = 0.1
         }
+        # Create the other
+        $was = fy&ov;
         if (fy&ov == 0.1) {
-            # to create the other
             $direction = (ok == 'G' ? '<-' : '->');
             ~>6 Enter: ok, op.t, direction, k, f.t
+            # must be repeaty
+            # may not set fy&$ok
             if (ok == 'G') {
                 otype != 'ball' and throw "enterG !ball"
-                f.y [ok] = me&input,op,f.t;
+                # returns the %ball without any Ringing
+                #  which might be lies if ...
+                r = me&input,op,f.t;
                 me&tsc,'connected','OK',6
                 fy&ov = 0.2;
             }
             else {
-                otype != 'ting' and throw "enterG !ball"
-                # < Ravelvis it
-                #me&Ravelvis,R,op,'M',
+                otype != 'ting' and throw "enterW !ting"
+                # < fy&ov=0.1 when bits change? el=2s
+                $c = {};
+                # M[f] -> More[R]
+                me&Ravelvis,R,op,'M',f,c;
+                if (cc&el == 8) {
+                    # means we should have seen it
+                    !r and throw "!r by el8"
+                    f.y [ok] and throw "by el8 !fy"+ok
+                    fy&ov = 0.2
+                }
+                
                 me&zu,"Growin",p
             }
         }
+        rync(r);
+        #c C:f
+        if (fy&ov >= 0.2) {
+            # the idealised lifecycled 
+            if (was < 0.2) {
+                # became 2 - upload/download %ting bits
+                #  depending on who we are
+                # assuming W will get there first,
+                $c = {};
+                me&tracupload,R,f,k,ok,type,otype;
+                ~>2 En2: k, '->', ok, f.t
+            }
+            else {
+                #~>2 Was2: k, '->', ok, f.t
+            }
+        }
+        
         if (fy&ov > 0) {
             $con = me&rolltog,R,{may:'trac',tsc:'l'};
             fy&ov < 0.2 and me&tsc,'@'+fy&ov,'...'
-            !con and return
-            me&zu,"Growon",p
+            if (con) {
+                me&zu,"Growon",p
+            }
         }
-        if (fy&ov == 0.2) {
-            # spread to either/* now
+        if (fy&ov >= 0.2) {
+            # ongoing spread to either/* now
             k == 'G' and Fc&indive(R,type)
             # is on
             return f;
         }
+    };
+    me.tracupload = &acgtRfk,ok,type,otype{
         
     };
-    
+    # up/downable essential identity
+    Be.C.ting = {
+        scgk: 'ting,directory,species',
+        # dont need to %ting=W at the top?
+        scdefault: {ting:'W'},
+        # %tings nest to imply structure,
+        #  these sc inherit from above
+        # < cause Ravelvis to recreate if changed
+        #   eg %ting must start fresh to add %directory
+        uplosive: 1,
+        # look mode (ov<=4) implies:
+        sclook: {species:4},
+        # then the main %species we need to fully awake:
+        scget: {species:1},
+        # wants 1 over the 4
+        #  for the details under the main thing
+        #  or does ForThe's %ting index/tooling abstract that?
+        #   supposing you ask for Thing.1
+        #   or you ask for Thing's %H (%ha/%dige),
+        #     Thing.4 could have the answer,
+        #      and have a %Ghostway to keep it up to date
+        #     ThingsInHere.4 also, a big map
+        #      which Lis must update, put forks in? or:
+        #     Dev.4 + Dev/$Thing, a searchpath
+        #      for who rides the chaos as thing grows
+        #       a language weld happening
+        #       shows where traits arose
+    };
+    me&BeCload;
     #c %ting finds %tracting
     me.tracarrive = &acgtRts{
         $tracting = 'trac'+t;
@@ -3148,20 +3257,6 @@ Foogla: |
     };
     
     #c trachas - either %tracting either
-    Be.trac = {};
-    # de/compress essential identity
-    Be.trac.ting = {
-        # %tings nest to imply structure,
-        #  some of it might be cd'ing
-        upargo: 'ting,directory'.split(','),
-        # dont need to %ting=W at the top?
-        defaultsc: {ting:'W'},
-        # know the main %species we need to fully awake
-        #  while we're checking with .4,
-        #  %ting%sleeplike
-        hierarchsc: {species:1},
-    };
-    
     # tracing@1 bring %ting id -> %ball
     
     
