@@ -3011,7 +3011,14 @@ Foogla: |
         $S = me.cbub(Ry&up,tracting,Sy&up);
         !S and return
         $t = S.sc[tracting];
-        ty&W != S and throw "cbub^^%tracting!=fyW", S, t
+        if (ty&W != S) {
+            if (t == Sy&up.sc[tracting]) {
+                ~tracarri ahead: S.t
+                T.wide = 'tracarri ahead of ^^tracmode';
+                return;
+            }
+            throw "cbub^^%tracting!=fyW", S, t
+        }
         
         # t = F at the top, then the previous f
         R.sc[tracting] = t;
@@ -3206,6 +3213,7 @@ Foogla: |
             $r = flook(f,r,ok);
         }
         
+        
         rync(r,'Look');
         # Click (or so) to other
         if (fc&ov == 0) {
@@ -3215,10 +3223,12 @@ Foogla: |
         }
         # Creates the other (either)
         #  even if we already see it
+        #   to make sure everything happens that can...
         #   so we know all the outbound connections
+        # < only want genesised if we really had to create them
         if (fc&ov == 0.1) {
             $direction = (ok == 'G' ? '<-' : '->');
-            ~>6 Enter: ok, op.t, direction, k, f.t
+            #~>6 Enter: ok, op.t, direction, k, f.t
             # must be repeatable (inputs != creates)
             #  only spacer yet
             tych();
@@ -3508,17 +3518,18 @@ Foogla: |
         # ^^%tracting/...%ting finds itself
         ['ting','6',&acgtRs{
             me&tracarri,R,'ting';
-        },'ift,D'],
-        
-        # %ting end
-        ['ting+tracting','6',&acgtRs{
+        #},'ift,D'],
+        #
+        ## %ting end
+        #['ting+tracting','6',&acgtRs{
+            !Rs&tracting and return
             $f = me&tracmode,R,'ting';
             !f and return
             
             # child find 
             Rs&flook = &f,r,ok{
                 # via ForThe or so? collector of masses of %tings
-                ~>7 Flook ting: f.t
+                #~>7 Flook ting: f.t
             };
             # child input
             Rs&finput = &f,r,ok{
