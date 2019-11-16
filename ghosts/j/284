@@ -2711,11 +2711,11 @@ Foogla: |
         # make a bunch of %tings!
         # < all hoisting into ForThe, transport workbench
         ['ForThe','3',&acgtRs{
-            Rs&tingspot = 1;
+            #Rs&tingspot = 1;
             
-            n ForThe  R %ting:W,Gens
-            
-            # source
+            n ForThe  R %ting:W,Gens,tingspot,MoreForThe
+        },'ift,D'],
+        ['MoreForThe','3',&acgtRs{
             n Stylehut  R %ting:W,directory:spot/je/
             n NutMachine  R %ting:W,directory:spot/ju/
             n Foogla  R %ting:w
@@ -2732,6 +2732,8 @@ Foogla: |
             # < get that done now, to 6
             #S /@6
         },'ift,D'],
+        
+        
         
         # for a bunch of %tings
         # < and their %More ... %tings
@@ -2970,6 +2972,8 @@ Foogla: |
         
         # so %tings notice upward %tracting
         S.sc[tracting] = F;
+        # and so this %ball realises its flook etc.
+        R.sc[tracting] = F;
         
         # waking up W or G about %tracting
         Fc&indive = &Rk{
@@ -2978,9 +2982,6 @@ Foogla: |
                 n.sc[tracting] = F;
             });
         };
-        # starting with G
-        #  its W if there will tracarri, tracmode first
-        Fc&indive(R,k);
     };
     $fio = me&fio;
     
@@ -2997,7 +2998,7 @@ Foogla: |
         $S = me.cbub(Ry&up,tracting,Sy&up);
         !S and return
         $t = S.sc[tracting];
-        #ty&W != S and throw "cbub^^%tracting!=fyW", S, t
+        ty&W != S and throw "cbub^^%tracting!=fyW", S, t
         
         # t = F at the top, then the previous f
         R.sc[tracting] = t;
@@ -3017,12 +3018,24 @@ Foogla: |
         # t = previous f
         $t = R.sc[tracting];
         !t and return
-        # for now, it goes ForThe%ForThe/ForThe%ting
-        Rs&ForThe and return
-        # avoid self knowledge at the top?
-        ty&W == R || ty&G == R and debugger; return
+        # goes ForThe%ForThe/ForThe%ting%tingspot%tracting
+        # %tings gathering around somewhere
+        
+        # tops stay f, creation on such type
+        #  eg ForThe%ting or Know%ball
+        # unity means "the top" for now
+        $unity = ty&W == R || ty&G == R;
+        
         # while persisting %tracting=f over (under) t
         $F = me&rollbsy,R,tracting;
+        if (unity) {
+            # itself
+            $f = t;
+            fc&ov = 0.2;
+            F && t != F and throw "top changed f"
+            t != ty&top and throw "unity !top"
+        }
+        else {
         if (t != F) {
             #~>3 rolling: k, R.t
             # double check via f tv
@@ -3051,13 +3064,12 @@ Foogla: |
             $f = fio(t,R.t);
             fy&up = F;
             fy&top = Fy&top;
-        }        
+        }
+        }
         # the shared object, about each climbing
         R.sc[tracting] = f;
-        # know about shared etc
         
         # wonder which one we are
-        # sharing f, connect either
         # as rescued from history
         $sync = &k{
             $r = f.y [k];
@@ -3078,18 +3090,24 @@ Foogla: |
         f.y [k] && f.y [k] != R and throw "already fy"+k
         f.y [k] = R;
         
-        t != fy&up and throw "t !fyup"
         $ok = !isting ? 'W' : 'G';
         $F = fy&top;
         $type = F.c[k+'type'];
         $otype = F.c[ok+'type'];
-        # the previous thing on either side
-        $op = fy&up.y [ok];
-        $p = fy&up.y [k];
-        # which may start however
-        $istop = F.y [ok] == op;
-        # then be of the other type
-        !istop && !op.sc[otype] and throw "need "+otype
+        if (!unity) {
+            t != fy&up and throw "t !fyup"
+            # the previous thing on either side
+            $op = fy&up.y [ok];
+            $p = fy&up.y [k];
+            # op must be the type we expect,
+            #  to look/input more of itselves
+            #   
+            #  the tops are sometimes op but never have op
+            #$istop = F.y [ok] == op;
+            !op.sc[otype] and throw "need "+otype
+        }
+        
+        
         #c A:f-ness, connect either
         # using this elvisory
         T.Mw = 'trac';
@@ -3151,21 +3169,27 @@ Foogla: |
             # go to being entered/having been entered
             fc&ov < 0.1 and fc&ov = 0.1
         }
-        
-        # Look for the other
-        # < ongoingly also
-        if (fc&ov <= 0.2) {
+        $tych = &{
             if (ok == 'G') {
-                otype != 'ball' and throw "lookG !ball"
-                $N = me&fabioty,op,[f.t];
-                N[0] and $r = N[0]
+                otype != 'ball' and throw "enterG !ball"
             }
             else {
                 otype != 'ting' and throw "enterW !ting"
-                # via ForThe or so? collector of masses of %tings
-                #me&tsc,"Findting?"
-                
             }
+        };
+        
+        # Look for the other
+        # < ongoingly also
+        if (fc&ov <= 0.2 && !unity) {
+            tych();
+            # child find
+            $flook = ops&flook;
+            flook ||= ops&ball && &f,r,ok{
+                $N = me&fabioty,op,[f.t];
+                N[0] and return N[0]
+            };
+            !flook and return me&tsc,"!flook" && me&zu,f
+            $r = flook(f,r,ok);
         }
         
         rync(r,'Look');
@@ -3174,40 +3198,25 @@ Foogla: |
             me&rolltog,R,{may:'^trac'} and fc&ov = 0.1
         }
         # Creates the other (either)
+        #  even if we already see it
+        #   so we know all the outbound connections
         if (fc&ov == 0.1) {
             $direction = (ok == 'G' ? '<-' : '->');
             ~>6 Enter: ok, op.t, direction, k, f.t
-            # < param from the op
-            # must be repeaty
-            # may not set fy&$ok
-            if (ok == 'G') {
-                otype != 'ball' and throw "enterG !ball"
+            # must be repeatable (inputs != creates)
+            #  only spacer yet
+            tych();
+            # child input
+            $finput = ops&finput;
+            finput ||= ops&ball && &f,r,ok{
                 # returns the %ball without any Ringing
                 #  which might be lies if ...
-                r = me&input,op,f.t;
-            }
-            else {
-                otype != 'ting' and throw "enterW !ting"
-                # < fy&ov=0.1 when bits change? el=2s
-                $vel = {};
-                # M[f] -> More[R]
-                me&Ravelvis,R,op,'M',f,vel;
-                if (velc&el == 8) {
-                    # means we should have seen it
-                    # < it should pass back the Runtime,
-                    #   M[f].y.Real? it's not M[f] then
-                    #   invent another object, the G pushing
-                    #   is almost the %tracupload,
-                    #    if it linked back to f
-                    !r and me&tsc,'vel=8!r',0,6
-                    !f.y [ok] and me&tsc,'vel=8!y'+ok,0,6
-                }
-                else {
-                    # let elvising establish, then r
-                    r = null
-                }
-                me&zu,"Growin",p
-            }
+                return me&input,op,f.t;
+            };
+            !finput and throw "no finput"
+            
+            $r = finput(f,r,ok);
+            
             # having from Looking or the input method,
             !r and me&tsc,'connecting:'+ok+'%'+otype,'...'
             else {
@@ -3240,14 +3249,15 @@ Foogla: |
             # < ongoingly also
         }
         
+        # unity will not have p/op around here (skips to 2)
+        
         # generalised notions of trac
         if (fc&ov > 0) {
             $con = me&rolltog,R,{may:'trac',tsc:'l'};
             fc&ov < 0.2 and me&tsc,'tryingsomething@'+fc&ov,'...'
             if (con) {
                 # clicks open to reveal controls
-                me&zu,"control-f",f
-                
+                me&zu,"control-f",f;
             }
         }
         
@@ -3259,7 +3269,7 @@ Foogla: |
         # is on
         return f
     };
-    # expression inherits from the last:
+    #c expression inherits from the last:
     #   %ball%tracting - when establishing %ting
     #   %ting%tracting - when learning %ball
     me.tracupload = &acgtRf,k,ok,type,otype{
@@ -3288,39 +3298,44 @@ Foogla: |
         $tracting = 'trac'+ting;
         load.type = ting;
         
-        $p = fy&up;
         $g = fy&G;
         $w = fy&W;
         g != R and throw "cup !G"
-        !g.sc[type] || !w.sc[otype] and throw "cup G/W type"
+        !g.sc[type] || !w.sc[otype] and throw "G/W type"
         
         # Thing = whole needs make Thing amongst Stuff about it
         #   Stuff our G/W system (typed %ball/%trac) isn't after
-        #  ie ghost is Thinging embedded in Stuff to know
-        #   the Cing of it all may not be all Thinging
+        #  ie ghost is Thinging to really know
+        #    embedded in Stuff to know
+        #   the Cing of it may not be all Thinging
         #    digitised known bits in a sea of analogue
         #     is how it sees itself and its other
-        $gp = gy&up;
-        $wp = wy&up;
-        # < see variation ^ v # many ghostbits per Thing
-        $gp = fy&up.y.G;
-        $wp = fy&up.y.W;
-        # < see variation ^ v # many tings per Thing etc
-        $gp = me.cbub(gy&up,tracting,F);
-        $wp = me.cbub(wy&up,tracting,F);
-        # < don't run into ForThe%tingspot%tracting?
-        gp.sc[type] || wp.sc[otype] and throw "cup G/W type"
+        if (f != fy&top) {
+            $p = fy&up;
+            !p and throw "no up"
+            $gp = gy&up;
+            $wp = wy&up;
+            # < see variation ^ v # many ghostbits per Thing
+            $gp = fy&up.y.G;
+            $wp = fy&up.y.W;
+            # < see variation ^ v # many tings per Thing etc
+            # < g not bound by F/**?
+            $gp = me.cbub(gy&up,tracting,F);
+            $wp = me.cbub(wy&up,tracting,F);
+            !gp.sc[type] || !wp.sc[otype] and throw "cup G/W type"
+            
+            gp == wp and ~>8 converge: k, '->', ok, p.t+'/'+f.t
+            gp == wp and return
+        }
         
-        gp == wp and ~>8 converge: k, '->', ok, p.t+'/'+f.t
-        gp == wp and return
-        #c checks it has the non-.t details right
-        # for writing on the ghost
+        # checks it has the non-.t details right
+        #   for writing on the ghost
         # %ting inherits them, has explicit ws&$k
         # %ball implies them being inherited
         me&Cloadsc,load,g,wp,w;
         fs&tracupload = load;
     };
-    # object for explicit/implicit expression
+    #c Cloadsc for explicit/implicit expression
     #  as per wp upward, the last spready instructo
     #  of C.sc.* in a Be.C.$group
     # generating Alets to find completion
@@ -3430,38 +3445,10 @@ Foogla: |
                 }
             }
         }
-        return c
+        return load
     };
     
-    # up/downable essential identity
-    Be.C.ting = {
-        scgk: 'ting,directory,species',
-        # dont need to %ting=W at the top?
-        scdefault: {ting:'W'},
-        # %tings nest to imply structure,
-        #  these sc inherit from above
-        # < cause Ravelvis to recreate if changed
-        #   eg %ting must start fresh to add %directory
-        scinherit: 1,
-        # look mode (ov<=4) implies:
-        sclook: {species:4},
-        # then the main %species we need to fully awake:
-        scget: {species:1},
-        # wants 1 over the 4
-        #  for the details under the main thing
-        #  or does ForThe's %ting index/tooling abstract that?
-        #   supposing you ask for Thing.1
-        #   or you ask for Thing's %H (%ha/%dige),
-        #     Thing.4 could have the answer,
-        #      and have a %Ghostway to keep it up to date
-        #     ThingsInHere.4 also, a big map
-        #      which Lis must update, put forks in? or:
-        #     Dev.4 + Dev/$Thing, a searchpath
-        #      for who rides the chaos as thing grows
-        #       a language weld happening
-        #       shows where traits arose
-    };
-    me&BeCload;
+            
     #c %ting finds %tracting
     me.tracarrive = &acgtRts{
         $tracting = 'trac'+t;
@@ -3597,20 +3584,90 @@ Foogla: |
     # the R life of %Search%_ting(Q)/G&ting/G&t
     # extra tricks here
     
+    # up/downable essential identity
+    Be.C.ting = {
+        scgk: 'ting,directory,species',
+        # dont need to %ting=W at the top?
+        scdefault: {ting:'W'},
+        # %tings nest to imply structure,
+        #  these sc inherit from above
+        # < cause Ravelvis to recreate if changed
+        #   eg %ting must start fresh to add %directory
+        scinherit: 1,
+        # look mode (ov<=4) implies:
+        sclook: {species:4},
+        # then the main %species we need to fully awake:
+        scget: {species:1},
+        # wants 1 over the 4
+        #  for the details under the main thing
+        #  or does ForThe's %ting index/tooling abstract that?
+        #   supposing you ask for Thing.1
+        #   or you ask for Thing's %H (%ha/%dige),
+        #     Thing.4 could have the answer,
+        #      and have a %Ghostway to keep it up to date
+        #     ThingsInHere.4 also, a big map
+        #      which Lis must update, put forks in? or:
+        #     Dev.4 + Dev/$Thing, a searchpath
+        #      for who rides the chaos as thing grows
+        #       a language weld happening
+        #       shows where traits arose
+    };
+    me&BeCload;
+    
     me.Tongingness = &acgtR{ return [
         # %trac*
         
-        # %tracting/...%ting
-        # RbitXing/Xpathing connect to %balls
+        # ^^%tracting/...%ting finds itself
         ['ting','6',&acgtRs{
-            #me&tracarrive,R,'ting',Rs&Live;
             me&tracarri,R,'ting';
         },'ift,D'],
         
         # %ting end
         ['ting+tracting','6',&acgtRs{
-            $t = me&tracmode,R,'ting';
-            !t and return
+            $f = me&tracmode,R,'ting';
+            !f and return
+            
+            # child find 
+            Rs&flook = &f,r,ok{
+                # via ForThe or so? collector of masses of %tings
+                ~>7 Flook ting: f.t
+            };
+            # child input
+            Rs&finput = &f,r,ok{
+                ok != 'W' and throw "ting finput !W"
+                $vel = {};
+                # M[f] -> More[R]
+                # from fy&G to fy&W
+                me&Ravelvis,fy&G,R,'M',f,vel;
+                if (velc&el == 8) {
+                    # means we should have seen it
+                    # < Ring it
+                    # < pass back the Runtime,
+                    #   M[f].y.Real? it's not M[f] then
+                    #   invent another object, the G pushing
+                    #   is almost the %tracupload,
+                    #    if it linked back to f
+                    !r and me&tsc,'vel=8!r',0,6
+                    !f.y [ok] and me&tsc,'vel=8!y'+ok,0,6
+                }
+                else {
+                    # let elvising establish, then r
+                    r = null
+                }
+                return r
+            };
+        },'ift,D'],
+        
+        # %ball end
+        # with some C visua
+        # being fy&G, gleans %ting's usual sc
+        ['ball+tracting','8',&acgtRs{
+            $c = {};
+            $f = me&tracmode,R,'ting',c;
+            !f and return
+            
+            
+            
             # upload/glean recipe
             return;
             $z = tc&s;
@@ -3621,15 +3678,6 @@ Foogla: |
                 me&tsc,')'
             }
             #n trac  $s:tc&s,R %ball,tightly
-        },'ift,D'],
-        
-        # %ball end
-        # with some C visua
-        ['ball+tracting','8',&acgtRs{
-            # < flavours of this to upload
-            $c = {};
-            $t = me&tracmode,R,'ting',c;
-            !t and return
             
             #R.t == 'Stylehut' and me&zu,Rs&tracting
             
@@ -3642,12 +3690,14 @@ Foogla: |
             # if different, wills its children to do the same
             # over a few Domings, since Ring A-time is not precise
         },'ift,D'],
+        
         ['ball+KnowingC','87',&acgtRs{
             Rc&noKnowC = 1;
             $s = Rs&KnowingC;
             #$s = me&thespot,R,'ting';
             me&zu,'FCit',s,''
         },'ift,D'],
+        
         #c %ting%More -> /%ting vision in
         ['ting','5',&acgtRs{
             each in Rs&More {
@@ -4487,11 +4537,11 @@ Foogla: |
                 $cb = &t,ar,w{
                     Rs&seekend(w,s,was);
                 };
-                # noop='nottl' so it renews
+                # noop='nottl' so it renews#
                 G&way,s.t,{},cb,'nottl';
             };
             
-            # thing is got
+            # thing is got!
             Rs&seekend = &w,s,was{
                 Ss&sleep_Further &&
                     Ss&sleep_Further(w,s);
@@ -4508,18 +4558,15 @@ Foogla: |
                 #   rolling commits together
                 i $Ghost/ing:s
                 $ing = ya;
-                $N = me&ioty,ing,[''],[w.t];
-                N.length > 2 and ~masstidy: w.t, N.length
-                each in N {
-                    i $ing/$n
-                }
+                ings&z and ings&z = ings&z.filter(n => w.t != n.t);
+                
                 i $Ghost/ing/$w
-                # once after the batch (ish)
+                # once after the batch (ish)!
                 $si = Rs&seeking.indexOf(s);
                 si >= 0 and Rs&seeking.slice(si,1);
                 # wait up to 30ms if more might seekend
                 $delay = Rs&seeking.length ? 30 : 0;
-                # joining seekends near in time
+                # joining seekends near in time!!!!!!
                 $cb = me&sccb,R,'seekingdone',Rs&do_ing;
                 delay ? G&yl,delay,cb
                     : cb();
