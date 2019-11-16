@@ -3273,22 +3273,20 @@ Foogla: |
         #   probably inheriting from ry&up
         # then
         #  asks to give bits
-        $conform = 0;
-        fy&genesised == 'G' and conform = 1
+        $load = {};
+        fy&genesised == 'G' and load.conform = 1
         # the bits + remarks that matter
         $lasc = fs&tracupload;
         # initial guzzle
-        !lasc and $forming = 1
+        !lasc and load.forming = 1
         # make the change
         # < elvis hoppering acceptance
-        $auto = forming || lasc.accepted;
+        load.auto = load.forming || lasc.accepted;
         
         $F = fy&top;
         $ting = Fc&Wtype;
         $tracting = 'trac'+ting;
-        # < Wtype:* brings everything,
-        #   to where osc watches osc
-        $Kc = Be.C[ting];
+        load.type = ting;
         
         $p = fy&up;
         $g = fy&G;
@@ -3319,19 +3317,32 @@ Foogla: |
         # for writing on the ghost
         # %ting inherits them, has explicit ws&$k
         # %ball implies them being inherited
-        $s = gc&s;
-        
-        # fs&tracupload
-        # object for explicit/implicit expression
-        #  of $nkv (C.*) .* in a Be.C.$group
-        #  and its sc differing-ness
-        $c = {};
-        # bits to give G
-        #   nulls imply implied
-        c.sc ||= {};
-        # bits to give W
-        #   explicit implieds
-        c.c ||= {};
+        me&Cloadsc,load,g,wp,w;
+        fs&tracupload = load;
+    };
+    # object for explicit/implicit expression
+    #  as per wp upward, the last spready instructo
+    #  of C.sc.* in a Be.C.$group
+    # generating Alets to find completion
+    #  g - description/upstream
+    #  w - reality .sc differing-ness to g.sc
+    #  gw - .sc inherits to w.sc
+    #   < entirely by Cloadsc, tighten %ting args?
+    # < generalise from sc
+    # < yup%ting <-> %ting should show their difference
+    #   apart from the .t, isn't in the subtle 
+    me.Cloadsc = &acgtcg,wp,w{
+        !c and throw "give c"
+        $load = c;
+        $s = g && gc&s;
+        # bits to give G: nulls for things it needn't
+        load.sc ||= {};
+        # bits to give W: everything
+        load.c ||= {};
+        # of this type's group
+        # < Wtype:* brings everything,
+        #   to where osc watches osc
+        $Kc = Be.C[load.type];
         
         # < relying on this to do the inheritance/defaulting
         #   needs a verbose verion of sc
@@ -3351,9 +3362,9 @@ Foogla: |
                 def != null and exp = def
             }
             
-            $was = s.sc[k];
+            $was = s && s.sc[k];
             # W says everything
-            c.c[k] = got || was || exp;
+            load.c[k] = got || was || exp;
             
             $value = got;
             # G implies what is implied
@@ -3366,59 +3377,60 @@ Foogla: |
                     throw k+' implied was !got'
                 }
                 else {
-                    ~>7 redundant: f.t, '%'+otype, '%'+k
+                    ~>7 redundant: g.t, '%'+load.type
                     value = null;
                 }
             }
             
-            c.sc[k] = value
+            load.sc[k] = value
         }
         
+        !s || load.noknow and return load
+        # finds difference to s (g)
+        
         $differs = [];
-        each kv c.sc {
+        each kv load.sc {
             v == null and s.sc[k] != null and differs.push(k)
             else
             v != s.sc[k] and differs.push(k)
         }
         $lies = [];
         each ik differs {
-            c.sc[k] == null and continue
+            load.sc[k] == null and continue
             # we said something, it was something else
             s.sc[k] != null and lies.push(k);
         }
         
         # want extra carevision
-        lies.length and auto = 0; c.lies = lies
+        lies.length and load.auto = 0; load.lies = lies
+        
         if (differs.length) {
-            c.differs = differs;
-            # < mod Tool for pulling as branch
+            load.differs = differs;
+            # < Tool for pulling as branch
             #   something differ can understand
             #   all terrain replication vehicle
-            if (conform) {
+            if (load.conform) {
                 # should not be changing
-                auto = 0;
+                load.auto = 0;
                 me&tsc,"recipe-doesnt-conform",'exp!',6
-                c.conform = 1
             }
-            if (auto) {
+            if (load.auto) {
+                # enacts change
                 each ik differs {
                     me&tsc,'~'+k,0,6;
                     $v = c.sc[k];
                     $was = s.sc[k];
                     if (was != null && v == null) {
-                        ~>7 redundant: f.t, '%'+otype, '%'+k
+                        ~>7 redundant: g.t, '%'+load.type
                     }
                     v == null and delete s.sc[k]
                     else {
                         s.sc[k] = v
                     }
                 }
-                c.auto = 1
             }
         }
-        forming and c.forming = 1
-        
-        fs&tracupload = c;
+        return c
     };
     
     # up/downable essential identity
