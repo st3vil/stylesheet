@@ -3032,7 +3032,7 @@ Foogla: |
             }
             # r%ball s=C
             # r%ting could have an s=C leading to the Question
-            f.c [k] = rc&s;
+            k.length == 1 and f.c [k] = rc&s
             r == R and return 1
         };
         
@@ -3064,7 +3064,11 @@ Foogla: |
         # using this elvisory
         T.Mw = 'trac';
         # f state (reset when?)
+        #  usually a step can be made by either W/G
         fy&ov ||= 0;
+        # for steps that must be done by both,
+        #  both know last ov they experienced
+        $was = f.y [k+"_ov"] || 0;
         
         # between fio(F...), fabioty(p..., Rc&X, Rs&Te
         #  we have a few ways to gravitate the elvising made
@@ -3083,7 +3087,7 @@ Foogla: |
         
         # rync when Look/Create finds an r
         $lr;
-        $rync = &r{
+        $rync = &r,how{
             !r and return
             r == lr and return
             lr = r;
@@ -3092,7 +3096,7 @@ Foogla: |
             $exp = f.y [ok+"_exp"];
             $got = f.y [ok];
             if (got) {
-                f.y [ok] and ~>4 rready: k, '->', ok, f.t
+                f.y [ok] and ~>4 rready: how, k, '->', ok, f.t
                 if (exp) {
                     exp == got and delete f.y [ok+"_exp"]
                     else {
@@ -3105,9 +3109,10 @@ Foogla: |
             rs&tracting ||= f
             [f,fy&up].indexOf(rs&tracting) < 0 and throw "difftracting"
             
-            # and is soon to be fy&[ok]
+            # and is soon to be fy&[ok], where it should stay:
             exp && exp != r and throw "change exp "+ok
-            f.y [ok+"_exp"] = r;
+            got and got != r and throw "change got "+ok
+            !got and f.y [ok+"_exp"] = r
             
             # may be already
             # go to being entered/having been entered
@@ -3124,18 +3129,17 @@ Foogla: |
             else {
                 otype != 'ting' and throw "enterW !ting"
                 # via ForThe or so? collector of masses of %tings
-                me&tsc,"Findting?"
+                #me&tsc,"Findting?"
                 
             }
         }
         
-        rync(r);
+        rync(r,'Look');
         # Click (or so) to other
         if (fy&ov == 0) {
             me&rolltog,R,{may:'^trac'} and fy&ov = 0.1
         }
-        # Create the other
-        $was = fy&ov;
+        # Creates the other (either)
         if (fy&ov == 0.1) {
             $direction = (ok == 'G' ? '<-' : '->');
             ~>6 Enter: ok, op.t, direction, k, f.t
@@ -3166,10 +3170,10 @@ Foogla: |
             }
             fy&genesised = k;
         }
-        rync(r);
+        rync(r,'Create');
         #c C:f-ness the idealised lifecycled potential
         
-        # starting
+        # starting (both)
         if (fy&ov >= 0.2 && was < 0.2) {
             # check grasp of what %ting bits are going on
             #  and if they're implied by their parents in G
@@ -3184,10 +3188,11 @@ Foogla: |
             fy&ov < 0.2 and me&tsc,'tryingsomething@'+fy&ov,'...'
             if (con) {
                 # clicks open to reveal controls
-                me&zu,"Growon",p
+                me&zu,"Growon",f
             }
         }
         
+        f.y [k+"_ov"] = fy&ov;
         # is off
         fy&ov < 0.2 and return
         # ongoing spread to either/* now
@@ -3223,7 +3228,7 @@ Foogla: |
         $g = fy&G;
         $w = fy&W;
         g != R and throw "cup !G"
-        g.sc[type] || w.sc[otype] and throw "cup G/W type"
+        !g.sc[type] || !w.sc[otype] and throw "cup G/W type"
         
         # Thing = whole needs make Thing amongst Stuff about it
         #   Stuff our G/W system (typed %ball/%trac) isn't after
