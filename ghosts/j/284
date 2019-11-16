@@ -3106,17 +3106,13 @@ Foogla: |
         if (yo && Rc&N.indexOf(yo) < 0) {
             ~>9 disco: k,'->',ok, f.t
             me&tsc,'disco:'+ok,0,6;
+            # < mez&delete should do the delete-all
+            #    el=2 input implies delete-all,
+            #    which Ghostway/ing needs
+            #   it would Rsync if R or s (finding refR) %ball
             $uz = fy&up.sc.z;
             $fi = uz.indexOf(f);
             uz.splice(fi,1);
-            # < delete f?
-            return
-            delete f.y [ok];
-            delete f.y [ok+'_exp'];
-            delete f.y [ok+'_ov'];
-            delete f.y [k+'_ov'];
-            delete f.y ['tracupload'];
-            return;
         }
         # or as usual,
         # W tends to wake first, !fy&G means initialise
@@ -3180,6 +3176,7 @@ Foogla: |
         if (fy&ov == 0.1) {
             $direction = (ok == 'G' ? '<-' : '->');
             ~>6 Enter: ok, op.t, direction, k, f.t
+            # < seem like they should param from the op
             # must be repeaty
             # may not set fy&$ok
             if (ok == 'G') {
@@ -3187,34 +3184,53 @@ Foogla: |
                 # returns the %ball without any Ringing
                 #  which might be lies if ...
                 r = me&input,op,f.t;
-                me&tsc,'connected','OK',6
-                fy&ov = 0.2;
             }
             else {
                 otype != 'ting' and throw "enterW !ting"
                 # < fy&ov=0.1 when bits change? el=2s
-                $c = {};
+                $vel = {};
                 # M[f] -> More[R]
-                me&Ravelvis,R,op,'M',f,c;
-                if (cc&el == 8) {
+                me&Ravelvis,R,op,'M',f,vel;
+                if (velc&el == 8) {
                     # means we should have seen it
-                    !r and throw "!r by el8"
-                    f.y [ok] and throw "by el8 !fy"+ok
-                    fy&ov = 0.2
+                    # < it should pass back the Runtime,
+                    #   M[f].y.Real? it's not M[f] then
+                    #   invent another object, the G pushing
+                    #   is almost the %tracupload,
+                    #    if it linked back to f
+                    !r and me&tsc,'vel=8!r',0,6
+                    !f.y [ok] and me&tsc,'vel=8!y'+ok,0,6
                 }
-                
+                else {
+                    # let elvising establish, then r
+                    r = null
+                }
                 me&zu,"Growin",p
             }
+            # having from Looking or the input method,
+            !r and me&tsc,'connecting:'+ok+'%'+otype,'...'
+            else {
+                me&tsc,'connected','OK',6
+                fy&ov = 0.2;
+            }
+            # if W/G created the other
             fy&genesised = k;
         }
         rync(r,'Create');
         #c C:f-ness the idealised lifecycled potential
         
+        if (fy&ov >= 0.2) {
+            !f.y [k] and throw "f@2 !y"+k
+            !f.y [ok] and throw "f@2 !y"+ok
+            !f.y [k] .sc[type] and throw "f@2 !y"+k+"%"+type
+            !f.y [ok] .sc[otype] and throw "f@2 !y"+ok+"%"+otype
+        }
         # starting (both)
         if (fy&ov >= 0.2 && was < 0.2) {
             # check grasp of what %ting bits are going on
             #  and if they're implied by their parents in G
             ~>2 En2: k, '->', ok, f.t
+            
             me&tracupload,R,f,k,ok,type,otype;
             # < ongoingly also
         }
