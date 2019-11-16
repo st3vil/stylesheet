@@ -3095,10 +3095,10 @@ Foogla: |
         T.Mw = 'trac';
         # f state
         #  usually a step can be made by either W/G
-        fy&ov ||= 0;
+        fc&ov ||= 0;
         # for steps that must be done by both,
-        #  both know last ov they experienced
-        $was = f.y [k+"_ov"] || 0;
+        #  both know last ov they lived
+        $was = f.c [k+"_ov"] || 0;
         
         $yo = f.y [ok];
         # reset state per fy&$ok disappearance
@@ -3116,7 +3116,7 @@ Foogla: |
         }
         # or as usual,
         # W tends to wake first, !fy&G means initialise
-        !f.y [ok] and fy&ov = was = 0
+        !f.y [ok] and fc&ov = was = 0
         
         # rync when Look/Create finds an r
         $lr;
@@ -3133,7 +3133,7 @@ Foogla: |
                 if (exp) {
                     exp == got and delete f.y [ok+"_exp"]
                     else {
-                        throw "not rready predicted"
+                        throw "not predicted "+ok
                     }
                 }
             }
@@ -3149,11 +3149,12 @@ Foogla: |
             
             # may be already
             # go to being entered/having been entered
-            fy&ov < 0.1 and fy&ov = 0.1
+            fc&ov < 0.1 and fc&ov = 0.1
         }
         
-        # Look for the other (slightly all the time?)
-        if (fy&ov <= 0.2) {
+        # Look for the other
+        # < ongoingly also
+        if (fc&ov <= 0.2) {
             if (ok == 'G') {
                 otype != 'ball' and throw "lookG !ball"
                 $N = me&fabioty,op,[f.t];
@@ -3169,14 +3170,14 @@ Foogla: |
         
         rync(r,'Look');
         # Click (or so) to other
-        if (fy&ov == 0) {
-            me&rolltog,R,{may:'^trac'} and fy&ov = 0.1
+        if (fc&ov == 0) {
+            me&rolltog,R,{may:'^trac'} and fc&ov = 0.1
         }
         # Creates the other (either)
-        if (fy&ov == 0.1) {
+        if (fc&ov == 0.1) {
             $direction = (ok == 'G' ? '<-' : '->');
             ~>6 Enter: ok, op.t, direction, k, f.t
-            # < seem like they should param from the op
+            # < param from the op
             # must be repeaty
             # may not set fy&$ok
             if (ok == 'G') {
@@ -3211,7 +3212,7 @@ Foogla: |
             !r and me&tsc,'connecting:'+ok+'%'+otype,'...'
             else {
                 me&tsc,'connected','OK',6
-                fy&ov = 0.2;
+                fc&ov = 0.2;
             }
             # if W/G created the other
             fy&genesised = k;
@@ -3219,14 +3220,18 @@ Foogla: |
         rync(r,'Create');
         #c C:f-ness the idealised lifecycled potential
         
-        if (fy&ov >= 0.2) {
-            !f.y [k] and throw "f@2 !y"+k
-            !f.y [ok] and throw "f@2 !y"+ok
+        if (fc&ov >= 0.2) {
+            if (!f.y [ok]) {
+                # wait for the other side to have a mind,
+                # then put heads together
+                fc&ov = 0.2;
+                return
+            }
             !f.y [k] .sc[type] and throw "f@2 !y"+k+"%"+type
             !f.y [ok] .sc[otype] and throw "f@2 !y"+ok+"%"+otype
         }
         # starting (both)
-        if (fy&ov >= 0.2 && was < 0.2) {
+        if (fc&ov >= 0.2 && was < 0.2) {
             # check grasp of what %ting bits are going on
             #  and if they're implied by their parents in G
             ~>2 En2: k, '->', ok, f.t
@@ -3236,18 +3241,19 @@ Foogla: |
         }
         
         # generalised notions of trac
-        if (fy&ov > 0) {
+        if (fc&ov > 0) {
             $con = me&rolltog,R,{may:'trac',tsc:'l'};
-            fy&ov < 0.2 and me&tsc,'tryingsomething@'+fy&ov,'...'
+            fc&ov < 0.2 and me&tsc,'tryingsomething@'+fc&ov,'...'
             if (con) {
                 # clicks open to reveal controls
-                me&zu,"Growon",f
+                me&zu,"control-f",f
+                
             }
         }
         
-        f.y [k+"_ov"] = fy&ov;
+        f.c [k+"_ov"] = fc&ov;
         # is off
-        fy&ov < 0.2 and return
+        fc&ov < 0.2 and return
         # ongoing spread to either/* now
         k == 'G' and Fc&indive(R,type)
         # is on
@@ -3271,16 +3277,11 @@ Foogla: |
         fy&genesised == 'G' and conform = 1
         # the bits + remarks that matter
         $lasc = fs&tracupload;
-        # this time:
-        $c = {};
-        # bits to give G
-        #   nulls imply implied
-        $sc = c.sc ||= {};
         # initial guzzle
-        !lasc and c.forming = 1
+        !lasc and $forming = 1
         # make the change
         # < elvis hoppering acceptance
-        $auto = c.forming || lasc.accepted;
+        $auto = forming || lasc.accepted;
         
         $F = fy&top;
         $ting = Fc&Wtype;
@@ -3320,18 +3321,39 @@ Foogla: |
         # %ball implies them being inherited
         $s = gc&s;
         
+        # fs&tracupload
+        # object for explicit/implicit expression
+        #  of $nkv (C.*) .* in a Be.C.$group
+        #  and its sc differing-ness
+        $c = {};
+        # bits to give G
+        #   nulls imply implied
+        c.sc ||= {};
+        # bits to give W
+        #   explicit implieds
+        c.c ||= {};
+        
+        # < relying on this to do the inheritance/defaulting
+        #   needs a verbose verion of sc
         each i,k Kc.scgk {
             # on %ting%$k
-            $got = w.sc[k];
+            $got = w && w.sc[k];
             # which is inheriting ^^%tracting
             # or not, if many tings per Thing,
             #  needing more explicit bits in recipe
             #  but something weirder might be afoot
             $exp = wp && wp.sc[k];
             # or not if it doesn't do that
-            !c.scinherit and exp = null
+            !Kc.scinherit and exp = null
+            # weaker exp than inherit
+            if (exp == null) {
+                $def = Kc.scdefault && Kc.scdefault[k];
+                def != null and exp = def
+            }
             
             $was = s.sc[k];
+            # W says everything
+            c.c[k] = got || was || exp;
             
             $value = got;
             # G implies what is implied
@@ -3349,17 +3371,19 @@ Foogla: |
                 }
             }
             
-            sc[k] = value
+            c.sc[k] = value
         }
         
         $differs = [];
-        each kv sc {
+        each kv c.sc {
             v == null and s.sc[k] != null and differs.push(k)
             else
             v != s.sc[k] and differs.push(k)
         }
         $lies = [];
         each ik differs {
+            c.sc[k] == null and continue
+            # we said something, it was something else
             s.sc[k] != null and lies.push(k);
         }
         
@@ -3379,7 +3403,7 @@ Foogla: |
             if (auto) {
                 each ik differs {
                     me&tsc,'~'+k,0,6;
-                    $v = sc[k];
+                    $v = c.sc[k];
                     $was = s.sc[k];
                     if (was != null && v == null) {
                         ~>7 redundant: f.t, '%'+otype, '%'+k
@@ -3392,8 +3416,9 @@ Foogla: |
                 c.auto = 1
             }
         }
+        forming and c.forming = 1
         
-        fy&tracupload = c;
+        fs&tracupload = c;
     };
     
     # up/downable essential identity
