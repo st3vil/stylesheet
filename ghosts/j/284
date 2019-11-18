@@ -2922,7 +2922,7 @@ Foogla: |
             s = me.cbu(R,spot);
             s and return s
         }
-        me&tsc,'no'+spot,'!t','B'
+        me&waits,'no'+spot,'!t','B'
     };
     
     # me.cbu having a boundary
@@ -2967,7 +2967,7 @@ Foogla: |
         $S = me&thespot,R,t;
         !S and throw "nospot"
         $f = S.sc[tracting];
-        f and return me&tsc,"alreadytrac"+t,"oc:"+r.t
+        f and return me&waits,"alreadytrac"+t,"oc:"+r.t
         
         # the organiser persists
         $abstracting = 'abs'+tracting;
@@ -3010,6 +3010,7 @@ Foogla: |
         $tracting = 'trac'+t;
         $S = me.cbub(Ry&up,tracting,Sy&up);
         !S and return
+        T.Mw = 'trac';
         $t = S.sc[tracting];
         if (ty&W != S) {
             if (t == Sy&up.sc[tracting]) {
@@ -3038,7 +3039,7 @@ Foogla: |
         # t = previous f
         $t = R.sc[tracting];
         !t and return
-        # goes ForThe%ForThe/ForThe%ting%tingspot%tracting
+        T.Mw = 'trac';
         # %tings gathering around somewhere
         
         # tops stay f, creation on such type
@@ -3107,7 +3108,7 @@ Foogla: |
         sync('G');
         sync('G_exp');
         # fy&G/W
-        f.y [k] && f.y [k] != R and me&tsc,"already-fy"+k; return
+        f.y [k] && f.y [k] != R and me&waits,"already-fy"+k; return
         #throw "already fy"+k
         f.y [k] = R;
         
@@ -3119,9 +3120,9 @@ Foogla: |
             t != fy&up and throw "t !fyup"
             # the previous thing on either side
             $op = fy&up.y [ok];
-            !op and me&tsc,"fyup!"+ok; return
+            !op and me&waits,"fyup!"+ok; return
             $p = fy&up.y [k];
-            !p and me&tsc,"fyup!"+k; return
+            !p and me&waits,"fyup!"+k; return
             # op must be the type we expect,
             #  to look/input more of itselves
             
@@ -3133,7 +3134,6 @@ Foogla: |
         
         #c A:f-ness, connect either
         # using this elvisory
-        T.Mw = 'trac';
         # f state
         #  usually a step can be made by either W/G
         fc&ov ||= 0;
@@ -3146,7 +3146,7 @@ Foogla: |
         # < not inside %sleeping
         if (yo && Rc&N.indexOf(yo) < 0) {
             ~>9 disco: k,'->',ok, f.t
-            me&tsc,'disco:'+ok,0,6;
+            me&waits,'disco:'+ok,0,6;
             # < mez&delete should do the delete-all
             #    el=2 input implies delete-all,
             #    which Ghostway/ing needs
@@ -3185,7 +3185,7 @@ Foogla: |
             
             # and is soon to be fy&[ok], where it should stay:
             exp && exp != r and throw "change exp "+ok
-            got and got != r and me&tsc,"r~got"; return
+            got and got != r and me&waits,"r~got"; return
             #throw "change got "+ok
             !got and f.y [ok+"_exp"] = r
             
@@ -3212,7 +3212,7 @@ Foogla: |
                 $N = me&fabioty,op,[f.t];
                 N[0] and return N[0]
             };
-            !flook and return me&tsc,"!flook" && me&zu,f
+            !flook and return me&waits,"!flook" && me&zu,f
             $r = flook(f,r,ok);
         }
         
@@ -3221,7 +3221,7 @@ Foogla: |
         # Click (or so) to other
         if (fc&ov == 0) {
             $ope = fy&up == fy&top
-                || me&rolltog,R,{may:'^trac'};
+                || me&rolltog,R,{may:'^trac',acty:1};
             ope and fc&ov = 0.1
         }
         # Creates the other (either)
@@ -3247,7 +3247,7 @@ Foogla: |
             $r = finput(f,r,ok);
             
             # having from Looking or the input method,
-            !r and me&tsc,'connecting:'+ok+'%'+otype,'...'
+            !r and me&waits,'connecting:'+ok+'%'+otype,'...'
             else {
                 me&tsc,'connected','OK',6
                 fc&ov = 0.2;
@@ -3258,7 +3258,9 @@ Foogla: |
         rync(r,'Create');
         #c C:f-ness the idealised lifecycled potentials
         
+        # check either y$ok and its type
         if (fc&ov >= 0.2) {
+            # should be ready
             if (!f.y [ok]) {
                 # wait for the other side to have a mind,
                 # then put heads together
@@ -3268,7 +3270,9 @@ Foogla: |
             !f.y [k] .sc[type] and throw "f@2 !y"+k+"%"+type
             !f.y [ok] .sc[otype] and throw "f@2 !y"+ok+"%"+otype
         }
-        # starting (both)
+        
+        # on startup, check config arrived
+        #  config sent by W's finput()
         if (fc&ov >= 0.2 && was < 0.2) {
             # check grasp of what %ting bits are going on
             #  and if they're implied by their parents in G
@@ -3282,11 +3286,12 @@ Foogla: |
         
         # generalised notions of trac
         if (fc&ov > 0) {
-            $con = me&rolltog,R,{may:'trac',tsc:'l'};
+            $con = me&rolltog,R,{may:'trac',tsc:'l',acty:8};
             fc&ov < 0.2 and me&tsc,'tryingsomething@'+fc&ov,'...'
             if (con) {
                 # clicks open to reveal controls
                 me&zu,"control-f",f;
+                me&rolltog,R,{may:'re2',tsc:'y',once:1} and fy&ov = 0.1
             }
         }
         
@@ -3450,13 +3455,14 @@ Foogla: |
         
         if (differs.length) {
             load.differs = differs;
+            # 
             # < Tool for pulling as branch
             #   something differ can understand
             #   all terrain replication vehicle
             if (load.conform) {
                 # should not be changing
                 load.auto = 0;
-                me&tsc,"recipe-doesnt-conform",'exp!',6
+                me&waits,"recipe-doesnt-conform",'exp!',6
             }
             if (load.auto) {
                 # enacts change
@@ -3522,7 +3528,8 @@ Foogla: |
         ['ting','6',&acgtRs{
             me&tracarri,R,'ting';
         #},'ift,D'],
-        #
+        # see 'tracarri ahead'
+        # < Ring all == cv to get v before ^ for inners
         ## %ting end
         #['ting+tracting','6',&acgtRs{
             !Rs&tracting and return
@@ -3569,7 +3576,7 @@ Foogla: |
             !f and return
             
             
-            
+            f.t == 'Foogla' and me&waits,"Wasready",0,'L';
             # upload/glean recipe
             return;
             $z = tc&s;
@@ -3591,6 +3598,57 @@ Foogla: |
             # loads up our %tings
             # if different, wills its children to do the same
             # over a few Domings, since Ring A-time is not precise
+        },'ift,D'],
+        #c tract-swarm comes together over the top
+        ['tracing','81',&acgtRs{
+            $f = Rs&tracting;
+            window.isst = &s{ return typeof s == 'string' };
+            window.isar = &s{ return s && s.constructor == Array };
+            
+            # array match
+            # if M, returns [not], puts M[matched]
+            #  eg N = arou(N,'acty',actyN) separates actyN from N
+            # else, returns [matched]
+            window.arou = &NyM{
+                $matched = M || [];
+                if (isst(y)) {
+                    $k = y;
+                    y = &n{ return n.sc[k] };
+                    if (k[0] == '!') {
+                        $cb = y;
+                        k = k.substr(1);
+                        y = &s{ return !cb(s) }
+                    }
+                }
+                if (M && !isar(M)) {
+                    # for an Nx.$k=N tape splitter
+                    !k and throw "dunno Nx k",M
+                    matched = M[k] ||= []
+                }
+                $not = [];
+                each in N {
+                    y(n) ? matched.push(n) : not.push(n)
+                }
+                return M ? not : matched
+            };
+            
+            # < fbitX + fc&N, the whole trac-swarm
+            #f != fy&top and return
+            $N = me&Mwty,R,'','trac','';
+            $Nx = {};
+            
+            # %acty:1 starts things, %acty:8 opens dialectic
+            N = arou(N,'acty',Nx);
+            
+            # everything %waits is important
+            # everything else is an error
+            Nx.err = arou(N,'waits',Nx);
+            
+            each kv Nx {
+                !v.length and delete Nx[k]
+            }
+            
+            me&zu,Nx
         },'ift,D'],
         
         ['ball+KnowingC','87',&acgtRs{
@@ -3782,7 +3840,7 @@ Foogla: |
             }
         },'ift,D'],
     ] };
-    #c Tingingness gets domethings
+    #c Search Tingingness gets domethings
     # stately getting of things
     # < with/via e,
     #   generating more different e,
