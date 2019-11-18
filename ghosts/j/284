@@ -3069,6 +3069,27 @@ Foogla: |
     #   which is in the domain of the particular G or W system,
     #   eg %ting:W,species:4 while checking out %MindInto/Know
     me.tracmode = &acgtRtc{
+        $f = me&tracintro,R,t,c;
+        
+        # not chattery
+        !me&beready,R,'trac' and return
+        # having f, returned, means ready
+        !f and return
+        # waits for us to 2->3 it
+        if (fc&ov == 0.2) {
+            # both here
+            $readygk = 'trac'+t+'_ready';
+            R.sc[readygk] = 1;
+            $r = fy&G == R ? fy&W : fy&G;
+            !r.sc[readygk] and return
+            fc&ov = 0.3;
+            # must come back so other lives ov=3 first
+            return
+        }
+        
+        return f
+    };
+    me.tracintro = &acgtRtc{
         $tracting = 'trac'+t;
         $isting = R.sc[t];
         $k = isting ? 'W' : 'G';
@@ -3309,7 +3330,6 @@ Foogla: |
         # generalised notions of trac
         if (fc&ov > 0) {
             $con = me&rolltog,R,{may:'trac',tsc:'l',acty:8};
-            fc&ov < 0.2 and me&tsc,'tryingsomething@'+fc&ov,'...'
             if (con) {
                 # clicks open to reveal controls
                 me&zu,"control-f",f;
@@ -3325,19 +3345,7 @@ Foogla: |
             #   was sent from here with their finput()
             me&tracupload,R,f,k,ok,type,otype;
             # < ongoingly also
-            
-            # not chattery
-            !me&beready,R,'trac' and return
-            
-            # both here
-            $readygk = tracting+'_ready';
-            R.sc[readygk] = 1;
-            $r = f.y [ok];
-            !r.sc[readygk] and return
-            
-            fc&ov = 0.3;
-            # must come back, so other lives ov=3 first
-            return
+            return f
         }
         
         # is off
@@ -3620,7 +3628,6 @@ Foogla: |
             $c = {};
             $f = me&tracmode,R,'ting',c;
             !f and return
-            
             
             # upload/glean recipe
             return;
