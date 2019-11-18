@@ -1,7 +1,7 @@
 
 
 iooia: | # F > i/o > input/output
-    $io = {}; # a bunch
+    $io = ar.io || {}; # a bunch!!
     
     # a limb
     io.F = &s,d{ return G&way,'PseudoF',{s:s,d:d,io:io} };
@@ -2328,8 +2328,6 @@ iooia: | # F > i/o > input/output
                 #   but indexes etc copied to the new one?
                 #   upstream changes joining local modulation
                 #   seems like s's buzz.
-                
-                # < input null to delete?
                 p.found = [io.input(s,D,v)]
             },
             is: 'i',
@@ -2399,7 +2397,7 @@ iooia: | # F > i/o > input/output
     # ignores the next/last/in/up wiring, let o do once sorted
     #   when it gives a kind of gravity,
     #   linearity to the stage that may not ever be there
-    io.input = &s,d,v{
+    io.input = &s,d,v,replaces{
         d = io.knowing(d,v);
         # return d here to extract what we know, kind of 2
         
@@ -2441,6 +2439,17 @@ iooia: | # F > i/o > input/output
             # or include it
             x == null and x = S[p] = d.zefault || [];
             x.constructor != Array and throw "z broken"
+            
+            # the tv input that also z inputs
+            #   knows what z should replace
+            # < could be v.y.earlier already
+            #    aka v.y.continues for tw dups
+            #     they want to be at another level
+            $r = replaces;
+            if (io.properz && r && r != v) {
+                $ri = x.indexOf(r);
+                ri >= 0 and x.splice(ri,1);
+            }
             #$xi = x.indexOf(v);
             # exact object ^, also could be claiming a tv had already (up at tv)
             # we shall start simply adding on, mentioning things more than once, etc
@@ -2464,7 +2473,7 @@ iooia: | # F > i/o > input/output
         # multiple angles of have
         if (d.also) {
             each in d.also {
-                typeof n == 'string' and io.input(s,n,v)
+                typeof n == 'string' and io.input(s,n,v,x)
                 else {
                     throw "What else", n
                 }
