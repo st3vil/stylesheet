@@ -2927,7 +2927,39 @@ Foogla: |
         me&waits,'no'+spot,'!t','B'
     };
     
-    
+    # checks R's modulat talk for %waits
+    me.beready = &acgtRk{
+        $Mw = k || '';
+        $N = me&Mwty,R,'',Mw,'';
+        $Nx = {};
+
+        # %acty:1 starts things, %acty:8 opens dialectic
+        N = arou(N,'acty',Nx);
+
+        # everything %waits is important
+        # everything else is an error
+        Nx.err = arou(N,'waits',Nx);
+
+        each kv Nx {
+            !v.length and delete Nx[k]
+        }
+
+        # is ready
+        !(Nx.waits || Nx.err) and return 1
+        # or not
+
+        if (Nx.waits) {
+            $situ = "waits("+Nx.waits.length+")";
+            $ope = me&rolltog,R,{may:situ,acty:8,tsc:'y'};
+        }
+
+        if (ope || Nx.err) {
+            me&zu,'Nx',Nx
+            each in Nx.waits {
+                me&zu,n
+            }
+        }
+    }
     
     # me.cbu having a boundary
     #  eg find %ting between %ting and %tingspot
@@ -3056,7 +3088,7 @@ Foogla: |
         if (unity) {
             # itself
             $f = t;
-            fc&ov = 0.2;
+            fc&ov = 0.3;
             F && t != F and throw "top changed f"
             t != ty&top and throw "unity !top"
         }
@@ -3122,6 +3154,7 @@ Foogla: |
         $otype = F.c[ok+'type'];
         if (!unity) {
             t != fy&up and throw "t !fyup"
+            tc&ov < 0.3 and me&waits,"fyupcov"; return
             # the previous thing on either side
             $op = fy&up.y [ok];
             !op and me&waits,"fyup!"+ok; return
@@ -3141,9 +3174,6 @@ Foogla: |
         # f state
         #  usually a step can be made by either W/G
         fc&ov ||= 0;
-        # for steps that must be done by both,
-        #  both know last ov they lived
-        $was = f.c [k+"_ov"] || 0;
         
         $yo = f.y [ok];
         # reset state per fy&$ok disappearance
@@ -3253,11 +3283,10 @@ Foogla: |
             # having from Looking or the input method,
             !r and me&waits,'connecting:'+ok+'%'+otype,'...'
             else {
-                me&tsc,'connected','OK',6
                 fc&ov = 0.2;
             }
-            # if W/G created the other
-            fy&genesised = k;
+            # if we didn't already see it
+            !lr and fy&genesised = k;
         }
         rync(r,'Create');
         #c C:f-ness the idealised lifecycled potentials
@@ -3275,18 +3304,7 @@ Foogla: |
             !f.y [ok] .sc[otype] and throw "f@2 !y"+ok+"%"+otype
         }
         
-        # on startup, check config arrived
-        #  config sent by W's finput()
-        if (fc&ov >= 0.2 && was < 0.2) {
-            # check grasp of what %ting bits are going on
-            #  and if they're implied by their parents in G
-            ~>2 En2: k, '->', ok, f.t
-            
-            me&tracupload,R,f,k,ok,type,otype;
-            # < ongoingly also
-        }
-        
-        # unity will not have p/op around here (skips to 2)
+        # unity will not have p/op around here (skips to 3)
         
         # generalised notions of trac
         if (fc&ov > 0) {
@@ -3299,11 +3317,35 @@ Foogla: |
             }
         }
         
-        f.c [k+"_ov"] = fc&ov;
+        # each thing not chattery to 0.3
+        if (fc&ov == 0.2) {
+            # on startup
+            ~>2 En2: k, '->', ok, f.t
+            # check config
+            #   was sent from here with their finput()
+            me&tracupload,R,f,k,ok,type,otype;
+            # < ongoingly also
+            
+            # not chattery
+            !me&beready,R,'trac' and return
+            
+            # both here
+            $readygk = tracting+'_ready';
+            R.sc[readygk] = 1;
+            $r = f.y [ok];
+            !r.sc[readygk] and return
+            
+            fc&ov = 0.3;
+            # must come back, so other lives ov=3 first
+            return
+        }
+        
         # is off
-        fc&ov < 0.2 and return
+        fc&ov < 0.3 and return
+        
         # ongoing spread to either/* now
         k == 'G' and Fc&indive(R,type)
+        
         # is on
         return f
     };
@@ -3580,7 +3622,6 @@ Foogla: |
             !f and return
             
             
-            f.t == 'Foogla' and me&waits,"Wasready",0,'L';
             # upload/glean recipe
             return;
             $z = tc&s;
@@ -3609,34 +3650,7 @@ Foogla: |
             
             # < fbitX + fc&N, the whole trac-swarm
             #f == fy&top and ...
-            $Mw = 'trac';
-            $N = me&Mwty,R,'',Mw,'';
-            $Nx = {};
-            
-            # %acty:1 starts things, %acty:8 opens dialectic
-            N = arou(N,'acty',Nx);
-            
-            # everything %waits is important
-            # everything else is an error
-            Nx.err = arou(N,'waits',Nx);
-            
-            each kv Nx {
-                !v.length and delete Nx[k]
-            }
-            
-            # is ready
-            !(Nx.waits || Nx.err) and return 1
-            # or not
-            
-            if (Nx.waits) {
-                $situ = "waits("+Nx.waits.length+")";
-                $ope = me&rolltog,R,{may:situ,acty:8};
-            }
-            
-            if (ope || Nx.err) {
-                me&zu,'Nx',Nx
-                Nx.waits.map(n => me&zu,n );
-            }
+            me&beready,R,'trac';
         },'ift,D'],
         
         ['ball+KnowingC','87',&acgtRs{
