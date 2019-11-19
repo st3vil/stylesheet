@@ -2921,6 +2921,7 @@ Foogla: |
         # everything %waits is important
         # everything else is an error
         Nx.err = arou(N,'waits',Nx);
+        delete Nx.err;
 
         each kv Nx {
             !v.length and delete Nx[k]
@@ -3601,6 +3602,39 @@ Foogla: |
         !m[ki] and ki = 0
         nc&s = f.sc[k] = m[ki];
     };
+    # hash stash
+    window.ah = &th{
+        !isC(t) and throw "!C"
+        $M = [... arguments].slice(2);
+        $h = t.sc[h] ||= {};
+        while (M.length) {
+            $k = M.shift();
+            M.length > 1 and h = h[k] ||= {}
+            else {
+                h[k] = M.shift()
+            }
+        }
+    };
+    # know about the Thing independent of the species
+    me.lookating = &acgtR{
+        $Q = Rs&Q;
+        $s = Rs&Live;
+        $Thing = G&Cye,[s.t,1,{},{}]
+        if (Rs&species == 5) {
+            Things&dige = ss&ha;
+            o $s/W/*:s
+            each in ays&s {
+                ah(Thing,'Wind',n.t,ns&ha)
+            }
+        }
+        elsif (Rs&species) {
+            me&zu,'Rspecies',Rs&species;
+        }
+        else {
+            Things&dige = Qs&dige;
+        }
+        return Thing
+    }
     
     me.Tongingness = &acgtR{ return [
         # %trac*
@@ -3615,14 +3649,29 @@ Foogla: |
             $W = fy&W;
             $Q = Ws&Q;
             !Q || !Qs&ready and me&waits,"!ready"
+            $w = Ws&Live;
+            !w and me&waits,"!live"
             
             f == fy&top and return
             
             $game = me&gamesc,R,f,'game',['look','get'];
-            $w = Ws&Live;
+            
+            # < roll/sleepatch inner processes
+            !me&beready,R,'trac' and return
+            
             Rc&dupl = 3;
-            game == 'get' and me&zu,'get',w
-            #me&beready,R,'trac';
+            
+                $Thing = me&lookating,W;
+                me&zu,'Thingstract',Thing
+                
+            if (game == 'look') {
+                # get dige-level diff figured
+            }
+            elsif (game == 'get') {
+                # should match the dige-level figured
+                
+                
+            }
             
             return;
             $z = tc&s;
@@ -3856,6 +3905,9 @@ Foogla: |
             
             !Qs&ready and me&waits,'!ready','...'
             
+            Qc&el and $el = me&tsc,'elvis',""+Qc&el,'b'
+            el && elc&s == 9 and els&fs = 16;
+            
             !s and return
             # look in
             me&rolltog,R,{may:'L'},0 &&
@@ -3863,8 +3915,6 @@ Foogla: |
             
             me&rolltog,R,'toball',0 &&
                 n Live  $s:s,R %ball,tightly,refpool
-            
-            Qc&el and me&tsc,'elvis',Qc&el,'b'
             
             if (Rs&species) {
                 if (!Rs&toball) {
