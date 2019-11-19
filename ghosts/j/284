@@ -3090,7 +3090,7 @@ Foogla: |
         !f and return
         # waits for us to 2->3 it
         if (fc&ov == 0.2) {
-            # both here
+            # both here + not chattery
             $readygk = 'trac'+t+'_ready';
             R.sc[readygk] = 1;
             $r = fy&G == R ? fy&W : fy&G;
@@ -3112,16 +3112,13 @@ Foogla: |
         !t and return
         T.Mw = 'trac';
         # %tings gathering around somewhere
-        
-        # tops stay f, creation on such type
-        #  eg ForThe%ting or Know%ball
-        # unity means "the top" for now
-        $unity = ty&W == R || ty&G == R;
-        
         # while persisting %tracting=f over (under) t
         $F = me&rollbsy,R,tracting;
+        $unity = ty&W == R || ty&G == R;
         if (unity) {
-            # itself
+            # tops stay f, creation on such type
+            #  eg ForThe%ting or Know%ball
+            # unity means "the top" for now
             $f = t;
             fc&ov = 0.3;
             F && t != F and throw "top changed f"
@@ -3160,22 +3157,12 @@ Foogla: |
         }
         # the shared object, about each climbing
         R.sc[tracting] = f;
-        
-        # wonder which one we are
-        # as rescued from history
-        $sync = &k{
+        # keep Rs on f
+        ['W','W_exp','G','G_exp'].map(&k{
             $r = f.y [k];
             !r and return
             r = f.y [k] = me&yfuture,r;
-        };
-        
-        # < when tracarri stops happening?
-        # < some use for predicting eg %tracting it doesn't have yet
-        #     with doming depending on it appearing
-        # expecting to see the W first
-        sync('W'); sync('W_exp');
-        sync('G'); sync('G_exp');
-        
+        });
         f.y [k] && f.y [k] != R and me&waits,"already-fy"+k; return
         f.y [k] = R;
         
@@ -3279,9 +3266,8 @@ Foogla: |
             !flook and return me&waits,"!flook" && me&zu,f
             $r = flook(f,r,ok);
         }
-        
-        
         rync(r,'Look');
+        
         # Click (or so) to other
         if (fc&ov == 0) {
             $ope = fy&up == fy&top
@@ -3290,15 +3276,15 @@ Foogla: |
         }
         # Creates the other (either)
         #  even if we already see it
+        #    must be repeatable (inputs != creates)
         #   to make sure everything happens that can...
         #   so we know all the outbound connections
         # < only want genesised if we really had to create them
         if (fc&ov == 0.1) {
             $direction = (ok == 'G' ? '<-' : '->');
             #~>6 Enter: ok, op.t, direction, k, f.t
-            # must be repeatable (inputs != creates)
-            #  only spacer yet
             tych();
+            fs&game = 'look';
             # child input
             $finput = ops&finput;
             finput ||= ops&ball && &f,r,ok{
@@ -3383,7 +3369,7 @@ Foogla: |
         #   probably inheriting from ry&up
         # then
         #  asks to give bits
-        $load = {};
+        $load = {f:f};
         # the bits + remarks that matter
         $lasc = fs&tracupload;
         # initial guzzle
@@ -3447,9 +3433,11 @@ Foogla: |
     # < generalise from sc
     # < show yup%ting <-> %ting difference usually
     #   apart from the .t, isn't in the subtle
+    # < worth redoing somewhere... KnowC one-many
     me.Cloadsc = &acgtcg,wp,w{
         !c and throw "give c"
         $load = c;
+        $f = load.f;
         $s = g && gc&s;
         # bits to give G: nulls for things it needn't
         load.sc ||= {};
@@ -3459,9 +3447,8 @@ Foogla: |
         # < Wtype:* brings everything,
         #   to where osc watches osc
         $Kc = Be.C[load.type];
+        $games = [];
         
-        # < relying on this to do the inheritance/defaulting
-        #   needs a verbose verion of sc
         each i,k Kc.scgk {
             # on %ting%$k
             $got = w && w.sc[k];
@@ -3477,10 +3464,20 @@ Foogla: |
                 $def = Kc.scdefault && Kc.scdefault[k];
                 def != null and exp = def
             }
+            # f can decide attr, or have them suited to:
+            # ephemeral modes of a point in a game
+            #  eg look intensely, look casually
+            each i,kc games {
+                $game = kc['sc'+fs&game];
+                game && game[k] and exp = game[k]
+            }
             
             $was = s && s.sc[k];
             # W says everything
-            load.c[k] = got || was || exp;
+            $v = load.c[k] = got || was || exp;
+            # %ting=W leads to more knowing
+            $kc = Kc.scfor && Kc.scfor[k] && Kc.scfor[k][v];
+            kc and games.push(kc);
             
             $value = got;
             # G implies what is implied
@@ -3568,10 +3565,12 @@ Foogla: |
         # < cause Ravelvis to recreate if changed
         #   eg %ting must start fresh to add %directory
         scinherit: 1,
-        # look mode (ov<=4) implies:
-        sclook: {species:4},
-        # then the main %species we need to fully awake:
-        scget: {species:1},
+        scfor: {ting:{W:{
+            # look mode (ov<=4) implies:
+            sclook: {species:5},
+            # then the main %species we need to fully awake:
+            scget: {species:1},
+        }}},
         # wants 1 over the 4
         #  for the details under the main thing
         #  or does ForThe's %ting index/tooling abstract that?
@@ -3613,6 +3612,7 @@ Foogla: |
                 ok != 'W' and throw "ting finput !W"
                 $vel = {};
                 # M[f] -> More[R]
+                #  uses f.t and f Cloadsc
                 # from fy&G to fy&W
                 me&Ravelvis,fy&G,R,'M',f,vel;
                 if (velc&el == 8) {
@@ -3688,20 +3688,15 @@ Foogla: |
             $M = Rs&Te && Rs&Te.sc.M || [];
             !Rc&b and M.splice(0,M.length)
             Rs&Modin ||= [];
-            each in M {
-                ac(R,'Modin',n) and continue
-                #me&zu,'Morelvis',n;
-                $c = G&Cye,[n.t,1,{R:1}];
-                # decompress Ghost
-                # < from its surroundings?
-                $load = {type:'ting'};
-                me&Cloadsc,load,ny&G,R;
-                #n.t == 'Stylicks' and me&zu,'Attr',load;
-                each kv load.c {
-                    # ever need to unset directory etc?
-                    #v == null and continue
-                    c.sc[k] = v
-                }
+            each if M {
+                ac(R,'Modin',f) and continue
+                $c = G&Cye,[f.t,1,{R:1}];
+                # gathers sc for type from Ghost,
+                #  also inheriting from this W
+                # and esp what fs&game might want
+                $load = {type:'ting',f:f};
+                me&Cloadsc,load,fy&G,R;
+                ex(c.sc,load.c)
                 ac(R,'More',c);
             }
             Rs&Modout ||= [];
@@ -3790,6 +3785,7 @@ Foogla: |
                 ns&fs = 11;
                 return n
             };
+            T.Mw = 'ting';
             
             # more %ting:1 in the same of/directory
             # < seeing where edges of C are,
@@ -3804,9 +3800,10 @@ Foogla: |
                 t = Rs&toW ? R.t : p.t;
             }
             # the Q&of = W
-            T.Mw = 'ting';
             !Rs&ting and throw "!%ting";
-            lab('ting',Rs&ting,'G');
+            $n = lab('ting',Rs&ting,'G');
+            ns&fs = 15;
+            
             # the Q.t = directory/t/species
             t ||= R.t;
             $fullname = t;
