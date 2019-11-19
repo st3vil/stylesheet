@@ -3173,14 +3173,10 @@ Foogla: |
         # < some use for predicting eg %tracting it doesn't have yet
         #     with doming depending on it appearing
         # expecting to see the W first
-        sync('W');
-        sync('W_exp');
-        # G may be given %tracting when on above
-        sync('G');
-        sync('G_exp');
-        # fy&G/W
+        sync('W'); sync('W_exp');
+        sync('G'); sync('G_exp');
+        
         f.y [k] && f.y [k] != R and me&waits,"already-fy"+k; return
-        #throw "already fy"+k
         f.y [k] = R;
         
         $ok = !isting ? 'W' : 'G';
@@ -3220,9 +3216,8 @@ Foogla: |
             #    el=2 input implies delete-all,
             #    which Ghostway/ing needs
             #   it would Rsync if R or s (finding refR) %ball
-            $uz = fy&up.sc.z;
-            $fi = uz.indexOf(f);
-            uz.splice(fi,1);
+            i fy&up/-$f
+            return
         }
         # or as usual,
         # W tends to wake first, !fy&G means initialise
@@ -3249,8 +3244,8 @@ Foogla: |
             }
             
             # probably already r%tracting=f spread from upyG
-            rs&tracting ||= f
-            [f,fy&up].indexOf(rs&tracting) < 0 and throw "difftracting"
+            r.sc[tracting] ||= f
+            [f,fy&up].indexOf(r.sc[tracting]) < 0 and throw "difftracting"
             
             # and is soon to be fy&[ok], where it should stay:
             exp && exp != r and throw "change exp "+ok
@@ -3271,7 +3266,7 @@ Foogla: |
             }
         };
         
-        # Look for the other
+        #c Look for the other
         # < ongoingly also
         if (fc&ov <= 0.2 && !unity) {
             tych();
@@ -3345,9 +3340,12 @@ Foogla: |
         if (fc&ov > 0) {
             $con = me&rolltog,R,{may:'trac',tsc:'l',acty:8};
             if (con) {
+                $ab = T.Mw;
+                T.Mw = 'traccont';
                 # clicks open to reveal controls
                 me&zu,"control-f",f;
-                me&rolltog,R,{may:'re2',tsc:'y',once:1} and fy&ov = 0.1
+                me&rolltog,R,{may:'re2',tsc:'y',once:1} and fc&ov = 0.1
+                T.Mw = ab;
             }
         }
         
@@ -3386,11 +3384,12 @@ Foogla: |
         # then
         #  asks to give bits
         $load = {};
-        fy&genesised == 'G' and load.conform = 1
         # the bits + remarks that matter
         $lasc = fs&tracupload;
         # initial guzzle
         !lasc and load.forming = 1
+        # 
+        load.forming && fy&genesised == 'G' and load.conform = 1
         # make the change
         # < elvis hoppering acceptance
         load.auto = load.forming || lasc.accepted;
@@ -3642,6 +3641,9 @@ Foogla: |
             $c = {};
             $f = me&tracmode,R,'ting',c;
             !f and return
+            $W = fy&W;
+            $Q = Ws&Q;
+            !Q || !Qs&ready and me&waits,"!ready"
             
             # upload/glean recipe
             return;
@@ -3671,7 +3673,7 @@ Foogla: |
             
             # < fbitX + fc&N, the whole trac-swarm
             #f == fy&top and ...
-            me&beready,R,'trac';
+            #me&beready,R,'trac';
         },'ift,D'],
         
         ['ball+KnowingC','87',&acgtRs{
@@ -3754,7 +3756,7 @@ Foogla: |
             # open it in the .1
             $wasp = p
             ps&species and p = me.cbu(py&up,'ting')
-            !p || ps&species and throw "!pp !species"
+            !p and throw "!pp !species"
             p == wasp and was = null;
             $M = ps&More ||= [];
             
@@ -3781,64 +3783,64 @@ Foogla: |
         ['ting','3',&acgtRs{
             Rs&rowish = 1;
             Rc&dubquiet = 1;
+            # make little label as from this I
+            $p = me.cbu(Ry&up,'ting');
+            $lab = &ltc{
+                $n = me&tsc,'%ting-'+l,t,c;
+                ns&fs = 11;
+                return n
+            };
             
             # more %ting:1 in the same of/directory
             # < seeing where edges of C are,
             #   pressurise to voyage
             $t = null;
             if (Rs&ting == '1') {
-                # same ting, may be adding %species
-                $p = me.cbu(Ry&up,'ting');
                 !p and throw "ting:1 !p"
+                # same ting, may be adding %species
                 Rs&ting = ps&ting;
                 ps&directory and Rs&directory ||= ps&directory
                 # may to another W/$t
                 t = Rs&toW ? R.t : p.t;
             }
+            # the Q&of = W
+            T.Mw = 'ting';
             !Rs&ting and throw "!%ting";
+            lab('ting',Rs&ting,'G');
+            # the Q.t = directory/t/species
             t ||= R.t;
-            
-            $what = Rs&ting;
-            if (Rs&species) {
-                # the .5 instead of .1
-                what = '.'+Rs&species;
-                t += '/'+Rs&species;
-            }
-            me&tsc,'%ting-of',what .sc.fs = 11
-            
-            # notice entering a directory/since last %ting
-            $p = me.cbu(Ry&up,'ting');
+            $fullname = t;
+            #   only say change in directory
             (p ? ps&directory != Rs&directory : Rs&directory) &&
-                me&tsc,'directory',(Rs&directory||'/'),'B';
+                lab('directory',(Rs&directory||'/'),'B')
+            p && R.t == p.t ?
+                lab('t-same','^','G')
+              : lab('t',t,'G')
+            Rs&species and lab('species','.'+Rs&species)
+            Rs&species and fullname += '/'+Rs&species
+            Rs&directory and fullname = Rs&directory+fullname
             
-            !Rs&species and me&tsc,'%ting-t',t,'G' .sc.fs = 11
-            Rs&directory and t = Rs&directory+t;
+            me&the_ting,R;
             
-            # have %Search%_ting
-            $r = me.cbu(R,'Inn');
-            $r = r && rs&Inn;
-            !r and throw "no way Inn"
-            !rs&_ting and throw "no Inn _ting";
-            Rs&_ting = rs&_ting;
-            
-            me&rollbs,R,'Q';
-            $C = Rs&Q ||= G&Cye,[t,'',{of:Rs&ting}];
-            c&async = &{};
+            $Q = me&rollbs,R,'Q';
+            Q && Q.t != fullname and Q = null
+            !Q and Q = Rs&Q = G&Cye,[fullname,'',{of:Rs&ting}];
+            Rs&Quploadsc and Ry&up.sc[Rs&Quploadsc] = Q
+            Qc&async = &{};
             # c&canwait = 1;
-            c&ready = &CP{};
-            $s = Rs&Live = Rs&_ting(C);
+            Qc&ready = &CP{};
+            $s = Rs&Live = Rs&_ting(Q);
             
+            T.Mw = 'ting-into';
             # you may roll into 
-            Rs&Quploadsc and Ry&up.sc[Rs&Quploadsc] = C
-            me&rolltog,R,'%Q',0 &&
-                n Q  $self:C,R %Cit,ot
+            me&rolltog,R,{may:'Q'},0 &&
+                n Q  $self:Q,R %Cit,ot
             
-            c&el and me&tsc,'elvis',c&el,'b'
-            !s&ready and me&tsc,'!ready','...'
+            !Qs&ready and me&waits,'!ready','...'
             
             !s and return
             # look in
-            me&rolltog,R,'%Live',0 &&
+            me&rolltog,R,{may:'L'},0 &&
                 n Live  $self:s,R %Cit,ot
             
             me&rolltog,R,'toball',0 &&
@@ -3885,6 +3887,16 @@ Foogla: |
             l[i] = '>'+(3+(i*2))+':l'+i+' '+(n||'')
         }
         return G&c:'>1 '+t,l
+    };
+    
+    # %ting is a layer upon ...
+    me.the_ting = &acgtR{
+        # have %Search%_ting
+        $r = me.cbu(R,'Inn');
+        $r = r && rs&Inn;
+        !r and throw "no way Inn"
+        !rs&_ting and throw "no Inn _ting";
+        Rs&_ting = rs&_ting;
     };
     
     # Guxily for thing, got via stately e
