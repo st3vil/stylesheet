@@ -1499,9 +1499,13 @@ Packle: |
                 # < doming to clue its relation to r
                 $Km = fio(k,['unknown',1,{},'grouping,wideas']);
                 # Kn(r)/r
+                # if Rc&s[r.t][gk] == nc&s,
+                #  where gk starts a lie, is probably ot
+                # < fix the R.t/Rs&ot thing, bad design
+                #   Elvis gets better paths through arrays with it,
+                #    and the thing gets its own name more often
                 each in out {
                     $gk = n.t;
-                    # the R.t/Rs&ot thing
                     $g = Rc&s[r.t];
                     if (g && nc&s && g[n.t] != nc&s) {
                         $topt = haks(g).filter(&gk,{
@@ -1509,9 +1513,19 @@ Packle: |
                             # sometimes Rc&s has 0 ||= null
                             || !g[gk] && !nc&s
                         });
-                        topt.length < 1 and isC(nc&s) and ~Toptnot: r.t, n.t, ki(haks(g))
-                        else
-                        topt.length > 1 and ~Toptmany: ki(topt)
+                        if (topt.length < 1) {
+                            # assumes nc&s == a gk v 
+                            isC(nc&s) and ~Toptnot: r.t, n.t, ki(haks(g))
+                        }
+                        elsif (topt.length > 1) {
+                            # probably knows gk anyway
+                            $ni = !ns&ot ? -1 :
+                                topt.indexOf(ns&ot);
+                            ni >= 0 and gk = ns&ot
+                            else {
+                                ~Toptmany: n.t, gk, ki(topt)
+                            }
+                        }
                         else {
                             gk = topt[0];
                         }
