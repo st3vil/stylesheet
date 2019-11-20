@@ -1191,25 +1191,6 @@ Packle: |
     #   wandering = cables?
     #   in/out of the Citop?
     
-    # make Cit+tightly
-    me.zu = &acgttsc{
-        $R = Cy&R;
-        typeof t != 'string' and c=s; s=t; t=''
-        c == '' and c = {refpool:1}
-        typeof c == 'string' and c = G&peel,c 
-        c ||= {};
-        !t && !s and s = R; t = 'R'
-        c.t = t || s && s.t;
-        !c.t || s && c.t == s.t and c.t='zun'
-        $t = ' '+c.t;
-        c.t = t;
-        c.self = s;
-        c.Cit = c.tightly = c.reneg = 1;
-        $n = me&Ret,R,c;
-        
-        return n
-    };
-    
     me.KnowCitingness = &acgtR{ return [
         # %tightly inherits into everything
         ['tightly','3',&acgtRs{
@@ -1217,7 +1198,6 @@ Packle: |
         },'ift,D'],
         ['Cee+runny+tightly','29',&acgtRs{
             $Cit = me.cbub(R,'Citop');
-            ~Runnything: R.t
             Cits&runny ||= 0;
             Cits&runny ++ > 20 and return Rc&nofurther = 1
             
@@ -1231,7 +1211,7 @@ Packle: |
             $is = Rs&scan;
             is.C and Rs&isC = 1
             
-            # also an.is=R, specifics
+            # also is=R, specifics
             $laC = me.cbu(Ry&up,'isC');
             
             $t = Rs&ot || R.t;
@@ -1240,7 +1220,7 @@ Packle: |
                 # path from parent, means R.t is s.t
                 # and that is something
                 me&walla,0,'bd:2.1h5,hu-7';
-                $d = me&Mwty,R,'ot';
+                $d = me&Mwty,R,'','ot';
                 d and delete ds&deco;
                 # array members may show intelligence
                 pis.sym == '[' and dc&s = R.t
@@ -1335,6 +1315,46 @@ Packle: |
     #c KnowC
     # < near a lot of extensibles for io
     # 
+    # make Cit+tightly
+    me.zu = &acgttsc{
+        $R = Cy&R;
+        typeof t != 'string' and c=s; s=t; t=''
+        c == '' and c = {refpool:1}
+        typeof c == 'string' and c = G&peel,c 
+        c ||= {};
+        !t && !s and s = R; t = 'R'
+        c.t = t || s && s.t;
+        !c.t || s && c.t == s.t and c.t='zun'
+        $t = ' '+c.t;
+        c.t = t;
+        c.self = s;
+        c.Cit = c.tightly = c.reneg = 1;
+        $n = me&Ret,R,c;
+        
+        return n
+    };
+    
+    me.nu = &acgttsc{
+        $R = Cy&R;
+        if (isst(t)) {
+            $limit = 5;
+            $k = "nuff_"+t.substr(0,3);
+            $n = R.sc[k] ||= 0;
+            isC(n) and nc&s++; return
+            elsif (n && n > limit) {
+                R.sc[k] = me&nu,'limore',limit;
+                return
+            }
+            else {
+                R.sc[k]++;
+            }
+        }
+        $r = me&zu,t,s,c;
+        rc&stable = 1;
+        rs&rowish = 1;
+        return r
+    }
+    
     me.KnowC = &acgtR{
         !Rs&isC || !Rs&Cit and throw "uwhat"
         $s = Rc&s;
@@ -1355,13 +1375,14 @@ Packle: |
         
         me&tsc,'thoughtisC','isC!','B';
         
-        Rc&noKnowC = 1;
+        #Rc&noKnowC = 1;
         
         #c raw knowing have K/nk/gk
         h.a = {};
         me&Knowa,h,s;
         # getting baked into:
-        # top/groupr(r(gk))/groupology()/grouping(Km)/groupthing(gk)
+        # top/groupr(r(gk))/groupology()/grouping(Km)/groupthing(Kn)
+        # Knc&n is an r%Cit out there
         $top = h.top = G&Cye,["KnowC",1];
         # which unifies C.* so we can style it up
         # across hemispheres especially,
@@ -1369,14 +1390,14 @@ Packle: |
         # should gather at the edge
         
         each nk,r h.r {
-            # as y,c,sc/*
+            # q for r for y,c,sc
+            $q = fio(h.top,r.t,[r.t,1,{r:r},'groupr']);
             # which may be as R or modulat,
             # wanting to apply as much effect to either
+            # always have groupr
             $c = {};
             c.onlynk = nk;
             c.enKm = &K,Kc{
-                # r/*
-                $q = fio(h.top,r.t,[r.t,1,{r:r},'groupr']);
                 # r/* known
                 $k = fio(q,'known'); ks&groupology = 1;
                 # r/* known by K
@@ -1469,7 +1490,7 @@ Packle: |
             $out = rs&z && rs&z
                 .filter(r => rs&Cit && !rs&zuctedto);
             
-            if (out.length) {
+            if (out && out.length) {
                 fio(q,['KnowC-bound',5,{s:')'},
                     'fs:25,ma:-0.4,separator']);
                 
@@ -1496,7 +1517,14 @@ Packle: |
                         }
                     }
                     gk != n.t && !ns&ot and throw "doesn'tot", gk, n.t
-                    ns&ot && ns&ot != gk and throw "notot", ns&ot, gk, n.t
+                    if (ns&ot && ns&ot != gk) {
+                        # let go
+                        #~>3 dupnotot?: ns&ot, gk
+                        gk = ns&ot;
+                        #, r, Rc&s
+                        #and throw "notot", ns&ot, gk, n.t
+                    }
+                    fio(Km,gk,0) and throw "multiple gk: "+gk
                     $Kn = fio(Km,gk,[gk,1,{s:n.t,n:n},
                         'groupthing,fs:9,mar:0.3']);
                     zuct(Kn,r,n);
@@ -1712,19 +1740,60 @@ Packle: |
                     cells(Kn,{float:'left'});
                 }
             }
-            
+        }
+        
+        # getting baked into:
+        # top/groupr(r(gk))/groupology()/grouping(Km)/groupthing(Kn)
+        # Knc&n is an r%Cit out there
+        $N = me&ioty,top,['','','grouping',''];
+        $short = N.length < 20;
+        
+        
+        # symbols or small values
+        each i,Kn N {
+            $n = Knc&n;
+            !n and continue
+            $c = ns&scan;
+            !c and continue
+            $M = me&Mw,n,'Cit';
+            $sym = c.sym;
+            if (sym) {
+                ns&ot == 'Live' and me&zu,n
+                m sym 128 $s:sym %fs:11,lh:0.8,hs:999
+            }
+        }
+        # pronounce
+        $N = me&ioty,top,['','','grouping'];
+        each i,Km N {
+            if (Km.t == 'in') {
+                # < get to the opening-in end
+                #   etc for things above us (yup, cN, etc)
+                #   have a here-business corner between?
+                #     peace symbol
+                Kms&fs = 12;
+            }
         }
         
         # give groupr to its r
         $N = me&ioty,top,'groupr';
         each iq N {
             $r = qc&r;
+            if (short) {
+                $c = rs&C;
+                cs&dis = 2;
+            }
+            # < our Mw/*/* is boost,t,sym,ot,thoughtisC
+            
             # q/* wants to end up in:
             $KM = me&Mw,r,'KnowC';
             KM.push(...qs&z);
         }
-        
-        Rs&C.t == ' Firstly' and me&zu,"has",h
+        $c = Rs&C;
+        # display:block makes solid background
+        # < 
+        cs&dis = 1;
+        h.R = R;
+        R.t == 'Foogla' and me&zu,"has",h
     };
     #c Cit
     =head2
