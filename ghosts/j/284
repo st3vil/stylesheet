@@ -3266,6 +3266,8 @@ Foogla: |
         # Click (or so) to other
         if (fc&ov == 0) {
             $ope = fy&up == fy&top
+                # from ball+tracting
+                || Rs&openey
                 || me&rolltog,R,{may:'^trac',acty:1};
             ope and fc&ov = 0.1
         }
@@ -3422,10 +3424,12 @@ Foogla: |
     #  as per wp upward, the last spready instructo
     #  of C.sc.* in a Be.C.$group
     # generating Alets to find completion
-    #  g - description/upstream
-    #  w - reality .sc differing-ness to g.sc
+    #  g - description/upstream, must have a:
+    #   gc&s - whose .sc differs:
+    #  w.sc - reality .sc, possibly lies or news
     #  gw - .sc inherits to w.sc
-    #   < entirely by Cloadsc, tighten %ting args?
+    # scfor plays games after a given k:v
+    # < tighten %ting args, entirely by Cloadsc
     # < generalise from sc
     # < show yup%ting <-> %ting difference usually
     #   apart from the .t, isn't in the subtle
@@ -3470,6 +3474,7 @@ Foogla: |
                 }
             }
             
+            
             $was = s && s.sc[k];
             # W says everything
             $v = load.c[k] = imp || got || was || exp;
@@ -3501,7 +3506,7 @@ Foogla: |
         me&Cnotesc,load,g,wp,w;
         return load
     };
-        
+    #c Cnotesc
     # finds difference to s (g)
     me.Cnotesc = &acgtcg,wp,w{
         $load = c;
@@ -3563,6 +3568,9 @@ Foogla: |
     # < include the flook/finput methods?
     
     # up/downable essential identity
+    Be.C.W = {
+        scgk: 'dige',
+    };
     Be.C.ting = {
         scgk: 'ting,directory,species',
         # dont need to %ting=W at the top?
@@ -3573,6 +3581,11 @@ Foogla: |
         #   eg %ting must start fresh to add %directory
         scinherit: 1,
         scfor: {ting:{W:{
+            # < plug this in to Cloadsc,
+            #   < %ting using Cloadsc on its own:
+            #      g=R,wp=Ry&up,w=R
+            #    < deriving the display
+            scdefault: {species:1},
             # look mode (ov<=4) implies:
             sclook: {species:5},
             # then the main %species we need to fully awake:
@@ -3605,7 +3618,7 @@ Foogla: |
         me&walls,n,'b:2.2'
         ns&bri = 1.3;
         $bet = "toggles %"+k+" between "+m.join(',');
-        ns&z = [G&Cye,[bet,1,{s:'#'},'fs:6'] ];
+        ns&z = [G&Cye,[bet,1,{s:'?'},'fs:8'] ];
         
         # leaves unset (will init to m[1])
         # returns it if not changed
@@ -3627,27 +3640,65 @@ Foogla: |
             }
         }
     };
-    # know about the Thing independent of the species
-    me.lookating = &acgtR{
-        $Q = Rs&Q;
-        $s = Rs&Live;
-        $Thing = G&Cye,[s.t,1,{},{}]
-        if (Rs&species == 5) {
+    #c know about the Thing independent of the species
+    me.lookating = &acgtW{
+        $Q = Ws&Q;
+        $s = Ws&Live;
+        $Thing = G&Cye,[s.t,1,{},{}];
+        if (Ws&species == 5) {
             Things&dige = ss&ha;
             o $s/W/*:s
             each in ays&s {
                 ah(Thing,'Wind',n.t,ns&ha)
             }
+            o $s/w/*:s
+            each in ays&s {
+                ah(Thing,'wind',n.t,ns&dige)
+            }
         }
-        elsif (Rs&species) {
-            me&zu,'Rspecies',Rs&species;
+        elsif (Ws&species == 1 || !Ws&species) {
+            # < can do similar for .4
+            # < pointings that adjust for its compression
+            each in sy&N {
+                ns&W && !ns&z &&
+                    ah(Thing,'Wind',n.t,ns&ha)
+            }
+            Things&dige = Qs&dige;
         }
         else {
-            Things&dige = Qs&dige;
         }
         return Thing
     }
     
+    # n (modulat) liften from R ground into t
+    # < combine with zuck/mez/polify for all-regrouping?
+    me.modopt = &acgtRtn{
+        $M = me&Mw,R,T.Mw;
+        $ni = M.indexOf(n);
+        ni < 0 and throw "n not in "+T.Mw
+        M.splice(ni,1);
+        fio(t,n.t,n);
+    };
+    me.mtsc = &acgtmtsc{
+        $R = Cy&R;
+        $n = me&tsc,t,s,c;
+        me&modopt,R,m,n;
+        return n
+    };
+    me.check_projected = &acgtRnk{
+        ['trouble','okay'].map(&diff,{
+            $z = R.sc[diff];
+            each it z {
+                !tc&proj and continue
+                # < do with Cshowsc (displays Cloadsc)
+                each kv t.sc {
+                    n.sc[k] == s and continue
+                    # < climb to the f/Winding
+                    me&tsc,"proj!%"+k
+                }
+            }
+        });
+    };
     me.Tongingness = &acgtR{ return [
         # %trac*
         
@@ -3655,6 +3706,7 @@ Foogla: |
         # with some C visua
         # being fy&G, gleans %ting's usual sc
         ['ball+tracting','61',&acgtRs{
+            $D = Rs&C;
             $c = {};
             $f = me&tracmode,R,'ting',c;
             !f and return
@@ -3673,8 +3725,82 @@ Foogla: |
             
             Rc&dupl = 3;
             
-                $Thing = me&lookating,W;
-                me&zu,'Thingstract',Thing
+            #c looking at the answer
+            # < sleep by Q&dige
+            $Thing = me&lookating,W;
+            
+            # accumulate into ss&dige
+            # < set it to wind back this branch
+            #   as ss&wantdige, may not be doable
+            #     for _ting to ask /W/ or /js/
+            # < copy from last good, or %fix/gamesc gizmo
+            # < this Know gets slowly tractorbeamed to stable/Know,
+            #   the load.auto waiting for test runs
+            $load = me&Cloadsc,{type:'W',auto:1},R,null,Thing;
+            if (load.differ) {
+                # make this thing curious until solvey
+                fs&changey ||= 1;
+                me&tsc,'~';
+                Ds&bri = 1.3
+            }
+            
+            if (Things&Wind) {
+                # check dige/exist
+                $ha = ex({},Things&Wind);
+                # < should only be (%ting, but is implied
+                #   some other Ghost type, which also get implied
+                #   an u climb
+                $N = me&ioty,R,'ball';
+                $have = {};
+                each in N {
+                    !ha[n.t] and continue
+                    have[n.t] = n;
+                }
+                $news = [];
+                each t,dige ha {
+                    $r = have[t];
+                    if (r) {
+                        $rs = rc&s;
+                        $diff = rss&dige != dige;
+                        # expect it will find the same diff
+                        # give it cause to wake/sleep
+                        # < these should be elvised in there
+                        #   to sleep the pile. write these:
+                        #   e $r -proj-cha $lc
+                        $d = G&Cye,["projected:",1,{proj:1,f:f},{dige:dige}];
+                        d.t += (diff ? 'cha' : 'still');
+                        ac(r, (diff ? 'trouble' : 'okay'), d);
+                    }
+                    else {
+                        $d = {may:'lookup_'+t,s:t,tsc:'y'};
+                        me&rolltog,R,d and me&input,R,t
+                        me&walls,d.n,'b:2.2';
+                        news.push(d.n);
+                    }
+                }
+                if (news.length) {
+                    $d = {may:'readnews',s:'Unhad:',tsc:'y'};
+                    me&rolltog,R,d &&
+                        news.map(d => me&input,R,dc&s );
+                    $n = d.n;
+                    ny&cv = 0.4;
+                    news.map(d => me&modopt,R,n,d );
+                    me&mtsc,n,"\n";
+                    me&walls,n,'b:2.2';
+                }
+                # < put news etc after %fixen as %dis:1
+                #me&zu,'Win',N
+                #me&zu,'Wind',Things&Wind
+            }
+            me&check_projected,R,Thing,'dige';
+            #me&zu,'Thingstract',Thing
+            #me&zu,'Loadism',load
+            
+            $N = me&ioty,R,'ball';
+            each in N {
+                # engage ^trac
+                fs&changey and ns&openey ||= 1
+            }
                 
             if (game == 'look') {
                 # get dige-level diff figured
