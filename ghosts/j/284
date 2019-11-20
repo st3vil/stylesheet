@@ -3522,6 +3522,7 @@ Foogla: |
         }
         $lies = [];
         each ik differs {
+            load.liesok and continue
             load.sc[k] == null and continue
             # we said something, it was something else
             s.sc[k] != null and lies.push(k);
@@ -3737,8 +3738,9 @@ Foogla: |
             # < copy from last good, or %fix/gamesc gizmo
             # < this Know gets slowly tractorbeamed to stable/Know,
             #   the load.auto waiting for test runs
-            $load = me&Cloadsc,{type:'W',auto:1},R,null,Thing;
-            if (load.differ) {
+            $load = {type:'W',auto:1,liesok:1};
+            me&Cloadsc,load,R,null,Thing;
+            if (load.differs) {
                 # make this thing curious until solvey
                 fs&changey ||= 1;
                 me&tsc,'~';
