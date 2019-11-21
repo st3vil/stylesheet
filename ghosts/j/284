@@ -3563,6 +3563,10 @@ Foogla: |
                 }
             }
         }
+        each ik differs {
+            load.is ||= {};
+            load.is[k] = s.sc[k];
+        }
         return load
     };
     
@@ -3727,7 +3731,7 @@ Foogla: |
             $got = w && w.sc[k];
             got == null and continue
             load.c[k] = got;
-            $Kn = fio(Km,k,[k,1,{s:k},'groupthing,fs:7,mar:0.3']);
+            $Kn = fio(Km,k,[k,1,{s:k},'groupthing,fs:9,mar:0.3']);
         }
         !hak(load.c) and delete load.Km
         else {
@@ -3763,8 +3767,6 @@ Foogla: |
             $M = Kns&z ||= [];
             M.push(n);
         }
-        #me&zu,"ty:"+k,Km
-        #    ns&zuctedto = Kn;
         Kmc&load = load;
         return Km
     };
@@ -3791,11 +3793,18 @@ Foogla: |
         if (c.w) {
             # R is auto-changey ghost
             #  eg %ball%tracting reflecting dige
-            $load = {type:k,auto:1,liesok:1};
+            $load = {type:k,auto:1,liesok:0};
             me&Cloadsc,load,R,null,c.w;
             each ik load.differs {
                 $was = load.was[k];
-                $d = G&Cye,[k,1,{s:"<-"+was},'changey,histgk,fs:8,hue:2,bri:0.8'];
+                $is = load.is[k];
+                $d = G&Cye,['Thing-has:'+k,1,{s:">"+was},'changey,histgk,fs:8,hue:2,bri:0.7'];
+                ds&gk = k;
+                if (was == is) {
+                    # if waiting to apply the change
+                    dc&s = "<"+load.c[k];
+                    ds&bri = 1.3;
+                }
                 # puts new top on history
                 me&givi,g,'history',d;
             }
@@ -3808,23 +3817,16 @@ Foogla: |
         # change history
         $N = me&ioty,g,['',''],['history',''];
         each id N {
-            $Kn = fio(Km,d.t);
+            $Kn = fio(Km,ds&gk||d.t);
             !Kn and continue
             fio(Kn,d)
             dy&cv = 0.789;
         }
         
-        $f = Rs&tracting;
-        if (f) {
-            # take any Kn with %changey as fs&changey
-            me&ioty,Km,['groupthing','changey']
-                .map(d => ac(f,'changey',d))
-        }
-        
         return Km
     };
-    #c gromps projects into yonder gripes
-    # without relying on it happening
+    #c gromps - projects into yonder grypes
+    # without relying on their happening
     #  eg check child dige
     #  or input if !exists
     me.gromps = &acgtRtks{
@@ -3863,13 +3865,14 @@ Foogla: |
             dc&R = R;
             if (r) {
                 dc&r = r;
-                !hak(r.sc,k) and ds&cha = 'new'
+                $rs = rc&s;
+                !hak(rs.sc,k) and ds&cha = 'new'
                 else
-                r.sc[k] != v and ds&cha = 'diff'
+                rs.sc[k] != v and ds&cha = 'diff'
                 # < gone is dcR != yfuture at the receiving end
                 #   with non-fatal not in Rc&N
                 $og = me&rollbsc,r,'grype/proj';
-                $ogi = fio(g,'i');
+                $ogi = fio(og,'i');
                 # < Rname:
                 me&givi,ogi,R.t,d;
                 # >1 them
@@ -3899,13 +3902,11 @@ Foogla: |
         }
     };
     
-    # cross-pollinate grypes
+    #c grimp - cross-pollinate grypes
     me.grimp = &acgtR{
         $g = me&rollbsc,R,'grype/proj';
-        $gi = fio(g,'i');
         # i/R.t/$d%proj
-        $N = me&ioty,gi,['',''],['','proj'];
-        Rs&traccon and me&nu,gi;
+        $N = me&ioty,g,['','','proj'],['i','',''];
         each id N {
             $Kn
             # the groupthing.t we're going for
@@ -3924,14 +3925,41 @@ Foogla: |
                 }
             }
             if (!Kn) {
-                # may not have gk yet
-                $Km = G&Cye,['may',1,{},'almost,grouping'];
-                Kn = fio(Km,[d.t,1,{s:d.t},'almost,groupthing,fs:7,mar:0.3']);
+                # may not have gk yet:
+                #   make extra grype (usually for type groups)
+                #   listens to all grypes for %groupthing/%changey
+                $ge = me&rollbsc,R,'grype/sc';
+                $Km = gec&Km ||= G&Cye,['may',1,{},'almost,grouping'];
+                Kn = fio(Km,[d.t,1,{s:t+'!'},'almost,groupthing,fs:7,mar:0.3']);
             }
             Kns&almost and Kns&opa = 0.5
             # noted, might match history of this gk
-            fio(Kn,["Projected from "+dc&R.t,1,{s:"^"+d.t},'changey,fs:6']);
+            $r = dc&R;
+            $po = fio(Kn,["Projected from "+r.t,7894,{projin:d},'dis:2']);
+            me&walls,po,'b:2.2';
+            # < make namepath looking
+            #   also if Mlimits dub all ^^^^ means parent loop
+            #     make larger recycle symbol
+            $up = fio(po,['fromabove',1,{s:'^'},'hs:999']);
+            if (ds&cha) {
+                # projected difference
+                # noticing out of date from our memory
+                pos&changey = 1;
+                ups&fs = 13;
+                fio(po,['projected-from',2,{s:r.t},'fs:6,hue:166,mat:-1']);
+                fio(po,['projected-'+t,3,{s:">"+dc&s},'fs:8,dis']);
+            }
         };
+        
+        each in Rs&grype {
+            $Km = nc&Km;
+            $f = Rs&tracting;
+            if (f) {
+                # take any Kn/%changey as fs&changey
+                me&ioty,Km,['groupthing','changey']
+                    .map(d => ac(f,'changey',d))
+            }
+        }
     };
     
     me.Tongingness = &acgtR{ return [
