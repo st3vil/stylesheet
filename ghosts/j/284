@@ -3435,10 +3435,11 @@ Foogla: |
     # < show yup%ting <-> %ting difference usually
     #   apart from the .t, isn't in the subtle
     # < worth redoing somewhere... KnowC one-many
+    
     me.Cloadsc = &acgtcg,wp,w{
         !c and throw "give c"
         $load = c;
-        $f = load.f;
+        $f = load.f; # optional
         $s = g && gc&s;
         # bits to give G: nulls for things it needn't
         load.sc ||= {};
@@ -3469,12 +3470,12 @@ Foogla: |
             # ephemeral modes of a point in a game
             #  eg look intensely, look casually
             each i,kc games {
+                !f and break
                 $game = kc['sc'+fs&game];
                 if (game && game[k]) {
                     $imp = game[k]
                 }
             }
-            
             
             $was = s && s.sc[k];
             # W says everything
@@ -3512,7 +3513,6 @@ Foogla: |
     # finds difference to s (g)
     me.Cnotesc = &acgtcgw{
         $load = c;
-        $f = load.f;
         $s = g && gc&s;
         
         $differs = [];
@@ -3571,9 +3571,15 @@ Foogla: |
     # < include the flook/finput methods?
     
     # up/downable essential identity
+    # W version
     Be.C.W = {
         scgk: 'dige',
     };
+    # how to include it
+    Be.C.inc = {
+        scgk: 'el',
+    };
+    # %ting config
     Be.C.ting = {
         scgk: 'ting,directory,species',
         # dont need to %ting=W at the top?
@@ -3621,7 +3627,7 @@ Foogla: |
         me&walls,n,'b:2.2'
         ns&bri = 1.3;
         $bet = "toggles %"+k+" between "+m.join(',');
-        ns&z = [G&Cye,[bet,1,{s:'?'},'fs:8'] ];
+        #ns&z = [G&Cye,[bet,1,{s:'?'},'fs:8'] ];
         
         # leaves unset (will init to m[1])
         # returns it if not changed
@@ -3695,13 +3701,70 @@ Foogla: |
                 !tc&proj and continue
                 # < do with Cshowsc (displays Cloadsc)
                 each kv t.sc {
-                    n.sc[k] == s and continue
+                    n.sc[k] == v and continue
                     # < climb to the f/Winding
-                    me&tsc,"proj!%"+k
+                    me&tsc,n.sc[k]+'!='+s,"proj!%"+k
                 }
             }
         });
     };
+    
+    #c here is Cupload reading a group for %tracting
+    #  sets up Km/Kn if so
+    #  see KnowC for reading all groups
+    me.Chavesc = &acgtcw{
+        !c and throw "give c"
+        $load = c;
+        # everything it has:
+        load.c ||= {};
+        $Kc = Be.C[load.type];
+        $Km = load.Km = G&Cye,[load.type,1,{Kc:Kc},'grouping'];
+        each i,k Kc.scgk {
+            $got = w && w.sc[k];
+            got == null and continue
+            load.c[k] = got;
+            $Kn = fio(Km,k,[k,1,{s:k},'groupthing,fs:7,mar:0.3']);
+        }
+        !hak(load.c) and delete load.Km
+        else {
+            $M = Kms&z ||= [];
+            $n =
+            m KnowC_K 1 $s:Km.t,K:1 %hs:684,fs:7,mt:-1,label
+            ny&cv = 0.001;
+            M.unshift(M.pop());
+            me&walls,Km,'bd:1.4,hu:3'
+        }
+        
+        return load;
+    };
+    
+    # 
+    me.groupfixtype = &acgtRk{
+        !Rs&ball and throw "!ball"
+        $s = Rc&s;
+        # type group what s has
+        $load = {type:k};
+        me&Chavesc,load,s;
+        $Km = load.Km;
+        !Km and return
+        $M = me&Mw,R,'trac-attr';
+        Kmy&cv = 0.4;
+        M.push(Km);
+        # adopt their %fix
+        $N = me&ioty,R,['fix'];
+        each in N {
+            ns&fix != 'sc' and continue
+            $Kn = fio(Km,n.t,0);
+            !Kn and continue
+            ns&zuctedto = Kn;
+            delete Knc&s;
+            $M = Kns&z ||= [];
+            M.push(n);
+        }
+        #me&zu,"ty:"+k,Km
+        #    ns&zuctedto = Kn;
+    };
+    
     me.Tongingness = &acgtR{ return [
         # %trac*
         
@@ -3748,6 +3811,13 @@ Foogla: |
                 me&tsc,'~';
                 Ds&bri = 1.3
             }
+            
+            # %ting attr
+            me&groupfixtype,R,'ting';
+            # %dige-ish group
+            me&groupfixtype,R,'W';
+            # %el etc
+            me&groupfixtype,R,'inc';
             
             if (Things&Wind) {
                 # check dige/exist
