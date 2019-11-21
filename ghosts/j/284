@@ -3702,20 +3702,6 @@ Foogla: |
         me&modopt,R,m,n;
         return n
     };
-    me.check_projected = &acgtRnk{
-        ['trouble','okay'].map(&diff,{
-            $z = R.sc[diff];
-            each it z {
-                !tc&proj and continue
-                # < do with Cshowsc (displays Cloadsc)
-                each kv t.sc {
-                    n.sc[k] == v and continue
-                    # < climb to the f/Winding
-                    me&tsc,n.sc[k]+'!='+s,"proj!%"+k
-                }
-            }
-        });
-    };
     
     #c here is Cupload reading a group for %tracting
     #  sets up Km/Kn if so
@@ -3799,6 +3785,7 @@ Foogla: |
                 $was = load.was[k];
                 $is = load.is[k];
                 $d = G&Cye,['Thing-has:'+k,1,{s:">"+was},'changey,histgk,fs:8,hue:2,bri:0.7'];
+                me&walls,d,'b:2.2';
                 ds&gk = k;
                 if (was == is) {
                     # if waiting to apply the change
@@ -3935,8 +3922,11 @@ Foogla: |
             Kns&almost and Kns&opa = 0.5
             # noted, might match history of this gk
             $r = dc&R;
-            $po = fio(Kn,["Projected from "+r.t,7894,{projin:d},'dis:2']);
+            # < want things for fs&changey to be persistent
+            $po = G&Cye,["Projected-from-"+r.t,7894,{projin:d},'dis:2'];
+            po.t += " to s&"+t;
             me&walls,po,'b:2.2';
+            fio(Kn,po);
             # < make namepath looking
             #   also if Mlimits dub all ^^^^ means parent loop
             #     make larger recycle symbol
@@ -3950,14 +3940,25 @@ Foogla: |
                 fio(po,['projected-'+t,3,{s:">"+dc&s},'fs:8,dis']);
             }
         };
-        
-        each in Rs&grype {
+        Rs&traccon and me&nu,"grypesc",Rs&grype;
+        #return;
+        each kn Rs&grype {
             $Km = nc&Km;
+            !Km and continue
+            Rs&traccon and me&nu,n
             $f = Rs&tracting;
             if (f) {
                 # take any Kn/%changey as fs&changey
-                me&ioty,Km,['groupthing','changey']
-                    .map(d => ac(f,'changey',d))
+                $N = me&ioty,Km,['groupthing','changey'];
+                each id N {
+                    # < want things for fs&changey to be persistent
+                    me&nu,'addingchangey',d;
+                    if (fs&changey && dy&cv > 0.7) {
+                        fs&changey = fs&changey
+                            .filter(c => c.t != d.t)
+                    }
+                    ac(f,'changey',d)
+                }
             }
         }
     };
@@ -4003,7 +4004,7 @@ Foogla: |
             # can hold changes to s:
             Rs&liesnotok = 1;
             # hold waking Thing changes are projected into:
-            Rs&noprojcha = 1;
+            #Rs&noprojcha = 1;
             
             # < set it to wind back this branch
             #   as ss&wantdige, may not be doable
@@ -4039,63 +4040,6 @@ Foogla: |
             # and that ^ projecting here
             me&grimp,R;
             
-            if (Things&Wind) {
-                # check child dige/exists
-                #  not relying on but leading to groupfixtype W
-                $ha = ex({},Things&Wind);
-                
-                # < should only be (%ting, but is implied
-                #   we have no other stuff in the Know yet, but could
-                #   supposedly the implications would change,
-                #   as u climb
-                # match against what we have
-                $N = me&ioty,R,'ball';
-                $have = {};
-                each in N {
-                    !ha[n.t] and continue
-                    have[n.t] = n;
-                }
-                $news = [];
-                each t,dige ha {
-                    $r = have[t];
-                    if (r) {
-                        # see their diff from here
-                        $rs = rc&s;
-                        $diff = rss&dige != dige;
-                        # expect it will find the same diff
-                        # give it cause to wake/sleep
-                        # < these should be elvised in there
-                        #   to sleep the pile. write these:
-                        #   e $r -proj-cha $lc
-                        $d = G&Cye,["projected:",1,{proj:1,f:f},{dige:dige}];
-                        d.t += (diff ? 'cha' : 'still');
-                        ac(r, (diff ? 'trouble' : 'okay'), d);
-                    }
-                    else {
-                        $d = {may:'lookup_'+t,s:t,tsc:'y'};
-                        me&rolltog,R,d and me&input,R,t
-                        me&walls,d.n,'b:2.2';
-                        news.push(d.n);
-                    }
-                }
-                if (news.length) {
-                    $d = {may:'readnews',s:'Unhad:',tsc:'y'};
-                    if (me&rolltog,R,d ) {
-                        news.map(d => me&input,R,dc&s );
-                    }
-                    $n = d.n;
-                    ns&fs = 8;
-                    ny&cv = 0.4;
-                    news.map(d => me&modopt,R,n,d );
-                    me&walls,n,'b:2.2';
-                    me&mtsc,n,"\n";
-                }
-                # < put news etc after %fixen as %dis:1
-                #me&zu,'Win',N
-                #me&zu,'Wind',Things&Wind
-            }
-            me&check_projected,R,Thing,'dige';
-            
             if (Rs&traccon) {
                 me&zu,'Thingstract',Thing
                 #me&zu,'Loadism',load
@@ -4108,8 +4052,10 @@ Foogla: |
                 # 2 them
                 me&ioty,R,'ball'
                     .map(n => ns&openey ||= 1)
+                me&zu,fs&changey;
             }
-                
+            
+            Rs&tracting_good = f;
             if (game == 'look') {
                 # get dige-level diff figured
             }
@@ -4139,6 +4085,20 @@ Foogla: |
             # loads up our %tings
             # if different, wills its children to do the same
             # over a few Domings, since Ring A-time is not precise
+        },'ift,D'],
+        ['ball+tracting_good','62',&acgtRs{
+            $f = Rs&tracting;
+            me&ioty,R,'ball' .map(&r{
+                !rs&tracting and return
+                if (!rs&tracting_good) {
+                    # < projecting the waits
+                    me&waits,'/'+r.t+'%..good'
+                }
+                else {
+                    $rf = rs&tracting;
+                    rfs&changey and ac(f,'changey',rf);
+                }
+            });
         },'ift,D'],
         #c trac-swarm comes together over the top
         ['tracting','81',&acgtRs{
