@@ -3396,20 +3396,33 @@ Soogle: | # start from Sevo
         return me&rollbsc,R,t,c
     }
     me.rollbsc = &acgtRtc{
-        me&rollbs,R,t;
-        $r = R.sc[t];
         c ||= {};
         typeof c == 'string' and c = G&peel,c
-        c.b and delete R.sc[t];
+        
+        $layers = t.split('/');
+        $t = layers.pop();
+        # rolls the top
+        me&rollbs,R,t;
+        $S = R.sc;
+        $r = S[t];
+        # inflate index
+        while (layers.length) {
+            !r and S[t] = r = {}
+            S = r;
+            t = layers.pop();
+            r = S[t];
+        }
+        
+        c.b and delete S[t]
         if (c.lineate) {
             if (r && rc&lineate != c.lineate) {
                 # y.hist?
-                delete R.sc[t]
+                delete S[t]
             }
         }
-        if (!R.sc[t]) {
+        if (!S[t]) {
             $n = G&Cye,[t,''];
-            
+            # may have r history
             c.increment ||= c.incrementt;
             if (c.increment) {
                 nc&increment = r ? rc&increment + 1 : 0;
@@ -3426,7 +3439,7 @@ Soogle: | # start from Sevo
             }
             
             ex(n.sc,c);
-            r = R.sc[t] = n
+            r = S[t] = n
         }
         if (c.count) {
             rs&count ||= 0;
@@ -3439,7 +3452,7 @@ Soogle: | # start from Sevo
         v == null and v = 1
         s && s.sc[k] == null and s.sc[k] = 1
     };
-    #c Rolt
+    #c tsc
     # be waiting for...
     me.waits = &acgttsc{
         !s and s = t; t = 'waits'
@@ -3511,7 +3524,7 @@ Soogle: | # start from Sevo
         return n
     };
     
-    # click on/off Rs&$k
+    #c rolltog - click on/off Rs&$k
     me.rolltog = &acgtRkdy{
         $c = typeof k == 'object' ? k : {k:k};
         $setter = c.y || y;
