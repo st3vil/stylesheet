@@ -1303,7 +1303,7 @@ Foogla: |
             Rs&Sampley and me&Sampley,R
         },'ift,D'],
     ] };
-    #c func Dome
+    #c func-Dome
     
     # saves your n ... as joined c&s text
     # some care to \n regularly
@@ -1386,6 +1386,11 @@ Foogla: |
         }
         c.bd and c.b ||= c.bd
         c.ba and c.b ||= c.ba
+        if (c.bg) {
+            s&bgh = c.bg == 1 ? '000' : c.bg;
+            s&bgh += ''
+            s&bgh += '142'.substr(s&bgh.length);
+        }
         if (c.b) {
             # (border px).(rounded em)
             $s = (''+c.b).split('h');
@@ -1394,17 +1399,19 @@ Foogla: |
             $px = geo[0] || 0;
             $round = geo[1];
             
-            $colour = 'blue';
-            if (s [1]) {
-                # < unify as hue
-                colour = s [1] == '5' ? 'green'
-                    : 'white'
-            }
             $style = c.bd && "dotted"
                 || c.ba && "dashed"
                 || "solid";
-                
-            s&bo = px+'px '+style+' '+colour;
+            
+            s&bo = px+'px '+style;
+            
+            # is a hue away from
+            $boc = s [1];
+            boc == null and boc = 6
+            boc += '';
+            boc += '175'.substr(boc.length);
+            s&boc = boc
+            
             round and s&br = round
         }
     };
@@ -3632,7 +3639,7 @@ Foogla: |
         $get = me&rolltog,R,c;
         
         $n = c.n;
-        me&walls,n,'b:2.2'
+        me&walls,n,'b:2.2h8'
         ns&bri = 1.3;
         $bet = "toggles %"+k+" between "+m.join(',');
         #ns&z = [G&Cye,[bet,1,{s:'?'},'fs:8'] ];
@@ -3787,7 +3794,7 @@ Foogla: |
                 $was = load.was[k];
                 $is = load.is[k];
                 $d = G&Cye,['Thing-has:'+k,1,{s:">"+was},'changey,histgk,fs:8,hue:2,bri:0.7'];
-                me&walls,d,'b:2.2h5';
+                me&walls,d,'b:2.2h666';
                 ds&gk = k;
                 if (was == is) {
                     # if waiting to apply the change
@@ -3930,7 +3937,7 @@ Foogla: |
             # < want things for fs&changey to be persistent
             $po = G&Cye,["Projected-from-"+r.t,7894,{projin:d},'dis:2'];
             po.t += " to s&"+t;
-            me&walls,po,'b:2.2h5';
+            me&walls,po,'b:2.2h666';
             fio(Kn,po);
             # < make namepath looking
             #   also if Mlimits dub all ^^^^ means parent loop
@@ -4057,7 +4064,7 @@ Foogla: |
     me.Xwai = &acgtXc{
         $N = [];
         each path,v X {
-            N.push(... me&wai,{v:v,k:path,name:'X',path:path} );
+            N.push(... me&wai,{v:v,k:path,name:'path',path:path} );
         }
         return N
     }
@@ -4095,17 +4102,31 @@ Foogla: |
         #   ah(R,'waitz','tw_scgk_r',r.t,'tracting_good',r);
         $N = me&Xwai,V;
         me&nu,"waitzeo",N;
+        # grouped by tw,scgk,r and path=tw_scgk_r
         $d = me&wainz,N;
         me&nu,"inz",d;
+        
         $g = G&Cye,['waitz',2,{},'waits'];
+        me&walls,g,'b:2.2h3';
+        $t = fio(g,['t',1,{s:g.t},'fs:8']);
+        me&tsc,t,0,'l';
+        
         $Kmi = &ka{
             $d = fio(g,k,[k,1,{},'grouping']);
+            me&walls,d,'bd:1.4,hu:3';
             fio(d,['t',1,{s:d.t}]);
             return d
         };
-        hak(gs&X) > 1 and Kmi('X');
+        hak(gs&path) > 1 and Kmi('path')
+        each kV g.sc {
+            $Vi = hak(V);
+            # hide fact of path unless mixing paths
+            k == 'path' && Vi <= 1 and continue
+            $n = Kmi(k);
+            
+        }
         
-        me&zu,"nool",'nul'
+        me&zu,"nool",'nul';
         
         
         # to 
@@ -4115,7 +4136,7 @@ Foogla: |
         # is a bunch of waits as one
         $M = me&Mw,R,'trac';
         m $g
-        !me&beready,R,'trac' and return
+        #!me&beready,R,'trac' and return
     };
     
     me.Tongingness = &acgtR{ return [
@@ -4157,10 +4178,10 @@ Foogla: |
             # sync ss&dige and Thing's dige (however it appears)
             #  and whatever other Things project knowledge around
             # can hold changes to s:
-            #Rs&liesnotok = 1;
+            Rs&liesnotok = 1;
             # hold waking Thing changes are projected into:
             # < without hiding the change
-            Rs&noprojcha = 1;
+            #Rs&noprojcha = 1;
             
             # < set it to wind back this branch
             #   as ss&wantdige, may not be doable
@@ -4260,7 +4281,7 @@ Foogla: |
                     #me&waits,'/'+r.t+'%..good'
                 }
                 else {
-                    rfs&changey and ac(f,'changey',rf);
+                    #rfs&changey and ac(f,'changey',rf);
                 }
             });
             
