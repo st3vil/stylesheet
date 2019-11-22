@@ -4022,12 +4022,13 @@ Foogla: |
             }
             d > 10 and throw "manywai"
             
-            if (d.name != 's') {
+            $nextname = d.path[d.d];
+            $islast = !d.path[d.d+1];
+            if (!islast) {
                 $eachable = isha(d.v) || isar(d.v);
                 !eachable and throw "index!hash"
                 each kv d.v {
-                    $c = {k:k,v:v};
-                    c.name = d.path[d.d-1] || 's';
+                    $c = {k:k,v:v,name:nextname};
                     wai(d,c);
                 }
                 return
@@ -4035,25 +4036,53 @@ Foogla: |
             
             # d.v is beyond the path, as s
             # puts row together
-            d.row = [];
-            me.cby(d,null,&n{
-                return n.up && n.up.name && n.up
-            }).map(&n{
-                # this n.d
-                d.row.push(n);
-                # each name,k,i,d
-                d.sc ||= {};
-                d.sc[n.name] ||= {};
-                $l = d.sc[n.name][n.k] ||= [];
-                l.push(d);
-            });
+            d.row = me.cby(d,null,&n{ return n.up });
+            # the path as names (arks in io) with values
+            d.c = {};
+            each in d.row {
+                $v = n.k;
+                # ignores the value if it's about index
+                d.c[n.name] = n.k;
+            }
+            # last one aka s (ya out of io)
+            d.c[nextname] = d.v;
             N.push(d)
             # and all sorts of
         };
         wai(d);
         return N
     };
-    
+    # iterate all intos of an X, as their own indexes
+    # eg X.x.*, X.nk_gk_r
+    me.Xwai = &acgtXc{
+        $N = [];
+        each path,v X {
+            N.push(... me&wai,{v:v,k:path,name:'X',path:path} );
+        }
+        return N
+    }
+    # how io wants to compress tons of rows
+    # but for wai, building k/v=[d+]
+    me.wainz = &acgtN{
+        $d = {inz:N};
+        d.refs = [];
+        each in N {
+            each kv n.c {
+                $S = d.sc ||= {};
+                # v sometimes object, d.c groups refs
+                if (isob(v)) {
+                    $vi = d.refs.indexOf(v);
+                    vi < 0 and vi = d.refs.push(v)-1
+                    v = vi;
+                    S = d.c ||= {};
+                }
+                S[k] ||= {};
+                $l = S[k][v] ||= [];
+                l.push(d);
+            }
+        }
+        return d
+    };
     
     #c summarises a pool of wait data,
     #  similar to beready pooling modulat %wait
@@ -4062,20 +4091,30 @@ Foogla: |
         $V = Rs&waitz;
         !V and return;
         
-        $N = [];
-        each path,v V {
-            N.push(... me&wai,{v:v,k:path,name:'X',path:path} );
-        }
+        # anything like
+        #   ah(R,'waitz','tw_scgk_r',r.t,'tracting_good',r);
+        $N = me&Xwai,V;
+        me&nu,"waitzeo",N;
+        $d = me&wainz,N;
+        me&nu,"inz",d;
+        $g = G&Cye,['waitz',2,{},'waits'];
+        $Kmi = &ka{
+            $d = fio(g,k,[k,1,{},'grouping']);
+            fio(d,['t',1,{s:d.t}]);
+            return d
+        };
+        hak(gs&X) > 1 and Kmi('X');
         
-        $g = G&Cye,['waitz',2,{},'%waits'];
+        me&zu,"nool",'nul'
+        
         
         # to 
         $X = {};
-        #ah(R,'waitz','tw_scgk_r',r.t,'tracting_good',r);
         # < projecting the waits
         #me&waits,'/'+r.t+'%..good'
-        me&nu,"waitzeo",N;
-
+        # is a bunch of waits as one
+        $M = me&Mw,R,'trac';
+        m $g
         !me&beready,R,'trac' and return
     };
     
