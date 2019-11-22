@@ -3976,13 +3976,15 @@ Foogla: |
         me&rollbs,k;
         $dig = ["Foogla@"+G&t,'w','Foogla' .sc.dige];
         c.s and dig.push(c.s);
+        $d = c.alsolineate;
+        d and dig.push(isC(d) ? "C:"+d.t : d+"")
         
         $lin = dig.join(' & ');
         $was = me&rollbs,R,'lin_'+k;
-        if (was != lin) {
-            R.t.includes('ick') and ~>4 islin: R.t, lin
-            R.t.includes('ick') and ~>5 wasslin: R.t, was
+        $dwas = me&rollbs,R,'lin_'+k+'_also';
+        if (was != lin || d && d != dwas) {
             R.sc['lin_'+k] = lin;
+            R.sc['lin_'+k+'_also'] = d;
             # can decide to return old or new state
             $s = c.cb ? c.cb() : {};
             me&rolled,k,s,c;
@@ -3996,6 +3998,87 @@ Foogla: |
         d and R.sc[k] = d
         else { delete R.sc[k] }
     };
+    
+    # deep hash to knowns paths/rows
+    # < just wander in until C
+    me.wai = &acgtd{
+        $N = [];
+        $wai;
+        wai = &d,c{
+            if (d.d == null) {
+                d.d = 0;
+                d.z = [];
+                d.wholepath = d.path;
+                d.path = d.path.split('_');
+            }
+            else {
+                $up = d;
+                d = ex({},d);
+                c and ex(d,c);
+                d.up = up;
+                d.z = [];
+                up.z.push(d);
+                d.d++;
+            }
+            d > 10 and throw "manywai"
+            
+            if (d.name != 's') {
+                $eachable = isha(d.v) || isar(d.v);
+                !eachable and throw "index!hash"
+                each kv d.v {
+                    $c = {k:k,v:v};
+                    c.name = d.path[d.d-1] || 's';
+                    wai(d,c);
+                }
+                return
+            }
+            
+            # d.v is beyond the path, as s
+            # puts row together
+            d.row = [];
+            me.cby(d,null,&n{
+                return n.up && n.up.name && n.up
+            }).map(&n{
+                # this n.d
+                d.row.push(n);
+                # each name,k,i,d
+                d.sc ||= {};
+                d.sc[n.name] ||= {};
+                $l = d.sc[n.name][n.k] ||= [];
+                l.push(d);
+            });
+            N.push(d)
+            # and all sorts of
+        };
+        wai(d);
+        return N
+    };
+    
+    
+    #c summarises a pool of wait data,
+    #  similar to beready pooling modulat %wait
+    me.waitzo = &acgtRc{
+        c ||= {};
+        $V = Rs&waitz;
+        !V and return;
+        
+        $N = [];
+        each path,v V {
+            N.push(... me&wai,{v:v,k:path,name:'X',path:path} );
+        }
+        
+        $g = G&Cye,['waitz',2,{},'%waits'];
+        
+        # to 
+        $X = {};
+        #ah(R,'waitz','tw_scgk_r',r.t,'tracting_good',r);
+        # < projecting the waits
+        #me&waits,'/'+r.t+'%..good'
+        me&nu,"waitzeo",N;
+
+        !me&beready,R,'trac' and return
+    };
+    
     me.Tongingness = &acgtR{ return [
         # %trac*
         
@@ -4021,7 +4104,7 @@ Foogla: |
             !f and return
             
             # roll/sleepatch inner processes
-            me&rolls,'grype',{s:f.t+"@"+Qs&dige};
+            me&rolls,'grype',{s:f.t+"@"+Qs&dige,alsolineate:f};
             # lowlevel pre-f matters
             $game = me&gamesc,R,f,'game',['look','get'];
             
@@ -4035,7 +4118,7 @@ Foogla: |
             # sync ss&dige and Thing's dige (however it appears)
             #  and whatever other Things project knowledge around
             # can hold changes to s:
-            Rs&liesnotok = 1;
+            #Rs&liesnotok = 1;
             # hold waking Thing changes are projected into:
             # < without hiding the change
             Rs&noprojcha = 1;
@@ -4085,7 +4168,7 @@ Foogla: |
             if (fs&changey) {
                 # dige here or inside solving
                 me&tsc,"f%changey","cha",'G';
-                me&zu,fs&changey;
+                me&zu,'changey',fs&changey;
                 # 2 them
                 me&ioty,R,'ball'
                     .map(n => ns&openey ||= 1)
@@ -4123,8 +4206,8 @@ Foogla: |
             # over a few Domings, since Ring A-time is not precise
         },'ift,D'],
         
-        # %tracting_good when we can rely on our reliances:
-        #  - 
+        #c %tracting_good when we can rely on our children
+        # to complain
         ['ball+tracting_good','62',&acgtRs{
             T.Mw = 'trac';
             $f = Rs&tracting;
@@ -4133,15 +4216,21 @@ Foogla: |
                 !rf and return
                 rs&ignore and return
                 if (!rs&tracting_good) {
+                    ah(R,'waitz','tw_scgk_r',r.t,'tracting_good',r);
                     # < projecting the waits
-                    me&waits,'/'+r.t+'%..good'
+                    #me&waits,'/'+r.t+'%..good'
                 }
                 else {
                     rfs&changey and ac(f,'changey',rf);
                 }
             });
+            
+            me&waitzo,R;
+            
+            
             !me&beready,R,'trac' and return
-            R.t == 'Stylehut' and me&zu,R;
+            
+            R.t == 'Stylehut' and me&zu,"Ready:"+R;
         },'ift,D'],
         #c trac-swarm comes together over the top
         ['tracting','81',&acgtRs{
