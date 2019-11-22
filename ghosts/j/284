@@ -3509,7 +3509,7 @@ Foogla: |
         me&Cnotesc,load,g,w;
         return load
     };
-    #c Cnotesc
+    #c Cnotesc - exacts differs
     # finds difference to s (g)
     me.Cnotesc = &acgtcgw{
         $load = c;
@@ -3696,12 +3696,24 @@ Foogla: |
         M.splice(ni,1);
         fio(t,n.t,n);
     };
+    # me&tsc into another modulat
     me.mtsc = &acgtmtsc{
         $R = Cy&R;
         $n = me&tsc,t,s,c;
         me&modopt,R,m,n;
         return n
     };
+    # i $g/#$k/$d
+    me.givi = &acgtgktd{
+        isC(t) and d = t; t = d.t
+        $hi = fio(g,k);
+        $b = fio(hi,t,0);
+        if (k == 'history') {
+            # puts new top on history
+            b and ac(d,'z',b);
+        }
+        fio(hi,t,d);
+    }
     
     #c here is Cupload reading a group for %tracting
     #  sets up Km/Kn if so
@@ -3734,7 +3746,7 @@ Foogla: |
     me.groupfixtype = &acgtRk{
         !Rs&ball and throw "!ball"
         $s = Rc&s;
-        # type group what s has
+        # type group s.sc.*
         $load = {type:k};
         me&Chavesc,load,s;
         $Km = load.Km;
@@ -3756,16 +3768,6 @@ Foogla: |
         Kmc&load = load;
         return Km
     };
-    me.givi = &acgtgktd{
-        isC(t) and d = t; t = d.t
-        $hi = fio(g,k);
-        $b = fio(hi,t,0);
-        if (k == 'history') {
-            # puts new top on history
-            b and ac(d,'z',b);
-        }
-        fio(hi,t,d);
-    }
     # type group %fix with changey
     me.grype = &acgtRkc{
         c ||= {};
@@ -3890,6 +3892,7 @@ Foogla: |
     };
     
     #c grimp - cross-pollinate grypes
+    # dialects of R%grype/* conclude into fs&changey
     me.grimp = &acgtR{
         $g = me&rollbsc,R,'grype/proj';
         # i/R.t/$d%proj
@@ -3940,8 +3943,7 @@ Foogla: |
                 fio(po,['projected-'+t,3,{s:">"+dc&s},'fs:8,dis']);
             }
         };
-        Rs&traccon and me&nu,"grypesc",Rs&grype;
-        #return;
+        Rs&traccon and me&nu,"grype/*",Rs&grype;
         each kn Rs&grype {
             $Km = nc&Km;
             !Km and continue
@@ -3952,7 +3954,7 @@ Foogla: |
                 $N = me&ioty,Km,['groupthing','changey'];
                 each id N {
                     # < want things for fs&changey to be persistent
-                    me&nu,'addingchangey',d;
+                    #   see 'these should be elvised in there'
                     if (fs&changey && dy&cv > 0.7) {
                         fs&changey = fs&changey
                             .filter(c => c.t != d.t)
@@ -4004,7 +4006,8 @@ Foogla: |
             # can hold changes to s:
             Rs&liesnotok = 1;
             # hold waking Thing changes are projected into:
-            #Rs&noprojcha = 1;
+            # < without hiding the change
+            Rs&noprojcha = 1;
             
             # < set it to wind back this branch
             #   as ss&wantdige, may not be doable
@@ -4013,7 +4016,8 @@ Foogla: |
             # < this Know gets slowly tractorbeamed to stable/Know,
             #   the load.auto waiting for test runs
             
-            # %ting attr - auto
+            # %ting attr - auto at A:f@1
+            # < configure it here sometime
             me&grype,R,'ting';
             
             # %dige-ish group - change makes fs&changey
@@ -4029,6 +4033,7 @@ Foogla: |
                     Ds&bri = 0.6;
                     me&mtsc,inc,'ig',0,'B'
                     # < also ignored by the compiler
+                    Rs&ignore = 1;
                     return
                 }
                 ss&el == 7 and me&mtsc,inc,'hmm',0,'B'
@@ -4037,7 +4042,7 @@ Foogla: |
             #   any of our W-type data changes
             #   child dige projection wrong
             Things&Wind and me&gromps,R,'Wind','t,dige',Things&Wind
-            # and that ^ projecting here
+            # tally  grypes and gromps (from above)
             me&grimp,R;
             
             if (Rs&traccon) {
@@ -4049,10 +4054,10 @@ Foogla: |
             if (fs&changey) {
                 # dige here or inside solving
                 me&tsc,"f%changey","cha",'G';
+                me&zu,fs&changey;
                 # 2 them
                 me&ioty,R,'ball'
                     .map(n => ns&openey ||= 1)
-                me&zu,fs&changey;
             }
             
             Rs&tracting_good = f;
@@ -4086,19 +4091,26 @@ Foogla: |
             # if different, wills its children to do the same
             # over a few Domings, since Ring A-time is not precise
         },'ift,D'],
+        
+        # %tracting_good when we can rely on our reliances:
+        #  - 
         ['ball+tracting_good','62',&acgtRs{
+            T.Mw = 'trac';
             $f = Rs&tracting;
             me&ioty,R,'ball' .map(&r{
-                !rs&tracting and return
+                $rf = rs&tracting;
+                !rf and return
+                rs&ignore and return
                 if (!rs&tracting_good) {
                     # < projecting the waits
                     me&waits,'/'+r.t+'%..good'
                 }
                 else {
-                    $rf = rs&tracting;
                     rfs&changey and ac(f,'changey',rf);
                 }
             });
+            !me&beready,R,'trac' and return
+            R.t == 'Stylehut' and me&zu,R;
         },'ift,D'],
         #c trac-swarm comes together over the top
         ['tracting','81',&acgtRs{
