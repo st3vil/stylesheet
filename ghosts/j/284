@@ -4001,19 +4001,24 @@ Foogla: |
             }
             
             # d.v is beyond the path, as s
-            # puts row together
-            d.row = me.cby(d,null,&n{ return n.up });
+            # similar to io's row but for d not d.v
+            #  since the meaning of here is usually:
+            #   the key/params used to get through (d.k)
+            #   then the final d.v,
+            #     without being another stackbit
+            #   < anything could be a value on the way down the path
+            #     and be related to the parameters used to get the value
+            d.stack = me.cby(d,null,&n{ return n.up });
             # the path as names (arks in io) with values
             d.c = {};
-            each in d.row {
-                $v = n.k;
-                # ignores the value if it's about index
+            each in d.stack {
+                # the key used at this stackbit
                 d.c[n.name] = n.k;
             }
             # last one aka s (ya out of io)
+            #  from the same stackbit that found it via d.k
             d.c[nextname] = d.v;
             N.push(d)
-            # and all sorts of
         };
         wai(d);
         return N
@@ -4197,9 +4202,15 @@ Foogla: |
             }
             each ka sol.arkfor {
                 each in M {
-                    $pi = n.path.indexOf(k);
-                    pi < 0 and continue
-                    
+                    $v = n.c[k];
+                    # eg a tracting_good sharing a row with an r
+                    !v and continue
+                    if (a.cb) {
+                        a.cb(d,v);
+                    }
+                    else {
+                        throw "handle arkfor"
+                    }
                 }
             }
         }
