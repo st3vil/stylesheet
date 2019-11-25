@@ -2957,6 +2957,188 @@ Foogla: |
         c.beready and return me&beready,R
         return 1;
     };
+    #c wai
+    
+    # deep hash to knowns paths/rows
+    # < just wander in until C
+    me.wai = &acgtd{
+        $N = [];
+        $wai;
+        wai = &d,c{
+            if (d.d == null) {
+                d.d = 0;
+                d.z = [];
+                d.wholepath = d.path;
+                d.path = d.path.split('_');
+            }
+            else {
+                $up = d;
+                d = ex({},d);
+                c and ex(d,c);
+                d.up = up;
+                d.z = [];
+                up.z.push(d);
+                d.d++;
+            }
+            d > 10 and throw "manywai"
+            
+            $nextname = d.path[d.d];
+            $islast = !d.path[d.d+1];
+            if (!islast) {
+                $eachable = isha(d.v) || isar(d.v);
+                !eachable and throw "index!hash"
+                each kv d.v {
+                    $c = {k:k,v:v,name:nextname};
+                    wai(d,c);
+                }
+                return
+            }
+            
+            # d.v is beyond the path, as s
+            # similar to io's row but for d not d.v
+            #  since the meaning of here is usually:
+            #   the key/params used to get through (d.k)
+            #   then the final d.v,
+            #     without being another stackbit
+            #   < anything could be a value on the way down the path
+            #     and be related to the parameters used to get the value
+            d.stack = me.cby(d,null,&n{ return n.up });
+            # the path as names (arks in io) with values
+            d.c = {};
+            each in d.stack {
+                # the key used at this stackbit
+                d.c[n.name] = n.k;
+            }
+            # last one aka s (ya out of io)
+            #  from the same stackbit that found it via d.k
+            d.c[nextname] = d.v;
+            N.push(d)
+        };
+        wai(d);
+        return N
+    };
+    # iterate all intos of an X, as their own indexes
+    # eg X.x.*, X.nk_gk_r
+    me.Xwai = &acgtXc{
+        $N = [];
+        each path,v X {
+            N.push(... me&wai,{v:v,k:path,name:'path',path:path} );
+        }
+        return N
+    }
+    # how io wants to compress tons of rows
+    # but for wai, building k/v=[d+]
+    me.wainz = &acgtN{
+        $d = {inz:N};
+        d.refs = [];
+        each in N {
+            each kv n.c {
+                $S = d.sc ||= {};
+                # v sometimes object, d.c groups refs
+                if (isob(v)) {
+                    $vi = d.refs.indexOf(v);
+                    vi < 0 and vi = d.refs.push(v)-1
+                    v = vi;
+                    S = d.c ||= {};
+                }
+                S[k] ||= {};
+                $l = S[k][v] ||= [];
+                l.push(n);
+            }
+        }
+        return d
+    };
+    
+    #c summarises a pool of data
+    
+    # brackdown - explore the dimensions
+    # io joins from a display perspective
+    # visual interactive group by
+    #  is probably an io-sized layer on io,
+    #   all about wandering through !C,
+    #    many ways in/out of everywhere,
+    #    hierarchies that may be
+    # < plug in some graph database's visuals
+    
+    # < standardise Km/Kn modulata,
+    #   drawing adjustable versions of them here,
+    #   that can be used to generate/explain logic/collection
+    
+    # < more autothink, process knows the types
+    #    without clicking into ope/opel
+    #     which should divide tangles
+    #   use this pile of types to course action
+    #   clues for eg. how to get an r to have an scgk,
+    #    or what variants of that scgk mean
+    #    and whatever other types of things are involved
+    #     esp hold/$r defeating changey/$r
+    # < include d.c, which are all refs
+    #   inform other k that they ultimately find an r,
+    #    and use maths symbols for "complete subset of" etc,
+    #     turn into r=twx4=%tracting_good
+    #     tw being the way to separate the r
+    # < X.ref(R) for mapping values to keyable uniqueness,
+    #    refR being for yfuture updating the value persisted
+    #    eg Ravelvis M + yfuture, non-string-name persistence
+    #    (because RbitX already persisted it)
+    # < venn diagrams of how many of this have that
+    #   is an io.nz() modulata, making Km/Kn
+    # < apart/together levelism of the types,
+    #    wandering indexes, conflicts
+    me.brackdown = &acgtRtNd{
+        $g = G&Cye,[t,2,{},'hue:30'];
+        
+        # vertical label
+        $q = {may:'waitz_label',s:g.t,tsc:'l',V:1};
+        $opelab = me&rolltog,R,q;
+        q = me&modopt,R,g,q.n;
+        me&walls,qs&z[0],'bg';
+        gy&inz = d;
+        if (opelab) {
+            ~labpo: R.t
+            me&nu,"waitzeo",N;
+            me&nu,"inz",d;
+        }
+        
+        $Kmi = &ka{
+            $Km = fio(g,k,[k,1,{},'grouping,ma:0.3,fs:8']);
+            me&walls,Km,'bd:1.4,hu:3';
+            Kmy&t = fio(Km,['Km-t',1,{s:Km.t}]);
+            return Km
+        };
+        
+        each kV d.sc {
+            $Vlen = hak(V);
+            # hide fact of path unless mixing paths
+            k == 'path' && Vlen <= 1 and continue
+            $Km = Kmi(k);
+            # size, may lead on
+            $q = {may:'waitz_ope_'+k,s:'x'+Vlen,tsc:'y'};
+            $ope = me&rolltog,R,q;
+            q = me&modopt,R,Km,q.n;
+            
+            if (Vlen == 1) {
+                # the others have this one type of this
+                $t = Kmy&t;
+                k == 'scgk' and tc&s = '%'
+                qc&s = haks(V)[0];
+            }
+            if (ope) {
+                fio(Km,['ope',1,{s:":"},'hs:888']);
+                each tn V {
+                    $q = {may:'waitz_ope_'+k+'_'+t,s:t,tsc:'y',ma:0.2};
+                    $opel = me&rolltog,R,q;
+                    q = me&modopt,R,Km,q.n;
+                    if (opel) {
+                        me&zu,"waitz'"+k+"'"+t,n;
+                    }
+                }
+            }
+        }
+        
+        return g
+    };
+    
     #c trac Know/...%ball <-> Wild...%ting
     
     # %tracting MindInto/Know/**%ball waking up
@@ -3420,11 +3602,10 @@ Foogla: |
         # is on
         return f
     };
-    #c trac info
-    
-    
+    #c tracupload info about W to G
     # expression inherits from the last W
-    #  eg has only to say the difference from the last %ting configuration
+    #  eg has only to say the difference
+    #   from the last %ting configuration
     # tends to learn what's out there
     # < complain via low-level changzo
     me.tracupload = &acgtRf,k,ok,type,otype{
@@ -3491,7 +3672,7 @@ Foogla: |
         me&Cloadsc,load,g,wp,w;
         fs&tracupload = load;
     };
-    #c Cloadsc for explicit/implicit expression
+    #c Cloadsc for explicit/implicit expression realising
     #  as per wp upward, the last spready instructo
     #  of C.sc.* in a Be.C.$group
     # generating Alets to find completion
@@ -3576,17 +3757,17 @@ Foogla: |
         }
         
         !s || load.noknow and return load
-        me&Cnotesc,load,g,w;
+        me&Cloadloadsc,load,g,w;
         return load
     };
-    #c Cnotesc - exacts differs
-    # finds difference to s (g)
-    me.Cnotesc = &acgtcgw{
+    #c Cloadloadsc - loads the load
+    # {part of,with c=returned from} Cloadsc
+    me.Cloadloadsc = &acgtcgw{
         $load = c;
         $s = g && gc&s;
         
         $differs = [];
-        each kv load.sc {
+            each kv load.sc {
             v == null and s.sc[k] != null and differs.push(k)
             else
             v != s.sc[k] and differs.push(k)
@@ -3642,31 +3823,6 @@ Foogla: |
     
             
     #c Tongingness %ting %trac* %Gens
-    # %ting* for Compositing of/other tings
-    # the R life of %Search%_ting(Q)/G&ting/G&t
-    # extra tricks here
-    
-    # toggle fs&$k = m[0,1]
-    # < dropdown/typein
-    me.gamesc = &acgtRfkm{
-        $c = {may:'change_'+k,tsc:'d',once:1};
-        c.s = f.sc[k] || '+';
-        $get = me&rolltog,R,c;
-        
-        $n = c.n;
-        me&walls,n,'b:2.2h8'
-        ns&bri = 1.3;
-        $bet = "toggles %"+k+" between "+m.join(',');
-        #ns&z = [G&Cye,[bet,1,{s:'?'},'fs:8'] ];
-        
-        # leaves unset (will init to m[1])
-        # returns it if not changed
-        !get and return f.sc[k]
-        $ki = m.indexOf(f.sc[k]) + 1;
-        !m[ki] and ki = 0
-        nc&s = f.sc[k] = m[ki];
-    };
-    
     # n (modulat) liften from R ground into t
     # < combine with zuck/mez/polify for all-regrouping?
     me.modopt = &acgtRtn{
@@ -3696,10 +3852,10 @@ Foogla: |
         return fio(hi,t,d);
     }
     
-    #c here is Cupload reading a group for %tracting
-    #  sets up Km/Kn if so
-    #  see KnowC for reading all groups
-    me.Chavesc = &acgtcw{
+    #c Cloadsc helps to groupfixtype
+    # like KnowC for %balls
+    # sets up Km/Kn modulata
+    me.Km_Cloadsc = &acgtcw{
         !c and throw "give c"
         $load = c;
         # everything it has:
@@ -3729,7 +3885,7 @@ Foogla: |
         $s = Rc&s;
         # type group s.sc.*
         $load = {type:k};
-        me&Chavesc,load,s;
+        me&Km_Cloadsc,load,s;
         $Km = load.Km;
         !Km and return
         $M = me&Mw,R,'trac-attr';
@@ -3749,7 +3905,7 @@ Foogla: |
         Kmc&load = load;
         return Km
     };
-    # type group %fix with changey
+    #c grype watches %ball/%fix
     me.grype = &acgtRkc{
         c ||= {};
         # %grypes can outlive a %tracting (untested)
@@ -3798,9 +3954,9 @@ Foogla: |
         return Km
     };
     #c gromps - projects into yonder grypes
-    # without relying on their happening
-    #  eg check child dige
-    #  or input if !exists
+    # without relying on them %tracting yet
+    #  eg check child dige, sends trouble
+    #  or !exists, input
     me.gromps = &acgtRtks{
         !Rs&ball and throw "!ball"
         # this R project*
@@ -3875,7 +4031,7 @@ Foogla: |
         }
     };
     
-    #c grimp - cross-pollinate grypes
+    #c grimp - cross-pollinates grypes
     # dialects of R%grype/* conclude into fs&changey
     me.grimp = &acgtR{
         $g = me&rollbsc,R,'grype/proj';
@@ -3950,218 +4106,6 @@ Foogla: |
         }
     };
     
-    #c roll wai
-    # R.sc.$process restarts/continues
-    # < sleeping clues, A:Kn
-    me.rolls = &acgtkc{
-        $R = Cy&R;
-        c ||= {};
-        me&rollbs,k;
-        $dig = ["Foogla@"+G&t,'w','Foogla' .sc.dige];
-        c.s and dig.push(c.s);
-        $d = c.alsolineate;
-        d and dig.push(isC(d) ? "C:"+d.t : d+"")
-        
-        $lin = dig.join(' & ');
-        $was = me&rollbs,R,'lin_'+k;
-        $dwas = me&rollbs,R,'lin_'+k+'_also';
-        if (was != lin || d && d != dwas) {
-            R.sc['lin_'+k] = lin;
-            R.sc['lin_'+k+'_also'] = d;
-            # can decide to return old or new state
-            $s = c.cb ? c.cb() : {};
-            me&rolled,k,s,c;
-        }
-    };
-    # process restarts/doesn't
-    me.rolled = &acgtkdc{
-        $R = Cy&R;
-        Rs&rolled ||= {};
-        Rs&rolled[k] = c || 1;
-        d and R.sc[k] = d
-        else { delete R.sc[k] }
-    };
-    
-    # deep hash to knowns paths/rows
-    # < just wander in until C
-    me.wai = &acgtd{
-        $N = [];
-        $wai;
-        wai = &d,c{
-            if (d.d == null) {
-                d.d = 0;
-                d.z = [];
-                d.wholepath = d.path;
-                d.path = d.path.split('_');
-            }
-            else {
-                $up = d;
-                d = ex({},d);
-                c and ex(d,c);
-                d.up = up;
-                d.z = [];
-                up.z.push(d);
-                d.d++;
-            }
-            d > 10 and throw "manywai"
-            
-            $nextname = d.path[d.d];
-            $islast = !d.path[d.d+1];
-            if (!islast) {
-                $eachable = isha(d.v) || isar(d.v);
-                !eachable and throw "index!hash"
-                each kv d.v {
-                    $c = {k:k,v:v,name:nextname};
-                    wai(d,c);
-                }
-                return
-            }
-            
-            # d.v is beyond the path, as s
-            # similar to io's row but for d not d.v
-            #  since the meaning of here is usually:
-            #   the key/params used to get through (d.k)
-            #   then the final d.v,
-            #     without being another stackbit
-            #   < anything could be a value on the way down the path
-            #     and be related to the parameters used to get the value
-            d.stack = me.cby(d,null,&n{ return n.up });
-            # the path as names (arks in io) with values
-            d.c = {};
-            each in d.stack {
-                # the key used at this stackbit
-                d.c[n.name] = n.k;
-            }
-            # last one aka s (ya out of io)
-            #  from the same stackbit that found it via d.k
-            d.c[nextname] = d.v;
-            N.push(d)
-        };
-        wai(d);
-        return N
-    };
-    # iterate all intos of an X, as their own indexes
-    # eg X.x.*, X.nk_gk_r
-    me.Xwai = &acgtXc{
-        $N = [];
-        each path,v X {
-            N.push(... me&wai,{v:v,k:path,name:'path',path:path} );
-        }
-        return N
-    }
-    # how io wants to compress tons of rows
-    # but for wai, building k/v=[d+]
-    me.wainz = &acgtN{
-        $d = {inz:N};
-        d.refs = [];
-        each in N {
-            each kv n.c {
-                $S = d.sc ||= {};
-                # v sometimes object, d.c groups refs
-                if (isob(v)) {
-                    $vi = d.refs.indexOf(v);
-                    vi < 0 and vi = d.refs.push(v)-1
-                    v = vi;
-                    S = d.c ||= {};
-                }
-                S[k] ||= {};
-                $l = S[k][v] ||= [];
-                l.push(n);
-            }
-        }
-        return d
-    };
-    
-    #c summarises a pool of data
-    
-    # brackdown - explore the dimensions
-    # io joins from a display perspective
-    # visual interactive group by
-    #  is probably an io-sized layer on io,
-    #   all about wandering through !C,
-    #    many ways in/out of everywhere,
-    #    hierarchies that may be
-    # < plug in some graph database's visuals
-    
-    # < standardise Km/Kn modulata,
-    #   drawing adjustable versions of them here,
-    #   that can be used to generate/explain logic/collection
-    
-    # < more autothink, process knows the types
-    #    without clicking into ope/opel
-    #     which should divide tangles
-    #   use this pile of types to course action
-    #   clues for eg. how to get an r to have an scgk,
-    #    or what variants of that scgk mean
-    #    and whatever other types of things are involved
-    #     esp hold/$r defeating changey/$r
-    # < include d.c, which are all refs
-    #   inform other k that they ultimately find an r,
-    #    and use maths symbols for "complete subset of" etc,
-    #     turn into r=twx4=%tracting_good
-    #     tw being the way to separate the r
-    # < X.ref(R) for mapping values to keyable uniqueness,
-    #    refR being for yfuture updating the value persisted
-    #    eg Ravelvis M + yfuture, non-string-name persistence
-    #    (because RbitX already persisted it)
-    # < venn diagrams of how many of this have that
-    #   is an io.nz() modulata, making Km/Kn
-    # < apart/together levelism of the types,
-    #    wandering indexes, conflicts
-    me.brackdown = &acgtRtNd{
-        $g = G&Cye,[t,2,{},'hue:30'];
-        
-        # vertical label
-        $q = {may:'waitz_label',s:g.t,tsc:'l',V:1};
-        $opelab = me&rolltog,R,q;
-        q = me&modopt,R,g,q.n;
-        me&walls,qs&z[0],'bg';
-        gy&inz = d;
-        if (opelab) {
-            ~labpo: R.t
-            me&nu,"waitzeo",N;
-            me&nu,"inz",d;
-        }
-        
-        $Kmi = &ka{
-            $Km = fio(g,k,[k,1,{},'grouping,ma:0.3,fs:8']);
-            me&walls,Km,'bd:1.4,hu:3';
-            Kmy&t = fio(Km,['Km-t',1,{s:Km.t}]);
-            return Km
-        };
-        
-        each kV d.sc {
-            $Vlen = hak(V);
-            # hide fact of path unless mixing paths
-            k == 'path' && Vlen <= 1 and continue
-            $Km = Kmi(k);
-            # size, may lead on
-            $q = {may:'waitz_ope_'+k,s:'x'+Vlen,tsc:'y'};
-            $ope = me&rolltog,R,q;
-            q = me&modopt,R,Km,q.n;
-            
-            if (Vlen == 1) {
-                # the others have this one type of this
-                $t = Kmy&t;
-                k == 'scgk' and tc&s = '%'
-                qc&s = haks(V)[0];
-            }
-            if (ope) {
-                fio(Km,['ope',1,{s:":"},'hs:888']);
-                each tn V {
-                    $q = {may:'waitz_ope_'+k+'_'+t,s:t,tsc:'y',ma:0.2};
-                    $opel = me&rolltog,R,q;
-                    q = me&modopt,R,Km,q.n;
-                    if (opel) {
-                        me&zu,"waitz'"+k+"'"+t,n;
-                    }
-                }
-            }
-        }
-        
-        return g
-    };
-    
     #c know about the Thing independent of the species
     me.lookating = &acgtW{
         $Q = Ws&Q;
@@ -4198,7 +4142,14 @@ Foogla: |
         return Thing
     }
     
-    #c %trac*
+    #c %ball%tracting%Compiling
+    # for Compositing of/other tings
+    # Lis R life of %Search%_ting(Q)/G&ting/G&t
+    # extra tricks here
+    
+    # < rename oscty
+    # local variables/hierarchy
+    # as per some scheme
     $tracin = &Ry{
         me&ioty,R,'ball' .map(&r{
             $rf = rs&tracting;
@@ -4215,12 +4166,12 @@ Foogla: |
         # extracting another Know-looking pile
         # things keep %Compiling even if !%tracting_good
         #   may cause compiling a state that was never there
-        # else slep changzo, or reset recipe if any waits
+        # else slep changzo, or reset %Compiling if any waits
         ['ball+tracting+Compiling','63',&acgtRs{
             T.Mw = 'trac';
             $f = Rs&tracting;
             # starts from the top/root
-            $om = me&rollbsc,R,'Compiling';
+            $om = me&rollbsc,R,'Compiling',{lineate:f};
             omc&ov ||= 0.1;
             omy&top == Rc&b and delete omy&top
             omy&top ||= R;
@@ -4487,7 +4438,6 @@ Foogla: |
             }
         },'ift,D'],
         
-
         #c %ting%More -> /%ting vision in
         ['ting','5',&acgtRs{
             $M = Rs&Te && Rs&Te.sc.M || [];
