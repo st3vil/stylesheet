@@ -3108,6 +3108,30 @@ Soogle: | # start from Sevo
         $l = me.cby(s,cb,z||'up');
         return l && l[0]
     };
+    
+    # me.cbu having a boundary
+    #  eg find %ting between %ting and %tingspot
+    me.cbub = &Rkbc{
+        c ||= {};
+        typeof b == 'string' and c.neggk = b; b = null
+        b && !isC(b) and c = b; b = null
+        isfu(b) and c.boundy = b
+        else
+        b and c.bound = b
+        $alongthe = &s{
+            return c.boundy && c.boundy(s)
+            || c.bound && s == c.bound
+            || c.neggk && s.sc[c.neggk]
+        };
+        $N = me.cby(R,&s{ return alongthe(s)
+            # k may be an inclusive boundary, returns path
+            || typeof k == 'object' ? s == k : s.sc[k]
+        });
+        # hit boundary, no path
+        alongthe(N[0]) and return
+        return N[0]
+    }
+    
     # timewards
     me.yfuture = &acgtrR{
         if (r.constructor == Array) {
@@ -3462,31 +3486,7 @@ Soogle: | # start from Sevo
         v == null and v = 1
         s && s.sc[k] == null and s.sc[k] = 1
     };
-    #c tsc
-    # be waiting for...
-    me.waits = &acgttsc{
-        !s and s = t; t = 'waits'
-        # < this style could be all we need
-        c ||= {};
-        typeof c == 'number' and c = ""+c
-        if (typeof c != 'object') {
-            c.length == 1 and $tsc = c; c = {}
-            else
-            typeof c == 'string' and c = G&peel,c
-        }
-        c.tsc and $tsc = delete c.tsc;
-        # c can be specifically about the wait
-        # 1 key means $scgk:$waittype
-        #  eg s&tracupload having .differ, needing .accept
-        if (haks(c).length == 1) {
-            $k = c.waits_sgk = haks(c)[0];
-            c.waits_type = delete c[k];
-        }
-        $n = me&tsc,t,s,tsc;
-        c.waits ||= 1;
-        ex(n.sc,c);
-        return n
-    };
+    #c tsc walla
     me.tsc = &acgttscb{
         s == null || s == 0 and s = t
         isC(t) and $n = t;
@@ -3533,6 +3533,75 @@ Soogle: | # start from Sevo
         b and y (b)
         return n
     };
+    
+    # cell wall style
+    # < dome for geometry adjustement on its own
+    me.walla = &acgthc{
+        R = Cy&R;
+        me&walls,R,h,c;
+    }
+    me.walls = &acgtthc{
+        !isC(t) and throw "walls C"
+        !ty&R || ty&R != t and $C = t
+        else {
+            $R = t;
+            $C = Rs&C;
+            !C and throw "walls R!C"
+        }
+        $x;
+        typeof h == 'number' and x = {m:h}; h = null
+        c ||= h || {};
+        typeof c == 'string' and c = G&peel,c
+        x and ex(c,x)
+        
+        # can be used to style any C
+        if (R) {
+            Rs&C != C and throw "Cy&R not Rs&C"
+            c.m == null || c.r and Rs&rowish = 1
+        }
+        
+        # mass/space from others
+        c.m and s&ma = c.m
+        
+        c.hu and s&hue = c.hu * 10
+        if (c.wi) {
+            # wider than parent
+            $f = (100*c.wi);
+            s&wi = f+'%';
+            f > 120 and s&ml = (-(f-120))+'%'
+        }
+        c.bd and c.b ||= c.bd
+        c.ba and c.b ||= c.ba
+        if (c.bg) {
+            s&bgh = c.bg == 1 ? '000' : c.bg;
+            s&bgh += ''
+            s&bgh += '142'.substr(s&bgh.length);
+        }
+        if (c.b) {
+            # (border px).(rounded em)
+            $s = (''+c.b).split('h');
+            $geo = s [0].split('.');
+            
+            $px = geo[0] || 0;
+            $round = geo[1];
+            
+            $style = c.bd && "dotted"
+                || c.ba && "dashed"
+                || "solid";
+            
+            s&bo = px+'px '+style;
+            
+            # is a hue away from
+            $boc = s [1];
+            boc == null and boc = 6
+            boc += '';
+            boc += '175'.substr(boc.length);
+            s&boc = boc
+            
+            round and s&br = round
+        }
+    };
+    
     
     #c rolltog - click on/off Rs&$k
     me.rolltog = &acgtRkdy{
