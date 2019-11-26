@@ -3434,7 +3434,7 @@ Foogla: |
         ['W','W_exp','G','G_exp'].map(&k{
             $r = f.y [k];
             !r and return
-            r = f.y [k] = me&yfuture,r;
+            r = f.y [k] = me&yfuture,r,R;
         });
         f.y [k] && f.y [k] != R and me&waits,"already-fy"+k; return
         f.y [k] = R;
@@ -3784,7 +3784,9 @@ Foogla: |
         }
         
         !s || load.noknow and return load
+        
         me&Cloadloadsc,load,g,w;
+        
         return load
     };
     #c Cloadloadsc - loads the load
@@ -4160,29 +4162,41 @@ Foogla: |
     me.Tongingness = &acgtR{ return [
         # %trac*
         #c A:f@6 run the game
+        ['ball+Compala','29',&acgtRs{
+            ac(R,'inheritsc','Compala');
+            $r = sy&R;
+            !r and return me&tsc,'notacomp','-','d'
+            $f = rs&tracting;
+            $co = rs&Comal;
+            fs&changey and me&tsc,'fs&changey','cha','d'
+            me&tsc,'ytaad',0,'d'
+        },'ift,D'],
         ['ball+tracting+Compiling','64',&acgtRs{
             T.Mw = 'trac';
             $f = Rs&tracting;
             $om = Rs&Compiling;
             omy&top != R and return
             
-            # monday
+            # Plabic graph
             $n = me&tsc,'Glabab';
+            ns&hue = 80;
             ns&fs = 12;
             ns&dis = 1;
             ny&cv = 0.2;
             
             $m = me&bal,'Om',om;
             me&zuct,n,m;
-            
-            # Plabic graph
+            ms&Compala = R;
             
             # check pile is ready every time
+            Rs&Compiling_waits &&
+                ah(R,'waitz','susp','Compiling')
             each ir oms&N {
                 rs&coready and continue
                 ah(R,'waitz','tw_scgk_r',r.t,'coready',r);
             }
-            !me&waitzo,R and return
+            !me&waitzo,R and ms&sleeping = 1; return
+            
             
             $N = omy&N.slice().reverse();
             $nv;
@@ -4198,17 +4212,11 @@ Foogla: |
                     }
                     nv = 0.2;
                 }
+                if (omc&ov == 0.2) {
+                    nv = 0.2;
+                }
             }
             nv and omc&ov = nv
-            
-            $D = Rs&C;
-            me&walla,'bd:2.2h3'
-            
-            
-            
-            
-            
-            
             
             
             
@@ -4239,27 +4247,48 @@ Foogla: |
         # things keep %Compiling even if !%tracting_good
         #   may cause compiling a state that was never there
         # else slep changzo, or reset %Compiling if any waits
+        
+        ['ball+tracting+amCompiling','627',&acgtRs{
+            Rs&Compiling and return
+            # %Compiling persists while chaos stops it engaging
+            #  eg %ting changes %species
+            #   may !Live%waits but f remains
+            #    Things&dige should be the same (5%ha|1%dige lies)
+            Rs&Compiling_waits = 1;
+            Rs&Compiling = 1;
+            $b = Rc&b;
+            bs&Compiling = Rs&amCompiling;
+            s&bgh = 111;
+            me&tsc,"amCompiling",0,'G';
+        },'ift,D'],
         ['ball+tracting+Compiling','63',&acgtRs{
             T.Mw = 'trac';
             $f = Rs&tracting;
-            # starts from the top/root
+            # starts from the top/root having:
+            $is_top = Rs&Compiling == 1;
+            # which becomes C:om to spread throughout f
             $om = me&rollbsc,R,'Compiling',{lineate:fy&top};
             omc&ov ||= 0.1;
-            omy&top == Rc&b and delete omy&top
+            if (is_top && omy&top && omy&top != R) {
+                omy&top != Rc&b and me&tsc,'f-om-sync',0,'G';
+                delete omy&top; 
+            }
             omy&top ||= R;
-            $op = omy&top == R;
-            if (op) {
+            if (is_top) {
                 me&tsc,"Compiling...";
-                # keeps %Compiling/**r
+                Rs&amCompiling = om;
+                # keeps %Compiling/**r, any goners fatal
                 omy&N ||= [];
                 me&yfuture,omy&N,R
             }
+            
             ac(om,'yN',R);
             Rs&tracting_goodin and Rs&coready = 1
             
             # each awakes children
             $co = Rs&Comal ||= me&givi,om,'all',[R.t,1];
             !co and return me&waits,"co^"
+            coy&R = R;
             
             tracin(R,&r,rf{
                 rs&Compiling = om;
@@ -4311,7 +4340,6 @@ Foogla: |
             
             # which means all we need to compile is connected
             if (fy&up == fy&top) {
-                # theory is
                 Rs&Compiling = 1;
             }
         },'ift,D'],
@@ -4346,9 +4374,9 @@ Foogla: |
             # < should have some waits
             !f and return
             
-            # roll/sleepatch inner processes 
+            # roll/sleepatch inner processes
             me&rolls,'grype',{s:f.t+"@"+Qs&dige,alsolineate:f};
-            
+            me&rollbs,'amCompiling';
             
             # lowlevel pre-f matters
             $game = me&gamesc,R,f,'game',['look','get'];
@@ -4359,7 +4387,7 @@ Foogla: |
             
             # looking at the answer
             # < sleep by Q&dige
-            $Thing = me&lookating,W;
+            $Thing = Rs&Glean = me&lookating,W;
             # sync ss&dige and Thing's dige (however it appears)
             #  and whatever other Things project knowledge around
             
