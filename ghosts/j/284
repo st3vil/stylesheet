@@ -2621,7 +2621,6 @@ Foogla: |
             me&Rom,R,'GhodigWap';
             # newsroom behind the %ting
             Rs&Inn = me&Rom,R,'Search';
-            G&waylay,'Fividy';
             # for that constant EleMento async
             Gc&ttl = 3600;
             
@@ -2845,15 +2844,19 @@ Foogla: |
         delete nc&s;
         fio(n,r);
     };
-    # n (modulat) liften from R ground into t
+    # n (modulat) lifted from some ground into C:t
     # < combine with zuck/mez/polify for all-regrouping?
-    me.modopt = &acgtRtn{
+    me.modopt = &acgtRmn{
         !n and throw "modopt!n"
-        $M = me&Mw,R,T.Mw;
-        $ni = M.indexOf(n);
-        ni < 0 and throw "n not in "+T.Mw
+        $could = [T.Mw,null];
+        each it could {
+            $M = me&Mw,R,t;
+            $ni = M.indexOf(n);
+            ni >= 0 and break
+        }
+        ni < 0 and throw "n not fground", could
         M.splice(ni,1);
-        return fio(t,n.t,n);
+        return fio(m,n.t,n);
     };
     # me&tsc into another modulat
     me.mtsc = &acgtmtsc{
@@ -2942,20 +2945,21 @@ Foogla: |
     #  similar to beready pooling modulat %wait
     me.waitzo = &acgtRc{
         c ||= {beready:1};
-        $V = Rs&waitz;
-        !V and return 1;
+        isst(c) and c = {k:c};
+        c.k ||= 'waitz'
+        $V = R.sc[c.k];
+        !V and return 9;
         
         # anything like
         #   ah(R,'waitz','tw_scgk_r',r.t,'tracting_good',r);
         $N = me&Xwai,V;
         # grouped by tw,scgk,r and path=tw_scgk_r
-        $d = me&wainz,N;
+        $d = me&waigh,N;
         
-        $g = me&brackdown,R,'waitz',N,d;
-        gs&waits = 1;
+        $g = me&brackdown,R,c.k,N,d;
         me&walls,g,'b:2.2h3';
         
-        $d = gy&inz;
+        $d = gy&waigh;
         # dscif: {scgk:'tracting_good'},
         # arkfor: {r: {cb:&dr{
         each i,sol c.solvent {
@@ -2982,7 +2986,10 @@ Foogla: |
         # < projecting the waits over there like grimp
         $M = me&Mw,R,'trac';
         m $g
-        c.beready and return me&beready,R
+        if (c.beready) {
+            gs&waits = 1;
+            return me&beready,R
+        }
         return 1;
     };
     #c wai
@@ -3056,8 +3063,8 @@ Foogla: |
     }
     # how io wants to compress tons of rows
     # but for wai, building k/v=[d+]
-    me.wainz = &acgtN{
-        $d = {inz:N};
+    me.waigh = &acgtN{
+        $d = {N:N};
         d.refs = [];
         each in N {
             each kv n.c {
@@ -3116,14 +3123,14 @@ Foogla: |
         $g = G&Cye,[t,2,{},'hue:30'];
         
         # vertical label
-        $q = {may:'waitz_label',s:g.t,tsc:'l',V:1};
+        $q = {may:'label',s:g.t,tsc:'l',V:1};
         $opelab = me&rolltog,R,q;
         q = me&modopt,R,g,q.n;
         me&walls,qs&z[0],'bg';
-        gy&inz = d;
+        gy&waigh = d;
         if (opelab) {
             ~labpo: R.t
-            me&nu,"waitzeo",N;
+            me&nu,t+'zeo',N;
             me&nu,"inz",d;
         }
         
@@ -3140,7 +3147,7 @@ Foogla: |
             k == 'path' && Vlen <= 1 and continue
             $Km = Kmi(k);
             # size, may lead on
-            $q = {may:'waitz_ope_'+k,s:'x'+Vlen,tsc:'y'};
+            $q = {may:t+'_ope_'+k,s:'x'+Vlen,tsc:'y'};
             $ope = me&rolltog,R,q;
             q = me&modopt,R,Km,q.n;
             
@@ -3153,7 +3160,7 @@ Foogla: |
             if (ope) {
                 fio(Km,['ope',1,{s:":"},'hs:888']);
                 each tn V {
-                    $q = {may:'waitz_ope_'+k+'_'+t,s:t,tsc:'y',ma:0.2};
+                    $q = {may:t+'_ope_'+k+'_'+t,s:t,tsc:'y',ma:0.2};
                     $opel = me&rolltog,R,q;
                     q = me&modopt,R,Km,q.n;
                     if (opel) {
@@ -4159,21 +4166,52 @@ Foogla: |
             y(r,rf);
         })
     };
+    # wai-ish pathed hash stash for {} in order
+    window.aha = &Rt{
+        return &s{
+            $args = [... arguments].slice(1);
+            isst(s) and s = G&peel,s
+            $path = [];
+            $bits = [];
+            each kv s {
+                # tw:C.t
+                path.push(k);
+                bits.push(k,v);
+            }
+            ah(R,t,path.join("_"), ... bits, ...args)
+        };
+    };
     me.Tongingness = &acgtR{ return [
         # %trac*
         #c A:f@6 run the game
         ['ball+Compala','29',&acgtRs{
             ac(R,'inheritsc','Compala');
             Rs&fixatfour = 1;
+            T.Mw = 'Comp';
+            
             $r = sy&R;
             !r and return me&tsc,'notacomp','-','d'
             $f = rs&tracting;
             $co = rs&Comal;
             fs&changey and me&tsc,'fs&changey','cha','d'
-            #me&tsc,'ytaad',0,'d'
+            
+            $ha = aha(R,'wou');
+            
+            fs&change and ha('cha')
             
             $ins = me&ioty,co,[''] .length;
-            me&tsc,'<-x'+ins,0,'d';
+            ins and ha('children')
+            
+            ha('winning')
+            
+            #me&nu,Rs&wou
+            me&waitzo,R,'wou';
+            #me&tsc,'<-x'+ins,0,'d';
+            
+                # then include their changes
+                # < into Rs&changzo, then rfs&changzo
+                #rfs&changey and ac(f,'changey',rf)
+            
             
         },'ift,D'],
         ['ball+tracting+Compiling','67',&acgtRs{
@@ -4181,7 +4219,7 @@ Foogla: |
             $f = Rs&tracting;
             $om = Rs&Compiling;
             omy&top != R and return
-            me&nu,fio(om,'all')
+            
             
         },'ift,D'],
         ['ball+tracting+Compiling','64',&acgtRs{
@@ -4343,9 +4381,6 @@ Foogla: |
                 !me&ollbs,r,'tracting_goodin' &&
                     ah(R,'waitz','tw_scgk_r',r.t,'tracting_goodin',r);
                 
-                # then include their changes
-                # < into Rs&changzo, then rfs&changzo
-                rfs&changey and ac(f,'changey',rf)
             });
             
             # autothink
