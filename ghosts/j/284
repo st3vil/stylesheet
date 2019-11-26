@@ -2992,98 +2992,6 @@ Foogla: |
         }
         return 1;
     };
-    #c wai
-    
-    # deep hash to knowns paths/rows
-    # < just wander in until C
-    me.wai = &acgtd{
-        $N = [];
-        $wai;
-        wai = &d,c{
-            if (d.d == null) {
-                d.d = 0;
-                d.z = [];
-                d.wholepath = d.path;
-                d.path = d.path.split('_');
-            }
-            else {
-                $up = d;
-                d = ex({},d);
-                c and ex(d,c);
-                d.up = up;
-                d.z = [];
-                up.z.push(d);
-                d.d++;
-            }
-            d > 10 and throw "manywai"
-            
-            $nextname = d.path[d.d];
-            $islast = !d.path[d.d+1];
-            if (!islast) {
-                $eachable = isha(d.v) || isar(d.v);
-                !eachable and throw "index!hash"
-                each kv d.v {
-                    $c = {k:k,v:v,name:nextname};
-                    wai(d,c);
-                }
-                return
-            }
-            
-            # d.v is beyond the path, as s
-            # similar to io's row but for d not d.v
-            #  since the meaning of here is usually:
-            #   the key/params used to get through (d.k)
-            #   then the final d.v,
-            #     without being another stackbit
-            #   < anything could be a value on the way down the path
-            #     and be related to the parameters used to get the value
-            d.stack = me.cby(d,null,&n{ return n.up });
-            # the path as names (arks in io) with values
-            d.c = {};
-            each in d.stack {
-                # the key used at this stackbit
-                d.c[n.name] = n.k;
-            }
-            # last one aka s (ya out of io)
-            #  from the same stackbit that found it via d.k
-            d.c[nextname] = d.v;
-            N.push(d)
-        };
-        wai(d);
-        return N
-    };
-    # iterate all intos of an X, as their own indexes
-    # eg X.x.*, X.nk_gk_r
-    me.Xwai = &acgtXc{
-        $N = [];
-        each path,v X {
-            N.push(... me&wai,{v:v,k:path,name:'path',path:path} );
-        }
-        return N
-    }
-    # how io wants to compress tons of rows
-    # but for wai, building k/v=[d+]
-    me.waigh = &acgtN{
-        $d = {N:N};
-        d.refs = [];
-        each in N {
-            each kv n.c {
-                $S = d.sc ||= {};
-                # v sometimes object, d.c groups refs
-                if (isob(v)) {
-                    $vi = d.refs.indexOf(v);
-                    vi < 0 and vi = d.refs.push(v)-1
-                    v = vi;
-                    S = d.c ||= {};
-                }
-                S[k] ||= {};
-                $l = S[k][v] ||= [];
-                l.push(n);
-            }
-        }
-        return d
-    };
-    
     #c brackdown - summarises a pool of data
     # brackdown - explore the dimensions
     # io joins from a display perspective
@@ -3171,6 +3079,97 @@ Foogla: |
         }
         
         return g
+    };
+    
+    #c wai
+    
+    # wai each type of path at X.*
+    me.Xwai = &acgtXc{
+        $N = [];
+        each path,v X {
+            N.push(... me&wai,{v:v,k:path,name:'path',path:path} );
+        }
+        return N
+    }
+    # deep hash with known paths/rows
+    # < just wander in until C
+    me.wai = &acgtd{
+        $N = [];
+        $wai;
+        wai = &d,c{
+            if (d.d == null) {
+                d.d = 0;
+                d.z = [];
+                d.wholepath = d.path;
+                d.path = d.path.split('_');
+            }
+            else {
+                $up = d;
+                d = ex({},d);
+                c and ex(d,c);
+                d.up = up;
+                d.z = [];
+                up.z.push(d);
+                d.d++;
+            }
+            d > 10 and throw "manywai"
+            
+            $nextname = d.path[d.d];
+            $islast = !d.path[d.d+1];
+            if (!islast) {
+                $eachable = isha(d.v) || isar(d.v);
+                !eachable and throw "index!hash"
+                each kv d.v {
+                    $c = {k:k,v:v,name:nextname};
+                    wai(d,c);
+                }
+                return
+            }
+            
+            # d.v is beyond the path, as s
+            # stack =~ io's row but for d not d.v
+            #  since the meaning of here is usually:
+            #   the key/params used to get through (d.k)
+            #   then the final d.v,
+            #     without being another stackbit
+            #   < anything could be a value on the way down the path
+            #     and be related to the parameters used to get the value
+            d.stack = me.cby(d,null,&n{ return n.up });
+            # the path as names (arks in io) with values
+            d.c = {};
+            each in d.stack {
+                # the key used at this stackbit
+                d.c[n.name] = n.k;
+            }
+            # last one aka s (ya out of io)
+            #  from the same stackbit that found it via d.k
+            d.c[nextname] = d.v;
+            N.push(d)
+        };
+        wai(d);
+        return N
+    };
+    # how io wants to compress tons of rows
+    # but for wai, building k/v=[d+]
+    me.waigh = &acgtN{
+        $d = {N:N};
+        d.refs = [];
+        each in N {
+            each kv n.c {
+                $S = d.sc ||= {};
+                # v sometimes object, d.c groups refs
+                if (isob(v)) {
+                    $vi = d.refs.indexOf(v);
+                    vi < 0 and vi = d.refs.push(v)-1
+                    v = vi;
+                    S = d.c ||= {};
+                }
+                S[k] ||= {};
+                $l = S[k][v] ||= [];
+                l.push(n);
+            }
+        }
+        return d
     };
     
     #c trac Know/...%ball <-> Wild...%ting
