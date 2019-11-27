@@ -2955,8 +2955,8 @@ Foogla: |
         $N = me&Xwai,V;
         # grouped by tw,scgk,r and path=tw_scgk_r
         $d = me&waigh,N;
-        
-        $g = me&brackdown,R,c.k,N,d;
+        # rendered modulata
+        $g = me&brackdown,R,c.k,d;
         me&walls,g,'b:2.2h3';
         
         $d = gy&waigh;
@@ -2984,11 +2984,11 @@ Foogla: |
         }
         
         # < projecting the waits over there like grimp
-        $M = me&Mw,R,'trac';
-        m $g
+        $M = me&Mw,R,T.Mw;
+        M.push(g);
         if (c.beready) {
             gs&waits = 1;
-            return me&beready,R
+            return me&beready,R,T.Mw
         }
         return 1;
     };
@@ -3027,7 +3027,33 @@ Foogla: |
     #   is an io.nz() modulata, making Km/Kn
     # < apart/together levelism of the types,
     #    wandering indexes, conflicts
-    me.brackdown = &acgtRtNd{
+    
+    # the group by
+    # how io wants to compress tons of rows
+    # but for wai, building k/v=[d+]
+    me.waigh = &acgtN{
+        $d = G&Cye,['waigh',1];
+        dy&N = N;
+        dy&refs = [];
+        each in N {
+            each kv n.c {
+                $S = d.sc ||= {};
+                # v sometimes object, d.c groups refs
+                if (isob(v)) {
+                    $vi = dy&refs.indexOf(v);
+                    vi < 0 and vi = dy&refs.push(v)-1
+                    v = vi;
+                    S = d.c ||= {};
+                }
+                S[k] ||= {};
+                $l = S[k][v] ||= [];
+                l.push(n);
+            }
+        }
+        return d
+    };
+    # takes a 
+    me.brackdown = &acgtRtd{
         $g = G&Cye,[t,2,{},'hue:30'];
         
         # vertical label
@@ -3036,10 +3062,11 @@ Foogla: |
         q = me&modopt,R,g,q.n;
         me&walls,qs&z[0],'bg';
         gy&waigh = d;
+        R.sc['waigh'+t] = d;
         if (opelab) {
             ~labpo: R.t
-            me&nu,t+'zeo',N;
-            me&nu,"inz",d;
+            me&nu,'wai',dy&N;
+            me&nu,"waigh",d;
         }
         
         $Kmi = &ka{
@@ -3052,7 +3079,7 @@ Foogla: |
         each kV d.sc {
             $Vlen = hak(V);
             # hide fact of path unless mixing paths
-            k == 'path' && Vlen <= 1 and continue
+            k == 'path' and continue
             $Km = Kmi(k);
             # size, may lead on
             $q = {may:t+'_ope_'+k,s:'x'+Vlen,tsc:'y'};
@@ -3148,28 +3175,6 @@ Foogla: |
         };
         wai(d);
         return N
-    };
-    # how io wants to compress tons of rows
-    # but for wai, building k/v=[d+]
-    me.waigh = &acgtN{
-        $d = {N:N};
-        d.refs = [];
-        each in N {
-            each kv n.c {
-                $S = d.sc ||= {};
-                # v sometimes object, d.c groups refs
-                if (isob(v)) {
-                    $vi = d.refs.indexOf(v);
-                    vi < 0 and vi = d.refs.push(v)-1
-                    v = vi;
-                    S = d.c ||= {};
-                }
-                S[k] ||= {};
-                $l = S[k][v] ||= [];
-                l.push(n);
-            }
-        }
-        return d
     };
     
     #c trac Know/...%ball <-> Wild...%ting
@@ -4175,14 +4180,15 @@ Foogla: |
             each kv s {
                 # tw:C.t
                 path.push(k);
-                bits.push(k,v);
+                bits.push(v);
             }
             ah(R,t,path.join("_"), ... bits, ...args)
         };
     };
     me.Tongingness = &acgtR{ return [
         # %trac*
-        #c A:f@6 run the game
+        #c A:f@5 thinking for to run game
+        # < each update leading to the next
         ['ball+Compala','29',&acgtRs{
             ac(R,'inheritsc','Compala');
             Rs&fixatfour = 1;
@@ -4192,19 +4198,22 @@ Foogla: |
             !r and return me&tsc,'notacomp','-','d'
             $f = rs&tracting;
             $co = rs&Comal;
-            fs&changey and me&tsc,'fs&changey','cha','d'
+            coy&CR = R;
             
             $ha = aha(R,'wou');
             
-            fs&change and ha('cha')
+            if (fs&changey) {
+                ha('mot:cha');
+                me.cbu(coy&up,&s{
+                    s == co and return
+                    ah(sy&CR,'wou','mot_fro','cha','inside',co)
+                })
+            }
             
-            $ins = me&ioty,co,[''] .length;
-            ins and ha('children')
-            
-            ha('winning')
+            me&ioty,co,['']
+                .map(n => ah(R,'wou','fro_tw','inside',n.t,n));
             
             #me&nu,Rs&wou
-            me&waitzo,R,'wou';
             #me&tsc,'<-x'+ins,0,'d';
             
                 # then include their changes
@@ -4212,6 +4221,26 @@ Foogla: |
                 #rfs&changey and ac(f,'changey',rf)
             
             
+        },'ift,D'],
+        ['ball+Compala','3',&acgtRs{
+            T.Mw = 'Comp';
+            me&waitzo,R,'wou';
+        },'ift,D'],
+        ['ball+Compala','31',&acgtRs{
+            # < this could introduce argumentatives
+            $r = sy&R;
+            !r and return
+            $f = rs&tracting;
+            $co = rs&Comal;
+            
+            if (coy&top == co) {
+                $N = coy&N.slice().reverse();
+                each in N {
+                    !n.t.includes('Kit') and continue
+                    n.t
+                    me&zu,"Wouc",ny&CR;
+                }
+            }
         },'ift,D'],
         ['ball+tracting+Compiling','67',&acgtRs{
             T.Mw = 'trac';
@@ -4221,6 +4250,8 @@ Foogla: |
             
             
         },'ift,D'],
+        
+        
         ['ball+tracting+Compiling','64',&acgtRs{
             T.Mw = 'trac';
             $f = Rs&tracting;
@@ -4241,40 +4272,15 @@ Foogla: |
             # check pile is ready every time
             Rs&Compiling_waits &&
                 ah(R,'waitz','susp','Compiling')
+            
             each ir oms&N {
                 rs&coready and continue
                 ah(R,'waitz','tw_scgk_r',r.t,'coready',r);
             }
-            !me&waitzo,R and ms&sleeping = 1; return
             
-            
-            $N = omy&N.slice().reverse();
-            $nv;
-            each ir N {
-                $f = rs&tracting;
-                $co = rs&Comal;
-                if (omc&ov == 0.1) {
-                    oms&items ||= 0;
-                    if (me&ioty,co,[''] .length) {
-                        # things are inside
-                        cos&Mix = ++oms&items;
-                        ac(om,'yMix',co)
-                    }
-                    nv = 0.2;
-                }
-                if (omc&ov == 0.2) {
-                    nv = 0.2;
-                }
+            if (!me&waitzo,R ) {
+                ms&sleeping = 1; return
             }
-            nv and omc&ov = nv
-            
-            
-            
-            
-            
-            
-            
-            
             
             if (Rs&applied) {
                 # %dige-ish group again
@@ -4284,15 +4290,14 @@ Foogla: |
                 $g = me&grype,R,'W',{w:Thing};
             }
             
-            
-            
-            
-            
         },'ift,D'],
         
-        #c A:f@5 %Compiling repiles
-        # having got fs&changey everywhere needed
-        # set Compiling everywhere needed,
+        #c A:f@4 Know/ *%Compiling=om, **%Comal=co
+        # everywhere:
+        #  would have fs&changey
+        #  gets the same %Compiling=om
+        #  gets %Comal=co for itself
+        # set %Compiling=om all over everywhere needed,
         # extracting another Know-looking pile
         # things keep %Compiling even if !%tracting_good
         #   may cause compiling a state that was never there
@@ -4315,7 +4320,7 @@ Foogla: |
         ['ball+tracting+Compiling','63',&acgtRs{
             T.Mw = 'trac';
             $f = Rs&tracting;
-            # starts from the fy&top/root (Know%trac)
+            # starts from the fy&top (Know(%trac)
             $is_top = isar(Rs&Compiling);
             if (is_top) {
                 # has Know/* %f
@@ -4326,16 +4331,25 @@ Foogla: |
             # C:co buildup, live as %ball%Compala
             $inp = &R{
                 $co = Rs&Comal ||= me&givi,om,'all',[R.t,1];
+                # fs&top != coy&top (Know/%Comal)
+                coy&top ||= co;
+                coy&top == co && coy&N and me&yfuture,coy&N,R
+                ac(coy&top,'yN',co);
+                # the Ghost%ball
                 coy&R = R;
                 tracin(R,&r,rf{
                     rs&Compiling = om;
-                    co and rs&Comal = fio(co,r.t);
+                    $o = fio(co,r.t);
+                    oy&up = co;
+                    rs&Comal = o;
                 });
             };
             if (is_top) {
                 omc&ov ||= 0.1;
                 omy&top && omy&top != Rc&b &&
                     me&tsc,'f-om-sync',0,'G';
+                # f/coy&top point to f/co, omy&top = R
+                # < use these points of difference to phylo Cit
                 omy&top = R;
                 # start Know/*
                 # creating @63, all there @64 to %ball
@@ -4356,7 +4370,7 @@ Foogla: |
             inp(R);
             
         },'ift,D'],
-        #c A:f@4 waits -> %Compiling
+        #c A:f@37 waits -> %Compiling
         # %tracting_good waits for R/*%tracting_good, etc
         #  when we can rely on our children to complain,
         #  know if they're changey/trouble
@@ -4393,7 +4407,8 @@ Foogla: |
             
             !me&waitzo,R,wa and return
             
-            # children if any are now %tracting_good + Rs&tracting_goodin
+            # children at least here
+            #  Ring usu. children almost here
             Rs&tracting_goodin = 1;
             
             # which means all we need to compile is connected
@@ -4499,7 +4514,7 @@ Foogla: |
                 Ds&fs = 15;
             }
             
-            # various parties lead to %changey, %openey, %trouble
+            # various leads to %changey, %openey, %trouble
             if (fs&changey) {
                 # dige here or inside solving
                 me&tsc,"f%changey","cha",'G';
