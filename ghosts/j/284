@@ -2953,8 +2953,10 @@ Foogla: |
         # anything like
         #   ah(R,'waitz','tw_scgk_r',r.t,'tracting_good',r);
         $N = me&Xwai,V;
-        # grouped by tw,scgk,r and path=tw_scgk_r
+        # group by any
         $d = me&waigh,N;
+        # which makes it more readable
+        R.sc[k+'gh'] = d;
         # rendered modulata
         $g = me&brackdown,R,c.k,d;
         me&walls,g,'b:2.2h3';
@@ -3028,30 +3030,6 @@ Foogla: |
     # < apart/together levelism of the types,
     #    wandering indexes, conflicts
     
-    # the group by
-    # how io wants to compress tons of rows
-    # but for wai, building k/v=[d+]
-    me.waigh = &acgtN{
-        $d = G&Cye,['waigh',1];
-        dy&N = N;
-        dy&refs = [];
-        each in N {
-            each kv n.c {
-                $S = d.sc ||= {};
-                # v sometimes object, d.c groups refs
-                if (isob(v)) {
-                    $vi = dy&refs.indexOf(v);
-                    vi < 0 and vi = dy&refs.push(v)-1
-                    v = vi;
-                    S = d.c ||= {};
-                }
-                S[k] ||= {};
-                $l = S[k][v] ||= [];
-                l.push(n);
-            }
-        }
-        return d
-    };
     #c creata modulata
     # the usual hierarchy:
     # top/groupr(r(gk))/groupology()/grouping(Km)/groupthing(Kn)acgttc
@@ -3153,7 +3131,7 @@ Foogla: |
         $g = me&opeology,t,{label:{walls:'bg',tsc:'l'}};
         gy&waigh = d;
         
-        R.sc['waigh'+t] = d;
+        R.sc[t+'gh'] = d;
         if (gs&ope) {
             ~labpo: R.t
             me&nu,'wai',dy&N;
@@ -3226,6 +3204,75 @@ Foogla: |
         return g
     };
     
+    #c waigh - the group by
+    # how io wants to compress tons of rows
+    # but for wai, building k/v=[d+]
+    me.waigh = &acgtN{
+        $d = G&Cye,['waigh',1];
+        dy&waigh = d;
+        dy&N = N;
+        dy&refs = [];
+        each in N {
+            each kv n.c {
+                $S = d.sc ||= {};
+                # v sometimes object, d.c groups refs
+                if (isob(v)) {
+                    $vi = dy&refs.indexOf(v);
+                    vi < 0 and vi = dy&refs.push(v)-1
+                    v = vi;
+                    S = d.c ||= {};
+                }
+                S[k] ||= {};
+                $l = S[k][v] ||= [];
+                l.push(n);
+            }
+        }
+        return d
+    };
+    
+    # query a waigh
+    #   $la = waighre(gh)
+    #   M[wai+] = la('t:k')
+    #      ^ from gh.sc.$t.$k.*:i.*:wai
+    #    ie the index t was bitted k by all these wai
+    # may return:
+    #   M[wai.c.$o] = la('t:k','co')
+    #    returns that one column
+    #      couldn't include rows without that column
+    #   null if !M.length
+    
+    # < merge gh.c/sc, know here to ..., take ref as input
+    # < producing another waigh, of matched
+    #  < other sql happenings
+    me.waighre = &acgt,gh{
+        ghy&waigh != gh and throw "gh !y&waigh"
+        $la = &ho{
+            $whe = G&peel,h;
+            $ok = 1;
+            $M = [];
+            each tv whe {
+                # < nonfirst t must join the Ms
+                #   or search within them,
+                #    if where's wai/gh indifferent
+                $S = gh.sc[t] || gh.c[t] || {};
+                each kN S {
+                    v != 1 && k != v and continue
+                    M.push(...N);
+                }
+            }
+            if (o) {
+                $N = M;
+                M = [];
+                each i,w N {
+                    $v = w.c[o];
+                    v == null and continue
+                    M.push(v);
+                }
+            }
+            M.length and return M
+        };
+        return la
+    };
     #c wai
     
     # wai each type of path at X.*
@@ -4339,29 +4386,17 @@ Foogla: |
             }
         },'ift,D'],
         
+        # enter thinking into wai:%wou
         ['ball+Compala+Comal','31',&acgtRs{
             T.Mw = 'Comp';
             $r = sy&G;
             $f = sy&f;
             $co = s;
-            
-            # < the wou comes back as uou, feedback loop
+            # waigh:wou from last time, feedback loop
             #    experience -> notion, notion -> etc,
             #    many nodes out of time etc
-            # < until wou%digish == uou,
-            #    unlocks more entropy
-            #     winds up %Compala %Compiling c&ov
-            
-            # < this kind of thing probed in
-            #   whatever happened to %Tool?
-            #   has %Doming to play on
-            if (0 && sy&top == s) {
-                ~>2 Plabic: R.t
-                $h = Rc&N[0];
-                $N = hs&clu;
-                $ma = arou(N,&s{ return s.t.includes('Compala') });
-                me&nu,"clu",ma;
-            }
+            $l = me&ollbs,R,'wough';
+            $la = l && me&waighre,l;
             
             $ha = aha(R,'wou');
             
@@ -4373,8 +4408,16 @@ Foogla: |
                 me.cbu(coy&up,&s{
                     # sanity
                     me&yfuture,sy&T,R;
-                    ah(sy&T,'wou','mot_fro_co','cha','inside',co)
+                    aha(sy&T,'wou')({mot:'cha',fro:'inside',co:co});
                 })
+            }
+            
+            if (la) {
+                la('mot:cha') and me&tsc,'Motcha'
+                la('fro:inside') and me&tsc,'insides'
+                la('mot:cha') && !la('fro:inside') && ha('motch:ready')
+                #me&zu,"waila",N;
+                #ls&cha && !ls&fro
             }
             
             0 && me&ioty,co,['']
@@ -4390,6 +4433,11 @@ Foogla: |
             T.Mw = 'Comp';
             
             me&waitzo,R,'wou';
+            R.t == 'Stylehut' and me&zu;
+            # < until wou%digish == uou,
+            #    unlocks more entropy
+            #     winds up %Compala %Compiling c&ov
+            
         },'ift,D'],
         
         ['ball+tracting+Compiling','67',&acgtRs{
@@ -4398,12 +4446,25 @@ Foogla: |
             $om = Rs&Compiling;
             omy&top != R and return
             #~>7 gets ov: R.t
+            
             if (omc&ov == 0.7) {
                 # %dige-ish group again
                 #   possibly after %ting discovers our change
                 # < into the changelog
+                # ! may break motivation to percolate changes
                 Rs&liesnotok = 0;
                 #$g = me&grype,R,'W',{w:Thing};
+            }
+            
+            # < this kind of thing probed in
+            #   whatever happened to %Tool?
+            #   has %Doming to play on
+            if (0 && sy&top == s) {
+                ~>2 Plabic: R.t
+                $h = Rc&N[0];
+                $N = hs&clu;
+                $ma = arou(N,&s{ return s.t.includes('Compala') });
+                me&nu,"clu",ma;
             }
             
         },'ift,D'],
