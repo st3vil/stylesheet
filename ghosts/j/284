@@ -2961,6 +2961,9 @@ Foogla: |
         $g = me&brackdown,R,c.k,d;
         me&walls,g,'b:2.2h3';
         
+        gs&ope and me&nu,"Xwai-V",V
+        gs&ope and me&nu,"Xwai-N",N
+        
         $d = gy&waigh;
         # dscif: {scgk:'tracting_good'},
         # arkfor: {r: {cb:&dr{
@@ -3111,9 +3114,14 @@ Foogla: |
     # size of anything control
     # < link to iteration of V(iew)
     me.opesizup = &acgtgc{
+        c ||= {};
+        c.opeif1 = 1;
+        me&sizo,g,c;
+    };
+    me.sizo = &acgtgc{
         $R = Cy&R;
         c ||= {};
-        c.len == 1 and gs&ope = 'is1'; return
+        c.opeif1 && c.len == 1 and gs&ope = 'is1'; return
         $s = fio(g,'size');
         ss&label = 1;
         c.len != null and sc&s = 'x'+c.len;
@@ -3142,6 +3150,8 @@ Foogla: |
             each kV d[nk] {
                 # hide fact of paths
                 k == 'path' and continue
+                # and the 1 in $k:1
+                k == 'isness' and continue
                 # size, may lead on
                 $Km = me&opeKm,g,k;
                 me&opesizup,Km,{len:hak(V)};
@@ -3176,7 +3186,12 @@ Foogla: |
                         }
                         $lab = Kny&label;
                         Knc&sortcv = 1;
-                        someC and fio(Kn,['sym',112,{s:'C'},'label,fs:13,lh:0.8,hs:295'])
+                        someC &&
+                            fio(Kn,['sym',112,{s:'C'},
+                            'label,fs:13,lh:0.8,hs:295']);
+                        
+                        me&sizo,Kn,{len:hak(V)};
+                        
                         
                         Kns&ma = 0.2;
                         if (Kns&ope) {
@@ -4352,10 +4367,19 @@ Foogla: |
             $path = [];
             $bits = [];
             each kv s {
-                # tw:C.t
+                # (tw:C.t)
                 path.push(k);
+                # (co:1, $co)
+                v == '1' && args.length and v = args.shift();
                 bits.push(v);
             }
+            bits = [ ... bits, ... args ];
+            # refs mean the end
+            # < doubling path so X.z = nodes here, X.$path = onward 
+            # strings at the end must turn into keys
+            # < counters
+            isst(bits.slice(-1)[0]) and bits.push(1); path.push('isness');
+            
             ah(R,t,path.join("_"), ... bits, ...args)
         };
     };
@@ -4415,7 +4439,7 @@ Foogla: |
             if (la) {
                 la('mot:cha') and me&tsc,'Motcha'
                 la('fro:inside') and me&tsc,'insides'
-                la('mot:cha') && !la('fro:inside') && ha('motch:ready')
+                la('mot:cha') && !la('fro:inside') and ha('mot:ready')
                 #me&zu,"waila",N;
                 #ls&cha && !ls&fro
             }
