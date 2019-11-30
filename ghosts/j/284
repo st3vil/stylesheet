@@ -2134,7 +2134,6 @@ Foogla: |
             delete Rs&Te.sc.boost
         },'ift,D'],
         
-
         #c %Elvisave sense grabber
         ['Elvisave','3',&acgtRs{
             Rs&rowish = 1;
@@ -3624,7 +3623,13 @@ Foogla: |
         ['W','W_exp','G','G_exp'].map(&k{
             $r = f.y [k];
             !r and return
-            r = f.y [k] = me&yfuture,r,R;
+            try {
+                r = f.y [k] = me&yfuture,r,R;
+            }
+            catch (er) {
+                er.message.match(/^yfutured .+ not in RcN$/) and return
+                throw er
+            }
         });
         f.y [k] && f.y [k] != R and me&waits,"already-fy"+k; return
         f.y [k] = R;
@@ -4463,11 +4468,13 @@ Foogla: |
             rs&twoready = 1;
             
             if (gs&ope) {
+                # Lines the %ball we're on, mostly hidden
                 if (!me&rollbs,R,'string' ) {
                     $st = me&Copy,R,s,{ball:9,Lines:3,ov:8};
                     !sts&string and throw "!string"
                     Rs&string = sts&string
                 }
+                
                 # < W might Ws&P the last Ws&Qs&P it saw...
                 $W = fy&W;
                 $Q = Ws&Q;
@@ -4479,6 +4486,58 @@ Foogla: |
                 $M = Ws&MoreLate ||= [];
                 $te = s.t+"_new";
                 m $te  R:1 %ting,toW
+                
+                $Ws = me&ioty,W,['ting'],[te] [0];
+                
+                $i = ss&z[0];
+                me&nu,"Sandsz",ss&z[0];
+                # < has its own islands, also %tracting
+                #   from the That, not Know
+                #   two sets of Gs to conjoin with %traccout?
+                =pod hmm yes.
+                   probably something like that
+                 going back to %MindInto
+                  has heaps to do.
+                  once this is stored again we want to link it into a /js/ name
+                  the %tracting-cha/%Compilings game
+                   is one of many tasks flying around
+                  
+                   stop/sleeping the %tracting when -> %Compiling
+                    except to game more info and check again just before writing
+                    
+                 Know -> That,
+                   except leaf nodes (which compile into others)
+                 being G before/after our compilation
+                 ~Know are sources changing
+                 ~That is us introducing changes we can preempt
+                 
+                  that how to express difference in a storable way,
+                    so we can wake/sleep areas of our process
+                    while they are supposedly rolling over
+                   is still floating
+                  freezing the waitzo modulat would almost do...
+                   diff it if waking up again.
+                  thats what they need everywhere...
+                
+                =cut
+                if (Ws) {
+                    $Qs = Wss&Q;
+                    $Ps = Qss&P;
+                    Qsc&el != 9 and me&diffya,R,'Wownder',R,Ps;
+                    else {
+                        me&nu,"Other",Ws;
+
+                        if (!me&rollbs,R,'sent_string' ) {
+                            Rs&sent_string =
+                            Qss&string = Rs&string;
+                            Qss&parent = Pss&dige;
+                            Wss&_ting(Qs)
+                        }
+                        Pss&string != Rs&string and return me&tsc,'pushing'
+                        me&tsc,'pushed';
+                    }
+                }
+                
                 #ac(W,'More',s.t+"_new");
                 me&zu,"streng",['<<<<',Rs&string]
             }
@@ -5234,7 +5293,7 @@ Foogla: |
             Rs&Modout ||= [];
             # entered too late last time
             (me&ollbs,R,'MoreLate' || [])
-                .map(n => ac(R,'More',la));
+                .map(n => ac(R,'More',n));
             each in Rs&More {
                 ac(R,'Modout',n.t) and continue
                 n $n
@@ -5906,7 +5965,8 @@ Foogla: |
                     c&patch and throw "< patches"
                     # continuity check, also for deletes
                     # < d.parent=null means it should be new
-                    s&P and d.parent = s&P.sc.dige;
+                    s&P and d.parent = s&P.sc.dige
+                    s&parent and d.parent = delete s&parent
                 }
                 T.got = &Psc{
                     $r = dej(s);
