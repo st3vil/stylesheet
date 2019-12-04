@@ -2810,7 +2810,7 @@ Foogla: |
         c ||= {};
         typeof c == 'string' and c = G&peel,c
         
-        # may be in Rs&z
+        # r may exist
         $r = me&ioty,R,'ball',t [0];
         
         if (c.dropempty && r && !me&ioty,r,'ball' .length) {
@@ -2818,9 +2818,11 @@ Foogla: |
             return
         }
         
-        if (!r) {
+        # create s
+        if (!r && !c.dropempty &&
+            (!c.maydo || me&rolltog,R,{maydo:t},0 )) {
+            # rolling s if !r the next time, eg c.eph unattached
             s ||= me&rollbsc,R,'bal_tw_s/'+t;
-            c.maydo && !me&rolltog,R,{maydo:t},0 and s = null
         }
         
         if (s && !r) {
@@ -2833,6 +2835,7 @@ Foogla: |
                 # < with ballio
             }
             rc&dupl = 5;
+            me&zN,r;
         }
         if (r && gaveC) {
             R.sc[t] = r;
@@ -2842,19 +2845,23 @@ Foogla: |
             ac(R,'balz',r);
             # sort ss&z to order of me&likez
             $li = Rs&balz.indexOf(r);
-            if (li > 0) {
-                $ro = Rs&balz[li];
-                $roi = Rs&z.indexOf(ro);
-                $ri = Rs&z.indexOf(r);
-                if (roi > ri) {
-                    Rs&z.splice(roi,1);
-                    Rs&z.splice(ri,0,ro);
-                    Rs&z[ri+1] != r and throw "yos"
-                }
-            }
+            $ro = Rs&balz[li-1];
+            ro and me&zaft,R,ro,r
         }
         return r
     };
+    
+    # Rs&z moves t after r
+    #  if not already somewhere after it
+    me.zaft = &acgtRor{
+        $roi = Rs&z.indexOf(o);
+        $ri = Rs&z.indexOf(r);
+        if (roi > ri) {
+            Rs&z.splice(ri,1);
+            Rs&z.splice(roi,0,r);
+            Rs&z[roi] != r and throw "yos"
+        }
+    }
     
     # r moves into modulat n
     me.zuct = &acgtnr{
@@ -3462,7 +3469,7 @@ Foogla: |
         $S = me&thespot,R,t;
         !S and throw "nospot"
         $f = S.sc[tracting];
-        f and return me&waits,"alreadytrac"+t,"oc:"+S.t
+        f and return me&waits,"alreadytrac"+t,"oc:"+f.t+'.G='+f.y.G.t
         
         # we are outside the R:Know but can sc it
         $C = Rs&C;
