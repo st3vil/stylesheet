@@ -2876,7 +2876,7 @@ Foogla: |
             s&boc = 588;
         },'ift,D'],
     ] };
-    # get accessor (waighre)
+    # get accessor (waighre), now or later
     me.waier = &acgtRc{
         c ||= {};
         isst(c) and c = G&peel,c
@@ -2887,7 +2887,7 @@ Foogla: |
         c.b and $l = me&ollbs,R,c.k+c.gh
         else {
             # or this time
-            $l = R.sc[c.k+c.gh] || me&waicu,R,c;
+            $l = me&waicu,R,c;
         }
         
         $la = l && me&waighre,l;
@@ -3154,30 +3154,12 @@ Foogla: |
         }
     }
     
-    #c f-waitzo-wai
+    #c f-waitzo/solvent
     # of wait data, 
     #  similar to beready pooling modulat %wait
     
-    # %wou -> %wough
-    me.waicu = &acgtRc{
-        c ||= {};
-        isst(c) and c = {k:c};
-        c.k ||= 'wou';
-        c.gh ||= 'gh';
-        
-        $V = R.sc[c.k];
-        !V and return
-        
-        # anything like
-        #   ah(R,'waitz','tw_scgk_r',r.t,'tracting_good',r);
-        $N = me&Xwai,V;
-        # group by any
-        $d = me&waigh,N;
-        # which makes it more readable
-        R.sc[c.k+c.gh] = d;
-        
-        return d
-    }
+    # returns 1 if not waiting
+    # < reverse that so: waitzo and return
     me.waitzo = &acgtRc{
         c ||= {beready:1};
         isst(c) and c = {k:c};
@@ -3189,13 +3171,27 @@ Foogla: |
         # rendered modulata
         $g = me&brackdown,R,c,d;
         me&walls,g,'b:2.2h3';
+        # < projecting the waits over there like grimp
+        me&Mw,R,T.Mw .push(g);
         
         gs&ope and me&nu,"Xwai-V",V
         gs&ope and me&nu,"Xwai-N",N
         
-        $d = gy&waigh;
-        # dscif: {scgk:'tracting_good'},
-        # arkfor: {r: {cb:&dr{
+        c.solvent and me&waisolvent,R,c,d;
+        
+        if (c.beready) {
+            gs&waits = 1;
+            return me&beready,R,T.Mw
+        }
+        return 1;
+    };
+    
+    # react to the state
+    # dscif: {scgk:'tracting_good'},
+    # arkfor: {r: {cb:&dr{
+    me.waisolvent = &acgtRcd{
+        d ||= c.d || me&waicu,R,c;
+        !c.solvent and throw "!c.solvent"
         each i,sol c.solvent {
             $M = [];
             each tk sol.dscif {
@@ -3207,6 +3203,7 @@ Foogla: |
                     $v = n.c[k];
                     # eg a tracting_good sharing a row with an r
                     !v and continue
+                    # < note in dy&brackdown
                     if (a.cb) {
                         a.cb(d,v);
                     }
@@ -3216,16 +3213,8 @@ Foogla: |
                 }
             }
         }
-        
-        # < projecting the waits over there like grimp
-        $M = me&Mw,R,T.Mw;
-        M.push(g);
-        if (c.beready) {
-            gs&waits = 1;
-            return me&beready,R,T.Mw
-        }
-        return 1;
     };
+    
     #c brackdown - summarises a pool of data
     # brackdown - explore the dimensions
     # io joins from a display perspective
@@ -3262,8 +3251,7 @@ Foogla: |
     # < apart/together levelism of the types,
     #    wandering indexes, conflicts
     
-
-    # takes a look
+    #c brackdown takes a look
     # < rename scgk %
     # < rename this which?
     # will be very useful for situating crammed meanings
@@ -3274,15 +3262,12 @@ Foogla: |
     me.brackdown = &acgtRcd{
         c ||= {};
         isst(c) and c = {k:c};
-        c.k ||= 'wou';
-        c.gh ||= 'gh';
-        if (!c.t) {
-            c.t = c.k;
-            c.gh != 'gh' and c.t += c.gh
-        }
+        d ||= c.d || me&waicu,R,c;
+        c.t ||= d.t;
         
         $g = me&opeology,c.t,{label:{walls:'bg',tsc:'l'}};
         gy&waigh = d;
+        dy&brackdown = g;
         
         if (gs&ope) {
             ~labpo: R.t
@@ -3362,33 +3347,7 @@ Foogla: |
         return g
     };
     
-    #c waigh - the group by
-    # how io wants to compress tons of rows
-    # but for wai, building k/v=[d+]
-    me.waigh = &acgtN{
-        $d = G&Cye,['waigh',1];
-        dy&waigh = d;
-        dy&N = N;
-        dy&refs = [];
-        each in N {
-            each kv n.c {
-                $S = d.sc ||= {};
-                # v sometimes object, d.c groups refs
-                if (isob(v)) {
-                    $vi = dy&refs.indexOf(v);
-                    vi < 0 and vi = dy&refs.push(v)-1
-                    v = vi;
-                    S = d.c ||= {};
-                }
-                S[k] ||= {};
-                $l = S[k][v] ||= [];
-                l.push(n);
-            }
-        }
-        return d
-    };
-    
-    # query a waigh
+    #c waigh query
     #   $la = waighre(gh)
     #   M[wai+] = la('t:k')
     #      ^ from gh.sc.$t.$k.*:i.*:wai
@@ -3431,9 +3390,79 @@ Foogla: |
         };
         return la
     };
-    #c wai
+
+    
+    #c waigh access, grouping
+    
+    # interpretation of the c
+    # usual names of the X and the gh
+    me.waidef = &cko{
+        c ||= {};
+        isst(c) and $v = c; c = {}; c[k] = v;
+        (o) and ex(c,o)
+        c.k ||= 'wai';
+        c.gh ||= 'gh';
+        if (!c.t) {
+            # for display
+            c.t = c.k;
+            c.gh != 'gh' and c.t += c.gh
+        }
+        return c
+    };
+    
+    # %wou -> %wough, reusing %wough
+    me.waicu = &acgtRc{
+        c = me&waidef,c,'k',{k:'wou'};
+        
+        $d = R.sc[c.k+c.gh];
+        d and return d
+        $X = R.sc[c.k];
+        !X and return
+        
+        $N = me&Xwai,X;
+        # group by any
+        $d = me&waigh,N,c;
+        # which makes it more readable
+        R.sc[c.k+c.gh] = d;
+        
+        return d
+    }
+    
+    # wai N[d] -> gh
+    #  ds&$ark.$key = N[d] with such
+    # how io wants to compress tons of rows
+    # but for wai, building k/v=[d+]
+    # c usu waicu's, accessor for gh
+    me.waigh = &acgtNc{
+        c = me&waidef,c,'k';
+        
+        $gh = G&Cye,[c.t,1];
+        ghy&waigh = gh;
+        ghy&N = N;
+        ghy&refs = [];
+        each in N {
+            each kv n.c {
+                $S = gh.sc ||= {};
+                # v sometimes object, d.c groups refs
+                if (isob(v)) {
+                    $vi = dy&refs.indexOf(v);
+                    vi < 0 and vi = dy&refs.push(v)-1
+                    v = vi;
+                    S = gh.c ||= {};
+                }
+                S[k] ||= {};
+                $l = S[k][v] ||= [];
+                l.push(n);
+            }
+        }
+        return gh
+    };
+    
+    #c N = Xwai(X = aha(...))
     
     # wai each type of path at X.*
+    # eg.
+    #   ah(R,'waitz','tw_scgk_r',r.t,'tracting_good',r);
     me.Xwai = &acgtXc{
         $N = [];
         each path,v X {
@@ -3441,6 +3470,48 @@ Foogla: |
         }
         return N
     }
+    
+    # setter of {names:keys} into X.names = k{e{y=s
+    # eg.
+    #   aha(R,'waitz')({tw:r.t,scgk:'tracting_good',r:r})
+    #
+    # < get between R better?
+    #   maybe do one big pile at the top,
+    #    each r able to enter as such,
+    #     perhaps using a template for "cares of r"
+    #     debugality (of elvising would do) wants to know
+    #     where the data came from
+    #      while there is expense to spare
+    #      brackdown sends hooks onto X.
+    #   then waigh for/into each r
+    #     triangling the hopes and dreams of the community
+    window.aha = &Rt{
+        return &s{
+            $args = [... arguments].slice(1);
+            isst(s) and s = G&peel,s
+            $path = [];
+            $bits = [];
+            each kv s {
+                # (tw:C.t)
+                path.push(k);
+                # (co:1, $co)
+                v == '1' && args.length and v = args.shift();
+                bits.push(v);
+            }
+            bits = [ ... bits, ... args ];
+            # refs mean the end
+            # < doubling path so X.z = nodes here, X.$path = onward 
+            # strings at the end must turn into keys
+            # < counters
+            isst(bits.slice(-1)[0]) and bits.push(1); path.push('isness');
+            
+            ah(R,t,path.join("_"), ... bits, ...args)
+        };
+    };
+    
+
+    
+    #c wai **{ -> N[d+]
     # deep hash with known paths/rows
     # < just wander in until C
     me.wai = &acgtd{
@@ -4632,42 +4703,8 @@ Foogla: |
             y(r,rf);
         })
     };
-    # wai-ish pathed hash stash for {} in order
-    # < should get between R better?
-    #   maybe do one big pile at the top,
-    #    each r able to enter as such,
-    #     perhaps using a template for "cares of r"
-    #     debugality (of elvising would do) wants to know
-    #     where the data came from
-    #      while there is expense to spare
-    #   then waigh for/into each r
-    #     triangling the hopes and dreams of the community
-    window.aha = &Rt{
-        return &s{
-            $args = [... arguments].slice(1);
-            isst(s) and s = G&peel,s
-            $path = [];
-            $bits = [];
-            each kv s {
-                # (tw:C.t)
-                path.push(k);
-                # (co:1, $co)
-                v == '1' && args.length and v = args.shift();
-                bits.push(v);
-            }
-            bits = [ ... bits, ... args ];
-            # refs mean the end
-            # < doubling path so X.z = nodes here, X.$path = onward 
-            # strings at the end must turn into keys
-            # < counters
-            isst(bits.slice(-1)[0]) and bits.push(1); path.push('isness');
-            
-            ah(R,t,path.join("_"), ... bits, ...args)
-        };
-    };
     me.Wrongingness = &acgtR{ return [
         # %trac*
-        #c A:f52 howse
         
         # in closing
         ['ball+tracting+Compiling','67',&acgtRs{
