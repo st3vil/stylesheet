@@ -2782,7 +2782,7 @@ Foogla: |
             # half-moved
             me&bal,'This','dropempty';
             # and its ...
-            me&bal,'Compiling','eph';
+            me&bal,'Compiling','eph,supr';
             
             # where from
             me&bal,'Know';
@@ -2826,7 +2826,6 @@ Foogla: |
                 me&tracto,r,'ball','ting',S;
                 
                 me&Ring,R,{und:r,ov:0.7};
-                me&zu,'ahawou',rs&wou;
             }
             
             # steps flow upwards
@@ -2846,6 +2845,7 @@ Foogla: |
                 return me&brackdown,r,c
             };
             each ir As {
+                i *= 1;
                 $l = As[i-1];
                 $n = As[i+1];
                 
@@ -2857,13 +2857,15 @@ Foogla: |
                 if (!rs&eph) {
                     # it may be ready to feed to n
                     $g = tip(r);
+                    !l and me&mtsc,g,"noprev"
                     $N = ra && ra('co:ready','r') || [];
-                    
-                    N && N.length and me&mtsc,g,"Have"
-                    
-                    # build ** into n
-                    #   apply Cuploadism as they finish
-                    # if That generates change... its product is saved
+                    each ij N {
+                        # < autoapply That change
+                        !n and me&mtsc,g,"nonext"; continue
+                        # build ** into n
+                        me&suprise,j,n;
+                    }
+                    # < apply change/Cuploadism as they finish
                     continue
                 }
                 
@@ -2871,7 +2873,7 @@ Foogla: |
                 #  with cha in itself but not its children
                 # if fs&changey:
                 #   ha('mot:cha');
-                #   me.cbu(coy&up,&s{ 
+                #   me.cbu(coy&up,&s{
                 #       aha(sy&T,'wou')({mot:'cha',fro:'inside',co:co});
                 #   });
                 # if la:
@@ -2880,6 +2882,7 @@ Foogla: |
                 # < %Comal should +cha if !That/$t
                 
                 # @31 domecheck, from
+                
                 me&Ring,r,{inside:r,ov:0.31};
                 
                 # @32 doing, from
@@ -2899,14 +2902,78 @@ Foogla: |
             }   
             T.Mw = 'Comp'; # desn't last
         },'ift,D'],
+        ['ball+Comal','31',&acgtRs{
+            me&tsc,"Shjur",0,'y';
+        },'ift,D'],
             
     ] };
-    # A:f@4-ish %Compiling** -> %Comal**
-    # rebuilds tree of C into the next process
-    # inject/sync Compiling%eph/$k/$t**
-    # cast from another C (tree of)
-    me.suprise = &acgtRc{
-        # 
+    #c suprise - cast (tree of) C into the next process
+    # was A:f@4-ish %Compiling** -> %Comal**, etc
+    #  got very heavy on the etc.
+    # r - the Know/Stylehut
+    # n - the Compiling
+    # linear Know/* -> Compiling/*%Comal -> That/*
+    # and sub-SupplyChain:
+    #   Compiling%eph/seq%eph/**%Comste,
+    #    to do things until %Comals are satisfied
+    #      enough to give that thing to That
+    #   was:
+    #     inject/sync Compiling%eph/$k/$t**
+    #     $k was all|seq for Comal|Comste
+    me.suprise = &acgt,lr,nr{
+        # z-getter per r, for what they want to transmit
+        $zget = lrs&zget || lrs&tracting && tracin;
+        !zget and throw "no zget"
+        
+        $toplr = lr;
+        $tops = [];
+        sup = &lr,nr{
+            if (lr != toplr) {
+                # lr now somewhere inside toplr (Know/**)
+                # S = itself in previous step
+                $S = lrc&s;
+                $s = nrc&s;
+                # should persist unless new
+                me&persis,s,'y','supr','Comal';
+                me&persis,S,'y','n',s
+                me&persis,s,'y','l',S;
+                sy&R = nr;
+            }
+            zget(lr,&r{
+                # copy the z-move, inputting
+                $rn = me&input,nr,r.t;
+                # S = its parent in this step
+                $S = nrc&s;
+                $s = rnc&s;
+                # top at Compiling/*
+                if (!sy&top || sy&top == s) {
+                    sy&top = s;
+                    tops.push(s);
+                }
+                else {
+                    sy&top = Sy&top;
+                    sy&up = S;
+                }
+                # collects them all
+                ac(sy&top,'yN',s);
+                
+                sup(r,rn);
+            });
+        };
+        sup(lr,nr);
+        # check no vanishing atoms
+        tops .map(&s{
+            sy&N .map(&s{
+                me&yfuture,sy&R
+            })
+        });
+    };
+    me.persis = &acgts,nk,gk,v{
+        $ov = s[nk][gk];
+        !ov and 'new'
+        else
+        ov != v and throw "!persis: "+s.t+"'s "+nk+"&"+gk
+        s[nk][gk] = v;
     };
     #c f-%ball/modulat
     # %ball suggested into/assumed from s)R%ball
