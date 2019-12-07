@@ -2810,8 +2810,10 @@ Foogla: |
             me&bewind,R and return
             
             # steps with a tingspot
-            $Gs = Rs&balz.filter(r => !rs&eph);
-            each ir Gs {
+            Rs&balz .filter(r => !rs&eph)
+            .map(&r{
+                # opposite of eph:
+                rs&grou = 1;
                 # eg ForThe/Know/tings%ting, usu 404, mainly to:
                 #  %folder the rest of the %tings inside
                 $S = me&bal,'tings',{R:r,eph:1,folder:1};
@@ -2826,7 +2828,7 @@ Foogla: |
                 me&tracto,r,'ball','ting',S;
                 
                 me&Ring,R,{und:r,ov:0.7};
-            }
+            });
             
             # steps flow upwards
             $As = Rs&balz.slice().reverse();
@@ -2837,7 +2839,7 @@ Foogla: |
                 c = woudef(c);
                 !r and return
                 # G already @7, use the one of it
-                !rs&eph and delete c.b; c.gh = 'gh'
+                rs&grou and delete c.b; c.gh = 'gh'
                 return me&waier,r,c
             };
             $tip = &rc{
@@ -2846,6 +2848,7 @@ Foogla: |
             };
             # eg Compiling:r/**%supr=Comal:j
             $nodes = &ry{
+                # the r = Compiling or Know
                 me&ioty,r .map(&j{
                     $s = jc&s;
                     !sy&supr and throw "wandering"
@@ -2858,7 +2861,7 @@ Foogla: |
                 $n = As[i+1];
                 
                 # these Know/Compiling/That
-                $la = waia(l,{b:1});
+                $la = waia(l); # has happened
                 $ra = waia(r,{b:1});
                 $na = waia(n,{b:1});
                 
@@ -2867,7 +2870,7 @@ Foogla: |
                     # it may be ready to feed to n
                     $g = tip(r);
                     !l and me&mtsc,g,"noprev"
-                    $N = ra && ra('co:ready','r') || [];
+                    $N = ra && ra('ready','r') || [];
                     each ij N {
                         # < autoapply That change
                         !n and me&mtsc,g,"nonext"; continue
@@ -2882,32 +2885,31 @@ Foogla: |
                 nodes(r,&js{
                     # y&l change already fatal
                     
-                    # y&f brought to it - design flaw
-                    # < Comal@31 wants to grab f of Know + That
-                    #   then know either change unto 32
-                    # < distant future G&t along y-ers to it,
-                    #   remembers what it saw/thought mattered
-                    
                     # waigh:wou from last time, feedback loop
                     #   experience -> notion, notion -> etc
                     jy&sa = waia(j,{b:1});
                     
                     jy&ha = aha(j,'wou');
                     
-                    # differ sa <-> wou now
+                    # differ before <-> now
+                    # < caching sa/za, then:
+                    #   < versioned X, re-waigh if ha since da
                     jy&da = &loose,tight,c{
+                        c ||= {};
+                        # what you want/specifically
+                        isst(loose) and loose = G&peel,loose
                         isst(tight) and tight = G&peel,tight
-                        # < versioned X, re-waigh if ha since da
-                        $gh = waia(j);
-                        $was = jy&sa(loose);
-                        $now = gh(loose);
+                        $sa = waia(j,ex({b:1},c));
+                        $za = waia(j,ex({},c));
+                        $was = sa(loose);
+                        $now = za(loose);
                         # gets zu grounding into j
                         $C = js&C;
                         me&zu,'da',{was,now,tight};
                         $cha = {};
                         each kv tight {
                             # k - the column in either
-                            # v - change type
+                            # v - change type/reaction
                             #  ref, slep, in/decrease, growth...
                         }
                         return cha
@@ -2915,7 +2917,7 @@ Foogla: |
                 })
                 
                 #c zap
-                me&nu,"zap",r;
+                #me&nu,"zap",r;
                 
                 # eg here's some %Comal electing the next %Comste
                 #  with cha in itself but not its children
@@ -2933,12 +2935,32 @@ Foogla: |
                 
                 me&Ring,r,{inside:r,ov:0.31};
                 
-                # @32 doing, from
+                # wouey is wough before 32
+                # < assume everything in 31 sleeps 32
+                #waia(r,{gh:'ey'});
+                #waia(r,{gh:'ey',b:1});
+                
                 me&Ring,r,{inside:r,ov:0.32};
+                
+                # wough is finally here!
+                $za = waia(r);
+                nodes(r,&js{
+                    # < insist ready is the first column
+                    #   so we can simply js&wou.*.ready
+                    $ja = waia(j);
+                    # < Comal wants to sidechain into Comste,
+                    #   which pushes back to Comal
+                    #   it can probably almost wind back the
+                    #   Rcv and Ring 32 again afterwards...
+                    ja('ready') and me&suprise,j,n,'Comste'
+                    
+                });
+                
             }
             
             s&boc = 588;
         },'ift,D'],
+        
         # the **%eph become %supr
         #  then their %$suprtype
         #   add particular behaviour
@@ -2968,14 +2990,14 @@ Foogla: |
             $Tf = me&supry,s,'yf','yn';
             ha({grab:'to',f:Tf});
             
-            # may use either
+            # which to compile from
             $leaf = !ss&z;
             sy&f = leaf ? Kf : Tf;
             
-            cos&coung ||= 0;
-            $le = cos&coung++;
+            ss&coung ||= 0;
+            $le = ss&coung++;
         },'ift,D'],
-        ['ball+Comal','31',&acgtRs{
+        ['ball+Comal','32',&acgtRs{
             $sa = Ry&sa;
             $ha = Ry&ha;
             $da = Ry&da;
@@ -2987,7 +3009,9 @@ Foogla: |
             #  eg delete rows with dep:yf
             # < wrap ha() with row template
             #   to add such a dependency to each thence
-            da('f','','ref') and 'drop f dependent state'
+            if (R.t == 'HutKitchen') {
+                da('f','','ref') and 'drop f dependent state'
+            }
             
             $f = sy&f;
             if (fs&changey) {
@@ -3001,44 +3025,40 @@ Foogla: |
             }
             # ^ goes around once, now fro will be there:
             if (sa) {
-                $ready = la('mot:cha') && !la('fro:inside')
-                if (ready) {
-                    ha('mot:ready');
-                    # give to topmost
-                    $t = sy&top;
-                    
-                    # place at top of this om**
-                    $om = me.cbub(R,'Omplier');
-                    #me&nu,"om",om
-                    # as opposed to $om/all/$co == sy&top
-                    #me&nu,"top",sy&top
-                    # and not as far as $Know%ball%Compiling
-                    #me&nu,"Compala",Rs&Compala
-                    aha(om,'wou')({elvism:'seq',t:co.t,Mix:co});
+                if (sa('mot:cha') && !sa('fro')) {
+                    # Compiling can see this:
+                    ha('ready');
                 }
             }
-            cos&count ||= 0;
-            $le = cos&count++;
+            ss&count ||= 0;
+            $le = ss&count++;
         },'ift,D'],
-            
     ] };
+    
+    #c MindInto-f
+    # < distant future G&t along y-ers to it,
+    #   remembers what it saw/thought mattered
     me.supry = &acgtstvc{
         c ||= {};
         # gets yf
         $nk = t.substr(0,1);
         $gk = t.substr(1);
-        # by travelling yl
+        # travel via yl
         $nv = v.substr(0,1);
         $gv = v.substr(1);
         $h = me.cby(s,
-            &s{ return s[nv][gv] },
-            &s{ return s[nk][gk] }
+            &s{ return s[nk][gk] },
+            &s{ return s[nv][gv] }
         )[0];
-        $vo = h && h[nv][gv];
+        $vo = h && h[nk][gk];
         c.fat && !vo and throw "no "+nk+"&"+gk+"-ward "+nv+"&"+gv+" from "+s.t
         return vo
     };
+    
     # GONER
+        # y&f brought to it - design flaw
+        # Comal@31 wants to grab f of Know + That
+        #   then know either change unto 32
     # percolate eg ry&f from r(y&l)+y&f
     # return 1 if non-init change
     me.supread = &acgtsc{
@@ -3056,6 +3076,7 @@ Foogla: |
         }}
         return change
     };
+    
     # sets eg sy&f and then checks it doesn't change
     # unless c.changeok: returns 1 if change (once set)
     me.persis = &acgts,nk,gk,v,c{
@@ -3071,7 +3092,7 @@ Foogla: |
         s[nk][gk] = v;
         return change
     };
-    #c suprise - cast (tree of) C into the next process
+    #c MindInto-suprise - cast (tree of) C into the next process
     # they already %supr=1 (if %eph)
     #  get ys&supr = $supr
     #   which becomes %$supr next time (good slow?)
@@ -3091,6 +3112,7 @@ Foogla: |
         # z-getter per r, for what they want to transmit
         $zget = lrs&zget || lrs&tracting && tracin;
         !zget and throw "no zget"
+        !nr and throw "no next"
         
         $tops = [];
         $sup;
@@ -3111,6 +3133,7 @@ Foogla: |
             });
         };
         $rup;
+        $first = 1;
         rup = &r,nr{
             $rn = me&input,nr,r.t;
             
@@ -3118,7 +3141,8 @@ Foogla: |
             $S = nrc&s;
             $s = rnc&s;
             # top at Compiling/*
-            if (!sy&top || sy&top == s) {
+            if (first || sy&top == s) {
+                first = 0;
                 sy&top = s;
                 tops.push(s);
             }
@@ -5850,7 +5874,8 @@ Foogla: |
             # which means all we need to compile is connected!
             if (pf == fy&top) {
                 $g = pfy&G;
-                aha(g,'wou')({co:'ready',tw:R.t,r:R});
+                #g != R and throw " wro"
+                aha(g,'wou')({ready:1,tw:R.t,r:R});
             }
         },'ift,D'],
         
