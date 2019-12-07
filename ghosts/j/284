@@ -2902,6 +2902,7 @@ Foogla: |
             }   
             T.Mw = 'Comp'; # desn't last
         },'ift,D'],
+        
         ['ball+Comal','31',&acgtRs{
             me&tsc,"Shjur",0,'y';
         },'ift,D'],
@@ -2913,8 +2914,8 @@ Foogla: |
     #   which becomes %$supr next time (good slow?)
     # was A:f@4-ish %Compiling** -> %Comal**, etc
     #  got very heavy on the etc.
-    # r - the Know/Stylehut
-    # n - the Compiling
+    # lr - the Know/Stylehut
+    # nr - the Compiling
     # linear Know/* -> Compiling/*%Comal -> That/*
     # and sub-SupplyChain:
     #   Compiling%eph/seq%eph/**%Comste,
@@ -2928,42 +2929,46 @@ Foogla: |
         $zget = lrs&zget || lrs&tracting && tracin;
         !zget and throw "no zget"
         
-        $toplr = lr;
         $tops = [];
+        $sup;
         sup = &lr,nr{
-            if (lr != toplr) {
-                # lr now somewhere inside toplr (Know/**)
-                # S = itself in previous step
-                $S = lrc&s;
-                $s = nrc&s;
-                # should persist unless new
-                me&persis,s,'y','supr',supr;
-                me&persis,S,'y','n',s
-                me&persis,s,'y','l',S;
-                sy&R = nr;
-            }
+            # lr now somewhere inside toplr (Know/**)
+            # S = itself in previous step
+            $S = lrc&s;
+            $s = nrc&s;
+            # should persist unless new
+            me&persis,s,'y','supr',supr;
+            me&persis,S,'y','n',s,{changeok:1}
+            me&persis,s,'y','l',S;
+            sy&R = nr;
+            
+            # copy the z-move, inputting
             zget(lr,&r{
-                # copy the z-move, inputting
-                $rn = me&input,nr,r.t;
-                # S = its parent in this step
-                $S = nrc&s;
-                $s = rnc&s;
-                # top at Compiling/*
-                if (!sy&top || sy&top == s) {
-                    sy&top = s;
-                    tops.push(s);
-                }
-                else {
-                    sy&top = Sy&top;
-                    sy&up = S;
-                }
-                # collects them all
-                ac(sy&top,'yN',s);
-                
-                sup(r,rn);
+                rup(r,nr);
             });
         };
-        sup(lr,nr);
+        $rup;
+        rup = &r,nr{
+            $rn = me&input,nr,r.t;
+            
+            # S = its parent in this step
+            $S = nrc&s;
+            $s = rnc&s;
+            # top at Compiling/*
+            if (!sy&top || sy&top == s) {
+                sy&top = s;
+                tops.push(s);
+            }
+            else {
+                sy&top = Sy&top;
+                sy&up = S;
+            }
+            # collects them all
+            ac(sy&top,'yN',s);
+
+            sup(r,rn);
+        };
+        rup(lr,nr);
         # check no vanishing atoms
         tops .map(&s{
             sy&N .map(&s{
@@ -2971,11 +2976,14 @@ Foogla: |
             })
         });
     };
-    me.persis = &acgts,nk,gk,v{
+    me.persis = &acgts,nk,gk,v,c{
+        c ||= {};
         $ov = s[nk][gk];
         !ov and 'new'
         else
-        ov != v and throw "!persis: "+s.t+"'s "+nk+"&"+gk
+        if (ov != v) {
+            !c.changeok and throw "!persis: "+s.t+"'s "+nk+"&"+gk
+        }
         s[nk][gk] = v;
     };
     #c f-%ball/modulat
