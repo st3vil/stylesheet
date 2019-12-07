@@ -2869,6 +2869,24 @@ Foogla: |
                     continue
                 }
                 
+                # now prepare the consciousness of 31 + 32
+                me&ioty,r .map(&j{
+                    $s = jc&s;
+                    sy&N .map(&s{
+                        # y&l change already fatal
+                        $fcha = me&supread,s,{bring:{y:{f:1}}}
+                        # y&f change handleable,
+                        #  since %Comal does all the work all the time
+                        #  but could reduce state feedback
+                        #   to redo work that may depend on it
+                        #  eg delete rows with dep:yf
+                        # < wrap ha() with row template
+                        #   to add the dependency to each thence
+                    })
+                });
+                
+                me&nu,"zap",r;
+                
                 # eg here's some %Comal electing the next %Comste
                 #  with cha in itself but not its children
                 # if fs&changey:
@@ -2891,7 +2909,7 @@ Foogla: |
             
             s&boc = 588;
         },'ift,D'],
-        # the **%eph become %supr
+        #c the **%eph become %supr
         #  then their %$suprtype
         #   add particular behaviour
         ['ball+supr','291',&acgtRs{
@@ -2908,6 +2926,38 @@ Foogla: |
         },'ift,D'],
             
     ] };
+    # percolate eg ry&f from r(y&l)+y&f
+    # return 1 if non-init change
+    me.supread = &acgtsc{
+        c.via ||= 'l';
+        $change = 0;
+        each nk,gk,v c.bring {
+            $h = me.cby(s,
+                &s{ return s[nk][gk] },
+                &s{ return s.y[c.via] }
+            )[0];
+            $vo = h && h[nk][gk];
+            !vo and throw "no "+c.via+"-ward "+nk+"&"+gk+" from "+s.t
+            $cha = me&persis,s,nk,gk,vo,{changeok:1};
+            cha and change = 1
+        }}
+        return change
+    };
+    # sets eg sy&f and then checks it doesn't change
+    # unless c.changeok: returns 1 if change (once set)
+    me.persis = &acgts,nk,gk,v,c{
+        c ||= {};
+        $ov = s[nk][gk];
+        $change = 0;
+        !ov and 'new'
+        else
+        if (ov != v) {
+            change = 1
+            !c.changeok and throw "!persis: "+s.t+"'s "+nk+"&"+gk
+        }
+        s[nk][gk] = v;
+        return change
+    };
     #c suprise - cast (tree of) C into the next process
     # they already %supr=1 (if %eph)
     #  get ys&supr = $supr
@@ -2975,16 +3025,6 @@ Foogla: |
                 me&yfuture,sy&R
             })
         });
-    };
-    me.persis = &acgts,nk,gk,v,c{
-        c ||= {};
-        $ov = s[nk][gk];
-        !ov and 'new'
-        else
-        if (ov != v) {
-            !c.changeok and throw "!persis: "+s.t+"'s "+nk+"&"+gk
-        }
-        s[nk][gk] = v;
     };
     #c f-%ball/modulat
     # %ball suggested into/assumed from s)R%ball
@@ -5657,6 +5697,8 @@ Foogla: |
         ['ball+tracting_good','62',&acgtRs{
             T.Mw = 'trac';
             $f = Rs&tracting;
+            # f goes to next steps, beyond %tracting-specifica
+            sy&f = f;
             $pf = fy&up;
             
             tracin(R,&r,rf{
