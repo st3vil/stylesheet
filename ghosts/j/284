@@ -2991,15 +2991,48 @@ Foogla: |
             # see Omplateau
         },'ift,D'],
         
-        ['ball+Comste','32',&acgtRs{
+        ['ball+Comste','31',&acgtRs{
             $sa = Ry&sa; # last waigh
             $ha = Ry&ha; # wai-in aha()()
             $da = Ry&da; # differ last waigh <-> now waigh
             
             me&rolltog,R,{may:'Comste'} and ha('ready')
-            me&tsc,'Comste',0,'y'
         },'ift,D'],
         
+        ['ball+Comste','32',&acgtRs{
+            $sa = Ry&sa; # last waigh
+            $ha = Ry&ha; # wai-in aha()()
+            $da = Ry&da; # differ last waigh <-> now waigh
+            
+            $f = sy&f;
+            f ||= sy&l.y.f;
+            # don't yet have the f for non-leaf nodes
+            
+            if (sa && sa('redialy')) {
+                # status should depend on:
+                f && fs&game != 'get' and throw "undialed"
+                ha('redialy')
+            }
+            else {
+                # < give fy&G/W some time to have game=...
+                #   ensuring it on the way back (Thing?)
+                # alters the %ting but supposedly it's ours,
+                #  and we will sleep til its ready again
+                f and fs&game = 'get'
+                return ha('redialy')
+            }
+            
+            if (sy&top == s) {
+                # o **!%redialy
+                #  very in future
+                $N = sy&N.map(s => sy&R)
+                    .filter(j => !(jy&sa && jy&sa('redialy')));
+                N.length and return ha('waits:them-redialy')
+                
+                me&tsc,'Stetop'
+            }
+            
+        },'ift,D'],
         #c Comal
         # the pile of codes moving towards That/**$t
         #  leaf nodes read Know/**$t, write That/**$t
@@ -3010,7 +3043,7 @@ Foogla: |
             $da = Ry&da; # differ last waigh <-> now waigh
             
             # Know/**$t
-            $Kf = sy&f = me&supry,s,'yf','yl';
+            $Kf = me&supry,s,'yf','yl';
             Kf and ha({grab:'from',f:Kf});
             
             # That/**$t, if found...
@@ -3038,20 +3071,35 @@ Foogla: |
             #   to add such a dependency to each thence
             da('f','','ref') and 'drop f dependent state'
             
-            $f = sy&f;
-            !f and return me&waits,"No-f"
-            if (fs&changey) {
-                ha('mot:cha,f',f);
-                # mot:cha affects all above,
-                #  unless its not That/$t-effective
+            $aplup = &sy{
                 me.cbu(sy&up,&s{
                     me&yfuture,sy&R,R; # sanity
-                    sy&R.y.ha({mot:'cha',fro:s});
+                    $j = sy&R;
+                    $ha = jy&ha;
+                    !ha and throw "aplup syup!yha"
+                    y(ha,j,s)
                 })
+            };
+            
+            $f = sy&f;
+            $mot = 0;
+            if (!f) {
+                # non-leaf && non-existent That..G?
+                mot = 1;
+                ha('mot:no-f');
             }
-            # ^ goes around once, now fro will be there:
+            elsif (fs&changey) {
+                mot = 1;
+                ha('mot:cha,f',f);
+            }
+            
+            # mot defers all above,
+            #  may be not That/$t-changey by their turn
+            mot and aplup(s,&ha,{ ha({mot:'cha',fro:s}) });
+            
+            # ^ goes around once, now fro can be there:
             if (sa) {
-                if (sa('mot:cha') && !sa('fro')) {
+                if (sa('mot') && !sa('fro')) {
                     # Compiling can see this:
                     ha('ready');
                 }
