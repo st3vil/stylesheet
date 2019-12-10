@@ -3033,7 +3033,8 @@ Foogla: |
             $ha = Ry&ha; # wai-in aha()()
             $da = Ry&da; # differ last waigh <-> now waigh
             
-            sy&f ||= sy&l.y.f;
+            $l = sy&l;
+            sy&f ||= ly&lf || ly&f;
             
             me&rolltog,R,{may:'Comste'} and ha('ready')
         },'ift,D'],
@@ -3124,7 +3125,7 @@ Foogla: |
             cha.length and delete Rs&Ready
             
             $D = Rs&Live;
-            !D and throw "Not %Live"
+            !D and return me&waits,"!live"
 
             $Lives = me&ioty,R,'Comste'
                 .map(j => js&Live);
@@ -3158,6 +3159,7 @@ Foogla: |
             # Know/**$t
             $Kf = me&supry,s,'yf','yl';
             Kf and ha({grab:'from',f:Kf});
+            s.y.lf = Kf;
             
             # That/**$t, if found...
             $Tf = me&supry,s,'yf','yfin';
@@ -3197,25 +3199,33 @@ Foogla: |
             };
             
             $f = sy&f;
-            $mot = 0;
+            $W = f && fy&W;
+            $fro = 0;
             if (!f) {
                 # non-leaf && non-existent That..G?
-                mot = 1;
+                fro = 1;
                 ha('mot:no-f');
             }
             elsif (fs&changey) {
-                mot = 1;
+                fro = 1;
                 ha('mot:cha,f',f);
             }
-            
-            # mot defers all above,
+            fro and fro = {mot:'cha'};
+            # mot-fro un-fro'd by Update writing...
+            #  should have it in sy&lf
+            fro && !ss&Updated and mot.fro = s
+            # fro defers all above,
+            #   perhaps mot lasts longer than fro,
+            #   so our Know + That G commit changey away,
+            #   then simply hang around...
             #  may be not That/$t-changey by their turn
-            mot and aplup(s,&ha,{ ha({mot:'cha',fro:s}) });
+            fro and aplup(s,&ha,{ ha({mot:'cha',fro:s}) });
             
             # ^ goes around once, now fro can be there:
             if (sa('mot') && !sa('fro')) {
                 # %SupplyChai finds this, makes into %Comste
                 ha('ready');
+                Rs&suprise_c = {dl:1};
             }
             
             #c Comal-ing
@@ -3293,7 +3303,6 @@ Foogla: |
                     # < W might Ws&P the last Ws&Qs&P it saw...
                     
                     $f = tsy&f;
-                    fs&Wupular = 1;
                     # is all there or 404
                     $fok = f && (ts&tracting_goodin || ts&creatine);
                     # keeps diags, pushes get dekeened if !fok
@@ -3306,6 +3315,9 @@ Foogla: |
                         return
                     }
                     
+                    !fok and return me&waits,'!fok'
+                    # mark as being in That
+                    fs&Wupular = 1
                     # now %ting for .1
                     
                     #me&nu,"ts",ts;
@@ -3370,7 +3382,7 @@ Foogla: |
                     }
                     go and ha({Pushable:sts&dige})
                     
-                    # or when found == + Know cha
+                    #c Comalor or when found == + Know cha
                     if (ss&Updated) {
                         if (s == sy&top) {
                             # < all deleted when the top is Updated
@@ -3378,11 +3390,12 @@ Foogla: |
                         }
                         else {
                             $p = sy&up;
-                            $pr = sy&R;
+                            $pr = py&R;
                             $pa = pry&ha;
                             pa('mot:upd,supr',s);
                             ha('Updated')
                             me&mtsc,g,'Up',0,'p';
+                            me&nu,"p",pr
                         }
                     }
                 }
@@ -3477,19 +3490,23 @@ Foogla: |
     #     $k was all|seq for Comal|Comste
     me.suprise = &acgt,lr,nr,c{
         c ||= {};
+        
         # z-getter per r, for what they want to transmit
         $zget = c.zget || lrs&zget || lrs&tracting && tracin;
         zget ||= &Ry{ me&ioty,R,'ball' .map(y) };
         !zget and throw "no zget"
         !nr and throw "no next"
+        
         supr = c.supr || nrs&supr;
         $C = lrs&C;
         !C and throw "suprise lr !Rs&C"
         !supr and return me&tsc,"!%supr-next"
         
+        ex(c,lrs&suprise_c||{});
+        
         $tops = [];
         $sup;
-        sup = &lr,nr{
+        sup = &lr,nr,depth{
             # lr now somewhere inside toplr (Know/**)
             # S = itself in previous step
             $S = lrc&s;
@@ -3503,14 +3520,16 @@ Foogla: |
             me&persis,s,'y','l',S,Sc;
             me&persis,s,'y','R',nr;
             
+            c.dl && c.dl <= depth and return
+            
             # copy the z-move, inputting
             zget(lr,&r{
-                rup(r,nr);
+                rup(r,nr,depth+1);
             });
         };
         $rup;
         $first = 1;
-        rup = &r,nr{
+        rup = &r,nr,depth{
             $rn = me&input,nr,r.t;
             
             # S = its parent in this step
@@ -3529,9 +3548,9 @@ Foogla: |
             # collects them all
             ac(sy&top,'yN',s);
 
-            sup(r,rn);
+            sup(r,rn,depth);
         };
-        rup(lr,nr);
+        rup(lr,nr,0);
         # check no vanishing atoms
         tops .map(&s{
             sy&N .map(&s{
