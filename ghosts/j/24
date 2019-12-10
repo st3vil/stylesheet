@@ -579,8 +579,10 @@ Wade: | # serve /W/$t to G&t
             $c->render(text=>sjson(
                 {er=>"illegal t[".pos()."] char: $1 in '$t'"}
             ));
-        # and you can't use the name 1
-        my $f = $t =~ /.+\/\d$/ ? $t : "$t/1";
+        # and you can't use the name 1 etc
+        $t =~ s/\/(\d)$//;
+        my $species = $1 || '1';
+        my $f = "$t/$species";
         
         # returns json:
         my $re = {ok=>0};
@@ -615,7 +617,7 @@ Wade: | # serve /W/$t to G&t
         }
         else {
             if (-f $f) {
-                $s = decode_utf8(read_file($f));
+                $s = encode_utf8(read_file($f));
                 re.ok = 'found';
             }
             else {
