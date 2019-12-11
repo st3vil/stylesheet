@@ -3582,17 +3582,7 @@ Foogla: |
                         if (s == sy&top) {
                             # < all deleted when the top is Updated
                             me&mtsc,g,'Alldone!',0,'p';
-                            # < me&waits into wai as well,
-                            #  < modopting into brackdown
-                            #    as a thumbnail, over the specifics
-                            #    which could go on joined by ark:waits
-                            each in sy&N {
-                                $r = ny&R;
-                                $C = rs&C;
-                                ny&inf and me&tsc,'ny*inf'
-                                ny&ouf and me&tsc,'ny*inf'
-                            }
-                            #
+                            me&SCfcommit,R,s;
                         }
                         else {
                             $p = sy&up;
@@ -3620,6 +3610,42 @@ Foogla: |
             
         },'ift,D'],
     ] };
+    
+    # commit sy&N's f, making Cupload in %ting
+    # < me&waits into wai as well,
+    #  < modopting into brackdown
+    #    as a thumbnail, over the specifics
+    #    which could go on joined by ark:waits
+    me.SCfcommit = &acgtRs{
+        $fs = [];
+        each in sy&N {
+            ny&inf and fs.push(ny&inf)
+            ny&ouf and fs.push(ny&ouf)
+        }
+        $waifs = [];
+        each if fs {
+            fs&commiting ||= 1
+            fs&commiting <3 and waifs.push(f)
+        }
+        waifs.length and return me&waits,"G-commits"
+        $c = {maydo:'MindSave',once:1,tsc:'B'};
+        $go = me&rolltog,R,c,0;
+        !go and return
+        
+        $mi = me.cbu(R,'SupplyChai');
+        !mi and throw "No ^^%SupplyChai"
+        $mg = me.cbu(R,'Gens');
+        !mg and throw "No ^^%SupplyChai^^%Gens"
+        
+        each in sy&N {
+            delete ns&Updated
+        }
+        # turn off %MindInto
+        me&introqua,mi,{play:0};
+        # push/diff
+        me&introqua,mg,{boost:1};
+        me&tsc,"leaving"
+    };
     
     #c MindInto-f
     # < distant future G&t along y-ers to it,
@@ -6447,6 +6473,7 @@ Foogla: |
             #   f%changey can be forgot if R%tracting is interrupted
             # don't apply change from the Thing until Compiling wants to
             Rs&liesnotok = 1;
+            fs&commiting and Rs&liesnotok = 0; fs&commiting++
             # hold waking Thing changes are projected into:
             # < without hiding the change
             #Rs&noprojcha = 1;
