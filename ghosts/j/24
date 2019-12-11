@@ -588,6 +588,7 @@ Wade: | # serve /W/$t to G&t
         my $re = {ok=>0};
         my $nos = 0;
         
+        
         if (defined $s) {
             # optional safety - must replace such dige
             my $pa = $c->param('parent');
@@ -606,9 +607,18 @@ Wade: | # serve /W/$t to G&t
                 -d $t || `mkdir -p $t`;
                 my $new = !-f $f;
                 $s = "$s\n" if $s !~ /\n$/;
-                # we journal! can't trust anything
+                
                 write_file("$f\.1",encode_utf8($s));
                 `mv $f\.1 $f`;
+                
+                # the .5 may be in the same request
+                my $five = $c->param('fivestring');
+                if ($five) {
+                    my $ff = "$t/5";
+                    write_file("$ff\.1",encode_utf8($five));
+                    `mv $ff\.1 $ff`;
+                }
+                
                 # < (notify nearby others, who )+
                 re.ok = 'updated';
                 re.ok = 'created' if $new;
