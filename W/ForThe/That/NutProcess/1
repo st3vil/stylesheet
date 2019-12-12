@@ -1,0 +1,226 @@
+NutProcess	9	Jo:1.1
+  eye		W:javascript
+    ind			{"acgt":"s y d","args":"A,C,G,T,s,y,d","coded":1,"dige":"b387dc6f295b","js":"eye","Wavel":"NutCertainty"}
+      c s: |
+        function(A,C,G,T,s,y,d) {
+        var D = s;
+        // setup
+        d = d || {};
+        if (!d.refs) {
+            d.refs = []; // all things
+            d.refid = {}; // those indices to d
+        }
+        y = y || function(s){ return s }
+        if (typeof y == 'string') {
+            if (y.slice(0,2) == 'ki') {
+                var dl = y.slice(2);
+                y = function(s){ return ki(s,dl) }
+            }
+            else { 
+                {var er = new Error("ind y named"); er.tc = [y]; throw er}
+            }
+        }
+        
+        // dedupe (s always an Object)
+        var ri = d.refs.indexOf(s);
+        if (ri < 0) {
+            ri = d.refs.push(s) - 1;
+            d.refid = d.refid || {};
+            d.refid[ri] = d;
+        }
+        else {
+            var od = d.refid[ri];
+            // dupe seeing very interesting for -jod
+            return;
+        }
+        
+        if (d.hup) {
+            // clone each thing, not repointing tw/tv/z etc
+            // < a separate object, a map to the result of the map this is
+            //d.infolate == null and d.infolate = 1;
+            s = G.h(A,C,G,T,'Cye',s);
+            s.y.D = D;
+        }
+        
+        var dd = function(d){
+            d = $.extend({},d);
+            d.path = (d.path||[]).slice();
+            return d
+        };
+        var up = d.out && d;
+        d = dd(d);
+        if (up) {
+            d.up = up
+        }
+        d.s = s;
+        d.path.push(s.t+' '+s.y.cv);
+        if (d.ind == null) {
+            d.ind = '  ';
+        }
+        // ^ accumulates on every depth's return of a string
+        d.d = d.d || 0;
+        d.d++;
+        // depth limit vs depth
+        if (d.dl && d.dl < d.d) {
+            return;
+        }
+        
+        var out = d.out = [];
+        var one;
+        var my = [];
+        
+        if (d.cbfirst) {
+            one = y(s,d)
+        }
+        if (d.not) {
+            return
+        }
+        if (d.nofurther) {
+            return one
+        }
+        
+        // )
+        //c the ways to go deep, should be all? will dedup
+        // user throws something on any way
+        if (s.sc.z) {
+            var z = s.sc.z.filter(function(s){ return 1 && s });
+            if (d.zort) {
+                d.zort(z,s,d);
+            }
+            for (var i in z) {
+            var D = z[i];
+                out.push( G.h(A,C,G,T,'ind',D,y,d) );
+            }
+        }
+        
+        if (s.y.in) {
+            out.push( G.h(A,C,G,T,'ind',s.y.in,y,d) );
+        }
+        
+        if (s.y.tw) {
+            for (var t in s.y.tw) {
+            var D = s.y.tw[t];
+                out.push( G.h(A,C,G,T,'ind',D,y,d) );
+            }
+        }
+        
+        if (s.y.tv) {
+            for (var t in s.y.tv) {
+            var vv = s.y.tv[t];
+            if(typeof vv != 'object') { continue }
+            for (var v in vv) {
+            var D = vv[v];
+                out.push( G.h(A,C,G,T,'ind',D,y,d) );
+            }}
+        }
+        
+        out = out.filter(function(s){ return 1 && s });
+        // flatten a bit, G.h(A,C,G,T,'ind') returns js arrays
+        var oute = []; 
+        out.map(function(s){
+            s.constructor == Array ? 
+                s.map(function(s){ oute.push(s) })
+            : oute.push(s)
+        });
+        out = oute;
+        
+        out = out.filter(function(s){ return 1 && s }).map(function(s){
+            if (typeof s == 'string')
+                return s.split("\n").map(function(s){ return d.ind+s }).join("\n")
+        
+            if (typeof s.constructor == Object) {
+                if (d.infolate) {
+                    if (!s.c.ind) {
+                        // (once) write where things are
+                        // on the things themselves
+                        s.c.ind = d.d;
+                        s.c.inds = '';
+                        var i = 0; // to d.d==1 for the first level
+                        while (i++ < d.d)
+                            s.c.inds += '  ';
+                        s.c.inside = d.path;
+                    }
+                }
+                my.push(s);
+            }
+            return s
+        });
+        
+        if (s.y.next && !d.nonext) {
+            var od = dd(d);
+            od.path.pop();
+            od.d--;
+            out.push( G.h(A,C,G,T,'ind',s.y.next,y,od) );
+        }
+        
+        if (!d.cbfirst) {
+            one = y(s,d)
+        }
+        if (d.not) {
+            return
+        }
+        out.unshift(one);
+        
+        out = out.filter(function(s){ return 1 && s });
+        if (!out.length) {
+            return
+        }
+        var retrefs = out.filter(function(s){ return typeof s != 'string' }).length > 0;
+        
+        if (d.d == 1 && !retrefs) {
+            if (d.wantarray) {
+                return out
+            }
+            return out.join("\n");
+        }
+        else {
+            // an N with insidenesses, has been organised, located...
+            // put insides (C.sc.z,yin) in a z on the outside
+            if (my.length && typeof one == Object) {
+                one.sc.z = my
+            }
+            // return every C in N, each G.h(A,C,G,T,'ind') leaves [] to dissolve
+            var flat = [];
+            for (var i in out) {
+            var s = out[i];
+                if (s.constructor != Array) {
+                    flat.push(s); continue
+                }
+                for (var I in s) {
+            var S = s[I];
+                    flat.push(S);
+                }
+            }
+            return flat
+        }
+        
+        };
+    S			{"acgt":"s t talk params","args":"A,C,G,T,s,t,talk,params","coded":1,"dige":"7e7e520c86b4","js":"eye","Wavel":"Domes"}
+      c s: |
+        function(A,C,G,T,s,t,talk,params) {
+        if (A[4].c.Srupto) {
+            return A[4].c.Srupto(A,C,G,T,s,t,talk,params)
+        }
+        G.h(A,C,G,T,'clusp');
+        A.e && G.h(A,C,G,T,'thro',A.e,6);
+        if (A.c.S) {
+            return A.c.S(s,t,talk,params)
+        }
+        // sync progress to ground...
+        var g = A.ground;
+        if (!g) {
+            throw new Error("groundless doming");
+        }
+        var Do =
+        g.sc.Doing = g.sc.Doing || {};
+        if (Do[s+t]) {
+            return 0
+        }
+        Do[s+t] = 1;
+        return 1
+        
+        
+        
+        };
+  Domes			W:Domes,ha:011e45297b4c
+  NutCertainty			W:NutCertainty,ha:8eda14cc154e
