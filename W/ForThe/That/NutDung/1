@@ -1,0 +1,411 @@
+NutDung	9	Jo:1.1
+  eye	001	W:javascript
+    add_script			{"acgt":"src cb","args":"A,C,G,T,src,cb","coded":1,"dige":"69efd9a80fc7","js":"eye","Wavel":"NutBung"}
+      c s: |
+        function(A,C,G,T,src,cb) {
+        var script = document.createElement('script');
+        script.setAttribute('src', src);
+        script.setAttribute('type', 'text/javascript');
+        if (cb) {
+            script.onload = function(e){ cb(script,e) };
+        }
+        A[4].on.appendChild(script);
+        return script
+        
+        };
+    Ban			{"acgt":"er msg url lineNo colNo","args":"A,C,G,T,er,msg,url,lineNo,colNo","coded":1,"dige":"99bf5dc8e06e","js":"eye","Wavel":"NutBung"}
+      c s: |
+        function(A,C,G,T,er,msg,url,lineNo,colNo) {
+        var B = G.c.B;
+        B = B.y.up;
+        if (typeof er == 'string') {
+            msg = msg || er;
+        G.h(A,C,G,T,"c",'>9 throwstring',[er+'']);
+        }
+        // msg sometimes stringified er, message is less noisy
+        if (er.message) {
+            msg = er.message;
+        }
+        if (msg.slice(0,5) == 'async') {
+            // test for unhandled asyncs
+            //G.h(A,C,G,T,'waylay','checkov_async',{B:B})
+            G.h(A,C,G,T,"c",'>9 '+msg);
+            er.nobigdeal = 1;
+            return
+        }
+        if (msg.slice(0,5) == 'waits') {
+            er.nobigdeal = 1;
+        }
+        
+        msg = msg.replace(/^Uncaught /,'');
+        var m = [
+            G.h(A,C,G,T,"intag",'>97 !')
+            ,G.h(A,C,G,T,"intag",'>75:Wtitle')
+            ,G.h(A,C,G,T,"intag",'>9:Bangmsg '+msg)
+            ,G.h(A,C,G,T,"intag",'>8:weirdness')
+            ,G.h(A,C,G,T,"intag",'>4:subinfo ?')
+        ];
+        if (er.tc) {
+            m.push( G.h(A,C,G,T,"intag",'>2:tnc '+ki(er.tc,3) ));
+            m.push(m.splice(-2,1));
+        }
+        
+        var it = G.h(A,C,G,T,"c",m.join(' '));
+        
+        var w = B.sc.way;
+        var cat = er.catches; // places of rethrow
+        // may get restacked when rethrowing
+        //   if running chrome < 2012 ?
+        var stack = er.stack;
+        if (cat) {
+            stack = cat[0].stack;
+        }
+        if (!stack) {
+            return;
+        }
+        var k = stack.split("\n");
+        k.shift();
+        var end = k[0];
+        console.log("er: ",msg,url,lineNo,er,w,cat,end);
+        if (url && location.href == url) {
+            url = null
+        }
+        var beyond = 0;
+        G.er = er;
+        
+        while (k.length) {
+            end = k.shift();
+        
+            if (beyond) {
+                it.set('weirdness','+'+beyond);
+            }
+        
+            // anon sub if way
+            var m = end.match(/<anonymous>:(\d+):(\d+)\)$/);
+            if (m) {
+                if (url && !url.match(/\/js\/NutMachine[^\/]*\.js$/)) {
+                    debugger;
+                }
+                if (w) {
+                    // works only if B is still the G.h(A,C,G,T,'way')
+                    it.set('Wtitle', 'w:'+w.t);
+                    var l = w.c.s.split("\n")[m[1] - 1 - 1];
+                    it.set('subinfo', l);
+                }
+                return
+            }
+        
+            // a url if <script>
+            var m = end.match(/ \((.+?\/js\/.+?):(\d+):(\d+)\)$/);
+            if (m) {
+                url = m[1];
+                lineNo = m[2];
+                colNo = m[3];
+                G.h(A,C,G,T,'Ban_url',it,er,msg,url,lineNo,colNo);
+                return
+            }
+        
+            beyond++;
+        }
+        
+        //debugger;
+        G.h(A,C,G,T,"c",'92 Neither url or way',[]);
+        
+        };
+    Ban_url			{"acgt":"it er msg url lineNo colNo","args":"A,C,G,T,it,er,msg,url,lineNo,colNo","coded":1,"dige":"552779ed23e1","js":"eye","Wavel":"NutBung"}
+      c s: |
+        function(A,C,G,T,it,er,msg,url,lineNo,colNo) {
+        // make sense of the resource
+        var v = new URL(url);
+        var src = v.pathname;
+        var m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
+        
+        if (!m) {
+            // other js resource
+            return it.set('subinfo', '?: '+url)
+        }
+        
+        // should be some A:u'
+        var W = m[1];
+        it.set('Wtitle',W);
+        
+        // get the lines, in the <script> already?
+        $.ajax(src).done(function(s,how,c){
+            if (how != 'success') {
+                {var er = new Error("Ban faile: "+how); er.tc = [c]; throw er}
+            }
+            var src = c.getResponseHeader('Location');
+            var m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
+            var W = m[1];
+            var ver = m[2];
+            var lines = s.split("\n");
+            var l = lines[lineNo-1];
+            var prior = 1;
+            var sub;
+            while (1) {
+                prior++;
+                var line = lines[lineNo-prior];
+                if (line == null) {
+                    break;
+                }
+                var fu = line.match('^function '+W+'_'+ver
+                    +'_(\\w+)_(\\d+)_(\\w+)_(\\d+)\\(');
+                if (!fu) {
+                    continue
+                }
+                var cv = '';
+                if (fu[4] != '1') {
+                    cv = fu[4]
+                }
+                sub = fu[1]+cv+'/'+fu[3];
+                break
+            }
+            sub = sub || "?: "+src;
+            var m = [
+                G.h(A,C,G,T,"intag",'>2:subtitle '+sub)
+                ,G.h(A,C,G,T,"intag",'>45:subline '+l)
+            ];
+            it.set('subinfo', m.join(': '));
+        });
+        
+        // check if current
+        $.ajax('/js/'+W).done(function(s,how,c){
+            if (how != 'success') {
+                {var er = new Error("Ban faile: "+how); er.tc = [c]; throw er}
+            }
+            var rep = c.getResponseHeader('Location');
+            if (src != rep) {
+                it.set('Wtitle',"(old)",1);
+            }
+        });
+        
+        };
+    h			{"acgt":"s so st sh sf si","args":"A,C,G,T,s,so,st,sh,sf,si","coded":1,"dige":"8518ef126e4f","js":"eye","Wavel":"NutThing"}
+      c s: |
+        function(A,C,G,T,s,so,st,sh,sf,si) {
+        var z = s;
+        if (typeof s === 'string') {
+            z = G.t(A,C,G,T,'eye',s);
+            z = z || G.t(A,C,G,T,'i',s);
+        }
+        if (!z) {
+            throw new Error("No h: "+s);
+        }
+        var t = typeof s == 'object' ? s.sc.js+'/'+s.t+'@'+s.y.cv : z.t;
+        var d = {t:t,y:{},c:{},sc:{z:[]}};
+        var B = G.c.B;
+        if (B) {
+            B.sc.z.push(d); d.y.up = B; d.c.d = (B.c.d || 0) + 1;
+        }
+        G.c.B = d;
+        d.sc.D = T.D = z;
+        d.sc.C = C; d.sc.A = A;
+        
+        var r = z.c.code(A,C,G,T,so,st,sh,sf,si);
+        
+        G.c.B = B;
+        return r
+        
+        };
+    t			{"acgt":"s t","args":"A,C,G,T,s,t","coded":1,"dige":"08efbe4eac10","js":"eye","Wavel":"NutThing"}
+      c s: |
+        function(A,C,G,T,s,t) {
+        if (typeof s == 'object') {
+            throw new Error("Nevers");
+        }
+        var D;
+        for (var n = 1; n <= 5; n++) {
+            var Y = A[n];
+            if (!Y) {
+                continue
+            }
+            var I = Y.I;
+            if (!I) {
+                continue
+            }
+            // container/personality/embryo
+            D = I[s];
+            // thing/step/nodule/item
+            if (D && t != null) {
+                D = D.y.tw[t];
+            }
+            if (D) {
+                break
+            }
+        }
+        return D;
+        
+        };
+    way			{"acgt":"t ar cb noop","args":"A,C,G,T,t,ar,cb,noop","coded":1,"dige":"c7803c5bb647","js":"eye","Wavel":"NutThing"}
+      c s: |
+        function(A,C,G,T,t,ar,cb,noop) {
+        var w = typeof t == 'object' ? t : G.h(A,C,G,T,'t','w',t);
+        var ttl = A[4].c.ttl || 5;
+        if (!(w && w.sc.now && G.h(A,C,G,T,'time',w.sc.now,ttl))) {
+            w = null
+        }
+        if (noop == 'nottl') {
+            w = null
+        }
+        
+        if (!w) {
+            if (cb == 'noop') {
+                cb = function(){};
+            }
+            else
+            if (typeof cb == 'string') {
+                throw new Error("Cant go async: "+cb);
+            }
+            var get = '/way/'+t;
+            var is_done;
+            var done = function(s,how,c){
+                is_done = 1;
+                if (how != 'success') {
+                    {var er = new Error("Failed request: "+how); er.tc = [c]; throw er}
+                }
+                var dige = c.getResponseHeader('Dige');
+                var w = G.h(A,C,G,T,'Cye',[t,1,{s:s},{of:'w',dige:dige}]);
+                A[5].I = A[5].I || {};
+                var D = A[5].I.w = A[5].I.w || G.h(A,C,G,T,'Cye',['w','',{},{z:[]}]);
+                D.y = D.y || {};
+                D.y.tw = D.y.tw || {};
+                D.y.tw[t] = w;
+                w.sc.now = G.h(A,C,G,T,'time');
+                // < check it compiles? but we don't know its args,
+                //   unless they are vaguely known by bumping into compile errors
+                //   awaiting better field recording (MelTest frontier of)
+                A.sc.ready = 1;
+                //~w!: t
+                if (cb) {
+                    if (G.h(A,C,G,T,'arfgunc',cb) == "s") {
+                        // wants its return value with given ar...
+                        //~w cb s: t
+                        var s = G.h(A,C,G,T,'way',t,ar,'already_async');
+                        cb(s);
+                    }
+                    else {
+                        // containing a sync G.h(A,C,G,T,'way') call
+                        // or a way to get the w back?
+                        //~w cb: t
+                        cb(t,ar,w);
+                    }
+                }
+            };
+            var r = $.ajax(get);
+            r.done(done);
+            var checks = 5;
+            var check = function(){
+                if (is_done) {
+                    return;
+                }
+                if (!r.statusText) {
+                    if (checks-- > 0) {
+                        return G.h(A,C,G,T,'yl',150,check);
+                    }
+                    console.log("Long wait going to: "+get)
+                    if (checks > -3) {
+                        return G.h(A,C,G,T,'yl',666,check);
+                    }
+                    return
+                }
+                if (r.statusText == 'Not Found') {
+                    throw new Error("No way: "+t);
+                }
+                if (r.statusText != 'OK') {
+                    throw new Error("Weird ajaxtus: "+r.statusText);
+                }
+                //~>57 waylo: t
+                done(r.responseText, 'success', r);
+            };
+            check();
+            //~w?: t
+            if (!cb) {
+                G.h(A,C,G,T,'TuneTimeMachine','w:'+t)
+            }
+            return
+        }
+        
+        ar = ar || {};
+        var args = G.h(A,C,G,T,'ks',ar);
+        if (args != w.c.code_args) {
+            delete w.c.code;
+        }
+        // code is already JaBabz'd
+        // < CoArgulate for ar, put as knowable source file?
+        // < make it c.code and G.h(A,C,G,T,'h') for a B?
+        if (!w.c.code) {
+            var name = 'w_'+w.t+'_'+w.sc.dige+'_'+args;
+            name = name.replace(/\W+/g,'_');
+            var ways = A[5].I.w;
+            ways.sc.namedcode = ways.sc.namedcode || {};
+            var code = ways.sc.namedcode[name];
+            if (code) {
+                w.c.code = code;
+            }
+            else {
+                var tar = 'ar';
+                if (args) {
+                    tar += ','+args;
+                }
+                // help Ban find its source
+                G.c.B.sc.way = w;
+                var code = 'w.c.code = function '+name+"(A,C,G,T,"+tar+"){\n"+w.c.s+"}";
+                try{
+                    eval(code);
+                }
+                catch(er){
+                    // eval this on the console to see source...
+                    window.lacode = code;
+                    (er.catches = er.catches || []).push({stack:er.stack}); throw er;
+                }
+                // now compiled, we are not "in" it until run
+                delete G.c.B.sc.way;
+                ways.sc.namedcode[name] = w.c.code;
+            }
+            if (args) {
+                w.c.code_args = args;
+            }
+        }
+        if (noop || cb == 'noop') {
+            return
+        }
+        var arm = [];
+        var ark = args.split(',');
+        for (var i in ark) {
+            var k = ark[i];
+            arm.push(k);
+        }
+        var so = ar[arm[0]];
+        var st = ar[arm[1]];
+        var sh = ar[arm[2]];
+        var sf = ar[arm[3]];
+        var si = ar[arm[4]];
+        
+        // help Ban find its source
+        G.c.B.sc.way = w;
+        return w.c.code(A,C,G,T,ar,so,st,sh,sf,si);
+        
+        };
+    waylay			{"acgt":"t ar delay cb","args":"A,C,G,T,t,ar,delay,cb","coded":1,"dige":"f2ba131f16e5","js":"eye","Wavel":"NutThing"}
+      c s: |
+        function(A,C,G,T,t,ar,delay,cb) {
+        if (typeof ar != 'object') {
+            delay = ar; ar = {};
+        }
+        if (typeof delay == 'function') {
+            cb = delay; delay = 0;
+        }
+        cb = cb || function(s){};
+        if (delay) {
+            // wait and then way
+            // < expect download's tiny delay as well?
+            G.h(A,C,G,T,"delay",delay,function(){ G.h(A,C,G,T,'waylay',t,ar,0,cb) });
+        G.h(A,C,G,T,"c",'waylayter',[t, delay]);
+            return
+        }
+        //~waylaydo: t
+        G.h(A,C,G,T,'way',t,ar,cb)
+        
+        };
+  NutBung			W:NutBung,ha:9b43944163e6
+  NutThing			W:NutThing,ha:c20306124c95
