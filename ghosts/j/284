@@ -3405,44 +3405,47 @@ Foogla: |
             $da = Ry&da;
             !sa and return me&waits,'no-sa'
             
-            # y&f change is ok,
-            #  since %Comal does all the work all the time
-            #  but could reduce state feedback
-            #   to redo work that may depend on it
+            # f ~ref is ok, Comal checks ~Live
+            # < test:
+            #  to redo work that may depend on it
             #  eg delete rows with dep:yf
             # < wrap ha() with row template
             #   to add such a dependency to each thence
-            #da('f','','ref') and 'drop f dependent state'
             
-            # get y&fin = s's mirror in the final A (That..G)
+            # That
+            $L = me&SCi,R;
+            # get sy&fin = That..s
+            #  s's mirror in the final A
             # gets sy&ouf to where it will be wanted
-            me&supwyth,R,s,'fin',{theys:'l',fin:1};
+            me&supwyth,R,s,'fin',{theys:'l',top:L};
             
             
-            $f = sy&f;
-            $W = f && fy&W;
-            $fro = 0;
-            if (!sy&leaf && !sy&ouf) {
-                # non-leaf && non-existent That..G
-                fro = 1;
-                ha('mot:no-f');
+            # non-leaf && non-existent That..G
+            !sy&leaf && !sy&ouf and ha('mot:no-ouf')
+            # fs&changey at either That/Know
+            $yf = ['inf','ouf'];
+            each ik yf {
+                $f = s.y [k];
+                !f and continue
+                fs&changey and ha('mot:cha,yf:'+k+',f',f)
             }
-            elsif (fs&changey) {
-                fro = 1;
-                ha('mot:cha,f',f);
+            # any mot-ivation 
+            if (Rs&wou && haks(Rs&wou)
+                .filter(t=>t.includes('mot'))
+                .length) {
+                # excites those above
+                $mot = {mot:'char'};
+                
+                # defers those above until Updated
+                #  may be not That/$t-changey by their turn
+                !ss&Updated and mot.fro = s
+                
+                # aplup helps ha to a different node
+                me.aplup(s,&ha,{ ha(mot) });
             }
-            # mot upwards to tell of hoistable
-            # fro defers all above,
-            #   perhaps mot lasts longer than fro,
-            #   so our Know + That G commit changey away,
-            #   then simply hang around...
-            #  may be not That/$t-changey by their turn
-            fro and fro = {mot:'char'};
-            fro && !ss&Updated and fro.fro = s
-            fro and me.aplup(s,&ha,{ ha(fro) });
             
-            # ^ goes around once, now fro can be there:
-            $ready = sa('mot') && !sa('fro');
+            # ^ goes around, now fro would be:
+            $ready = !sy&leaf && sa('mot') && !sa('fro');
             
             $g = me&opeology,"Comal",{walls:1};
             ac(R,'M',g);
@@ -3682,7 +3685,7 @@ Foogla: |
         me&tsc,"leaving"
     };
     
-    #c MindInto-f
+    #c SC-f
     # < distant future G&t along y-ers to it,
     #   remembers what it saw/thought mattered
     me.supry = &acgtstvc{
@@ -3702,7 +3705,16 @@ Foogla: |
         c.fat && !vo and throw "no "+nk+"&"+gk+"-ward "+nv+"&"+gv+" from "+s.t
         return vo
     };
-    
+    # looking at steps in a doming
+    # the last of the As
+    # < more features?
+    me.SCi = &acgtRc{
+        c ||= {i:0};
+        $SC = me.cbu(R,'SupplyChai');
+        $As = SCs&balz;
+        $L = As[c.i];
+        return L
+    };
     # GONER
         # y&f brought to it - design flaw
         # Comal@31 wants to grab f of Know + That
@@ -3741,21 +3753,15 @@ Foogla: |
         return change
     };
     #c MindInto-suprise - cast (tree of) C into the next process
-    # C-C tracting-ish by ay[k] = b, by[c.theys] = a
+    # C-C tracting-ish by a.y[k] = b, b.y[c.theys] = a
     #  a soft suprise in reverse?
     # eg follow Comal's That's
     #  Comal being suprised from Know%tracting
     # < float down That pile until name found
     me.supwyth = &acgtRskc{
         $p = sy&up;
-        $fin = p && p.y [k];
-        if (!fin && c.fin) {
-            # the last of the As
-            $SC = me.cbu(R,'SupplyChai');
-            $As = SCs&balz;
-            $L = As[0];
-            fin = Lc&s;
-        }
+        $fin = p && p.y [k] || c.top;
+        finy&R == fin and fun = finc&s;
         me&ioty,fin,[''],[s.t] .map(&l{
             # < persis/compete for
             s.y [k] = l;
@@ -4997,6 +5003,7 @@ Foogla: |
             # if we didn't already see it
             !lr and fy&genesised = k;
         }
+        #
         rync(r,'Create');
         #c A:f@2 the idealised lifecycled potentials
         
