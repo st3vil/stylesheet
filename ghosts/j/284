@@ -2797,16 +2797,8 @@ Foogla: |
                 # do %tracting
                 ss&trac != 'ting' and throw "othertrac"
                 me&tracto,r,'ball','ting',S;
-
-                # ting@5 gets %flook():
-                me&Ring,R,{und:r,ov:0.505};
-                # ball+tracting@51 etcs
-                me&Ring,R,{und:r,ov:0.58};
             }
             else {
-                # time to create the whole pile of R
-                me&Ring,r,{inside:r,ov:0.306};
-
                 if (rs&supr) {
                     # set by %supr@291
                     # also to init from suprised
@@ -2823,14 +2815,20 @@ Foogla: |
         $woudef = &c{
             return me&waidef,c,'',{k:'wou'};
         };
+        # eg can give p or s, uses yR
+        me.yasp = &acgtrk{
+            r && r.y [k] and r = r.y [k]
+            return r
+        };
         $waia = &rc{
-            c = woudef(c);
+            r = me&yasp,r,'R';
             !r and return &{}
+            c = woudef(c);
             # G already @7, use the one of it
             rs&Gracto and delete c.b; c.gh = 'gh'
             return me&waier,r,c || &{}
         };
-        $tip = &rc{
+        hy&tip = &rc{
             c = woudef(c);
             return me&brackdown,r,c
         };
@@ -2838,22 +2836,31 @@ Foogla: |
         #   which can repeat steps
         #   and do SCreport inside the SCtrip
         each ip hs&steps {
+            $r = py&R;
+            if (rs&Gracto) {
+                # ting@5 gets %flook():
+                me&Ring,R,{und:r,ov:0.505};
+                # ball+tracting@51 etcs
+                me&Ring,R,{und:r,ov:0.58};
+            }
+        }
+        each ip hs&steps {
             # p, its nomad and ghost
             $r = py&R;
             $s = py&s;
-            # p's neighbours
+            # p's neighbours, earlier and next
             i *= 1;
             $l = hs&steps[i-1];
             $n = hs&steps[i+1];
             # being three states at once
             
-            $la = waia(ly&R); # has happened
-            $ra = waia(r,{b:1});
-            $na = waia(ny&R,{b:1});
+            $la = waia(l); # has happened
+            $ra = waia(p,{b:1});
+            $na = waia(n,{b:1});
             
             if (rs&Gracto) {
                 # G already @7, conclude
-                $g = tip(r);
+                $g = hy&tip(r);
                 #!l and me&mtsc,g,"noprev"
                 $N = ra('ready','r');
                 each ij N {
@@ -2864,13 +2871,14 @@ Foogla: |
                         me&mtsc,g,"nonext"; continue
                     }
                     # build ** into n
-                    me&suprise,j,n
+                    me&suprise,j,ny&R
                 }
                 # < apply change/Cuploadism as they finish
                 continue
             }
             else {
                 #c middles
+                !py&nodes and return me&nu,"Bort-!nodes",p
                 py&nodes(&js{
                     # y&l change already fatal
                     
@@ -2925,7 +2933,7 @@ Foogla: |
                     # < insist ready is the first column
                     #   so we can simply js&wou.*.ready
                     $ja = waia(j,{gh:'ad'});
-                    ja('ready') and me&suprise,j,n
+                    ja('ready') and me&suprise,j,ny&R
                     
                     # < subtype step:Seq's ready to -> step:Compiling
                     #   same way step:Compiling would then -> That..G
@@ -2935,26 +2943,20 @@ Foogla: |
                     #ja('Ready') and me&suprise,j,n
                     
                 });
-                $g = tip(r);
+                $g = hy&tip(r);
                 me&walls,g,'b:3.3h9';
                 !n and me&mtsc,g,"nonext"
             }
         }   
     };
+    # display once laters ha ealiers etc
     me.SCreport = &acgtRh{
         each ip hs&steps {
-            # p, its nomad and ghost
-            $r = py&R;
-            $s = py&s;
-            each ir As {
-                !rs&eph and continue
-                # display once laters ha ealiers etc
-                nodes(r,&js{
-                    js&wough and throw "Hadwough: "+j.t
-                    $g = tip(j);
-                    me&walls,g,'b:2.2';
-                });
-            }
+            py&nodes && py&nodes(&js{
+                js&wough and throw "Hadwough: "+j.t
+                $g = hy&tip(j);
+                me&walls,g,'b:2.2';
+            });
         }   
     };
     
@@ -3113,7 +3115,7 @@ Foogla: |
             # < steps y&R should == Rs&balz
             #   with dups where step in many processes
             each kh Rs&SCh {
-                hs&z and throw "h!z"
+                !hs&z and throw "h!z",h
                 hs&z.map(p => ac(SC,'steps',p))
             }
             !SCs&steps and throw "!steps"
@@ -3151,9 +3153,6 @@ Foogla: |
                 # will be actuated for setup
             }
         }
-        $first = [];
-        hs&steps = arou(hs&steps,'priority',first);
-        hs.unshift(...first);
     };
     # has a ting for itself (signpost for island)
     # eg ForThe/Know/tings%ting, usu 404, mainly to:
@@ -3173,7 +3172,7 @@ Foogla: |
 
     # near/for bal unciation
     me.SChema = &acgtRtc{
-        # all running on %SupplyChai=SC
+        # all running on %SupplyChai=SC, aka h later
         $SC = me&rollbsc,R,'SupplyChai';
         delete SCy&compiled; # drop cache
         # for the %KnowThat=h
@@ -3188,8 +3187,12 @@ Foogla: |
         
         # steps adopted from recent: n ...
         hy&domed = &{
-            me&ydome.map(&n{
+            $N = me&ydome;
+            # bal shall adjust Rs&z, flow upwards:
+            N.reverse();
+            N.map(&n{
                 # attach via bal (%eph not attached)
+                ns&supr and ns&eph = 1
                 # n.sc -> R.sc
                 $r = me&bal,n.t,n.sc;
                 $s = rc&s;
@@ -3244,7 +3247,7 @@ Foogla: |
             $h = me&SChema,R,'KnowThat',{};
             
             # where from
-            n Know 1  %bri:0.7,%tings
+            n Know 1 %bri:0.7,tings
             
             # all, knows what's changing
             n Compiling 3  %hue:70,supr:Comal
@@ -3257,10 +3260,10 @@ Foogla: |
             #  < better place for hacks than Know/**?
             #    which will be little trees and codes...
             # currently won't be there to be suprised into
-            #n This 67  %hue:140,dropempty
+            #n This 67  %hue:140,tings,dropempty
             
-            # where to
-            n That 7  %tings:Win
+            # where to!
+            n That 7  %tings
             
             hy&domed()
         },'ift,D'],
@@ -3274,13 +3277,13 @@ Foogla: |
             $h = me&SChema,R,'WithThat',{};
             
             # where from
-            n Know 1 {trac:'ting'} %bri:0.7,gently
+            n Know 1  %bri:0.7,gently,tings
             
             # osmosize interesting Thats
-            n With 4 {tw:1} %supr:Comack
+            n With 4 tw %tings,supr:Comack
             
             # where to
-            n That 7 {directory:R.t+'/That/',trac:'ting'}
+            n That 7  %tings
             
             hy&domed()
         },'ift,D'],
@@ -3968,7 +3971,7 @@ Foogla: |
         supr = c.supr || nrs&supr;
         $C = lrs&C;
         !C and throw "suprise lr !Rs&C"
-        !supr and return me&tsc,"!%supr-next"
+        !supr and return me&tsc,"!%supr-next:"+nr.t
         
         ex(c,lrs&suprise_c||{});
         
@@ -4056,9 +4059,6 @@ Foogla: |
         if (s && !r) {
             delete c.dropempty;
             ex(c,{t:t,s:s,ball:1,tightly:1});
-            # Rs&sc = {} mixed into s.sc
-            $csc = delete c.sc;
-            csc and ex(s.sc,csc)
             r = me&Ret,R,c;
             if (Rs&ball && !c.eph) {
                 me&input,R,rc&s;
@@ -4067,6 +4067,9 @@ Foogla: |
             }
             rc&dupl = 5;
             me&zN,r;
+        }
+        else {
+            ex(r.sc,c)
         }
         if (r && gaveC) {
             R.sc[t] = r;
