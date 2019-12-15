@@ -3137,6 +3137,9 @@ Foogla: |
         }
     };
     #c SupplyChai@304 process composition
+    # each school (of thought) eg %KnowThat
+    #   is h of 
+    #   contributes 
     me.SCenter = &acgtR{
         # %SC=1 became rolling C
         $SC = me&rollbsc,R,'SupplyChai';
@@ -3184,26 +3187,38 @@ Foogla: |
             }
         }
     };
-                    #   eg With local knowledge about certain names
-
-    # %*T pronounces how it will be
-    me.SChema = &acgtRtc{
-        # all running on %SupplyChai=SC, aka h later
-        $SC = me&rollbsc,R,'SupplyChai';
-        delete SCy&compiled; # drop cache
-        # for the %KnowThat=h
-        $h = me&rollbsc,R,'SCh/'+t;
-        hy&R = R;
-        R.sc[t] = h;
-        
-        # display zone
-        $g = hy&g = me&opeolo,t,{walls:'b:2.2h6',label:{walls:'bg'}};
-        Rc&brackuiet = 1;
-        gy&can('ope',&{ Rc&brackuiet = 0 });
-        
+    
+    #c SCA
+    me.SC = {};
+    me.SC.A = &acgt{
+    };
+    me.SC.A = &acgt{ return [
+        ['KnowThat','304',&acgtRs{
+    
+        },'ift,D'],
+    ]};
+    me.SC.Schema = &acgt{ return [
+        # %KnowThat forks a Schema from SC
+        ['forks',0.01,&acgtRYs,SC{
+            $t = Ys&t;
+            $s = me&rollbsc,R,'SCh/'+t;
+            ah(SC,'Schemas',t,h);
+            sy&up = SC;
+            Yc&M = [s];
+            # drop cache # < wait til @2
+            delete SCy&compiled;
+        },'ift,D'],
+        # day, display zone
+        ['on',0.02,&acgtRYs,SC{
+            sy&R = R;
+            
+            $g = sy&g = me&opeolo,s.t,{walls:'b:2.2h6',label:{walls:'bg'}};
+            Rc&brackuiet = 1;
+            gy&can('ope',&{ Rc&brackuiet = 0 });
+        },'ift,D'],
         # steps adopted from recent: n ...
-        hy&domed = &{
-            $N = me&ydome;
+        ['steps adopted',0.11,&acgtRYs,SC{
+            $N = Ys&N;
             # bal shall adjust Rs&z, flow upwards:
             N.reverse();
             N.map(&n{
@@ -3221,6 +3236,114 @@ Foogla: |
                 py&R = sy&R = r;
                 # < persis sy&p multiplies, if py&R now
             });
+        },'ift,D'],
+    ]};
+    
+    # start Aing as a way to find C about how to A
+    # we have the t
+    me.SCAing = &acgtsc,sc{
+        # awareness
+        $Y = delete c.Y;
+        Y ||= Cye(['A:'+c.t,'']);
+        # A:$t cv-ov
+        ex(Y.c,c);
+        # its quest for a specific etc
+        ex(Y.sc,sc);
+        # of this routine
+        Yc&N = me.SC[Yc&t];
+        while (1) {
+            $ci = t && Yc&N.indexOf(t) || 0;
+            $t = Yc&N[ci];
+            ty&cv > Yc&ov and break
+            ty&cv <= Yc&cv and continue
+            # to the insides from s=SC
+            $M = Yc&M || [s];
+            each in M {
+                tc&s(A,C,G,T,sy&R,Y,n,s);
+                Yc&cv = ty&cv;
+            }
+        }
+        Yc&M and Yc&M.map(s => sy&Y = Y)
+        return Y
+    };
+    # to be Aing SC**
+    me.SCA = &acgtstc,ov{
+        $R = Cy&R;
+        
+        # < climb sy&up, part of wider Aing
+        $dive = me.cby(s);
+        $SC = dive[0];
+        # Ys must be regenerated per R%SC
+        $diffR = !sy&R || me&yfuture,sy&R != sy&R;
+        $Y = sy&Y;
+        $difft = Y && Yc&t != t;
+        if (!Y || diffR || difft) {
+            # resync/init/continue the Y
+            if (difft) {
+                # t goes more specific than sy&Y.t
+                #   share nodes with nano Y
+                #   or it might be a mega Y
+                #   eg Comste pumping Live through steps of encoding,
+                #   which want to be their own sequence of events
+                #   at the top level
+                throw "forkY"
+            }
+            $gen = {t:t,cv:0,ov:0.1};
+            # may skip forks@0.01 if sy&Y
+            Y and gen.Y = Y; c.cv = 0.01
+            
+            # Aing @1 s c sc, every SCA
+            # t selects itself or one of its types
+            #  eg Schema or Step, or SupplyChai 
+            Y = me&SCAing,s,gen,c;
+            Yc&begins = Y.sc;
+            Y.sc = {};
+        }
+        
+        # Aing >1 may now c=sc, sc={reaction}
+        #  until sc.ov etc conduces a decision to etc
+        $ov ||= 0.9;
+        Y = me&SCAing,s,{ov:ov},c;
+        
+        # sy&Y to say "needs /schema/*"
+        return Ys&returns || (Yc&M||[])[0]
+    };
+    
+    # the oscillator's sense
+    me.SCs = &acgt{
+        $R = Cy&R;
+        # causes %SupplyChai to happen later
+        $SC = me&rollbsc,R,'SupplyChai';
+        SCy&R = R;
+        SCy&typing ||= me&SCtyping,SC;
+        return SC;
+    };
+    
+    
+    # With: local knowledge about certain names etc
+    
+    # %*T pronounces how it will be, arranging for SCing:
+    # A:SC@1 %SupplyChai=C macro laterer
+    #  A:Schema@1 %SCh/$t=C micro schema
+    #   ...gets finished:
+    #  A:Schema@2 can slep & tell macro
+    #   @3 with each other, notice late joiners
+    #   @4 patterns emerge
+    #   @5 decide how to change the game in progress
+    #   @6 Ret (via bal) the step
+    # SCing:
+    # A:SC@2 inits
+    #  A:Schema@6 may be moved in here,
+    #   to avoid it Ringing outside the SCing
+    
+    
+    me.SChema = &acgtRtc{
+        $SC = me&SCs,R;
+        $s = me&SCA,SC,'Schema',{t:t};
+        # steps adopted from recent: n ...
+        sy&domed = &{
+            $N = me&ydome;
+            me&SCA,s,'Schema',{N:N},2;
         };
         return h
     };
