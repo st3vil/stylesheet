@@ -3136,69 +3136,40 @@ Foogla: |
             })
         }
     };
-    #c SupplyChai@304 process composition
+    #c SupplyChai@3 process composition
     # each school (of thought) eg %KnowThat
-    #   is h of 
-    #   contributes 
-    me.SCenter = &acgtR{
-        # %SC=1 became rolling C
-        $SC = me&rollbsc,R,'SupplyChai';
-        if (!SCy&compiled) {
-            # mix steps from schemas
-            # < steps y&R should == Rs&balz
-            #   with dups where step in many processes
-            each kh Rs&SCh {
-                !hs&z and throw "h!z",h
-                hs&z.map(p => ac(SC,'steps',p))
-            }
-            !SCs&steps and throw "!steps"
-            tvsortz(SCs&steps);
-            # realise steps, ordering can trascend cv
-            me&SCinit,SC;
-        }
-        
-        return SC
-    };
-    
-    # compile-time schema's meanings about h%steps[p
-    me.SCinit = &acgth{
-        each ip hs&steps {
-            $r = py&R;
-            $s = py&s;
-            
-            rs&tings and ss&trac = 'ting'
-            # G, storage type of step
-            ss&trac and rs&Gracto = 1
-            
-            # prefer specific tw, altering supr-isms
-            # they seem to have storable ambitions
-            # eg including to /W/ ways to use
-            #   With/$trick/$hack
-            #    + $hack = $trick trick
-            #   and SCinway
-            ss&tw and rs&tw = ss&tw
-            #  allowing calm isolated spacewalks
-            rs&gently && rs&Gracto and rs&tw = 1
-            
-            if (rs&Gracto) {
-                # should wake first
-                ps&priority = 1;
-                # will be actuated for setup
-            }
-        }
-    };
-    
-    #c SCA
+    # gets mixed/attached/progressed
     me.SC = {};
     me.SC.A = &acgt{
     };
+    # %SC=1 became rolling C
+    me.SCenter = &acgtR{
+        $SC = me&rollbsc,R,'SupplyChai';
+        me&nu,'SC',SC;
+        $SC = me&SCs,R;
+        $s = me&SCA,SC,SC.t,{},1;
+        return SC
+    };
     me.SC.SupplyChai = &acgt{ return [
-        ['KnowThat','1',&acgtRs{
-            !SCy&compiled and Yc&cv = 0.2; # reduce only
-            $N = me&ioty,SC,['',''],['Schema',''];
-            # < eat SCenter
+        # mix steps from schemas
+        # < belongs in me.SC.Schema somehow
+        #   for multiple Schema/$s into SC
+        ['Schemaload',0.02,&acgtRYs,SC{
+            s != SC and throw "should be the one"
+            sy&R = R;
+            $S = fio(s,'Schema');
+            if (!Sc&compiled) {
+                me&SC_Schema_init,s;
+                me&SC_steps_init,s;
+                Sc&compiled = 1;
+                ~>3 Compi: s.t
+            }
+        },'ift,D'],
+        ['KnowThat',0.02,&acgtRs{
         },'ift,D'],
     ]};
+    
+    #c SCA
     # cache SC I
     me.SCminds = {};
     me.SCmind = &acgtt{
@@ -3213,13 +3184,15 @@ Foogla: |
     # start Aing as a way to find C about how to A
     # we have the t
     me.SCAing = &acgtsc,sc{
-        # awareness
+        # awareness may already be in sy&Y,
+        #  which will already be:
         $Y = delete c.Y;
         Y ||= Cye(['A:'+c.t,'']);
-        # A:$t cv-ov
+        # A:$t cv-ov are life + time to be
+        # < see me&tempwind undoing some of this, 
         ex(Y.c,c);
-        Yc&ov and Yc&ov = G&sca,Yc&ov;
-        Yc&cv and Yc&cv = G&sca,Yc&cv;
+        Yc&ov and Yc&ov = sca(Yc&ov)
+        Yc&cv and Yc&cv = sca(Yc&cv)
         # its quest for a specific etc
         ex(Y.sc,sc);
         # of this routine
@@ -3242,6 +3215,27 @@ Foogla: |
         Yc&M and Yc&M.map(s => sy&Y = Y)
         return Y
     };
+    # when about to ex(c,s)
+    # returns function to replace originals
+    #  not exception handling, a brittle strategy
+    #   maybe it could have a stack of jobs in Y.sc
+    #   to be plucked into Y.c, committing to it
+    # to allow SCA to temporarily be:
+    #   SCAing 0-1 every time we SCA,
+    #   is really another A's work,
+    #   though it might still present this A (Y)
+    #   as the Y to I that don't know the distinction
+    me.tempwind = &acgtcs{
+        $set = {};
+        each kv s {
+            hak(c,k) and set[k] = c[k]
+        }
+        return &{
+            each kv set {
+                c[k] = set[k]
+            }
+        }
+    };
     # to be Aing SC**
     me.SCA = &acgtstc,ov{
         $R = Cy&R;
@@ -3249,7 +3243,7 @@ Foogla: |
         # < climb sy&up, part of wider Aing
         $dive = me.cby(s);
         $SC = dive[0];
-        # Ys must be regenerated per R%SC
+        # Ys must be regenerated per R%SC?
         $diffR = !sy&R || me&yfuture,sy&R != sy&R;
         $Y = sy&Y;
         $difft = Y && Yc&t != t;
@@ -3265,15 +3259,16 @@ Foogla: |
                 throw "forkY"
             }
             $gen = {t:t,cv:0,ov:0.1};
+            # put cv/ov back where they were after
+            $cb = Y ? me&tempwind,Y.c,gen : &{};
             # may skip forks@0.01 if sy&Y
-            Y and gen.Y = Y; c.cv = 0.01
+            Y and gen.Y = Y; gen.cv = 0.01
             
             # Aing @1 s c sc, every SCA
             # t selects itself or one of its types
             #  eg Schema or Step, or SupplyChai 
             Y = me&SCAing,s,gen,c;
-            Yc&begins = Y.sc;
-            Y.sc = {};
+            cb();
         }
         
         # Aing >1 may now c=sc, sc={reaction}
@@ -3312,17 +3307,65 @@ Foogla: |
     #  A:Schema@6 may be moved in here,
     #   to avoid it Ringing outside the SCing
     
+    # A:SC@1 has A:Schema@6 - giving SCs&steps[$step
+    # < SC simply towing A:Schema and its /sy&Y
+    me.SC_Schema_init = &acgts{
+        # mixing the Schema/$schema/$step
+        # into ss&steps[$step for now
+        # < into Steps/$step,
+        #   then A:Steps conserves stepy&Y, etc
+        # drop and recreate
+        #  their R may persist %wou etc
+        delete ss&steps;
+        me&ioty,s,['',''],['Schema',''] .map(&h{
+            !hs&z and throw "h!z",h
+            hs&z.map(p => ac(s,'steps',p))
+        });
+        !ss&steps and throw "!steps"
+        tvsortz(ss&steps);
+    }
+    
+    # A:SC@1 has A:Steps@1 - notice them all
+    me.SC_steps_init = &acgth{
+        each ip hs&steps {
+            $r = py&R;
+            $s = py&s;
+            
+            rs&tings and ss&trac = 'ting'
+            # G, storage type of step
+            ss&trac and rs&Gracto = 1
+            
+            # prefer specific tw, altering supr-isms
+            # they seem to have storable ambitions
+            # eg including to /W/ ways to use
+            #   With/$trick/$hack
+            #    + $hack = $trick trick
+            #   and SCinway
+            ss&tw and rs&tw = ss&tw
+            #  allowing calm isolated spacewalks
+            rs&gently && rs&Gracto and rs&tw = 1
+            
+            if (rs&Gracto) {
+                # should wake first
+                ps&priority = 1;
+                # will be actuated for setup
+            }
+        }
+    };
+    
     me.SC.Schema = &acgt{ return [
         # %KnowThat forks a Schema from SC
         ['forks',0.01,&acgtRYs,SC{
             $t = Ys&t;
             $s = me&rollbsc,R,'SCh/'+t;
             # organise SC's Ys under of/t:
-            me&givi,SC,'Schema',s;
+            $Sch = fio(SC,'Schema');
+            fio(Sch,s,9);
+            fio(Sch,s);
             sy&up = SC;
             Yc&M = [s];
-            # drop cache # < wait til @2
-            delete SCy&compiled;
+            # drop cache # < wake Y:Schema if diff
+            delete Schc&compiled;
         },'ift,D'],
         # day, display zone
         ['on',0.02,&acgtRYs,SC{
@@ -3332,11 +3375,13 @@ Foogla: |
             Rc&brackuiet = 1;
             gy&can('ope',&{ Rc&brackuiet = 0 });
         },'ift,D'],
+        # i $s:schema/$step o T.nN/*:step
         # steps adopted from recent: n ...
         ['steps adopted',0.11,&acgtRYs,SC{
             $N = Ys&N;
             $schema = s;
-            # bal shall adjust Rs&z, flow upwards:
+            # bal shall adjust Rs&z but not Rc&ss&z
+            #  to flow upwards?
             N.reverse();
             N.map(&n{
                 # attach via bal (%eph not attached)
