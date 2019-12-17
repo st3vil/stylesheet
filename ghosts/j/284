@@ -2728,6 +2728,8 @@ Foogla: |
             # wait for R/*%ball to kinda happen
             me&bewind,R and return
             
+            me&rolls,'SupplyChai';
+            
             $g = me&opeolo,'MindInto';
             # zuct not (notes) in there ^ 
             me&ioty,R,'','not' .map(&r{
@@ -2752,7 +2754,7 @@ Foogla: |
             });
         },'ift,D'],
     
-        #c SupplyChai ~ as osc would have it
+        # SupplyChai ~ as osc would have it
         =awaits
         
         intro object, runs doming + waigh-sense
@@ -2769,12 +2771,15 @@ Foogla: |
             
             # steps congealed
             $h = me&SCenter,R;
+            
             # per R life
             me&SCale,R,h;
             # per attend to step
             me&SCtrip,R,h;
             # talk out
             me&SCreport,R,h;
+            
+            me&nu,'SC',h;
             
             s&boc = 588;
         },'ift,D'],
@@ -3143,6 +3148,7 @@ Foogla: |
         !t and throw "SCmind!t"
         $N = me.SCminds[t];
         N and return N
+        !me.SC[t] and throw "SCmind!t:"+t
         $N = me.SC[t](A,C,G,T);
         N = N.map(n => Cye(n));
         N.map(n => n.c = {s:n.c})
@@ -3166,18 +3172,22 @@ Foogla: |
         # of this routine
         Yc&N = me&SCmind,Yc&t;
         $il = 30;
+        # do all of a cv once begun
+        $incv;
         while (1) {
             il-- < 0 and throw "ManySCAing"
             $ci = t ? Yc&N.indexOf(t) : -1;
             $t = Yc&N[ci+1];
             !t and break
             ty&cv > Yc&ov and break
-            ty&cv <= Yc&cv and continue
+            ty&cv <= Yc&cv && incv != ty&cv and continue
+            incv = ty&cv;
             # to the insides from s=SC
             $M = Yc&M || [s];
             each in M {
                 # t act, n ground
-                tc&s(A,C,G,T,sy&R,Y,n,s);
+                $r = ny&R || sy&R || Cy&R;
+                tc&s(A,C,G,T,r,Y,n,s);
                 Yc&cv = ty&cv;
             }
         }
@@ -3235,9 +3245,9 @@ Foogla: |
         $difft = t && Y && Yc&t != t;
         if (!Y || diffR || difft) {
             # s may look like the mind its expecting
-            t ||= ss&of || s.t;
+            t ||= Y && Yc&t || ss&of || s.t;
             # start/resync the Y
-            if (difft) {
+            if (Y && Yc&t != t) {
                 # be a different Y,
                 #  happens as we SCA,SC,'Schema',... when SCy&Y
                 # < knowing we came from this Y (is in sy&up)
@@ -3265,6 +3275,7 @@ Foogla: |
         
         # Yc&M would be different if it was complicated forks@01
         # < persis this
+        Yc&M ||= [s];
         (Yc&M||[]).length == 1 && Yc&M[0] == s and sy&Y = Y
         
         # < Aing >1 may now sc=c
@@ -3295,33 +3306,44 @@ Foogla: |
     # %SC=1 became rolling C
     me.SCenter = &acgtR{
         $SC = me&SCs;
-        me&nu,'SC',SC;
-        $s = me&SCA,SC,SC.t,{},1;
+        $s = me&SCA,SC,{},1;
         return SC
     };
     me.SC.SupplyChai = &acgt{ return [
-        # mix steps from schemas
-        # < belongs in me.SC.Schema somehow
-        #   for multiple Schema/$s into SC
-        ['SCis',0.02,&acgtRYs,SC{
+        ['on',0.02,&acgtRYs,SC{
             s != SC and throw "should be the one"
             sy&R = R;
+            sy&Y = Y;
         },'ift,D'],
+        # mix Schema/$h/$p into Steps/$p
+        # < Schema knowing export export to Steps/$p
+        #   or knowing $p:step, and Steps inhales :steps
         ['Schema to Steps',0.02,&acgtRYs,SC{
-            $S = fio(s,'Schema');
-            Sc&compiled and return
-            
-            # Schema
-            #  has Schema/$h, are A:Schema
-            # remake Steps, is A:Steps
-            #  replace Steps/$step, are A:Step
-            me&SC_Schema_init,s;
-                
-            # into A:Steps/$p
-            me&SC_steps_init,s;
+            $Sch = me&SCio,SC,'Schema',7;
+            Schc&compiled and return
+            $N = [];
+            me&SCio,Sch,'' .map(&h{
+                me&SCio,h,'' .map(p => N.push(p))
+            });
+            tvsortz(N);
+            # start new Steps
+            #  SCyYct != 'Steps', so will @01
+            #   which recreates SC/Steps
+            #     if it didn't we could make it:
+            #       $was = me&SCio,SC,'Steps',9;
+            #   and imports new Steps/$p
+            $s = me&SCA,SC,'Steps',{N:N},1;
             
             ~>3 Compi: s.t
-            Sc&compiled = 1;
+            Schc&compiled = 1;
+            
+            #me&SC_Schema_init,s;
+            #!ss&steps and throw "!steps"
+            #tvsortz(ss&steps);
+                
+            # into A:Steps/$p
+            #me&SC_steps_init,s;
+            
         },'ift,D'],
         # @1 figure out where things are at every R%SC
         # @2 pull up map for this Aing
@@ -3334,15 +3356,16 @@ Foogla: |
     # < more than one level
     # < io pipes A to A
     # auto ny&up = s
-    me.SCio = &acgtsMc{
+    me.SCio = &acgtstc{
         c ||= {};
         isnu(c) and c = {el:c}
-        isst(M) and M = M.split('/');
-        M.length > 1 and throw "One"
-        $t = M[0];
+        # many
         t == '' and return me&ioty,s,[''],['']
         # read only
         $n = fio(s,t,0);
+        # 7 must be there, 8 read only
+        c.el == 7 && !n and throw "No "+s.t+"/"+t
+        c.el == 8 || c.el == 7 and return n
         !n and c.el ||= 1
         else {
             # if we were placing a different object
@@ -3355,6 +3378,7 @@ Foogla: |
             # inputting sets y&up
             ny&up = s
         }
+        c.Y and ny&Y = c.Y
         return n
     };
     #c SChema
@@ -3419,10 +3443,47 @@ Foogla: |
         }
     };
     
+    me.SC.Steps = &acgt{ return [
+        # compulsive recreate SC/Steps(Y)
+        ['forks',0.01,&acgtRYs,SC{
+            $s = Ys&returns = me&SCio,SC,'Steps',{el:1,Y:Y};
+            Ys&N .map(&p{
+                me&SCio,s,p
+            });
+            sy&Y = Y;
+            # goes on as each SC/Steps/$p
+            SCs&steps = Yc&M = ss&z;
+        },'ift,D'],
+        # a $p per R
+        ['on',0.02,&acgtRYp,SC{
+            $r = py&R;
+            $s = py&s;
+            
+            rs&tings and ss&trac = 'ting'
+            # G, storage type of step
+            ss&trac and rs&Gracto = 1
+            
+            # prefer specific tw, altering supr-isms
+            # they seem to have storable ambitions
+            # eg including to /W/ ways to use
+            #   With/$trick/$hack
+            #    + $hack = $trick trick
+            #   and SCinway
+            ss&tw and rs&tw = ss&tw
+            #  allowing calm isolated spacewalks
+            rs&gently && rs&Gracto and rs&tw = 1
+            
+            if (rs&Gracto) {
+                # should wake first
+                ps&priority = 1;
+                # will be actuated for setup
+            }
+        },'ift,D'],
+    ]};
     me.SC.Schema = &acgt{ return [
         # %KnowThat forks SC/Schema/t=KnowThat
         ['forks',0.01,&acgtRYs,SC{
-            # organise SC's Ys under of/t:
+            # organise SC's Ys as of/t:
             $Sch = me&SCio,SC,'Schema';
             $t = Ys&t;
             !t and throw "give t"
