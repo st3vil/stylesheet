@@ -3154,16 +3154,25 @@ Foogla: |
         # mix steps from schemas
         # < belongs in me.SC.Schema somehow
         #   for multiple Schema/$s into SC
-        ['Schemaload',0.02,&acgtRYs,SC{
+        ['SCis',0.02,&acgtRYs,SC{
             s != SC and throw "should be the one"
             sy&R = R;
+        },'ift,D'],
+        ['Schema to Steps',0.02,&acgtRYs,SC{
             $S = fio(s,'Schema');
-            if (!Sc&compiled) {
-                me&SC_Schema_init,s;
-                me&SC_steps_init,s;
-                Sc&compiled = 1;
-                ~>3 Compi: s.t
-            }
+            Sc&compiled and return
+            
+            # Schema
+            #  has Schema/$h, are A:Schema
+            # remake Steps, is A:Steps
+            #  replace Steps/$step, are A:Step
+            me&SC_Schema_init,s;
+                
+            # into A:Steps/$p
+            me&SC_steps_init,s;
+            
+            ~>3 Compi: s.t
+            Sc&compiled = 1;
         },'ift,D'],
         # @1 figure out where things are at every R%SC
         # @2 pull up map for this Aing
@@ -3172,10 +3181,14 @@ Foogla: |
         },'ift,D'],
     ]};
     
+    me.SCio = &acgtMk{
+    
+    };
     #c SCA
     # cache SC I
     me.SCminds = {};
     me.SCmind = &acgtt{
+        !t and throw "SCmind!t"
         $N = me.SCminds[t];
         N and return N
         $N = me.SC[t](A,C,G,T);
@@ -3289,7 +3302,6 @@ Foogla: |
         $R = Cy&R;
         # causes %SupplyChai to happen later
         $SC = me&rollbsc,R,'SupplyChai';
-        SCy&R = R;
         return SC;
     };
     
@@ -3358,7 +3370,7 @@ Foogla: |
     };
     
     me.SC.Schema = &acgt{ return [
-        # %KnowThat forks a Schema from SC
+        # %KnowThat forks SC/Schema/t=KnowThat
         ['forks',0.01,&acgtRYs,SC{
             $t = Ys&t;
             $s = me&rollbsc,R,'SCh/'+t;
