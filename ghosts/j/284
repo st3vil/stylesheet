@@ -3181,6 +3181,8 @@ Foogla: |
                 Yc&cv = ty&cv;
             }
         }
+        # so Y looks @2, if last ty&cv < 2
+        Yc&cv = Yc&ov;
         Yc&M and Yc&M.map(s => sy&Y = Y)
         return Y
     };
@@ -3205,42 +3207,67 @@ Foogla: |
             }
         }
     };
-    # to be Aing SC**
+    #c to be Aing SC**
+    # $s = me&SCA $s(y&Y) $mind? {Y.sc intro} $ov||=9
     me.SCA = &acgtstc,ov{
         $R = Cy&R;
+        isob(t) and ov = c; c = t; t = null
         
-        # < climb sy&up, part of wider Aing
+        # may be inside SC
+        # < slope sy&up and know stuff, part of wider Aing
         $dive = me.cby(s);
         $SC = dive[0];
-        # Ys must be regenerated per R%SC?
-        $diffR = !sy&R || me&yfuture,sy&R != sy&R;
+        
+        # s may have sy&Y to continue,
+        # or begin:
+        #  forks@01 - alters Yc&M=[s]
+        #   the ground/world/atoms we want to be,
+        #   may structure them itself, eg:
+        #     $h = me&SCA,SC,'Schema',{t:t},1
+        #   makes $SC/Schema/$h named $t with hy&Y = Y
+        #   or if still Yc&M=[s], sy&Y = Y
+        # or resync:
+        #   if sy&R is not current
+        #  on@02 - join macro A (eg R)
+        #   so it can give/take grounds there
+        $diffR = sy&R && me&yfuture,sy&R != sy&R;
         $Y = sy&Y;
-        $difft = Y && Yc&t != t;
+        $difft = t && Y && Yc&t != t;
         if (!Y || diffR || difft) {
-            # resync/init/continue the Y
+            # s may look like the mind its expecting
+            t ||= ss&of || s.t;
+            # start/resync the Y
             if (difft) {
-                # t goes more specific than sy&Y.t
-                #   share nodes with nano Y
-                #   or it might be a mega Y
-                #   eg Comste pumping Live through steps of encoding,
-                #   which want to be their own sequence of events
-                #   at the top level
-                throw "forkY"
+                # be a different Y,
+                #  happens as we SCA,SC,'Schema',... when SCy&Y
+                # < knowing we came from this Y (is in sy&up)
+                ~>3 forky: s.t, t
+                Y = null;
+                # < some Aing of Y to use a different mind
+                #   wouldn't go here
+                #  it's a different Y...
+                #   a layer projecting C alterations into te pipeline
+                #   Y:Comste has Y:Encode travelling
+                #    such Y:Nodes from Y:Step
             }
+            # here's the Yc&t - SCmind to have
             $gen = {t:t,cv:0,ov:0.1};
-            # put cv/ov back where they were after
-            $cb = Y ? me&tempwind,Y.c,gen : &{};
-            # may skip forks@0.01 if sy&Y
-            Y and gen.Y = Y; gen.cv = 0.01
-            
-            # Aing @1 s c sc, every SCA
-            # t selects itself or one of its types
-            #  eg Schema or Step, or SupplyChai 
+            if (Y) {
+                # put cv/ov back where they were after
+                $cb = me&tempwind,Y.c,gen;
+                # may skip forks@0.01 if sy&Y
+                gen.Y = Y;
+                gen.cv = 0.01
+            }
             Y = me&SCAing,s,gen,c;
-            cb();
+            cb && cb()
         }
         
-        # Aing >1 may now c=sc, sc={reaction}
+        # Yc&M would be different if it was complicated forks@01
+        # < persis this
+        (Yc&M||[]).length == 1 && Yc&M[0] == s and sy&Y = Y
+        
+        # < Aing >1 may now sc=c
         #  until sc.ov etc conduces a decision to etc
         $ov ||= 0.9;
         Y = me&SCAing,s,{Y:Y,ov:ov},c;
@@ -3267,9 +3294,8 @@ Foogla: |
     };
     # %SC=1 became rolling C
     me.SCenter = &acgtR{
-        $SC = me&rollbsc,R,'SupplyChai';
+        $SC = me&SCs;
         me&nu,'SC',SC;
-        $SC = me&SCs,R;
         $s = me&SCA,SC,SC.t,{},1;
         return SC
     };
@@ -3304,10 +3330,33 @@ Foogla: |
         },'ift,D'],
     ]};
     
-    me.SCio = &acgtMk{
-    
+    # ah() for C with A (Y) sense
+    # < more than one level
+    # < io pipes A to A
+    # auto ny&up = s
+    me.SCio = &acgtsMc{
+        c ||= {};
+        isnu(c) and c = {el:c}
+        isst(M) and M = M.split('/');
+        M.length > 1 and throw "One"
+        $t = M[0];
+        t == '' and return me&ioty,s,[''],['']
+        # read only
+        $n = fio(s,t,0);
+        !n and c.el ||= 1
+        else {
+            # if we were placing a different object
+            isob(t) && n != t and c.el = 1
+            # remove the one we found
+            c.el == 1 || c.el == 9 and fio(s,t,9)
+        }
+        if (c.el == 1) {
+            $n = fio(s,t);
+            # inputting sets y&up
+            ny&up = s
+        }
+        return n
     };
-
     #c SChema
     
     # %*T pronounces how it will be, arranging for SCing:
@@ -3373,13 +3422,13 @@ Foogla: |
     me.SC.Schema = &acgt{ return [
         # %KnowThat forks SC/Schema/t=KnowThat
         ['forks',0.01,&acgtRYs,SC{
-            $t = Ys&t;
-            $s = me&rollbsc,R,'SCh/'+t;
             # organise SC's Ys under of/t:
-            $Sch = fio(SC,'Schema');
-            fio(Sch,s,9);
-            fio(Sch,s);
-            sy&up = SC;
+            $Sch = me&SCio,SC,'Schema';
+            $t = Ys&t;
+            !t and throw "give t"
+            # el:1 recreates, string t makes spacer
+            #  and sets sy&Y = Y
+            $s = me&SCio,Sch,t,{el:1,Y:Y};
             Yc&M = [s];
             # drop cache # < wake Y:Schema if diff
             delete Schc&compiled;
@@ -3424,7 +3473,7 @@ Foogla: |
         # steps adopted from recent: n ...
         sy&domed = &{
             $N = me&ydome;
-            me&SCA,s,'Schema',{N:N},2;
+            me&SCA,s,{N:N},2;
         };
         return s
     };
