@@ -2967,6 +2967,8 @@ Foogla: |
             # p, its nomad and ghost
             $r = py&R;
             $s = py&s;
+            # p's current walk around
+            $w = py&O;
             # p's neighbours, earlier and next
             i *= 1;
             $l = hs&steps[i-1];
@@ -3096,19 +3098,6 @@ Foogla: |
     };
     
     #c SCAing
-    # cache SC I
-    me.SCminds = {};
-    me.SCmind = &acgtt{
-        !t and throw "SCmind!t"
-        $N = me.SCminds[t];
-        N and return N
-        !me.SC[t] and throw "SCmind!t:"+t
-        $N = me.SC[t](A,C,G,T);
-        N = N.map(n => Cye(n));
-        N.map(n => n.c = {s:n.c})
-        me.SCminds[t] = N;
-        return N
-    };
     # start Aing as a way to find C about how to A
     # we have the t
     me.SCAing = &acgtsc,sc{
@@ -3151,28 +3140,7 @@ Foogla: |
         Yc&M and Yc&M.map(s => sy&Y = Y)
         return Y
     };
-    # when about to ex(c,s)
-    # returns function to replace originals
-    #  not exception handling, a brittle strategy
-    #   maybe it could have a stack of jobs in Y.sc
-    #   to be plucked into Y.c, committing to it
-    # to allow SCA to temporarily be:
-    #   SCAing 0-1 every time we SCA,
-    #   is really another A's work,
-    #   though it might still present this A (Y)
-    #   as the Y to I that don't know the distinction
-    me.tempwind = &acgtcs{
-        $set = {};
-        each kv s {
-            hak(c,k) and set[k] = c[k]
-        }
-        return &{
-            each kv set {
-                c[k] = set[k]
-            }
-        }
-    };
-    #c to be Aing SC**
+    #c SCA - to be Aing SC**
     # $s = me&SCA $s(y&Y) $mind? {Y.sc intro} $ov||=9
     me.SCA = &acgtstc,ov{
         $R = Cy&R;
@@ -3274,28 +3242,56 @@ Foogla: |
         return Ys&returns || (Yc&M||[])[0]
     };
     
-    #c SC.SupplyChai-f process composition
+    #c SCA-f process composition
+    
     # each school (of thought) eg %KnowThat
     # gets mixed/attached/progressed
-    
     # With: local knowledge about certain names etc
     me.SC = {};
-    me.SC.A = &acgt{
+    me.SC.A = &acgt{ [
+        ['on',0.02,&acgtRYs,SC{
+            s != SC and throw "should init the one"
+            sy&R = R;
+            sy&Y = Y;
+            # list of atoms to loop, default:
+            # Yc&M = [s]
+        },'ift,D'],
+    ] };
+    
+    # get I = me.SC.$t
+    me.SCminds = {};
+    me.SCmind = &acgtt{
+        !t and throw "SCmind!t"
+        $N = me.SCminds[t];
+        N and return N
+        !me.SC[t] and throw "SCmind!t:"+t
+        $N = me.SC[t](A,C,G,T);
+        N = N.map(n => Cye(n));
+        N.map(n => n.c = {s:n.c})
+        me.SCminds[t] = N;
+        return N
     };
     
-    # the oscillator's sense
-    # %SC=1 became rolling C
-    me.SCs = &acgt{
-        $R = Cy&R;
-        # causes %SupplyChai to happen later
-        $SC = me&rollbsc,R,'SupplyChai';
-        return SC;
-    };
-    # begins here:
-    me.SCenter = &acgtR{
-        $SC = me&SCs;
-        $s = me&SCA,SC,{},1;
-        return SC
+    # when SCA about to ex(Y.c,gen)
+    # returns function to replace originals
+    #  not exception handling, a brittle strategy
+    #   maybe it could have a stack of jobs in Y.sc
+    #   to be plucked into Y.c, committing to it
+    # to allow SCA to temporarily be:
+    #   SCAing 0-1 every time we SCA,
+    #   is really another A's work,
+    #   though it might still present this A (Y)
+    #   as the Y to I that don't know the distinction
+    me.tempwind = &acgtcs{
+        $set = {};
+        each kv s {
+            hak(c,k) and set[k] = c[k]
+        }
+        return &{
+            each kv set {
+                c[k] = set[k]
+            }
+        }
     };
     
     # ah() for C with A (Y) sense
@@ -3327,7 +3323,22 @@ Foogla: |
         c.Y and ny&Y = c.Y
         return n
     };
-    #c SC.SupplyChai/Steps
+    #c SC.SupplyChai
+    
+    # the oscillator's sense
+    # %SC=1 became rolling C
+    me.SCs = &acgt{
+        $R = Cy&R;
+        # causes %SupplyChai to happen later
+        $SC = me&rollbsc,R,'SupplyChai';
+        return SC;
+    };
+    # begins here:
+    me.SCenter = &acgtR{
+        $SC = me&SCs;
+        $s = me&SCA,SC,{},1;
+        return SC
+    };
     
     me.SC.SupplyChai = &acgt{ return [
         # @1 figure out where things are at every so often
@@ -3451,12 +3462,16 @@ Foogla: |
             }
         },'ift,D'],
         
-        # per walk through Y:SC
+        #c per walk through Y:Steps
         # @03 each Steps/(p,r,s) wake up, have features
         #  may be different, may be time to something
         ['on',0.03,&acgtRYp,SC{
             $r = py&R;
             $s = py&s;
+            
+            # p's current walk around Y:Steps
+            $Ob = py&O;
+            $O = py&O = Cye([p.t,py&cv]);
             
             if (rs&supr) {
                 # %supr puts sy&R, Steps@02 puts {s,p}y&R
@@ -3545,13 +3560,6 @@ Foogla: |
             me&SCA,s,{N:N},2;
         };
         return s
-    };
-    # for T.nN, from n ...
-    me.ydome = &acgty{
-        !T.nN || !T.nN.length and return []
-        $N = T.nN.map(n => y ? y(n) : n);
-        T.nN = [];
-        return N
     };
     
     #c KnowThat@304 process schematics
