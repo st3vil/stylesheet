@@ -2773,7 +2773,7 @@ Foogla: |
             $h = me&SCenter,R;
             
             # per R life
-            me&SCale,R,h;
+            #me&SCale,R,h;
             # per attend to step
             me&SCtrip,R,h;
             # talk out
@@ -3095,52 +3095,6 @@ Foogla: |
         }   
     };
     
-    #c SC@305 creates hierarchy
-    me.SCale = &acgtRh{
-        each ip hs&steps {
-            $r = py&R;
-            $s = py&s;
-
-            # iterate step's things
-            # each step/* is sy&top, has pool sy&N
-            rs&supr and py&nodes = me&SCnodes,R,r;
-
-            if (rs&Gracto) {
-                # hide networking pile
-                #  and imply %directory=$R/$r/
-                #  tractings %directory out of being W/$R/$r/$t
-                $S = me&tingsfolder,R,r;
-                # do %tracting
-                ss&trac != 'ting' and throw "othertrac"
-                me&tracto,r,'ball','ting',S;
-            }
-            else {
-                if (rs&supr) {
-                    # set by %supr@291
-                    # also to init from suprised
-                    py&nodes(&js{ me&persis,s,'y','R',j })
-                }
-            }
-        }
-        # could reorder steps
-        # quite often want the last step
-        Rs&Lastly = hs&steps.slice(-1)[0];
-    };
-    # R/r%supr can find **s%ball%supr%Comal
-    me.SCnodes = &acgtRr{
-        # the r
-        me&yfuture,r,R != r and throw r.t+" yfuted"
-        return &y{
-            me&ioty,r,'ball' .map(&j{
-                me&yfuture,j,R != j and throw j.t+" yfuted"
-                js&folder and return
-                $s = jc&s;
-                # must be used on %supr, or anywhere y&N is?
-                !sy&supr and throw "wandering"
-                sy&N .map(s => y(sy&R,s))
-            })
-        }
-    };
     #c SCAing
     # cache SC I
     me.SCminds = {};
@@ -3158,6 +3112,9 @@ Foogla: |
     # start Aing as a way to find C about how to A
     # we have the t
     me.SCAing = &acgtsc,sc{
+        # incv - allows doing Ycv==tcv
+        #  usu so many at == cv all happen
+        $incv = delete c.ashocks&&c.cv;
         # awareness may already be in sy&Y,
         #  which will already be:
         $Y = delete c.Y;
@@ -3172,8 +3129,6 @@ Foogla: |
         # of this routine
         Yc&N = me&SCmind,Yc&t;
         $il = 30;
-        # do all of a cv once begun
-        $incv;
         while (1) {
             il-- < 0 and throw "ManySCAing"
             $ci = t ? Yc&N.indexOf(t) : -1;
@@ -3222,12 +3177,17 @@ Foogla: |
     me.SCA = &acgtstc,ov{
         $R = Cy&R;
         isob(t) and ov = c; c = t; t = null
+        # ov='o2' -> @02
+        isst(ov) && ov.substr(0,1) == 'o' and ov = ov.substr(1)/100
+        ov ||= 0.9;
         
         # may be inside SC
         # < slope sy&up and know stuff, part of wider Aing
         $dive = me.cby(s);
         $SC = dive[0];
         
+        # init a possibility
+        #   they may resume their previous cv/ov after
         # s may have sy&Y to continue,
         # or begin:
         #  forks@01 - alters Yc&M=[s]
@@ -3240,15 +3200,18 @@ Foogla: |
         #   if sy&R is not current
         #  on@02 - join macro A (eg R)
         #   so it can give/take grounds there
+        
         $diffR = sy&R && me&yfuture,sy&R != sy&R;
         $Y = sy&Y;
+        
+        
         $difft = t && Y && Yc&t != t;
-        if (!Y || diffR || difft) {
+        if (!Y || diffR || difft || ov <= 0.1) {
             # s may look like the mind its expecting
             t ||= Y && Yc&t || ss&of || s.t;
             # start/resync the Y
             if (Y && Yc&t != t) {
-                # be a different Y,
+                # going to fork a different Y,
                 #  happens as we SCA,SC,'Schema',... when SCy&Y
                 # < knowing we came from this Y (is in sy&up)
                 Y = null;
@@ -3259,17 +3222,43 @@ Foogla: |
                 #   Y:Comste has Y:Encode travelling
                 #    such Y:Nodes from Y:Step
             }
+            
+            # about this vector if init:
+            $gen = {cv:0,ov:0.1};
+            if (ov <= 0.1) {
+                # low ov takes init temporality,
+                if (!Y || (Yc&cv||0) < ov) {
+                    # from (after) current low cv, to this low ov
+                    gen.cv = Y && Yc&cv || 0;
+                    gen.ov = ov;
+                }
+                else {
+                    # including cv=ov, to 0.1 as usual
+                    c.ashocks = 1;
+                    gen.cv = ov;
+                    gen.ov = 0.1;
+                }
+            }
+            
             # here's the Yc&t - SCmind to have
-            $gen = {t:t,cv:0,ov:0.1};
+            gen.t ||= t;
             if (Y) {
+                $wascv = Yc&cv;
                 # put cv/ov back where they were after
                 $cb = me&tempwind,Y.c,gen;
                 # may skip forks@0.01 if sy&Y
                 gen.Y = Y;
-                gen.cv = 0.01
+                gen.cv ||= 0.01;
             }
+            
             Y = me&SCAing,s,gen,c;
-            cb && cb()
+            
+            $thencv = Yc&cv;
+            cb && cb();
+            # keep a progressed cv
+            #  if cb() wound back as expected
+            if (wascv < thencv && wascv == Yc&cv)
+                Yc&cv = thencv
         }
         
         # Yc&M would be different if it was complicated forks@01
@@ -3279,8 +3268,7 @@ Foogla: |
         
         # < Aing >1 may now sc=c
         #  until sc.ov etc conduces a decision to etc
-        $ov ||= 0.9;
-        Y = me&SCAing,s,{Y:Y,ov:ov},c;
+        Yc&cv < ov and Y = me&SCAing,s,{Y:Y,ov:ov},c
         
         # sy&Y to say "needs /schema/*"
         return Ys&returns || (Yc&M||[])[0]
@@ -3342,17 +3330,20 @@ Foogla: |
     #c SC.SupplyChai/Steps
     
     me.SC.SupplyChai = &acgt{ return [
-        # @1 figure out where things are at every R%SC
+        # @1 figure out where things are at every so often
         
+        # @02 when R%SC relives,
+        #  ~SCy&R winds SCy&Y back to here
         ['on',0.02,&acgtRYs,SC{
             s != SC and throw "should be the one"
             sy&R = R;
             sy&Y = Y;
         },'ift,D'],
-        # mix Schema/$h/$p into Steps/$p
+        
+        #  mix Schema/$h/$p into Steps/$p
         # < Schema knowing export to Steps/$p
-        #   or knowing $p:step, and Steps inhales :steps
-        ['Schema to Steps',0.02,&acgtRYs,SC{
+        #   or sharing as $p:step, and Steps inhales :steps
+        ['Schema to Steps',0.021,&acgtRYs,SC{
             $Sch = me&SCio,SC,'Schema',7;
             Schc&compiled and return
             $N = [];
@@ -3366,31 +3357,70 @@ Foogla: |
             #     if it didn't we could make it:
             #       $was = me&SCio,SC,'Steps',9;
             #   and imports new Steps/$p
-            $s = me&SCA,SC,'Steps',{N:N},1;
+            s = Ys&Steps = me&SCA,SC,'Steps',{N:N},'o2';
             
-            ~>3 Compi: s.t
+            ~>3 Compi: SC.t
             Schc&compiled = 1;
         },'ift,D'],
         
-        # @2 pull up map for this Aing
-        # @3 
-        ['KnowThat',0.02,&acgtRs{
+        # @023 Steps per R%SC
+        ['Steps per R',0.023,&acgtRYs,SC{
+            # covered by Schema always recompiling
+            #me&SCA,Ys&Steps,{},'o2';
         },'ift,D'],
+        
+        # @023 Steps per walk through Y:SC
+        #   pull up a map for this Aing,
+        ['Steps per walk',0.03,&acgtRYs,SC{
+            me&SCA,Ys&Steps,{},'o3';
+        },'ift,D'],
+        
     ]};
     
+    #c SC.Steps
+    # Y:SC/Y:Steps/$p:step
+    # @01 downloading from Ys&N (Schema/*/$p)
+    # @02 having r and its s
+    # @03 runtime oncily
     me.SC.Steps = &acgt{ return [
-        # compulsive recreate SC/Steps(Y)
+        # compulsive recreate SC/Y:Steps, give z of Ys&N
         ['forks',0.01,&acgtRYs,SC{
             $s = Ys&returns = me&SCio,SC,'Steps',{el:1,Y:Y};
+            sy&Y = Y;
             Ys&N .map(&p{
                 me&SCio,s,p
             });
-            sy&Y = Y;
+        },'ift,D'],
+        
+        # per R%SC:
+        # @02 as Y:Steps each $p:step has r which has s
+        ['steps are',0.02,&acgtRYs,SC{
+            $s = Ys&returns;
+            sy&R = R;
+            # reverse: bal shall adjust Rs&z to flow upwards
+            ss&z.slice().reverse().map(&p{
+                $n = py&Schema_step;
+                # bal inputs to ups%ball, unless %eph
+                ns&supr && !ns&tings and ns&eph = 1
+                # n.sc -> r.sc
+                $r = me&bal,n.t,n.sc;
+                $s = rc&s;
+                # n.c -> s.sc
+                ex(s.sc,n.c);
+                py&s = s;
+                sy&p = p;
+                # < is b
+                py&R = sy&R = r;
+            });
             # goes on as each SC/Steps/$p
             SCs&steps = Yc&M = ss&z;
+            # GOING
+            Rs&Lastly = ss&z.slice().pop();
         },'ift,D'],
-        # a $p per R
-        ['on',0.02,&acgtRYp,SC{
+        
+        # still per R%SC:
+        # @021 each Steps/(p,r,s) attr init
+        ['on',0.021,&acgtRYp,SC{
             $r = py&R;
             $s = py&s;
             
@@ -3411,8 +3441,48 @@ Foogla: |
             if (rs&Gracto) {
                 # should wake first
                 ps&priority = 1;
-                # will be actuated for setup
+                # hide networking pile
+                #  and imply %directory=$R/$r/
+                #  tractings %directory out of being W/$R/$r/$t
+                $S = me&tingsfolder,R,r;
+                # do %tracting
+                ss&trac != 'ting' and throw "othertrac"
+                me&tracto,r,'ball','ting',S;
             }
+        },'ift,D'],
+        
+        # per walk through Y:SC
+        # @03 each Steps/(p,r,s) wake up, have features
+        #  may be different, may be time to something
+        ['on',0.03,&acgtRYp,SC{
+            $r = py&R;
+            $s = py&s;
+            
+            if (rs&supr) {
+                # %supr puts sy&R, Steps@02 puts {s,p}y&R
+                me&yfuture,r,R != r and throw r.t+" yfuted"
+                
+                # each step/* is sy&top, has pool sy&N
+                #  iterate through here get:
+                #   (j,s) - non-ground things inside $p:step
+                # < climb however, refs limited to those in sy&N
+                py&nodes = &y{
+                    me&ioty,r,'ball' .map(&j{
+                        me&yfuture,j,R != j and throw j.t+" yfuted"
+                        js&folder and return
+                        $s = jc&s;
+                        # must be used on %supr, or anywhere y&N is?
+                        !sy&supr and throw "wandering"
+                        sy&N .map(s => y(sy&R,s))
+                    })
+                };
+                if (!rs&Gracto) {
+                    # set by %supr@291
+                    # also to init from suprised
+                    py&nodes(&js{ me&persis,s,'y','R',j })
+                }
+            }
+            
         },'ift,D'],
     ]};
     #c SC.Schema
@@ -3457,25 +3527,12 @@ Foogla: |
         # steps adopted from recent: n ...
         ['steps adopted',0.11,&acgtRYs,SC{
             $N = Ys&N;
-            $schema = s;
-            # bal shall adjust Rs&z but not Rc&ss&z
-            #  to flow upwards?
-            N.reverse();
-            N.map(&n{
-                # attach via bal (%eph not attached)
-                ns&supr && !ns&tings and ns&eph = 1
-                # n.sc -> R.sc
-                $r = me&bal,n.t,n.sc;
-                $s = rc&s;
-                # n.c -> s.sc
-                ex(s.sc,n.c);
-                # and h persists steps, which have py&cv
-                $p = fio(schema,[n.t,n.y.cv||1]);
-                py&s = s;
-                sy&p = p;
-                py&R = sy&R = r;
-                # < persis sy&p multiplies, if py&R now
-            });
+            !N and throw "nosteps"
+            each in N {
+                $p = fio(s,[n.t,n.y.cv||1]);
+                py&Schema_step and throw "multi schema step", n
+                py&Schema_step = n;
+            }
         },'ift,D'],
     ]};
     
