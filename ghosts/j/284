@@ -2769,17 +2769,11 @@ Foogla: |
             
             # phases: to be minding the steps
             
+            $SC = me&SCs;
             # steps congealed
-            $h = me&SCenter,R;
+            $s = me&SCA,SC;
             
-            # per R life
-            #me&SCale,R,h;
-            # per attend to step
-            me&SCtrip,R,h;
-            # talk out
-            me&SCreport,R,h;
-            
-            me&nu,'SC',h;
+            me&nu,'SC',SC;
             
             s&boc = 588;
         },'ift,D'],
@@ -2931,7 +2925,7 @@ Foogla: |
     #c SCAing
     # start Aing as a way to find C about how to A
     # we have the t
-    me.SCAing = &acgtsc,sc{
+    me.SCAing = &acgtRsc,sc{
         # incv - allows doing Ycv==tcv
         #  usu so many at == cv all happen
         $incv = delete c.ashocks&&c.cv;
@@ -2961,8 +2955,11 @@ Foogla: |
             $M = Yc&M || [s];
             each in M {
                 # t act, n ground
-                $r = ny&R || sy&R || Cy&R;
-                tc&s(A,C,G,T,r,Y,n,s);
+                # can't always trust whatever these might be:
+                #$r = ny&R || sy&R || Cy&R;
+                # R is from the SCA above (R%SC)
+                # < elabourate argumentation
+                tc&s(A,C,G,T,R,Y,n,s);
                 Yc&cv = ty&cv;
             }
         }
@@ -3050,7 +3047,7 @@ Foogla: |
                 gen.cv ||= 0.01;
             }
             
-            Y = me&SCAing,s,gen,c;
+            Y = me&SCAing,R,s,gen,c;
             
             $thencv = Yc&cv;
             cb && cb();
@@ -3067,7 +3064,7 @@ Foogla: |
         
         # < Aing >1 may now sc=c
         #  until sc.ov etc conduces a decision to etc
-        Yc&cv < ov and Y = me&SCAing,s,{Y:Y,ov:ov},c
+        Yc&cv < ov and Y = me&SCAing,R,s,{Y:Y,ov:ov},c
         
         # sy&Y to say "needs /schema/*"
         return Ys&returns || (Yc&M||[])[0]
@@ -3163,12 +3160,6 @@ Foogla: |
         # causes %SupplyChai to happen later
         $SC = me&rollbsc,R,'SupplyChai';
         return SC;
-    };
-    # begins here:
-    me.SCenter = &acgtR{
-        $SC = me&SCs;
-        $s = me&SCA,SC,{},1;
-        return SC
     };
     me.SC.SupplyChai = &acgt{ return [
         # @1 figure out where things are at every so often
@@ -3326,6 +3317,11 @@ Foogla: |
             $r = py&R;
             !rs&supr and return
             
+            # p's current walk around Y:Steps
+            $Ob = py&O;
+            $O = py&O = Cye([p.t,py&cv]);
+            Ob and Oc&b = Ob; delete Obc&b
+            
             # %supr puts sy&R, Steps@02 puts {s,p}y&R
             me&yfuture,r,R != r and throw r.t+" yfuted"
 
@@ -3366,52 +3362,26 @@ Foogla: |
         ['Steps',0.6,&acgtRYp,SC{
             # Steps
             $S = Ys&returns;
-            $i = Ss&z.indexOf(p);
+            $i = Yc&M.indexOf(p);
             i < 0 and throw "nop"
             # $p:step's neighbours, earlier and next
-            $l = Ss&z[i-1];
-            $n = Ss&z[i+1];
+            $l = Yc&M[i-1];
+            $n = Yc&M[i+1];
             
             # being three states at once
-            $la = SCy&waia(l); # has happened
+            # la has happened
+            $la = SCy&waia(l);
             $ra = SCy&waia(p,{b:1});
             $na = SCy&waia(n,{b:1});
-        },'ift,D'],
-    ]};
-    #c SC@31-33 and more
-    me.SCtrip = &acgtRh{
-        # < add an iteration of phase
-        #   which can repeat steps
-        #   and do SCreport inside the SCtrip
-        each ip hs&steps {
-            $r = py&R;
-            if (rs&Gracto) {
-                # ting@5 gets %flook():
-                me&Ring,R,{und:r,ov:0.505};
-                # ball+tracting@51 etcs
-                me&Ring,R,{und:r,ov:0.58};
-            }
-        }
-        $anyGbusy = 0;
-        each ip hs&steps {
-            # p, its nomad and ghost
-            $r = py&R;
-            $s = py&s;
-            # p's current walk around
-            $w = py&O;
-            # p's neighbours, earlier and next
-            i *= 1;
-            $l = hs&steps[i-1];
-            $n = hs&steps[i+1];
-            # being three states at once
             
-            $la = waia(l); # has happened
-            $ra = waia(p,{b:1});
-            $na = waia(n,{b:1});
+            # < Y:step could take it from here
+            #   to step 12222112232323343456 in one R%SC
+            #   usually we have enough leash to do such runs
+            #  and to attach the Gractoids more sidily:
             
             if (rs&Gracto) {
                 # G already @7, conclude
-                $g = hy&tip(r);
+                $g = SCy&tip(r);
                 #!l and me&mtsc,g,"noprev"
                 $N = ra('ready','r');
                 each ij N {
@@ -3425,108 +3395,106 @@ Foogla: |
                     me&suprise,j,ny&R
                 }
                 !N || N.length < me&ioty,r .length and anyGbusy = 1
-                # < apply change/Cuploadism as they finish
-                continue
+                # SCfcommit applies change/Cuploadism as they finish
+                return
             }
-            else {
-                #c middles
-                if (anyGbusy && rc&b) {
-                    ~>7 Geeping: r.t
-                    #rs&sleeping = 1;
-                    # seems to have children that keep going already
-                    #  even if we move the bal to SCenter
-                    # continue;
-                }
-                !py&nodes and return me&nu,"Bort-!nodes",p
-                py&nodes(&js{
-                    # y&l change already fatal
-                    
-                    # waigh:wou from last time, feedback loop
-                    #   experience -> notion, notion -> etc
-                    jy&sa = waia(j,{b:1});
-                    
-                    # wai:wou this time enterer
-                    jy&ha = aha(j,'wou');
-                    
-                    # differ before <-> now
-                    # < caching sa/za, then:
-                    #   < versioned X, re-waigh if ha since da
-                    jy&da = &loose,tight,c{
-                        return 1; # too-caching wough
-                        c ||= {};
-                        # what you want/specifically
-                        isst(loose) and loose = G&peel,loose
-                        isst(tight) and tight = G&peel,tight
-                        $sa = waia(j,ex({b:1},c));
-                        $za = waia(j,ex({},c));
-                        !(sa && za) and return
-                        $was = sa(loose);
-                        $now = za(loose);
-                        # gets zu grounding into j
-                        $C = js&C;
-                        me&zu,'da',{was,now,tight};
-                        $cha = {};
-                        each kv tight {
-                            # k - the column in either
-                            # v - change type/reaction
-                            #  ref, slep, in/decrease, growth...
-                        }
-                        return cha
-                    };
-                });
-                
-                # @31 domecheck, from
-                
-                me&Ring,r,{inside:r,ov:0.31};
-                
-                # wouey is wough before 32
-                # < assume everything in 31 sleeps 32
-                #waia(r,{gh:'ey'});
-                #waia(r,{gh:'ey',b:1});
-                
-                me&Ring,r,{inside:r,ov:0.32};
-                
-                # wough is finally here!
-                $za = waia(r);
-                py&nodes(&js{
-                    # < insist ready is the first column
-                    #   so we can simply js&wou.*.ready
-                    $ja = waia(j,{gh:'ad'});
-                    ja('ready') and me&suprise,j,ny&R
-                    
-                    # < subtype step:Seq's ready to -> step:Compiling
-                    #   same way step:Compiling would then -> That..G
-                    #   That..G wants all parents of the things changing
-                    # < or step:Apply after seq,
-                    #   or is it This..G?
-                    #ja('Ready') and me&suprise,j,n
-                    
-                });
-                $g = hy&tip(r);
-                me&walls,g,'b:3.3h9';
-                !n and me&mtsc,g,"nonext"
+            #c middles
+            if (anyGbusy && rc&b) {
+                ~>7 Geeping: r.t
+                #rs&sleeping = 1;
+                # seems to have children that keep going already
+                #  even if we move the bal to SCenter
+                # continue;
             }
-        }
-        # and again to wake things generated
-        #  from but not to inside:r
-        each ip hs&steps {
+            !py&nodes and return me&nu,"Bort-!nodes",p
+            py&nodes(&js{
+                # y&l change already fatal
+
+                # waigh:wou from last time, feedback loop
+                #   experience -> notion, notion -> etc
+                jy&sa = SCy&waia(j,{b:1});
+
+                # wai:wou this time enterer
+                jy&ha = aha(j,'wou');
+
+                # differ before <-> now
+                # < caching sa/za, then:
+                #   < versioned X, re-waigh if ha since da
+                jy&da = &loose,tight,c{
+                    return 1; # too-caching wough
+                    c ||= {};
+                    # what you want/specifically
+                    isst(loose) and loose = G&peel,loose
+                    isst(tight) and tight = G&peel,tight
+                    $sa = SCy&waia(j,ex({b:1},c));
+                    $za = SCy&waia(j,ex({},c));
+                    !(sa && za) and return
+                    $was = sa(loose);
+                    $now = za(loose);
+                    # gets zu grounding into j
+                    $C = js&C;
+                    me&zu,'da',{was,now,tight};
+                    $cha = {};
+                    each kv tight {
+                        # k - the column in either
+                        # v - change type/reaction
+                        #  ref, slep, in/decrease, growth...
+                    }
+                    return cha
+                };
+            });
+
+            # @31 domecheck, from
+
+            me&Ring,r,{inside:r,ov:0.31};
+
+            # wouey is wough before 32
+            # < assume everything in 31 sleeps 32
+            #waia(r,{gh:'ey'});
+            #waia(r,{gh:'ey',b:1});
+
+            me&Ring,r,{inside:r,ov:0.32};
+
+            # wough is finally here!
+            $za = SCy&waia(r);
+            py&nodes(&js{
+                # < insist ready is the first column
+                #   so we can simply js&wou.*.ready
+                $ja = SCy&waia(j,{gh:'ad'});
+                ja('ready') and me&suprise,j,ny&R
+                ja('ready') and ~>5 ready: j.t, '->', n.t
+
+                # < subtype step:Seq's ready to -> step:Compiling
+                #   same way step:Compiling would then -> That..G
+                #   That..G wants all parents of the things changing
+                # < or step:Apply after seq,
+                #   or is it This..G?
+                #ja('Ready') and me&suprise,j,n
+
+            });
+            $g = SCy&tip(r);
+            me&walls,g,'b:3.3h9';
+            !n and me&mtsc,g,"nonext"
+        },'ift,D'],
+        
+        # and again to wake things generated into other steps
+        #  ie from inside:r, out to where Ring isn't
+        ['Steps may other',0.67,&acgtRYp,SC{
             $r = py&R;
             me&Ring,r,{inside:r,ov:0.31};
-        }   
-    };
-    # display once laters ha ealiers etc
-    me.SCreport = &acgtRh{
-        each ip hs&steps {
+        },'ift,D'],
+        
+        # and again to wake things generated
+        ['Trip report',0.7,&acgtRYp,SC{
             $r = py&R;
-            rs&sleeping and continue
+            rs&sleeping and return
             py&nodes && py&nodes(&js{
                 js&wough and throw "Hadwough: "+j.t
-                $g = hy&tip(j);
+                $g = SCy&tip(j);
                 me&walls,g,'b:2.2';
             });
-        }   
-    };
-    
+        },'ift,D'],
+    ]};
     #c SC.Schema
     
     # %*T pronounces how it will be, arranging for SCing:
@@ -5568,6 +5536,7 @@ Foogla: |
                 $N = me&fabioty,op,[f.t];
                 N[0] and return N[0]
             };
+            !flook && f.t == 'NutEl' and debugger
             !flook and return me&waits,"!flook" && me&zu,op
             $r = flook(f,r,ok);
         }
