@@ -2771,9 +2771,12 @@ Foogla: |
             
             $SC = me&SCs;
             # steps congealed
-            $s = me&SCA,SC;
+            $s = me&SCA,SC,{},1;
+            #debugger;
+            $s = me&SCA,SC,{},9;
             
-            me&nu,'SC',SC;
+            #me&nu,'SC',SC;
+            #me&nu,'SCminds',me.SCminds;
             
             s&boc = 588;
         },'ift,D'],
@@ -2925,7 +2928,7 @@ Foogla: |
     #c SCAing
     # start Aing as a way to find C about how to A
     # we have the t
-    me.SCAing = &acgtRsc,sc{
+    me.SCAing = &acgtRsc,sc,SC{
         # incv - allows doing Ycv==tcv
         #  usu so many at == cv all happen
         $incv = delete c.ashocks&&c.cv;
@@ -2959,7 +2962,7 @@ Foogla: |
                 #$r = ny&R || sy&R || Cy&R;
                 # R is from the SCA above (R%SC)
                 # < elabourate argumentation
-                tc&s(A,C,G,T,R,Y,n,s);
+                tc&s(A,C,G,T,R,Y,n,SC);
                 Yc&cv = ty&cv;
             }
         }
@@ -3047,7 +3050,7 @@ Foogla: |
                 gen.cv ||= 0.01;
             }
             
-            Y = me&SCAing,R,s,gen,c;
+            Y = me&SCAing,R,s,gen,c,SC;
             
             $thencv = Yc&cv;
             cb && cb();
@@ -3064,7 +3067,7 @@ Foogla: |
         
         # < Aing >1 may now sc=c
         #  until sc.ov etc conduces a decision to etc
-        Yc&cv < ov and Y = me&SCAing,R,s,{Y:Y,ov:ov},c
+        Yc&cv < ov and Y = me&SCAing,R,s,{Y:Y,ov:ov},c,SC
         
         # sy&Y to say "needs /schema/*"
         return Ys&returns || (Yc&M||[])[0]
@@ -3225,6 +3228,12 @@ Foogla: |
             me&SCA,Ys&Steps,{},'o3';
         },'ift,D'],
         
+        # @023 Steps take walk through Y:SC
+        #   pull up a map for this Aing,
+        ['Steps walk',0.6,&acgtRYs,SC{
+            me&SCA,Ys&Steps,{},9;
+        },'ift,D'],
+        
     ]};
     
     #c SC.Steps
@@ -3311,16 +3320,28 @@ Foogla: |
         },'ift,D'],
         
         #c Y:Steps per current walk around
+        # < Y:Trip - delivering goods or not this dome
+        #   decides if it's done or to keep going around
+        #     like c&e's T.pos/T.el
+        #   then Y:Steps decides whether to multiply Trips per Step, etc
+        # 
         # @03 each Steps/(p,r,s) wake up, have features
-        #  may be different, may be time to something
+        #  may be different, may be time to something!
         ['on',0.03,&acgtRYp,SC{
             $r = py&R;
-            !rs&supr and return
             
             # p's current walk around Y:Steps
             $Ob = py&O;
             $O = py&O = Cye([p.t,py&cv]);
             Ob and Oc&b = Ob; delete Obc&b
+            
+            !rs&supr and return
+            
+            # < know if this is to sleep, and
+            # < avoid suprising to it etc
+            #   do it more elvisily
+            # so we can suprise anywhere along the chain:
+            me&Ring,R,{und:r,ov:0.304};
             
             # %supr puts sy&R, Steps@02 puts {s,p}y&R
             me&yfuture,r,R != r and throw r.t+" yfuted"
@@ -3351,15 +3372,19 @@ Foogla: |
         #   even if it is the next step @6
         ['Gracto',0.3,&acgtRYp,SC{
             $r = py&R;
+            
             !rs&Gracto and return
+            
             # ting@5 gets %flook():
             me&Ring,R,{und:r,ov:0.505};
+            
             # ball+tracting@51 etcs
             me&Ring,R,{und:r,ov:0.58};
         },'ift,D'],
         
         # steps happen in order
         ['Steps',0.6,&acgtRYp,SC{
+            $r = py&R;
             # Steps
             $S = Ys&returns;
             $i = Yc&M.indexOf(p);
@@ -3398,7 +3423,7 @@ Foogla: |
                 # SCfcommit applies change/Cuploadism as they finish
                 return
             }
-            #c middles
+            #c Y:Trip
             if (anyGbusy && rc&b) {
                 ~>7 Geeping: r.t
                 #rs&sleeping = 1;
@@ -3445,16 +3470,17 @@ Foogla: |
             });
 
             # @31 domecheck, from
-
-            me&Ring,r,{inside:r,ov:0.31};
+            #r.t == 'Compiling' and debugger
+            me&Ring,R,{und:r,ov:0.31};
 
             # wouey is wough before 32
             # < assume everything in 31 sleeps 32
             #waia(r,{gh:'ey'});
             #waia(r,{gh:'ey',b:1});
 
-            me&Ring,r,{inside:r,ov:0.32};
-
+            me&Ring,R,{und:r,ov:0.32};
+            
+            
             # wough is finally here!
             $za = SCy&waia(r);
             py&nodes(&js{
@@ -3481,7 +3507,7 @@ Foogla: |
         #  ie from inside:r, out to where Ring isn't
         ['Steps may other',0.67,&acgtRYp,SC{
             $r = py&R;
-            me&Ring,r,{inside:r,ov:0.31};
+            me&Ring,r,{und:r,ov:0.31};
         },'ift,D'],
         
         # and again to wake things generated
@@ -5504,8 +5530,10 @@ Foogla: |
             }
             
             # probably already r%tracting=f spread from upyG
-            r.sc[tracting] ||= f
-            [f,fy&up].indexOf(r.sc[tracting]) < 0 and throw "difftracting"
+            r.sc[tracting] ||= f;
+            $dif = [f,fy&up].indexOf(r.sc[tracting]) < 0;
+            dif && how == 'Look' and return 'dif'
+            dif and throw "difftracting"
             
             # and is soon to be fy&[ok], where it should stay:
             exp && exp != r and throw "change exp "+ok
@@ -5536,11 +5564,11 @@ Foogla: |
                 $N = me&fabioty,op,[f.t];
                 N[0] and return N[0]
             };
-            !flook && f.t == 'NutEl' and debugger
-            !flook and return me&waits,"!flook" && me&zu,op
+            !flook and return me&waits,"!flook" && me&zu,"!flook",op
             $r = flook(f,r,ok);
         }
-        rync(r,'Look');
+        $dif = rync(r,'Look');
+        dif and delete R.sc[tracting]; return me&waits,"^-difftracting-v"
         
         # Click (or so) to other
         if (fc&ov == 0) {
