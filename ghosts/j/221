@@ -364,7 +364,11 @@ get/js: | # turns W of js into a <script> with toc function,  in C
     my $name = join'_', C.t, c&ver ;
     $name =~ s/\W+/_/g;
     
+    my $cur = join'_', C.t, 'current' ;
+    $cur =~ s/\W+/_/g;
+    
     my $s = join "",
+        "function $cur () { return $name() }\n",
         "function $name () { return [\n",
         # data and code has indent
         (map { $_->[0].sjson($_).",\n" } @toc),
