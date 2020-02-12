@@ -289,8 +289,14 @@ get/js: | # turns W of js into a <script> with toc function,  in C
     if (!$ver) {
         # hardlink? pull from meta
         ($ver) = `cat $f/2` =~ /1:(\w+)\b/;
+        if (!$ver) {
+            ($ver) = `cat $f/5` =~ /ha:(\w+)\b/;
+            $li = "1";
+        }
+        else {
+            $li = "h/$ver";
+        }
         $ver || die "not h/dig looking: $f says $li";
-        $li = "h/$ver";
     }
     $li = "$f/$li";
     # specify version
