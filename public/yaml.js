@@ -2887,7 +2887,7 @@ module.exports = new Schema({
     require('../type/merge')
   ],
   explicit: [
-    require('../type/binary'),
+    //require('../type/binary'),
     require('../type/omap'),
     require('../type/pairs'),
     require('../type/set')
@@ -3487,7 +3487,7 @@ var esprima;
 try {
   // workaround to exclude package from browserify list.
   var _require = require;
-  esprima = _require('esprima');
+  //esprima = _require('esprima');
 } catch (_) {
   /*global window */
   if (typeof window !== 'undefined') esprima = window.esprima;
