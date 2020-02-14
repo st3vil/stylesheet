@@ -1796,6 +1796,108 @@ Hunt	9	Jo:1.1
         return h
         
         };
+    quest_js			{"acgt":"t","coded":"1","dige":"6acd0800bea8","js":"i","args":"A,C,G,T,t","Wavel":"NutIns"}
+      c s: |
+        function(A,C,G,T,t) {
+        var Q = G.h(A,C,G,T,'Cye',[t,'',{of:'js'}]);
+        Q.c.ready = function(){
+            A.cv = 0.4;
+            // Jin should accept this A again
+            // < never set to 0, might speed it up if...
+            A.sc.ready = 1;
+        };
+        Q.c.async = function(){
+            A.sc.ready = 0;
+            A[4].sc.N.push(A);
+            T.not = 1;
+        };
+        var W = G.h(A,C,G,T,'ting',Q);
+        //A.sc.I = W.sc.I;
+        //A.sc.v = W.sc.v;
+        return W
+        
+        };
+    quest_w			{"acgt":"t ar cb","args":"A,C,G,T,t,ar,cb","coded":1,"dige":"35f4bbb9fb57","js":"i","Wavel":"NutIns"}
+      c s: |
+        function(A,C,G,T,t,ar,cb) {
+        var Q = G.h(A,C,G,T,'Cye',[t,'',{of:'w'}]);
+        Q.c.ready = function(){
+            // Jin should accept this A again
+            // < never set to 0, might speed it up if...
+            A.sc.ready = 1;
+            // so wait for it...
+            if (!cb) {
+                return
+            }
+            if (G.h(A,C,G,T,'arfgunc',cb) == "s") {
+                // way randomly happens, give return value to cb
+                // without A lining up around it (it may do so itself)
+                // see G.h(A,C,G,T,'waylay') for use case as delayed call
+                var s = G.h(A,C,G,T,'way',t,ar,'already_async');
+                cb(s);
+            }
+            else {
+                // containing a sync G.h(A,C,G,T,'way') call
+                // or a way to get the context revisted?
+                cb(t,ar,w);
+            }
+        };
+        Q.c.async = function(){
+            if (cb == 'noop') {
+                cb = function(){}
+            }
+            else
+            if (typeof cb == 'string') {
+                throw new Error("Cant go async: "+cb);
+            }
+            // Jin should avoid this A for a while
+            A.sc.ready = 0;
+            // and throw/abort if no callback
+            if (!cb) {
+                G.h(A,C,G,T,'TuneTimeMachine','w:'+t)
+            }
+        };
+        var w = G.h(A,C,G,T,'ting',Q);
+        return w
+        
+        
+        };
+    question			{"acgt":"get data cb","args":"A,C,G,T,get,data,cb","coded":1,"dige":"2e866c764431","js":"i","Wavel":"NutIns"}
+      c s: |
+        function(A,C,G,T,get,data,cb) {
+        var is_done;
+        if (typeof data == 'function') {
+            cb = data; data = null;
+        }
+        if (data) {
+            get = {url:get,data:data};
+        }
+        var r = $.ajax(get);
+        var done = function(s,how,c){
+            if (is_done) {
+                return
+            }
+            is_done = 1;
+            if (r.status != '200') {
+                {var er = new Error("ques: "+r.status+": "+get); er.tc = [r]; throw er}
+            }
+            cb(s,c)
+        };
+        r.done(done);
+        
+            var checks = 5;
+            var check = function(){
+                if (is_done) {
+                    return
+                }
+                if (!r.status && checks-- > 0) {
+                    return G.h(A,C,G,T,'yl',150,check)
+                }
+                done(r.responseText, 'maybe', r)
+            };
+            check();
+        
+        };
     readLines			{"acgt":"s opt","args":"A,C,G,T,s,opt","coded":1,"dige":"665aef4cd849","js":"i","Wavel":"NutMachine/NutErupts/NutLands"}
       c s: |
         function(A,C,G,T,s,opt) {
@@ -2334,6 +2436,427 @@ Hunt	9	Jo:1.1
         }
         // time
         return now
+        
+        };
+    ting			{"acgt":"s t","args":"A,C,G,T,s,t","coded":1,"dige":"9ab1c9427c0b","js":"i","Wavel":"NutIns"}
+      c s: |
+        function(A,C,G,T,s,t) {
+        var C = {};
+        if (typeof s == 'object') {
+            C = s;
+            s = C.c.of;
+            if (t) {
+                throw new Error("C & t");
+            }
+            t = C.t;
+        }
+        else {
+            C.t = null == t ? '' : t;
+            C.y = {};
+            C.c = {of:s};
+            if (!C.c.of) {
+                throw new Error("Gt without an of");
+            }
+            C.sc = {};
+        }
+        
+        // trusted as current beacuse 4/5 are alive
+        // covered by the version of Normal attached to everything
+        var D = G.h(A,C,G,T,'t',C.c.of,C.t);
+        if (D) {
+            return D;
+        }
+        
+        // otherwise send question/pull into 5 to keep up to date
+        //  C - the question
+        //  P - the pull/import state 
+        //  D - the item
+        
+        // C (question) should get D.sc.v (and more?)
+        //   often it shall be deciding to wake up if news
+        
+        // P (pull) lives in A[5].sc.in
+        //   and any A.r.sc.in where it's used,
+        //    and hoists to 1-A[3].sc.in
+        //     so they can be traced into the dome that G.h(A,C,G,T,'t')'d it
+        
+        // C.sc.in should be of/t/pointer = P
+        
+        // pointer usually a W, or maybe several conjoined by \t
+        //   like elvis points paths into things
+        // pointer could be '' if it's something in 5,
+        //   then the version of 5 (or Normal) is something's upstream
+        // pointer may be something (W) visible on 4/5's bays,
+        //   or deep inside somewhere
+        
+        // as C.sc.in disappears down inside a W,
+        //   shall its pointers stay focused A[3],
+        //   or start pointing upwards:
+        //     because it could use C.sc.in to take input from itself
+        //   a lark for now,
+        //   getting them to pool on A[3] for A[3] would do the trick
+        //   even without a remove-when-they-disappear thing, see s/swim
+        
+        // C.sc.out could be pointer = s
+        //  to everything it writes
+        //   the path being W/page, or A[1].t/'',
+        //   from the perspective of A[2]
+        
+        // so C.sc.in is qualified by of/t finding and pointer (a kind of url)
+        //   and has P, a pull/remote/link item to track change,
+        //     for P.c.s = D, the thing itself
+        //   from that specific pointered remote
+        //   the G.h(A,C,G,T,'ting') may end up with a different P,
+        //   but would work it like a different version of the same P,
+        //   the P you keep (branch becoming local?) must clone to here.sc.in
+        
+        // and C.sc.out is qualified by pointer (a kind of url),
+        //   A[1].sc.out:
+        //     has a P-like push item to track change,
+        //       with P.c.s = s, the brain, the prosthetic memory made
+        //     or the perma-e that pulls it into storage...
+        //   P.sc.out:
+        //     paths from 4 to any A[3] it is used A[1].sc.in
+        //     untidiable... unless updating because of it,
+        //       the extra minder could see the lack of relation-creation
+        //     the updator would join all A[1].sc.in and A[5].sc.in,
+        //       know P changed and following P.sc.out is cheating?
+        //       spreading out to the users... is all-ahead-bendix
+        // A[5].sc.in -> A[1].sc.in -> s.sc.in -> r.sc.in
+        
+        //c have the thing?
+        // lets forget C.sc.out until s pages and data surfs
+        // and forget C.sc.in hoisting
+        // just clone A[5].sc.in..P into A[3].sc.in..P, let chaos clean up
+        //   such an attention to detail that wants to turn into awake desire
+        //     is interesting. model it.
+        // we are importing these types (C.c.of) of thing (t)
+        A[5].sc.in = A[5].sc.in || {js:{}, W:{}, w:{}};
+        if (!A[5].sc.in[C.c.of]) {
+            return
+        }
+        var type = A[5].sc.in[C.c.of];
+        var thing = type[C.t] = type[C.t] || {};
+        if (C.c.p) {
+            throw new Error("pointers diffract where thing must be from");
+        }
+        // G.h(A,C,G,T,'t',[Wt,,$s]) sets
+        //  could be A:s? take up its string channel
+        //   as string, not the decoded P.c.s object (that is returned)
+        var saying = C.c.s != null;
+        // C.sc.P may be the thing it must replace if reusing Pull request to Push
+        
+        var found;
+        // P coming from the first location... unless something
+        for (var p in thing) {
+            var P = thing[p];
+            if (C.c.p && C.c.p != p) {
+                continue
+            }
+            if (found) {
+                {var er = new Error("many points of thing"); er.tc = [thing]; throw er}
+            }
+            found = P
+        }
+        P = found;
+        // is our cache too old
+        var p = P; // may be able to check C.sc.dige or so...
+        if (P) {
+            var ttl = A[4].c.ttl || 5;
+            if (P.c.ttl_mult) {
+                ttl *= P.c.ttl_mult;
+            }
+            if (P.sc.now && !G.h(A,C,G,T,'time',P.sc.now,ttl)) {
+                P = null
+            }
+        }
+        // formulate question or statement
+        if (!P || saying) {
+            P = G.h(A,C,G,T,'Cye',[C.t,C.y.cv,{of:C.c.of},{}]);
+            var get; // how to ask
+            var got; // response to P/C.c.s
+        
+            // they may have their own ways to use dige/v, p/P/C.sc.P
+            //c w|js
+            if (C.c.of == 'w') {
+                get = '/way/'+C.t;
+                got = function(P,s,c){
+                    var w = G.h(A,C,G,T,'Cye',[C.t,1]);
+                    w.c.s = s;
+                    w.sc.of = 'w';
+                    // hash of the source, compiled in s
+                    w.sc.dige = c.getResponseHeader('Dige');
+                    P.c.s = w;
+                };
+            }
+            if (C.c.of == 'js') {
+                get = '/js/'+C.t;
+                // T would put this C.c.v to wind back from bugs
+                if (C.c.v) {
+                    get += '-'+C.c.v;
+                }
+                // < check dige/download if different in one request
+                got = function(P,s,c){
+                    var src = c.getResponseHeader('Location');
+                    var m = src.match('^\/js\/(\\w+)-(\\w+)(\\.js)');
+                    var W = m[1];
+                    var ver = m[2];
+                    var W = G.h(A,C,G,T,'Cye',[W,1]);
+                    var I = W.sc.I = {};
+                    P.sc.v = W.sc.v = ver;
+                    P.c.s = W;
+                    // js doesn't communicate much of the W 9, or anything not in I
+        
+                    // move usual after-got() act to after this callback
+                    var ready = C.c.ready;
+                    delete C.c.ready;
+        
+                    var callback = function(script,e){
+                        // D & C in here refer to the of & the of/t
+                        // < check for errors from that script?
+                        var tocfunc = W.t+'_'+W.sc.v;
+                        if (!window[tocfunc]) {
+                            throw new Error("Notocfunc: "+tocfunc);
+                        }
+                        var toc = window[tocfunc]();
+                        var D;
+                        for (var i in toc) {
+            var l = toc[i];
+                            var ind = v[0];
+                            var C = G.h(A,C,G,T,'Cye',[v[1],v[2],v[3],v[4]]);
+                            if (ind == '') {
+                                D = I[t] = C;
+                                D.y.tw = {};
+                                D.y.tv = {};
+                                D.sc.z = D.sc.z || [];
+                            }
+                            else if (ind == '  ') {
+                                if (D.t != C.sc.js) {
+                                    {var er = new Error("Csjs not last D"); er.tc = [C, D]; throw er}
+                                }
+                                C.c.code = window[C.sc.name];
+                                if (typeof C.c.code != 'function') {
+                                    {var er = new Error("Cccode not function"); er.tc = [C, D]; throw er}
+                                }
+                                // grow I
+                                D.y.tv[C.t] = D.y.tv[C.t] || {};
+                                D.y.tv[C.t][C.y.cv] = C;
+                                D.y.tw[C.t] = C;
+                                var l = D.sc.z.slice(-1);
+                                if (l[0]) {
+                                    l[0].y.next = C;
+                                }
+                                D.sc.z.push(C);
+                                D.y.in = D.y.in || C;
+                                if (D.t === 'i' && (C.t === 'h' || C.t === 't')) {
+                                    G[C.t] = C.c.code;
+                                }
+                            }
+                            else {
+                                {var er = new Error("deep C: "+W+"/"+t); er.tc = [v]; throw er}
+                            }
+                        }
+        
+                        ready();
+                    };
+        
+                    var have = $('body script[src="'+src+'"]');
+                    if (have.length) {
+                        return callback();
+                    }
+                    G.h(A,C,G,T,'add_script',src,callback);
+                };
+            }
+            //c of=W
+            if (C.c.of == 'W') {
+                get = {url:'/W/'+C.t};
+                var d = get.data = {};
+                // the first "can you hold on to..."
+                if (C.sc.P) {
+                    // if G.h(A,C,G,T,'ting',thesameC) again
+                }
+                if (p) {
+                    // the P disqualified
+                }
+                if (C.c.s) {
+                    // wants to write
+                    // must be replacing C.sc.P
+                }
+                else {
+                    // read
+                    // have: C.sc.P - a pull, this question has been answered before
+                    //  and now it's 
+                    if (C.sc.P) {
+                        // the pull, check same dige
+                        // same dige could also come from
+                    }
+                }
+                if (saying) {
+                    // wants to write
+                    get.type = 'post';
+        
+                    // Core scuttle boundary, Q -> get/W
+                    if (null != C.c.s) {
+                        d.s = C.c.s;
+                    }
+                    if (null != C.c.patch) {
+                        d.patch = C.c.patch;
+                    }
+        
+                    // if we should be careful about what we replace
+                    if (d.patch && !C.sc.P) {
+                        throw new Error("Pull before you Push a patch");
+                    }
+                    // the old P
+                    if (C.sc.P) {
+                        d.parent = C.sc.P.sc.dige;
+                    }
+                    // the new P
+                    P.sc.dige = dig(C.c.s);
+                    P.c.String = C.c.s;
+                }
+        
+                // dige we have floating around
+                d.have = [];
+                // p the possibly out of date
+                // Q.sc.P from before
+                // P the new pull, what will be...
+                var poss = [p, C.sc.P, P]
+                    .filter(function(p){ return p && p.c.String && p.sc.dige })
+                    .filter(function(p){ return d.have.push(p.sc.dige) });
+                if (d.have.length) {
+                    d.have = uniq(d.have).join("\t");
+                }
+                else {
+                    delete d.have
+                }
+        
+                got = function(P,s,c){
+                    var r = dej(s);
+                    if (r.dige) {
+                        // variance in perl/js dig()?
+                        if (P.sc.dige && P.sc.dige != r.dige) {
+                            'indeed'
+                        }
+                        P.sc.dige = r.dige;
+                        // dige without s if it's cached here
+                        if (null == r.s) {
+                            for (var i in poss) {
+            var p = poss[i];
+                                if (p.sc.dige == r.dige) {
+                                    r.s = p.c.String
+                                }
+                            }
+                            if (!r.s) {
+                                {var er = new Error("get/W implied we know"); er.tc = [r, P]; throw er}
+                            }
+                        }
+                    }
+                    if (r.ok) {
+                        s = '';
+                        if (r.ok == 'created') {
+                            s = C.c.s
+                        }
+                        else
+                        if (r.ok == 'found') {
+                            s = r.s
+                        }
+                        else
+                        if (r.ok == 'updated') {
+                            s = C.c.s
+                        }
+                        else
+                        if (r.ok == 'deleted') {
+                            s = null
+                        }
+                        else {
+                            {var er = new Error("other kind of ok"); er.tc = [r.ok]; throw er}
+                        }
+                        P.c.String = s;
+                        if (s) {
+                            var N = G.h(A,C,G,T,'readLines',s);
+                            if (N.length != 1) {
+                                {var er = new Error("Weird tW lines"); er.tc = [s]; throw er}
+                            }
+                            s = N[0];
+                            s.y.P = P;
+                        }
+                        P.c.s = s
+                    }
+                    else {
+                        if (r.er == 'not ffwd') {
+                            if (C.c.rebase) {
+                                C.c.rebase()
+                            }
+                            else {
+                                {var er = new Error("not ffwd: "+C.t); er.tc = [r]; throw er}
+                            }
+                        }
+                        else
+                        if (r.er != 'not found') {
+                            {var er = new Error("tW er"); er.tc = [r.er]; throw er}
+                        }
+                        P.c.s = null
+                    }
+                };
+            }
+        
+            //c ask,return
+            var done = function(s,c){
+                // every pulling happened now
+                P.sc.now = G.h(A,C,G,T,'time');
+                // specific stuff moves from the response to P and P.c.s
+                got(P,s,c);
+                // stash the P on A[5].sc.in
+                if (P.c.p == null) {
+                    P.c.p = '';
+                }
+                thing[P.c.p] = P;
+                // and on Cuestion
+                C.sc.P = P;
+                // specific continuation
+                if (C.c.ready) {
+                    C.c.ready()
+                }
+            };
+            G.h(A,C,G,T,'question',get,done);
+        
+            if (C.c.async) {
+                C.c.async(); throw new Error("async didnt async");
+            }
+            // returning undef (later) means nothing found
+            // could C.c.l = netslopes (above 5) to look up... lumit
+            G.h(A,C,G,T,'TuneTimeMachine',C.c.of+':'+t)
+        }
+        
+        
+        
+        // stash
+        if (P) {
+            // hang ourselves on P.sc.out?
+            // copy P to your C.sc.in
+            if (P.c.p == null) {
+                throw new Error("no Pcp, even if ''");
+            }
+            P = G.h(A,C,G,T,'Cye',P);
+            A[3].sc.in = A[3].sc.in || {};
+            A[3].sc.in[P.c.of] = A[3].sc.in[P.c.of] || {};
+            A[3].sc.in[P.c.of][P.t] = A[3].sc.in[P.c.of][P.t] || {};
+            A[3].sc.in[P.c.of][P.t][P.c.p] = P;
+            // give the question the link to the answer
+            C.sc.P = P;
+            // return the answer
+            return P.c.s;
+        }
+        // automatically mirror C in A[5].sc.things.C.c.of.$t?
+        //  tracking what things we think we know from outside
+        //   the A[4].sc.mind (A:u') has ttl and A.sc.N back to users (A:u)
+        //   the A[5].sc.I.w.$way has ttl too, but shouldn't
+        // could the A[5].sc.thing, for each C.c.of/t,
+        // be things to G.h(A,C,G,T,'t') again to compute ghostliness
+        // and linking attention back to A.3s,
+        //   maybe C.sc.G thing like an I thing, but with minimal info
+        //   that pools upward through J, s, domes, even individual C
         
         };
     TN			{"acgt":"s","coded":"1","dige":"39958b2a8d97","js":"i","args":"A,C,G,T,s","Wavel":"NutMachine/NutWorld/NutSeq/NutTub"}
@@ -3780,5 +4303,23 @@ Hunt	9	Jo:1.1
         T.seek = 3;
         
         };
+  om	001	W:javascript
+    Four	6		{"acgt":"s","act":"1","coded":"1","dige":"f8add08e8f54","gk":"Four","js":"om","nk":"c","v":"cFour","args":"A,C,G,T,s","Wavel":"NutIns"}
+      c s: |
+        function(A,C,G,T,s) {
+        var Y = A[1].sc.child = G.h(A,C,G,T,'Four',C.t);
+        var p = Y.sc.parent = A[1];
+        // doesn't have a clock running yet...
+        // should n {C},{c:resyncin:20ms} and push the Jinloop button via e?
+        var startup = function(A,C,G,T){
+            G.h(A,C,G,T,'n',['Lunch']);
+        };
+        if (s >= 6 && p.sc.subphone) {
+            p.sc.subphone(startup);
+        }
+        // 
+        
+        };
   Stylehut			W:Stylehut,ha:90c27ebfb24e
   NutMachine			W:NutMachine,ha:9256fdd036c0
+  NutIns			W:NutIns,ha:9f9233a58d72
