@@ -430,11 +430,14 @@ Fourism: |
           mostly sees /G/$cat/$way
             also wormhole/way/$way
           have a write mode, like /W/
-            dig to wormhole/digway/$t
+            dig to wormhole/digway/$way
           needs: JaBabz
         /W/
           should work?
           needs: othlia/G.pm
+        /digwaypoll/
+          watching wormhole/digway/$way
+          
         /js/ GONE temporarily?
           needs Beach, etc.
           just host /js/Hunt.js
@@ -446,13 +449,24 @@ Fourism: |
           see j/32 Jigdoer
           get JaBabz in pure perl
             it has a Rw JaBabz for <<"" to avoid
+            in Wud /way/:
+                Rw JaBabz $C:w;
+                wc&s
     =cut
     
     # etc
     
 Wud: | # restacked Wed server
-    #
-    # use Mojo, serve ghost/
+    #!/usr/bin/perl
+    use strict;
+    use warnings;
+    no warnings qw(uninitialized redefine);
+    use FindBin qw($Bin);
+    use lib "$Bin/othlia";
+    use lib "$Bin/slib";
+    use G;
+    my ($A,$C,$G,$T);
+
     saygr "Being Wud in ".(Gc&ipd || Gc&dir);
     
     use Mojolicious::Lite;
@@ -463,37 +477,193 @@ Wud: | # restacked Wed server
     app->log->path((Gc&ipd || Gc&dir)."/mojo\.log")
         if Gc&dir || Gc&ipd;
     
-    no warnings qw(uninitialized redefine);
+    my $listen = "http://localhost:10222"
     
-    #G.c.listen = readlink('listen') if -l 'listen';
-    my $s = Gc&bay . '-Wud';
-    my $port = Rw Numstring $s;
-    Gc&listen = 'localhost:'.$port;
-    my $s = Gc&listen || "s:10094";
-    $s = "http://$s" if $s !~/^http:\/\//;
+    # 4s&waythe way
+    # < Accept headers to get the various translations
+    get '/way/*way' => &c{
+        my $t = $c->param('way');
+        $t =~ s/\W+/-/g;
+        my $w = G&t,w=>$t;
+        if (!$w) {
+            my @opt = glob "G/*/$t";
+            my $f = shift @opt;
+            if ($f) {
+                $w = {t=>$t,y=>{}};
+                wc&s = read_file($f);
+                ws&dige = slm(12, dig wc&s);
+                ws&of = 'w';
+            }
+        }
+        $w || return $c->reply->not_found;
+        $c->res->headers->append(Dige => ws&dige);
+        
+        my $babv = readlink("wormhole/digway/JaBabz");
+        a&wayjs = {} if a&babv ne $babv;
+        a&babv = $babv;
+        
+        if ( a&wayjs.>w.t.>ws&dige &&
+            $c->param('have') eq ws&dige ) {
+            return $c->render(text => '')
+        }
+        
+        
+        my $s = a&wayjs.>w.t.>ws&dige ||= do {
+            Rw JaBabz $C:w;
+            wc&s
+        };
+        #$s =~ /^(.+?m\.replace(.+?))$/sgm && sayyl "Fuo:\n $1\n\n";
+        $c->render(text => decode_utf8($s));
+    };
+    #c /digwaypoll/ notifier, see 281 Sevo
+    my $poll = {tx=>[],ways=>{}};
+    poll.wayt = {}; # pi/name -> pi-name
+    poll.wayd = {}; # pi-name -> s&dige
+    poll.doing = &o{
+        return if $o && poll.one && $o ne poll.one;
+        my @ways;
+        each pi poll.ways {
+            my $t = $p;
+            $t = poll.wayt.>$p ||= do { $t =~ s/\W/-/sg; $t };
+            my $dig = readlink "wormhole/digway/$t";
+            my $was = poll.wayd.>$t;
+            next if $dig eq $was;
+            poll.wayd.>$t = $dig;
+            $was = 'any';
+            $was && push @ways,
+                $p.'%dige:'.$dig
+        }
+        
+        if (@ways) {
+            # send many d=0 Lines as one message,
+            # so receiver can react immediately
+            my $s = join"",map{ $_ ."\n" }@ways;
+            for my $tx (@{poll.tx}) {
+                $tx->send($s);
+            }
+        }
+        
+        G&timer:0.3,&{ poll.doing(poll.one = rand()) };
+    };
+    websocket '/digwaypoll' => &s{
+        my $tx = $s->tx;
+        poll.doing();
+        1 && sayyl "Got digwaypolling";
+        
+        # complete picture (t/dige) at new listeners
+        poll.wayd = {};
+        push @{poll.tx}, $tx;
+        
+        my $addr = $tx->remote_address;
+        Mojo::IOLoop->stream($tx->connection)->timeout(300000);
+        $tx->max_websocket_size(512000);
+        
+        $s->on(message => &M,m{ #}
+            die "Not wordy: $m" unless $m =~ /^([\w\-\/]+)(%\w+.*)?$/;
+            tx.ways.>$1 ++ || poll.ways.>$1 ++
+        });
+        
+        $s->on(finish => &M,code,reason{
+            @{poll.tx} = grep { $_ ne $tx } @{poll.tx};
+            each ti tx.ways {
+                -- poll.ways.>$t && next;
+                delete poll.ways.>$t;
+                $t = delete poll.wayt.>$t;
+                delete poll.wayd.>$t;
+            }
+            #1 && sayre "digwaypoll Gone: $addr $code $reason";
+        });
+    };
     
+    #c /W/
+    any '/W/*W' => &c{
+        my $t = $c->param('W');
+        my $s = $c->param('s');
+        my $patch = $c->param('patch') && die "know patch";
+        my $cache = G.Wache ||= {};
+        
+        # read t, write if s
+        # all there
+        $t = "W/$t";
+        # char safety
+        $t =~ /([^\w\/-]+)/ && return
+            $c->render(text=>sjson(
+                {er=>"illegal t[".pos()."] char: $1 in '$t'"}
+            ));
+        # and you can't use the name 1 etc
+        $t =~ s/\/(\d)$//;
+        my $species = $1 || '1';
+        my $f = "$t/$species";
+        
+        # returns json:
+        my $re = {ok=>0};
+        my $nos = 0;
+        
+        
+        if (defined $s) {
+            # optional safety - must replace such dige
+            my $pa = $c->param('parent');
+            if ($pa && $pa ne $cache.>$f ) {
+                re.er = 'not ffwd';
+                # could give out tree since...
+                $s = '';
+                # re.dige = $cache.>$f ;
+            }
+            elsif (!length $s) {
+                `rm $t/1`;
+                re.ok = 'deleted';
+            }
+            else {
+                # the whole name is directory
+                -d $t || `mkdir -p $t`;
+                my $new = !-f $f;
+                $s = "$s\n" if $s !~ /\n$/;
+                
+                write_file("$f\.1",encode_utf8($s));
+                `mv $f\.1 $f`;
+                
+                # the .5 may be in the same request
+                my $five = $c->param('fivestring');
+                if ($five) {
+                    my $ff = "$t/5";
+                    write_file("$ff\.1",encode_utf8($five));
+                    `mv $ff\.1 $ff`;
+                }
+                
+                # < (notify nearby others, who )+
+                re.ok = 'updated';
+                re.ok = 'created' if $new;
+                $nos = 1;
+            }
+        }
+        else {
+            if (-f $f) {
+                $s = encode_utf8(read_file($f));
+                re.ok = 'found';
+            }
+            else {
+                re.er = 'not found'
+            }
+        }
+        if (length $s) {
+            # it should have a dig
+            my $dig = slm(12,
+                $f =~ m{^W/spot/} ? dig($s)
+                :
+                Digest::SHA::sha256_hex($s)
+            );
+            $cache->{$f} = $dig;
+            re.dige = $dig;
+            re.s = $s;
+            # if they know its hash, assume they don't need the string again
+            if (my $ha = $c->param('have')) {
+                delete re.s if grep {$_ eq $dig} split "\t", $ha
+            }
+            # or if it was a write
+            delete re.s if $nos;
+        }
+        $c->render(text=>sjson($re));
+    };
     
-    # to remain verbose
-    my $A = G&A,'requesto';
-    A.V = 1;
-    
-    #  /js/
-    #  /way/
-    Rw ServeC;
-    
-    # contains:
-    
-    #  /Spade/ - bulk version checking GOING
-    #    to be a W you talk to
-    #Rw Spade;
-    
-    #  /W/
-    #Rw Wade;
-    
-    #  /digwaypoll/ - notifier
-    #    watching wormhole/digway/$t
-    #Rw Tyrade;
-
-        1 && saybl "Starting  G.t     listens: $s";
-        1 && saygr "Appstart: ". app->start('daemon', '--listen' => "$s");
+    starts();
 
