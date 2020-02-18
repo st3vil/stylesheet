@@ -430,4 +430,50 @@ Fourism: |
     
     # etc
     
+Wud: | # restacked Wed server
+    #
+    # use Mojo, serve ghost/
+    saygr "Being Wud in ".(Gc&ipd || Gc&dir);
+    
+    use Mojolicious::Lite;
+    use MIME::Base64;
+    push @{app->static->paths}, '/home/s/styleshed/public';
+    app->secrets(["nothing"]);
+    # divert mojo log statements from our err channel
+    app->log->path((Gc&ipd || Gc&dir)."/mojo\.log")
+        if Gc&dir || Gc&ipd;
+    
+    no warnings qw(uninitialized redefine);
+    
+    #G.c.listen = readlink('listen') if -l 'listen';
+    my $s = Gc&bay . '-Wud';
+    my $port = Rw Numstring $s;
+    Gc&listen = 'localhost:'.$port;
+    my $s = Gc&listen || "s:10094";
+    $s = "http://$s" if $s !~/^http:\/\//;
+    
+    
+    # to remain verbose
+    my $A = G&A,'requesto';
+    A.V = 1;
+    
+    #  /js/
+    #  /way/
+    Rw ServeC;
+    
+    # contains:
+    
+    #  /Spade/ - bulk version checking GOING
+    #    to be a W you talk to
+    #Rw Spade;
+    
+    #  /W/
+    #Rw Wade;
+    
+    #  /digwaypoll/ - notifier
+    #    watching wormhole/digway/$t
+    #Rw Tyrade;
+
+        1 && saybl "Starting  G.t     listens: $s";
+        1 && saygr "Appstart: ". app->start('daemon', '--listen' => "$s");
 
