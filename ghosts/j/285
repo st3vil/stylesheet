@@ -447,15 +447,38 @@ Fourism: |
         do eval from the client, to:
         compile serve.pl, from Wud and etc:
           see j/32 Jigdoer
-          get JaBabz in pure perl
-            it has a Rw JaBabz for <<"" to avoid
-            in Wud /way/:
-                Rw JaBabz $C:w;
-                wc&s
+          get JaBabz, Wud in pure perl
+            Wud has a # insert JaBabz here
+            'Rw JaBabz $C;' -> something in either
     =cut
     
     # etc
     
+StyleAgent: | # compile serve.pl from Wud + JaBabz
+    my $way = sub {
+        my $t = shift;
+        G.way.>$t || die "No $t";
+    };
+    my $bab = sub {
+        my $s = shift;
+        my $C = {t=>'somba',y=>{},c=>{s=>$s}};
+        G&CoBabbler;
+        C.c.s
+    };
+    
+    my $wab;$wab = sub {
+        my $t = shift;
+        my $w = $way->($t);
+        $t eq 'Wud' && $w =~ s/# insert JaBabz here/$way->('JaBabz')/e;
+        $w =~ s/Rw\ JaBabz \$C;/JaBabz(\$C);/sg;
+        $bab->($w);
+    };
+    
+    my $f = "serve\.pl";
+    my $perl = $wab->('Wud');
+    write_file $f, $perl;
+    `chmod +x $f`;
+    sayre "Done";
 Wud: | # restacked Wed server
     #!/usr/bin/perl
     use strict;
@@ -466,34 +489,36 @@ Wud: | # restacked Wed server
     use lib "$Bin/slib";
     use G;
     my ($A,$C,$G,$T);
-
-    saygr "Being Wud in ".(Gc&ipd || Gc&dir);
     
     use Mojolicious::Lite;
     use MIME::Base64;
     push @{app->static->paths}, '/home/s/styleshed/public';
     app->secrets(["nothing"]);
     # divert mojo log statements from our err channel
-    app->log->path((Gc&ipd || Gc&dir)."/mojo\.log")
-        if Gc&dir || Gc&ipd;
+    #app->log->path((Gc&ipd || Gc&dir)."/mojo\.log")
+    #    if Gc&dir || Gc&ipd;
     
-    my $listen = "http://localhost:10222"
+    our $listen = "http://localhost:1422";
+    sub starts {
+        1 && saybl "Starting     listens: $listen";
+        1 && saygr "Appstart: ". app->start('daemon', '--listen' => "$listen");
+    }
     
     # 4s&waythe way
     # < Accept headers to get the various translations
     get '/way/*way' => &c{
         my $t = $c->param('way');
         $t =~ s/\W+/-/g;
-        my $w = G&t,w=>$t;
-        if (!$w) {
-            my @opt = glob "G/*/$t";
+        my $w;
+        for ('G/*','wormhole/way') {
+            my @opt = glob "$_/$t";
             my $f = shift @opt;
-            if ($f) {
-                $w = {t=>$t,y=>{}};
-                wc&s = read_file($f);
-                ws&dige = slm(12, dig wc&s);
-                ws&of = 'w';
-            }
+            next if !$f;
+            $w = {t=>$t,y=>{}};
+            wc&s = read_file($f);
+            ws&dige = slm(12, dig wc&s);
+            ws&of = 'w';
+            last
         }
         $w || return $c->reply->not_found;
         $c->res->headers->append(Dige => ws&dige);
@@ -509,7 +534,8 @@ Wud: | # restacked Wed server
         
         
         my $s = a&wayjs.>w.t.>ws&dige ||= do {
-            Rw JaBabz $C:w;
+            my $C = $w;
+            Rw JaBabz $C;
             wc&s
         };
         #$s =~ /^(.+?m\.replace(.+?))$/sgm && sayyl "Fuo:\n $1\n\n";
@@ -543,7 +569,7 @@ Wud: | # restacked Wed server
             }
         }
         
-        G&timer:0.3,&{ poll.doing(poll.one = rand()) };
+        Mojo::IOLoop->timer(0.3,&{ poll.doing(poll.one = rand()) });
     };
     websocket '/digwaypoll' => &s{
         my $tx = $s->tx;
@@ -664,6 +690,12 @@ Wud: | # restacked Wed server
         }
         $c->render(text=>sjson($re));
     };
+    
+    sub JaBabz {
+        my $C = shift;
+        # insert JaBabz here
+    }
+    
     
     starts();
 
