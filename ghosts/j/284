@@ -2082,14 +2082,17 @@ Foogla: | # Domes prepare to A=A
             $h = Rs&Here = me&yfuture,Rs&Here;
             
             # want to have a %ting
+            if (!Rs&Saveting) {
             Rs&Saveting =
                 # %ting%Save itself
                 Rs&ting ? R :
                 # %Save/%ting
                 n $R.t  R %ting:W
+            }
             
-            (Rs&boost||0) <= 0 and return
+            Rs&Save < 2 && (Rs&boost||0) <= 0 and return
             
+            Rs&noHereEncode and return
             # check in
             if (!hs&ball) {
                 # the non-%ball process defines another
@@ -2103,7 +2106,7 @@ Foogla: | # Domes prepare to A=A
             hs&Lines = 3
         },'ift,D'],
         ['Save','71',&acgtRs{
-            (Rs&boost||0) <= 0 and return
+            Rs&Save < 2 && (Rs&boost||0) <= 0 and return
             
             $h = Rs&Here;
             if (!isC(Rs&Saveting)) {
@@ -2127,7 +2130,7 @@ Foogla: | # Domes prepare to A=A
             me&introqua,[R,'diff'],'boost','@1';
             me&diffya,R,'diff',h,P;
             
-            (Rs&boost||0) <= 1 and return
+            Rs&Save < 3 && (Rs&boost||0) <= 1 and return
             
             if (!me&rollbs,R,'sent_string' ) {
                 Rs&sent_string = Qs&string = hs&string;
@@ -2136,6 +2139,7 @@ Foogla: | # Domes prepare to A=A
             Ps&string != hs&string and return me&tsc,'pushing'
             me&tsc,'pushed';
             delete Rs&Te.sc.boost
+            Rs&Save = 7;
         },'ift,D'],
         
         #c %Elvisave sense grabber
@@ -7514,8 +7518,8 @@ Foogla: | # Domes prepare to A=A
                 }
                 if (s && s != Ps&string) {
                     Pc&s = null;
-                    Ps&dige = r.dige;
-                    Ps&string = r.s;
+                    Ps&dige = dig(s);
+                    Ps&string = s;
                     Ps&Want_Decode = 'Lines';
                 }
             };

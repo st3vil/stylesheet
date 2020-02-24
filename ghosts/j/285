@@ -485,6 +485,9 @@ Fourism: |
                 4s&paused = 0;
             });
             
+            # this toplevel-ish R may take ages
+            Rs&timetopause = 3418;
+            
             # spending time in/out of the callback
             $g = me&opeolo,'plane';
             $ti = gy&can('n','time');
@@ -686,66 +689,38 @@ Fourism: |
             elsif (ps&Code) {
                 me&tsc,'%Zave','upCode','B';
                 Rs&Here = pc&s;
+                Rs&noHereEncode = 1;
             }
             # let Gens+self @31
             Rs&Zaver and return
             # resolve what(Here)/where(ting)
             $Z = Rs&Zaver = R;
             $ting = Zs&Saveting ||=
-                n $p.t  $ting:Rs&Zave %R
+                n $p.t  $ting:Rs&Zave,R
             Rs&AutoSave and tings&directory = "AutoSave/"
         },'ift,D'],
+        
         # %Gens%Here = R:$self%ball
-        ['Zave','39',&acgtRs{
+        ['Zave','32',&acgtRs{
             $Z = Rs&Zaver;
             Zs&Here ||= Rs&mayhaveHere && Rs&mayhaveHere.sc.Here;
-            if (!Zs&Here) {
-                me&nu,"Znoh",Z;
-                !Zs&Here and return me&tsc,'ZnoHere','!h','B'
-            }
+            !Zs&Here and return me&nu,"ZnoHere",Z;
             $h = Zs&Here = me&yfuture,Zs&Here;
             
-            #Rs&Zave == 'mem' and debugger;
-            me&zu,"Z",Z
+            # Zs&Saveting 
+            me&zu,"Zting",Zs&Saveting 
             
+            # translate %Zaver boost to %Save=2/3
             (Rs&boost||0) <= 0 and return
-            Zs&Save = 1;
-            me&tsc,'%Save','%Save','B'
-        },'ift,D'],
-        ['Saveo','71',&acgtRs{
-            (Rs&boost||0) <= 0 and return
-            
-            $h = Rs&Here;
-            if (!isC(Rs&Saveting)) {
-                me&tsc,'!Sting',null,'G';
-                return me&zu,"Savoir",Rs&Saveting;
-            }
-            $ting = Rs&Saveting = me&yfuture,Rs&Saveting;
-            !ting || !tings&ting and return me&tsc,'Save!ting';
-            
-            $Q = tings&Q;
-            $P = Qs&P;
-            !P and return me&tsc,'!P'
-            !Qs&ready and return me&tsc,'!ready'
-            !h and return me&tsc,'!here'
-            
-            #me&zu,'here',h;
-            #me&zu,'their',P;
-            
-            !hs&string and return me&tsc,'hs!string'
-            
-            me&introqua,[R,'diff'],'boost','@1';
-            me&diffya,R,'diff',h,P;
-            
+            Zs&Save = 2;
+            me&tsc,'%Save','%Save...','B'
             (Rs&boost||0) <= 1 and return
-            
-            if (!me&rollbs,R,'sent_string' ) {
-                Rs&sent_string = Qs&string = hs&string;
-                tings&_ting(Q)
-            }
-            Ps&string != hs&string and return me&tsc,'pushing'
-            me&tsc,'pushed';
-            delete Rs&Te.sc.boost
+            Zs&Save = 3;
+        },'ift,D'],
+        
+        ['Zave','77',&acgtRs{
+            $Z = Rs&Zaver;
+            Zs&Save == 7 and delete Rs&Te.sc.boost
         },'ift,D'],
         
         ['Code+CodeSave','5',&acgtRs{
