@@ -582,6 +582,13 @@ Fourism: |
             }
         },'ift,D'],
         
+        # Codo outside
+        ['Gens+Gedo','293',&acgtRs{
+            $c = me&tsc,'%Codon','Gedo','g';
+            Rs&Zaving = "mem,W";
+            # < %Here's %Lines to /mem/, /W/
+        },'ift,D'],
+        
         # Codo inside
         ['ball+Codin','296',&acgtRs{
             $c = me&tsc,'%Codon','Codin','g';
@@ -592,17 +599,11 @@ Fourism: |
             #Rs&beopen ||= 1;
         },'ift,D'],
         
-        # Codo outside
-        ['Gens+Gedo','293',&acgtRs{
-            $c = me&tsc,'%Codon','Gedo','g';
-            # has AutoSave (see below)
-        },'ift,D'],
-        
         # fixturism
         ['ball+Code','293',&acgtRs{
             $c = me&tsc,'%Codon','Code','g';
             4s&thecode = R;
-            Rs&CodeSave = 1;
+            Rs&Zaving = "mem,ghost";
         },'ift,D'],
         
         ['fix+Cofix','296',&acgtRs{
@@ -612,8 +613,77 @@ Fourism: |
         },'ift,D'],
         
         
-        #c %AutoSave (%Codons)
-        # 
+        #c %Zaving %Codons
+        =pod specialise
+        saves/unsaves (in the case of mem > W)
+         things that may already have %Gens
+        
+        the existing %Gens action:
+            Gens @25:
+              %self rollbs
+              %ting ||= 1
+            Gens+ting @31:
+              %self ||=
+                Pc&el < 3 ? Copy Pc&s.c.s
+                : create %self
+              %Save = 1
+              # dupe for %Code/%Zave
+            Gens+self @31:
+              Rings %Here = R self)%ball
+              # already in a %ball%Code/%Zave
+            Gens+Here @4:
+              unfinished road to in/out pluck
+
+            Save @5:
+              has %Here
+                puts Here%Lines=3 # or not if ^^%Code/%Zave
+                # ? %Here could = %self, it has %string
+              Rs&Saveting ||= R %ting
+
+            Save @71:
+              pushes %Here.%string to %Saveting
+        
+        so we are %Zaving on a:
+          %Gens for its %Here%Lines
+          %Code for its ss&string
+        
+        %Gens unsave:
+          replace %self
+        %Code unsave:
+          replace ss&string 
+        
+        =cut
+        # to these locations
+        ['Zaving','294',&acgtRs{
+            $lo = Rs&Zaving.split(',');
+            each il lo {
+                $t = R.t +' Zaves '+ l;
+                n $t  $Zave:l %R
+            }
+        },'ift,D'],
+        # watch the game, sequence pushes
+        # by timing/commit policy
+        # replacing some %self
+        ['Zaves','291',&acgtRs{
+        },'ift,D'],
+        ['Zave','291',&acgtRs{
+            $p = Ry&up;
+            if (ps&Gens) {
+                me&tsc,'%Zave','upGens','B'
+                if (ps&ting == Rs&Zave) {
+                    Rs&Reuseting = 1;
+                }
+                else {
+                    me&tsc,'%Zave','ting:'+Rs&Zave,'q'
+                }
+                # reuse its %Saveting?
+                # or leave it to receive our changes
+            }
+            elsif (ps&Code) {
+                me&tsc,'%Zave','upCode','B';
+                Rs&Here = s;
+            }
+        },'ift,D'],
         # %Gens%Here = R:$self%ball
         ['Gens+Codo+Gedo','5',&acgtRs{
             !Rs&Here and return me&tsc,'noHere','!h','B'
