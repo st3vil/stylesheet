@@ -7142,6 +7142,7 @@ Foogla: | # Domes prepare to A=A
                 # < C gets its own decode? or Copy Pc&s on el<3
                 #s&wantdecode and Ps&Want_Decode = 1
                 # < modes of decode: dl/Xpath, allowing yaml code
+                Ps&noDecode and delete Ps&Want_Decode
                 Ps&Want_Decode and Rs&Pull_Decode(T,C,P)
                 
                 !T.ok and return
@@ -7179,6 +7180,17 @@ Foogla: | # Domes prepare to A=A
                 T.get = {};
                 T.get.data = {};
                 Do(T,C,P);
+                if (T.done) {
+                    # sync Talk.mem.Do
+                    Ps&now = Gtime();
+                    T.ok = 1;
+                    delete T.done;
+                    # for Decode timer:
+                    T.tcp = ch("mem",[C.t,'.','.','.','']);
+                    T.aft_waits = Gtime();
+                    # no cb_gen, returns to Pull_a
+                    return
+                }
                 !T.get.url || !T.got and throw "!Talk handlers "+c&of
                 
                 T.cb = &sc{
@@ -7468,7 +7480,56 @@ Foogla: | # Domes prepare to A=A
                 };
             };
          
-            
+            #c Talks.mem,tmp
+            Rs&Talks.mem = &TCP{
+                T.done = 1;
+                $s = localStorage[C.t];
+                $el = 1;
+                s == null and el = 9;
+                if (s&string != null) {
+                    # wants to write
+                    $parent;
+                    s&P and parent = s&P.sc.dige
+                    s&parent and parent = delete s&parent
+                    parent && dig(s) != parent and el = 7
+                    else {
+                        s = localStorage[C.t] = delete s&string
+                    }
+                }
+                Pc&el = el;
+                if (el == 9) {
+                    # watch for undelete?
+                    delete Pc&s;
+                    delete Ps&dige;
+                    delete Ps&string;
+                    # plumb? like an elvisory
+                    return
+                }
+                if (el == 7) {
+                    # notify push failed?
+                    c&rebase and c&rebase(P,C)
+                    else {
+                        throw "not ffwd: "+C.t, r
+                    }
+                }
+                if (s && s != Ps&string) {
+                    Pc&s = null;
+                    Ps&dige = r.dige;
+                    Ps&string = r.s;
+                    Ps&Want_Decode = 'Lines';
+                }
+            };
+            # mem that is string
+            Rs&Talks.tmp = &TCP{
+                Rs&Talks.mem(T,C,P);
+                Ps&noDecode = 1;
+            };
+            # W that is string
+            Rs&Talks.ghost = &TCP{
+                Rs&Talks.W(T,C,P);
+                T.get.url = '/ghost/'+C.t;
+                Ps&noDecode = 1;
+            };
             #c way/js questions as C
             # public interfaces
             # shows how to plug their async gear into ting's
