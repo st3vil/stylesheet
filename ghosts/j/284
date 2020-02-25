@@ -6904,6 +6904,8 @@ Foogla: | # Domes prepare to A=A
             Qc&async = &{};
             # c&canwait = 1;
             Qc&ready = &CP{};
+            Rs&havediges and Qs&havediges = Rs&havediges
+            # < Live should never disappear?
             $s = Rs&Live = Rs&_ting(Q);
             
             T.Mw = 'ting-into';
@@ -7402,7 +7404,9 @@ Foogla: | # Domes prepare to A=A
                 $d = T.get.data = {};
                 # clue them to Hobs for it we have around
                 # the current HEAD:
-                Ps&dige and d.have = Ps&dige
+                $haves = s&havediges || {};
+                Ps&dige and haves[Ps&dige] = Ps&string
+                hak(haves) and d.have = haks(haves).join("\t")
                 # the first "can you hold on to..."
                 if (s&string != null) {
                     # wants to write, '' to delete
@@ -7432,7 +7436,10 @@ Foogla: | # Domes prepare to A=A
                     $r = dej(s);
                     # dige find things we d.have
                     if (r.dige && r.s == null) {
-                        r.dige == Ps&dige and r.s = Ps&string
+                        if (haves[r.dige]) {
+                            r.s = haves[r.dige];
+                            dig(r.s) != r.dige and throw "!security of anyone's Cs&havediges providing Ps&string"
+                        }
                         else
                         d.s && r.dige == dig(d.s) and r.s = d.s
                         r.s == null and $nors = 1;
