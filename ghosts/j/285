@@ -208,7 +208,7 @@ Twoism: | # js the way in
     4c&ttl = 3600;
     
     # mind as me
-    $me = window.me = {};
+    $me = 4c&me = window.me = {};
     me.Ja = {}; # pins
     me.timestamp = &{ return(new Date).toISOString() };
     A&me = me;
@@ -767,7 +767,12 @@ Fourism: |
                 me&rollbs,R,'Whichto';
                 me&rollbs,R,'Wantsto';
                 
-                Qc&el != 8 and delete Rs&Settled
+                if (Qc&el != 8 && Qc&el != 3) {
+                    # el=8 when same, el=3 when writ
+                    # others faulter the autocommit
+                    # eg if ok=found, there is news
+                    delete Rs&Settled
+                }
                 
                 # the Zave=tmp first
                 if (hs&string == null) {
@@ -806,12 +811,20 @@ Fourism: |
                 me.nto(R,l,&s{ Rs&Wantsto = 'pull' });
                 me.nto(R,r,&s{ Rs&Wantsto = 'push' });
                 
+                $co = gy&can('n','commit');
+                cos&dis = 4;
+                cos&zi = 30;
+                cos&po = 2;
+                $en = gy&can('n','enter');
+                ens&dis = 4;
+                
                 if (Rs&Whichto) {
                     # direction it was going
                     $to = Rs&Whichto == 'pull' ? l : r;
                     tos&bri = 1.7
                 }
                 
+                #c patch
                 if (Rs&Wantsto) {
                     Rs&Amountto ||= 1;
                     $to = Rs&Wantsto == 'pull' ? l : r;
@@ -819,15 +832,13 @@ Fourism: |
                     
                     $from = to == l ? r : l;
                     
-                    $co = gy&can('n','commit');
-                    cos&dis = 4;
                     
                     $pa = coy&can('n','patch');
                     pas&dis = 4;
                     pas&fs = 14;
                     me&walls,pa,'b:2.2h666';
                     pas&bgh = '010';
-                    pas&mb = -1;
+                    pas&zi = 30;
                     
                     me&introqua,[R,'diff'],'boost','@1';
                     $di = me&diffya,R,'diff',fromy&tree,toy&tree;
@@ -838,8 +849,6 @@ Fourism: |
                     # < commit with message, put somewhere
                     #   and other ways to convene to key states
                     
-                    $en = coy&can('n','enter');
-                    ens&dis = 4;
                     $says = Rs&Wantsto;
                     $ma = me&mtsc,en,'make-commit',says,'B';
                     $commit = &{
@@ -866,6 +875,18 @@ Fourism: |
                         commit();
                     }
                 }
+                # 
+                $re = eny&can('n','remote');
+                res&dis = 4;
+                me&walls,re,'b:2.2h866';
+                res&bgh = '010';
+                if (commit) {
+                    # cell smoodge
+                    res&po = 2;
+                    res&left = -2;
+                    res&pl = 2;
+                }
+                me&zuct,re,Zs&Saveting;
             }
             else {
                 # similar...
@@ -921,7 +942,7 @@ Fourism: |
       monday:
         %ting - place to send/receive string
         < %differ switching up %self and collecting %Here etc?
-         < ↯ at new/gone \n with !\w
+         ↯ at new/gone \n with !\w
         < avoid re-%Lines depending on slep,
            or by accounting for all change
       tuesday:
@@ -940,7 +961,8 @@ Fourism: |
          < slowing /ghost/
           < compile check etc first
         /ghost/
-        redo callback to insides
+        
+       < redo callback to insides
          modeening that might T.wake=R
       
       thursday:
@@ -997,6 +1019,8 @@ Fourism: |
         T - phenomenate when going to an aboveness that may not be awake
         G - intelligensiata
         the whole vs. a part
+        new git repo, just /G/ and /W/
+          ignore, slowly import /wormhole/
         
       new server
         /way/
@@ -1276,7 +1300,7 @@ Wud: | # restacked Wed server
                 (my $dir = $f) =~ s/\/[^\/]+$//;
                 -d $dir || `mkdir -p $dir`;
                 my $new = !-f $f;
-                $s = "$s\n" if $s !~ /\n$/;
+                #$s = "$s\n" if $s !~ /\n$/;
                 
                 write_file("$f\.1",encode_utf8($s));
                 `mv $f\.1 $f`;
@@ -1299,7 +1323,7 @@ Wud: | # restacked Wed server
         if (length $s) {
             my $dig = slm(12,Digest::SHA::sha256_hex($s));
             $cache->{$f} = $dig;
-            if ($dig != $digway) {
+            if ($dig ne $digway) {
                 -l $wig && `unlink $wig`;
                 `ln -s $dig $wig`;
             }

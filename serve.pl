@@ -846,7 +846,7 @@ any '/ghost/*w' => sub { my ($c) = @_;
             (my $dir = $f) =~ s/\/[^\/]+$//;
             -d $dir || `mkdir -p $dir`;
             my $new = !-f $f;
-            $s = "$s\n" if $s !~ /\n$/;
+            #$s = "$s\n" if $s !~ /\n$/;
 
             write_file("$f\.1",encode_utf8($s));
             `mv $f\.1 $f`;
@@ -869,7 +869,7 @@ any '/ghost/*w' => sub { my ($c) = @_;
     if (length $s) {
         my $dig = slm(12,Digest::SHA::sha256_hex($s));
         $cache->{$f} = $dig;
-        if ($dig != $digway) {
+        if ($dig ne $digway) {
             -l $wig && `unlink $wig`;
             `ln -s $dig $wig`;
         }

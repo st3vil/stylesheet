@@ -818,6 +818,8 @@ Soogle: | # start from Sevo
         'empc pa^dding',
         'empc mi^n width,height',
         'empc max width,height',
+        # %ab:1 also position:absolutes
+        'ori:static~absolute~relative~fixed po^sition',
         #'empc lef^t,ri^ght,top^,bot^tom',
         'empc left^,right^,top^,bottom^',
         'empc width^,height^',
@@ -3726,7 +3728,7 @@ Soogle: | # start from Sevo
         }
         
         # < merge to Tool's
-        me.modeenery(R);
+        me.modeenery(R,{setter});
         if (setter) {
             # set value every time
             !c.relax and setter(R.sc[k]);
@@ -3737,14 +3739,15 @@ Soogle: | # start from Sevo
         return v
     }
     # the %modeen callback, see togla, nto
-    me.modeenery = &R{
+    me.modeenery = &Rc{
+        c ||= {};
         Rs&modeen = &acgtr{
             ry&modeening and ry&modeening(r,T)
             else
             if (rs&togla) {
                 $k = rs&togla;
                 $v = R.sc[k] = R.sc[k] ? 0 : 1;
-                setter && setter(v)
+                c.setter && c.setter(v)
             }
             else {
                 throw "What? "+r.t
