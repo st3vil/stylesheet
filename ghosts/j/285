@@ -602,7 +602,7 @@ Fourism: |
         ['ball+Codin','296',&acgtRs{
             $c = me&tsc,'%Codon','Codin','g';
             # < only wi if first %ball%Codo
-            me&walla,'hu:17,wi:1.7';
+            me&walla,'hu:17,wi:1.3';
             s&bgh = '111';
             # < feed openness
             #Rs&beopen ||= 1;
@@ -685,7 +685,7 @@ Fourism: |
             $p = Ry&up;
             $havediges = {};
             $section;
-            $g = Rs&gopolo = me&opeolo,'Z:'+Rs&Zave;
+            $g = Rs&gopolo = me&opeolo,'Z';
             gs&dis = 3;
             # can do:
             #gy&can('ope',&{ while_open() });
@@ -766,6 +766,7 @@ Fourism: |
                 me&rollbs,R,'Settled';
                 me&rollbs,R,'Whichto';
                 me&rollbs,R,'Wantsto';
+                me&rollbs,R,'Unsure';
                 
                 if (Qc&el != 8 && Qc&el != 3) {
                     # el=8 when same, el=3 when writ
@@ -785,12 +786,13 @@ Fourism: |
                     Rs&Settled = 1;
                     delete Rs&Wantsto;
                     delete Rs&Amountto;
+                    Rs&Whichto ||= 'pull';
                 }
                 else {
                     if (Rs&Settled || Qc&el == 9) {
                         # we sync, they follow
-                        Rs&Amountto = 2;
-                        Rs&Wantsto = 'push';
+                        Rs&Amountto ||= 2;
+                        Rs&Wantsto ||= 'push';
                     }
                     else {
                         # start different or their updates
@@ -798,18 +800,41 @@ Fourism: |
                         Rs&Wantsto ||= 'pull';
                     }
                 }
+                if (Rs&Wantsto) {
+                    Rs&Amountto ||= 1
+                    Rs&Unsure and Rs&Amountto = 1
+                }
                 
                 $g = Rs&gopolo;
                 $gi = gy&can('n','git');
-                gis&dis = 4;
+                gis&dis = 2;
                 gis&fs = 17;
-                $l = me&mtsc,gi,'local','<','B';
-                $r = me&mtsc,gi,'remote','>','B';
+                
+                $l = giy&can('n','local');
+                $r = giy&can('n','remote');
+                ly&label = me&mtsc,l,'local','<','B';
+                ry&label = me&mtsc,r,'remote','>','B';
                 ly&tree = h;
                 ry&tree = P;
                 # flop direction of the patch
                 me.nto(R,l,&s{ Rs&Wantsto = 'pull' });
                 me.nto(R,r,&s{ Rs&Wantsto = 'push' });
+                if (!Rs&Whichto || (Rs&Wantsto && Rs&Amountto < 2)) {
+                    # l/r switch patch direction
+                    # < parameters, eg:
+                    #Rs&Unsure and tos&bor = '3px dotted black'
+                }
+                else {
+                    $goingto = Rs&Wantsto || Rs&Whichto;
+                    $redirection = goingto != Rs&Whichto;
+                    $to = goingto == 'pull' ? l : r;
+                    $from = to == l ? r : l;
+                    froms&dis = 0;
+                    Rs&Unsure and tos&bor = '3px dotted black'
+                    me.nto(R,to,&s{
+                        Rs&Unsure = Rs&Unsure ? 0 : 1
+                    });
+                }
                 
                 $co = gy&can('n','commit');
                 cos&dis = 4;
@@ -942,33 +967,47 @@ Fourism: |
       monday:
         %ting - place to send/receive string
         < %differ switching up %self and collecting %Here etc?
-         ↯ at new/gone \n with !\w
         < avoid re-%Lines depending on slep,
            or by accounting for all change
       tuesday:
         gitify %Code/%Zave
       wednesday:
         streaming %Zave push/pull
+        ↯ at new/gone \n with !\w
+      thursday:
+        < stop using %boost to %Save
+        < %Unsure etc parameters should gui
+           volume - how much to say about changes
+           pause - no acting (diffproximate only?)
+           rewind - to a point (see %differ switching up)
+           speed - push while typing, etc
+        < /tmp/ faster (while typing)
          < be sure the codemirror is saved
-            as it can not &gev while typing
+            as it doesnt &gev while typing
             so we appear from a 5s timer or something,
             check all the %Code)%strings from cm
              ideally elvising that so we can pick up on its looseness
               how surely anyone has said what it is
-         < concat fragments from %Code!%string/*%Code
-         < each output can be an input
-         < /mem/ faster than /W/
-         < slowing /ghost/
+        < /ghost/ slowly
           < compile check etc first
-        /ghost/
-        
+      
+      unfolding labby mess, way too many dimensions:
        < redo callback to insides
          modeening that might T.wake=R
+         T.wake=modulat might even work,
+          since Ry&Displayc&refs has it?
+          and it just wants to Cavon
       
-      thursday:
+       and bring some automation over the top
+         < saving its own openness from %Te
+         < such that it can be relied upon by others
+           who includes it is security over time
+           time = distance over the network
+      
        < make an alternative openness network
          using s&medo=me.$handler,
           dispatching to JRoms as an entire planet (4s&callback)
+       
        < %Search (centralised %tings) delivering updates
         < trusting /digwaypol/ for /way/ and /ghost/ it has
        < slep to scan for changes
@@ -984,17 +1023,10 @@ Fourism: |
          < %autosave/**%Gens every 5s, in:
          < %ting=mem for W in localStorage
         
-        %Codon generally to fix the %Gens:
-         takes s&other=out%ball to mean !%ting for in%Gens
-        and bring some automation over the top
-         < saving its own openness from %Te
-         < such that it can be relied upon by others
-           who includes it is security over time
-           time = distance over the network
-        
         %Codon%Code the contained way
-         < %ting=ghost for string
+         %ting=ghost for string
           < send patches, of lines
+        < concat fragments from %Code!%string/*%Code
          < inside way are hash-c markers, etc
             so %Code might not have %string,
              once burst into many somethings
@@ -1023,17 +1055,20 @@ Fourism: |
           ignore, slowly import /wormhole/
         
       new server
-        /way/
-          mostly sees /G/$cat/$way
-            also wormhole/way/$way
-        < have a write mode, like /W/
-            dig to wormhole/digway/$way
+        /way/ - compiled code
+          sees /G/$se/$way
+        /ghost/ - source code
+          for /G/$se/$way
+          API like /W/
+          maintains dige in wormhole/digway/$way
+          notifies /digwaypoll/
+           < wait 3ms to scoop any batched changes?
+            < they come through one %Sock frame
+        /digwaypoll/ - code change socket
+          watching wormhole/digway/$way
         
         /W/
           futuristics
-          
-        /digwaypoll/
-          watching wormhole/digway/$way
           
         /js/ GONE temporarily?
           needs Beach, etc.
