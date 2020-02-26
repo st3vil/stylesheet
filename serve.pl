@@ -646,43 +646,6 @@ if(1){
 
 }
 
-# $A->{4}->{sc}->{waythe} way
-# < Accept headers to get the various translations
-get '/way/*way' => sub { my ($c) = @_;
-    my $t = $c->param('way');
-    $t =~ s/\W+/-/g;
-    my $w;
-    for ('G/*','wormhole/way') {
-        my @opt = glob "$_/$t";
-        my $f = shift @opt;
-        next if !$f;
-        $w = {t=>$t,y=>{}};
-        $w->{c}->{s} = read_file($f);
-        $w->{sc}->{dige} = slm(12, dig $w->{c}->{s});
-        $w->{sc}->{of} = 'w';
-        last
-    }
-    $w || return $c->reply->not_found;
-    $c->res->headers->append(Dige => $w->{sc}->{dige});
-
-    my $babv = readlink("wormhole/digway/JaBabz");
-    $A->{sc}->{wayjs} = {} if $A->{sc}->{babv} ne $babv;
-    $A->{sc}->{babv} = $babv;
-
-    if ( $A->{sc}->{wayjs}->{"$w->{t}"}->{"$w->{sc}->{dige}"} &&
-        $c->param('have') eq $w->{sc}->{dige} ) {
-        return $c->render(text => '')
-    }
-
-
-    my $s = $A->{sc}->{wayjs}->{"$w->{t}"}->{"$w->{sc}->{dige}"} ||= do {
-        my $C = $w;
-        JaBabz($C);
-        $w->{c}->{s}
-    };
-    #$s =~ /^(.+?m\.replace(.+?))$/sgm && sayyl "Fuo:\n $1\n\n";
-    $c->render(text => decode_utf8($s));
-};
 #c /digwaypoll/ notifier, see 281 Sevo
 my $poll = {tx=>[],ways=>{}};
 $poll->{wayt} = {}; # pi/name -> pi-name
@@ -833,5 +796,140 @@ any '/W/*W' => sub { my ($c) = @_;
     $c->render(text=>sjson($re));
 };
 
+#c /ghost/
+any '/ghost/*w' => sub { my ($c) = @_;
+    my $t = $c->param('w');
+    # / in t not meaning directory
+    (my $st = $t) =~ s/\W+/-/g;
+    my $se = $c->param('se') || '*';
+    my $s = $c->param('s');
+    my $patch = $c->param('patch') && die "know patch";
+    my $cache = $G->{ghostache} ||= {};
+    my @opt = glob "G/$se/$st";
+    die "multiple @opt" if @opt > 1;
+    my $f = $opt[0] || '';
+    my ($cat) = $f =~ /^G\/([^\/]+)\//;
+    # < avoid some disking if $have
+    my $wig = "wormhole/digway/$st";
+    my $digway = readlink($wig);
+
+    # returns json:
+    my $re = {ok=>0};
+    my $was_write = 0;
+
+    # hasghost
+    if (defined $s) {
+        # optional safety - must replace such dige
+        my $pa = $c->param('parent');
+        if ($se eq '*') {
+            $re->{er} = "!se param category to overwrite";
+            $s = '';
+        }
+        elsif ($pa && $pa ne $cache->{"$f"} ) {
+            if (!$cache->{"$f"} ) {
+                $re->{er} = "lookup first";
+                # < or trust digway?
+            }
+            else {
+                $re->{er} = 'not ffwd';
+            }
+            # could give out tree since...
+            $s = '';
+            # $re->{dige} = $cache->{"$f"} ;
+        }
+        elsif (!length $s) {
+            -f $f && `rm $f`;
+            $re->{ok} = 'deleted';
+        }
+        else {
+            # non-name is directory
+            (my $dir = $f) =~ s/\/[^\/]+$//;
+            -d $dir || `mkdir -p $dir`;
+            my $new = !-f $f;
+            $s = "$s\n" if $s !~ /\n$/;
+
+            write_file("$f\.1",encode_utf8($s));
+            `mv $f\.1 $f`;
+
+            # < (notify nearby others, who )+
+            $re->{ok} = 'updated';
+            $re->{ok} = 'created' if $new;
+            $was_write = 1;
+        }
+    }
+    else {
+        if ($f && -f $f) {
+            $s = encode_utf8(read_file($f));
+            $re->{ok} = 'found';
+        }
+        else {
+            $re->{er} = 'not found'
+        }
+    }
+    if (length $s) {
+        my $dig = slm(12,Digest::SHA::sha256_hex($s));
+        $cache->{$f} = $dig;
+        if ($dig != $digway) {
+            -l $wig && `unlink $wig`;
+            `ln -s $dig $wig`;
+        }
+        $re->{dige} = $dig;
+        die "no cat: $f" if !$cat;
+        $re->{se} = $cat if $cat ne $se;
+        $re->{s} = $s;
+        # they know string if:
+        if (my $ha = $c->param('have')) {
+            # they know its hash
+            delete $re->{s} if grep {$_ eq $dig} split "\t", $ha
+        }
+        if ($was_write) {
+            # they just sent it
+            delete $re->{s};
+            # speed /digwaypol/
+            $poll->{doing}() if $poll->{ways} && $poll->{ways}->{"$t"};
+        }
+
+    }
+    $c->render(text=>sjson($re));
+};
+
+#c /way/ $A->{4}->{sc}->{waythe} way
+# < Accept headers to get the various translations
+get '/way/*way' => sub { my ($c) = @_;
+    my $t = $c->param('way');
+    $t =~ s/\W+/-/g;
+    my $w;
+    for ('G/*','wormhole/way') {
+        my @opt = glob "$_/$t";
+        my $f = shift @opt;
+        next if !$f;
+        $w = {t=>$t,y=>{}};
+        $w->{c}->{s} = read_file($f);
+        $w->{sc}->{dige} = slm(12, dig $w->{c}->{s});
+        $w->{sc}->{of} = 'w';
+        last
+    }
+    $w || return $c->reply->not_found;
+    $c->res->headers->append(Dige => $w->{sc}->{dige});
+
+    # < JaBabz is final
+    my $babv = readlink("wormhole/digway/JaBabz");
+    $A->{sc}->{wayjs} = {} if $A->{sc}->{babv} ne $babv;
+    $A->{sc}->{babv} = $babv;
+
+    if ( $A->{sc}->{wayjs}->{"$w->{t}"}->{"$w->{sc}->{dige}"} &&
+        $c->param('have') eq $w->{sc}->{dige} ) {
+        return $c->render(text => '')
+    }
+
+
+    my $s = $A->{sc}->{wayjs}->{"$w->{t}"}->{"$w->{sc}->{dige}"} ||= do {
+        my $C = $w;
+        JaBabz($C);
+        $w->{c}->{s}
+    };
+    #$s =~ /^(.+?m\.replace(.+?))$/sgm && sayyl "Fuo:\n $1\n\n";
+    $c->render(text => decode_utf8($s));
+};
 
 starts();
