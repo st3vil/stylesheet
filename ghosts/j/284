@@ -2119,7 +2119,7 @@ Foogla: | # Domes prepare to A=A
             $Q = tings&Q;
             $P = Qs&P;
             !P and return me&tsc,'!P'
-            !Qs&ready and return me&tsc,'!ready'
+            !Qs&ready && Qc&el != '9' and return me&tsc,'!ready'
             !h and return me&tsc,'!here'
             
             #me&zu,'here',h;
@@ -4576,7 +4576,7 @@ Foogla: | # Domes prepare to A=A
     # < combine with zuck/mez/polify for all-regrouping?
     me.modopt = &acgtRmn{
         !n and throw "modopt!n"
-        $could = [T.Mw,null,Rs&M];
+        $could = [T.Mw,null,T.nN,Rs&M];
         each it could {
             $M = isar(t) ? t : me&Mw,R,t;
             $ni = M.indexOf(n);
@@ -6907,6 +6907,7 @@ Foogla: | # Domes prepare to A=A
             # c&canwait = 1;
             Qc&ready = &CP{};
             Rs&havediges and Qs&havediges = Rs&havediges
+            Rs&section and Qs&section = Rs&section
             # < Live should never disappear?
             $s = Rs&Live = Rs&_ting(Q);
             
@@ -7086,6 +7087,8 @@ Foogla: | # Domes prepare to A=A
                     c&el && Py&decidedel && Py&decidedel(c&el);
                     
                     s&dige = Ps&dige;
+                    s&section = Ps&section;
+                    !s&section and delete s&section
                     c&s = Pc&s;
                     # C never gets s&string unless it makes it
 
@@ -7409,6 +7412,7 @@ Foogla: | # Domes prepare to A=A
                 $haves = s&havediges || {};
                 Ps&dige and haves[Ps&dige] = Ps&string
                 hak(haves) and d.have = haks(haves).join("\t")
+                s&section and d.se = s&section
                 # the first "can you hold on to..."
                 if (s&string != null) {
                     # wants to write, '' to delete
@@ -7450,21 +7454,24 @@ Foogla: | # Domes prepare to A=A
                         !C.t.match(/^spot\//) and ~>6 Nodig: C.t, dig(r.s), r.dige
                     }
                     $el;
+                    $erok = 0;
                     r.ok == 'found' and el = 1
                     r.ok == 'created' and el = 2
                     r.ok == 'updated' and el = 3
                     # 6 is 3 from beyond 5! matters
                     r.ok == 'forward' and el = 6
-                    r.er == 'not ffwd' and el = 7
+                    r.er == 'not ffwd' and el = 7; erok++
                     r.ok == 'deleted' and el = 9; Ps&departs = Ps&dige
-                    r.er == 'not found' and el = 9
+                    r.er == 'not found' and el = 9; erok++
                     Pc&el = el;
+                    r.er && !erok and throw r.er
                     if (el == 9) {
                         # watch for undelete?
                         r.s and throw "what"
                         delete Pc&s;
                         delete Ps&dige;
                         delete Ps&string;
+                        delete Ps&section;
                         # plumb? like an elvisory
                         return
                     }
@@ -7490,10 +7497,26 @@ Foogla: | # Domes prepare to A=A
                         Ps&string = r.s;
                         Ps&Want_Decode = 'Lines';
                     }
+                    if (el <= 3) {
+                        $se = d.se || r.se;
+                        se and Ps&section = se
+                    }
                 };
             };
          
-            #c Talks.mem,tmp
+            #c Talks.ghost,tmp,mem
+            # W that is string
+            Rs&Talks.ghost = &TCP{
+                Rs&Talks.W(T,C,P);
+                T.get.url = '/ghost/'+C.t;
+                Ps&noDecode = 1;
+            };
+            # tmp that is string
+            Rs&Talks.tmp = &TCP{
+                Rs&Talks.mem(T,C,P);
+                Ps&noDecode = 1;
+            };
+            # mem that is Lines
             Rs&Talks.mem = &TCP{
                 T.done = 1;
                 $s = localStorage[C.t];
@@ -7531,17 +7554,6 @@ Foogla: | # Domes prepare to A=A
                     Ps&string = s;
                     Ps&Want_Decode = 'Lines';
                 }
-            };
-            # mem that is string
-            Rs&Talks.tmp = &TCP{
-                Rs&Talks.mem(T,C,P);
-                Ps&noDecode = 1;
-            };
-            # W that is string
-            Rs&Talks.ghost = &TCP{
-                Rs&Talks.W(T,C,P);
-                T.get.url = '/ghost/'+C.t;
-                Ps&noDecode = 1;
             };
             #c way/js questions as C
             # public interfaces

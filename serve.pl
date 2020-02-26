@@ -658,7 +658,7 @@ $poll->{doing} = sub { my ($o) = @_;
         $t = $poll->{wayt}->{"$p"} ||= do { $t =~ s/\W/-/sg; $t };
         my $dig = readlink "wormhole/digway/$t";
         my $was = $poll->{wayd}->{"$t"};
-        next if $dig eq $was;
+        next if $was && $dig eq $was;
         $poll->{wayd}->{"$t"} = $dig;
         $was = 'any';
         $was && push @ways,
@@ -822,7 +822,7 @@ any '/ghost/*w' => sub { my ($c) = @_;
         # optional safety - must replace such dige
         my $pa = $c->param('parent');
         if ($se eq '*') {
-            $re->{er} = "!se param category to overwrite";
+            $re->{er} = "!se param: writing G/\$se/\$t";
             $s = '';
         }
         elsif ($pa && $pa ne $cache->{"$f"} ) {
@@ -875,7 +875,7 @@ any '/ghost/*w' => sub { my ($c) = @_;
         }
         $re->{dige} = $dig;
         die "no cat: $f" if !$cat;
-        $re->{se} = $cat if $cat ne $se;
+        $re->{se} = $cat;# if $cat ne $se;
         $re->{s} = $s;
         # they know string if:
         if (my $ha = $c->param('have')) {

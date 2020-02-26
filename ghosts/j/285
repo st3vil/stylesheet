@@ -383,7 +383,7 @@ Fourism: |
     };
     
     #c ambient synapse
-    4c&fps = 0.3;
+    4c&framerate = 0.3;
     
     # loop comebacks between attentions
     $lastwas = 0;
@@ -397,7 +397,7 @@ Fourism: |
         $Y = A;
         A.on.A = A;
         #A.noelvis = 1;
-        $frames = 1000/A&fps;
+        $frames = 1000/A&framerate;
         frames += A&brake ||= 0;
         A&brake > 0 and ~braking: A&brake
         A&brake > 7000 and A&brake = 7000
@@ -684,6 +684,11 @@ Fourism: |
         ['Zave','291',&acgtRs{
             $p = Ry&up;
             $havediges = {};
+            $section;
+            $g = Rs&gopolo = me&opeolo,'Z:'+Rs&Zave;
+            gs&dis = 3;
+            # can do:
+            #gy&can('ope',&{ while_open() });
             
             if (Rs&Zave == 'ghost') {
                 # tmp read (instant) caches ghost read
@@ -698,6 +703,12 @@ Fourism: |
                 $tP = tQ && tQs&P;
                 tP && tPs&dige and havediges[tPs&dige] = tPs&string
                 Rs&tmpP = tP;
+                
+                # the %Codin (%Codo inside another) above
+                #  becomes traceable from G/$se/$t
+                $din = me.cbu(R,'Codin');
+                !din and delete Rs&Zave; return me&mtsc,g,'no^^%Codin',0,'B';
+                section = din.t;
             }
             
             ah(p,'Zaving',Rs&Zave,R);
@@ -716,7 +727,7 @@ Fourism: |
                 # or leave it to receive our changes
             }
             elsif (ps&Code) {
-                me&tsc,'%Zave','upCode','B';
+                #me&tsc,'%Zave','upCode','B';
                 Rs&Here = pc&s;
                 Rs&noHereEncode = 1;
             }
@@ -731,20 +742,12 @@ Fourism: |
             Rs&AutoSave and tings&directory = "AutoSave/"
             
             haks(havediges) and tings&havediges = havediges
+            section and tings&section = section
         },'ift,D'],
         
         #c Zave behaviour
-        ['Zave','32',&acgtRs{
-            $Z = Rs&Zaver;
-            $mayh = Rs&mayhaveHere;
-            Zs&Here ||= mayh && mayhs&Here
-            # require %Here = R:$self%ball (aft %Gens @31)
-            !Zs&Here and delete Rs&Zave; return me&tsc,"Z!h";
-            # translate %Zave boost to %Save=3 @5 act
-            (Rs&boost||0) <= 0 and return
-            Zs&Save = 3;
-        },'ift,D'],
-        # so late so %Saveting for %Gens happens
+        # and git harness for %Code or %Gens
+        # late so %Saveting for %Gens happens
         #  tmp should be ready, ghost will have sent
         #   unless its storage/place is local
         #    within this javascript runtime/elvisability
@@ -757,7 +760,7 @@ Fourism: |
             $t = Zs&Saveting = me&yfuture,Zs&Saveting;
             $Q = ts&Q;
             $P = Q && Qs&P;
-            !P || !Qs&ready and return  me&tsc,"Z!P";
+            !P and return  me&tsc,"Z!P";
             
             if (ps&Code) {
                 me&rollbs,R,'Settled';
@@ -791,8 +794,7 @@ Fourism: |
                     }
                 }
                 
-                $g = me&opeolo,'Z';
-                gs&dis = 3;
+                $g = Rs&gopolo;
                 $gi = gy&can('n','git');
                 gis&dis = 4;
                 gis&fs = 17;
@@ -864,16 +866,23 @@ Fourism: |
                         commit();
                     }
                 }
-                # Ps&string or h
-                me&zu,"CodeHere",h
-                me&zu,"CodeQ",Q
             }
             else {
-                # 
+                # similar...
             }
         },'ift,D'],
         
-        #c when %Save completes
+        #c %Zave <-> %Save completes
+        ['Zave','32',&acgtRs{
+            $Z = Rs&Zaver;
+            $mayh = Rs&mayhaveHere;
+            Zs&Here ||= mayh && mayhs&Here
+            # require %Here = R:$self%ball (aft %Gens @31)
+            !Zs&Here and delete Rs&Zave; return me&tsc,"Z!h";
+            # translate %Zave boost to %Save=3 @5 act
+            (Rs&boost||0) <= 0 and return
+            Zs&Save = 3;
+        },'ift,D'],
         ['Zave','77',&acgtRs{
             $Z = Rs&Zaver;
             if (Zs&Save == 7) {
@@ -1079,7 +1088,7 @@ Wud: | # restacked Wed server
             $t = poll.wayt.>$p ||= do { $t =~ s/\W/-/sg; $t };
             my $dig = readlink "wormhole/digway/$t";
             my $was = poll.wayd.>$t;
-            next if $dig eq $was;
+            next if $was && $dig eq $was;
             poll.wayd.>$t = $dig;
             $was = 'any';
             $was && push @ways,
@@ -1243,7 +1252,7 @@ Wud: | # restacked Wed server
             # optional safety - must replace such dige
             my $pa = $c->param('parent');
             if ($se eq '*') {
-                re.er = "!se param category to overwrite";
+                re.er = "!se param: writing G/\$se/\$t";
                 $s = '';
             }
             elsif ($pa && $pa ne $cache.>$f ) {
@@ -1296,7 +1305,7 @@ Wud: | # restacked Wed server
             }
             re.dige = $dig;
             die "no cat: $f" if !$cat;
-            re.se = $cat if $cat ne $se;
+            re.se = $cat;# if $cat ne $se;
             re.s = $s;
             # they know string if:
             if (my $ha = $c->param('have')) {
