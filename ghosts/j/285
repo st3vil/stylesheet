@@ -71,6 +71,7 @@ Fividy: |
     window.isar = &s{ return s && s.constructor == Array };
     window.isha = &s{ return s && typeof s == 'object' && !isC(s) };
     window.isob = &s{ return s && typeof s == 'object' };
+    window.isR = &s{ return isC(s) && sy&R == s };
     window.Cye = &s{
         s = G&Cye,s;
         s.y = {cv:s.y.cv};
@@ -745,9 +746,6 @@ Fourism: |
             
             # translate %Zaver boost to %Save=2/3
             (Rs&boost||0) <= 0 and return
-            Zs&Save = 2;
-            me&tsc,'%Save','%Save...','B'
-            (Rs&boost||0) <= 1 and return
             Zs&Save = 3;
         },'ift,D'],
         # so late so %Saveting for %Gens happens
@@ -774,7 +772,11 @@ Fourism: |
                 }
                 
                 # notice situation
-                hs&string == Ps&string and Rs&Settled = 1
+                if (hs&string == Ps&string) {
+                    Rs&Settled = 1;
+                    delete Rs&Wantsto;
+                    delete Rs&Amountto;
+                }
                 else {
                     if (Rs&Settled || Qc&el == 9) {
                         # we sync, they follow
@@ -798,10 +800,8 @@ Fourism: |
                 ly&tree = h;
                 ry&tree = P;
                 # flop direction of the patch
-                me.nto(R,l,&s{ 
-                    ~Wantpull:
-                    Rs&Wantsto = 'pull'; });
-                me.nto(R,r,&s{ Rs&Wantsto = 'push'; });
+                me.nto(R,l,&s{ Rs&Wantsto = 'pull' });
+                me.nto(R,r,&s{ Rs&Wantsto = 'push' });
                 
                 if (Rs&Whichto) {
                     # direction it was going
@@ -838,8 +838,30 @@ Fourism: |
                     $en = coy&can('n','enter');
                     ens&dis = 4;
                     $says = Rs&Wantsto;
-                    Rs&Amountto == 1 and says += "?";
                     $ma = me&mtsc,en,'make-commit',says,'B';
+                    $commit = &{
+                        if (Rs&Wantsto == 'pull') {
+                            hs&string = Ps&string;
+                            Rs&Whichto = 'pull';
+                        }
+                        else {
+                            # Zave @32 shall transfer
+                            me&introqua,R,'boost:1';
+                        }
+                    };
+                    if (Rs&Amountto == 1) {
+                        # clickable talk
+                        mac&s += "?";
+                        me.nto(R,ma,&sT{
+                            commit();
+                            # wakes %ball%Code%Zaving
+                            #  and innards (R%Zave)
+                            T.wake = p;
+                        });
+                    }
+                    else {
+                        commit();
+                    }
                 }
                 # Ps&string or h
                 me&zu,"CodeHere",h
@@ -853,15 +875,11 @@ Fourism: |
         #c when %Save completes
         ['Zave','77',&acgtRs{
             $Z = Rs&Zaver;
-            Zs&Save == 7 and delete Rs&Te.sc.boost
+            if (Zs&Save == 7) {
+                delete Rs&Te.sc.boost;
+                Rs&Whichto = 'push';
+            }
         },'ift,D'],
-        
-        ['Code+CodeSave','5',&acgtRs{
-            # < like %Gens for the %self%string only
-            #   may concat fragments from children
-            # < also wants %AutoSave to mem level, when being careful
-        },'ift,D'],
-
         
         ['Evelse','291',&acgtRs{
             me&introqua,[R,'A'],{boost:1}
@@ -875,7 +893,11 @@ Fourism: |
     me.nto = &Rny{
         n.y == n and throw "A"
         ns&medo = 'modeen';
-        ny&modeening = y;
+        ny&modeening = &sT{
+            y (s,T);
+            # prefer waking this R to 4c&callback
+            T.wake ||= R;
+        };
         me.modeenery(R);
     };
     #Fiveplan #c
@@ -888,17 +910,25 @@ Fourism: |
       
       monday:
         %ting - place to send/receive string
-        < each output can be an input
-        < /mem/ faster than /W/
-        < slowing /ghost/
-         < compile check etc first
         < %differ switching up %self and collecting %Here etc?
+         < ↯ at new/gone \n with !\w
         < avoid re-%Lines depending on slep,
            or by accounting for all change
       tuesday:
         gitify %Code/%Zave
       wednesday:
         streaming %Zave push/pull
+         < be sure the codemirror is saved
+            as it can not &gev while typing
+            so we appear from a 5s timer or something,
+            check all the %Code)%strings from cm
+             ideally elvising that so we can pick up on its looseness
+              how surely anyone has said what it is
+         < concat fragments from %Code!%string/*%Code
+         < each output can be an input
+         < /mem/ faster than /W/
+         < slowing /ghost/
+          < compile check etc first
         /ghost/
         redo callback to insides
          modeening that might T.wake=R
@@ -907,7 +937,9 @@ Fourism: |
        < make an alternative openness network
          using s&medo=me.$handler,
           dispatching to JRoms as an entire planet (4s&callback)
-         and a slep to scan for changes
+       < %Search (centralised %tings) delivering updates
+        < trusting /digwaypol/ for /way/ and /ghost/ it has
+       < slep to scan for changes
         
         %Gens starts from out%ball to have in%ball
          < %ino for in feeds out sans s&z
