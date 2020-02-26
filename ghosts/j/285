@@ -1067,43 +1067,6 @@ Wud: | # restacked Wed server
         # insert JaBabz here
     }
     
-    # 4s&waythe way
-    # < Accept headers to get the various translations
-    get '/way/*way' => &c{
-        my $t = $c->param('way');
-        $t =~ s/\W+/-/g;
-        my $w;
-        for ('G/*','wormhole/way') {
-            my @opt = glob "$_/$t";
-            my $f = shift @opt;
-            next if !$f;
-            $w = {t=>$t,y=>{}};
-            wc&s = read_file($f);
-            ws&dige = slm(12, dig wc&s);
-            ws&of = 'w';
-            last
-        }
-        $w || return $c->reply->not_found;
-        $c->res->headers->append(Dige => ws&dige);
-        
-        my $babv = readlink("wormhole/digway/JaBabz");
-        a&wayjs = {} if a&babv ne $babv;
-        a&babv = $babv;
-        
-        if ( a&wayjs.>w.t.>ws&dige &&
-            $c->param('have') eq ws&dige ) {
-            return $c->render(text => '')
-        }
-        
-        
-        my $s = a&wayjs.>w.t.>ws&dige ||= do {
-            my $C = $w;
-            Rw JaBabz $C;
-            wc&s
-        };
-        #$s =~ /^(.+?m\.replace(.+?))$/sgm && sayyl "Fuo:\n $1\n\n";
-        $c->render(text => decode_utf8($s));
-    };
     #c /digwaypoll/ notifier, see 281 Sevo
     my $poll = {tx=>[],ways=>{}};
     poll.wayt = {}; # pi/name -> pi-name
@@ -1254,6 +1217,134 @@ Wud: | # restacked Wed server
         $c->render(text=>sjson($re));
     };
     
+    #c /ghost/
+    any '/ghost/*W' => &c{
+        my $t = $c->param('W');
+        my $se = $c->param('se');
+        my $s = $c->param('s');
+        my $patch = $c->param('patch') && die "know patch";
+        my $cache = G.Wache ||= {};
+        
+        # read t, write if s
+        # all there
+        $t = "W/$t";
+        # char safety
+        $t =~ /([^\w\/-]+)/ && return
+            $c->render(text=>sjson(
+                {er=>"illegal t[".pos()."] char: $1 in '$t'"}
+            ));
+        # and you can't use the name 1 etc
+        $t =~ s/\/(\d)$//;
+        my $species = $1 || '1';
+        my $f = "$t/$species";
+        
+        # returns json:
+        my $re = {ok=>0};
+        my $nos = 0;
+        
+        
+        if (defined $s) {
+            # optional safety - must replace such dige
+            my $pa = $c->param('parent');
+            if ($pa && $pa ne $cache.>$f ) {
+                re.er = 'not ffwd';
+                # could give out tree since...
+                $s = '';
+                # re.dige = $cache.>$f ;
+            }
+            elsif (!length $s) {
+                `rm $t/1`;
+                re.ok = 'deleted';
+            }
+            else {
+                # the whole name is directory
+                -d $t || `mkdir -p $t`;
+                my $new = !-f $f;
+                $s = "$s\n" if $s !~ /\n$/;
+                
+                write_file("$f\.1",encode_utf8($s));
+                `mv $f\.1 $f`;
+                
+                # the .5 may be in the same request
+                my $five = $c->param('fivestring');
+                if ($five) {
+                    my $ff = "$t/5";
+                    write_file("$ff\.1",encode_utf8($five));
+                    `mv $ff\.1 $ff`;
+                }
+                
+                # < (notify nearby others, who )+
+                re.ok = 'updated';
+                re.ok = 'created' if $new;
+                $nos = 1;
+            }
+        }
+        else {
+            if (-f $f) {
+                $s = encode_utf8(read_file($f));
+                re.ok = 'found';
+            }
+            else {
+                re.er = 'not found'
+            }
+        }
+        if (length $s) {
+            # it should have a dig
+            my $dig = slm(12,
+                $f =~ m{^W/spot/} ? dig($s)
+                :
+                Digest::SHA::sha256_hex($s)
+            );
+            $cache->{$f} = $dig;
+            re.dige = $dig;
+            re.s = $s;
+            # if they know its hash, assume they don't need the string again
+            if (my $ha = $c->param('have')) {
+                delete re.s if grep {$_ eq $dig} split "\t", $ha
+            }
+            # or if it was a write
+            delete re.s if $nos;
+        }
+        $c->render(text=>sjson($re));
+    };
+    
+    #c /way/ 4s&waythe way
+    # < Accept headers to get the various translations
+    get '/way/*way' => &c{
+        my $t = $c->param('way');
+        $t =~ s/\W+/-/g;
+        my $w;
+        for ('G/*','wormhole/way') {
+            my @opt = glob "$_/$t";
+            my $f = shift @opt;
+            next if !$f;
+            $w = {t=>$t,y=>{}};
+            wc&s = read_file($f);
+            ws&dige = slm(12, dig wc&s);
+            ws&of = 'w';
+            last
+        }
+        $w || return $c->reply->not_found;
+        $c->res->headers->append(Dige => ws&dige);
+        
+        my $babv = readlink("wormhole/digway/JaBabz");
+        a&wayjs = {} if a&babv ne $babv;
+        a&babv = $babv;
+        
+        if ( a&wayjs.>w.t.>ws&dige &&
+            $c->param('have') eq ws&dige ) {
+            return $c->render(text => '')
+        }
+        
+        
+        my $s = a&wayjs.>w.t.>ws&dige ||= do {
+            my $C = $w;
+            Rw JaBabz $C;
+            wc&s
+        };
+        #$s =~ /^(.+?m\.replace(.+?))$/sgm && sayyl "Fuo:\n $1\n\n";
+        $c->render(text => decode_utf8($s));
+    };
     
     starts();
 
