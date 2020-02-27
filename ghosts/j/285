@@ -848,125 +848,125 @@ Fourism: |
             me.nto(R,l,&s{ Rs&Wantsto = 'pull' });
             me.nto(R,r,&s{ Rs&Wantsto = 'push' });
                 
-                if (Qc&el != 8 && Qc&el != 3) {
-                    # faulter the autocommit
-                    # el=8 when same, el=3 when we push
-                    # eg el=1, there is news
-                    delete Rs&Settled
-                }
-                
-                # the Zave=tmp first
-                if (hs&string == null) {
-                    hs&string = Ps&string;
-                    Rs&Whichto = 'pull';
-                }
-                
-                # notice situation
-                if (hs&string == Ps&string) {
-                    Rs&Settled = 1;
-                    delete Rs&Wantsto;
-                    delete Rs&Amountto;
-                    Rs&Whichto ||= 'pull';
-                }
-                else {
-                    if (Rs&Settled || Qc&el == 9) {
-                        # we sync, they follow
-                        Rs&Amountto ||= 2;
-                        Rs&Wantsto ||= 'push';
-                    }
-                    else {
-                        # start different or their updates
-                        Rs&Amountto = 1;
-                        Rs&Wantsto ||= 'pull';
-                    }
-                }
-                
-                if (Rs&Wantsto) {
-                    Rs&Amountto ||= 1
-                    Rs&Unsure and Rs&Amountto = 1
-                }
-                
-                if (!Rs&Whichto || (Rs&Wantsto && Rs&Amountto < 2)) {
-                    # l/r switch patch direction
-                    # < parameters, eg:
-                    #Rs&Unsure and tos&bor = '3px dotted black'
+            if (Qc&el != 8 && Qc&el != 3) {
+                # faulter the autocommit
+                # el=8 when same, el=3 when we push
+                # eg el=1, there is news
+                delete Rs&Settled
+            }
+
+            # the Zave=tmp first
+            if (hs&string == null) {
+                hs&string = Ps&string;
+                Rs&Whichto = 'pull';
+            }
+
+            # notice situation
+            if (hs&string == Ps&string) {
+                Rs&Settled = 1;
+                delete Rs&Wantsto;
+                delete Rs&Amountto;
+                Rs&Whichto ||= 'pull';
+            }
+            else {
+                if (Rs&Settled || Qc&el == 9) {
+                    # we sync, they follow
+                    Rs&Amountto ||= 2;
+                    Rs&Wantsto ||= 'push';
                 }
                 else {
-                    $goingto = Rs&Wantsto || Rs&Whichto;
-                    $redirection = goingto != Rs&Whichto;
-                    $to = goingto == 'pull' ? l : r;
-                    $from = to == l ? r : l;
-                    froms&dis = 0;
-                    Rs&Unsure and tos&bob = '3px dotted black'
-                    me.nto(R,to,&s{
-                        Rs&Unsure = Rs&Unsure ? 0 : 1
-                    });
+                    # start different or their updates
+                    Rs&Amountto = 1;
+                    Rs&Wantsto ||= 'pull';
                 }
+            }
+
+            if (Rs&Wantsto) {
+                Rs&Amountto ||= 1
+                Rs&Unsure and Rs&Amountto = 1
+            }
+
+            if (!Rs&Whichto || (Rs&Wantsto && Rs&Amountto < 2)) {
+                # l/r switch patch direction
+                # < parameters, eg:
+                #Rs&Unsure and tos&bor = '3px dotted black'
+            }
+            else {
+                $goingto = Rs&Wantsto || Rs&Whichto;
+                $redirection = goingto != Rs&Whichto;
+                $to = goingto == 'pull' ? l : r;
+                $from = to == l ? r : l;
+                froms&dis = 0;
+                Rs&Unsure and tos&bob = '3px dotted black'
+                me.nto(R,to,&s{
+                    Rs&Unsure = Rs&Unsure ? 0 : 1
+                });
+            }
+
+            if (Rs&Whichto) {
+                # direction it was going
+                $to = Rs&Whichto == 'pull' ? l : r;
+                tos&bri = 1.7
+            }
                 
-                if (Rs&Whichto) {
-                    # direction it was going
-                    $to = Rs&Whichto == 'pull' ? l : r;
-                    tos&bri = 1.7
-                }
-                
-                #c patch
-                if (Rs&Wantsto) {
-                    Rs&Amountto ||= 1;
-                    $to = Rs&Wantsto == 'pull' ? l : r;
-                    tos&sha = '3 3 3 777';
-                    
-                    $from = to == l ? r : l;
-                    
-                    $pa = coy&can('n','patch');
-                    pas&dis = 4;
-                    pas&fs = 14;
-                    me&walls,pa,'b:2.2h666';
-                    pas&bgh = '010';
-                    pas&zi = 30;
-                    
-                    me&introqua,[R,'diff'],'boost','@1';
-                    $di = me&diffya,R,'diff',fromy&tree,toy&tree;
-                    me&zuct,pa,di;
-                    
-                    # < patch chunk pluck
-                    
-                    # < commit with message, put somewhere
-                    #   and other ways to convene to key states
-                    
-                    $says = Rs&Wantsto;
-                    $ma = me&mtsc,en,'make-commit',says,'B';
-                    $commit = &{
-                        if (Rs&Wantsto == 'pull') {
-                            if (ps&Code) {
-                                hs&string = Ps&string;
-                            }
-                            else {
-                                # to reset a %Gens, put %self
-                                #  and one more %Lines to satisfy git
-                                me&mtsc,en,'no-pull','dont-know','B';
-                                Rs&Unsure = 1;
-                            }
-                            Rs&Whichto = 'pull';
+            #c patch
+            if (Rs&Wantsto) {
+                Rs&Amountto ||= 1;
+                $to = Rs&Wantsto == 'pull' ? l : r;
+                tos&sha = '3 3 3 777';
+
+                $from = to == l ? r : l;
+
+                $pa = coy&can('n','patch');
+                pas&dis = 4;
+                pas&fs = 14;
+                me&walls,pa,'b:2.2h666';
+                pas&bgh = '010';
+                pas&zi = 30;
+
+                me&introqua,[R,'diff'],'boost','@1';
+                $di = me&diffya,R,'diff',fromy&tree,toy&tree;
+                me&zuct,pa,di;
+
+                # < patch chunk pluck
+
+                # < commit with message, put somewhere
+                #   and other ways to convene to key states
+
+                $says = Rs&Wantsto;
+                $ma = me&mtsc,en,'make-commit',says,'B';
+                $commit = &{
+                    if (Rs&Wantsto == 'pull') {
+                        if (ps&Code) {
+                            hs&string = Ps&string;
                         }
                         else {
-                            # Zave @32 shall transfer
-                            Rs&Committing = 1;
+                            # to reset a %Gens, put %self
+                            #  and one more %Lines to satisfy git
+                            me&mtsc,en,'no-pull','dont-know','B';
+                            Rs&Unsure = 1;
                         }
-                    };
-                    if (Rs&Amountto == 1) {
-                        # clickable talk
-                        mac&s += "?";
-                        me.nto(R,ma,&sT{
-                            commit();
-                            # wakes %ball%Code%Zaving
-                            #  and innards (R%Zave)
-                            T.wake = p;
-                        });
+                        Rs&Whichto = 'pull';
                     }
                     else {
-                        commit();
+                        # Zave @32 shall transfer
+                        Rs&Committing = 1;
                     }
+                };
+                if (Rs&Amountto == 1) {
+                    # clickable talk
+                    mac&s += "?";
+                    me.nto(R,ma,&sT{
+                        commit();
+                        # wakes %ball%Code%Zaving
+                        #  and innards (R%Zave)
+                        T.wake = p;
+                    });
                 }
+                else {
+                    commit();
+                }
+            }
             if (commit) {
                 # remote cell smoodge
                 res&po = 2;
