@@ -496,9 +496,9 @@ Fourism: |
             me&mtsc,ti,'timeof','/','g'
             me&mtsc,ti,'timeout',4s&nonms,'6'
             
-            # %ball transfigurations
+            # %ball transfigurations (move,copy,etc)
             #n Elvito  R %Tool
-            # %ball activations
+            # %ball activations (just %R -> JRom)
             Rs&playsheet = {
                 ball: &acgtR{
                     me&Bear,R,Rc&s,'play'
@@ -507,13 +507,41 @@ Fourism: |
             };
             
             # remotes
-            # news from the old editor
+            # news from the editor
             me&Rom,R,'GhodigWap';
-            # newsroom behind the %ting
+            # newsroom behind all %tings
             Rs&Inn = me&Rom,R,'Search';
             
-            me&Rom,R,'Elfor';
+            # one variety of walking around names
+            #  climbing X, < other structures
+            #  invent linguistic surface bubbler
+            me.upsit = &acgtRt{
+                $z = me.cby(R).reverse();
+                each in z {
+                    $X = nc&X;
+                    $oX = X && X.x && X.x[t];
+                    oX && oX.z and return oX.z[0]
+                }
+            };
+            me&rollbs,R,'Incremento';
+            Rs&Incremento = (Rs&Incremento||0)+1;
+            if (Rs&Incremento == 2) {
+                ['GhodigWap','Search'].map(&t{
+                    $r = me&upsit,R,t;
+                    r && me&introqua,r,'boost:-1';
+                })
+            }
+            # another thing-ink dripper:
+            #        $he = Rc&N[0];
+            #        $i = hes&inti = (hes&inti||0)+1;
+            #        me&tsc,'%Zave',i+'th','y';
+            #        i == 2 and debugger
+            # the first few %settings are usually important:
+            #    me&tsc,'%Zave',haks(R.sc).slice(0,10).join(','),'y';
             
+            # Codon/experiment
+            me&Rom,R,'Elfor';
+            # wash
             me&Rom,R,'Evelse';
         },'ift,D'],
         
@@ -522,6 +550,7 @@ Fourism: |
         ['Elfor','291',&acgtRs{
             n Flar  R %Codon,ting:W,Gens,tingspot
             #n ForThe  R %ting:W,Gens,tingspot
+            
         },'ift,D'],
         
         # cloud of %Codon and related types inheriting
@@ -576,7 +605,7 @@ Fourism: |
         },'ift,D'],
         
         ['Codo','2901',&acgtRs{
-            $c = me&tsc,'%Codon','Codo','g';
+            #$c = me&tsc,'%Codon','Codo','g';
             # %Codon not inherited through %JRom
             Rs&Codon = 1;
             # becomes inside
@@ -628,41 +657,6 @@ Fourism: |
         
         
         #c %Zaving %Codons
-        =pod specialise
-        saves/unsaves (in the case of mem > W)
-         things that may already have %Gens
-        
-        the existing %Gens action:
-            Gens @25:
-              %self rollbs
-              %ting ||= 1
-            Gens+ting @31:
-              %self ||=
-                Pc&el < 3 ? Copy Pc&s.c.s
-                : create %self
-              %Save = 1
-              # dupe for %Code/%Zave
-            Gens+self @31:
-              Rings %Here = R self)%ball
-              # already in a %ball%Code/%Zave
-            Gens+Here @4:
-              unfinished road to in/out pluck
-
-            Save @5:
-              has %Here
-                puts Here%Lines=3 # or not if ^^%Code/%Zave
-                # ? %Here could = %self, it has %string
-              Rs&Saveting ||= R %ting
-
-            Save @71:
-              pushes %Here.%string to %Saveting
-        
-        so we are %Zaving on a:
-          %Gens for its %Here%Lines
-          %Code for its ss&string
-        
-        
-        =cut
         # to these locations
         ['Zaving','294',&acgtRs{
             $lo = Rs&Zaving.split(',');
@@ -677,6 +671,17 @@ Fourism: |
         # replacing some %self
         ['Zaves','291',&acgtRs{
         },'ift,D'],
+        =pod specialise handling a %ting/%Gens
+        
+        %Zaver will be the (%Gens|%Zave) to %Save on
+         is a pointless polymorphism for now?
+         
+        the existing %Gens action:
+            Gens @25:
+              %self rollbs
+              %ting ||= 1
+        then we:
+        =cut
         ['Zave','291',&acgtRs{
             $p = Ry&up;
             $havediges = {};
@@ -707,20 +712,20 @@ Fourism: |
             # for %ting=tmp|mem
             Rs&Zave.length == 3 and Rs&AutoSave = 1
             if (ps&Gens) {
-                me&tsc,'%Zave','upGens','B'
-                # use that %Gens%Save
-                if (ps&ting == Rs&Zave) {
+                #me&tsc,'%Zave','upGens','B'
+                # reuse that %Gens%Save%ting, if it's the same
+                if (ps&ting == Rs&Zave ||
+                    ps&ting == '1' && Rs&Zave == 'W') {
                     Rs&Zaver = p;
                 }
                 else {
                     Rs&mayhaveHere = p;
                 }
-                # reuse its %Saveting?
-                # or leave it to receive our changes
             }
             elsif (ps&Code) {
-                #me&tsc,'%Zave','upCode','B';
+                # %Here = s%string)%ball
                 Rs&Here = pc&s;
+                # it is usually an R %Linesing %string
                 Rs&noHereEncode = 1;
             }
             # let Gens+self @31
@@ -736,6 +741,33 @@ Fourism: |
             haks(havediges) and tings&havediges = havediges
             section and tings&section = section
         },'ift,D'],
+        =pod
+        then existing %Gens action:
+            Gens+ting @31:
+              %self ||=
+                Pc&el < 3 ? Copy Pc&s.c.s
+                : create %self
+              %Save = 1
+              # dupe for %Code/%Zave
+            Gens+self @31:
+              Rings %Here = R self)%ball
+              # already in a %ball%Code/%Zave
+            Gens+Here @4:
+              unfinished road to in/out pluck
+
+            Save @5:
+              has %Here
+                puts Here%Lines=3 # or not if ^^%Code/%Zave
+                # ? %Here could = %self, it has %string
+              Rs&Saveting ||= R %ting
+
+            Save @71:
+              pushes %Here.%string to %Saveting
+        
+        so we are %Zaving on a:
+          %Gens for its %Here%Lines
+          %Code for its ss&string
+        =cut
         
         #c Zave behaviour
         # and git harness for %Code or %Gens
@@ -762,16 +794,51 @@ Fourism: |
             # can do:
             #gy&can('ope',&{ while_open() });
             
-            if (ps&Code) {
-                me&rollbs,R,'Settled';
-                me&rollbs,R,'Whichto';
-                me&rollbs,R,'Wantsto';
-                me&rollbs,R,'Unsure';
+            $gi = gy&can('n','git');
+            gis&dis = 4;
+            gis&fs = 17;
+            
+            # big < and/or > symbols
+            $l = giy&can('n','local');
+            $r = giy&can('n','remote');
+            ly&label = me&mtsc,l,'local','<','B';
+            ry&label = me&mtsc,r,'remote','>','B';
+            ly&tree = h;
+            ry&tree = P;
+            # flop direction of the patch
+            me.nto(R,l,&s{ Rs&Wantsto = 'pull' });
+            me.nto(R,r,&s{ Rs&Wantsto = 'push' });
+            
+            # where the patch etc may live
+            $co = gy&can('n','commit');
+            cos&dis = 4;
+            cos&zi = 30;
+            cos&po = 2;
+
+            $en = gy&can('n','enter');
+            ens&dis = 4;
+            
+            $re = eny&can('n','remote');
+            res&dis = 4;
+            me&walls,re,'b:2.2h866';
+            res&bgh = '010';
+                
+            $ing = Zs&Saveting;
+            # can't zuct the %Gens%ting directly above
+            #  once J it'll be Able
+            !ings&Gens and me&zuct,re,Zs&Saveting;
+            
+            
+            
+            # %Gens: can't think until got
+            ps&Gens && !hs&string and return me&mtsc,g,"ge";
+            
+                me&rollbs,R,'Settled,Whichto,Wantsto,Unsure';
                 
                 if (Qc&el != 8 && Qc&el != 3) {
-                    # el=8 when same, el=3 when writ
-                    # others faulter the autocommit
-                    # eg if ok=found, there is news
+                    # faulter the autocommit
+                    # el=8 when same, el=3 when we push
+                    # eg el=1, there is news
                     delete Rs&Settled
                 }
                 
@@ -800,24 +867,12 @@ Fourism: |
                         Rs&Wantsto ||= 'pull';
                     }
                 }
+                
                 if (Rs&Wantsto) {
                     Rs&Amountto ||= 1
                     Rs&Unsure and Rs&Amountto = 1
                 }
                 
-                $gi = gy&can('n','git');
-                gis&dis = 4;
-                gis&fs = 17;
-                
-                $l = giy&can('n','local');
-                $r = giy&can('n','remote');
-                ly&label = me&mtsc,l,'local','<','B';
-                ry&label = me&mtsc,r,'remote','>','B';
-                ly&tree = h;
-                ry&tree = P;
-                # flop direction of the patch
-                me.nto(R,l,&s{ Rs&Wantsto = 'pull' });
-                me.nto(R,r,&s{ Rs&Wantsto = 'push' });
                 if (!Rs&Whichto || (Rs&Wantsto && Rs&Amountto < 2)) {
                     # l/r switch patch direction
                     # < parameters, eg:
@@ -835,13 +890,6 @@ Fourism: |
                     });
                 }
                 
-                $co = gy&can('n','commit');
-                cos&dis = 4;
-                cos&zi = 30;
-                cos&po = 2;
-                $en = gy&can('n','enter');
-                ens&dis = 4;
-                
                 if (Rs&Whichto) {
                     # direction it was going
                     $to = Rs&Whichto == 'pull' ? l : r;
@@ -855,7 +903,6 @@ Fourism: |
                     tos&sha = '3 3 3 777';
                     
                     $from = to == l ? r : l;
-                    
                     
                     $pa = coy&can('n','patch');
                     pas&dis = 4;
@@ -877,7 +924,15 @@ Fourism: |
                     $ma = me&mtsc,en,'make-commit',says,'B';
                     $commit = &{
                         if (Rs&Wantsto == 'pull') {
-                            hs&string = Ps&string;
+                            if (ps&Code) {
+                                hs&string = Ps&string;
+                            }
+                            else {
+                                # to reset a %Gens, put %self
+                                #  and one more %Lines to satisfy git
+                                me&mtsc,en,'no-pull','dont-know','B';
+                                Rs&Unsure = 1;
+                            }
                             Rs&Whichto = 'pull';
                         }
                         else {
@@ -899,21 +954,11 @@ Fourism: |
                         commit();
                     }
                 }
-                # 
-                $re = eny&can('n','remote');
-                res&dis = 4;
-                me&walls,re,'b:2.2h866';
-                res&bgh = '010';
-                if (commit) {
-                    # cell smoodge
-                    res&po = 2;
-                    res&left = -2;
-                    res&pl = 2;
-                }
-                me&zuct,re,Zs&Saveting;
-            }
-            else {
-                # similar...
+            if (commit) {
+                # remote cell smoodge
+                res&po = 2;
+                res&left = -2;
+                res&pl = 2;
             }
         },'ift,D'],
         
