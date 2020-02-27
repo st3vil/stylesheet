@@ -384,6 +384,8 @@ Fourism: |
     
     #c ambient synapse
     4c&framerate = 0.3;
+    # when without G&h
+    window.Gtime = &d{ return G&time,d };
     
     # loop comebacks between attentions
     $lastwas = 0;
@@ -676,10 +678,10 @@ Fourism: |
         %Zaver will be the (%Gens|%Zave) to %Save on
          is a pointless polymorphism for now?
          
-        the existing %Gens action:
-            Gens @25:
-              %self rollbs
-              %ting ||= 1
+        may be following %Gens action:
+        Gens @25:
+          %self rollbs
+          %ting ||= 1
         then we:
         =cut
         ['Zave','291',&acgtRs{
@@ -741,35 +743,44 @@ Fourism: |
             haks(havediges) and tings&havediges = havediges
             section and tings&section = section
         },'ift,D'],
-        =pod
-        then existing %Gens action:
-            Gens+ting @31:
-              %self ||=
-                Pc&el < 3 ? Copy Pc&s.c.s
-                : create %self
-              %Save = 1
-              # dupe for %Code/%Zave
-            Gens+self @31:
-              Rings %Here = R self)%ball
-              # already in a %ball%Code/%Zave
-            Gens+Here @4:
-              unfinished road to in/out pluck
-
-            Save @5:
-              has %Here
-                puts Here%Lines=3 # or not if ^^%Code/%Zave
-                # ? %Here could = %self, it has %string
-              Rs&Saveting ||= R %ting
-
-            Save @71:
-              pushes %Here.%string to %Saveting
-        
-        so we are %Zaving on a:
-          %Gens for its %Here%Lines
-          %Code for its ss&string
+        =Gens+ting @31
+          %self ||=
+            Pc&el < 3 ? Copy Pc&s.c.s
+            : create %self
+          %Save = 1
+          # dupe for %Code/%Zave
+        =Gens+self @31:
+          Rings %Here = R self)%ball
+        =cut
+        # %Zave <-> %Save completes
+        ['Zave','32',&acgtRs{
+            $Z = Rs&Zaver;
+            $mayh = Rs&mayhaveHere;
+            Zs&Here ||= mayh && mayhs&Here
+            # require %Here = R:$self%ball (aft %Gens @31)
+            !Zs&Here and delete Rs&Zave; return me&tsc,"Z!h";
+            # specialise %Save
+            Zs&ForZave = 1;
+            me&ollbs,R,'Describing' and Zs&Save = 2
+            me&rollbs,R,'Committing' and Zs&Save = 3
+        },'ift,D'],
+        ['Zave','77',&acgtRs{
+            $Z = Rs&Zaver;
+            if (Zs&Save == 7) {
+                delete Rs&Committing;
+                Rs&Whichto = 'push';
+            }
+        },'ift,D'],
+        =Save @5
+          has %Here
+            puts Here%Lines=3 # or not if ^^%Code/%Zave
+            # ? %Here could = %self, it has %string
+          Rs&Saveting ||= R %ting
+        =Save @71
+          pushes %Here.%string to %Saveting
         =cut
         
-        #c Zave behaviour
+        #c Zave autogit
         # and git harness for %Code or %Gens
         # late so %Saveting for %Gens happens
         #  tmp should be ready, ghost will have sent
@@ -804,8 +815,6 @@ Fourism: |
             $r = giy&can('n','remote');
             ly&label = me&mtsc,l,'local','<','B';
             ry&label = me&mtsc,r,'remote','>','B';
-            ly&tree = h;
-            ry&tree = P;
             [l,r].map(&s{ s = sy&label; ss&lh = 0.5 });
             
             # where the patch etc may live
@@ -825,25 +834,39 @@ Fourism: |
             $ing = Zs&Saveting;
             # can't zuct the %Gens%ting directly above
             #  once J it'll be Able
-            !ings&Gens and me&zuct,re,Zs&Saveting;
+            !ings&Gens and me&zuct,re,ing;
             else {
                 me&mtsc,re,'local','^','B';
             }
             
             #c timing
+            me&rollbs,R,'Described';
             if (ps&Code) {
                 # hs&string is always
             }
             else {
+                (Rs&boost||0) > 0 and Rs&Describing = 1
                 # can't think until got
-                if (!hs&string) {
+                if (!hs&string && !Rs&Described) {
                     gs&fs = 7;
                     me&mtsc,co,"...";
                     return
                 }
+                if (Rs&Describing) {
+                    delete Rs&Describing;
+                    # keep a false %Here
+                    $De = Cye(h);
+                    Des&now = Gtime();
+                    Rs&Described = De;
+                }
+                $De = Rs&Described
+                De && Gtime(Des&now)<10 and delete Rs&Described
             }
+            $De = Rs&Described || h;
             
             me&rollbs,R,'Settled,Whichto,Wantsto,Unsure';
+            ly&tree = De;
+            ry&tree = P;
             # flop direction of the patch
             me.nto(R,l,&s{ Rs&Wantsto = 'pull' });
             me.nto(R,r,&s{ Rs&Wantsto = 'push' });
@@ -856,13 +879,14 @@ Fourism: |
             }
 
             # the Zave=tmp first
-            if (hs&string == null) {
+            if (Des&string == null) {
+                !ps&Code and throw "init pull !Code"
                 hs&string = Ps&string;
                 Rs&Whichto = 'pull';
             }
 
             # notice situation
-            if (hs&string == Ps&string) {
+            if (Des&string == Ps&string) {
                 Rs&Settled = 1;
                 delete Rs&Wantsto;
                 delete Rs&Amountto;
@@ -975,27 +999,7 @@ Fourism: |
             }
         },'ift,D'],
         
-        #c %Zave <-> %Save completes
-        ['Zave','32',&acgtRs{
-            $Z = Rs&Zaver;
-            me&rollbs,R,'Committing';
-            $mayh = Rs&mayhaveHere;
-            Zs&Here ||= mayh && mayhs&Here
-            # require %Here = R:$self%ball (aft %Gens @31)
-            !Zs&Here and delete Rs&Zave; return me&tsc,"Z!h";
-            # translate %Zave%Committing to %Save=3 @5 act
-            Zs&ForZave = 1;
-            !Rs&Committing and return
-            Zs&Save = 3;
-        },'ift,D'],
-        ['Zave','77',&acgtRs{
-            $Z = Rs&Zaver;
-            if (Zs&Save == 7) {
-                delete Rs&Committing;
-                Rs&Whichto = 'push';
-            }
-        },'ift,D'],
-        
+        #c %Evelse, nto
         ['Evelse','291',&acgtRs{
             me&introqua,[R,'A'],{boost:1}
             me&zu,"4s&thecode",4s&thecode;
