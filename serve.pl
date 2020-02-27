@@ -6,6 +6,7 @@ use FindBin qw($Bin);
 use lib "$Bin/othlia";
 use lib "$Bin/slib";
 use G;
+sub dige { slm(12, Digest::SHA::sha256_hex( encode_utf8(shift) ) ) };
 my ($A,$C,$G,$T);
 my $ar = {};
 
@@ -769,7 +770,7 @@ any '/W/*W' => sub { my ($c) = @_;
     }
     else {
         if (-f $f) {
-            $s = encode_utf8(read_file($f));
+            $s = decode_utf8(read_file($f));
             $re->{ok} = 'found';
         }
         else {
@@ -781,7 +782,7 @@ any '/W/*W' => sub { my ($c) = @_;
         my $dig = slm(12,
             $f =~ m{^W/spot/} ? dig($s)
             :
-            Digest::SHA::sha256_hex($s)
+            dige($s)
         );
         $cache->{$f} = $dig;
         $re->{dige} = $dig;
@@ -859,7 +860,7 @@ any '/ghost/*w' => sub { my ($c) = @_;
     }
     else {
         if ($f && -f $f) {
-            $s = encode_utf8(read_file($f));
+            $s = decode_utf8(read_file($f));
             $re->{ok} = 'found';
         }
         else {
@@ -867,7 +868,7 @@ any '/ghost/*w' => sub { my ($c) = @_;
         }
     }
     if (length $s) {
-        my $dig = slm(12,Digest::SHA::sha256_hex($s));
+        my $dig = dige($s);
         $cache->{$f} = $dig;
         if ($dig ne $digway) {
             -l $wig && `unlink $wig`;
@@ -904,7 +905,7 @@ get '/way/*way' => sub { my ($c) = @_;
         my $f = shift @opt;
         next if !$f;
         $w = {t=>$t,y=>{}};
-        $w->{c}->{s} = read_file($f);
+        $w->{c}->{s} = decode_utf8(read_file($f));
         $w->{sc}->{dige} = slm(12, dig $w->{c}->{s});
         $w->{sc}->{of} = 'w';
         last
@@ -929,7 +930,7 @@ get '/way/*way' => sub { my ($c) = @_;
         $w->{c}->{s}
     };
     #$s =~ /^(.+?m\.replace(.+?))$/sgm && sayyl "Fuo:\n $1\n\n";
-    $c->render(text => decode_utf8($s));
+    $c->render(text => $s);
 };
 
 starts();
