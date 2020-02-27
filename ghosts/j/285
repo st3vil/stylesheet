@@ -882,7 +882,7 @@ Fourism: |
                         }
                         else {
                             # Zave @32 shall transfer
-                            me&introqua,R,'boost:1';
+                            Rs&Committing = 1;
                         }
                     };
                     if (Rs&Amountto == 1) {
@@ -920,18 +920,20 @@ Fourism: |
         #c %Zave <-> %Save completes
         ['Zave','32',&acgtRs{
             $Z = Rs&Zaver;
+            me&rollbs,R,'Committing';
             $mayh = Rs&mayhaveHere;
             Zs&Here ||= mayh && mayhs&Here
             # require %Here = R:$self%ball (aft %Gens @31)
             !Zs&Here and delete Rs&Zave; return me&tsc,"Z!h";
-            # translate %Zave boost to %Save=3 @5 act
-            (Rs&boost||0) <= 0 and return
+            # translate %Zave%Committing to %Save=3 @5 act
+            Zs&ForZave = 1;
+            !Rs&Committing and return
             Zs&Save = 3;
         },'ift,D'],
         ['Zave','77',&acgtRs{
             $Z = Rs&Zaver;
             if (Zs&Save == 7) {
-                delete Rs&Te.sc.boost;
+                delete Rs&Committing;
                 Rs&Whichto = 'push';
             }
         },'ift,D'],
@@ -975,7 +977,7 @@ Fourism: |
         ↯ at new/gone \n with !\w
       
       thursday:
-        < stop using %boost to %Save
+        stop using %boost to %Save
         < %Unsure etc parameters should gui
            volume - how much to say about changes
            pause - no acting (diffproximate only?)
