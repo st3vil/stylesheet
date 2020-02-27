@@ -857,6 +857,8 @@ Fourism: |
                 # hs&string is always
             }
             else {
+                $old = me&mtsc,co,'Deold','🔁','d';
+                olds&fs = 20;
                 if (!Rs&Described) {
                     # borrow from neighbours
                     neighbours.map(&r{
@@ -865,14 +867,13 @@ Fourism: |
                         me&mtsc,de,'borrow'
                     });
                 }
-                if (!Rs&Described) {
-                    (Rs&boost||0) > 0 and Rs&Describing = 1
+                if (!Rs&Described && !Rs&Describing) {
+                    oldc&s = '...';
+                    olds&hs = 555;
+                    me.nto(R,old,&{ Rs&Describing = 1 });
+                    gs&fs = 7;
                     # can't think until got
-                    if (!hs&string) {
-                        gs&fs = 7;
-                        me&mtsc,co,"...";
-                        return
-                    }
+                    return;
                 }
                 if (Rs&Describing) {
                     delete Rs&Describing;
@@ -881,6 +882,7 @@ Fourism: |
                     Des&now = Gtime();
                     Rs&Described = De;
                     Dey&Zave = R;
+                    !Des&string and debugger
                 }
                 $De = Rs&Described;
                 if (De) {
@@ -889,22 +891,23 @@ Fourism: |
                     # we trust the (earlier) neighbour to calc time
                     # then they will look equal
                     DZ == R and DZs&age = Gtime(Des&now)
-                    
-                    $old = me&mtsc,de,'Deold','🔁'+DZs&age+'s','d';
+                    if (DZs&age > 0) {
+                        me&mtsc,old,'howold',DZs&age+'s' .sc.fs = 5
+                    }
                     $refresh = &{ DZs&Describing = 1 };
                     # can be clicked
                     me.nto(R,old,refresh);
                     # lights up when done
                     De != me&ollbs,R,'Described' and olds&bri = 1.7
                     # do when old
-                    Gtime(Des&now)>20 and refresh()
+                    DZ == R && DZs&age > 20 and refresh()
                     # < when slep/ball/etc wants to
                 }
-                Rs&Unsure = 1;
+                Rs&Zave == 'W' and Rs&Unsure = 1
             }
             $De = Rs&Described || h;
             
-            !Des&string and return me&tsc,"De!string";
+            !ps&Code && !Des&string and return me&tsc,"De!string";
 
             me&rollbs,R,'Settled,Wantsto';
             ly&tree = De;
@@ -963,9 +966,11 @@ Fourism: |
                 $to = goingto == 'pull' ? l : r;
                 $from = to == l ? r : l;
                 froms&dis = 0;
+                
                 Rs&Unsure and tos&bob = '3px dotted black'
                 me.nto(R,to,&s{
                     Rs&Unsure = Rs&Unsure ? 0 : 1
+                    Rs&Unsure and ~Unsure: R.t
                 });
             }
 
@@ -1037,10 +1042,6 @@ Fourism: |
                 res&po = 2;
                 res&left = -2;
                 res&pl = 2;
-            }
-            else {
-                # make the encode refresh visible...
-                old and oldc&s = '🔁'
             }
         },'ift,D'],
         
