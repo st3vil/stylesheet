@@ -847,18 +847,33 @@ Fourism: |
             
             #c timing
             me&rollbs,R,'Described,Whichto,Unsure';
-            # neighbours
+            
+            # neighbours - help save time/space
             $neighbours = [];
             each tn ps&Zaving {
                 $z = ns&Zaver;
                 R != n && zs&Here == h and neighbours.push(n)
             }
+            
+            # particular types, when & how to git them
             if (ps&Code) {
                 # hs&string is always
+                $pull = &{ hs&string = Ps&string };
             }
-            else {
+            elsif (ps&Gens) {
+                $pull = &{
+                    # to reset a %Gens, put %self
+                    # see Gens+ting @31
+                    ps&self = me&Copy,R,Pc&s .c.s;
+                    Rs&Describing = 1;
+                    # we might be out of the light cone
+                    # < should still work, A:n would dome good
+                    #me&mtsc,en,'no-pull','dont-know','B';
+                    Rs&Unsure = 1;
+                };
                 $old = me&mtsc,co,'Deold','🔁','d';
                 olds&fs = 20;
+                
                 if (!Rs&Described) {
                     # borrow from neighbours
                     neighbours.map(&r{
@@ -867,18 +882,29 @@ Fourism: |
                         me&mtsc,de,'borrow'
                     });
                 }
+                
                 if (!Rs&Described && !Rs&Describing) {
-                    oldc&s = '...';
-                    olds&hs = 555;
-                    me.nto(R,old,&{ Rs&Describing = 1 });
-                    gs&fs = 7;
-                    # can't think until got
-                    return;
+                    if (ps&Gens && !hc&b) {
+                        # init picture from %Gens's ting string
+                        # so heads can be compared
+                        $tQ = ps&Q;
+                        $tP = tQs&P;
+                        ps&stringguess = tP && tPs&string;
+                    }
+                    if (!ps&stringguess) {
+                        oldc&s = '...';
+                        olds&hs = 555;
+                        me.nto(R,old,&{ Rs&Describing = 1 });
+                        gs&fs = 7;
+                        # can't think until got
+                        return;
+                    }
                 }
-                if (Rs&Describing) {
+                if (Rs&Describing || ps&stringguess) {
                     delete Rs&Describing;
                     # keep a false %Here
                     $De = Cye(h);
+                    ps&stringguess and Des&string = ps&stringguess
                     Des&now = Gtime();
                     Rs&Described = De;
                     Dey&Zave = R;
@@ -908,7 +934,7 @@ Fourism: |
             $De = Rs&Described || h;
             
             !ps&Code && !Des&string and return me&tsc,"De!string";
-
+            #c look
             me&rollbs,R,'Settled,Wantsto';
             ly&tree = De;
             ry&tree = P;
@@ -946,6 +972,8 @@ Fourism: |
                 else {
                     # start different or their updates
                     Rs&Amountto = 1;
+                    $someSettled = neighbours.filter(n => ns&Settled).length;
+                    someSettled and Rs&Wantsto ||= 'push';
                     Rs&Wantsto ||= 'pull';
                 }
             }
@@ -1008,15 +1036,7 @@ Fourism: |
                 $ma = me&mtsc,en,'make-commit',says,'B';
                 $commit = &{
                     if (Rs&Wantsto == 'pull') {
-                        if (ps&Code) {
-                            hs&string = Ps&string;
-                        }
-                        else {
-                            # to reset a %Gens, put %self
-                            #  and one more %Lines to satisfy git
-                            me&mtsc,en,'no-pull','dont-know','B';
-                            Rs&Unsure = 1;
-                        }
+                        pull();
                         Rs&Whichto = 'pull';
                     }
                     else {
@@ -1024,6 +1044,7 @@ Fourism: |
                         Rs&Committing = 1;
                     }
                 };
+
                 if (Rs&Amountto == 1) {
                     # clickable talk
                     mac&s += "?";
