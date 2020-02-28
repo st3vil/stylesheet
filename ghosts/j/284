@@ -7175,7 +7175,7 @@ Foogla: | # Domes prepare to A=A
                 #!Pc&s and throw "no ting Pcs: "+Pc&of+'/'+P.t
                 
                 s&P = P;
-                Py&decidedel = &n{ T.tcp.set('l3',n) };
+                Py&decidedel = &n{ T.tcp && T.tcp.set('l3',n) };
                 
                 each iC Ps&readyingC {
                     # P completed async, get back to C time
@@ -7204,7 +7204,7 @@ Foogla: | # Domes prepare to A=A
                     T.ok = 1;
                     delete T.done;
                     # for Decode timer:
-                    T.tcp = ch("mem",[C.t,'.','.','.','']);
+                    #T.tcp = ch(c&of,[C.t,'.','.','.','']);
                     T.aft_waits = Gtime();
                     # no cb_gen, returns to Pull_a
                     return
@@ -7297,8 +7297,7 @@ Foogla: | # Domes prepare to A=A
                 if (T.ok && T.aft_waits) {
                     T.aft_waited = Gtime(T.aft_waits);
                     delete T.aft_waits;
-                    $tcp = T.tcp;
-                    tcp.set('l2',G&thime,T.aft_waited );
+                    T.tcp && T.tcp.set('l2',G&thime,T.aft_waited );
                 }
             };
             
@@ -7514,6 +7513,7 @@ Foogla: | # Domes prepare to A=A
             #c Talks.ghost,tmp,mem
             # W that is string
             Rs&Talks.ghost = &TCP{
+                s&string != null && !s&section and throw "/ghost/+ !section"
                 Rs&Talks.W(T,C,P);
                 T.get.url = '/ghost/'+C.t;
                 Ps&noDecode = 1;
