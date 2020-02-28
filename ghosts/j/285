@@ -755,26 +755,17 @@ Fourism: |
         # %Zave <-> %Save completes
         ['Zave','32',&acgtRs{
             $p = Ry&up;
-            $Z = Rs&Zaver;
             if (ps&Gens) {
+                # %Here = s%string)%ball
                 # Gens @25 rolls %self,
                 # Gens+self @31 makes %Here
-                Rs&Here = ps&Here;
+                $h = Rs&Here = me&Rsc,p,'Here';
+                me&rollbs,R,'Describing' and hs&Lines = 3
             }
             elsif (ps&Code) {
-                # %Here = s%string)%ball
+                # %Here = %ball(s%string
                 Rs&Here = pc&s;
-                # it is usually an R %Linesing %string
-                Rs&noHereEncode = 1;
-            }
-            Rs&ForZave = 1;
-            me&rollbs,R,'Describing' and Rs&Save = 2
-            me&rollbs,R,'Committing' and Rs&Save = 3
-        },'ift,D'],
-        ['Zave','77',&acgtRs{
-            if (Rs&Save == 7) {
-                delete Rs&Committing;
-                Rs&Whichto = 'push';
+                me&rollbs,R,'Describing' and 'conjoin'
             }
         },'ift,D'],
         
@@ -879,12 +870,12 @@ Fourism: |
             
             
             #c timing
-            me&rollbs,R,'Described,Whichto,Unsure';
+            me&rollbs,R,'Described,Committing,Whichto,Unsure';
             # return anywhere ahead to avoid business
             
             # neighbours - help save time/space
             $neighbours = [];
-            each tn ps&Zaving {
+            each in ps&Zaving {
                 R != n and neighbours.push(n)
             }
             
@@ -977,7 +968,7 @@ Fourism: |
             
             if (!ps&Code) {
                 # Code may be Here without string
-                Des&string == null and return me&tsc,"De!string"
+                Des&string == null and return me&mtsc,en,"De!string",0,'B'
             }
             
             # into time/desire for
@@ -1000,14 +991,23 @@ Fourism: |
                 hs&string = Ps&string;
                 Rs&Whichto = 'pull';
             }
-
+            
             # notice situation
-            if (Des&string == Ps&string) {
+            $Settle = &{
                 Rs&Settled = Ps&dige;
                 delete Rs&Wantsto;
                 delete Rs&Amountto;
                 Rs&Whichto ||= 'pull';
-            }
+                if (Rs&Committing) {
+                    delete Rs&Committing;
+                    me&mtsc,en,'made-commit',"pushed",'B';
+                    Rs&Whichto = 'push';
+                }
+            };
+            # De may change since push
+            Rs&Committing && Rs&Committing == Ps&string && Settle()
+            # and separately:
+            Des&string == Ps&string and Settle()
             else {
                 if (Rs&Settled || Qc&el == 9) {
                     # we sync, they follow
@@ -1087,8 +1087,13 @@ Fourism: |
                         Rs&Whichto = 'pull';
                     }
                     else {
-                        # Zave @32 shall transfer
-                        Rs&Committing = 1;
+                        # awaits ack
+                        Rs&Committing and mac&s += '..'; return
+                        !Qs&ready && Qc&el != '9' and return me&mtsc,en,'!ready'
+                        !Des&string and return me&mtsc,en,'!string'
+                        
+                        Rs&Committing = Qs&string = hs&string;
+                        ts&_ting(Q)
                     }
                 };
 
