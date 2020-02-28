@@ -7413,14 +7413,15 @@ Foogla: | # Domes prepare to A=A
             Rs&Talks.W = &TCP{
                 T.get.url = '/W/'+C.t;
                 $d = T.get.data = {};
+                $is_write = s&string != null;
                 # clue them to Hobs for it we have around
                 # the current HEAD:
                 $haves = s&havediges || {};
                 Ps&dige and haves[Ps&dige] = Ps&string
-                hak(haves) and d.have = haks(haves).join("\t")
+                hak(haves) && !is_write and d.have = haks(haves).join("\t")
                 s&section and d.se = s&section
                 # the first "can you hold on to..."
-                if (s&string != null) {
+                if (is_write) {
                     # wants to write, '' to delete
                     T.get.type = 'post';
                     # the .1
@@ -7451,7 +7452,12 @@ Foogla: | # Domes prepare to A=A
                     if (r.dige && r.s == null) {
                         if (haves[r.dige]) {
                             r.s = haves[r.dige];
-                            dig(r.s) != r.dige and throw "!security of anyone's Cs&havediges providing Ps&string"
+                            if (dig(r.s) != r.dige) {
+                                is_write and throw "write dig mismatch", dig(d.s)
+                                else {
+                                    throw "!security of anyone's Cs&havediges providing Ps&string"
+                                }
+                            }
                         }
                         else
                         d.s && r.dige == dig(d.s) and r.s = d.s
