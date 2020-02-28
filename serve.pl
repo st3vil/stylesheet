@@ -918,8 +918,9 @@ get '/way/*way' => sub { my ($c) = @_;
     $A->{sc}->{wayjs} = {} if $A->{sc}->{babv} ne $babv;
     $A->{sc}->{babv} = $babv;
 
-    if ( $A->{sc}->{wayjs}->{"$w->{t}"}->{"$w->{sc}->{dige}"} &&
-        $c->param('have') eq $w->{sc}->{dige} ) {
+    my $have = $c->param('have');
+    if ($have && $A->{sc}->{wayjs}->{"$w->{t}"}->{"$w->{sc}->{dige}"} &&
+        $have eq $w->{sc}->{dige} ) {
         return $c->render(text => '')
     }
 
