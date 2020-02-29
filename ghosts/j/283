@@ -1271,7 +1271,6 @@ Packle: |
             # also is=R, specifics
             $laC = me.cbu(Ry&up,'isC');
             
-            
             $ot = me&Mwty,R,'','ot';
             ot && Rs&isC and delete ots&deco;
             
@@ -1363,42 +1362,32 @@ Packle: |
     };
     #c KnowC
     
-    me.KnowC = &acgtRc{
-        !Rs&isC || !Rs&Cit and throw "uwhat"
+    me.Knowfix = &acgtRc{
         $s = Rc&s;
+        c ||= {for='fix'};
         $h = {};
         Rc&noKnowC and return
         me&bewind,R and return
         # have an R:$gk
-        h.r = {};
-        me&ioty,R,'Cit' .map(r => h.r[r.t] = r);
-        !haks(h.r).length and return; # me&tsc,"Noz"
+        h.sides = {};
+        me&ioty,R,'fix' .map(&r{
+            $side = h.sides[rs&fix] ||= {};
+            side[r.t] = r;
+        });
+        me&tsc,'thoughtisC','Kfix','B';
         
-        me&tsc,'thoughtisC','isC!','B';
-        
-        #Rc&noKnowC = 1;
-        
-        #c raw knowing have K/nk/gk
         h.a = {};
         me&Knowa,h,s;
-        # getting baked into:
-        # top/groupr(r(gk))/groupology()/grouping(Km)/groupthing(Kn)
-        # Knc&n is an r%Cit out there
-        $top = h.top = G&Cye,["KnowC",1];
-        # which unifies C.* so we can style it up
-        # across hemispheres especially,
-        #   crescent moon shaped, so the c can have its sc near it
-        # should gather at the edge
-        
-        each nk,r h.r {
+        $top = h.top = G&Cye,["Knowfix",1];
+        each nk,r h.sides {
             # q for r for y,c,sc
             $q = fio(top,r.t,[r.t,1,{r:r},'groupr']);
             # which may be as R or modulat,
             # wanting to apply as much effect to either
             # always have groupr
-            $c = {};
-            c.onlynk = nk;
-            c.enKm = &K,Kc{
+            $cK = {};
+            cK.onlynk = nk;
+            cK.enKm = &K,Kc{
                 # r/* known
                 $k = fio(q,'known'); ks&groupology = 1;
                 # r/* known by K
@@ -1406,7 +1395,7 @@ Packle: |
                 $Km = fio(k,K,[K,1,{Kc:Kc},'grouping']);
                 return Km
             };
-            c.enKn = &Km,nk,gk,v,Ka{
+            cK.enKn = &Km,nk,gk,v,Ka{
                 $Kn = fio(Km,gk,[gk,1,{s:gk,Ka:Ka},'groupthing,fs:7,mar:0.3']);
                 
                 # find r(nk)/n($v
@@ -1430,10 +1419,89 @@ Packle: |
                     me&tsc,"gathermodulatsof:"+gk
                 }
             }
-            me&KnowKn,h,s,c;
+            me&KnowKn,h,s,cK;
         }
+        return me&KnowSmush,R,h,s,c
         
-        #c zuct having noticed $r/* they want
+    };
+    
+    #c KnowC
+    me.KnowC = &acgtRc{
+        !Rs&isC || !Rs&Cit and throw "uwhat"
+        $s = Rc&s;
+        c ||= {};
+        $h = {};
+        Rc&noKnowC and return
+        me&bewind,R and return
+        # have an R:$gk
+        h.r = {};
+        me&ioty,R,'Cit' .map(r => h.r[r.t] = r);
+        !haks(h.r).length and return; # me&tsc,"Noz"
+        
+        me&tsc,'thoughtisC','isC!','B';
+        
+        #Rc&noKnowC = 1;
+        
+        # raw knowing have K/nk/gk
+        h.a = {};
+        me&Knowa,h,s;
+        # getting baked into:
+        # top/groupr(r(gk))/groupology()/grouping(Km)/groupthing(Kn)
+        # Knc&n is an r%Cit out there
+        $top = h.top = G&Cye,["KnowC",1];
+        # which unifies C.* so we can style it up
+        # across hemispheres especially,
+        #   crescent moon shaped, so the c can have its sc near it
+        # should gather at the edge
+        
+        each nk,r h.r {
+            # q for r for y,c,sc
+            $q = fio(top,r.t,[r.t,1,{r:r},'groupr']);
+            # which may be as R or modulat,
+            # wanting to apply as much effect to either
+            # always have groupr
+            $cK = {};
+            cK.onlynk = nk;
+            cK.enKm = &K,Kc{
+                # r/* known
+                $k = fio(q,'known'); ks&groupology = 1;
+                # r/* known by K
+                # C for the grouping (Be.C.*)
+                $Km = fio(k,K,[K,1,{Kc:Kc},'grouping']);
+                return Km
+            };
+            cK.enKn = &Km,nk,gk,v,Ka{
+                $Kn = fio(Km,gk,[gk,1,{s:gk,Ka:Ka},'groupthing,fs:7,mar:0.3']);
+                
+                # find r(nk)/n($v
+                $n = me&ioty,r,'Cit',gk [0]
+                # < should always Rbit by path out of over
+                #   otherwise its Rname, sometimes preferred
+                || v && typeof v == 'object'
+                    && me&ioty,r,'Cit'
+                        .filter(r => rc&s == v)[0];
+
+                if (n) {
+                    # ground relating to this gk
+                    # < %Cit%isC%ot should be the gk path?
+                    Knc&n = n;
+                    # attempt to claim the n
+                    # < while recently boosty?
+                    ac(q,'zuction',n,'K',0)
+                        .push(Kn);
+                }
+                else {
+                    me&tsc,"gathermodulatsof:"+gk
+                }
+            }
+            me&KnowKn,h,s,cK;
+        }
+        return me&KnowSmush,R,h,s,c
+    };
+    #c KnowSmush
+    me.KnowSmush = &acgtRhsc{
+        c ||= {};
+        # zuct having noticed $r/* they want
         $zuct = &Kn,r,n{
             $M = Kns&z ||= [];
             # grouping modulat hosts
