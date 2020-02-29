@@ -1360,18 +1360,20 @@ Packle: |
             }
         }
     };
-    #c KnowC
-    
+    #c KnowC/fix
+    # just slightly! different that KnowC
     me.Knowfix = &acgtRc{
         $s = Rc&s;
-        c ||= {for='fix'};
+        c ||= {};
+        c.for ||= 'fix';
         $h = {};
         Rc&noKnowC and return
+        Rc&noKnowC = 1;
         me&bewind,R and return
         # have an R:$gk
-        h.sides = {};
+        h.r = {};
         me&ioty,R,'fix' .map(&r{
-            $side = h.sides[rs&fix] ||= {};
+            $side = h.r[rs&fix] ||= {};
             side[r.t] = r;
         });
         me&tsc,'thoughtisC','Kfix','B';
@@ -1379,12 +1381,9 @@ Packle: |
         h.a = {};
         me&Knowa,h,s;
         $top = h.top = G&Cye,["Knowfix",1];
-        each nk,r h.sides {
-            # q for r for y,c,sc
-            $q = fio(top,r.t,[r.t,1,{r:r},'groupr']);
-            # which may be as R or modulat,
-            # wanting to apply as much effect to either
-            # always have groupr
+        each nk,sides h.r {
+            # q for r for y,c,sc (if present)
+            $q = fio(top,nk,[nk,1,{},'groupr']);
             $cK = {};
             cK.onlynk = nk;
             cK.enKm = &K,Kc{
@@ -1396,14 +1395,21 @@ Packle: |
                 return Km
             };
             cK.enKn = &Km,nk,gk,v,Ka{
-                $Kn = fio(Km,gk,[gk,1,{s:gk,Ka:Ka},'groupthing,fs:7,mar:0.3']);
+                $Kn = fio(Km,gk,[gk,1,
+                    {s:gk,r:r,Ka:Ka},
+                    'groupthing,fs:7,mar:0.3'
+                ]);
                 
                 # find r(nk)/n($v
-                $n = me&ioty,r,'Cit',gk [0]
+                $whr = &k{
+                    return me&ioty,R,k
+                        .filter(r => rs&fix == nk)
+                };
+                $n = whr(gk) [0]
                 # < should always Rbit by path out of over
                 #   otherwise its Rname, sometimes preferred
                 || v && typeof v == 'object'
-                    && me&ioty,r,'Cit'
+                    && whr()
                         .filter(r => rc&s == v)[0];
 
                 if (n) {
@@ -1421,7 +1427,13 @@ Packle: |
             }
             me&KnowKn,h,s,cK;
         }
-        return me&KnowSmush,R,h,s,c
+        if (R.t == 't') {
+            me&tsc,"Gothere"
+            n mo  $s:h.top,R %Zavmo:2
+            me&nu,"Knowfix",h
+        }
+        #h.top.sc.z[0]
+        #me&KnowSmush,R,h,s,c;
         
     };
     
@@ -1501,6 +1513,9 @@ Packle: |
     #c KnowSmush
     me.KnowSmush = &acgtRhsc{
         c ||= {};
+        c.for ||= 'Cit';
+        $top = h.top;
+        
         # zuct having noticed $r/* they want
         $zuct = &Kn,r,n{
             $M = Kns&z ||= [];
@@ -1554,12 +1569,18 @@ Packle: |
             }
         }
         
-        # zuct remaining r/* into unknown
+        #c zuct remaining r/* into unknown
         each iq N {
             $r = qc&r;
-            
-            $out = rs&z && rs&z
-                .filter(r => rs&Cit && !rs&zuctedto);
+            # from R/$nk:r/$gk or R/$gk
+            r ||= R;
+            $out = c.for == 'fix' ?
+                # looks for %fix=$nk
+                me&ioty,r .filter(r => r.sc[c.for] == q.t)
+                # or all these things
+            :   me&ioty,r,c.for;
+            # not zuctedto to (Km/Kn)
+            out = out.filter(r => !rs&zuctedto);
             
             if (out && out.length) {
                 fio(q,['KnowC-bound',5,{s:')'},
@@ -1578,7 +1599,7 @@ Packle: |
                 #    and the thing gets its own name more often
                 each in out {
                     $gk = n.t;
-                    $g = Rc&s[r.t];
+                    $g = Rc&s[q.t];
                     if (g && nc&s && g[n.t] != nc&s) {
                         $topt = haks(g).filter(&gk,{
                             return g[gk] == nc&s
@@ -1587,7 +1608,7 @@ Packle: |
                         });
                         if (topt.length < 1) {
                             # assumes nc&s == a gk v 
-                            isC(nc&s) and ~Toptnot: r.t, n.t, ki(haks(g))
+                            isC(nc&s) and ~Toptnot: q.t, n.t, ki(haks(g))
                         }
                         elsif (topt.length > 1) {
                             # probably knows gk anyway
@@ -1643,8 +1664,6 @@ Packle: |
         # label, 'c{', path in
         $N = me&ioty,top,'groupr';
         each iq N {
-            $r = qc&r;
-            
             # non-%groupology
             # < put higher than groupologies,
             #   to spew open !%va
@@ -1652,6 +1671,9 @@ Packle: |
             $l = fio(q,'label');
             ls&label = 1;
             qs&z.unshift(qs&z.pop());
+            
+            $r = qc&r;
+            !r and continue
             
             # < zuct modulats?
             #   supposing compressors go looking for traw
@@ -1915,10 +1937,10 @@ Packle: |
         $N = me&ioty,top,'groupr';
         each iq N {
             $r = qc&r;
-            $c = rs&C;
+            $c = r && rs&C;
             if (short) {
                 # inline
-                cs&dis = 2;
+                c and cs&dis = 2
                 # drop KnowC_K
                 me&ioty,q,['','grouping','label'] .map(&n{
                     n.t == 'KnowC_K' and ns&dis = 0
@@ -1928,8 +1950,18 @@ Packle: |
             # < our Mw/*/* is boost,t,sym,ot,thoughtisC
             
             # q/* wants to end up in:
-            $KM = me&Mw,r,'KnowC';
-            KM.push(...qs&z);
+            if (r) {
+                $KM = me&Mw,r,'KnowC';
+                KM.push(...qs&z);
+            }
+            else {
+                $ca = me&case,'Knowfix-'+q,t;
+                cay&can('c','caseof-'+q.t);
+                $de = cay&can('o','describe');
+                $l = dey&can('i',q.t,'fs:12');
+                $fi = cay&can('c','fixens');
+                fis&z = [...qs&z];
+            }
         }
         $c = Rs&C;
         # block makes solid background
