@@ -769,6 +769,7 @@ Fourism: |
           fold around together
           share same diffs
           gui
+        # together
           should shrink right up: o - overall com dot
            (~|-| ) inside/next to o
             cluing sync to both stores:
@@ -776,7 +777,12 @@ Fourism: |
              o~ tmp stored
              o- fully stored
            o -> % etc unpacks its friends
+        # apart
+          0: disappear
+          1: sym+%Zave only
+          2: everything
            %important modulat should float to the top
+          
           parameters
            volume - how much to say about changes
            pause - no acting (%Unsure currently?)
@@ -792,7 +798,7 @@ Fourism: |
             $p = Ry&up;
             if (!ps&Zavmo || Rs&Zavmo > 1) {
                 Rs&Zatop = [];
-                s&fs = 12;
+                #s&fs = 12;
                 Rs&zoom = 3;
                 if (!Rc&b) {
                     # start tiny unless problematic
@@ -834,7 +840,7 @@ Fourism: |
             scan.is != 'C' &&
             n sym 12 $s:scan.is %fs:15,ls:-0.1,zi:-1,hs:4955
             
-            if (scan.is != 'R' || me&ollbs,R,'Zasope') {
+            if (Rs&opecsc && (scan.is != 'R' || me&ollbs,R,'Zasope')) {
                 Rs&Knowfix = 1;
                 me&fixatfour,R,s;
             }
@@ -941,7 +947,8 @@ Fourism: |
         ['Zave','68',&acgtRs{
             # chop up a displaycase
             s&dis = 1;
-            $g = me&case;
+            me&rollbs,R,'Described,Committing,Whichto,Unsure';
+            $g = me&case,2;
             # can do:!
             #gy&can('ope',&{ while_open() });
             
@@ -953,9 +960,44 @@ Fourism: |
             # big < and/or > symbols
             $l = symy&can('n','local');
             $r = symy&can('n','remote');
-            ly&label = me&mtsc,l,'local','<','B';
-            ry&label = me&mtsc,r,'remote','>','B';
+            ly&label = me&mtsc,l,'local','◀','B';
+            ry&label = me&mtsc,r,'remote','▶','B';
             [l,r].map(&s{ s = sy&label; ss&lh = 0.5 });
+            
+            # settings after logic may change them
+            $and_finally = &{
+                # we have eg to,from = l,r
+                #  where 'pull' == (Rs&Wantsto || Rs&Whichto)
+                # <> control/show flow
+                #  extra clicking makes Unsure
+                #   and could open the git log etc
+                if (!Rs&Whichto || (Rs&Wantsto && Rs&Amountto < 2)) {
+                    # <> flop direction of the patch
+                    $Wantingto = &s{
+                        Rs&Wantsto == s and return Rs&Unsure = 1
+                        Rs&Wantsto = s
+                    };
+                    me.nto(R,l,&s{ Wantingto('pull') });
+                    me.nto(R,r,&s{ Wantingto('push') });
+                }
+                else {
+                    # single < once pulled
+                    froms&dis = 0;
+                    me.nto(R,to,&s{ Rs&Unsure = 1 });
+                }
+
+                if (Rs&Whichto) {
+                    # direction it was going
+                    $was = Rs&Whichto == 'pull' ? l : r;
+                    wass&bri = 1.7
+                }
+                
+                if (Rs&Unsure) {
+                    # resume autopush, various causes
+                    $un = me&mtsc,sym,'Unsure-re-autogit','i'
+                    me.nto(R,un,&s{ Rs&Unsure = 0; });
+                }
+            };
             
             # where the patch etc may live
             $co = gy&can('c','commit','zi:30,po:2');
@@ -980,8 +1022,6 @@ Fourism: |
             
             
             #c timing
-            me&rollbs,R,'Described,Committing,Whichto,Unsure';
-            # return anywhere ahead to avoid business
             
             # neighbours - help save time/space
             $neighbours = [];
@@ -1085,9 +1125,6 @@ Fourism: |
             me&rollbs,R,'Settled,Wantsto';
             ly&tree = De;
             ry&tree = P;
-            # flop direction of the patch
-            me.nto(R,l,&s{ Rs&Wantsto = 'pull' });
-            me.nto(R,r,&s{ Rs&Wantsto = 'push' });
             
             # faulter the autocommit
             Rs&Settled != Ps&dige and delete Rs&Settled
@@ -1137,40 +1174,19 @@ Fourism: |
                 Rs&Amountto ||= 1
                 Rs&Unsure and Rs&Amountto = 1
             }
-
-            if (!Rs&Whichto || (Rs&Wantsto && Rs&Amountto < 2)) {
-                # l/r switch patch direction
-                # < parameters, eg:
-                #Rs&Unsure and tos&bor = '3px dotted black'
+            
             }
-            else {
-                $goingto = Rs&Wantsto || Rs&Whichto;
-                $redirection = goingto != Rs&Whichto;
-                $to = goingto == 'pull' ? l : r;
-                $from = to == l ? r : l;
-                froms&dis = 0;
-                
-                Rs&Unsure and tos&bob = '3px dotted black'
-                me.nto(R,to,&s{
-                    Rs&Unsure = Rs&Unsure ? 0 : 1
-                    Rs&Unsure and ~Unsure: R.t
-                });
-            }
-
-            if (Rs&Whichto) {
-                # direction it was going
-                $to = Rs&Whichto == 'pull' ? l : r;
-                tos&bri = 1.7
-            }
-            }
+            
+            $goingto = Rs&Wantsto || Rs&Whichto;
+            $redirection = goingto != Rs&Whichto;
+            $to = goingto == 'pull' ? l : r;
+            $from = to == l ? r : l;
                 
             #c patch
             if (Rs&Wantsto) {
                 Rs&Amountto ||= 1;
-                $to = Rs&Wantsto == 'pull' ? l : r;
+                
                 tos&sha = '3 3 3 777';
-
-                $from = to == l ? r : l;
 
                 # < patch chunk pluck
                 # < commit with message, put somewhere
@@ -1229,6 +1245,7 @@ Fourism: |
                 res&left = -2;
                 res&pl = 2;
             }
+            and_finally();
         },'ift,D'],
         #c Zif
         ['Zif','3',&acgtRs{
