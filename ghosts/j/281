@@ -3138,11 +3138,16 @@ Soogle: | # start from Sevo
     #  eg find %ting between %ting and %tingspot
     me.cbub = &Rkbc{
         c ||= {};
+        # k - climb for
+        typeof k == 'object' and c.refk = 1
+        
+        # b - climb until
         typeof b == 'string' and c.neggk = b; b = null
         b && !isC(b) and c = b; b = null
         isfu(b) and c.boundy = b
         else
         b and c.bound = b
+        
         $alongthe = &s{
             return c.boundy && c.boundy(s)
             || c.bound && s == c.bound
@@ -3150,11 +3155,11 @@ Soogle: | # start from Sevo
         };
         $N = me.cby(R,&s{ return alongthe(s)
             # k may be an inclusive boundary, returns path
-            || typeof k == 'object' ? s == k : s.sc[k]
+            || c.refk ? s == k : s.sc[k]
         });
         # hit boundary, no path
         alongthe(N[0]) and return
-        return N[0]
+        return c.refk ? N : N[0]
     }
     
     # timewards
