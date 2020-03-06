@@ -2473,7 +2473,16 @@ Soogle: | # start from Sevo
         }
         
         $srv = &{
-            T.wake and G&yl,0.001,4c&callback; delete T.wake
+            !T.wake and return
+            # e-nvelope the finished e with one to wake its target
+            #  similar can be used to send things,
+            #   unpacking e = ec&e for an act on arrival
+            $e = Cye(['wake','',{e:C}]);
+            ec&wake = delete T.wake;
+            $cb = &{
+                4c&callback(e);
+            };
+            G&yl,0.001,cb;
         };
 
         # go up C path until bingoed
@@ -2482,6 +2491,8 @@ Soogle: | # start from Sevo
         $elo = delete 4s&eloncer;
         if (elo) {
             elo(A,C,G,T,lop[0]);
+            s&edone = 'eloncer';
+            s&n = lop[0];
             srv();
             return
         }
@@ -2497,6 +2508,9 @@ Soogle: | # start from Sevo
             ~Elvised: medo, '>3:what ...'
             $ret = me[medo](A,C,G,T,n);
             G&yl:123,&{ msg.set('what',ki(ret)) };
+            s&edone = 'medo';
+            s&medo = medo;
+            s&n = n;
             srv();
             return
         }
@@ -2505,9 +2519,13 @@ Soogle: | # start from Sevo
         # puts 4c&elvising as the event of the 4c&callback
         #   then inside callback J:Fourier oscs me.Elvising
         #    finding Rs&elvis = Gazer, etc
+        $cb = &{
+            4c&callback(C);
+        };
+        #~Insideon: ki(c&slope,2)
+        # GONER:
         4s&elvising = C;
-        ~Insideon: ki(c&slope,2)
-        G&yl,0,4c&callback;
+        G&yl,0,cb;
     };
     #c Fourier < in-time elvising
     me.Ja.Fourier = &acgt{
@@ -2752,6 +2770,9 @@ Soogle: | # start from Sevo
             each kv T.qua {
                 el.sc[k] = v;
             }
+            T.qua and T.wake ||= R;
+            R == T.wake && Rs&wakesparent and T.wake = Ry&up
+            
             # strategise forth
             $r = refresh;
             if (r) {
@@ -2780,6 +2801,7 @@ Soogle: | # start from Sevo
     };
     # ESC from textinput
     me.sayeth = &acgts{
+        throw "GONER"
         ~Sayeth: ki(A), c&s
         T.qua.sayeth = c&s;
     };
@@ -4573,6 +4595,7 @@ Soogle: | # start from Sevo
         #c ballope
         # < sprout usual inquisitivity/saveness?
         ['etype','3',&acgtRs{
+            Rs&wakesparent = 1;
             n saying   %e,fs:8
             me&Tie,R,'sayeth',1;
             $say = Rs&sayeth;
