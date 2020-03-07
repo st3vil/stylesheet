@@ -456,7 +456,7 @@ Fourism: |
         B = Gc&B = G&Cye,[A.t,''];
         Bs&A = A;
         Bs&z = [];
-        $g = A.ground = G&Cye,[me.timestamp(),{},{root:1},{}];
+        $g = 4c&s = A.ground = G&Cye,[me.timestamp(),{},{root:1},{}];
         !me.inita.ed and me&inita
         
         # 1/10th attend
@@ -496,7 +496,7 @@ Fourism: |
             $e = gc&e;
             !e and return
             $emsg =
-            ~>8 e: '>3:IS','>7:pathin'
+            ~>8 e: '>3:IS','>7:pathin','>3:ts '+4c&s.t.substr(-5)
             # ec&wake may be alone, or come from:
             if ((e.t.includes('click')||1) && ec&slope) {
                 $sl = ec&slope.slice().reverse();
@@ -527,33 +527,34 @@ Fourism: |
                 !isR(r) and throw "non-R ecwake"
                 $JR = me.cbu(r,'JRom');
                 $l = me.cby(r);
-                # concentrate
-                JR.t != 'Elfor' and return emsg.set('pathin','<>')
                 # R(c&b)+ - historical R they pointed to
                 es&tunnelin = l;
                 # Rc&b - last R to happen
-                es&tunnel = l = l.map(n => me&yfuture,n );
+                #  yfuture can climb to aborted X
+                es&tunnel = l = l.map(n => me&yfuture,n,0,{merged:1} );
                 # must have reawakens to tunnel
-                !l.filter(n => ns&reawakens).length and return emsg.set('pathin','<------>')
+                !l.filter(n => ns&reawakens).length and es&beawake = 1
                 # this R
-                $li = l.indexOf(R);
+                $li = l.indexOf(Rc&b);
                 li < 0 and throw "noRfut",R,e,l
                 l[li] = Rc&b;
+                es&tunneli = li;
+                
                 # %tunneling builds tunnel_now
                 ac(e,'tunnel',Rc&b,'now',R);
-                
                 emsg.set('pathin',l.slice(li).map(n=>n.t).join('/'));
+                
                 
                 # don't happen
                 Rs&sleeping = 1;
                 # keep non-happening A.3 history
                 me&recycleRbitXz,R;
-                $ee = e;
                 Rs&icate = &{
                     # make something to happen
                     $c = ex({},JRs&JRom);
                     c.tunneling = e;
-                    #~>3 Domewake: ki(e,4.22)
+                    # concentrate
+                    JR.t != 'Elfor' and es&beawake = 1
                     $n = me&Rom,R,c;
                     4s&pathin = {path:[...l],n,e};
                 };
@@ -569,19 +570,45 @@ Fourism: |
         #c tunneling
         ['sleeping+tunneling','94',&acgtRs{
             $b = Rc&b;
+            # impersonate the last awake sc fuller
+            #  now that we won't be switching things on
+            #  eg inheritsc can't be trusted
             each kv b.sc {
                 R.sc[k] ||= v;
             }
         },'ift,D'],
+        ['Elfor','13',&acgtRs{
+            Rs&Timefrom = 4c&s.t.substr(-5);
+        },'ift,D,sleeping'],
         ['tunneling','18',&acgtRs{
             $e = Rs&tunneling;
+            Rs&sleeping and debugger;
+            es&beawake and return
             $l = es&tunnel;
             
+            $tohere = l.slice(0,es&tunneli+3).map(n=>n.t).join('/');
+            if (!Rc&b) {
+                ~>2 NOB: R.t, tohere
+                return
+            }
+            
             $li = l.indexOf(Rc&b);
-            li < 0 and ~linofound: R.t
+            $notch = l[es&tunneli+2];
+            
+            li < 0 and ~linofound: R.t, tohere, '>3 '+notchs&Timefrom
+            #li < 0 and debugger;
             li < 0 and return;
+            #es&tunneli = li + 1;
+            if (li < 0) {
+                # when is this other self?
+                li = es&tunneli+1;
+                $b = es&tunnel[li];
+                b.t != R.t and debugger;
+            }
             #throw 'nobtunnel', R, e, l
-            ac(e,'tunnel',Rc&b,'now',R);
+            es&tunneli = li;
+            
+            ac(e,'tunnel',b||Rc&b,'now',R);
             
             # out of the tunnel
             li+1 == l.length and ~>2 Out at: R.t
@@ -603,6 +630,11 @@ Fourism: |
                 $aw = bs&reawakens;
                 aw and c.reawakens = aw
                 !aw and aw = me.cbu(R,'reawakens'); aw = aw && aws&reawakens
+                # strategy for a widely held gk
+                #  eg %Slei, %Codon, %ball
+                # < sleep other types inside (they could)
+                #   near: which parent to T.wake
+                #    after A:eing something somewhere
                 $use = 0;
                 each tw aw {
                     b.sc[t] and use = w
@@ -613,6 +645,10 @@ Fourism: |
                             hak(b.sc,k) and c[k] = b.sc[k]
                         });
                     }
+                }
+                if (bs&ball) {
+                    c.ball = 1;
+                    bs&tightly and c.tightly = 1;
                 }
                 # has more tunneling
                 c.tunneling = e;
@@ -634,6 +670,7 @@ Fourism: |
         ['Evelse','291',&acgtRs{
             me&introqua,[R,'A'],{boost:1}
             me&zu,"4s&pathin",4s&pathin;
+            me&zu,"4s&Slsz",4s&Slsz;
             
             me&zu,"A",A.4;
             
@@ -862,7 +899,23 @@ Fourism: |
         # < %Zavmo for X
         
         # mostly
-        #  elvis() talks to JRom of A.4
+        #  < elvis() talks to JRom of A.4
+        #    from inside A.4, brokering async
+        # ! occasional linofound
+        #      wasn't: throw while tunneling breaks history (later)
+        #    see notch, why is it from thence?
+        #    < want to replay testily,
+        #      look at various angles ... while...
+        #  < accept name match?
+        #   
+        
+        # tunneling:
+        # ! inside %Timeding many times, then outside
+        #   seems to leave many sames in z
+        # ! can't boost right after creating a %ball
+        #     
+        
+        # see Fourism/tunneling:
         #  to find some strategy for sneaking in
         #   past R%sleeping to the wakers
         #   re-argumenting it re strategy,
@@ -872,6 +925,7 @@ Fourism: |
         #     < could Ring-wait the outsiders until
         #       inners are certain they don't need
         #       their surroundings after doing stuff
+        
         ['Slei','278',&acgtRs{
             !(Rs&ball || Rs&Gens) and delete Rs&Slei; return
             ac(R,'inheritsc','Slei');
@@ -892,6 +946,7 @@ Fourism: |
             
             $Sl = me&ioty,R,'Timeding' [0];
             #me&nu,"Sl",Sl;
+            Sls&z.length > 3 and 4s&Slsz = Sls&z.slice();
             each ir Sls&z {
                 i = i+' '+(Rc&N.indexOf(r)>=0 ? "wake" : "s");
                 me&tsc,i,i+":"+r.t .sc.dis = 1;
@@ -953,7 +1008,9 @@ Fourism: |
             Rs&country++;
             me&tsc,'%Codon','byb:'+Rs&country,'G';
             
-            # cs&count == 10 and throw "wobble"
+            #cs&count == 10 and throw "wobble"
+            
+            s.t == 'Vame2' and ~>4 Vame2:
             
             $p = me.cbu(R,'Timeding');
             s.t == 'Vame3' and ps&Vawake = R

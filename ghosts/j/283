@@ -2503,7 +2503,8 @@ Packle: |
     #c Display R ender
     # bunch of Rs with Mw etc get html'd under R.y.up
     #   for the R:Thingyoudo under the R:C visualising
-    me.Display = &acgtr{
+    me.Display = &acgtrc{
+        c ||= {};
         me&Mlimits,r;
 
         each iR rc&N {
@@ -2517,7 +2518,12 @@ Packle: |
         $t = 'Display';
         #rs&task and t += ":"+rs&task
         $zuctations = [];
-        $d = Ron(r,t,r,0,&Rs{
+        $d = Ron(r,t,r,&Rs{
+            if (s == r) {
+                # first accepts eg Rs&igV to drop history
+                c && ex(R.sc,c);
+            }
+        },&Rs{
             Rc&nl = 0;
             !s.sc and debugger;
             # unaligns Rc&N/refs (not put in N)
@@ -2547,11 +2553,13 @@ Packle: |
                     Rs&down.push(...ss&down);
                 }
                 # slep could be in there ^ want to update it?
-                if (ss&sleeping) {
+                if (ss&sleeping || c.sleeping) {
                     Rs&originsleeping = 1;
                     Rs&nofurtherDisplay = 1;
                     # wakers inside replace
                     each in ss&z {
+                        # or not if we're Display%sleeping after errors (me.Rom)
+                        c.sleeping and continue
                         sc&N.indexOf(n) < 0 and continue
                         me&Ret,R,{t:n.t,s:n};
                     }

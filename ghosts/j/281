@@ -2756,7 +2756,8 @@ Soogle: | # start from Sevo
             $R = ns&R;
             
             # make the adjustment
-            me[ns&elvis](A,C,G,T,R);
+            $s = c&slope.slice(-1)[0];
+            me[ns&elvis](A,C,G,T,R,s);
             
             if (T.non) {
                 T.non = 'drag' and delete T.non
@@ -2788,8 +2789,12 @@ Soogle: | # start from Sevo
     };
     #c e-do boost/say/drag
     # click up/down anywhere
-    me.Gazel = &acgtR{
-        C.t == 'says' and return T.qua.sayeth = c&s
+    me.Gazel = &acgtRs{
+        if (C.t == 'says') {
+            # renaming requires context
+            s && s.t == 't' and T.wake = Ry&up
+            return T.qua.sayeth = c&s
+        }
         C.t.includes('S+') and return T.qua.play = Rs&play ? 0 : 1
         
         Rs&boost ||= 0;
@@ -3188,7 +3193,8 @@ Soogle: | # start from Sevo
     }
     
     # timewards
-    me.yfuture = &acgtrR{
+    me.yfuture = &acgtrRc{
+        c ||= {};
         if (r.constructor == Array) {
             # keep an array up to date,
             # not changing into ny&R
@@ -3206,7 +3212,7 @@ Soogle: | # start from Sevo
             r = ry&future;
             i-- < 0 and throw "manyfuture"
         }
-        if (rc&X && rc&X.newz) {
+        if (rc&X && rc&X.newz && !c.merged) {
             # is being a b
             $X = rc&X;
             $ri = X.z.indexOf(r);
