@@ -523,6 +523,8 @@ Fourism: |
             if (ec&wake) {
                 # pointer
                 $r = ec&wake;
+                r == 1 and return
+                !isR(r) and throw "non-R ecwake"
                 $JR = me.cbu(r,'JRom');
                 $l = me.cby(r);
                 # concentrate
@@ -531,6 +533,8 @@ Fourism: |
                 es&tunnelin = l;
                 # Rc&b - last R to happen
                 es&tunnel = l = l.map(n => me&yfuture,n );
+                # must have reawakens to tunnel
+                !l.filter(n => ns&reawakens).length and return emsg.set('pathin','<------>')
                 # this R
                 $li = l.indexOf(R);
                 li < 0 and throw "noRfut",R,e,l
@@ -538,20 +542,20 @@ Fourism: |
                 # %tunneling builds tunnel_now
                 ac(e,'tunnel',Rc&b,'now',R);
                 
-                l = l.slice(li);
-                emsg.set('pathin',l.map(n=>n.t).join('/'));
+                emsg.set('pathin',l.slice(li).map(n=>n.t).join('/'));
                 
                 # don't happen
                 Rs&sleeping = 1;
                 # keep non-happening A.3 history
                 me&recycleRbitXz,R;
+                $ee = e;
                 Rs&icate = &{
                     # make something to happen
                     $c = ex({},JRs&JRom);
                     c.tunneling = e;
                     #~>3 Domewake: ki(e,4.22)
                     $n = me&Rom,R,c;
-                    4s&pathin = {path:[...l],n};
+                    4s&pathin = {path:[...l],n,e};
                 };
             }
         },'ift,D'],
@@ -562,15 +566,61 @@ Fourism: |
             me&applyRbitX,R;
         },'ift,D'],
         
-        ['tunneling','22',&acgtRs{
+        #c tunneling
+        ['sleeping+tunneling','94',&acgtRs{
+            $b = Rc&b;
+            each kv b.sc {
+                R.sc[k] ||= v;
+            }
+        },'ift,D'],
+        ['tunneling','18',&acgtRs{
             $e = Rs&tunneling;
             $l = es&tunnel;
-            $li = l.indexOf(Rc&b);
-            li < 0 and throw 'nobtunnel',R,e,l
-            ac(e,'tunnel',Rc&b,'now',R);
-            # decide to sleep or wake,
-            #  generate children for more tunneling
             
+            $li = l.indexOf(Rc&b);
+            li < 0 and ~linofound: R.t
+            li < 0 and return;
+            #throw 'nobtunnel', R, e, l
+            ac(e,'tunnel',Rc&b,'now',R);
+            
+            # out of the tunnel
+            li+1 == l.length and ~>2 Out at: R.t
+            li+1 == l.length and return
+            
+            # don't happen
+            Rs&sleeping = 1;
+            me&recycleRbitXz,R;
+            
+            # tunnel awake
+            # < join many involves separating the es&tunnel
+            $N = l[li+1];
+            !isar(N) and N = [N]
+            each ib N {
+                $c = {t:b.t};
+                # < subtly repointed with slep sometimes
+                c.s = bc&s;
+                # it knows {$gk:{use}}
+                $aw = bs&reawakens;
+                aw and c.reawakens = aw
+                !aw and aw = me.cbu(R,'reawakens'); aw = aw && aws&reawakens
+                $use = 0;
+                each tw aw {
+                    b.sc[t] and use = w
+                }
+                if (use) {
+                    if (use.rollbs) {
+                        use.rollbs.split(',').map(&k{
+                            hak(b.sc,k) and c[k] = b.sc[k]
+                        });
+                    }
+                }
+                # has more tunneling
+                c.tunneling = e;
+                $r = me&Ret,R,c;
+                me&zN,r;
+                Rs&z.filter(n => n == r).length != 1 and debugger;
+            }
+            # depending on the la awakeness theory
         },'ift,D,sleeping'],
         
         ['mune','3',&acgtRs{
@@ -586,6 +636,9 @@ Fourism: |
             me&zu,"4s&pathin",4s&pathin;
             
             me&zu,"A",A.4;
+            
+            # %ball transfigurations (move,copy,etc)
+            n Elvito  R %Tool
             #n Elviso  $s:4s&elvisory %R:ball
         },'ift,D'],
         
@@ -620,8 +673,6 @@ Fourism: |
             me&mtsc,ti,'timeof','/','g'
             me&mtsc,ti,'timeout',4s&nonms,'6'
             
-            # %ball transfigurations (move,copy,etc)
-            n Elvito  R %Tool
             # %ball activations (just %R -> JRom)
             Rs&playsheet = {
                 ball: &acgtR{
@@ -836,11 +887,11 @@ Fourism: |
         ['Flaring','89',&acgtRs{
             # to get R%sleeping to hit eg ball+sleeping
             ah(R,'reawakens','Slei',{
-                rollbsc:'ball,Flaring,Slei,Timeding,Timedin',
+                rollbs:'ball,Flaring,Slei,Timeding,Timedin',
             });
             
             $Sl = me&ioty,R,'Timeding' [0];
-            me&nu,"Sl",Sl;
+            #me&nu,"Sl",Sl;
             each ir Sls&z {
                 i = i+' '+(Rc&N.indexOf(r)>=0 ? "wake" : "s");
                 me&tsc,i,i+":"+r.t .sc.dis = 1;
