@@ -657,7 +657,10 @@ $poll->{doing} = sub { my ($o) = @_;
     while (my ($p,$i) = each %{$poll->{ways} }) {
         my $t = $p;
         $t = $poll->{wayt}->{"$p"} ||= do { $t =~ s/\W/-/sg; $t };
-        my $dig = readlink "wormhole/digway/$t";
+        my $digway = "wormhole/digway/$t";
+        my $dig = readlink $digway;
+        $G->{h}->($A,$C,$G,$T,'say','sayre',"no $digway") if !$dig;
+        next if !$dig;
         my $was = $poll->{wayd}->{"$t"};
         next if $was && $dig eq $was;
         $poll->{wayd}->{"$t"} = $dig;

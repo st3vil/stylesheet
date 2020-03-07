@@ -522,7 +522,12 @@ Fourism: |
                     $l = me.cby(r);
                     emsg.set('pathin',l.map(n=>n.t).join('/'));
                     ~>3 Domewake: ki(e,4.22)
-                    l.filter(n => n.t == 'Elfor').length and 4s&pathin = l
+                    if (l.filter(n => n.t == 'Elfor' && ns&JRom).length) {
+                        4s&pathin = {path:[...l]};
+                        l.reverse();
+                        # find a %JRom + %reawakens
+                        
+                    }
                     #~>3 Domewake: l.map(n=>n.t).join('/')
                     # < %sleeping the way in
                 }
@@ -1837,7 +1842,10 @@ Wud: | # restacked Wed server
         each pi poll.ways {
             my $t = $p;
             $t = poll.wayt.>$p ||= do { $t =~ s/\W/-/sg; $t };
-            my $dig = readlink "wormhole/digway/$t";
+            my $digway = "wormhole/digway/$t";
+            my $dig = readlink $digway;
+            sayre "no $digway" if !$dig;
+            next if !$dig;
             my $was = poll.wayd.>$t;
             next if $was && $dig eq $was;
             poll.wayd.>$t = $dig;
