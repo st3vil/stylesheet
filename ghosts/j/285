@@ -495,48 +495,84 @@ Fourism: |
             $g = A.up.ground;
             $e = gc&e;
             !e and return
-            if (e) {
-                $emsg =
-                ~>8 e: '>3:IS','>7:pathin'
-                # ec&wake may be alone, or come from:
-                if ((e.t.includes('click')||1) && ec&slope) {
-                    $sl = ec&slope.slice().reverse();
-                    each in sl {
-                        # ns&medo is handled without 4c&callback
-                        $m = ns&med;
-                        !m and continue;
-                        # not in C or A
-                        $C = e;
-                        $s = ec&s;
-                        me&$m,s;
-                        T.ok = 1;
-                        break
-                    }
-                    !T.ok and emsg.set('IS','NODICE')
-                    else {
-                        delete T.ok;
-                        emsg.set('IS','ok')
-                        T.wake and ec&wake = T.wake
-                    }
+            $emsg =
+            ~>8 e: '>3:IS','>7:pathin'
+            # ec&wake may be alone, or come from:
+            if ((e.t.includes('click')||1) && ec&slope) {
+                $sl = ec&slope.slice().reverse();
+                each in sl {
+                    # ns&medo is handled without 4c&callback
+                    $m = ns&med;
+                    !m and continue;
+                    # not in C or A
+                    $D = C;
+                    $C = e;
+                    $s = ec&s;
+                    me&$m,s;
+                    C = D;
+                    T.ok = 1;
+                    break
                 }
-                if (ec&wake) {
-                    $r = ec&wake;
-                    $JR = me.cbu(r,'JRom');
-                    $aw = me.cbu(r,'reawakens');
-                    $l = me.cby(r);
-                    emsg.set('pathin',l.map(n=>n.t).join('/'));
-                    ~>3 Domewake: ki(e,4.22)
-                    if (l.filter(n => n.t == 'Elfor' && ns&JRom).length) {
-                        4s&pathin = {path:[...l]};
-                        l.reverse();
-                        # find a %JRom + %reawakens
-                        
-                    }
-                    #~>3 Domewake: l.map(n=>n.t).join('/')
-                    # < %sleeping the way in
+                !T.ok and emsg.set('IS','NODICE')
+                else {
+                    delete T.ok;
+                    emsg.set('IS','ok')
+                    T.wake and ec&wake = T.wake
                 }
             }
+            if (ec&wake) {
+                # pointer
+                $r = ec&wake;
+                $JR = me.cbu(r,'JRom');
+                $l = me.cby(r);
+                # concentrate
+                JR.t != 'Elfor' and return emsg.set('pathin','<>')
+                # R(c&b)+ - historical R they pointed to
+                es&tunnelin = l;
+                # Rc&b - last R to happen
+                es&tunnel = l = l.map(n => me&yfuture,n );
+                # this R
+                $li = l.indexOf(R);
+                li < 0 and throw "noRfut",R,e,l
+                l[li] = Rc&b;
+                # %tunneling builds tunnel_now
+                ac(e,'tunnel',Rc&b,'now',R);
+                
+                l = l.slice(li);
+                emsg.set('pathin',l.map(n=>n.t).join('/'));
+                
+                # don't happen
+                Rs&sleeping = 1;
+                # keep non-happening A.3 history
+                me&recycleRbitXz,R;
+                Rs&icate = &{
+                    # make something to happen
+                    $c = ex({},JRs&JRom);
+                    c.tunneling = e;
+                    #~>3 Domewake: ki(e,4.22)
+                    $n = me&Rom,R,c;
+                    4s&pathin = {path:[...l],n};
+                };
+            }
         },'ift,D'],
+        # let sleeping+Utilis @28
+        ['sleeping+mune+icate','3',&acgtRs{
+            Rs&icate();
+            # merges the branch, keeps them to Rc&b
+            me&applyRbitX,R;
+        },'ift,D'],
+        
+        ['tunneling','22',&acgtRs{
+            $e = Rs&tunneling;
+            $l = es&tunnel;
+            $li = l.indexOf(Rc&b);
+            li < 0 and throw 'nobtunnel',R,e,l
+            ac(e,'tunnel',Rc&b,'now',R);
+            # decide to sleep or wake,
+            #  generate children for more tunneling
+            
+        },'ift,D,sleeping'],
+        
         ['mune','3',&acgtRs{
             # Codon/experiment
             me&Rom,R,'Elfor';
@@ -554,6 +590,15 @@ Fourism: |
         },'ift,D'],
         
         #c unihab
+        ['sleeping+Utilis','28',&acgtRs{
+            if (!me&ollbs,R,'Inn' ) {
+                # wake up (after error?)
+                delete Rs&icate;
+                delete Rs&sleeping;
+                return
+            }
+            me&rollbs,R,'Inn,Incremento';
+        },'ift,D'],
         ['Utilis','291',&acgtRs{
             # window/A.4 goes to sleep
             $(window).off('blur').off('focus')
@@ -841,7 +886,7 @@ Fourism: |
             $t = Rs&sleeping ? "sleeping" : "w";
             $oc = me&ollbs,R,'countis';
             $oic = me&ollbs,R,'incount';
-            ~>5 Timeding: t, oc,'->',Rs&countis, oic,'->',Rs&incount
+            #~>5 Timeding: t, oc,'->',Rs&countis, oic,'->',Rs&incount
         },'ift,D,sleeping'],
         
         # as child, sometimes unreached etc
