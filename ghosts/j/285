@@ -567,16 +567,25 @@ Fourism: |
         &{
         me.tunnelJRom = &acgtRbe{
             !bs&JRom and throw "b!%JRom"
+            $c = ex({},bs&JRom);
+            
             $l = es&tunnel;
             # beyond this R/r%JRom
             $froml = es&tunnel.slice(es&tunneli+2);
+            $next = froml[0];
             # must be another JRom, or reawakens
             #  to leave tunnel mid-JRom with correct sc
-            $toanotherJRom = froml.filter(n => ns&JRom).length;
-            !toanotherJRom && !froml.filter(n => ns&reawakens).length and es&beawake = {wandRom:R}
+            if (!me&ioty,froml,'JRom' .length) {
+                if (bs&returns != next) {
+                    # not for the main thing of the JRom
+                    c.pause = 1
+                }
+                elsif (!me&ioty,froml,'reawakens' .length) {
+                    es&beawake ||= {wandRom:R}
+                }
+            }
             
-            $c = ex({},bs&JRom);
-            c.tunneling = e;
+            !c.pause and c.tunneling = e
 
             $r = me&Rom,R,c;
             ac(e,'JRs',r);
@@ -611,32 +620,32 @@ Fourism: |
             # start onward
             es&tunnelin == null and es&tunnelin = es&tunneli
             $next = l[es&tunneli+1];
-            !next and return es&beawake = {nonpath:R}
-            ps&JRom && next != pbs&returns and return es&beawake = {nonmain:R}
+            !next and return es&beawake ||= {nonpath:R}
+            ps&JRom && next != pbs&returns and return es&beawake ||= {nonmain:R}
             
             # now the path inc here
             $fromtop = l.slice(es&tunnelin);
             $tohere = fromtop.slice(0,1+es&tunneli-es&tunnelin);
             $path = tohere.map(n=>n.t).join('/');
-            ~>5 tohere: path
+            #~>5 tohere: path
             
             $li = l.indexOf(Rc&b);
             if (li < 0) {
                 c.fatal and debugger;
-                #throw "noRfut",R,e,l
+                c.fatal and throw "noRfut",R,e,l
                 # should have b from l, confusin?
                 console.log("lino");
-                notch and ~>7 linofound: R.t, path, '>3 '+nexts&Timefrom
+                next and ~>7 linofound: R.t, path, '>3 '+nexts&Timefrom
                 else {
                     ~>7 Should JROM: R.t
                 }
-                return es&beawake = {nofind:Rc&b}
+                return es&beawake ||= {nofind:Rc&b}
             }
             es&tunneli = li;
             # %tunneling builds tunnel_now
             ac(e,'tunnel',Rc&b,'now',R);
             
-            !l[es&tunneli+1] and return es&beawake = {pathend:R}
+            !l[es&tunneli+1] and return es&beawake ||= {pathend:R}
         };
         },
         #c tunnel awake
@@ -746,7 +755,7 @@ Fourism: |
                     Rs&z.filter(n => n == r).length != 1 and debugger;
                 }
             }
-        },'ift,D,sleeping'],
+        },'ift,D'],
         
         #c mune
         ['mune','3',&acgtRs{
