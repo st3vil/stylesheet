@@ -541,41 +541,52 @@ Fourism: |
                 # this R
                 $li = l.indexOf(Rc&b);
                 li < 0 and throw "noRfut",R,e,l
-                l[li] = Rc&b;
                 es&tunneli = li;
                 $froml = l.slice(li);
                 # %tunneling builds tunnel_now
                 ac(e,'tunnel',Rc&b,'now',R);
-                emsg.set('pathin',froml.map(n=>n.t).join('/'));
+                $path = froml.map(n=>n.t).join('/');
+                emsg.set('pathin',path);
+                es&path = path;
                 
                 # < J sync Te/X, jump to
                 # assume tunneling between JRoms is safe
                 froml.shift();
-                es&JRs = froml.filter(n => ns&JRom);
-                $toanotherJRom = es&JRs.length > 1;
-                $JR = es&JRs[0];
+                $JR = froml.filter(n => ns&JRom)[0];
                 !JR and return
                 
                 # don't happen
                 Rs&sleeping = 1;
                 # keep non-happening A.3 history
                 me&recycleRbitXz,R;
+                
                 Rs&icate = &{
                     # make something to happen
-                    $c = ex({},JRs&JRom);
-                    c.tunneling = e;
-                    # concentrate
-                    JR.t != 'Elfor' and es&beawake = 1
-                    # must have %reawakens somewhere
-                    #  to leave tunnel mid-JRom with correct sc
-                    toanotherJRom && !froml.filter(n => ns&reawakens).length and es&beawake = 1
+                    $n = me&tunnelJRom,R,JR,e;
                     
-                    !es&beawake and $pa = 4s&pathin = {path:[...l],e};
-                    $n = me&Rom,R,c;
-                    pa and pa.n = n;
+                    JR.t == 'Elfor' and 4s&pathout = e
                 };
             }
         },'ift,D'],
+        &{
+        me.tunnelJRom = &acgtRbe{
+            !bs&JRom and throw "b!%JRom"
+            $l = es&tunnel;
+            # beyond this R/r%JRom
+            $froml = es&tunnel.slice(es&tunneli+2);
+            # must be another JRom, or reawakens
+            #  to leave tunnel mid-JRom with correct sc
+            $toanotherJRom = froml.filter(n => ns&JRom).length;
+            !toanotherJRom && !froml.filter(n => ns&reawakens).length and es&beawake = 1
+            
+            $c = ex({},bs&JRom);
+            c.tunneling = e;
+
+            $r = me&Rom,R,c;
+            ac(e,'JRs',r);
+            return r
+        };
+        },
         # let sleeping+Utilis @28
         ['sleeping+mune+icate','3',&acgtRs{
             Rs&icate();
@@ -719,19 +730,7 @@ Fourism: |
             each ic M {
                 $b = delete c.b;
                 if (c.JRom) {
-                    $c = ex({},c.JRom);
-                    c.tunneling = e;
-                    
-                    $froml = l.slice(e.sc.tunneli);
-                    froml.shift(); # R
-                    froml.shift(); # r
-                    $toanotherJRom = froml.filter(n => ns&JRom).length;
-                    !toanotherJRom && !froml.filter(n => ns&reawakens).length and es&beawake = 1
-                    
-                    $r = me&Rom,R,c;
-                    $pa = 4s&pathin;
-                    pa.JRs ||= [];
-                    pa.JRs.push(r);
+                    $r = me&tunnelJRom,R,b,e;
                 }
                 else {
                     $r = me&Ret,R,c;
@@ -752,7 +751,7 @@ Fourism: |
         # %Evelse, nto
         ['Evelse','291',&acgtRs{
             me&introqua,[R,'A'],{boost:1}
-            me&zu,"4s&pathin",4s&pathin;
+            me&zu,"4s&pathout",4s&pathout;
             me&zu,"4s&Slsz",4s&Slsz;
             
             me&zu,"A",A.4;
