@@ -627,7 +627,14 @@ Fourism: |
             es&tunnelin == null and es&tunnelin = es&tunneli
             $next = l[es&tunneli+1];
             !next and return es&beawake ||= {nonpath:R}
-            ps&JRom && next != pbs&returns and return es&beawake ||= {nonmain:R}
+            if (ps&JRom && next != pbs&returns) {
+                # < 
+                next.t == pbs&returns.t and ~halfanonmain: R.t
+                else {
+                    return es&beawake ||= {nonmain:R}
+                }
+            }
+            # 
             
             # now the path inc here
             $fromtop = l.slice(es&tunnelin);
@@ -665,6 +672,7 @@ Fourism: |
             # must be another JRom, or reawakens
             #  to leave tunnel mid-JRom with correct sc
             delete c.pause;
+            delete c.neednt;
             if (!me&ioty,froml,'JRom' .length) {
                 if (next && bs&returns != next) {
                     # not for the main thing of the JRom
@@ -690,6 +698,11 @@ Fourism: |
             each kv Rc&b.sc {
                 R.sc[k] ||= v;
             }
+        },'ift,D'],
+        # to put a JRom to sleep, such that ^ happens
+        ['neednt','18',&acgtRs{
+            Rs&tunneling = Rs&neednt;
+            Rs&sleeping = 1;
         },'ift,D'],
         ['tunneling','18',&acgtRs{
             $e = Rs&tunneling;
@@ -744,6 +757,8 @@ Fourism: |
                 else {
                     # %reawakens implies %tunneling to it is ok
                 }
+                # general
+                bs&Gens and c.Gens = 1
                 # JRom skip %tunneling
                 if (bs&JRom) {
                     # < to sleeping+JRom/%Domeds,
@@ -888,6 +903,13 @@ Fourism: |
         # mostly
         #  < elvis() talks to JRom of A.4
         #     from inside A.4, brokering async
+        # ! tunnel..wake outside a JRom sleeps it,
+        #    without looking like a pause,
+        #     yet %neednt gets stuck on,
+        #     clicks inside right after outside stay outside
+        #    is really e%beawake=nonmain, 
+        #      
+        
         # ! occasional linofound
         #      wasn't: throw while tunneling breaks history (later)
         #    see notch, why is it from thence?
@@ -1027,7 +1049,8 @@ Fourism: |
             !Rs&ball and return
             
             ah(R,'reawakens','Codon',{
-                rollbs:'Codon,Codo,Codin,Gedo,Gens,self,Cofix,Code,Zaving',
+                rollbs:'Codon,Codo,Codin,Gedo,Cofix,Code'
+                    +',Gens,self,Here,Zaving,Abodo',
             });
             
             # < creates an inside
@@ -1039,19 +1062,28 @@ Fourism: |
                 # an out%ball sprouts JRom:Codo
                 # implied by %R=Codo
                 # < feed openness
-                me&tsc,'%Codo','bout','6'
+                me&rollbs,R,'incount';
+                Rs&incount ||= 0;
+                Rs&incount++;
+                
+                me&tsc,'%Codo','bout-'+Rs&incount,'6'
+                
+                # avoid JRom after tunneling
+                $tu = me.cbu(R,'tunneling');
                 ss&Doming = 3;
                 ss&Codon = 1;
                 Rs&compLines = &D{
                     delete Ds&Doming; 
                     delete Ds&Codon;
                 };
-                me&Bear,R,s,'play';
+                tu and c.neednt = 1
+                $r = me&ballRom,R,s,c;
+                r && me&nu,"ballRo",ry&up;
             }
             else {
                 $p = me.cbu(R,&r{ return rs&Codo && rs&ball });
                 # above %Codo
-                !p and me&tsc,'%Codo','bove','6'
+                !p and Rs&Abodo = 1
                 # all %Codo/**%Codon !%Codo are %Code
                 else
                 p != R and Rs&Code = 1
@@ -1089,10 +1121,16 @@ Fourism: |
         #c %Codo outside
         ['Gens+Codon','293',&acgtRs{
             $c = me&tsc,'%Codon','Gedo','g';
+            # %Zaving instead of Gens+ting
             Rs&Zaving = "mem,W";
-            # ^ instead of load/save on the %Gens:
             delete Rs&ting;
-            # < %Here's %Lines to /mem/, /W/
+        },'ift,D'],
+        # entire lab
+        ['Abodo','292',&acgtRs{
+            me&rollbs,R,'incount';
+            Rs&incount ||= 0;
+            Rs&incount++;
+            $c = me&tsc,'%Codon','Abodo-'+Rs&incount,'g';
         },'ift,D'],
         
         # Codo inside
@@ -1139,6 +1177,106 @@ Fourism: |
         },'ift,D'],
     ]};
         
+    #Fiveplan #c
+    
+    =editor
+        make way into /G/$cat/$way
+        organised by /W/$cat of $way+
+      will be
+        network of %Gens%Codon
+      
+      monday:
+       elvis tunnels: e:say etc wakes just the %Code
+        see %Slei and above
+       %Codo openness map
+       < clicking Flar should sleep JRom:Lafr
+      tuesday:
+      wednesday:
+      thursday:
+         
+       editor:
+        %Codo openness map
+          not %Te
+           > deciding limbs of it are abandonable
+             time-separated limbs
+          list of t at depths
+           draw current viewport over it
+           attention/change history
+          with empty space to defocus, to allow:
+          typing into space puts search through:
+        %Codo search
+          preventDefault a C+F event?
+         prioritised by where we are
+          then knowing all %Codo/%Code/%Zave=mem
+           then /ghostack/
+         presenting them as %Codo around us
+          disjointed, to be pulled in
+           as dependencies/further reading
+        
+        re-scrollto the %Codin,
+          is about hosting many pos:ab together
+           using their computed height/width
+           harnessing them with foldways
+          scroll to keep the view same when rearranging
+        re-undohistory the %Codes
+      
+       < 4s&pause while %busy
+         %busy while cm.focus
+         %busy near typing/scrolling/mouse waving
+          e want to now or later
+       
+       cm.blur makes e:say, should be enough
+        < /tmp/ faster (while typing)
+          cm.focus starts 5s timers
+           e:mutter -> %Code (around %busy)
+            the %Zave=ghost only listening to e:say
+          involves some:
+        < %Here tricks:
+          < different %Heres per %Zave
+          < %differ switching up %self and collecting %Here
+          < when/how to encode:
+          < avoid re-%Lines depending on slep,
+            or by accounting for all change
+        
+      random:
+       < %Search (centralised %tings)
+        < delivering updates
+        < trust /digwaypoll/ for /ghost/
+         the %Idoubleyou ($Way to %Ghostway)
+          should be defining seeketh/seekend
+          so %Search can ting them,
+           group for consumers T.wake=%ting
+      
+      unfolding labby mess, way too many dimensions:
+       and bring some automation over the top
+       saving opennesses, stacking their difference:
+         < such that it can be relied upon by others
+           who includes it is security over time
+           time = distance over the network
+
+        %Code%Zaving:
+          o - overall com dot, clicking in
+          (~|-| |!) inside/next to o
+          for (wild|got|still|err)
+           relationships to their stores/consumers
+            probably having one each (G/W)
+          < which are G - space for belief
+           G store:
+             wild - tmp stored (recent keystrokes)
+             got - fully stored (available to consumers)
+             err - compiletime errors
+              may not know args of way
+               they could be made up from error messages
+           G consumer:
+             wild - ghost updating
+             got - runtime ok
+             err - runtime errors
+    
+         < chase 'Kn-burst' error, boosting a medo%fix 
+           while Km:Display(Kn:Mw) is there, not zuctedto
+           < forward escape &KnowSmush
+        
+    =cut
     #c %Zaving %Codons
     me.Zavingness = &acgt{ return [
         # watch the game, sequence pushes
@@ -1855,125 +1993,9 @@ Fourism: |
     
         
     ] };
-    #Fiveplan #c
-    
-    =editor
-        make way into /G/$cat/$way
-        organised by /W/$cat of $way+
-      will be
-        network of %Gens%Codon
-      
-      monday:
-       elvis tunnels: e:say etc wakes just the %Code
-        see %Slei and above
-       
-      tuesday:
-      wednesday:
-      thursday:
-       %Zaving 7
-         
-      
-      random:
-       < %Search can trust /digwaypoll/ for /ghost/
-         the %Idoubleyou ($Way to %Ghostway)
-          should be defining seeketh/seekend
-          so %Search can ting them,
-           group for consumers T.wake=%ting
-       
-       < 4s&pause while %busy
-         %busy while cm.focus
-         %busy near typing/scrolling/mouse waving
-          e want to now or later
-       
-       cm.blur makes e:say, should be enough
-        < /tmp/ faster (while typing)
-          cm.focus starts 5s timers
-           e:mutter -> %Code (around %busy)
-            the %Zave=ghost only listening to e:say
-          involves some:
-        < %Here tricks:
-          < different %Heres per %Zave
-          < %differ switching up %self and collecting %Here
-          < when/how to encode:
-          < avoid re-%Lines depending on slep,
-            or by accounting for all change
-      
-      friday:
-       editor:
-        %Codo openness map
-          not %Te
-           > deciding limbs of it are abandonable
-             time-separated limbs
-          list of t at depths
-           draw current viewport over it
-           attention/change history
-          with empty space to defocus, to allow:
-          typing into space puts search through:
-        %Codo search
-          preventDefault a C+F event?
-         prioritised by where we are
-          then knowing all %Codo/%Code/%Zave=mem
-           then /ghostack/
-         presenting them as %Codo around us
-          disjointed, to be pulled in
-           as dependencies/further reading
-        
-        re-scrollto the %Codin,
-          is about hosting many pos:ab together
-           using their computed height/width
-           harnessing them with foldways
-          scroll to keep the same when rearranging
-        re-undohistory the %Codes
-        
-      
-      
-      unfolding labby mess, way too many dimensions:
-       and bring some automation over the top
-       saving opennesses, stacking their difference:
-         < such that it can be relied upon by others
-           who includes it is security over time
-           time = distance over the network
-
-        %Code%Zaving:
-          o - overall com dot, clicking in
-          (~|-| |!) inside/next to o
-          for (wild|got|still|err)
-           relationships to their stores/consumers
-            probably having one each (G/W)
-          < which are G - space for belief
-           G store:
-             wild - tmp stored (recent keystrokes)
-             got - fully stored (available to consumers)
-             err - compiletime errors
-              may not know args of way
-               they could be made up from error messages
-           G consumer:
-             wild - ghost updating
-             got - runtime ok
-             err - runtime errors
-    
-    assorted:
-         < chase 'Kn-burst' error, boosting a medo%fix 
-           while Km:Display(Kn:Mw) is there, not zuctedto
-           < forward escape &KnowSmush
-        
        #c monday?
+    =beyondo
        
-       < %Search (centralised %tings) delivering updates
-        < trusting /digwaypol/ for /way/ and /ghost/ it has
-       < slep to scan for changes
-        
-        %Gens starts from out%ball to have in%ball
-         < %ino for in feeds out sans s&z
-            is a qua muter situation, as is:
-             %Lines encoding customs
-             %slep deciding where to crawl
-             %Te accepting as 'the story'
-         < ghost/wormhole happens when in appears
-         < %slep for changes, helps %Lines
-         < %autosave/**%Gens every 5s, in:
-         < %ting=mem for W in localStorage
-        
         %Codon%Code the contained way
         < concat fragments from %Code/*%Code
          < inside way are hash-c markers, etc
@@ -1986,9 +2008,15 @@ Fourism: |
             sub-diff with move abstracted
             # waits for serve.js?
         
-        there are many /W/$cat competing the same /G/*/$way
-          suppose creating %Code ensures singularity
-         < %searchpath should order A.4s to talk to about things
+        
+        %Gens starts from out%ball to have in%ball
+         < %ino for in feeds out sans s&z
+            is a qua muter situation, as is:
+             %Lines encoding customs
+             %slep deciding where to crawl
+             %Te accepting as 'the story'
+         < ghost/wormhole happens when in appears
+         < %slep for changes, helps %Lines
         
         room for a tool for composing %slep schema
          < wants to use Zavmo for slep on modulata
@@ -2002,7 +2030,6 @@ Fourism: |
           we can otherwise effect
            to drive change from/to A something
     
-        
       thence
         T - phenomenate when going to an aboveness that may not be awake
         G - intelligensiata
