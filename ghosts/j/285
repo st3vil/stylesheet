@@ -532,8 +532,6 @@ Fourism: |
                 r == 1 and return
                 !isR(r) and throw "non-R ecwake"
                 
-                # < J sync Te/X, jump to
-                $JR = me.cbu(r,'JRom');
                 $l = me.cby(r);
                 # R(c&b)+ - historical R they pointed to
                 es&tunnelin = l;
@@ -545,10 +543,18 @@ Fourism: |
                 li < 0 and throw "noRfut",R,e,l
                 l[li] = Rc&b;
                 es&tunneli = li;
-                
+                $froml = l.slice(li);
                 # %tunneling builds tunnel_now
                 ac(e,'tunnel',Rc&b,'now',R);
-                emsg.set('pathin',l.slice(li).map(n=>n.t).join('/'));
+                emsg.set('pathin',froml.map(n=>n.t).join('/'));
+                
+                # < J sync Te/X, jump to
+                # assume tunneling between JRoms is safe
+                froml.shift();
+                es&JRs = froml.filter(n => ns&JRom);
+                $toanotherJRom = es&JRs.length > 1;
+                $JR = es&JRs[0];
+                !JR and return
                 
                 # don't happen
                 Rs&sleeping = 1;
@@ -558,11 +564,11 @@ Fourism: |
                     # make something to happen
                     $c = ex({},JRs&JRom);
                     c.tunneling = e;
-                    
                     # concentrate
                     JR.t != 'Elfor' and es&beawake = 1
-                    # must have %reawakens somewhere to tunnel
-                    !l.filter(n => ns&reawakens).length and es&beawake = 1
+                    # must have %reawakens somewhere
+                    #  to leave tunnel mid-JRom with correct sc
+                    toanotherJRom && !froml.filter(n => ns&reawakens).length and es&beawake = 1
                     
                     $n = me&Rom,R,c;
                     4s&pathin = {path:[...l],n,e};
@@ -584,8 +590,6 @@ Fourism: |
         },'ift,D,sleeping'],
         &{ me.tunnel_arrives = &acgtR{
         }; },
-        
-        
         
         ['sleeping+tunneling','94',&acgtRs{
             $b = Rc&b;
@@ -609,13 +613,22 @@ Fourism: |
                 ~>2 NOB: R.t, tohere
                 return
             }
-            
+            ~Tun: R.t, es&tunneli, '>7 '+tohere
+            # doesn't arrive on %JRom, c passed through
+            $p = Ry&up;
+            ps&JRom and es&tunneli = l.indexOf(pc&b)
+            es&tunneli < 0 and throw "confuse through JRom"
             $li = l.indexOf(Rc&b);
-            $notch = l[es&tunneli+2];
+            $notch = l[es&tunneli+1];
             
-            li < 0 and ~linofound: R.t, tohere, '>3 '+notchs&Timefrom
-            #li < 0 and debugger;
-            li < 0 and return;
+            if (li < 0) {
+                # should have b from l, confusin?
+                notch and ~linofound: R.t, tohere, '>3 '+notchs&Timefrom
+                else {
+                    ~Should JROM:
+                }
+                return
+            }
             #es&tunneli = li + 1;
             if (li < 0) {
                 # when is this other self?
@@ -631,11 +644,11 @@ Fourism: |
             ac(e,'tunnel',b||Rc&b,'now',R);
             
             # out of the tunnel
-            li+1 == l.length and ~>2 Out at: R.t
-            li+1 == l.length and return
+            li+1 >= l.length and ~>2 Out at: R.t
+            li+1 >= l.length and return
             
             
-            # tunnel awake
+            #c tunnel awake
             # < join many involves separating the es&tunnel
             $N = l[li+1];
             !isar(N) and N = [N]
@@ -673,17 +686,20 @@ Fourism: |
                         }
                         use.sc and ex(c,use.sc)
                     }
-                    if (bs&ball) {
-                        c.ball = 1;
-                        bs&tightly and c.tightly = 1;
-                    }
+                    bs&ball and c.ball = 1
+                    bs&tightly and c.tightly = 1
                 }
                 else {
                     # %reawakens implies %tunneling to it is ok
                 }
+                bs&JRom and ex(c,bs&JRom);
+                #bs&JRomD and c.JRomD = bs&JRomD;
+                #bs&JRom and debugger;
                 !c.reawakens && aw && !use and c.noreawakens = 1
             }
             
+            #$c = ex({},JRs&JRom);
+            #toanotherJRom && !l.filter(n => ns&reawakens).length and es&beawake = 1
             # depending on awakeness theory
             $dont = M.filter(c => c.noreawakens);
             # R wakes to generate R out of strategy
@@ -810,11 +826,11 @@ Fourism: |
         # < leading the way
         ['Elfor','291',&acgtRs{
             # write code
-            #n Flar  R %Codon,ting:W,Gens,tingspot
+            n Flar  R %Codon,ting:W,Gens,tingspot
             # lingo patch panel
             #n ForThe  R %ting:W,Gens,tingspot
             # test sleep
-            n Sleigh  R %Slei,ting:W,Gens,tingspot
+            #n Sleigh  R %Slei,ting:W,Gens,tingspot
         },'ift,D'],
         
         # cloud of %Codon and related types inheriting
@@ -827,6 +843,10 @@ Fourism: |
             
             Rs&Gens and Rs&Gedo = 1
             !Rs&ball and return
+            
+            ah(R,'reawakens','Codon',{
+                rollbs:'Codon,Codo,Codin,Gedo,Gens,self,Cofix,Code,Zaving',
+            });
             
             # < creates an inside
             $c = me&tsc,'%Codon','C','B';
@@ -914,7 +934,10 @@ Fourism: |
         
         # fixturism
         ['ball+Code','293',&acgtRs{
-            $c = me&tsc,'%Codon','Code','g';
+            me&rollbs,R,'incount';
+            Rs&incount ||= 0;
+            Rs&incount++;
+            $c = me&tsc,'%Codon','Code-'+Rs&incount,'g';
             4s&thecode = R;
             Rs&Zaving = "tmp,ghost";
             Rs&compLines = &D{
@@ -936,9 +959,6 @@ Fourism: |
         #    must roll everything it wants to keep
         #   the R%sleeping/** don't happen,
         #    but if they do, Display them
-        
-        # do:
-        #  wake Cit
         
         # < specify non-history-creating mode
         #   how to add futures at depth...
