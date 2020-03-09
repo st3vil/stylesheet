@@ -534,17 +534,14 @@ Fourism: |
                 
                 $l = me.cby(r);
                 # R(c&b)+ - historical R they pointed to
-                es&tunnelin = l;
+                es&tunnel_raw = l;
                 # Rc&b - last R to happen
                 #  yfuture can climb to unapplied X.newz
                 es&tunnel = l = l.map(n => me&yfuture,n,0,{merged:1} );
                 # this R
-                $li = l.indexOf(Rc&b);
-                li < 0 and throw "noRfut",R,e,l
-                es&tunneli = li;
-                $froml = l.slice(li);
-                # %tunneling builds tunnel_now
-                ac(e,'tunnel',Rc&b,'now',R);
+                me&tunnelArrive,R,e,{fatal:1};
+                
+                $froml = l.slice(es&tunneli);
                 $path = froml.map(n=>n.t).join('/');
                 emsg.set('pathin',path);
                 es&path = path;
@@ -562,8 +559,7 @@ Fourism: |
                 
                 Rs&icate = &{
                     # make something to happen
-                    $n = me&tunnelJRom,R,JR,e;
-                    
+                    me&tunnelJRom,R,JR,e;
                     JR.t == 'Elfor' and 4s&pathout = e
                 };
             }
@@ -577,7 +573,7 @@ Fourism: |
             # must be another JRom, or reawakens
             #  to leave tunnel mid-JRom with correct sc
             $toanotherJRom = froml.filter(n => ns&JRom).length;
-            !toanotherJRom && !froml.filter(n => ns&reawakens).length and es&beawake = 1
+            !toanotherJRom && !froml.filter(n => ns&reawakens).length and es&beawake = {wandRom:R}
             
             $c = ex({},bs&JRom);
             c.tunneling = e;
@@ -600,9 +596,50 @@ Fourism: |
         ['Elfor','13',&acgtRs{
             Rs&Timefrom = 4c&s.t.substr(-5);
         },'ift,D,sleeping'],
-        &{ me.tunnel_arrives = &acgtR{
-        }; },
-        
+        &{ 
+        me.tunnelArrive = &acgtRec{
+            c ||= {};
+            $l = es&tunnel;
+            !Rc&b and throw "NOb"
+            !l and throw "no l"
+            
+            # doesn't arrive on %JRom, c passed through
+            $p = Ry&up;
+            $pb = pc&b;
+            ps&JRom and es&tunneli = l.indexOf(pb)
+            es&tunneli < 0 and throw "confuse through JRom"
+            # start onward
+            es&tunnelin == null and es&tunnelin = es&tunneli
+            $next = l[es&tunneli+1];
+            !next and return es&beawake = {nonpath:R}
+            ps&JRom && next != pbs&returns and return es&beawake = {nonmain:R}
+            
+            # now the path inc here
+            $fromtop = l.slice(es&tunnelin);
+            $tohere = fromtop.slice(0,1+es&tunneli-es&tunnelin);
+            $path = tohere.map(n=>n.t).join('/');
+            ~>5 tohere: path
+            
+            $li = l.indexOf(Rc&b);
+            if (li < 0) {
+                c.fatal and debugger;
+                #throw "noRfut",R,e,l
+                # should have b from l, confusin?
+                console.log("lino");
+                notch and ~>7 linofound: R.t, path, '>3 '+nexts&Timefrom
+                else {
+                    ~>7 Should JROM: R.t
+                }
+                return es&beawake = {nofind:Rc&b}
+            }
+            es&tunneli = li;
+            # %tunneling builds tunnel_now
+            ac(e,'tunnel',Rc&b,'now',R);
+            
+            !l[es&tunneli+1] and return es&beawake = {pathend:R}
+        };
+        },
+        #c tunnel awake
         ['sleeping+tunneling','94',&acgtRs{
             $b = Rc&b;
             # impersonate the last awake sc fuller
@@ -617,51 +654,16 @@ Fourism: |
             Rs&sleeping and debugger;
             es&beawake and return
             
-            $l = es&tunnel;
+            me&tunnelArrive,R,e;
+            es&beawake and return es&tunnelout = R
             
-            $tohere = l.slice(0,es&tunneli+3).map(n=>n.t).join('/');
-            
-            # doesn't arrive on %JRom, c passed through
-            $p = Ry&up;
-            ps&JRom and es&tunneli = l.indexOf(pc&b)
-            es&tunneli < 0 and throw "confuse through JRom"
-            $li = l.indexOf(Rc&b);
-            $notch = l[es&tunneli+1];
-            
-            !Rc&b and throw "NOb"
-            if (li < 0) {
-                # should have b from l, confusin?
-                notch and ~linofound: R.t, tohere, '>3 '+notchs&Timefrom
-                else {
-                    ~Should JROM:
-                }
-                return
-            }
-            #es&tunneli = li + 1;
-            if (li < 0) {
-                # when is this other self?
-                li = es&tunneli+1;
-                $b = es&tunnel[li];
-                b.t != R.t and debugger;
-            }
-            #throw 'nobtunnel', R, e, l
-            
-            
-            es&tunneli = li;
-            
-            ac(e,'tunnel',b||Rc&b,'now',R);
-            
-            # out of the tunnel
-            li+1 >= l.length and ~>2 Out at: R.t
-            li+1 >= l.length and return
-            
-            
-            #c tunnel awake
+            $N = es&tunnel[es&tunneli+1];
             # < join many involves separating the es&tunnel
-            $N = l[li+1];
+            #   want to use X
             !isar(N) and N = [N]
             $M = [];
             each ib N {
+                Rc&N.indexOf(b) >= 0 and throw "b current"
                 $c = {t:b.t};
                 c.tunneling = e;
                 M.push(c);
@@ -701,10 +703,15 @@ Fourism: |
                     # %reawakens implies %tunneling to it is ok
                 }
                 # JRom skip %tunneling
-                bs&JRom and c.JRom = bs&JRom;
+                if (bs&JRom) {
+                    # < to sleeping+JRom/%Domeds,
+                    #   as opposed to the JRom%returns
+                    #    see also es&beawake = {nonmain:R}
+                    c.JRom = bs&JRom;
+                }
                 else
                 !c.reawakens && aw && !use and c.noreawakens = 1
-                c.b = b;
+                c.b = b
             }
             
             # depending on awakeness theory
@@ -721,12 +728,13 @@ Fourism: |
                 # $can hook into tunneling again
                 $eg = dont[0];
                 ~>5 leaving tunnel: R.t, eg.t
-                return
+                return es&tunnelout = R
             }
             # and doesn't
             Rs&sleeping = 1;
             me&recycleRbitXz,R;
-            # or inflates individuals, %tunneling
+            
+            # or inflates individuals with %tunneling
             each ic M {
                 $b = delete c.b;
                 if (c.JRom) {
