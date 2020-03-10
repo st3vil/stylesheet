@@ -1477,7 +1477,10 @@ Fourism: |
                 # Gens @25 rolls %self,
                 # Gens+self @31 makes %Here
                 $h = Rs&Here = me&Rsc,p,'Here';
-                me&rollbs,R,'Describing' and hs&Lines = 3
+                if (me&rollbs,R,'Describing' ) {
+                    !h and return me&waits,'!h@32'
+                    hs&Lines = 3
+                }
             }
             elsif (ps&Code) {
                 # %Here = %ball(s%string
@@ -1494,7 +1497,7 @@ Fourism: |
             if (Rs&Zave == 'ghost') {
                 # filed under se%Codin: G/$se/$t
                 $din = me.cbu(R,'Codin');
-                !din and delete Rs&Zave; return me&tsc,'no^^%Codin',0,'B';
+                !din and delete Rs&Zave; return me&waits,'no^^%Codin'
                 tings&section = din.t;
                 # fixes !section on initCode commit
                 $Q = tings&Q;
@@ -1715,6 +1718,9 @@ Fourism: |
             
             #c look
             $De = Rs&Described || h;
+            # unless situation is changing
+            $action = neighbours.filter(n => ns&Amountto > 1).length;
+            action and return
             if (!De) {
                 if (!Rs&Here && ps&Gens && !ps&self) {
                     Rs&Wantsto = 'pull';
@@ -1764,12 +1770,12 @@ Fourism: |
             # De may change since push
             Rs&Committing && Rs&Committing == Ps&string && Settle()
             # and separately:
-            Des&string == Ps&string and Settle()
+            De && Des&string == Ps&string and Settle()
             else {
                 if (Rs&Settled || Qc&el == 9) {
                     # we sync, they follow
                     Rs&Amountto ||= 2;
-                    Rs&Wantsto ||= 'push';
+                    Rs&Wantsto = 'push';
                 }
                 else {
                     # start different or their updates
@@ -1793,6 +1799,7 @@ Fourism: |
             $from = to == l ? r : l;
                 
             #c patch
+            Rs&Wantsto == 'pull' && Ps&string == null and delete Rs&Wantsto
             if (Rs&Wantsto) {
                 Rs&Amountto ||= 1;
                 
@@ -1806,7 +1813,12 @@ Fourism: |
                 pas&bgh = '010';
                 pas&zi = 30;
                 
-                if (h) {
+                
+                if (Ps&string == null) {
+                    # < Zif could say new
+                    Rs&summary = me&tsc,'summary','new!','B'
+                }
+                elsif (De) {
                     # < attention upgrades to JRom
                     $c = {t:'Zif',Zif:1,neighbours};
                     c.got = fromy&tree;
@@ -1818,12 +1830,14 @@ Fourism: |
                     each in dis&waits {
                         ac(R,'waits',n)
                     }
+                    Rs&summary = dis&summary;
                 }
                 
                 $says = Rs&Wantsto;
                 $ma = me&mtsc,en,'make-commit',says,'B';
                 $commit = &{
                     if (Rs&Wantsto == 'pull') {
+                        # depends on the thing
                         pull();
                         Rs&Whichto = 'pull';
                     }
@@ -1837,14 +1851,13 @@ Fourism: |
                         ts&_ting(Q)
                     }
                 };
-                Rs&summary = di && dis&summary;
                 
                 Rs&waits and '...'
                 else
                 if (Rs&Amountto == 1) {
                     # clickable talk
                     mac&s += "?";
-                    !di and throw "no %Zif @ Amountto=1"
+                    #!di and throw "no %Zif @ Amountto=1"
                     # hoisted by Zaving 7 lum=1
                     # shall be given nto that lum=2s it
                     # keeps nto that commits
