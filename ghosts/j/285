@@ -650,19 +650,112 @@ Fourism: |
         # to the thing
         #  handlers generating ec&wake
         me.elvis = &acgtRec{
-            c.in != 4 and throw "< exit A"
-            
-            T.msg =
-            ~>8 e: '>3:IS','>7:pathin','>3:ts '+4c&s.t.substr(-5)
-            
-            # slope %med=cra -> slope %elvis=Gazel
-            !es&edone && ec&slope and me&slopemed,R,e
-            # all other unsolved elvis
-            !es&edone && !ec&wake and me&domisce,R,e
-            # go to it
-            ec&wake and me&ewake,R,e
+            if (c.in == 4) {
+                # receptive/do mode
+                T.msg =
+                ~>8 e: '>3:IS','>7:pathin','>3:ts '+4c&s.t.substr(-5)
+
+                # slope %med=cra -> slope %elvis=Gazel
+                !es&edone && ec&slope and me&slopemed,R,e
+                # sort pools
+                !es&edone && ec&pack and me&unpacke,R,e
+                # all other unsolved elvis
+                !es&edone && !ec&wake and me&domisce,R,e
+                # go to it
+                ec&wake and me&ewake,R,e
+            }
+            else {
+                isst(e) && !isC(c) and e = Cye([e,1,c||{},{}])
+                else {
+                    throw "long form elvis plant"
+                }
+                # current Ring act
+                es&act = T.act;
+                es&R = R;
+                # probably waking itself
+                !haks(e.c) and ec&wake = R
+                
+                # messages want collecting
+                $JR = me.cbu(Ry&up,'JRom');
+                ac(JR,'elvoids',e);
+            }
         };
-        # along the way to, tunneling:
+        },
+        # JRoms pool elvising
+        ['JRom+elvoids','314',&acgtRs{
+            # < cancellable everything
+            Rs&error and return
+            $e = Cye(['elvoids',8,{pack:R}]);
+            es&z = Rs&elvoids.slice();
+            $JR = me.cbu(Ry&up,'JRom');
+            if (JR) {
+                ac(JR,'elvoids',e);
+            }
+            else {
+                G&yl,0,&{4c&callback(e)}
+            }
+        },'ift,D'],
+        &{
+        # makes a tree of ec&wakes a single diverging tunnel
+        me.unpacke = &acgtRe{
+            $flat = &e{
+                !ec&pack and return [e]
+                $N = [];
+                each in es&z {
+                    N.push(... flat(n))
+                }
+                return N
+            };
+            $N = flat(e);
+            $M = N.map(&n{
+                $r = nc&wake;
+                !r and debugger;
+                !isR(r) and r = ns&R
+                !isR(r) and throw "wake!R", n
+                return me.cby(r)
+            });
+            # < io's grouping col/row
+            # for the deepest JRoms first, splitting time
+            #  incorporating more e from those times
+            #   etc
+            $dep = &jM{
+                $N = [];
+                $dif = [];
+                # unique
+                each in M {
+                    $r = n[j];
+                    !r and continue
+                    $ri = dif.indexOf(r);
+                    ri < 0 and dif.push(r);
+                    $ri = dif.indexOf(r);
+                    $z = N[ri] ||= [];
+                    z.push(n);
+                }
+                # group many, inline if 1
+                $path = [];
+                each iz N {
+                    $eg = z[0][j];
+                    z.length > 1 && eg != z[1][j] and throw "wob"
+                    $ins = dep(j+1,z);
+                    $bit = [eg];
+                    path.push(bit);
+                    !ins.length and continue
+                    # may be a [r,r,r] or [r,[[r,r],[r,r]]]
+                    ins.length == 1 and bit.push(... ins[0])
+                    else { bit.push(ins) }
+                }
+                return path
+            };
+            $pathy = dep(0,M);
+            4s&Slsz = pathy;
+            
+            
+            
+            es&edone = 'unpacke';
+        };
+        },
+        #c along the way to, tunneling:
+        &{
         #  to find some strategy for sneaking in
         #   past R%sleeping to the wakers
         #   re-argumenting it re strategy,
@@ -930,7 +1023,7 @@ Fourism: |
         #   < ch() say smoke
         #  me&handelvis - %medo
         #   =modeen, play R, < dom
-        # in elvis():
+        # in planet/elvis():
         #  me&slopemed - %med
         #   =cra, solveR etc slope-finds %elvis
         #     =Gazel, say/boost/drag
@@ -1162,8 +1255,10 @@ Fourism: |
         
         # an out%ball sprouts JRom:Codo
         # < feed openness
-        ['ball+Codo','299',&acgtRs{
-            me&tsc,'%Codo','ball+Codo','6'
+        ['ball+Codo','33',&acgtRs{
+            $h = me&tsc,'%Codo','ball+Codo','6'
+            me.nto(R,h,&{ Rs&Doop = 1 });
+            me&ollbs,R,'Doop' and Rs&z.map( r => me&elvis,R,'Dooping',{wake:r} );
         },'ift,D'],
         ['Codoor','299',&acgtRs{
             me&rollbs,R,'incount';
@@ -1645,6 +1740,7 @@ Fourism: |
                 else {
                     # single < once pulled
                     froms&dis = 0;
+                    # tampering with < makes Unsure
                     me.nto(R,to,&s{ Rs&Unsure = 1 });
                 }
 
@@ -1834,6 +1930,7 @@ Fourism: |
                     delete Rs&Committing;
                     me&mtsc,en,'made-commit',"pushed",'B';
                     Rs&Whichto = 'push';
+                    me&elvis,R,"pushed",{wake:R,delay:0.4};
                 }
             };
             # De may change since push
@@ -1905,6 +2002,8 @@ Fourism: |
                 $says = Rs&Wantsto;
                 $ma = me&mtsc,en,'make-commit',says,'B';
                 $commit = &{
+                    # wakes this
+                    me&elvis,R,Rs&Wantsto,{wake:p};
                     if (Rs&Wantsto == 'pull') {
                         # depends on the thing
                         pull();
@@ -1917,7 +2016,6 @@ Fourism: |
                         !Des&string and return me&waits,'!string'
                         
                         Rs&Committing = Qs&string = Des&string;
-                        ~>6 tinging: Q.t
                         ts&_ting(Q)
                     }
                 };
