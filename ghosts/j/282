@@ -3493,12 +3493,14 @@ Coffle: | # discussion
     me.recycleRbitXz = &acgtR{
         $b = Rc&b;
         !b and throw "recycle !hist"
+        Rc&X.recycled and return
         $ig = [];
         each bit,oV bc&X.x {
             # no support for dupes, which share an X
             # would take merging the new over the old or so,
             Rc&X.x && Rc&X.x[bit] and continue
             Rc&X.x ||= {};
+            Rc&X.x[bit] and ~>7 recycle already: R.t, bit
             Rc&X.x[bit] = oV;
         }
         # %sleeping %notsleeping should unrecycle
@@ -3506,8 +3508,15 @@ Coffle: | # discussion
         # and links to their last selves
         # < io may notice the z !tv
         #   me&ioty just looks at z
+        Rs&z ||= [];
+        $avoid = [];
+        each in Rs&z {
+            nc&b and avoid.push(nc&b)
+        }
         each in bs&z {
-            # < of there being a future of it already?
+            $ni = avoid.indexOf(n);
+            ni >= 0 and ~>5 Ret-before-recycle: R.t, n.t
+            ni >= 0 and continue
             ac(R,'z',n);
         }
     };
@@ -3540,14 +3549,13 @@ Coffle: | # discussion
             ni < 0 and continue
             Rs&z.splice(ni,1);
             !r and continue
-            # also, put the new r where the old one was
-            # keeping order of things dappled awake
+            # keep order of Rs&z dappled awake
             # < N-order, is overcome by placeness (Lines, etc)
             $ri = Rs&z.indexOf(r);
-            # r might be entered before 
             ri < 0 and debugger
-            ri < ni and ni--;
-            Rs&z.splice(ri,1);
+            # if removing before it, put -1
+            ri < ni and ni--
+            $out = Rs&z.splice(ri,1);
             Rs&z.splice(ni,0,r);
         }
     }
