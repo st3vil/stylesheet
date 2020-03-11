@@ -1781,9 +1781,6 @@ Fourism: |
             
             #c look
             $De = Rs&Described || h;
-            # unless situation is changing
-            $action = neighbours.filter(n => ns&Amountto > 1).length;
-            action and return
             if (!De) {
                 if (!Rs&Here && ps&Gens && !ps&self) {
                     Rs&Wantsto = 'pull';
@@ -1793,15 +1790,24 @@ Fourism: |
                     return me&waits,"Z!h"
                 }
             }
-            else {
+            if (De) {
+                # into time/desire for
+                me&rollbs,R,'Settled,Wantsto';
+            }
+            
+            # wait for changing situation
+            $action = neighbours.filter(n =>
+                ns&Wantsto == 'pull' && ns&Amountto > 1
+            ).length;
+            action and return
+            
+            if (De) {
             
             if (!ps&Code) {
                 # Code may be Here without string
                 Des&string == null and return me&waits,"De!string",0,'B'
             }
             
-            # into time/desire for
-            me&rollbs,R,'Settled,Wantsto';
             ly&tree = De;
             ry&tree = P;
             
@@ -1907,7 +1913,7 @@ Fourism: |
                     else {
                         # awaits ack
                         Rs&Committing and mac&s += '..'; return
-                        !Qs&ready && Qc&el != '9' and return me&waits,'!ready'
+                        Ps&string == null && Qc&el != '9' and return me&waits,'!ready'
                         !Des&string and return me&waits,'!string'
                         
                         Rs&Committing = Qs&string = Des&string;
