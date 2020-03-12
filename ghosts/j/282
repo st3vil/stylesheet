@@ -3410,6 +3410,7 @@ Coffle: | # discussion
         # but let's depend on X.z being as it was, not X.x
         #  to make history easier to forge
         $V = !Rs&igV && Rc&V && Rc&V.x && Rc&V.x[bit] || {};
+        R.t == "Flar" && Rc&b && !haks(V) and debugger
         # X (new) must hold which V (old) z we're up to
         $b;
         if (V && V.z && V.z[i-1]) {
@@ -3421,13 +3422,26 @@ Coffle: | # discussion
             V.newz ||= [];
             V.newz[i-1] = R;
         }
-        # care to leave history
+        # care to leave history (Re)
         # = V ? me&RbitXtend,V : {};
         Rc&V = V;
-        if (b) {
-            Rc&b = b;
-            # no further back
-            bc&b and bc&b;
+        b and Rc&b = b
+    };
+    # clone for destructive history
+    me.RbitXtend = &acgtV{
+        V = ex({},V);
+        V.z and V.z = V.z.slice()
+        V.x and V.x = ex({},V.x)
+        #delete V.newz;
+        return V
+    };
+    # rollback a part of X
+    me.resetRbitX = &acgtRr{
+        $b = rc&b;
+        # reset X, failed R don't become b
+        each tX Rc&X.x {
+            X != rc&X and continue
+            Rc&X.x[t] = bc&X
         }
     };
     
