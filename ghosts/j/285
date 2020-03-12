@@ -737,7 +737,7 @@ Fourism: |
                     $eg = z[0][j];
                     z.length > 1 && eg != z[1][j] and throw "wob"
                     $ins = dep(j+1,z);
-                    $bit = [eg];
+                    $bit = [ me&yfuture,eg,0,{merged:1} ];
                     path.push(bit);
                     !ins.length and continue
                     # may be a [r,r,r] or [r,[[r,r],[r,r]]]
@@ -746,8 +746,10 @@ Fourism: |
                 }
                 return path
             };
-            $pathy = dep(0,M);
-            4s&Slsz = pathy;
+            $path = dep(0,M); 
+            4s&Slsz = path;
+            path.length > 1 and throw "unpacke multi path"
+            ec&wake = path[0];
             
             
             
@@ -765,32 +767,48 @@ Fourism: |
         #     < could Ring-wait the outsiders until
         #       inners are certain they don't need
         #       their surroundings after doing stuff
+        me.printpath = &acgtli{
+            i != null and l = l.slice(0,i+1)
+            return l.map(n=>isar(n) ? '*'+n.length : n.t).join('/');
+        };
         me.ewake = &acgtRe{
             # pointer
             $r = ec&wake;
             r == 1 and return
-            !isR(r) and throw "non-R ecwake"
+            if (isar(r)) {
+                # multipath from unpacke, already yfuture
+                es&tunnel = l = r
+                #debugger;
+            }
+            else {
+                !isR(r) and throw "non-R ecwake"
 
-            # the latest maybe %sleeping parents of r
-            #  applyRbitX updated y&up of recycled Rs&z
-            $l = me.cby(r);
-            # R(c&b)+ - historical R they pointed to
-            es&tunnel_raw = l;
-            # Rc&b - last R to happen
-            #  yfuture can climb to unapplied X.newz
-            es&tunnel = l = l.map(n => me&yfuture,n,0,{merged:1} );
+                # the latest maybe %sleeping parents of r
+                #  applyRbitX updated y&up of recycled Rs&z
+                $l = me.cby(r);
+                # R(c&b)+ - historical R they pointed to
+                es&tunnel_raw = l;
+                # Rc&b - last R to happen
+                #  yfuture can climb to unapplied X.newz
+                es&tunnel = l = l.map(n => me&yfuture,n,0,{merged:1} );
+            }
             # this R
             me&tunnelArrive,R,e;
 
             $froml = l.slice(es&tunneli);
-            $path = froml.map(n=>n.t).join('/');
-            T.msg.set('pathin',path);
-            es&path = path;
+            es&path = me&printpath,froml;
+            T.msg.set('pathin',es&path);
+            es&beawake and return
 
             # < J sync Te/X, jump to
             # assume tunneling between JRoms is safe
             froml.shift();
-            $JR = froml.filter(n => ns&JRom)[0];
+            $JR;
+            each in froml {
+                isar(n) and throw "multipath before JRom"
+                ns&JRom and JR = n; break
+            }
+            l[es&tunneli+1] != JR and throw "JR!next"
             !JR and return
 
             # %icate() is like R:e suggesting N to do at A.4
@@ -824,15 +842,11 @@ Fourism: |
             $l = es&tunnel;
             !Rc&b and throw "NOb"
             !l and throw "no l"
-            $pat = &li{
-                i != null and l = l.slice(0,i+1)
-                return l.map(n=>n.t).join('/')
-            };
-            
             $p = Ry&up;
             # %tunneling jumps through %JRom
             ps&JRom and me&tunnelArrive,p,e,{toJR:1};
             
+            $pat = &li{ return me&printpath,l,i };
             # start/onward ideally knowing the last R
             $li = l.indexOf(Rc&b);
             if (li < 0 && !es&tunneli) {
@@ -845,9 +859,10 @@ Fourism: |
                 }
                 ~>4 nonb top: pat(l,i)
             }
-            $lin = es&tunneli+1;
-            $exp = l[lin];
             if (li < 0) {
+                $lin = es&tunneli+1;
+                $exp = l[lin];
+                !exp and return es&beawake ||= {shortpath:R}
                 # matching t)
                 exp.t != R.t and throw "not tun", pat(l,i), R.t
                 li = lin;
@@ -902,7 +917,7 @@ Fourism: |
             return r
         };
         },
-        #c e 6 tunnel awake
+        #c e 6 tunneling individua
         # impersonate the last awake sc fuller
         #  now that we won't be switching things on
         #  eg inheritsc can't be trusted
@@ -924,15 +939,30 @@ Fourism: |
             me&tunnelArrive,R,e;
             es&beawake and return es&tunnelout = R
             
-            $N = es&tunnel[es&tunneli+1];
+            $lin = es&tunneli+1;
+            $N = es&tunnel[lin];
             # < join many involves separating the es&tunnel
             #   want to use X
             !isar(N) and N = [N]
             $M = [];
             each ib N {
-                Rc&N.indexOf(b) >= 0 and throw "b current"
-                $c = {t:b.t};
+                $c = {};
                 c.tunneling = e;
+                if (isar(b)) {
+                    $en = Cye(['divaw',8]);
+                    eny&up = e; ac(e,'divawz',en);
+                    ens&tunnel = es&tunnel.slice();
+                    # a tunnel[ ends in one multiplicity
+                    ens&tunnel.length != lin+1 and throw "multimultipath"
+                    ens&tunnel.splice(lin,1,...b);
+                    ens&tunneli = es&tunneli;
+                    ens&tunnelin = es&tunnelin;
+                    b = b[0];
+                    c.tunneling = en;
+                }
+                
+                Rc&N.indexOf(b) >= 0 and throw "b current"
+                c.t = b.t;
                 M.push(c);
                 # < subtly repoint s with slep
                 c.s = bc&s;
@@ -1273,7 +1303,7 @@ Fourism: |
             c.Codo = 1;
             # avoid JRom after tunneling
             $tu = me.cbu(R,'tunneling');
-            tu || Rc&b and c.neednt = 1
+            tu && Rc&b and c.neednt = 1
             $r = me&ballRom,R,s,c;
             r && me&nu,"ballRo",ry&up;
             
@@ -1303,6 +1333,7 @@ Fourism: |
             s&width = '55%';
             s&height = '100%';
             s&over = 'scroll';
+            s&class = 'fathandle';
             Rs&rowish = 0;
             
             $init = !me&rollbs,R,'incount';
