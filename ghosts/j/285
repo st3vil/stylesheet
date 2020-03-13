@@ -1372,16 +1372,11 @@ Fourism: |
         ['ball+Abodo','6',&acgtRs{
             $N = me&ioty,R,'ball';
             each in N {
-                # < causes X problems in Display:
-                #   Elfor/Flar/Flar/Lafr%Abodo!c&b
                 $c = ns&C;
                 if (ns&ball) {
                     cs&po = 1;
-                    cs&top = i * 30;
                     cs&left = '14';
                     cs&width = '100%';
-                    cs&height = 30;
-                    #me&zuct,m,n;
                 }
                 else {
                     #ns&Codap || ns&Abodis and me&zuct,t,n
@@ -1408,7 +1403,7 @@ Fourism: |
             n Abodis  R %Abodis
         },'ift,D'],
         
-        # constantly watch geometries
+        #c constantly watch geometries
         # < adjust scroll after we redraw to keep focus
         # < on-redraw, a post-Cupon hook
         ['Abodis','292',&acgtRs{
@@ -1420,31 +1415,62 @@ Fourism: |
             
             # %ball thing
             $Abodo = me.cbu(R,'Abodo');
+            $r = me&Disp,Abodo;
+            $on = r && rs&on;
             # side
             $Codap = me.cbu(R,'Codap');
+            $cr = me&Disp,Abodo;
+            $con = cr && crs&on;
             
-            $se = me&case;
-            me&walla,se,'b:2.2,bg:010';
-            $see = sey&can('o','fa');
-            $ons = seey&can('m','on');
-            $have = {};
-            $N = me&ioty,Abodo,'ball';
-            each in N {
-                have[n.t] = '?';
-                $nr = me&Disp,n;
-                !nr and continue
-                i > 1 and continue;
-                $re = nrs&on.getBoundingClientRect();
-                have[n.t] = re;
-                onsy&can('nu',n.t,re);
-            }
-            #onsy&can('nu','on',have);
-            ##
+            $f = {};
+            f.balls = &{
+                $M = [];
+                $N = me&ioty,Abodo,'ball';
+                each in N {
+                    $m =
+                    m $n.t  $R:n
+                    $nr = me&Disp,n;
+                    !nr and continue
+                    ms&on = nrs&on;
+                    $re = nrs&on.getBoundingClientRect();
+                    ms&height = re.height;
+                    ms&top = re.top;
+                }
+                return M
+            };
+            f.heighten = &M{
+                $sum = 0;
+                each im M {
+                    $(ms&on).css('top',sum+'px');
+                    sum += ms&height;
+                    
+                }
+            };
+            f.shui = &{
+                $M = f.balls();
+                # see where we're looking
+                $at = f.where();
+                # < select one to keep scroll to
+                M.push(at);
+                Rs&liM = M;
+                f.heighten(M);
+            };
+            f.where = &{
+                $at = Cye(['attend']);
+                ['Top','Left','Width','Height']
+                .map(k => at.c[k.toLocaleLowerCase()] = on['scroll'+k]);
+                return at
+            };
             
+            # align after draw
+            G&yl,0,f.shui;
+            
+            $M = me&rollbs,R,'liM';
+            me&nu,'M',M;
             
             $have = {}
-            $r = me&Disp,Abodo;
-            !r and return
+            
+            !on and return
             haks(rs&on).filter(k => k.match(/scroll/))
                 .map(k => have[k] = rs&on[k]);
             
@@ -1454,14 +1480,10 @@ Fourism: |
             
             $c = me&Disp,Codap;
             rs&on.onscroll = &{
-                
                 $(cs&on).css('left','-'+$(rs&on).scrollLeft()+'px');
             };
             
-            $see = sey&can('o','lookings');
-            $ons = seey&can('m','on');
-            onss&fs = 12;
-            onsy&can('nu','on',have);
+            me&nu,'on',have;
             
         },'ift,D'],
         
