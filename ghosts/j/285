@@ -431,6 +431,7 @@ Fourism: |
         $sing = 4c&callback.singly = {};
         G&yl:frames,&{ sing == 4c&callback.singly && 4c&callback() };
         
+        4s&thinking = 1;
         try { me&planet,s }
         catch (e) {
             $async = e.message.match(/^async/);
@@ -442,6 +443,7 @@ Fourism: |
             }
             ~Ytp: e.message
         }
+        4s&thinking = 0;
         
         $ends = G&time,starts;
         4s&ms = ends;
@@ -678,9 +680,15 @@ Fourism: |
                 # probably waking itself
                 !haks(e.c) and ec&wake = R
                 
-                # messages want collecting
-                $JR = me.cbu(Ry&up,'JRom');
-                ac(JR,'elvoids',e);
+                if (4s&thinking) {
+                    # messages want collecting
+                    $JR = me.cbu(Ry&up,'JRom');
+                    ac(JR,'elvoids',e);
+                }
+                else {
+                    # message delivered
+                    G&yl,0.001,&{4c&callback(e)};
+                }
             }
         };
         },
@@ -1337,24 +1345,16 @@ Fourism: |
         #c Abodo..Codo
         # entire lab
         ['ball+Abodo','292',&acgtRs{
-            # position:fixed leaves its parent!!
-            $p = Ry&up;
-            !ps&Gens and throw "Ab"
-            $c = ps&C;
-            cs&po = 3;
-            cs&left = '0';
-            cs&top = 0;
-            cs&width = '55%';
-            cs&height = '100%';
-            cs&over = 'scroll';
-            cs&attr = {class:'fathandle'};
-            ps&rowish = 0;
-            
-            s&width = '120%';
+            # position:fixed leaves its parent
+            s&po = 3;
+            s&left = '0';
+            s&top = 0;
+            s&width = '55%';
             s&height = '100%';
-            s&ml = '20%';
-            s&dis = 1;
-            
+            s&over = 'scroll';
+            s&attr = {class:'fathandle'};
+            s&bgi = '/i/IMG_3524.JPG';
+            Rs&rowish = 0;
             
             $init = !me&rollbs,R,'incount';
             Rs&incount ||= 0;
@@ -1368,28 +1368,23 @@ Fourism: |
         
         ['ball+Abodo','38',&acgtRs{
             n Codap  R %Codap
-            #n Abodis  R %Abodis!
         },'ift,D'],
         ['ball+Abodo','6',&acgtRs{
-            $t = me&tsc,'thriv';
-            ty&cv = 0.89;
-            ts&po = 1;
-            ts&dis = 1;
-            ts&width = '20%';
-            ts&height = '100%';
-            ts&left = '0';
-            ts&top = '0';
-            $N = me&ioty,R;
+            $N = me&ioty,R,'ball';
             each in N {
                 # < causes X problems in Display:
                 #   Elfor/Flar/Flar/Lafr%Abodo!c&b
                 $c = ns&C;
                 if (ns&ball) {
-                    # cs&ml = '20%'
+                    cs&po = 1;
+                    cs&top = i * 30;
+                    cs&left = '14';
+                    cs&width = '100%';
+                    cs&height = 30;
                     #me&zuct,m,n;
                 }
                 else {
-                    ns&Codap || ns&Abodis and me&zuct,t,n
+                    #ns&Codap || ns&Abodis and me&zuct,t,n
                 }
             }
         },'ift,D'],
@@ -1397,17 +1392,20 @@ Fourism: |
         ['Codap','38',&acgtRs{
             #s&width = '20%';
             s&dis = 1;
-            #s&po = 3;
-            s&top = 0;
-            s&height = '100%';
-            s&width = '100%';
+            s&po = 3;
+            s&top = '5%';
+            s&height = '90%';
+            s&width = 14;
             #s&left = '5em';
-            me&walla,'bg:3423';
+            me&walla,'b:2.2,bg:3423';
+            Rs&rowish = 0;
             $i = 0;
             while (i++ < 9) {
                 $n = me&tsc,"Laovely";
                 ns&dis = 1
             }
+            
+            n Abodis  R %Abodis
         },'ift,D'],
         
         # constantly watch geometries
@@ -1415,22 +1413,22 @@ Fourism: |
         # < on-redraw, a post-Cupon hook
         ['Abodis','292',&acgtRs{
             $cb = &{ me&elvis,R,'Dooping',{wake:R} };
-            $del = Rc&b ? 0.3 : 0;
-            G&yl,del,cb;
-            
+            $del = Rc&b ? 5.3 : 0.01;
+            #G&yl,del,cb;
+            ~BLap
             !Rc&b and return
             
-            $se = me&case;
-            ses&bgh = '010';
-            me&walla,se;
-            #ses&po = 3;
-            #ses&top = '22%';
-            #ses&left = '5%';
+            # %ball thing
+            $Abodo = me.cbu(R,'Abodo');
+            # side
+            $Codap = me.cbu(R,'Codap');
             
+            $se = me&case;
+            me&walla,se,'b:2.2,bg:010';
             $see = sey&can('o','fa');
             $ons = seey&can('m','on');
             $have = {};
-            $N = me&ioty,Ry&up,'ball';
+            $N = me&ioty,Abodo,'ball';
             each in N {
                 have[n.t] = '?';
                 $nr = me&Disp,n;
@@ -1441,12 +1439,11 @@ Fourism: |
                 onsy&can('nu',n.t,re);
             }
             #onsy&can('nu','on',have);
-            
+            ##
             
             
             $have = {}
-            $p = me.cbu(R,'Abodo');
-            $r = me&Disp,p;
+            $r = me&Disp,Abodo;
             !r and return
             haks(rs&on).filter(k => k.match(/scroll/))
                 .map(k => have[k] = rs&on[k]);
@@ -1454,7 +1451,13 @@ Fourism: |
             haks(rs&on).filter(k => k.match(/offset/))
                 .map(k => have[k] = rs&on[k]);
             #debugger;
-             rs&on.scrollTop += 12;
+            
+            $c = me&Disp,Codap;
+            rs&on.onscroll = &{
+                
+                $(cs&on).css('left','-'+$(rs&on).scrollLeft()+'px');
+            };
+            
             $see = sey&can('o','lookings');
             $ons = seey&can('m','on');
             onss&fs = 12;
