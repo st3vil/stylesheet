@@ -1353,7 +1353,7 @@ Fourism: |
             s&height = '100%';
             s&over = 'scroll';
             s&attr = {class:'fathandle'};
-            s&bgi = '/i/IMG_3524.JPG';
+            #s&bgi = '/i/IMG_3524.JPG';
             Rs&rowish = 0;
             
             $init = !me&rollbs,R,'incount';
@@ -1404,8 +1404,9 @@ Fourism: |
         },'ift,D'],
         
         #c constantly watch geometries
-        # < adjust scroll after we redraw to keep focus
-        # < on-redraw, a post-Cupon hook
+        # adjust scroll after we redraw to keep focus
+        # < on-redraw, a post-Cupon hook,
+        #   for any tunneling through %Abodo
         ['Abodis','292',&acgtRs{
             $cb = &{ me&elvis,R,'Dooping',{wake:R} };
             $del = Rc&b ? 5.3 : 0.01;
@@ -1419,7 +1420,7 @@ Fourism: |
             $on = r && rs&on;
             # side
             $Codap = me.cbu(R,'Codap');
-            $cr = me&Disp,Abodo;
+            $cr = me&Disp,Codap;
             $con = cr && crs&on;
             
             $f = {};
@@ -1432,7 +1433,7 @@ Fourism: |
                     $nr = me&Disp,n;
                     !nr and continue
                     ms&on = nrs&on;
-                    $re = nrs&on.getBoundingClientRect();
+                    $re = ms&on.getBoundingClientRect();
                     ms&height = re.height;
                     ms&top = re.top;
                 }
@@ -1451,14 +1452,36 @@ Fourism: |
                 # see where we're looking
                 $at = f.where();
                 # < select one to keep scroll to
+                $vis = M
+                    .filter(n => ns&top + ns&height > 0)
+                    .filter(n => ns&top < ats&gapy);
+                # < if not focused on vis[0] use vis[1]
+                $v = vis[0];
+                
+                ats&z = vis;
+                f.heighten(M);
+                $V = f.balls().filter(n => nc&R == vc&R)[0];
+                $move = vs&top - Vs&top;
+                $abso = ats&top - move;
+                atc&s = v.t+" "+move+": "+abso;
+                on.scrollTop = abso;
+                
+                
                 M.push(at);
                 Rs&liM = M;
-                f.heighten(M);
             };
             f.where = &{
-                $at = Cye(['attend']);
-                ['Top','Left','Width','Height']
-                .map(k => at.c[k.toLocaleLowerCase()] = on['scroll'+k]);
+                $at = Cye(['attend','']);
+                ats&on = on;
+                # position of the view
+                ats&top = on.scrollTop;
+                ats&left = on.scrollLeft;
+                # size of the view
+                ats&gapx = on.offsetWidth;
+                ats&gapy = on.offsetHeight;
+                # scrollable ground (> view)
+                ats&width = on.scrollWidth;
+                ats&height = on.scrollHeight;
                 return at
             };
             
@@ -1471,16 +1494,20 @@ Fourism: |
             $have = {}
             
             !on and return
-            haks(rs&on).filter(k => k.match(/scroll/))
-                .map(k => have[k] = rs&on[k]);
+            haks(on).filter(k => k.match(/scroll/))
+                .map(k => have[k] = on[k]);
             
-            haks(rs&on).filter(k => k.match(/offset/))
-                .map(k => have[k] = rs&on[k]);
-            #debugger;
+            haks(on).filter(k => k.match(/offset/))
+                .map(k => have[k] = on[k]);
             
-            $c = me&Disp,Codap;
-            rs&on.onscroll = &{
-                $(cs&on).css('left','-'+$(rs&on).scrollLeft()+'px');
+            $wasleft;
+            on.onscroll = &{
+                wasleft == on.scrollLeft and return
+                wasleft = on.scrollLeft;
+                $(con).css('left','-'+wasleft+'px');
+                $re = con.getBoundingClientRect();
+                ~>6 panelnow: re.right
+                
             };
             
             me&nu,'on',have;
