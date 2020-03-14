@@ -1397,6 +1397,7 @@ Fourism: |
             !Lc&W and throw "!cW"
             $store = 'remember/'+Lc&W+'/'+k;
             if (d) {
+                delete dc&thaw;
                 $more = &d{
                     $l = [d.t,d.y.cv];
                     each in ds&z {
@@ -1441,7 +1442,8 @@ Fourism: |
             # resume
             $c = me&remember,Loc,'center';
             cc&thaw and Rs&seekto = c
-            me&rollbs,R,'seekto';
+            $se = me&rollbs,R,'seekto'
+            se and ~>7 %Codap%seekto: se.t
             
             # over:
             me&ioty,Abodo,'Codoor' .map(&d{
@@ -1481,10 +1483,11 @@ Fourism: |
             $con = cr && crs&on;
             
             $f = {};
-            f.balls = &r{
+            f.balls = &rt{
                 $M = [];
                 $N = me&ioty,r,'ball';
                 each in N {
+                    t && t != n.t and continue
                     $m =
                     m $n.t  $R:n
                     $nr = me&Disp,n;
@@ -1509,11 +1512,38 @@ Fourism: |
             };
             # init to a point
             f.seek = &{
-                $c = Rs&seekto;
-                
+                $c = Codaps&seekto;
+                $M = f.balls(Abodo);
+                f.heighten(M);
+                # for %Codoor
+                $v = f.balls(Abodo,c.t)[0];
+                !v and return delete Codaps&seekto
+                $Codin = vc&R;
+                $Codinner = Codins&Codinner;
+                !Codinner and return
+                # for %Code
+                $cn = (cs&z||[])[0];
+                !cn and return delete Codaps&seekto
+                $n = f.balls(Codinner,cn.t)[0];
+                # wait for it to %string
+                $nr = n && nc&R;
+                $s = nr && nrc&s;
+                !s || ss&string == null and n = null
+                !n and ~>6 waitseek: c.t, cn.t
+                !n and return
+                # < elvis shunting awake cn
+                #   %Zave needing to reawake when %string init?
+                cnc&wait ||= 3;
+                cnc&wait--;
+                cnc&wait > 0 and return
+                delete cnc&wait;
+                on.scrollTop = on.scrollTop
+                    + ns&top + ns&height * cn.y.cv;
+                ~>7 SEEEKEd: c.t, cn.t, ns&top, ns&height * cn.y.cv
+                delete Codaps&seekto;
             };
             f.shui = &{
-                Rs&seekto and return f.seek()
+                Codaps&seekto and return f.seek()
                 $M = f.balls(Abodo);
                 # see where we're looking
                 $at = f.where();
