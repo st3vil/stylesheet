@@ -1373,13 +1373,13 @@ Fourism: |
                     }
                 });
                 
-                # header
+                #c header
                 $se = me&case;
                 $to = sey&can('o','tooli');
                 tos&dis = 3;
                 $eo = toy&can('c','tools');
                 $trunc = me&mtsc,eo,'trunc',0,'y'
-                me.nto(R,trunc,&sT{
+                $truncate = &{
                     # truncate elvis log
                     me&ioty,el .map(&n{
                         Gtime(nc&time) > 60 and fio(el,n,9)
@@ -1388,51 +1388,72 @@ Fourism: |
                         Gtime(nc&timetil) > 60 and fio(so,n,9)
                     });
                     ~>6 truncated:
-                });
-
-                me&ioty,so .map(&n{
+                };
+                
+                me.nto(R,trunc,truncate);
+                
+                $N = me&ioty,so;
+                each in N {
                     n $n.t  $s:n,R %Evelse:2,Timegroup
-                });
+                }
+                i > 9 and truncate();
                 T.nN.reverse();
                 
                 # footer
                 $se = me&case,7;
                 sey&can('i',sos&in_time);
-                me&tsc,'intime',sos&in_time,'G' .y.cv = 0.8;
+                #me&tsc,'intime',sos&in_time,'G' .y.cv = 0.8;
                 
                 n Elvito  R %Tool
+                
+                #n Teing  $s:Rs&Te,R %ball,tightly
             }
             elsif (Rs&Timegroup) {
-                $ti = me&case;
                 me&domesticate,R
                 me&ioty,s .map(&m{
-                    $mo = tiy&can('c',m.t);
-                    # < Abodisish align subrows
-                    mos&dis = 3;
-                    $mi = moy&can('i',ms&in_time);
-                    moy&can('i',ms&direction,'fs:22,lh:0.5,ma:0.2,hs:339')
-
-                    #$eo = moy&can('c','e '+i);
-                    each ie ms&z {
-                        $eo = moy&can('c','e '+i);
-                        #eos&dis = 3;
-                        $ei = eoy&can('i',e.t,{fs:33,hue:33})
-                        #eis&ope and eos&dis = 3; eoy&can('nu',e)
-                    }
-                    if (mis&ope) {
-                        $mo = sey&can('c',m.t);
-                        mos&dis = 1;
-                        n $m.t  $Zuctto:mo,s:m,R %Evelse:2
-                    }
+                    n $m.t  $s:m,R %Evelse:2,Timebit
                 });
             }
+            elsif (Rs&Timebit) {
+                # < Abodisish align subrows across %Timegroups
+                # timestamp key
+                #me&domesticate,R
+                me&tsc,'in_time',ss&in_time,'b'
+                me&tsc,'direction',ss&direction,'y','fs:22,lh:0.5,ma:0.2,hs:339'
+                
+                each ie ss&z {
+                    me&tsc,'i'+eti,e.t,'y','fs:18,lh:0.5,hue:33'
+                    
+                    $eti = i+':'+e.t;
+                    (Rs&boost||0)>0 &&
+                        n $eti  $s:e,R %Evelse:2,Elvisbit
+                }
+                (Rs&boost||0)>0 &&
+                    n Timebit  $s:s,R %Evelse:2,Elvisgroup
+            }
+            elsif (Rs&Elvisgroup) {
+                # < learn a slep scan to reduce into Cit
+                me&tsc,'t',R.t,'y','fs:12,lh:0.5,hue:33'
+                (Rs&boost||0)<=0 and return
+                sy&R and me&nu,"R",sy&R;
+            }
+            elsif (Rs&Elvisbit) {
+                me&tsc,'t',R.t,'y','fs:18,lh:0.5,hue:33'
+                me&tsc,'t',s.t,'g';
+                me&tsc,'tbo',"bo:"+Rs&boost,'b';
+                (Rs&boost||0)<=0 and return
+                me&tsc,'tbop',"ope!",'b';
+                me&nu,"elvisy",s
+            }
             else {
+                me&tsc,'t',R.t,'y','fs:18,lh:0.5,hue:33'
+                #me&domesticate,R
                 # some time, more details
-                me&nu,'detail',s
+                me&nu,'detail',{s:Rc&s}
 
             }
             ah(R,'reawakens','Evelse',{
-                rollbs:'Evelse',
+                rollbs:'Evelse,Timegroup,Timebit,Elvisgroup,Elvisbit',
             });
             #me&introqua,[R,'A'],{boost:1}
             #me&zu,"4s&pathout",4s&pathout;
