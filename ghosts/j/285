@@ -1321,29 +1321,24 @@ Fourism: |
         ['Evelse','291',&acgtRs{
             Rs&rowish = 1;
             $p = Ry&up;
-            $so = me&rollbsc,R,'sorted';
-            sos&z ||= [];
-            sos&inc ||= 1;
             if (!ps&Evelse) {
                 4s&Elvact = R;
                 s&mb = 20;
+                # input/output piles:
                 $el = 4s&Elvacts;
-                # group into time
-                me&ioty,el .map(&n{
-                    ny&sorted == so and return
-                    # i $so/%now<>nc&time<3
-                    $co = (sos&z||[]).slice(-1)[0];
-                    if (!co || coc&timetil+2 < nc&time)
-                        co = fio(so,"#"+sos&inc++)
-                    coc&time ||= nc&time;
-                    coc&timetil = nc&time;
-                    fio(co,n);
-                    ny&sorted = so
-                });
-                # say each bit of timestamp different
-                $se = me&case,2;
-                $last_time;
-                $ftime = &l{
+                $so = me&rollbsc,R,'sorted';
+                sos&z ||= [];
+                sos&inc ||= 1;
+                
+                $ftime = &ls{
+                    if (s) {
+                        # say each bit of timestamp different
+                        $dif = [];
+                        each id l {
+                            s [i] != d || dif.length and dif.push(d)
+                        }
+                        l = dif;
+                    }
                     $ms = l.pop();
                     ms.length <3 and l.push(ms); ms = null
                     $times = l.slice(-3);
@@ -1354,63 +1349,32 @@ Fourism: |
                     ms and s += "."+ms
                     return s
                 };
-
-                # footer
-                $ini = sey&can('o','ini');
-                inis&dis = 3;
-                iniy&can('i','init');
-                $init = iniy&can('c','times');
-
-                # log table
-                me&ioty,so .map(&n{
-                    $co = sey&can('o','co'+n.t);
-                    cos&dis = 3; # tr
-                    coy&can('i',n.t);
-                    $ti = coy&can('c','times');
-
-
-                    #$quiet = i > 3;!
-                    me&ioty,n .map(&m{
-                        # timestamp key
-                        $times = m.t.split(/\D+/).slice(0,-1);
-                        if (!last_time) {
-                            last_time = times.slice(0,-1);
-                            $l = inity&can('c','init');
-                            ls&dis = 3;
-                            ly&can('i',ftime(last_time));
-
+                # group into time
+                $timegap = 4;
+                me&ioty,el .map(&n{
+                    if (!ny&sorted) {
+                        # i $so/%now<>nc&time<3
+                        $co = sos&z.slice(-1)[0];
+                        if (!co || coc&timetil+timegap < nc&time)
+                            co = fio(so,"#"+sos&inc++)
+                        coc&time ||= nc&time;
+                        coc&timetil = nc&time;
+                        fio(co,n);
+                        ny&sorted = so;
+                        
+                        # formatted timestamp key
+                        $times = n.t.split(/\D+/).slice(0,-1);
+                        if (!sos&last_time) {
+                            sos&last_time = times.slice(0,-1);
+                            sos&in_time = ftime(sos&last_time)
                         }
-                        # compile different columns to last_time
-                        $dif = [];
-                        each in times {
-                            last_time[i] != n || dif.length and dif.push(n)
-                        }
-                        last_time = times;
-                        $mo = tiy&can('c',m.t);
-                        # < Abodisish align subrows
-                        mos&dis = 3;
-                        $mi = moy&can('i',ftime(dif));
-                        moy&can('i',ms&direction,'fs:22,lh:0.5,ma:0.2,hs:339')
-
-                        #$eo = moy&can('c','e '+i);
-                        each ie ms&z {
-                            $eo = moy&can('c','e '+i);
-                            #eos&dis = 3;
-                            $ei = eoy&can('i',e.t,{fs:33,hue:33})
-                            #eis&ope and eos&dis = 3; eoy&can('nu',e)
-                        }
-                        if (mis&ope) {
-                            $mo = tiy&can('c',m.t);
-                            mos&dis = 3;
-                            n $m.t  $Zuctto:mo,s:m,R %Evelse:2
-                        }
-                        # !
-                    });
-
-                    tis&z.reverse();
+                        ns&in_time = ftime(times,sos&last_time);
+                        sos&last_time = times;
+                    }
                 });
-
+                
                 # header
+                $se = me&case;
                 $to = sey&can('o','tooli');
                 tos&dis = 3;
                 $eo = toy&can('c','tools');
@@ -1426,8 +1390,41 @@ Fourism: |
                     ~>6 truncated:
                 });
 
-                ses&z.reverse();
+                me&ioty,so .map(&n{
+                    n $n.t  $s:n,R %Evelse:2,Timegroup
+                });
+                T.nN.reverse();
+                
+                # footer
+                $se = me&case,7;
+                sey&can('i',sos&in_time);
+                me&tsc,'intime',sos&in_time,'G' .y.cv = 0.8;
+                
                 n Elvito  R %Tool
+            }
+            elsif (Rs&Timegroup) {
+                $ti = me&case;
+                me&domesticate,R
+                me&ioty,s .map(&m{
+                    $mo = tiy&can('c',m.t);
+                    # < Abodisish align subrows
+                    mos&dis = 3;
+                    $mi = moy&can('i',ms&in_time);
+                    moy&can('i',ms&direction,'fs:22,lh:0.5,ma:0.2,hs:339')
+
+                    #$eo = moy&can('c','e '+i);
+                    each ie ms&z {
+                        $eo = moy&can('c','e '+i);
+                        #eos&dis = 3;
+                        $ei = eoy&can('i',e.t,{fs:33,hue:33})
+                        #eis&ope and eos&dis = 3; eoy&can('nu',e)
+                    }
+                    if (mis&ope) {
+                        $mo = sey&can('c',m.t);
+                        mos&dis = 1;
+                        n $m.t  $Zuctto:mo,s:m,R %Evelse:2
+                    }
+                });
             }
             else {
                 # some time, more details
