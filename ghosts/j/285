@@ -1587,6 +1587,70 @@ Fourism: |
             #    me&tsc,'%Zave',haks(R.sc).slice(0,10).join(','),'y';
 
         },'ift,D'],
+        #c functions
+        &{
+        # zap in css sc, so it stays there
+        # also returns callback to apply css to an element
+        me.eCsc = &acgtRtc,weakly{
+            # they persist
+            $was = Rs&eCsc && Rs&eCsc[t];
+            was && weakly and return
+            
+            isst(c) and c = G&peel,c
+            ah(R,'eCsc',t,c);
+            # returns hash of css
+            $ctocss = &c{
+                $C = Cye([t+'-style',1]);
+                ex(C.sc,c)
+                $st = 4s&styler ||= me&styler;
+                $css = {};
+                st(C,css);
+                return css
+            };
+            return &el,{
+                $css = ctocss(c);
+                was and was = ctocss(was)
+                each kv was {
+                    css[k] and continue
+                    $(el).css(k,'');
+                }
+                was = null;
+                $(el).css(css)
+            };
+        }
+        # < harness such datastructure for %Zave!
+        # save/resume L%k = C(t y)+
+        me.remember = &acgtLk{
+            $d = L.sc[k];
+            !Lc&W and throw "!cW"
+            $store = 'remember/'+Lc&W+'/'+k;
+            if (d) {
+                delete dc&thaw;
+                $more = &d{
+                    $l = [d.t,d.y.cv];
+                    each in ds&z {
+                        l.push(more(n))
+                    }
+                    return l
+                };
+                localStorage[store] = enj(more(d));
+            }
+            else {
+                $s = localStorage[store];
+                !s and return
+                $more = &l{
+                    $d = Cye([l.shift(),l.shift()]);
+                    each in l {
+                        fio(d,more(n))
+                    }
+                    return d
+                };
+                d = L.sc[k] = more(dej(s))
+                dc&thaw = 1
+            }
+            return d
+        };
+        },
         #c %Codon
         # < leading the way
 
@@ -1618,7 +1682,7 @@ Fourism: |
             # %Codon dives:
             #  %Abodo/%Codoor/%JRom/%Codo%Gens
             #    /%Codo%Codin/%Code
-            # %Gens%Codo/%ball%Codo
+            # the %JRom and %Gens are !%ball
             $Codo = me.cbub(R,&r{ return rs&Codo && rs&ball },'Gens');
             if (!Codo) {
                 $Abodo = me.cbu(R,'Abodo');
@@ -1710,70 +1774,9 @@ Fourism: |
                 $c = ns&C;
                 # will be undone when %Abodis heightens everything
                 # pl:14 =~ ab,left:14,height:...
-                ns&ball and me&eCsc,n,'Abodo','ml:14'
+                ns&ball and me&eCsc,n,'Abodo','ml:14',1
             }
         },'ift,D'],
-        &{
-        # zap in css sc, so it stays there
-        # also returns callback to apply css to an element
-        me.eCsc = &acgtRtc{
-            isst(c) and c = G&peel,c
-            # they persist
-            $was = Rs&eCsc && Rs&eCsc[t];
-            ah(R,'eCsc',t,c);
-            # returns hash of css
-            $ctocss = &c{
-                $C = Cye([t+'-style',1]);
-                ex(C.sc,c)
-                $st = 4s&styler ||= me&styler;
-                $css = {};
-                st(C,css);
-                return css
-            };
-            return &el,{
-                $css = ctocss(c);
-                was and was = ctocss(was)
-                each kv was {
-                    css[k] and continue
-                    ~Removing: R.t, k
-                    $(el).css(k,'');
-                }
-                $(el).css(css)
-            };
-        }
-        # < harness such datastructure for %Zave!
-        # save/resume L%k = C(t y)+
-        me.remember = &acgtLk{
-            $d = L.sc[k];
-            !Lc&W and throw "!cW"
-            $store = 'remember/'+Lc&W+'/'+k;
-            if (d) {
-                delete dc&thaw;
-                $more = &d{
-                    $l = [d.t,d.y.cv];
-                    each in ds&z {
-                        l.push(more(n))
-                    }
-                    return l
-                };
-                localStorage[store] = enj(more(d));
-            }
-            else {
-                $s = localStorage[store];
-                !s and return
-                $more = &l{
-                    $d = Cye([l.shift(),l.shift()]);
-                    each in l {
-                        fio(d,more(n))
-                    }
-                    return d
-                };
-                d = L.sc[k] = more(dej(s))
-                dc&thaw = 1
-            }
-            return d
-        };
-        },
         ['Codap','38',&acgtRs{
             #s&width = '20%';
             s&dis = 1;
@@ -1860,9 +1863,9 @@ Fourism: |
                 cnc&wait--;
                 cnc&wait > 0 and return
                 delete cnc&wait;
-                on.scrollTop = on.scrollTop
-                    + ns&top + ns&height * cn.y.cv;
-                ~>7 SEEEKEd: c.t, cn.t, ns&top, ns&height * cn.y.cv
+                on.scrollTop = dec(on.scrollTop
+                    + ns&top + ns&height * cn.y.cv);
+                ~>7 SEEEKEd: c.t, ki(cn,2)
                 delete Codaps&seekto;
             };
             f.shui = &{
@@ -1961,7 +1964,7 @@ Fourism: |
                 each im M {
                     $r = mc&R;
                     # < skip dis:0 - the recently open
-                    $css = 'po,left:14,width:100%,top:'+sum+'px';
+                    $css = 'po,left:14,width:100%,top:'+dec(sum)+'px';
                     # overwrites the other eCsc Abodo
                     $apply = me&eCsc,r,'Abodo',css;
                     apply(ms&on);
