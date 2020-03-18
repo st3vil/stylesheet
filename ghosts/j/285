@@ -1846,8 +1846,7 @@ Fourism: |
         ['Alooseion','98',&acgtRs{
             $Al = Rs&Alooseion;
             each t,cb Al {
-                ~>3 Alooseion: R.t, t
-                cb();
+                cb('Alooseion');
             }
         },'ift,D,sleeping'],
 
@@ -1914,30 +1913,57 @@ Fourism: |
             ~BLap
             $Abodo = me.cbu(R,'Abodo');
             $Codap = me.cbu(R,'Codap');
+            me&rollbs,R,'comf';
             $f = {};
+            f.com = Rs&comf ||= {};
             # after Display:Abodo
             ah(Abodo,'Alooseion','Abodis',&{ f.shui() });
             f.shui = &{
-                Abodo = me.cbu(R,'Abodo');
-                Codap = me.cbu(R,'Codap');
-                me&yfuture,Abodo != Abodo and throw "A wander"
-                me&yfuture,Codap != Codap and throw "C wander"
+                # < Abodo knowing better its outoftime function waterfallery
+                Abodo = me&yfuture,Abodo;
+                Codap = me&yfuture,Codap;
+                
                 if (f.init) {
                     f.init() and delete f.init
                     else {
-                        ~>6 finitwait:
+                        ~>2 finitwait:
                         return
                     }
                 }
+                
+                $at = f.where();
+                if (ats&gapy < 500) {
+                    ~>2 skinny:
+                    return G&yl,4.04,f.shui
+                }
+                
                 # check dom semi arrived
                 $M = f.balls(Abodo);
                 if (M.filter(m => !ms&height).length) {
-                    ~>6 heightholes:
+                    ~>2 heightholes:
                     return G&yl,0.04,f.shui
                 }
-
+                
+                # wait for the Abodo to be done
+                # elvis shunting awake cn
+                # which we can rely on %Alooseion to reactivate us after
+                $JR = me.cbu(Abodo,'JRom');
+                if (JRs&elvoids) {
+                    f.com.beenwaiting ||= 0;
+                    $i = f.com.beenwaiting++;
+                    ~>2 stashed?: i
+                    return
+                }
+                
+                if (f.com.beenwaiting) {
+                    
+                    ~>2 Ready: f.com.beenwaiting
+                    delete f.com.beenwaiting
+                    return G&yl,0.01,f.shui
+                }
+                
                 Codaps&seekto and return f.seek()
-                ~>6 shui:
+                ~>2 shui:
                 f.stable_reheighten();
                 f.Locpoint();
             };
@@ -1954,23 +1980,20 @@ Fourism: |
                     $re = con.getBoundingClientRect();
                     re.right < 0 and 'sleep'
                 };
+                return 1
             }
 
             # init to a point
             f.seek = &{
-                # wait for the Abodo to be done
-                # elvis shunting awake cn
-                $JR = me.cbu(Abodo,'JRom');
-                # < Abodo knowing better its outoftime function waterfallery
-                if (JRs&elvoids) {
-                    ~>6 stashed?:
-                    return
-                }
-                ~>6 seek:
+                ~>2 seek:
 
                 $c = Codaps&seekto;
                 $M = f.balls(Abodo);
-                M.filter(m => !ms&height).length and return G&yl,0.04,f.shui
+                if (M.filter(m => !ms&height).length) {
+                    ~>6 heightholes:
+                    return G&yl,0.04,f.shui
+                }
+                
                 f.heighten(M);
                 # for %Codoor
                 $v = f.balls(Abodo,c.t)[0];
@@ -1988,6 +2011,8 @@ Fourism: |
                 !s || ss&string == null and n = null
                 !n and ~>6 waitseek: c.t, cn.t
                 !n and return
+                
+                $on = me&Dispon,Abodo;
 
                 on.scrollTop = dec(on.scrollTop
                     + ns&top + ns&height * cn.y.cv);
@@ -2008,9 +2033,8 @@ Fourism: |
                     t && t != n.t and continue
                     $m =
                     m $n.t  $R:n
-                    $nr = me&Disp,n;
-                    !nr and continue
-                    ms&on = nrs&on;
+                    ms&on = me&Dispon,n;
+                    !ms&on and continue
                     $re = ms&on.getBoundingClientRect();
                     ms&height = re.height;
                     ms&top = re.top;
@@ -2036,21 +2060,20 @@ Fourism: |
 
             # scroll to counteract positioning adjustment
             f.stable_reheighten = &{
-                $M = f.balls(Abodo);
+                $on = me&Dispon,Abodo;
                 # see where we're looking
                 $at = f.where();
+                $M = f.balls(Abodo);
                 # select one to keep scroll to
-                $v = M
-                    .filter(n => ns&top + ns&height > 0)
-                    .filter(n => ns&top < ats&gapy) [0];
+                $v = M.filter(n => ns&top < ats&gapy).reverse()[0];
+                !v and throw "not one"
                 f.heighten(M);
                 $V = f.balls(Abodo).filter(n => nc&R == vc&R)[0];
                 $move = vs&top - Vs&top;
                 $abso = ats&top - move;
                 atc&s = v.t+" "+move+": "+abso;
-                on.scrollTop = abso;
-                M.push(at);
-                Rs&liM = M;
+                
+                on.scrollTop = abso
             };
             # apply absolute positioning
             f.heighten = &M{
