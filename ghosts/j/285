@@ -1865,7 +1865,9 @@ Fourism: |
         },'ift,D'],
         ['Codap','38',&acgtRs{
             # < TEST why such extravagant memory loss
-            #    happens when click Codap, Abodo wakes, Codoors c.neednt
+            #   without this %reawakens, clicks here wakes %Abodo
+            #   then its %Codoors c.neednt badly,
+            #   < JRom post-error/pre-history better
             ah(R,'reawakens','Codap',{rollbs:'Codap,Loc'});
             #s&width = '20%';
             s&dis = 1;
@@ -1881,7 +1883,7 @@ Fourism: |
             $Abodo = me.cbu(R,'Abodo');
             # to sample attention from
             $Loc = me&rollbsc,R,'Loc';
-            Locc&W = Abodo.t
+            Locc&W = Abodo.t;
             # resume
             $c = me&remember,Loc,'center';
             cc&thaw and Rs&seekto = c
@@ -1927,25 +1929,26 @@ Fourism: |
                 Codap = me&yfuture,Codap;
                 f.com.f != f and return
                 
-                if (f.init) {
-                    f.init() and delete f.init
-                    else {
-                        ~>2 finitwait:
-                        return
-                    }
+                $on = me&Dispon,Abodo;
+                # f.at - view, also f.on/f.con
+                $at = f.at = f.where();
+                # f.M - Codoors
+                f.M = f.balls(Abodo);
+                if (!(ats&on && ats&con)) {
+                    ~>2 muntedaton:
+                    return G&yl,444.04,f.shui
                 }
                 
-                $at = f.at = f.where();
                 if (ats&gapy < 500) {
                     ~>2 skinty: ats&gapy
                     return G&yl,444.04,f.shui
                 }
                 
                 # check dom semi arrived
-                $M = f.balls(Abodo);
-                if (M.filter(m => !ms&height).length) {
-                    ~>2 heightholes:
-                    return G&yl,0.04,f.shui
+                $N = f.M.filter(m => (ms&height||0) < 22);
+                if (N.length) {
+                    ~>2 heightholes: N.map(n=>n.t).join(',')
+                    return G&yl,144.04,f.shui
                 }
                 
                 # wait for the Abodo to be done
@@ -1965,15 +1968,17 @@ Fourism: |
                     return G&yl,0.01,f.shui
                 }
                 
+                f.init && f.init() and delete f.init
+                
                 Codaps&seekto and return f.seek()
                 ~>2 shui:
                 f.stable_reheighten();
                 f.Locpoint();
             };
             f.init = &{
-                $on = me&Dispon,Abodo;
-                $con = me&Dispon,Codap;
-                !(on && con) and return
+                $at = f.at;
+                $on = ats&on;
+                $con = ats&con;
 
                 $wasleft;
                 on.onscroll = &{
@@ -1989,15 +1994,9 @@ Fourism: |
             # init to a point
             f.seek = &{
                 ~>2 seek:
-
+                # to here:
                 $c = Codaps&seekto;
-                $M = f.balls(Abodo);
-                if (M.filter(m => !ms&height).length) {
-                    ~>6 heightholes:
-                    return G&yl,0.04,f.shui
-                }
-                
-                f.heighten(M);
+                f.heighten();
                 # for %Codoor
                 $v = f.balls(Abodo,c.t)[0];
                 !v and return delete Codaps&seekto
@@ -2049,8 +2048,8 @@ Fourism: |
             # the view
             f.where = &{
                 $at = Cye(['attend','']);
-                $on = me&Dispon,Abodo;
-                ats&on = on;
+                $on = f.on = ats&on = me&Dispon,Abodo;
+                $con = f.con = ats&con = me&Dispon,Codap;
                 # position of the view
                 ats&top = on.scrollTop;
                 ats&left = on.scrollLeft;
@@ -2065,23 +2064,22 @@ Fourism: |
 
             # scroll to counteract positioning adjustment
             f.stable_reheighten = &{
-                $on = me&Dispon,Abodo;
                 # see where we're looking
-                $at = f.where();
-                $M = f.balls(Abodo);
+                $at = f.at;
                 # select one to keep scroll to
-                $v = M.filter(n => ns&top < ats&gapy).reverse()[0];
+                $v = f.M.filter(n => ns&top < ats&gapy).reverse()[0];
                 !v and throw "not one"
-                f.heighten(M);
-                $V = f.balls(Abodo).filter(n => nc&R == vc&R)[0];
+                f.heighten();
+                $V = f.M.filter(n => nc&R == vc&R)[0];
                 $move = vs&top - Vs&top;
                 $abso = ats&top - move;
                 atc&s = v.t+" "+move+": "+abso;
                 
-                on.scrollTop = abso
+                f.on.scrollTop = abso
             };
             # apply absolute positioning
             f.heighten = &M{
+                M ||= f.M;
                 $sum = 0;
                 each im M {
                     $r = mc&R;
@@ -2092,22 +2090,22 @@ Fourism: |
                     apply(ms&on);
                     sum += ms&height;
                 }
+                f.M = f.balls(Abodo);
             };
             #c AbodisLoc
             # notice where view points
             #  as fractions of %Codin(/%Code)
             #  to draw the viewport in the Codap
             f.Locpoint = &{
-                $at = f.where();
+                $at = f.at;
                 $Loc = Codaps&Loc;
                 $point = 0;
                 ['begin','center','end'].map(&k{
-                    $M = f.balls(Abodo);
-                    $din = f.atpoint(point,M);
-                    $Codin = dinc&R;
-                    $Codinner = Codins&Codinner;
-                    !Codinner and return
-                    $N = f.balls(Codinner);
+                    $din = f.atpoint(point,f.M);
+                    # to (din)%Cod
+                    $oor = dinc&R;;
+                    !oors&Codinner and return
+                    $N = f.balls(oors&Codinner);
                     $ner = f.atpoint(point,N);
                     fio(din,ner);
                     Loc.sc[k] = din;
@@ -2166,8 +2164,10 @@ Fourism: |
         ['ball+Codin','296',&acgtRs{
             $c = me&tsc,'%Codon','Codin','g';
             me&walla,'hu:17';
-            $Codoor = me.cbu(R,'Codoor');
-            Codoors&Codinner = R;
+            # is left outside
+            #  is JRom's s&Js&top
+            $oor = me.cbu(R,'Codoor');
+            oors&Codinner = R;
             s&bgh = '111';
 
             $ag = me&tsc,'add-ghost','';
@@ -2227,7 +2227,7 @@ Fourism: |
       tuesday:
        %elvoids log, explore
 
-      wednesday:#####################
+      wednesday:
        multipath tunneling: non-first doesnt Display
          because me&ing iterated Rs&z while it unrecycles
           as seen by Lafr/a not e:init-pull,
@@ -2240,6 +2240,7 @@ Fourism: |
             all the loose ends of the Codon would generate some e
             as such was stylehouses first life
            would break off after 0.2...
+      thursday: #####################
         < resumes point in last 20 %Codes per %Codin
 
         < learn a slep scan to reduce into Cit
@@ -2259,7 +2260,6 @@ Fourism: |
 
 
 
-      thursday:
       friday:
 
      # elvising
