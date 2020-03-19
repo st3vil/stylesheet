@@ -1967,11 +1967,9 @@ Fourism: |
             $muchpoint = &din,don{
                 $nir = (dins&z||[])[0];
                 $nor = (dons&z||[])[0];
-                return
-                din.t != don.t
-                || muchdif(diny&cv,dony&cv)
-                || nir.t != nor.t
-                || muchdif(niry&cv,nory&cv)
+                return din.t != don.t || nir.t != nor.t
+                    || muchdif(diny&cv,dony&cv)
+                    || muchdif(niry&cv,nory&cv)
             };
             ah(R,'Abodish','o','casual',&fT{
                 # trail wanders along
@@ -1982,20 +1980,45 @@ Fourism: |
                 # we are on it
                 $din = Locs&center;
                 $ner = (dins&z||[])[0];
-                ~>3 cas: ki(din,2), ki(ner,2)
+                $nor = (dons&z||[])[0];
                 
-                don && !muchpoint(din,don) and return
+                $doit = !don || muchpoint(din,don);
+                !doit and return
                 # add a place we were
                 ts&z.unshift(din);
+                ts&changey ||= 0;
+                ts&changey++;
+                
+                ts&changey < 5 and return
+                delete ts&changey;
+                
                 # < scaling up, grouping into each other
                 $tend = 30;
+                while (ts&z.length > 15) {
+                    $tw = {};
+                    $not = [];
+                    each in ts&z {
+                        $m = tw[n.t];
+                        # for %Codin
+                        !m and tw[n.t] = m; continue
+                        not.push(n);
+                        each il ns&z {
+                            # leave more recent Code fraction
+                            ms&z.filter(L => L.t == l.t).length and continue
+                            fio(m,l,0)
+                        }
+                    }
+                }
                 while (ts&z.length > 30) {
                     # we gradually blur into time,
                     #  easiest to exclude (eg a curve) first
                     ts&z.pop();
                 }
+                
+                me&remember,Loc,'trail';
+                
                 $ner = (dins&z||[])[0];
-                ~>3 casually: ki(din,2), ki(ner,2)
+                ~>3 strail: ki(din,2), ki(ner,2)
             });
             
             
@@ -2101,7 +2124,7 @@ Fourism: |
                 f.com.f != f and return
                 # to shui not in a hurry since the last shui
                 $cb = me&sccb,R,'shui_casual',&{f.shui('casual')};
-                G&delay,3.14,cb;
+                G&delay,2.14,cb;
                 
                 # f.at - view, also f.on/f.con
                 $at = f.at = f.where();
