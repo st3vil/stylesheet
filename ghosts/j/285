@@ -1720,7 +1720,7 @@ Fourism: |
             }
             else {
                 $s = localStorage[store];
-                !s and return
+                !s and return L.sc[k] = Cye([k,1])
                 $more = &l{
                     $d = Cye([l.shift(),l.shift()]);
                     each in l {
@@ -1937,7 +1937,7 @@ Fourism: |
                 ~>7 sunk: ki(c,2), ki(cn,2)
                 delete Rs&seekto;
             });
-            # notice where view points now
+            # notice where view points now!
             #  as fractions of %Codin(/%Code)
             #  to draw the viewport in the Codap
             ah(R,'Abodish','o',71,&fT{
@@ -1952,14 +1952,49 @@ Fourism: |
                 # for %Code
                 $ner = f.atpoint(point,N);
                 fio(din,ner);
-                ~>3 center: ki(din,2), ki(ner,2)
+                #~>3 center: ki(din,2), ki(ner,2)
                 Locs&center = din;
             });
             
+            #c timestrail
+            me&remember,Loc,'trail';
+            $muchdif = &ab{
+                a *= 1;
+                b *= 1;
+                return b > a + 0.05
+                    || b < a - 0.05
+            };
+            $muchpoint = &din,don{
+                $nir = (dins&z||[])[0];
+                $nor = (dons&z||[])[0];
+                return
+                din.t != don.t
+                || muchdif(diny&cv,dony&cv)
+                || nir.t != nor.t
+                || muchdif(niry&cv,nory&cv)
+            };
             ah(R,'Abodish','o','casual',&fT{
+                # trail wanders along
+                $t = Locs&trail;
+                !t and throw "noitime"
+                ts&z ||= [];
+                $don = ts&z[0];
+                # we are on it
                 $din = Locs&center;
                 $ner = (dins&z||[])[0];
+                ~>3 cas: ki(din,2), ki(ner,2)
                 
+                don && !muchpoint(din,don) and return
+                # add a place we were
+                ts&z.unshift(din);
+                # < scaling up, grouping into each other
+                $tend = 30;
+                while (ts&z.length > 30) {
+                    # we gradually blur into time,
+                    #  easiest to exclude (eg a curve) first
+                    ts&z.pop();
+                }
+                $ner = (dins&z||[])[0];
                 ~>3 casually: ki(din,2), ki(ner,2)
             });
             
