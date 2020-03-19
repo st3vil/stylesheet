@@ -1918,22 +1918,30 @@ Fourism: |
                     $Codoor = vc&R;
                     $Codin = Codoors&Codinner;
                     !Codin and return
-                # for %Code
+                
+                # for %Code, maybe
                 $cn = (cs&z||[])[0];
-                !cn and return delete Rs&seekto
-                $n = f.balls(Codin,cn.t)[0];
-                    # which must look ready < know Zave/waits
-                    $nr = n && nc&R;
-                    $s = nr && nrc&s;
-                    !s || ss&string == null and n = null
-                    !n and ~>6 waitseek: c.t, cn.t
-                    !n and return
+                if (cn) {
+                    $n = f.balls(Codin,cn.t)[0];
+                        # which must look ready < know Zave/waits
+                        $nr = n && nc&R;
+                        $s = nr && nrc&s;
+                        !s || ss&string == null and n = null
+                        !n and ~>6 waitseek: c.t, cn.t
+                        !n and return
+                }
 
                 $at = f.at;
                 $on = f.on;
-                on.scrollTop = dec(on.scrollTop
-                    + ns&top + ns&height * cn.y.cv
-                    - ats&gapy / 2);
+                $thing = n || v;
+                $scroll = on.scrollTop + things&top;
+                if (thing == n) {
+                    # put center
+                    scroll -= ats&gapy / 2;
+                    # yay far down
+                    scroll += ns&height * cn.y.cv
+                }
+                on.scrollTop = dec(scroll);
                 ~>7 sunk: ki(c,2), ki(cn,2)
                 delete Rs&seekto;
             });
@@ -1986,9 +1994,10 @@ Fourism: |
                 !doit and return
                 # add a place we were
                 ts&z.unshift(din);
+                f.hatch('trails');
+                # slow down
                 ts&changey ||= 0;
                 ts&changey++;
-                
                 ts&changey < 5 and return
                 delete ts&changey;
                 
@@ -2022,24 +2031,7 @@ Fourism: |
             });
             
             
-            #c and scroll
-            ah(R,'Abodish','o',1,&fT{
-                $at = f.at;
-                $on = ats&on;
-                $con = ats&con;
-
-                $wasleft;
-                window.lon = on;
-                on.onscroll = &{
-                    # < interface for formula watching
-                    if (wasleft != on.scrollLeft) {
-                        wasleft = on.scrollLeft;
-                        $(con).css('left','-'+wasleft+'px');
-                        $re = con.getBoundingClientRect();
-                        re.right < 0 and 'sleep'
-                    }
-                };
-            });
+            #c stabilise scroll 
             # when %Codin heights are changing
             # scroll to counteract positioning adjustment
             ah(R,'Abodish','o',6,&fT{
@@ -2058,24 +2050,70 @@ Fourism: |
             });
             
             
-            each tv Loc.sc {
-                me&nu,t,v
-            }
 
-            # a map, accentuated
+            ah(R,'Abodish','o',1,&fT{
+                $at = f.at;
+                $on = ats&on;
+                $con = ats&con;
+
+                $wasleft;
+                window.lon = on;
+                on.onscroll = &{
+                    # < interface for formula watching
+                    if (wasleft != on.scrollLeft) {
+                        wasleft = on.scrollLeft;
+                        $(con).css('left','-'+wasleft+'px');
+                        $re = con.getBoundingClientRect();
+                        re.right < 0 and 'sleep'
+                    }
+                };
+                f.hatch('trails');
+            });
+            
+            # on %Codine qua, trail grows
+            # < center changes faster
+            # < to unify all waits-ing, sparkles of activity
+            ah(R,'Abodish','o','trails',&fT{
+                # apply styles to Loc/*/* map
+                ~>7 Trails!:
+                $c = Locs&center;
+                $apply = &O,sc{
+                    $modon = me&Dispon,Oc&n;
+                    me&eCsc,O,'trailstyle',sc (modon);
+                };
+                me&ioty,Loc .map(&D{
+                    me&ioty,D .map(&O{
+                        $sc = {};
+                        c && fio(c,O.t,0) and sc.fs = 22
+                        apply(O,sc);
+                    });
+                    $sc = {};
+                    c && c.t == D.t and sc.fs = 22
+                    apply(D,sc);
+                });
+            });
+            
+            # a map, plumbed to ^
             me&ioty,Abodo,'Codoor' .map(&d{
-                $n = me&tsc,"Codoor",d.t;
+                $n = me&tsc,"Codoor:"+d.t,d.t;
                 ns&dis = 3;
-                c && c.t == d.t and ns&fs = 22
+                $D = fio(Loc,d.t);
+                Dc&R = d;
+                Dc&n = n;
                 ds&Codinner && 
                 me&ioty,ds&Codinner,'Code' .map(&r{
-                    $m = me&tsc,"Codoor",r.t,'y';
-                    c && fio(c,r.t,0) and ms&fs = 22
+                    $m = me&tsc,"Code:"+r.t,r.t,'y';
                     ms&dis = 5;
                     ms&pl = 1;
+                    $O = fio(D,r.t);
+                    Oc&R = r;
+                    Oc&n = m;
                 });
             });
 
+            each tv Loc.sc {
+                me&nu,t,v
+            }
             n Abodis  R %Abodis
         },'ift,D'],
         #c Abodis clockworks geometries
@@ -2101,7 +2139,7 @@ Fourism: |
             f.init = 1;
             # for any tunneling through %Abodo
             ah(Abodo,'Alooseion','Abodis',&{ f.shui() });
-            $hatch = &t{
+            f.hatch = &t{
                 $T = {};
                 $cb = f.o[t] || f[t];
                 !cb and return
@@ -2122,6 +2160,7 @@ Fourism: |
                 Abodo = f.Abodo = me&yfuture,Abodo;
                 Codap = f.Codap = me&yfuture,Codap;
                 f.com.f != f and return
+                f.on && f.on.ownerDocument.contains(f.on) and return
                 # to shui not in a hurry since the last shui
                 $cb = me&sccb,R,'shui_casual',&{f.shui('casual')};
                 G&delay,2.14,cb;
@@ -2134,7 +2173,6 @@ Fourism: |
                     ~>2 muntedaton:
                     return G&yl,444.04,f.shui
                 }
-                
                 if (ats&gapy < 500) {
                     ~>2 skinty: ats&gapy
                     return G&yl,444.04,f.shui
@@ -2165,17 +2203,17 @@ Fourism: |
                 }
                 
                 if (f.init) {
-                    hatch(1) and return
+                    f.hatch(1) and return
                     delete f.init
                 }
                 
-                hatch(22) and return
+                f.hatch(22) and return
                 
-                hatch(6) and return
+                f.hatch(6) and return
                 
-                hatch(71) and return
+                f.hatch(71) and return
                 
-                mode && hatch(mode) and return
+                mode && f.hatch(mode) and return
                 
                 ~>2 shui:
             };
