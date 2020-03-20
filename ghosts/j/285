@@ -808,6 +808,7 @@ Fourism: |
         #  handlers generating ec&wake
         me.elvis = &acgtRec{
             $E = 4s&Elvacts ||= Cye(['Elvacts',1]);
+            c ||= {wake:R};
             # store time/e
             $Ein  = &c{
                 $t = Cye([me.timestamp(),{y:R}]);
@@ -990,6 +991,11 @@ Fourism: |
                 $is = 4s&paused = !4s&paused;
                 is = is ? "off" : "on"
                 ~>7 Ambient wake: '>5 '+is
+                4s&paused and Rs&sleeping = 1
+            }
+            elsif (e.t == 'C+click') {
+                debugger;
+                ec&wake = 1
             }
             elsif (e.t == 'V') {
                 ec&wake = 1
@@ -1321,7 +1327,6 @@ Fourism: |
             }
         },'ift,D'],
     ] };
-
     #c Fourismness Elfor=Codon|Slei
     me.Fourismness = &acgt{ return [
         ... me&Zavingness ,
@@ -1897,7 +1902,7 @@ Fourism: |
             $Loc = me&rollbsc,R,'Loc';
             Locc&W = Abodo.t;
             
-            #c resume center
+            #c seekto resume Loc%center
             $c = me&remember,Loc,'center';
             cc&thaw and Rs&seekto = c
             $se = me&rollbs,R,'seekto'
@@ -1919,7 +1924,7 @@ Fourism: |
                     # which links into itself like s&Js&top
                     $Codoor = vc&R;
                     $Codin = Codoors&Codinner;
-                    !Codin and return
+                    !Codin and return me&elvis,R,'seekto',{wake:Codoor}
                 
                 # for %Code, maybe
                 $cn = (cs&z||[])[0];
@@ -1968,7 +1973,7 @@ Fourism: |
                 Locs&center = din;
             });
             
-            #c timestrail
+            #c grow Loc%trail
             me&remember,Loc,'trail';
             $muchdif = &ab{
                 a *= 1;
@@ -2240,7 +2245,7 @@ Fourism: |
                 #   everyone pooling timestyles,
                 #    esp on drag, everyone holds breath
                 $ro = f.com.scrolltime;
-                ro && Gtime(ro) < 0.5 and return G&yl,444.04,f.shui
+                ro && Gtime(ro) < 0.5 and return G&yl,444.04,&{f.shui(mode)}
                 
                 # f.at - view, also f.on/f.con
                 $at = f.at = f.where();
@@ -2922,7 +2927,7 @@ Fourism: |
                     sy&Pfrom = P;
                     Rs&Describing = 1;
                 };
-                $old = me&mtsc,co,'Deold','🔁','d';
+                $old = me&mtsc,co,'Describe','🔁','d';
                 olds&fs = 16;
 
                 if (!Rs&Described) {
@@ -2943,6 +2948,7 @@ Fourism: |
                         }
                         if (!ps&stringguess) {
                             oldc&s = '...';
+                            old.t += '-awaits';
                             olds&hs = 555;
                             me.nto(R,old,&{ Rs&Describing = 1 });
                             # Code want their Codin saved
@@ -2982,7 +2988,10 @@ Fourism: |
                     if (DZs&age > 0) {
                         me&mtsc,old,'howold',DZs&age+'s' .sc.fs = 5
                     }
-                    $refresh = &{ DZs&Describing = 1 };
+                    $refresh = &{
+                        me&elvis,p,'reDescribing';
+                        DZs&Describing = 1;
+                    };
                     # can be clicked
                     me.nto(R,old,refresh);
                     # lights up when done
@@ -3060,7 +3069,7 @@ Fourism: |
                 if (Rs&Settled || Qc&el == 9) {
                     # we sync, they follow
                     Rs&Amountto ||= 2;
-                    Rs&Wantsto = 'push';
+                    Rs&Wantsto ||= 'push';
                 }
                 else {
                     # start different or their updates
@@ -3132,7 +3141,18 @@ Fourism: |
                         Rs&Committing and mac&s += '..'; return
                         Ps&string == null && Qc&el != '9' and return me&waits,'!ready'
                         !Des&string and return me&waits,'!string'
-
+                        if (Qc&el == '9' && !Rs&Committing) {
+                            # wake $Codin on new $Code
+                            # < committing subtrees
+                            # ! for some reason it doesn't have %Zaving
+                            #   find with %Gens for now..
+                            $r = me.cbu(R,'Gens')
+                            r and me&elvis,R,'1up',{wake:r}
+                        }
+                        if (Rs&Zave == 'ghost') {
+                            Qs&section = me.cbu(R,'Codin').t
+                        }
+                        
                         Rs&Committing = Qs&string = Des&string;
                         ts&_ting(Q)
                     }
