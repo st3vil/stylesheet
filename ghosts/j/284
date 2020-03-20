@@ -1914,6 +1914,7 @@ Foogla: | # Domes prepare to A=A
 
         # < explore I by fraction
         c.neednt and c.wantsleep = 'neednt'
+        c.impausible and delete c.wantsleep
         # c.wantsleep and c.ov = 0.279
         c.wantsleep and c.ov = 0.172
 
@@ -1923,9 +1924,8 @@ Foogla: | # Domes prepare to A=A
             cb && cb(r);
             me&Ring,r;
             if (c.wantsleep) {
-                if (!rc&b) {
-                    #  || !rc&b.y.Display
-                    ~nohisttosleep
+                if (!rc&b || !rc&b.y.Display) {
+                    me&tsc,"sleep!hist:"+r.t,0,'B'
                 }
                 else {
                     rs&sleeping = 'wanted';
@@ -1947,7 +1947,6 @@ Foogla: | # Domes prepare to A=A
             $async = msg.match(/^async/);
             # reset X, failed R don't become b!
             me&resetRbitX,R,r;
-            #
             # can it sleep?
             $b = rc&b;
             if (b && by&Display) {
@@ -2024,7 +2023,8 @@ Foogla: | # Domes prepare to A=A
                 s&boc = '858';
                 c.igV = 1;
             }
-            elsif ((Rs&boost||0) < 0 || c.pause) {
+            elsif (!c.impausible &&
+                ((Rs&boost||0) < 0 || c.pause)) {
                 $pa = me&tsc,'JRom-paused','⏸','6';
                 pas&po = 1;
                 pas&fs = 22;
