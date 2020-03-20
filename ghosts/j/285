@@ -1981,7 +1981,9 @@ Fourism: |
                     || muchdif(diny&cv,dony&cv)
                     || muchdif(niry&cv,nory&cv)
             };
-            ah(R,'Abodish','o','casual',&fT{
+            # to casually be somewhere
+            # location accumulator
+            ah(R,'Abodish','o','casual',&f,T,doit{
                 # trail wanders along
                 $t = Locs&trail;
                 !t and throw "noitime"
@@ -1992,18 +1994,28 @@ Fourism: |
                 $ner = (dins&z||[])[0];
                 $nor = (dons&z||[])[0];
                 
-                $doit = !don || muchpoint(din,don);
+                doit = doit || !don || muchpoint(din,don);
                 !doit and return
+                doit== 'doit' and ~>7 doing leave: ner.t
                 # add a place we were
                 ts&z.unshift(din);
-                f.hatch('trails');
+                f.hatch('trailstyle');
                 # slow down
                 ts&changey ||= 0;
                 ts&changey++;
                 ts&changey < 5 and return
                 delete ts&changey;
                 
-                # < scaling up, grouping into each other
+                f.blurpoints(t);
+                
+                me&remember,Loc,'trail';
+                
+                $ner = (dins&z||[])[0];
+                ~>3 strail: ki(din,2), ki(ner,2)
+            });
+            # trail/$Codin+/$Code+ pointers smush down
+            # < scaling up, grouping into each other
+            ah(R,'Abodish','blurpoints',&t{
                 $tend = 30;
                 while (ts&z.length > 15) {
                     $tw = {};
@@ -2019,17 +2031,17 @@ Fourism: |
                             fio(m,l,0)
                         }
                     }
+                    each in not {
+                        $ni = ts&z.indexOf(n);
+                        ni < 0 and throw "notnot"
+                        ts&z.splice(ni,1);
+                    }
                 }
                 while (ts&z.length > 30) {
                     # we gradually blur into time,
                     #  easiest to exclude (eg a curve) first
                     ts&z.pop();
                 }
-                
-                me&remember,Loc,'trail';
-                
-                $ner = (dins&z||[])[0];
-                ~>3 strail: ki(din,2), ki(ner,2)
             });
             
             
@@ -2067,7 +2079,7 @@ Fourism: |
                         re.right < 0 and 'sleep'
                     }
                 };
-                f.hatch('trails');
+                f.hatch('trailstyle');
                 Rs&fengi = &TtO{
                     f = f.com.f;
                     f.hatch(t,O);
@@ -2096,6 +2108,8 @@ Fourism: |
                     }
                     la and ontoy&cv = lay&cv
                 }
+                # note exactly where we left
+                f.hatch('casual','doit');
                 Rs&seekto = seek;
                 ~>2 Seek: ki(seek,2)
                 # < trail the leaving
@@ -2103,16 +2117,16 @@ Fourism: |
                 T.feng = 1;
             });
             
-            #c on %Codine qua, trail grows
+            #c stylepile
             # < center changes faster
             # < to unify all waits-ing, sparkles of activity
             $apply = &O,sc{
                 $modon = me&Dispon,Oc&n;
                 me&eCsc,O,'trailstyle',sc (modon);
             };
-            ah(R,'Abodish','o','trails',&fT{
+            ah(R,'Abodish','o','trailstyle',&fT{
                 # apply styles to Loc/*/* map
-                ~>7 Trails!:
+                ~>7 trailstyle!:
                 $c = Locs&center;
                 me&ioty,Loc .map(&D{
                     me&ioty,D .map(&O{
@@ -2152,6 +2166,11 @@ Fourism: |
 
             each tv Loc.sc {
                 me&nu,t,v
+                if (t == 'trail') {
+                    $s = G&ind,v,'ki2';
+                    $d = me&tsc,"trail-ind",s,'y';
+                    ds&dis = 1;
+                }
             }
             n Abodis  R %Abodis
         },'ift,D'],
@@ -2172,21 +2191,20 @@ Fourism: |
             $f = {};
             f.com = Rs&comf ||= {};
             f.com.f = f;
+            f.init = 1;
+            
             each tv f.com {
                 me&nu,t,v
             }
-            f.init = 1;
             # for any tunneling through %Abodo
             ah(Abodo,'Alooseion','Abodis',&{ f.shui() });
+            
             f.hatch = &tO{
                 $T = {};
                 $cb = f.o[t] || f[t];
                 !cb and return
                 cb(f,T,O);
-                if (T.feng) {
-                    $cb = &{ delete f.on; f.shui() };
-                    G&delay,0.001,cb;
-                }
+                T.feng and G&delay,0.001,&{f.shui()}
                 T.waits and return 1
             };
             f.o = {};
@@ -2203,7 +2221,7 @@ Fourism: |
                 Abodo = f.Abodo = me&yfuture,Abodo;
                 Codap = f.Codap = me&yfuture,Codap;
                 f.com.f != f and return
-                f.on && f.on.ownerDocument.contains(f.on) and return
+                f.on && !f.on.ownerDocument.contains(f.on) and return
                 # to shui not in a hurry since the last shui
                 $cb = me&sccb,R,'shui_casual',&{f.shui('casual')};
                 G&delay,2.14,cb;
@@ -2238,7 +2256,6 @@ Fourism: |
                     ~>2 stashed?: i
                     return
                 }
-                
                 if (f.com.beenwaiting) {
                     ~>2 Ready: f.com.beenwaiting
                     delete f.com.beenwaiting
@@ -2399,7 +2416,7 @@ Fourism: |
        %elvoids log, explore
 
       wednesday:
-       multipath tunneling: non-first doesnt Display
+       fixed multi-tunneling: non-first doesnt Display
          because me&ing iterated Rs&z while it unrecycles
           as seen by Lafr/a not e:init-pull,
            f.seek seeing !ms&height
