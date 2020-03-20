@@ -2006,7 +2006,7 @@ Fourism: |
                 ts&changey < 5 and return
                 delete ts&changey;
                 
-                f.blurpoints(t);
+                blurtrail(t);
                 
                 me&remember,Loc,'trail';
                 
@@ -2015,20 +2015,21 @@ Fourism: |
             });
             # trail/$Codin+/$Code+ pointers smush down
             # < scaling up, grouping into each other
-            ah(R,'Abodish','blurpoints',&t{
+            $blurtrail = &t{
                 $tend = 30;
-                while (ts&z.length > 15) {
+                $ima = 100;
+                while (ts&z.length > 5 && ima-- > 0) {
                     $tw = {};
                     $not = [];
                     each in ts&z {
-                        $m = tw[n.t];
-                        # for %Codin
-                        !m and tw[n.t] = m; continue
+                        $m = delete tw[n.t];
+                        # for two %Codin
+                        !m and tw[n.t] = n; continue
                         not.push(n);
                         each il ns&z {
                             # leave more recent Code fraction
                             ms&z.filter(L => L.t == l.t).length and continue
-                            fio(m,l,0)
+                            fio(m,l)
                         }
                     }
                     each in not {
@@ -2040,9 +2041,10 @@ Fourism: |
                 while (ts&z.length > 30) {
                     # we gradually blur into time,
                     #  easiest to exclude (eg a curve) first
+                    ~>2 blurtrail truncates:
                     ts&z.pop();
                 }
-            });
+            };
             
             
             #c stabilise scroll 
@@ -2085,7 +2087,6 @@ Fourism: |
                     f.hatch(t,O);
                     T.wake ||= 'not';
                 };
-                ~BLapa init:
             });
             Rs&fengi = &tl{
                 throw "!init fengi"
@@ -2217,6 +2218,7 @@ Fourism: |
                 f.o = o;
             }
             f.shui = &mode,{
+                $began = Gtime();
                 # < Abodo knowing better its outoftime function waterfallery
                 Abodo = f.Abodo = me&yfuture,Abodo;
                 Codap = f.Codap = me&yfuture,Codap;
@@ -2266,16 +2268,23 @@ Fourism: |
                     f.hatch(1) and return
                     delete f.init
                 }
-                
                 f.hatch(22) and return
                 
-                f.hatch(6) and return
+                # sleepytime same geo
+                $is = [ats&left,ats&top,
+                    ...f.M.map(m=>ms&top+':'+ms&height)]
+                    .join(",");
+                $still = is == f.com.was;
+                f.com.was = is;
                 
-                f.hatch(71) and return
-                
-                mode && f.hatch(mode) and return
-                
-                ~>2 shui:
+                if (!still) {
+                    f.hatch(6) and return
+
+                    f.hatch(71) and return
+
+                    mode && f.hatch(mode) and return
+                }
+                ~>2 shui: Gtime(began), mode||'...', still?"still":""
             };
             
             #c Abodis...
@@ -2438,7 +2447,7 @@ Fourism: |
             as finding the coherent several diffs
             along a trail of string evolution
       friday: #####################
-        < trail the leaving
+        trail the leaving
         < style map
         < user, go some SCA, they pull via Search, etc
           
