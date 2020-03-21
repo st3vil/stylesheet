@@ -588,9 +588,10 @@ Fourism: |
     # this is a bag of marbles, they are free and together
     # < plane should throttle e
     me.wantpause = &acgtRs{
+        $was = 4s&paused;
         $is = 4s&paused = s == 'tog' ? !4s&paused : s
         $say = is ? "off" : "on";
-        ~>7 Ambient wake: '>5 '+say
+        was != is and ~>7 Ambient wake: '>5 '+say
         return is
     };
     me.planet = &acgts{
@@ -966,6 +967,18 @@ Fourism: |
         #  security of thems
         &{
         me.slopemed = &acgtRe{
+            if (e.t == 'says') {
+                if (ec&type == 'blur') {
+                    # ec&ev.relatedTarget is where it's going,
+                    #  for codemirror, .tagName == 'TEXTAREA'
+                    #  and .parentNode()+ to something we know
+                    if (ec&s == '') {
+                        es&edone = 'sayvague';
+                        Rs&sleeping = 1;
+                        return
+                    }
+                }
+            }
             $sl = ec&slope.slice().reverse();
             each in sl {
                 # ns&medo is handled without 4c&callback
@@ -995,7 +1008,7 @@ Fourism: |
         };
         me.domisce = &acgtRe{
             if (e.t == 'A') {
-                me&wantsleep,R,'tog' and Rs&sleeping = 1
+                me&wantpause,R,'tog' and Rs&sleeping = 1
             }
             elsif (e.t == 'C+click') {
                 debugger;

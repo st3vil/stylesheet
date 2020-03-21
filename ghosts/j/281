@@ -641,18 +641,15 @@ Soogle: | # start from Sevo
             # supposing the element will surely be there...
         }
     };
-    
+    # store %value submit (e:say) or set (c&s)
+    #  avoids settting what was submit,
+    #   or we'd lose bits of fast typing while saving
     me.valuecha = &acgtRhv{
         $b = Rc&b;
-        !b and return 1
         # untyped into
         Rs&value = v;
-        # already set what we wanted
-        #  leaves room for h to wander,
-        # avoids setting what was submit
-        #bs&value != v and ~Valuecha: ki(bs&value),'->',ki(v)
-        bs&value != v and return 1
-        h != v and ~Value: ki(h),'<-',ki(v)
+        !b || bs&value != v and return 1
+        h != v and ~Valuewander: ki(h),'<-',ki(v)
     };
     me.valuesays = &acgtRe{
         e.t = 'says';
@@ -666,7 +663,6 @@ Soogle: | # start from Sevo
         # we default to ec&s = $(on).val()
         # unless wanting to watch typing as it happens,
         # throws out events like click, keypress other than esc/enter
-        4c&pause = 0;
     };
     me.textinput = &acgtRb{
         # sets value
@@ -736,11 +732,12 @@ Soogle: | # start from Sevo
             if (me&valuecha,R,is,c&s ) {
                 if (is) {
                     ~CMerge
+                    debugger;
                     # merge/merge.js
                 }
                 cm.setValue(''+c&s);
                 cm.refresh();
-                G&yl:400,&{ cm.refresh() };
+                #G&yl:400,&{ cm.refresh() };
             }
             # ? = s&dige;
         }
