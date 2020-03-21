@@ -1913,14 +1913,40 @@ Fourism: |
             cc&thaw and Rs&seekto = c
             $se = me&rollbs,R,'seekto'
             
-            # init to a point
+            # a %Code that wants focus
+            ah(R,'Abodish','o','Codon_curse',&fTr{
+                r = me&yfuture,r;
+                $cm = rs&cm;
+                !cm and T.waits = 'forcm';
+                if (!rs&waitedonce) {
+                    # < cm.on ready? 
+                    T.waits = rs&waitedonce = 'forcm+1';
+                    return T.feng = 1
+                }
+                ~>6 doing cm: r.t
+                cm.focus();
+                cm.execCommand('goLineEnd');
+            });
+            # init to a point!
             ah(R,'Abodish','o',22,&fT{
+                Abodo = f.Abodo;
+                
+                each tO Abodos&fengtodo {
+                    O == 'not' and continue
+                    f.hatch(t,O) and return
+                    Abodos&fengtodo[t] = 'not' 
+                }
+                delete Abodos&fengtodo;
+                
+                Rs&seekto and f.hatch('Codon_point',Rs&seekto)
+                
+                
+            });
+            ah(R,'Abodish','o','Codon_point',&fTc{
                 # < specify seekto is the intent,
                 #   drop on fail/success
                 # < seekto as %loca, any depth/describitude
                 #    as SCA ring
-                $c = Rs&seekto;
-                !c and return
                 cc&ttl ||= 5;
                 if (--cc&ttl == 0) {
                     # might be things on trail no longer in W
@@ -2146,22 +2172,40 @@ Fourism: |
                 T.feng = 1;
             });
             
-            #c stylepile
+            #c stylepile!
             # < center changes faster
             # < to unify all waits-ing, sparkles of activity
             $apply = &O,sc{
                 $modon = me&Dispon,Oc&n;
                 me&eCsc,O,'trailstyle',sc (modon);
             };
+            # make/keeps some Loc/**
+            $futlink = &Otr{
+                r and Oc&R = r
+                !Oc&R and return
+                r = Oc&R = me&yfuture,Oc&R;
+                r.sc[t] = O;
+                return r
+            };
+            
+            # when an %initCode is out there,
+            #  point cursor into it
             ah(R,'Abodish','o','trailstyle',&fT{
                 # apply styles to Loc/*/* map
                 ~>7 trailstyle!:
                 $c = Locs&center;
                 me&ioty,Loc .map(&D{
+                    # update r
+                    $r = futlink(D,'Org');
+                    
+                    # resync D off this
                     me&ioty,D .map(&O{
+                        $r = futlink(O,'Org');
+                    
                         $sc = {};
                         c && fio(c,O.t,0) and sc.fs = 22
                         # %Code
+                        
                         apply(O,sc);
                     });
                     $sc = {};
@@ -2169,6 +2213,7 @@ Fourism: |
                     apply(D,sc);
                 });
             });
+            
             
             # a map, plumbed to ^
             $ntovent = &Ot{
@@ -2179,7 +2224,8 @@ Fourism: |
                 $n = me&tsc,"Codoor:"+d.t,d.t;
                 ns&dis = 3;
                 $D = fio(Loc,d.t);
-                Dc&R = d;
+                Dy&up = Loc;
+                futlink(D,'Org',d);
                 Dc&n = n;
                 ds&Codinner && 
                 me&ioty,ds&Codinner,'Code' .map(&r{
@@ -2188,7 +2234,7 @@ Fourism: |
                     ms&pl = 1;
                     $O = fio(D,r.t);
                     Oy&up = D;
-                    Oc&R = r;
+                    futlink(D,'Org',r);
                     Oc&n = m;
                     ntovent(O);
                 });
@@ -2210,38 +2256,27 @@ Fourism: |
             # automation of these handlers
             n Abodis  R %Abodis
             
-            
+            # Code inits
+            # - already pauses
             
                 me&ioty,Loc .map(&D{
                     me&ioty,D .map(&O{
-                        Oc&R = me&yfuture,Oc&R;
-                        $r = Oc&R;
-                            $st = me&ioty,r,'fix'
-                                .filter(n=>n.t=='string')[0];
-                            $stD = st && me&Disp,st;
-                            $sD = stD && me&ioty,stD,'modulat'
-                                .filter(n=>n.t=='s')[0];
-                                
-                $cm = sDs&cm;
-                # undumpable due to 'constructor' as R.t,
-                # < name inherited properties differently
-                $l = haks(cm);
-                $l = [];
-                each kv cm {
-                    !cm.hasOwnProperty(k) and k = '   '+k
-                    l.push(k);
+                        
+                        $r = futlink(O,'Org');
+                        !r and return
+                        $cm = rs&cm;
+                        
+                if (0) {
+                    # undumpable due to 'constructor' as R.t,
+                    # < name inherited properties differently
+                    $l = haks(cm);
+                    $l = [];
+                    each kv cm {
+                        !cm.hasOwnProperty(k) and k = '   '+k
+                        l.push(k);
+                    }
+                        me&nu,"Haesh",l
                 }
-                window.keem = cm;
-                
-                if (r.t == 'Pictures') {
-                    me&nu,"Haesh",l
-                    #cm.on('focus',&{
-                    #    ~>5 focus: r.t
-                    #});
-                    cm.focus();
-                    cm.execCommand('goLineEnd');
-                }
-                
                     });
                 });
         },'ift,D'],
@@ -2490,7 +2525,10 @@ Fourism: |
                 delete Ds&string
             };
             Rs&initCode and ss&string = "# "
-            
+        },'ift,D'],
+        ['ball+Code+initCode','4',&acgtRs{
+            $Abodo = me.cbu(R,'Abodo');
+            ah(Abodo,'fengtodo','Codon_curse',R)
         },'ift,D'],
 
         ['fix+Cofix','296',&acgtRs{
