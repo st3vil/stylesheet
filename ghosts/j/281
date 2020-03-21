@@ -556,9 +556,14 @@ Soogle: | # start from Sevo
         # past self
         $b = Rc&b || {c:{},sc:{}};
         if (s&e && s&e != 2) {
-            s&tag = 'input';
-            s&inv = 1;
+            #s&tag = 'input';
+            #s&inv = 1;
             c&s == null and c&s = '';
+            if (c&s == '') {
+                # stackoverflow:cant-get-to-empty-paragraphs-in-contenteditable
+                s&dis ||= 2;
+                s&height = 1;
+            }
         }
         s&nobody and throw "used to reselect d.on"
         if (s&tag || bs&tag) { # or historically
@@ -619,10 +624,13 @@ Soogle: | # start from Sevo
                 G&gev
             }});
         }
+        s&e && c&s == null and c&s = ''
         if (typeof c&s == 'string' || typeof c&s == 'number') {
             if (s&e) {
                 s&e == '1' and me&textinput,R,b
                 else
+                # < may use %Alooseion, higher tension
+                #   as soon as Rs&on is somewhere
                 s&e == '2' and G&yl:1,&{ me&codemirror,R,b };
                 else {
                     throw "other e type"
@@ -636,9 +644,6 @@ Soogle: | # start from Sevo
                 Rs&text = c&s;
                 b && Rs&text != bs&text and me&chR,R,'text'
             }
-            # Cupon sets Rs&on's text/html content as a child
-            # which is why to cause Rs&cha? might work without
-            # supposing the element will surely be there...
         }
     };
     # store %value submit (e:say) or set (c&s)
@@ -660,26 +665,24 @@ Soogle: | # start from Sevo
             $r = me&yfuture,R;
             rs&value = ec&s;
         };
+        console.log(e)
+        ec&s = Rs&on.textContent;
         # we default to ec&s = $(on).val()
         # unless wanting to watch typing as it happens,
         # throws out events like click, keypress other than esc/enter
     };
     me.textinput = &acgtRb{
+        Rs&textonly = 1;
         # sets value
         if (c&s != null) {
-            if (me&valuecha,R,Rs&on.value,c&s ) {
-                Rs&on.value = c&s
+            if (me&valuecha,R,Rs&on.textContent,c&s ) {
+                $(Rs&on).text(c&s)
             }
         }
         # gives value
         Rs&on.eintro = &e{ me&valuesays,R,e };
-
-        # stretched by value
-        Rs&on.onkeydown = &ev,{
-            $(Rs&on).css('width', (2 + (Rs&on.value.length / 1.95))+'em');
-        };
-        $(Rs&on).trigger('onkeydown');
-
+        Rs&on.contentEditable = true;
+        
         # leave valuec
         
         $hands = {
@@ -1174,6 +1177,12 @@ Soogle: | # start from Sevo
                 Rs&down.push(... bs&down);
                 # already/awakers replace
                 already.map(n => bac(R,'down',n));
+                # that still are
+                $rm = Rs&down.filter
+                    (n => !ns&modulat && nc&s.c.not);
+                rm.length and ~>6 rmconsc: R.t, ki(rm,4.23)
+                Rs&down = Rs&down.filter
+                    (n => !(!ns&modulat && nc&s.c.not))
             }
             
             !p and continue
@@ -1249,6 +1258,7 @@ Soogle: | # start from Sevo
             }
             
             !Rs&cha and continue
+            Rs&textonly and continue
             
             # what is
             $has = Rs&on.childNodes;
@@ -2750,12 +2760,24 @@ Soogle: | # start from Sevo
     # C = e, R above s, may be modulat or so
     me.Gazel = &acgtRs{
         if (C.t == 'says') {
-            # renaming requires context
-            s && s.t == 't' and T.wake = Ry&up
-            # Te.sc.$qua = input
-            $qua = ss&qua || 'sayeth';
-            qua == 1 and qua = s.t
-            return T.qua[qua] = c&s
+            if (Rs&ball && ss&qua == 'renameto') {
+                T.notime = 1;
+                me&ballrename,R,c&s;
+                ~>7 rename: R.t, c&s
+                # < avoidable if history/Te/etc are renamed as well
+                #   or if T.wakealso = R, waking up but sleeping the non R
+                #   otherwise R.t remains as it was
+                T.wake = Ry&up;
+                return;
+            }
+            else {
+                # renaming requires context
+                s && s.t == 't' and T.wake = Ry&up; T.wakealso = R;
+                # Te.sc.$qua = input
+                $qua = ss&qua || 'sayeth';
+                qua == 1 and qua = s.t
+                return T.qua[qua] = c&s
+            }
         }
         C.t.includes('S+') and return T.qua.play = Rs&play ? 0 : 1
         
@@ -3374,8 +3396,9 @@ Soogle: | # start from Sevo
         me&Rsync,p;
         i $ps/$S
         me&Rsync,p;
+        
     };
-    # keep a %ball for each Rc&ss&z
+    # keep a %ball for each Rc&ss&z!
     me.Rsync = &acgtRV{
         $S = Rc&s;
         $p = Ry&up;
@@ -3403,6 +3426,7 @@ Soogle: | # start from Sevo
             T.V &&
             ~Removed: R.t, n.t
         }
+        T.notime and return
         each in ba {
             if (Rc&nofurther) {
                 ~Rsyncnofurther: R.t, n.t
@@ -4576,7 +4600,7 @@ Soogle: | # start from Sevo
                 ts&e = 1;
                 ts&qua = 'renameto';
                 $name = me&Tie,R,'renameto',1;
-                if (name) {
+                if (name && name != s.t) {
                     me&ballrename,R,name;
                     tc&s = s.t;
                     n cha  s:cha %fs:6,hs:594
