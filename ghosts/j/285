@@ -2266,9 +2266,9 @@ Fourism: |
             };
             
             # rebuilds r:Abodo/** to O:Loc/**
-            #   links each Oc&R=r, Rs&Org=O
+            #  links each Oc&R=r, Rs&Org=O
             $sch = {schinf:['Codoor','Code'],O:'Org'};
-            $Org = me&indother,Loc,Abodo,sch;
+            $Org = me&indother,Abodo,Loc,sch;
             
             ah(R,'Abodish','o','trailstyle',&fT{
                 # apply styles to Loc/*/* map
@@ -2304,13 +2304,19 @@ Fourism: |
                 me.nto(R,Oc&n,&sT{ Rs&fengi(T,t,O) });
             };
             
-            Org.self(&rOds{
+            $self = Org.self(&rOds{
+                ~>6 selfin: d.ind, r.t
                 # Oc&n = map modulat
                 $n = Oc&n = me&tsc,ds&gk+":"+s.t,s.t;
                 ns&dis = d.d == 2 ? 3 : 5;
                 
                 ntovent(O);
+                return ki(O,2);
             });
+            
+            
+            me&nu,'selfind',self;
+            
             
             # random printouts!
             each tv Loc.sc {
@@ -2329,7 +2335,7 @@ Fourism: |
             
             # Code inits
             # - already pauses
-            
+            if (0) {
                 me&ioty,Loc .map(&D{
                     me&ioty,D .map(&O{
                         
@@ -2350,8 +2356,9 @@ Fourism: |
                 }
                     });
                 });
+            }
         },'ift,D'],
-        #c ind
+        #c indother!!!
         &{
         
         me.indother = &acgtSOd{
@@ -2359,52 +2366,58 @@ Fourism: |
                 $c = ex({},d);
                 isha(y) and ex(c,y); c.yy = delete c.y
                 else { c.yy = y }
+                return c
             };
-            $finally = &d,k,noop{
+            $finaly = &d,k,noop{
                 # check d.O/** is not missing from d.s/**
                 !ds&z and return
                 !d[k] and throw "!d"+k
-                ~>5 Orggone: ki(gone,4.23)
                 return gone
             };
-            $Org = {
-                self = &y{
+            return {
+                self: &y{
                     $c = initc(y);
                     c.y = &rds{
                         # i Loc/...
                         d.O ||= O;
-                        $O = d.O = me&syncup,d.O,s;
+                        O = d.O = me&syncup,d.O,s;
 
                         # Oc&R=r, rs&Org=O
                         c.O and me&futlink,O,c.O,r
                         
                         # middle
-                        c.yy and c.yy(r,O,d,s);
+                        $re = c.yy ? c.yy(r,O,d,s) : r;
+                        return re;
                     };
-                    c.finally = &rds{
+                    c.finaly = &rds{
                         $gone = me&syncdown,d.O,ds&z.map(d=>d.O);
-                        # has been sorted
+                        gone.length and ~>5 Orggone: ki(gone,4.23)
                     };
-                    me&ind,S (c)
+                    return me&ind,S (c)
                 },
-                other = &y{
+                other: &y{
                     $c = initc(y);
                     c.y = &Od{
                         # Oc&R=r yfutures, rs&Org=O
                         $r = d.S = me&futlink,O,c.O
-                        
-                        # do 
-                        
                         r && isC(r) and $s = rc&s
+                        
                         # middle
-                        c.yy and c.yy(r,O,d,s);
+                        $re = c.yy ? c.yy(r,O,d,s) : r;
+                        return re;
                     };
                     $goned = [];
-                    c.finally = &Od{
+                    c.finaly = &Od{
                         # can now trust d.S beyond
                         #  to be the latest r inside r
                         $r = d.S;
-                        $gone = me&syncdown,r,ds&z.map(d=>d.S),'noop';
+                        # r/* not in O/*
+                        #  as sch would filter it
+                        $Z = (rs&z||[]).filter(r => c.schableto(r,null,d.d+1));
+                        $neu = me&syncdown,Z,ds&z.map(d=>d.S),'noop';
+                        # O/* not in r/*
+                        $gone = me&syncdown,O,rs&z.map(r=>r.sc[c.O]),'noop';
+                        gone.push(...neu);
                         !gone.length and return
                         ds&gone = gone;
                         goned.push(d);
@@ -2413,9 +2426,11 @@ Fourism: |
                     goned.length && c.anygoned and c.anygoned(goned)
                     return re
                 },
-            };
-            return Org
+            }
         };
+        
+        #c ind
+        
         # make/keeps Oc&R=r, rs&Org=O
         me.futlink = &acgtOtr{
             r and Oc&R = r
@@ -2438,11 +2453,13 @@ Fourism: |
         # o coming out
         me.syncdown = &acgtDz,noop{
             !isar(z) and throw "z=[s+]"
-            $gone = (Ds&z || []).filter(&s{
+            $Z = isar(D) && D || Ds&z || [];
+            $gone = Z.filter(&s{
                 # refs not names
                 return !z.includes(s)
             });
             noop and return gone
+            Z != D and throw "D=[] !noop"
             each is gone {
                 $S = fio(D,s.t,0);
                 S != s and throw "inexactly"
@@ -2468,23 +2485,36 @@ Fourism: |
                 if (isha(y)) {
                     $c = y;
                     c.schinf and c.sch = c.schinf
-                    c.sch and c.beyond ||= 1
+                    if (c.sch) {
+                        c.beyond ||= 1;
+                        c.schableto = &r,d,depth{
+                            depth ||= d.d;
+                            $schi = depth - 2;
+                            $gk = c.sch[schi];
+                            !gk && c.schinf and gk = c.sch.slice(-1)[0];
+                            !(isC(r) && r.sc[gk]) and return
+                            # sometimes hypothetical, no d yet
+                            if (d) {
+                                ds&gk = gk
+                            }
+                            return 1
+                        };
+                    }
                     y = &rd{
                         d.sc = {};
                         # for those inside s
                         c.beyond && d.d <= c.beyond and return
                         if (c.sch && d.d > 1) {
-                            $schi = d.d - 2;
-                            $gk = c.sch[schi];
-                            !gk && c.schinf and gk = c.sch.slice(-1)[0];
-                            !(isC(r) && r.sc[gk]) and return d.not = 1
-                            ds&gk = gk;
+                            !c.schableto(r,d) and return d.not = 1
                         }
-                        # flat list, depth first
-                        N.push(d);
-                        # each ds&z = [d+]
-                        ac(d.up,'z',d);
-                        c.y and return ay(c.y,r,d);
+                        $re = c.y ? ay(c.y,r,d) : r;
+                        if (!d.not) {
+                            # flat list, depth first
+                            N.push(d);
+                            # each ds&z = [d+]
+                            ac(d.up,'z',d);
+                        }
+                        return re
                     };
                 }
                 # into 26:NutCertainty
