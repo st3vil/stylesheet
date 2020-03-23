@@ -2393,7 +2393,7 @@ Fourism: |
                         $gone = me&syncdown,d.O,ds&z.map(d=>d.O);
                         gone.length and ~>5 Orggone: ki(gone,4.23)
                     };
-                    return me&ind,S (c)
+                    return me&indo,S (c)
                 },
                 other: &y{
                     $c = initc(y);
@@ -2422,14 +2422,14 @@ Fourism: |
                         ds&gone = gone;
                         goned.push(d);
                     };
-                    $re = me&ind,O (c);
+                    $re = me&indo,O (c);
                     goned.length && c.anygoned and c.anygoned(goned)
                     return re
                 },
             }
         };
         
-        #c ind
+        #c indo
         
         # make/keeps Oc&R=r, rs&Org=O
         me.futlink = &acgtOtr{
@@ -2470,9 +2470,9 @@ Fourism: |
         
         # surf
         # < BAB me&ind,v,...{\n should let us close the bracket
-        # me&ind,r ({sche:la,y:&rds{ ...
+        # me&indo,r ({sch:['Types'],y:&rds{ ...
         #  supposing rc&s=s
-        me.ind = &ACGTsd{
+        me.indo = &ACGTsd{
             d ||= {};
             # callback r before r/**, still depth first
             d.cbfirst ||= 1;
@@ -2517,14 +2517,174 @@ Fourism: |
                         return re
                     };
                 }
-                # into 26:NutCertainty
-                $re = G&ind,s,y,d;
+                $re = me&ind,s,y,d;
                 if (c) {
                     c.finally and N.map(d => ay(c.finally,d.s,d))
                 }
                 return re
             };
         };
+        
+        #c ind climb C
+        # from 26:NutCertainty
+        me.ind = &acgtsyd{
+            $D = s;
+            # setup
+            d ||= {};
+            if (!d.refs) {
+                d.refs = []; # all things
+                d.refid = {}; # those indices to d
+            }
+            y ||= &s{ return s }
+            if (typeof y == 'string') {
+                if (y.slice(0,2) == 'ki') {
+                    $dl = y.slice(2);
+                    y = &s{ return ki(s,dl) }
+                }
+                else { 
+                    throw "ind y named", y
+                }
+            }
+
+            # dedupe (s always an Object)
+            $ri = d.refs.indexOf(s);
+            if (ri < 0) {
+                ri = d.refs.push(s) - 1;
+                d.refid ||= {};
+                d.refid[ri] = d;
+            }
+            else {
+                $od = d.refid[ri];
+                # dupe seeing very interesting for -jod
+                return;
+            }
+
+            if (d.hup) {
+                # clone each thing, not repointing tw/tv/z etc
+                # < a separate object, a map to the result of the map this is
+                #d.infolate == null and d.infolate = 1;
+                s = G&Cye,s;
+                s.y.D = D;
+            }
+
+            $dd = &d{
+                d = $.extend({},d);
+                d.path = (d.path||[]).slice();
+                return d
+            };
+            $up = d.out && d;
+            d = dd(d);
+            up and d.up = up
+            d.s = s;
+            d.path.push(s.t+' '+s.y.cv);
+            d.ind == null and d.ind = '  ';
+            # ^ accumulates on every depth's return of a string
+            d.d ||= 0;
+            d.d++;
+            # depth limit vs depth
+            d.dl && d.dl < d.d and return;
+
+            $out = d.out = [];
+            $one;
+            $my = [];
+
+            d.cbfirst and one = y(s,d)
+            d.not and return
+            d.nofurther and return one
+
+            # )
+            #c the ways to go deep, should be all? will dedup
+            # user throws something on any way
+            if (ss&z) {
+                $z = ss&z.filter(&s{ return 1 && s });
+                d.zort and d.zort(z,s,d);
+                each iD z {
+                    out.push( me&ind,D,y,d );
+                }
+            }
+
+            if (s.y.in) {
+                out.push( me&ind,s.y.in,y,d );
+            }
+
+            if (s.y.tw) {
+                each tD s.y.tw {
+                    out.push( me&ind,D,y,d );
+                }
+            }
+
+            if (s.y.tv) {
+                each tvD s.y.tv {
+                    out.push( me&ind,D,y,d );
+                }}
+            }
+
+            out = out.filter(&s{ return 1 && s });
+            # flatten a bit, G&ind returns js arrays
+            $oute = []; 
+            out.map(&s{
+                s.constructor == Array ? 
+                    s.map(&s{ oute.push(s) })
+                : oute.push(s)
+            });
+            out = oute;
+
+            out = out.filter(&s{ return 1 && s }).map(&s{
+                if (typeof s == 'string')
+                    return s.split("\n").map(&s{ return d.ind+s }).join("\n")
+
+                if (typeof s.constructor == Object) {
+                    if (d.infolate) {
+                        if (!sc&ind) {
+                            # (once) write where things are
+                            # on the things themselves
+                            sc&ind = d.d;
+                            sc&inds = '';
+                            $i = 0; # to d.d==1 for the first level
+                            while (i++ < d.d)
+                                sc&inds += '  ';
+                            sc&inside = d.path;
+                        }
+                    }
+                    my.push(s);
+                }
+                return s
+            });
+
+            if (s.y.next && !d.nonext) {
+                $od = dd(d);
+                od.path.pop();
+                od.d--;
+                out.push( me&ind,s.y.next,y,od );
+            }
+
+            !d.cbfirst and one = y(s,d)
+            d.not and return
+            out.unshift(one);
+
+            out = out.filter(&s{ return 1 && s });
+            !out.length and return
+            $retrefs = out.filter(&s{ return typeof s != 'string' }).length > 0;
+
+            if (d.d == 1 && !retrefs) {
+                d.wantarray and return out
+                return out.join("\n");
+            }
+            else {
+                # an N with insidenesses, has been organised, located...
+                # put insides (s&z,yin) in a z on the outside
+                my.length && typeof one == Object and ones&z = my
+                # return every C in N, each G&ind leaves [] to dissolve
+                $flat = [];
+                each is out {
+                    s.constructor != Array and flat.push(s); continue
+                    each IS s {
+                        flat.push(S);
+                    }
+                }
+                return flat
+            }
+
         },
         #c Abodis clockworks geometries
         # adjust scroll after we redraw to keep focus
