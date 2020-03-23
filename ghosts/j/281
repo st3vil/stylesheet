@@ -665,8 +665,6 @@ Soogle: | # start from Sevo
             $r = me&yfuture,R;
             rs&value = ec&s;
         };
-        console.log(e)
-        ec&s = Rs&on.textContent;
         # we default to ec&s = $(on).val()
         # unless wanting to watch typing as it happens,
         # throws out events like click, keypress other than esc/enter
@@ -680,7 +678,10 @@ Soogle: | # start from Sevo
             }
         }
         # gives value
-        Rs&on.eintro = &e{ me&valuesays,R,e };
+        Rs&on.eintro = &e{
+            ec&s = Rs&on.textContent;
+            me&valuesays,R,e
+        };
         Rs&on.contentEditable = true;
         
         # leave valuec
@@ -724,9 +725,11 @@ Soogle: | # start from Sevo
         Rs&cm ||= CodeMirror(Rs&on,{
             mode:'perl',theme:'midnight',
             lineWrapping:true,indentUnit:4,smartIndent:0,
+            # indent after {
+            electricChars:1,autoCloseBrackets:1,
             foldOptions: {
-              widget: (from, to) => {
-                  $count = to.lines - from.lines;
+              widget: &from,to{
+                  $count = to.line - from.line;
                   return `\u21A4${count}\u21A6`
               },
             }
@@ -740,7 +743,7 @@ Soogle: | # start from Sevo
             if (me&valuecha,R,is,c&s ) {
                 if (is) {
                     ~CMerge
-                    debugger;
+                    # usually for a pull
                     # merge/merge.js
                 }
                 cm.setValue(''+c&s);
@@ -801,6 +804,11 @@ Soogle: | # start from Sevo
         
         $hoi = s&hoistcm;
         hoi and hois&cm = cm
+        $wr = cm.getWrapperElement();
+        wr.style.background = 'initial';
+        wr.style.height = 'initial';
+        
+        window.keem = cm;
 
         #    $('#'+id).css('width','15em','max-height','70%','overflow','scroll');
         #   $('#'+id+' > .CodeMirror');//.css('height','auto');
