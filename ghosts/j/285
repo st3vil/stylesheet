@@ -2528,7 +2528,6 @@ Fourism: |
         #c ind climb C
         # from 26:NutCertainty
         me.ind = &acgtsyd{
-            $D = s;
             # setup
             d ||= {};
             if (!d.refs) {
@@ -2545,24 +2544,30 @@ Fourism: |
                     throw "ind y named", y
                 }
             }
-
+            
+            $i = {};
             # dedupe (s always an Object)
-            $ri = d.refs.indexOf(s);
-            if (ri < 0) {
-                ri = d.refs.push(s) - 1;
-                d.refid ||= {};
-                d.refid[ri] = d;
-            }
-            else {
-                $od = d.refid[ri];
-                # dupe seeing very interesting for -jod
-                return;
-            }
+            i.refin = &ds{
+                $ri = d.refs.indexOf(s);
+                if (ri < 0) {
+                    ri = d.refs.push(s) - 1;
+                    d.refid ||= {};
+                    d.refid[ri] = d;
+                    return 1
+                }
+                else {
+                    $od = d.refid[ri];
+                    # dupe seeing very interesting for -jod
+                    return;
+                }
+            };
+            !i.refin(d,s) and return
 
             if (d.hup) {
                 # clone each thing, not repointing tw/tv/z etc
                 # < a separate object, a map to the result of the map this is
                 #d.infolate == null and d.infolate = 1;
+                $D = s;
                 s = G&Cye,s;
                 s.y.D = D;
             }
@@ -2576,7 +2581,7 @@ Fourism: |
             d = dd(d);
             up and d.up = up
             d.s = s;
-            d.path.push(s.t+' '+s.y.cv);
+            $pi = d.path.push(s.t+' '+s.y.cv)-1;
             d.ind == null and d.ind = '  ';
             # ^ accumulates on every depth's return of a string
             d.d ||= 0;
@@ -2591,6 +2596,12 @@ Fourism: |
             d.cbfirst and one = y(s,d)
             d.not and return
             d.nofurther and return one
+            
+            if (d.s != s) {
+                !i.refin(d,s) and throw "switched s dup ref"
+                s = d.s;
+                d.path[pi] = s.t+' '+s.y.cv;
+            }
 
             # )
             #c the ways to go deep, should be all? will dedup
@@ -2684,7 +2695,7 @@ Fourism: |
                 }
                 return flat
             }
-
+        };
         },
         #c Abodis clockworks geometries
         # adjust scroll after we redraw to keep focus
@@ -2760,7 +2771,7 @@ Fourism: |
                 f.M = f.balls(Abodo);
                 
                 # check dom semi arrived
-                $N = f.M && f.M.filter(m => (ms&height||0) < 22);
+                $N = f.M && f.M.filter(m => (ms&height||0) < 22) || [];
                 if (!f.M || N.length) {
                     ~>2 heightholes: N.map(n=>n.t).join(',')
                     return G&yl,144.04,f.shui
