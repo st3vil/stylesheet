@@ -2264,19 +2264,19 @@ Fourism: |
                 $modon = me&Dispon,Oc&n;
                 me&eCsc,O,'trailstyle',sc (modon);
             };
-            # make/keeps some Loc/**
-            $futlink = &Otr{
-                r and Oc&R = r
-                !Oc&R and return
-                r = Oc&R = me&yfuture,Oc&R;
-                r.sc[t] = O;
-                return r
-            };
+            
+            # rebuilds r:Abodo/** to O:Loc/**
+            #   links each Oc&R=r, Rs&Org=O
+            $sch = {schinf:['Codoor','Code'],O:'Org'};
+            $Org = me&indother,Loc,Abodo,sch;
             
             ah(R,'Abodish','o','trailstyle',&fT{
                 # apply styles to Loc/*/* map
                 ~>7 trailstyle!:
                 $c = Locs&center;
+                Org.other(&rOds{
+                    
+                });
                 me&ioty,Loc .map(&D{
                     # update r
                     $r = futlink(D,'Org');
@@ -2304,25 +2304,12 @@ Fourism: |
                 me.nto(R,Oc&n,&sT{ Rs&fengi(T,t,O) });
             };
             
-            me&ind,Abodo ({schinf:['Codoor','Code'],y:&rds{
-                # i Loc/...
-                d.O ||= Loc;
-                $O = d.O = me&syncup,d.O,s;
-                
-                # Oc&R = 
-                futlink(O,'Org',r);
-                
+            Org.self(&rOds{
                 # Oc&n = map modulat
                 $n = Oc&n = me&tsc,ds&gk+":"+s.t,s.t;
                 ns&dis = d.d == 2 ? 3 : 5;
-                n;
                 
                 ntovent(O);
-            },finally:&rds{
-                # check d.O/** is not missing from d.s/**
-                !ds&z and return
-                !d.O and throw "!dO"
-                $gone = me&syncdown,d.O,ds&z.map(d=>d.O);
             });
             
             # random printouts!
@@ -2366,21 +2353,96 @@ Fourism: |
         },'ift,D'],
         #c ind
         &{
+        
+        me.indother = &acgtSOd{
+            $initc = &y{
+                $c = ex({},d);
+                isha(y) and ex(c,y); c.yy = delete c.y
+                else { c.yy = y }
+            };
+            $finally = &d,k,noop{
+                # check d.O/** is not missing from d.s/**
+                !ds&z and return
+                !d[k] and throw "!d"+k
+                ~>5 Orggone: ki(gone,4.23)
+                return gone
+            };
+            $Org = {
+                self = &y{
+                    $c = initc(y);
+                    c.y = &rds{
+                        # i Loc/...
+                        d.O ||= O;
+                        $O = d.O = me&syncup,d.O,s;
+
+                        # Oc&R=r, rs&Org=O
+                        c.O and me&futlink,O,c.O,r
+                        
+                        # middle
+                        c.yy and c.yy(r,O,d,s);
+                    };
+                    c.finally = &rds{
+                        $gone = me&syncdown,d.O,ds&z.map(d=>d.O);
+                        # has been sorted
+                    };
+                    me&ind,S (c)
+                },
+                other = &y{
+                    $c = initc(y);
+                    c.y = &Od{
+                        # Oc&R=r yfutures, rs&Org=O
+                        $r = d.S = me&futlink,O,c.O
+                        
+                        # do 
+                        
+                        r && isC(r) and $s = rc&s
+                        # middle
+                        c.yy and c.yy(r,O,d,s);
+                    };
+                    $goned = [];
+                    c.finally = &Od{
+                        # can now trust d.S beyond
+                        #  to be the latest r inside r
+                        $r = d.S;
+                        $gone = me&syncdown,r,ds&z.map(d=>d.S),'noop';
+                        !gone.length and return
+                        ds&gone = gone;
+                        goned.push(d);
+                    };
+                    $re = me&ind,O (c);
+                    goned.length && c.anygoned and c.anygoned(goned)
+                    return re
+                },
+            };
+            return Org
+        };
+        # make/keeps Oc&R=r, rs&Org=O
+        me.futlink = &acgtOtr{
+            r and Oc&R = r
+            !Oc&R and return
+            r = Oc&R = me&yfuture,Oc&R;
+            r.sc[t] = O;
+            return r
+        };
+        
         # replicators
         # i going in
-        me.syncup = &acgtDs{
+        me.syncup = &acgtDs,noop{
             $S = fio(D,s.t,0);
-            S and return
-            $d = fio(D,s.t);
-            dy&up = D;
+            noop and return !S
+            S and return S
+            S = fio(D,s.t);
+            Sy&up = D;
+            return S
         };
         # o coming out
-        me.syncdown = &acgtDz{
+        me.syncdown = &acgtDz,noop{
             !isar(z) and throw "z=[s+]"
             $gone = (Ds&z || []).filter(&s{
                 # refs not names
                 return !z.includes(s)
             });
+            noop and return gone
             each is gone {
                 $S = fio(D,s.t,0);
                 S != s and throw "inexactly"
@@ -2388,6 +2450,8 @@ Fourism: |
             }
             return gone
         };
+        
+        # surf
         # < BAB me&ind,v,...{\n should let us close the bracket
         # me&ind,r ({sche:la,y:&rds{ ...
         #  supposing rc&s=s
