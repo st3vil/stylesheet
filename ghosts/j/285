@@ -2257,7 +2257,7 @@ Fourism: |
             };
             
             
-            #c stylepile!
+            #c stylepile!!
             # < center changes faster
             # < to unify all waits-ing, sparkles of activity
             $apply = &O,sc{
@@ -2266,8 +2266,13 @@ Fourism: |
             };
             
             # rebuilds r:Abodo/** to O:Loc/**
-            #  links each Oc&R=r, Rs&Org=O
-            $sch = {schinf:['Codoor','Code'],O:'Org'};
+            $sch = {
+                schinf:['Codin','Code'],
+                # really Abodo/Codoor/.../Codin/Code
+                schifat:{Codoor:{scto:'Codinner'}},
+                # links each Oc&R=r, Rs&Org=O
+                O:'Org',
+            };
             $Org = me&indother,Abodo,Loc,sch;
             
             ah(R,'Abodish','o','trailstyle',&fT{
@@ -2279,11 +2284,11 @@ Fourism: |
                 });
                 me&ioty,Loc .map(&D{
                     # update r
-                    $r = futlink(D,'Org');
+                    $r = me&futlink,D,'Org';
                     
                     # resync D off this
                     me&ioty,D .map(&O{
-                        $r = futlink(O,'Org');
+                        $r = me&futlink,O,'Org';
                     
                         $sc = {};
                         c && fio(c,O.t,0) and sc.fs = 22
@@ -2311,11 +2316,12 @@ Fourism: |
                 ns&dis = d.d == 2 ? 3 : 5;
                 
                 ntovent(O);
+                #r.t = 'Lafr' and debugger
                 return ki(O,2);
             });
             
             
-            me&nu,'selfind',self;
+            me&tsc,'selfind',self .sc.dis = 1;
             
             
             # random printouts!
@@ -2413,7 +2419,9 @@ Fourism: |
                         $r = d.S;
                         # r/* not in O/*
                         #  as sch would filter it
-                        $Z = (rs&z||[]).filter(r => c.schableto(r,null,d.d+1));
+                        $Z = (rs&z||[])
+                            .map(r => c.schableto(r,null,d.d+1))
+                            .filter(r => r);
                         $neu = me&syncdown,Z,ds&z.map(d=>d.S),'noop';
                         # O/* not in r/*
                         $gone = me&syncdown,O,rs&z.map(r=>r.sc[c.O]),'noop';
@@ -2492,12 +2500,32 @@ Fourism: |
                             $schi = depth - 2;
                             $gk = c.sch[schi];
                             !gk && c.schinf and gk = c.sch.slice(-1)[0];
-                            !(isC(r) && r.sc[gk]) and return
+                            !isC(r) and return
+                            $fail = !r.sc[gk];
+                            
+                            if (fail && c.schifat) {
+                                # for switching d.s into a link
+                                each kv c.schifat {
+                                    # if we're a %Codoor
+                                    !r.sc[k] and continue
+                                    !v.scto and throw "!scto"
+                                    # with a %Codinner
+                                    $or = r.sc[v.scto];
+                                    !or and continue
+                                    # that is %Codin, as it were
+                                    !or.sc[gk] and continue
+                                    ~>6 schifatted: r.t, or.t
+                                    r = or;
+                                    fail = 0;
+                                    break
+                                }
+                            }
+                            fail and return
                             # sometimes hypothetical, no d yet
                             if (d) {
                                 ds&gk = gk
                             }
-                            return 1
+                            return r
                         };
                     }
                     y = &rd{
@@ -2505,7 +2533,9 @@ Fourism: |
                         # for those inside s
                         c.beyond && d.d <= c.beyond and return
                         if (c.sch && d.d > 1) {
-                            !c.schableto(r,d) and return d.not = 1
+                            r = c.schableto(r,d);
+                            !r and return d.not = 1
+                            d.s = r
                         }
                         $re = c.y ? ay(c.y,r,d) : r;
                         if (!d.not) {
@@ -2598,7 +2628,7 @@ Fourism: |
             d.nofurther and return one
             
             if (d.s != s) {
-                !i.refin(d,s) and throw "switched s dup ref"
+                !i.refin(d,d.s) and throw "switched s dup ref"
                 s = d.s;
                 d.path[pi] = s.t+' '+s.y.cv;
             }
