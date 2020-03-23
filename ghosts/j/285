@@ -1925,19 +1925,15 @@ Fourism: |
             $Loc = me&rollbsc,R,'Loc';
             Locc&W = Abodo.t;
             
-            #c seekto resume Loc%center
-            $c = me&remember,Loc,'center';
-            cc&thaw and Rs&seekto = c
-            $se = me&rollbs,R,'seekto'
-            
-            # accumulating to f.*
+            #c Codap extends Abodis
+            # accumulating to f.*, which we receive
             #  f.hatch($t,$arg) may be used to call them
             # or if f isnt around, eg from nto:
             #  Rs&fengi($otherT,$t,$arg) entrances
             # the f.o.* are hatched along the feng()
             #   able to T.waits to break
             
-            # init f, once per R:
+            # init f, once per R:Abodis
             $f;
             ah(R,'Abodish','o',1,&tT{
                 f = t;
@@ -1986,11 +1982,54 @@ Fourism: |
                 delete Abodos&fengtodo;
                 
                 Rs&seekto and f.hatch('Codon_point',Rs&seekto)
-                
-                
             });
             
-            #c a %Code that wants focus
+            #c keep center
+            
+            # < flying into the one thing, its environment piling in
+            #   as we know it's /ghost/such first,
+            #   winding up Gensetc in the background,
+            #   merging preemptive R with the native
+            
+            # seekto resume Loc%center
+            $c = me&remember,Loc,'center';
+            cc&thaw and Rs&seekto ||= c
+            # others may set this
+            me&rollbs,R,'seekto'
+            
+            # notice where center of view is
+            #  as fractions of %Codin(/%Code)
+            ah(R,'Abodish','o',71,&fT{
+                $din = f.Codepointer();
+                !din and return
+                #~>3 center: ki(din,2), ki(ner,2)
+                Locs&center = din;
+            });
+            
+            # scroll to counteract repositioning
+            ah(R,'Abodish','o',6,&fT{
+                # see where we're looking
+                $at = f.at;
+                # select one at center to keep scroll to
+                $din = f.Codepointer();
+                !din and throw "not one"
+                # one Codin|Code, before|after
+                $da = f.Codeba(din);
+                f.heighten();
+                $ba = f.Codeba(din);
+                !ba and return
+                dac&R != bac&R and throw "din!ba R"
+                
+                $move = das&top - bas&top;
+                $abso = ats&top - move;
+                atc&s = ba.t+" "+move+": "+abso;
+                
+                f.on.scrollTop = abso
+            });
+            
+            #c %Code acts
+            
+            # %Code that wants typing into (%initCode)
             ah(R,'Abodish','o','Codon_curse',&fTr{
                 r = me&yfuture,r;
                 $cm = rs&cm;
@@ -2002,10 +2041,12 @@ Fourism: |
                 !cm and ~>6 lost cm: r.t
                 !cm and return
                 
-                ~>6 doing cm: r.t
+                ~>6 Into cm: r.t
                 cm.focus();
                 cm.execCommand('goLineEnd');
             });
+            
+            # Codap%seekto=din to go there
             ah(R,'Abodish','o','Codon_point',&f,T,din{
                 # < specify seekto is the intent,
                 #   drop on fail/success
@@ -2047,18 +2088,37 @@ Fourism: |
                 ~>7 sunk: ki(fora,2)
                 delete Rs&seekto;
             });
-            #c pointer
-            # notice where center of view is
-            #  as fractions of %Codin(/%Code)
-            #  to draw the viewport in the Codap
-            ah(R,'Abodish','o',71,&fT{
-                $din = f.Codepointer();
-                !din and return
-                #~>3 center: ki(din,2), ki(ner,2)
-                Locs&center = din;
+            
+            # Loc/** to %seekto
+            ah(R,'Abodish','o','Codon_click',&fTO{
+                $D = Oy&up;
+                D == Loc and D = null
+                !D and D = O; O = null
+                $seek = Cye([D.t,1]);
+                O and $onto = fio(seek,O.t)
+                $t = Locs&trail;
+                if (onto && t) {
+                    $la;
+                    each in ts&z {
+                        la and break
+                        n.t != D.t and continue
+                        each ij ns&z {
+                            j.t != O.t and continue
+                            
+                        }
+                    }
+                    la and ontoy&cv = lay&cv
+                }
+                # note exactly where we leave
+                f.hatch('casual','doit');
+                Rs&seekto = seek;
+                ~>2 Seek: ki(seek,2)
+                # as very fast 
+                T.feng = 1;
             });
             
-            # din from center
+            #c pointers: gapy<->ba<->din
+            # din from gapy
             # < redo "pointer", f.ind thing
             ah(R,'Abodish','Codepointer',&point,{
                 $at = f.at;
@@ -2116,7 +2176,7 @@ Fourism: |
                 return thing
             });
             
-            #c grow Loc%trail
+            #c grow trail
             me&remember,Loc,'trail';
             $muchdif = &ab{
                 a *= 1;
@@ -2196,59 +2256,6 @@ Fourism: |
                 }
             };
             
-            
-            #c stabilise scroll 
-            # when %Codin heights are changing around us
-            # < flying into the one thing, its environment piling in
-            #   as we know it's /ghost/such first,
-            #   winding up Gensetc in the background,
-            #   merging preemptive R with the native
-            # scroll to counteract positioning adjustment
-            ah(R,'Abodish','o',6,&fT{
-                # see where we're looking
-                $at = f.at;
-                # select one at center to keep scroll to
-                $din = f.Codepointer();
-                !din and throw "not one"
-                # one Codin|Code, before|after
-                $da = f.Codeba(din);
-                f.heighten();
-                $ba = f.Codeba(din);
-                !ba and return
-                dac&R != bac&R and throw "din!ba R"
-                
-                $move = das&top - bas&top;
-                $abso = ats&top - move;
-                atc&s = ba.t+" "+move+": "+abso;
-                
-                f.on.scrollTop = abso
-            });
-            ah(R,'Abodish','o','Codon_click',&fTO{
-                $D = Oy&up;
-                D == Loc and D = null
-                !D and D = O; O = null
-                $seek = Cye([D.t,1]);
-                O and $onto = fio(seek,O.t)
-                $t = Locs&trail;
-                if (onto && t) {
-                    $la;
-                    each in ts&z {
-                        la and break
-                        n.t != D.t and continue
-                        each ij ns&z {
-                            j.t != O.t and continue
-                            
-                        }
-                    }
-                    la and ontoy&cv = lay&cv
-                }
-                # note exactly where we leave
-                f.hatch('casual','doit');
-                Rs&seekto = seek;
-                ~>2 Seek: ki(seek,2)
-                # as very fast 
-                T.feng = 1;
-            });
             
             #c stylepile!
             # < center changes faster
