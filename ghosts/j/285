@@ -1938,7 +1938,9 @@ Fourism: |
             #   able to T.waits to break
             
             # init f, once per R:
-            ah(R,'Abodish','o',1,&fT{
+            $f;
+            ah(R,'Abodish','o',1,&tT{
+                f = t;
                 $at = f.at;
                 $on = ats&on;
                 $con = ats&con;
@@ -2004,13 +2006,13 @@ Fourism: |
                 cm.focus();
                 cm.execCommand('goLineEnd');
             });
-            ah(R,'Abodish','o','Codon_point',&fTc{
+            ah(R,'Abodish','o','Codon_point',&f,T,din{
                 # < specify seekto is the intent,
                 #   drop on fail/success
                 # < seekto as %loca, any depth/describitude
                 #    as SCA ring
-                cc&ttl ||= 5;
-                if (--cc&ttl == 0) {
+                dinc&ttl ||= 5;
+                if (--dinc&ttl == 0) {
                     # might be things on trail no longer in W
                     # < loose bits of uncommitted W to reintro
                     delete Rs&seekto;
@@ -2020,43 +2022,29 @@ Fourism: |
                 T.waits = 'seekto';
                 ~>2 seekto:
                 f.heighten();
-                # c/co is sheer openness, two layers
-                #  < good shape of thing to stream space solvitude around
-                # for %Codoor
-                $v = f.M.filter(n=>c.t==n.t)[0];
-                !v and ~>2 seek!found: c.t
-                !v and return delete Rs&seekto
-                    # which links into itself like s&Js&top
-                    $Codoor = vc&R;
-                    $Codin = Codoors&Codinner;
-                    !Codin and return me&elvis,R,'seekto',{wake:Codoor}
                 
-                # for %Code, maybe
-                $cn = (cs&z||[])[0];
-                if (cn) {
-                    $n = f.balls(Codin,cn.t)[0];
-                    !n and return
-                        # which must look ready < know Zave/waits
-                        $nr = n && nc&R;
-                        $s = nr && nrc&s;
-                        !s || ss&string == null and n = null
-                        !n and ~>6 waitseek: c.t, cn.t
-                        !n and return
+                $c = {};
+                $thing = f.Codeba(din,c);
+                $fora = c.fora;
+                if (!thing) {
+                    # elvises unopen path (without %Codinner=%Codin)
+                    T.waits and return
+                    # or it cancels the go
+                    return delete Rs&seekto
                 }
 
                 $at = f.at;
                 $on = f.on;
-                $thing = n || v;
-                $fora = cn || c;
+                
                 $scroll = on.scrollTop + things&top;
                 if (foray&cv != 0.1) {
                     # put center
                     scroll -= ats&gapy / 2;
                     # yay far down
-                    scroll += ns&height * cn.y.cv
+                    scroll += things&height * foray&cv
                 }
                 on.scrollTop = dec(scroll);
-                ~>7 sunk: ki(c,2), ki(cn,2)
+                ~>7 sunk: ki(fora,2)
                 delete Rs&seekto;
             });
             #c pointer
@@ -2064,7 +2052,7 @@ Fourism: |
             #  as fractions of %Codin(/%Code)
             #  to draw the viewport in the Codap
             ah(R,'Abodish','o',71,&fT{
-                $din = f.hatch('Codepointer');
+                $din = f.Codepointer();
                 !din and return
                 #~>3 center: ki(din,2), ki(ner,2)
                 Locs&center = din;
@@ -2072,7 +2060,7 @@ Fourism: |
             
             # din from center
             # < redo "pointer", f.ind thing
-            ah(R,'Abodish','Codepointer',&f,T,point{
+            ah(R,'Abodish','Codepointer',&point,{
                 $at = f.at;
                 point ||= ats&gapy / 2;
                 # for %Codoor
@@ -2089,20 +2077,27 @@ Fourism: |
             });
             
             # din to ba, space item amongst f.balls
-            ah(R,'Abodish','Codeba',&fTc{
-                # c/co is sheer openness, two layers
+            ah(R,'Abodish','Codeba',&din,c{
+                c ||= {};
+                # din/ner is sheer openness, two layers
                 #  < good shape of thing to stream space solvitude around
+                #  < should be ind magic, use cases are here
+                
                 # for %Codoor
-                $v = f.M.filter(n=>c.t==n.t)[0];
-                !v and ~>2 seek!found: c.t
-                !v and return delete Rs&seekto
+                $v = f.M.filter(n=>din.t==n.t)[0];
+                !v and ~>2 seek!found: din.t
+                !v and return
                     # which links into itself like s&Js&top
                     $Codoor = vc&R;
                     $Codin = Codoors&Codinner;
-                    !Codin and return me&elvis,R,'seekto',{wake:Codoor}
+                    if (!Codin) {
+                        me&elvis,R,'seekto',{wake:Codoor};
+                        T.waits = 'seektowake:'+Codoor.t
+                        return
+                    }
                 
                 # for %Code, maybe
-                $cn = (cs&z||[])[0];
+                $cn = (dins&z||[])[0];
                 if (cn) {
                     $n = f.balls(Codin,cn.t)[0];
                     !n and return
@@ -2110,13 +2105,14 @@ Fourism: |
                         $nr = n && nc&R;
                         $s = nr && nrc&s;
                         !s || ss&string == null and n = null
-                        !n and ~>6 waitseek: c.t, cn.t
+                        !n and ~>6 waitseek: din.t, cn.t
                         !n and return
                 }
 
                 $at = f.at;
                 $on = f.on;
                 $thing = n || v;
+                c.fora = cn || din;
                 return thing
             });
             
@@ -2211,13 +2207,15 @@ Fourism: |
             ah(R,'Abodish','o',6,&fT{
                 # see where we're looking
                 $at = f.at;
-                # select one to keep scroll to
-                $din = f.hatch('Codepointer');
+                # select one at center to keep scroll to
+                $din = f.Codepointer();
                 !din and throw "not one"
+                # one Codin|Code, before|after
+                $da = f.Codeba(din);
                 f.heighten();
-                $ba = f.hatch('Codeba',din);
-                dinc&R != bac&R an throw "din!ba R"
-                $da = dinc&ba;
+                $ba = f.Codeba(din);
+                !ba and return
+                dac&R != bac&R and throw "din!ba R"
                 
                 $move = das&top - bas&top;
                 $abso = ats&top - move;
