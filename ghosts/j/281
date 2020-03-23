@@ -721,11 +721,16 @@ Soogle: | # start from Sevo
     # < should mostly in osc, high level fork important
     me.codemirror = &acgtRb{
         Rs&cm ||= bs&cm;
-        Rs&cm ||= CodeMirror(
-            Rs&on,
-            {mode:'perl',theme:'midnight',
-            lineWrapping:true,indentUnit:4,smartIndent:0}
-        );
+        Rs&cm ||= CodeMirror(Rs&on,{
+            mode:'perl',theme:'midnight',
+            lineWrapping:true,indentUnit:4,smartIndent:0,
+            foldOptions: {
+              widget: (from, to) => {
+                  $count = to.lines - from.lines;
+                  return `\u21A4${count}\u21A6`
+              },
+            }
+        });
         $cm = Rs&cm;
 
         # sets value
@@ -775,7 +780,8 @@ Soogle: | # start from Sevo
             "Ctrl-Enter": save,
 
             # TODO push the fix for mode/perl:
-            #   add fold: "brace", next to electricChars:"{}"
+            #   add fold: "indent", next to electricChars:"{}"
+            #  isnt indent mode independent?
             "Ctrl-Q": &cm,{ cm.foldCode(cm.getCursor()); },
         });
 
