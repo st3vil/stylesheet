@@ -1926,6 +1926,11 @@ Fourism: |
             cc&thaw and Rs&seekto = c
             $se = me&rollbs,R,'seekto'
             
+            # accumulating things to be compiled to f.*
+            #  f.hatch($t,$arg) may be used to call them
+            # or if not amongst f, eg via nto:
+            #  Rs&fengi($otherT,$t,$arg) entrances
+            
             # a %Code that wants focus
             ah(R,'Abodish','o','Codon_curse',&fTr{
                 r = me&yfuture,r;
@@ -2012,14 +2017,22 @@ Fourism: |
                 ~>7 sunk: ki(c,2), ki(cn,2)
                 delete Rs&seekto;
             });
-            
-            # notice where view points now!
+            #c pointer
+            # notice where center of view is
             #  as fractions of %Codin(/%Code)
             #  to draw the viewport in the Codap
             ah(R,'Abodish','o',71,&fT{
+                $din = f.hatch('Codepointer');
+                !din and return
+                #~>3 center: ki(din,2), ki(ner,2)
+                Locs&center = din;
+            });
+            
+            # din from center
+            # < redo "pointer", f.ind thing
+            ah(R,'Abodish','Codepointer',&f,T,point{
                 $at = f.at;
-                $point = ats&gapy / 2;
-                
+                point ||= ats&gapy / 2;
                 # for %Codoor
                 $din = f.atpoint(point);
                     $oor = dinc&R;
@@ -2030,8 +2043,39 @@ Fourism: |
                 # for %Code
                 $ner = f.atpoint(point,N);
                 fio(din,ner);
-                #~>3 center: ki(din,2), ki(ner,2)
-                Locs&center = din;
+                return din;
+            });
+            
+            # din to ba, space item amongst f.balls
+            ah(R,'Abodish','Codeba',&fTc{
+                # c/co is sheer openness, two layers
+                #  < good shape of thing to stream space solvitude around
+                # for %Codoor
+                $v = f.M.filter(n=>c.t==n.t)[0];
+                !v and ~>2 seek!found: c.t
+                !v and return delete Rs&seekto
+                    # which links into itself like s&Js&top
+                    $Codoor = vc&R;
+                    $Codin = Codoors&Codinner;
+                    !Codin and return me&elvis,R,'seekto',{wake:Codoor}
+                
+                # for %Code, maybe
+                $cn = (cs&z||[])[0];
+                if (cn) {
+                    $n = f.balls(Codin,cn.t)[0];
+                    !n and return
+                        # which must look ready < know Zave/waits
+                        $nr = n && nc&R;
+                        $s = nr && nrc&s;
+                        !s || ss&string == null and n = null
+                        !n and ~>6 waitseek: c.t, cn.t
+                        !n and return
+                }
+
+                $at = f.at;
+                $on = f.on;
+                $thing = n || v;
+                return thing
             });
             
             #c grow Loc%trail
@@ -2126,13 +2170,16 @@ Fourism: |
                 # see where we're looking
                 $at = f.at;
                 # select one to keep scroll to
-                $v = f.M.filter(n => ns&top < ats&gapy).reverse()[0];
-                !v and throw "not one"
+                $din = f.hatch('Codepointer');
+                !din and throw "not one"
                 f.heighten();
-                $V = f.M.filter(n => nc&R == vc&R)[0];
-                $move = vs&top - Vs&top;
+                $ba = f.hatch('Codeba',din);
+                dinc&R != bac&R an throw "din!ba R"
+                $da = dinc&ba;
+                
+                $move = das&top - bas&top;
                 $abso = ats&top - move;
-                atc&s = v.t+" "+move+": "+abso;
+                atc&s = ba.t+" "+move+": "+abso;
                 
                 f.on.scrollTop = abso
             });
@@ -2443,13 +2490,13 @@ Fourism: |
                 $N = me&ioty,r,'ball';
                 each in N {
                     t && t != n.t and continue
-                    $m =
+                    $ba =
                     m $n.t  $R:n
-                    ms&on = me&Dispon,n;
-                    !ms&on and return
-                    $re = ms&on.getBoundingClientRect();
-                    ms&height = re.height;
-                    ms&top = re.top;
+                    bas&on = me&Dispon,n;
+                    !bas&on and return
+                    $re = bas&on.getBoundingClientRect();
+                    bas&height = re.height;
+                    bas&top = re.top;
                 }
                 return M
             };
@@ -2476,14 +2523,14 @@ Fourism: |
             f.heighten = &M{
                 M ||= f.M;
                 $sum = 0;
-                each im M {
-                    $r = mc&R;
+                each i,ba M {
+                    $r = bac&R;
                     # < skip dis:0 - the recently open
                     $css = 'po,left:14,width:100%,top:'+dec(sum)+'px';
                     # overwrites the other eCsc Abodo
                     $apply = me&eCsc,r,'Abodo',css;
-                    apply(ms&on);
-                    sum += ms&height;
+                    apply(bas&on);
+                    sum += bas&height;
                 }
                 f.M = f.balls(Abodo);
             };
@@ -2493,18 +2540,18 @@ Fourism: |
             f.atpoint = &point,M{
                 M ||= f.M;
                 $la;
-                each in M {
-                    la = n;
-                    ns&top + ns&height < point and continue
-                    ns&top > point and continue
+                each i,ba M {
+                    la = ba;
+                    bas&top + bas&height < point and continue
+                    bas&top > point and continue
                     break;
                 }
-                $n = la;
-                $prog = point - ns&top;
-                $frac = dec(prog / ns&height);
+                $ba = la;
+                $prog = point - bas&top;
+                $frac = dec(prog / bas&height);
                 frac < 0.001 and frac = 0.001
                 frac > 0.999 and frac = 0.999
-                return Cye([n.t,frac,{R:nc&R,at:n}])
+                return Cye([ba.t,frac,{R:bac&R,ba:ba}])
             };
         },'ift,D'],
         #c Codo inside
