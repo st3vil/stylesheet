@@ -646,6 +646,9 @@ if(1){
 %$hide && $C->{c}->{s} =~ s/HIDING:([0-9a-f]+)/$hide->{$1} || die "Cant find $1"/seg;
 
 }
+get '/' => sub { my ($c) = @_;
+    $c->reply->static("two\.html");
+};
 
 #c /digwaypoll/ notifier, see 281 Sevo
 my $poll = {tx=>[],ways=>{}};
