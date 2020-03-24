@@ -2280,6 +2280,8 @@ Fourism: |
             $Org = me&indother,Abodo,Loc,sch;
             
             # map drawn
+            # ! d.d > 3 (Code/Code) causes e loop
+            # ! cant seekto a Code!string
             # < ind a floppy case
             $ma =
             n map   %bg:033,dis,ws:0
@@ -2301,14 +2303,12 @@ Fourism: |
                 ts&dis = 2;
                 ts&fs = 12;
                 d.d == 2 and ts&fs = 18; ns&dis = 1;
-                # ! d.d > 3 (Code/Code) causes e loop
-                # ! cant seekto a Code!string
                 
                 me.nto(R,n,&sT{ Rs&fengi(T,'Codon_click',O) })
                 
                 return O.t
             });
-            me&tsc,'selfs',selfs,'b' .sc.dis = 1;
+            #me&tsc,'selfs',selfs,'b' .sc.dis = 1;
             
             # map styled
             # O-memorised c-styling n-modulat
@@ -2319,12 +2319,11 @@ Fourism: |
             ah(R,'Abodish','o','trailstyle',&fT{
                 # apply styles to Loc/*/* map
                 ~>7 trailstyle!:
-                $c = Locs&center;
                 
                 # start using that pointer
                 # < to steer around (d.not=1)
-                $cent = me&doint,'center',c;
-                
+                $cent = me&doint,'center',Locs&center;
+                $tra = me&doint,'trail',Locs&trail,{};
                 # looking for the center
                 # < look at center and any Rversioned since,
                 #   and the last path we thought it was
@@ -2332,9 +2331,19 @@ Fourism: |
                 
                 Org.other({y:&rOds{
                     $sc = {};
-                    cent(s,d) and sc.bri = 1.7;
                     $n = Oc&n;
-                    apply(O,ny&label,sc);
+                    $l = ny&label;
+                    
+                    cent(s,d) and sc.deco = 1;
+                    # points over time (which is lost)
+                    #  could keep nulls in between
+                    $N = tra(s,d);
+                    if (N) {
+                        sc.bri ||= 1.3
+                        sc.fs = ls&fs + N.length * 2
+                    }
+                    
+                    apply(O,l,sc);
                 },anycha:&chad,{
                     each id chad {
                         $go = ds&cha;
@@ -2348,17 +2357,16 @@ Fourism: |
             
             
             
-            # random printouts!
+            # random printouts!!
             each tv Loc.sc {
-                Rc&Verbose and me&nu,t,v
-                if (t == 'trail') {
+                !isC(v) and continue
                     $y = &sd{
                         return d.d == 2 ? s.t : ki(s,2)
                     };
                     $s = G&ind,v,y;
-                    $d = me&tsc,"trail-ind",s,'y';
-                    #ds&dis = 1;
-                }
+                    $d = me&tsc,t,s,'y';
+                    ds&hue = i * 30;
+                    ds&dis = 1;
             }
         },'ift,D'],
         #c indother!!!
@@ -2443,22 +2451,47 @@ Fourism: |
         
         # climb pointer C
         #  returns callback to test in middle
-        me.doint = &acgtkn{
+        me.doint = &acgtknc{
             !isC(n) and throw "pointer !C";
-            ns&z && !ny&tw and throw "pointer C!tw"
+            c ||= {tw:1};
+            c.tw && ns&z && !ny&tw and throw "pointer C!tw"
             k = "p_"+k;
+            $topn = n;
             return &sd{
-                $c = d[k];
-                if (!c) {
-                    n.t != s.t and return
-                    c = d[k] = n;
+                $h = d[k];
+                n = topn;
+                # they match s.t unless:
+                !n and return
+                h == 'not' and return
+                if (c.tw) {
+                    # default, begins matching n
+                    if (!h) {
+                        n.t == s.t and h = n
+                    }
+                    else {
+                        h = fio(h,s.t,0);
+                    }
                 }
                 else {
-                    $nc = fio(c,s.t,0);
-                    !nc and return
-                    d[k] = nc;
+                    $N = [];
+                    # begins matching n/*
+                    if (!h) {
+                        N = ns&z || []
+                    }
+                    else {
+                        each in h {
+                            !isC(n) and throw "inpointz !C", n
+                            N.push(...ns&z)
+                        }
+                    }
+                    h = N.filter(n => n.t == s.t);
+                    h = h.length && h
                 }
-                return c
+                !h and d[k] = 'not'
+                else {
+                    d[k] = h
+                }
+                return h
             };
         };
         
