@@ -2275,53 +2275,62 @@ Fourism: |
             };
             $Org = me&indother,Abodo,Loc,sch;
             
-            ah(R,'Abodish','o','trailstyle',&fT{
-                # apply styles to Loc/*/* map
-                ~>7 trailstyle!:
-                $c = Locs&center;
-                Org.other(&rOds{
-                    
-                });
-                me&ioty,Loc .map(&D{
-                    # update r
-                    $r = me&futlink,D,'Org';
-                    
-                    # resync D off this
-                    me&ioty,D .map(&O{
-                        $r = me&futlink,O,'Org';
-                    
-                        $sc = {};
-                        c && fio(c,O.t,0) and sc.fs = 22
-                        # %Code
-                        
-                        apply(O,sc);
-                    });
-                    $sc = {};
-                    c && c.t == D.t and sc.fs = 22
-                    apply(D,sc);
-                });
-            });
-            
-            
-            # a map, plumbed to ^
-            $ntovent = &Ot{
-                t ||= 'Codon_click';
-                me.nto(R,Oc&n,&sT{ Rs&fengi(T,t,O) });
-            };
-            
-            $self = Org.self(&rOds{
-                ~>6 selfin: d.ind, r.t
+            # map drawn
+            $selfs = Org.self(&rOds{
                 # Oc&n = map modulat
                 $n = Oc&n = me&tsc,ds&gk+":"+s.t,s.t;
                 ns&dis = d.d == 2 ? 3 : 5;
                 
-                ntovent(O);
-                #r.t = 'Lafr' and debugger
-                return ki(O,2);
+                me.nto(R,Oc&n,&sT{ Rs&fengi(T,'Codon_click',O) })
+                return O.t
             });
             
+            # map styled
+            ah(R,'Abodish','o','trailstyle',&fT{
+                # apply styles to Loc/*/* map
+                ~>7 trailstyle!:
+                $c = Locs&center;
+                
+                # start using that pointer
+                # < to steer around (d.not=1)
+                me.doint = &acgtkn{
+                    !isC(n) and throw "pointer !C";
+                    ns&z && !ny&tw and throw "pointer C!tw"
+                    k = "p_"+k;
+                    return &sd{
+                        if (!d[k]) {
+                            n.t != s.t and return
+                            d[k] = n;
+                        }
+                        else {
+                            $nc = fio(d[k],s.t,0);
+                            !nc and return
+                            d[k] = nc;
+                        }
+                        return 1
+                    };
+                };
+                $cent = me&doint,'center',c;
+                
+                # looking for the center
+                # < look at center and any Rversioned since,
+                #   and the last path we thought it was
+                
+                
+                Org.other(&rOds{
+                    ~Othi: d.ind, O.t
+                    $sc = {};
+                    cent(s,d) and sc.fs = 22
+                    apply(O,sc);
+                });
+            });
             
-            me&tsc,'selfind',self .sc.dis = 1;
+            $oths = Org.other(&rOds{
+                ~Othrg: d.ind, O.t
+                return s.t
+            });
+            me&tsc,'othind',oths .sc.dis = 1;
+            
             
             
             # random printouts!
@@ -2367,6 +2376,8 @@ Fourism: |
         #c indother!!!
         &{
         
+        # surf into S, not S itself
+        #  
         me.indother = &acgtSOd{
             $initc = &y{
                 $c = ex({},d);
@@ -2380,12 +2391,13 @@ Fourism: |
                 !d[k] and throw "!d"+k
                 return gone
             };
+            $topO = O;
             return {
                 self: &y{
                     $c = initc(y);
                     c.y = &rds{
                         # i Loc/...
-                        d.O ||= O;
+                        d.O ||= topO;
                         O = d.O = me&syncup,d.O,s;
 
                         # Oc&R=r, rs&Org=O
@@ -2403,6 +2415,7 @@ Fourism: |
                 },
                 other: &y{
                     $c = initc(y);
+                    c.schexcuse = 1;
                     c.y = &Od{
                         # Oc&R=r yfutures, rs&Org=O
                         $r = d.S = me&futlink,O,c.O
@@ -2430,7 +2443,7 @@ Fourism: |
                         ds&gone = gone;
                         goned.push(d);
                     };
-                    $re = me&indo,O (c);
+                    $re = me&indo,topO (c);
                     goned.length && c.anygoned and c.anygoned(goned)
                     return re
                 },
@@ -2496,6 +2509,9 @@ Fourism: |
                     if (c.sch) {
                         c.beyond ||= 1;
                         c.schableto = &r,d,depth{
+                            # avoided for the other
+                            # < way to call schableto(Oc&R in middle
+                            c.schexcuse and return r
                             depth ||= d.d;
                             $schi = depth - 2;
                             $gk = c.sch[schi];
@@ -2535,7 +2551,8 @@ Fourism: |
                         if (c.sch && d.d > 1) {
                             r = c.schableto(r,d);
                             !r and return d.not = 1
-                            d.s = r
+                            # < should be re-2'd (SCA)
+                            r != d.s and d.s = r
                         }
                         $re = c.y ? ay(c.y,r,d) : r;
                         if (!d.not) {
@@ -2603,7 +2620,7 @@ Fourism: |
             }
 
             $dd = &d{
-                d = $.extend({},d);
+                d = ex({},d);
                 d.path = (d.path||[]).slice();
                 return d
             };
@@ -2612,8 +2629,8 @@ Fourism: |
             up and d.up = up
             d.s = s;
             $pi = d.path.push(s.t+' '+s.y.cv)-1;
-            d.ind == null and d.ind = '  ';
-            # ^ accumulates on every depth's return of a string
+            # accumulates on every depth's return of a string
+            d.ind = d.ind == null ? '' : d.ind+'  ';
             d.d ||= 0;
             d.d++;
             # depth limit vs depth
@@ -2672,7 +2689,7 @@ Fourism: |
 
             out = out.filter(&s{ return 1 && s }).map(&s{
                 if (typeof s == 'string')
-                    return s.split("\n").map(&s{ return d.ind+s }).join("\n")
+                    return s.split("\n").map(&s{ return '  '+s }).join("\n")
 
                 if (typeof s.constructor == Object) {
                     if (d.infolate) {
