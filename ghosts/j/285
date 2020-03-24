@@ -1987,7 +1987,7 @@ Fourism: |
                 Rs&seekto and f.hatch('Codon_point',Rs&seekto)
             });
             
-            #c keep center
+            #c center keeps
             
             # < flying into the one thing, its environment piling in
             #   as we know it's /ghost/such first,
@@ -2134,8 +2134,8 @@ Fourism: |
                 !N and ~>6 noseeingcenter:
                 !N and return
                 # for %Code
-                $ner = f.atpoint(point,N);
-                fio(din,ner);
+                $ner = f.atpoint(point,N,'exactly');
+                ner and fio(din,ner);
                 return din;
             });
             
@@ -2206,6 +2206,8 @@ Fourism: |
                 $din = Locs&center;
                 $ner = (dins&z||[])[0];
                 $nor = (dons&z||[])[0];
+                # don't trail 1-pointers
+                !ner and return
                 
                 doit = doit || !don || muchpoint(din,don);
                 !doit and return
@@ -2927,15 +2929,19 @@ Fourism: |
             
             # make C = t, fraction, {R,at}
             #  for point in ats&gapy
-            f.atpoint = &point,M{
+            f.atpoint = &point,M,exactly{
                 M ||= f.M;
                 $la;
+                $precisely = 0;
                 each i,ba M {
                     la = ba;
                     bas&top + bas&height < point and continue
                     bas&top > point and continue
+                    precisely = 1;
                     break;
                 }
+                # tries to return something if !exactly
+                exactly && !precisely and return
                 $ba = la;
                 $prog = point - bas&top;
                 $frac = dec(prog / bas&height);
