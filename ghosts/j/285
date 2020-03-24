@@ -14,9 +14,30 @@ Fividy: |
             $k = M.shift();
             M.length > 1 and h = h[k] ||= {}
             else {
-                h[k] = M.shift()
+                $re = h[k];
+                h[k] = M.shift();
+                return re;
             }
         }
+    };
+    # hashes are identical
+    window.heq = &sd{
+        !hakd(s,d).length
+    };
+    # keys of differing values
+    window.hakd = &sd{
+        $dif = {};
+        each kv s {
+            !hak(d,k) || d[k] != v and dif[k] = 1
+        }
+        each kv d {
+            !hak(s,k) || s[k] != v and dif[k] = 1
+        }
+        $ks = [];
+        each ko dif {
+            ks.push(k)
+        }
+        return ks
     };
 
     # array match
@@ -1689,9 +1710,12 @@ Fourism: |
         me.eCsc = &acgtRtc,weakly{
             # they persist
             $was = Rs&eCsc && Rs&eCsc[t];
+            # keep the later wave of style
             was && weakly and return
-
             isst(c) and c = G&peel,c
+            # realise work is done
+            was && heq(c,was) and return &{}
+            
             ah(R,'eCsc',t,c);
             # returns hash of css
             $ctocss = &c{
@@ -2340,7 +2364,10 @@ Fourism: |
                     $N = tra(s,d);
                     if (N) {
                         sc.bri ||= 1.3
-                        sc.fs = ls&fs + N.length * 2
+                        sc.fs = ls&fs + N.length * 3
+                    }
+                    else {
+                        sc.bri = 0.6
                     }
                     
                     apply(O,l,sc);
