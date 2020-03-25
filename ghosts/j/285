@@ -1041,6 +1041,9 @@ Fourism: |
             elsif (e.t == 'E') {
                 ec&wake = 4s&Elvact;
             }
+            elsif (e.t == 'W') {
+                ec&wake = 4s&Wayout;
+            }
             else {
                 ~>8: Otherev: '>5 '+e.t
                 # don't happen
@@ -1389,8 +1392,10 @@ Fourism: |
         },'ift,D'],
 
         ['mune','3',&acgtRs{
-            # Codon/experiment
+            # Codon
             me&Rom,R,'Elfor';
+            # experiment
+            me&Rom,R,'Wayout';
             # wash
             me&Rom,R,'Evelse';
         },'ift,D'],
@@ -1403,7 +1408,12 @@ Fourism: |
             # test sleep
             #n Sleigh  R %Slei,ting:W,Gens,tingspot
         },'ift,D'],
-        #c %Evelse, nto
+        ['Wayout','291',&acgtRs{
+            4s&Wayout = R;
+            Rs&rowish = 1;
+            G&way,'g';
+        },'ift,D'],
+        #c %Evelse e log
         ['Evelse','291',&acgtRs{
             Rs&rowish = 1;
             $p = Ry&up;
@@ -4335,6 +4345,7 @@ Wud: | # restacked Wed server
             for my $tx (@{poll.tx}) {
                 $tx->send($s);
             }
+            1 && saygr "sent $s"
         }
         
         Mojo::IOLoop->timer(0.3,&{ poll.doing(poll.one = rand()) });

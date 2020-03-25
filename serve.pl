@@ -679,6 +679,7 @@ $poll->{doing} = sub { my ($o) = @_;
         for my $tx (@{$poll->{tx}}) {
             $tx->send($s);
         }
+        1 && saygr "sent $s"
     }
 
     Mojo::IOLoop->timer(0.3,sub { $poll->{doing}($poll->{one} = rand()) });
