@@ -2014,10 +2014,10 @@ Fourism: |
                 }
                 delete Abodos&fengtodo;
                 
-                Rs&seekto and f.hatch('Codon_point',Rs&seekto)
+                Rs&seekto and f.hatch(T,'Codon_point',Rs&seekto)
             });
             
-            #c center keeps
+            #c center
             
             # < flying into the one thing, its environment piling in
             #   as we know it's /ghost/such first,
@@ -2057,7 +2057,10 @@ Fourism: |
                 $abso = ats&top - move;
                 atc&s = ba.t+" "+move+": "+abso;
                 
-                f.on.scrollTop = abso
+                $was = f.on.scrollTop;
+                f.on.scrollTop = abso;
+                $diff = abso - was;
+                ~>6     scrool: dec(diff);
             });
             
             #c %Code acts
@@ -2098,8 +2101,8 @@ Fourism: |
                 $thing = f.Codeba(din,c);
                 $fora = c.fora;
                 if (!thing) {
-                    # elvises unopen path (without %Codinner=%Codin)
-                    T.waits and return
+                    # elvises unopen path (without %Codinner=%Codin)!
+                    T.waits and return ~>7 unopenable path?: din.t
                     # or it cancels the go
                     return delete Rs&seekto
                 }
@@ -2333,16 +2336,30 @@ Fourism: |
                 ts&dis = 2;
                 ts&fs = 12;
                 d.d == 2 and ts&fs = 18; ns&dis = 1;
+                
+                $clicksat = &OTe{
+                    $was = Os&ope;
+                    $is = Os&ope = e.t.includes('C') ? 0 : 1;
+                    if (is == 0) {
+                        if (rs&Codin) {
+                            # close innards
+                            me&ioty,O .map(O => Os&ope = 0);
+                        }
+                    }
+                    is != was and Rs&fengi(T,'trailstyle',O)
+                    return is||-1
+                };
+                
                 # clicks in the map
                 me.nto(R,n,&sTe{
                     ~>4 selfs: n.t, e.t
-                    Rs&fengi(T,'Codon_click',O);
+                    clicksat(O,T,e) > 0 and Rs&fengi(T,'Codon_click',O);
                     T.wake = 'not';
                 });
                 # clicks on their label (dont boost)
                 Oc&nto_label = &sTe{
                     ~>4 others: n.t, e.t
-                    
+                    clicksat(O,T,e);
                     T.wake = 'not';
                 };
                 
@@ -2372,10 +2389,14 @@ Fourism: |
                 
                 # start using that pointer
                 # < to steer around (d.not=1)
+                # < if we have the O we want styles updated on...
+                #   supposing its meaning doesn't spread up ind
+                #   ie ind's doming/grasp of itself from recently,
+                #    is allowed to reinc small change
                 $cent = me&doint,'center',Locs&center;
                 $tra = me&doint,'trail',Locs&trail,{};
-                # looking for the center
-                # < look at center and any Rversioned since,
+                # looking for the center, etc
+                # < and any Rversioned since,
                 #   and the last path we thought it was
                 
                 
@@ -2393,11 +2414,18 @@ Fourism: |
                     # init
                     Os&ope == null && haks(sc) and Os&ope = 1
                     # explicit tinkering
-                    Os&ope and sc.fs = 14
+                    Os&ope and sc.fs = 16
                     
                     if (rs&Code) {
                         $cm = rs&cm;
                         if (cm) {
+                            # < rather mute the %fix somehow
+                            $div = cm.getWrapperElement();
+                            $is = Os&ope ? '' : 'none';
+                            if (div.style.display != is) {
+                                div.style.display = is;
+                                T.feng = 'cmope';
+                            }
                             # < some Org styling should lead to f.heighten()
                             #  < %height that knows to apply to cm,
                             #    and join it into this geometry quest
@@ -2882,14 +2910,17 @@ Fourism: |
             # for any tunneling through %Abodo
             ah(Abodo,'Alooseion','Abodis',&{ f.shui() });
             
-            f.hatch = &tO{
-                $T = {};
+            f.hatch = &t{
+                $args = [...arguments];
+                $T = isha(args[0]) ? args.shift() : {};
+                $t = args.shift();
                 $cb = f.o[t] || f[t];
                 !cb and return
-                cb(f,T,O);
+                cb(f,T,...args);
                 T.feng and G&delay,0.001,&{f.shui()}
                 T.waits and return 1
             };
+            
             f.o = {};
             $minds = [Codap];
             each in minds {
@@ -3115,10 +3146,14 @@ Fourism: |
                     .map(n => n.c.not = 1);
                 $t = me&Mwty,R,'ball','t';
                 delete ts&deco;
+                
+                # O that map assigns to us
+                #  similar to %tracting=f, tidier
+                me&rollbs,R,'Org';
                 # let the map hook label clicks
-                # < defer to what would happen (^^R%elvis) if modeening unsatisfied
-                #    inc trying to push a value past its maximum,
-                #     which would inc. maxed value adjustment
+                # < defer to what would happen (^^R%elvis)
+                #    if modeening unsatisfied
+                #    inc pushing maxed value
                 me.nto(R,t,&sTe{
                     # < ind various kinds of d.matter, io.input etc
                     #   which has some this should be C,
@@ -3188,6 +3223,7 @@ Fourism: |
       wenesday:  #####################
        style %Codes, remove %bo
        cm.heighten()
+       < AutoSave hands changes
        
        < feed openness
          start closedish depending on Loc%*
