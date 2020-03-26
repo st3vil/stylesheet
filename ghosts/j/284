@@ -2201,21 +2201,37 @@ Foogla: | # Domes prepare to A=A
                     nc&s = wasline+':'+s;
                 }
             };
-            # locatable compile errors
+            # locatable compile errors!
             $wayjs = &w{
                 $args = wc&argumentation;
                 !args and throw "untried w"
                 $src = ['','wayjs',ws&dige,args,w.t].join('/');
-                # < find if already
-                $script = G&add_script,src;
-                # < via window.onerror, attach to src=...
+                
+                # window.onerror puts script.compile_errors[error]
+                $script = wc&script = G&add_script,src;
+                
                 
                 script.onerror = &er{
-                    debugger;
+                    ~>5 wayjs err: w.t
                 };
-                script.onerror = &er{
-                    debugger;
+                script.onload = &er{
+                    # if compiled or not
+                    $name = ['w',w.t,ws&dige,args].join('__');
+                    name = name.replace(/\W+/g,'_');
+                    $y = window[name];
+                    !y and return ~>5 wayjs not compiling: w.t
+                    ~>5 wayjs loaded: w.t
+                    script.loaded = 1;
+                    # swap it in, providing the next error with line number:
+                    wc&code = y;
                 };
+            };
+            # load .js, returns script if already
+            $add_script = &src,cb{
+                $r = me.cbu(R,'Inn');
+                $r = r && rs&Inn;
+                !r and throw "no way Inn"
+                return rs&add_script(src,cb)
             };
             
             $er = sc&er;
@@ -2234,8 +2250,14 @@ Foogla: | # Domes prepare to A=A
                         $fore = stack.shift();
                         $first = stack[0];
                         me&tsc,'stackend',first,'y' .sc.dis = 1;
-                        
+                        # < !w may still have urls of wayjs
                         if (w) {
+                            $script = wc&script;
+                            if (script) {
+                                window.ascri = script;
+                                wayline(w,first);
+                            }
+                            else
                             # lineno is correct if:
                             first.includes('[as code]') and wayline(w,first)
                             # or it could be for the last eval
