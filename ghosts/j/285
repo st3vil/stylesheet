@@ -450,6 +450,7 @@ Threeism: |
                 args and tar += ','+args;
                 # help Ban find its source
                 Gc&B.sc.way = w;
+                wc&argumentation = tar;
                 $code = 'wc&code = function '+name+"(A,C,G,T,"+tar+"){\n"+wc&s+"}";
                 try{
                     window.code = code;
@@ -3240,10 +3241,13 @@ Fourism: |
          ind revival unlimits pointers
       tuesday:
        style map
-      wenesday:  #####################
+      wenesday:
        style %Codes, openable, ʚ
        < AutoSave hands cm.on.changes
-       < user, goes SCA, they pull via Search, etc
+      thursday:  #####################
+       < G&way,'g'
+        < chase Error lines
+        < goes SCA, they pull via Search, etc
           would planet but not Planet?
       v goo tuner ^
        < interactive widgets want tiny Displays,
@@ -3295,7 +3299,7 @@ Fourism: |
            the receptive phenomenon
           oscillator application
         < convert to names, replay for testing
-
+        < iframe http://webchat.freenode.net/?channels=channel_name
 
 
 
@@ -4569,41 +4573,62 @@ Wud: | # restacked Wed server
     
     #c /way/ 4s&waythe way
     # < Accept headers to get the various translations
-    get '/way/*way' => &c{
-        my $t = $c->param('way');
+    sub away {
+        my $t = shift();
+        my $ot = $t;
         $t =~ s/\W+/-/g;
         my $w;
         for ('G/*','wormhole/way') {
             my @opt = glob "$_/$t";
             my $f = shift @opt;
             next if !$f;
-            $w = {t=>$t,y=>{}};
+            # w.t will be pi/thing, t (on disk) is pi-thing
+            $w = {t=>$ot,y=>{}};
             wc&s = decode_utf8(read_file($f));
             ws&dige = slm(12, dig wc&s);
             ws&of = 'w';
             last
         }
-        $w || return $c->reply->not_found;
-        $c->res->headers->append(Dige => ws&dige);
+        $w || return;
         
         # < JaBabz is final
         my $babv = readlink("wormhole/digway/JaBabz");
-        a&wayjs = {} if a&babv ne $babv;
+        a&wayjs = {} if !a&babv || a&babv ne $babv;
         a&babv = $babv;
-        
-        my $have = $c->param('have');
-        if ($have && a&wayjs.>w.t.>ws&dige &&
-            $have eq ws&dige ) {
-            return $c->render(text => '')
-        }
-        
-        
-        my $s = a&wayjs.>w.t.>ws&dige ||= do {
-            my $C = $w;
+        # swap s just read for s compiled against its t/dige
+        wc&s = a&wayjs.>w.t.>ws&dige ||= do {
+            $C = $w;
+            # this line is compiled to JaBabz($C):
             Rw JaBabz $C;
             wc&s
         };
-        #$s =~ /^(.+?m\.replace(.+?))$/sgm && sayyl "Fuo:\n $1\n\n";
+        return $w
+    };
+    get '/way/*way' => &c{
+        my $t = $c->param('way');
+        my $w = away($t);
+        $w || return $c->reply->not_found;
+        
+        $c->res->headers->append(Dige => ws&dige);
+        
+        my $have = $c->param('have');
+        if ($have && $have eq ws&dige ) {
+            return $c->render(text => '')
+        }
+        $c->render(text => wc&s);
+    };
+    get '/wayjs/#dige/#args/*way' => &c{
+        my $t = $c->param('way');
+        my $w = away($t);
+        # must be that version
+        $w && $c->param('dige') eq ws&dige
+            || return $c->reply->not_found;
+        # put in a global namespace
+        my $name = join("__",'w',$t,
+            $c->param('dige'),$c->param('args'));
+        $name =~ s/\W+/_/g;
+        my $s = "function $name(A,C,G,T,"
+            .$c->param('args').") {\n".wc&s."\n}\n";
         $c->render(text => $s);
     };
     

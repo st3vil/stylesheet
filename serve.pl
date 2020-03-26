@@ -903,41 +903,62 @@ any '/ghost/*w' => sub { my ($c) = @_;
 
 #c /way/ $A->{4}->{sc}->{waythe} way
 # < Accept headers to get the various translations
-get '/way/*way' => sub { my ($c) = @_;
-    my $t = $c->param('way');
+sub away {
+    my $t = shift();
+    my $ot = $t;
     $t =~ s/\W+/-/g;
     my $w;
     for ('G/*','wormhole/way') {
         my @opt = glob "$_/$t";
         my $f = shift @opt;
         next if !$f;
-        $w = {t=>$t,y=>{}};
+        # $w->{t} will be pi/thing, t (on disk) is pi-thing
+        $w = {t=>$ot,y=>{}};
         $w->{c}->{s} = decode_utf8(read_file($f));
         $w->{sc}->{dige} = slm(12, dig $w->{c}->{s});
         $w->{sc}->{of} = 'w';
         last
     }
-    $w || return $c->reply->not_found;
-    $c->res->headers->append(Dige => $w->{sc}->{dige});
+    $w || return;
 
     # < JaBabz is final
     my $babv = readlink("wormhole/digway/JaBabz");
     $A->{sc}->{wayjs} = {} if $A->{sc}->{babv} ne $babv;
     $A->{sc}->{babv} = $babv;
-
-    my $have = $c->param('have');
-    if ($have && $A->{sc}->{wayjs}->{"$w->{t}"}->{"$w->{sc}->{dige}"} &&
-        $have eq $w->{sc}->{dige} ) {
-        return $c->render(text => '')
-    }
-
-
-    my $s = $A->{sc}->{wayjs}->{"$w->{t}"}->{"$w->{sc}->{dige}"} ||= do {
-        my $C = $w;
+    # swap s just read for s compiled against its t/dige
+    $w->{c}->{s} = $A->{sc}->{wayjs}->{"$w->{t}"}->{"$w->{sc}->{dige}"} ||= do {
+        $C = $w;
+        # this line is compiled to JaBabz($C):
         JaBabz($C);
         $w->{c}->{s}
     };
-    #$s =~ /^(.+?m\.replace(.+?))$/sgm && sayyl "Fuo:\n $1\n\n";
+    return $w
+};
+get '/way/*way' => sub { my ($c) = @_;
+    my $t = $c->param('way');
+    my $w = away($t);
+    $w || return $c->reply->not_found;
+
+    $c->res->headers->append(Dige => $w->{sc}->{dige});
+
+    my $have = $c->param('have');
+    if ($have && $have eq $w->{sc}->{dige} ) {
+        return $c->render(text => '')
+    }
+    $c->render(text => $w->{c}->{s});
+};
+get '/wayjs/#dige/#args/*way' => sub { my ($c) = @_;
+    my $t = $c->param('way');
+    my $w = away($t);
+    # must be that version
+    $w && $c->param('dige') eq $w->{sc}->{dige}
+        || return $c->reply->not_found;
+    # put in a global namespace
+    my $name = join("__",'w',$t,
+        $c->param('dige'),$c->param('args'));
+    $name =~ s/\W+/_/g;
+    my $s = "function $name(A,C,G,T,"
+        .$c->param('args').") {\n".$w->{c}->{s}."\n}\n";
     $c->render(text => $s);
 };
 

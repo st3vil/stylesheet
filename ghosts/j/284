@@ -2169,34 +2169,95 @@ Foogla: | # Domes prepare to A=A
             
             n Y  $self:Y %R:Cit
         },'ift,D'],
-
+        #c Error 4
         ['Error','4',&acgtRs{
-            #Rs&rowish = 1;#
+            # < maybe if ^^%Domed%rowish or many ^/%Error
+            #Rs&rowish = 1;
             $skull = '☠';
             $bigger = me&rolltog,R,{may:skull,tsc:'D',once:1},0;
             
             me&tsc,'message',sc&s,'d';
+            
             $B = ss&B;
             $w = B && Bs&way;
             w and me&tsc,'w',w.t+'#'+ws&dige
             
+            $wayline = &wlc{
+                if (!isnu(l)) {
+                    $stackline = l;
+                    $m = stackline.match(/:(\d+):(\d+)\)$/);
+                    l = m[1];
+                    c = m[2];
+                }
+                # for the wrapping as a function with argumentation:
+                l -= 1;
+                $lines = wc&s.split("\n").slice(l-3,l+2);
+                me&tsc,"from:"+l+":"+lines.length;
+                each is lines {
+                    $wasline = (l-2)+i*1;
+                    $sty = wasline == l ? 'b' : 'y';
+                    $n = me&tsc,'line:'+wasline,0,sty;
+                    ns&dis = 1;
+                    nc&s = wasline+':'+s;
+                }
+            };
+            # locatable compile errors
+            $wayjs = &w{
+                $args = wc&argumentation;
+                !args and throw "untried w"
+                $src = ['','wayjs',ws&dige,args,w.t].join('/');
+                # < find if already
+                $script = G&add_script,src;
+                # < via window.onerror, attach to src=...
+                
+                script.onerror = &er{
+                    debugger;
+                };
+                script.onerror = &er{
+                    debugger;
+                };
+            };
+            
             $er = sc&er;
-            $ersense = &er,{
+            $ersense = &er,erp{
                 me&nu,s;
                 $stack = er && er.stack;
+                
                 if (stack) {
-                    stack = stack.split("\n");
-                    $fore = stack.shift();
-                    $first = stack[0];
-                    me&tsc,'stackend',first,'y' .sc.dis = 1;    
+                    # each catch throws a new error,
+                    #  containing the old ones in catches
+                    #  or at least their stack,
+                    #  which all seem to be the same?
+                    erp && stack == erp.stack and 'stack same'
+                    else {
+                        stack = stack.split("\n");
+                        $fore = stack.shift();
+                        $first = stack[0];
+                        me&tsc,'stackend',first,'y' .sc.dis = 1;
+                        
+                        if (w) {
+                            # lineno is correct if:
+                            first.includes('[as code]') and wayline(w,first)
+                            # or it could be for the last eval
+                            #  (or that + lines in the eval?)
+                            # < using eval as an operator not a function?
+                            else {
+                                $get = me&tsc,'getline?',0,'p'
+                                me.nto(R,get,&{
+                                    wayjs(w);
+                                });
+                            }
+                        }
+                        else {
+                            me&tsc,'!w',0,'p'
+                        }
+                    }
                 }
-                (er.catches||[]).map(er => ersense(er))
+                (er.catches||[]).map(erd => ersense(erd,er))
             };
             
             er and ersense(er);
             if (w) {
-                # stack's first line may contain [as code],
-                #  meaning its lineno is correct
                 # otherwise we must inject as <script>
                 #  to detect the line properly
                 #   for compile errors
