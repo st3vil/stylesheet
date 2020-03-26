@@ -1980,6 +1980,7 @@ Foogla: | # Domes prepare to A=A
             $erN = JRs&erN;
             erN.push(n);
             Rs&error = n;
+            ps&returns and throw er
         }
         return rs&returns || r
     };
@@ -2107,7 +2108,6 @@ Foogla: | # Domes prepare to A=A
             # p%NzR cs=[D%Domed+]
             $D = s;
             $r = Ds&R;
-            
             # 3 gauge of gauge
             # only latest or Te'd open
             if (Rs&glampi != null &&
@@ -2198,14 +2198,19 @@ Foogla: | # Domes prepare to A=A
                 $context = 2;
                 $lines = wc&s.split("\n").slice(l-context-1,l+context);
                 me&tsc,"from:"+l+":"+lines.length;
+                if (!lines.length) {
+                    me&tsc,'invalid-lineguess' .sc.ma = 0.3;
+                    me&tsc,'stackend',stackline,'y' .sc.dis = 1;
+                    return;
+                }
                 each is lines {
                     $wasline = (l-context)+i*1;
                     $n = me&tsc,'line:'+wasline,0,'y';
                     ns&dis = 1;
                     if (wasline == l) {
-                        $problem = s.substr(c);
-                        s = substr(0,c);
-                        me&mtsc,n,'problem',s,'b';
+                        $trouble = s.substr(c-1);
+                        s = s.substr(0,c-1);
+                        me&mtsc,n,'trouble',trouble,'b';
                     }
                     nc&s = wasline+':'+s;
                 }
@@ -2224,7 +2229,9 @@ Foogla: | # Domes prepare to A=A
                 };
                 script.onload = &er{
                     # if compiled or not
-                    me&elvis,R,'wayjs',{wake:me.cbu(R,'JRom')}
+                    $towake = me.cbu(R,'JRom');
+                    !towake and throw "notowake";
+                    me&elvis,R,'wayjs',{wake:towake};
                     $name = ['w',w.t,ws&dige,args].join('__');
                     name = name.replace(/\W+/g,'_');
                     $y = window[name];
@@ -2243,6 +2250,7 @@ Foogla: | # Domes prepare to A=A
                 return rs&add_script(src,cb)
             };
             
+            #c ercursion
             $er = sc&er;
             $ersense = &er,erp{
                 me&nu,s;
@@ -2258,12 +2266,11 @@ Foogla: | # Domes prepare to A=A
                         stack = stack.split("\n");
                         $fore = stack.shift();
                         $first = stack[0];
-                        #me&tsc,'stackend',first,'y' .sc.dis = 1;
                         # < !w may still have urls of wayjs
                         if (w) {
                             $script = wc&script;
                             if (script) {
-                                me&tsc,'hadscript';
+                                me&tsc,'hadscript' .sc.ma = 0.3;
                                 window.ascri = script;
                                 $ers = script.compile_errors;
                                 if (ers) {
@@ -2278,6 +2285,7 @@ Foogla: | # Domes prepare to A=A
                                 else {
                                     # < should have script src in
                                     ~>5 does wayjs stack look right?:
+                                    #me&tsc,'stackend',first,'y' .sc.dis = 1;
                                     wayline(w,first);
                                 }
                             }
@@ -2289,7 +2297,7 @@ Foogla: | # Domes prepare to A=A
                             #  (or that + lines in the eval?)
                             # < using eval as an operator not a function?
                             else {
-                                me&tsc,'getline...',0,'p'
+                                me&tsc,'getline...',0,'p' .sc.ma = 0.3;
                                 wayjs(w);
                             }
                         }
