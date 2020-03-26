@@ -2191,17 +2191,26 @@ Foogla: | # Domes prepare to A=A
                 }
                 # for the wrapping as a function with argumentation:
                 l -= 1;
-                $lines = wc&s.split("\n").slice(l-3,l+2);
+                # < Differ having more context sense:
+                #   find line before each indent outwards and upwards,
+                #   and the first line of a comment on either side
+                #   < far more ideally, how the logic went!
+                $context = 2;
+                $lines = wc&s.split("\n").slice(l-context-1,l+context);
                 me&tsc,"from:"+l+":"+lines.length;
                 each is lines {
-                    $wasline = (l-2)+i*1;
-                    $sty = wasline == l ? 'b' : 'y';
-                    $n = me&tsc,'line:'+wasline,0,sty;
+                    $wasline = (l-context)+i*1;
+                    $n = me&tsc,'line:'+wasline,0,'y';
                     ns&dis = 1;
+                    if (wasline == l) {
+                        $problem = s.substr(c);
+                        s = substr(0,c);
+                        me&mtsc,n,'problem',s,'b';
+                    }
                     nc&s = wasline+':'+s;
                 }
             };
-            # locatable compile errors!
+            # locatable errors!
             $wayjs = &w{
                 $args = wc&argumentation;
                 !args and throw "untried w"
@@ -2210,12 +2219,12 @@ Foogla: | # Domes prepare to A=A
                 # window.onerror puts script.compile_errors[error]
                 $script = wc&script = G&add_script,src;
                 
-                
                 script.onerror = &er{
                     ~>5 wayjs err: w.t
                 };
                 script.onload = &er{
                     # if compiled or not
+                    me&elvis,R,'wayjs',{wake:me.cbu(R,'JRom')}
                     $name = ['w',w.t,ws&dige,args].join('__');
                     name = name.replace(/\W+/g,'_');
                     $y = window[name];
@@ -2249,25 +2258,39 @@ Foogla: | # Domes prepare to A=A
                         stack = stack.split("\n");
                         $fore = stack.shift();
                         $first = stack[0];
-                        me&tsc,'stackend',first,'y' .sc.dis = 1;
+                        #me&tsc,'stackend',first,'y' .sc.dis = 1;
                         # < !w may still have urls of wayjs
                         if (w) {
                             $script = wc&script;
                             if (script) {
+                                me&tsc,'hadscript';
                                 window.ascri = script;
-                                wayline(w,first);
+                                $ers = script.compile_errors;
+                                if (ers) {
+                                    # G&way/er still shows lies from before wayjs
+                                    #  since it cannot be linked into w
+                                    ers.length != 1 and debugger
+                                    $ec = ers[0];
+                                    ec+'' != er+'' and ~>5 differing way/wayjs compiler: ec+'', er+''
+                                    ec.lineNo == null and me&tsc,"nolineNo?"
+                                    wayline(w,ec.lineNo,ec.colNo);
+                                }
+                                else {
+                                    # < should have script src in
+                                    ~>5 does wayjs stack look right?:
+                                    wayline(w,first);
+                                }
                             }
-                            else
-                            # lineno is correct if:
-                            first.includes('[as code]') and wayline(w,first)
+                            elsif (first.includes('[as code]')) {
+                                # lineno is correct
+                                wayline(w,first)
+                            }
                             # or it could be for the last eval
                             #  (or that + lines in the eval?)
                             # < using eval as an operator not a function?
                             else {
-                                $get = me&tsc,'getline?',0,'p'
-                                me.nto(R,get,&{
-                                    wayjs(w);
-                                });
+                                me&tsc,'getline...',0,'p'
+                                wayjs(w);
                             }
                         }
                         else {
