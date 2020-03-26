@@ -654,6 +654,9 @@ get '/' => sub { my ($c) = @_;
 my $poll = {tx=>[],ways=>{}};
 $poll->{wayt} = {}; # pi/name -> pi-name
 $poll->{wayd} = {}; # pi-name -> $C->{sc}->{dige}
+get '/digwtf' => sub { my ($c) = @_;
+    $c->render(text => wdump($poll->{wayd}));
+};
 $poll->{doing} = sub { my ($o) = @_;
     return if $o && $poll->{one} && $o ne $poll->{one};
     my @ways;
@@ -710,7 +713,7 @@ websocket '/digwaypoll' => sub { my ($s) = @_;
             $t = delete $poll->{wayt}->{"$t"};
             delete $poll->{wayd}->{"$t"};
         }
-        #1 && sayre "digwaypoll Gone: $addr $code $reason";
+        1 && sayre "digwaypoll Gone: $addr $code $reason";
     });
 };
 
@@ -911,7 +914,7 @@ sub away {
     for ('G/*','wormhole/way') {
         my @opt = glob "$_/$t";
         my $f = shift @opt;
-        next if !$f;
+        next if !$f || !-f $f;
         # $w->{t} will be pi/thing, t (on disk) is pi-thing
         $w = {t=>$ot,y=>{}};
         $w->{c}->{s} = decode_utf8(read_file($f));
@@ -923,7 +926,7 @@ sub away {
 
     # < JaBabz is final
     my $babv = readlink("wormhole/digway/JaBabz");
-    $A->{sc}->{wayjs} = {} if $A->{sc}->{babv} ne $babv;
+    $A->{sc}->{wayjs} = {} if !$A->{sc}->{babv} || $A->{sc}->{babv} ne $babv;
     $A->{sc}->{babv} = $babv;
     # swap s just read for s compiled against its t/dige
     $w->{c}->{s} = $A->{sc}->{wayjs}->{"$w->{t}"}->{"$w->{sc}->{dige}"} ||= do {

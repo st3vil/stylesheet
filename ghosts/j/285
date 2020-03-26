@@ -3259,6 +3259,7 @@ Fourism: |
       thursday:  #####################
        < G&way,'g'
         chase Error lines
+        chase digwaypoll
         < goes SCA, they pull via Search, etc
           would planet but not Planet?
       v goo tuner ^
@@ -3268,7 +3269,6 @@ Fourism: |
          
      %Codap
        map:
-        names change colour accordingly, fast collapse
         lessthink if not on screen
         know git trouble centrally
        pointers:
@@ -4336,6 +4336,9 @@ Wud: | # restacked Wed server
     my $poll = {tx=>[],ways=>{}};
     poll.wayt = {}; # pi/name -> pi-name
     poll.wayd = {}; # pi-name -> s&dige
+    get '/digwtf' => &c{
+        $c->render(text => wdump(poll.wayd));
+    };
     poll.doing = &o{
         return if $o && poll.one && $o ne poll.one;
         my @ways;
@@ -4392,7 +4395,7 @@ Wud: | # restacked Wed server
                 $t = delete poll.wayt.>$t;
                 delete poll.wayd.>$t;
             }
-            #1 && sayre "digwaypoll Gone: $addr $code $reason";
+            1 && sayre "digwaypoll Gone: $addr $code $reason";
         });
     };
     
@@ -4593,7 +4596,7 @@ Wud: | # restacked Wed server
         for ('G/*','wormhole/way') {
             my @opt = glob "$_/$t";
             my $f = shift @opt;
-            next if !$f;
+            next if !$f || !-f $f;
             # w.t will be pi/thing, t (on disk) is pi-thing
             $w = {t=>$ot,y=>{}};
             wc&s = decode_utf8(read_file($f));
