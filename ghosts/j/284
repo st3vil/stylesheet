@@ -1916,6 +1916,7 @@ Foogla: | # Domes prepare to A=A
         c.neednt and c.wantsleep = 'neednt'
         c.impausible and delete c.wantsleep
         # c.wantsleep and c.ov = 0.279
+        # before tunneling 18:
         c.wantsleep and c.ov = 0.172
 
         try {
@@ -2055,7 +2056,16 @@ Foogla: | # Domes prepare to A=A
             
             $r = me&Rom,R,'Rom',c;
             # out me&Rom returns in me&Rom
-            Rs&returns = r;
+            if (c.wantsleep) {
+                # from before JRom paused
+                if (!me&rollbs,R,'returns' ) {
+                    throw "cant return !sleeping"
+                }
+            }
+            else {
+                # may have become %sleeping (eg tunneling 18)
+                Rs&returns = r;
+            }
             
             # pause if slow
             $max = rs&timetopause || 2.5;
