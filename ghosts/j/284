@@ -7306,16 +7306,30 @@ Foogla: | # Domes prepare to A=A
                     Ps&Want_Check = 1;
                 }
                 # validate cache
+                if (s&Want_Check) {
+                    Ps&Want_Check = 1;
+                    delete s&Want_Check;
+                    c&ready and ac(P,'readyingC',C)
+                }
                 Ps&now && Gtime(Ps&now) > 25 and Ps&Want_Check = 1
                 s&P && s&P != P and s&oP = delete s&P
                 
                 # in/out of time bit, lost in the store
                 $ok = Rs&Pull_a(C,P);
                 
+                if (s&notsync) {
+                    # C is not experiencing changes,
+                    #  eg refreshing things out of time
+                    #  and Pull_a will c&ready() leads back
+                    delete s&notsync;
+                    return
+                }
+                
                 # don't wait for the async check
                 # Pc&s only null if never found,
                 #  or new string is got but not decoded
                 !ok && Pc&s && !c&canwait and ok = 1
+                
                 
                 if (!ok) {
                     # go async
