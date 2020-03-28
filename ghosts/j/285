@@ -1297,20 +1297,18 @@ Fourism: |
                     aw = me.cbu(R,'reawakens');
                     aw = aw && aws&reawakens;
                 }
+                $used = [];
                 if (aw) {
                     # see if strategy is for this R
-                    $use = 0;
                     each tw aw {
-                        b.sc[t] and use = w
-                    }
-                    if (use) {
+                        !b.sc[t] and continue
+                        used.push(t);
                         # < babz this 'each, k use.rollbs'
-                        if (use.rollbs) {
-                            use.rollbs.split(',').map(&k{
-                                hak(b.sc,k) and c[k] = b.sc[k]
-                            });
-                        }
-                        use.sc and ex(c,use.sc)
+                        w.rollbs &&
+                        w.rollbs.split(',').map(&k{
+                            hak(b.sc,k) and c[k] = b.sc[k]
+                        });
+                        w.sc and ex(c,w.sc)
                     }
                     bs&ball and c.ball = 1
                     bs&tightly and c.tightly = 1
@@ -1331,7 +1329,7 @@ Fourism: |
                     c.JRom = bs&JRom;
                 }
                 else
-                !c.reawakens && aw && !use and c.noreawakens = 1
+                !c.reawakens && aw && !used.length and c.noreawakens = 1
                 c.b = b
             }
             #c doing, depending on awakeness theory
@@ -1916,9 +1914,9 @@ Fourism: |
             Rs&incount++;
             $c = me&tsc,'%Codon','Abodo-'+Rs&incount,'g';
             
-            
             n Codap  R %Abodis,Codap
         },'ift,D'],
+        
         # Codap extends Abodis, animal of these handlers
         # accumulating to f.*, which we receive
         #  f.hatch($t,$arg) may be used to call them
@@ -1937,7 +1935,7 @@ Fourism: |
             #   without this %reawakens, clicks here wakes %Abodo
             #   then its %Codoors c.neednt badly,
             #   < JRom post-error/pre-history better
-            ah(R,'reawakens','Codap',{rollbs:'Codap,Loc'});
+            ah(R,'reawakens','Codap',{rollbs:'Codap,Loc,selfs'});
             
             $Abodo = me.cbu(R,'Abodo');
             # to sample attention from
@@ -2840,6 +2838,11 @@ Fourism: |
         },'ift,D,sleeping'],
         #c Abodis maproom
         # has a layout, icon trays
+        ['sleeping+Abodis','293',&acgtRs{
+            $f = Rs&Abodis;
+            ~>5 sleeping+Abodis:
+            fs&init = 0;
+        },'ift,D'],
         ['Abodis','293',&acgtRs{
             $dish = &{ah(R,'Abodis',...arguments) };
             $fenginto = &nt{
@@ -2979,7 +2982,7 @@ Fourism: |
                 f.hatch('mapstyle');
                 f.hatch('fengup');
                 fs&init = 1;
-                
+                ~>5 INIT:
                 # e->f entry, eg nto callback, hatch with arg
                 Rs&fengi = &TtO{
                     f = fs&f;
@@ -2990,14 +2993,19 @@ Fourism: |
             });
             # delays calls until replaced on init
             Rs&fengi = &TtO{
-                T.lotsfengi ||= 0;
-                T.lotsfengi++ > 3 and throw "!init fengi"
+                $r = me&yfuture,R;
+                if (R != r) {
+                    ~>5 redir fengi:
+                    return rs&fengi(...arguments);
+                }
+                Rs&lotsfengi ||= 0;
+                Rs&lotsfengi++ > 3 and throw "!init fengi"
                 $args = [...arguments];
                 $cb = &{
                     $r = me&yfuture,R;
                     rs&fengi(...args)
                 };
-                G&yl,2,cb;
+                G&yl,80,cb;
                 T.wake = 'not';
             };
             
@@ -3039,17 +3047,21 @@ Fourism: |
         ['Abodis','292',&acgtRs{
             me&walla,'b:2.4,h:7';
             ~BLapa
-            $Abodo = me.cbu(R,'Abodo');
+            ah(R,'reawakens','Abodis',{rollbs:'Abodis,comf'});
+            
             $f = Rs&Abodis = {};
             f.sc = me&rollbs,R,'comf',{};
             fs&f = f;
             fs&init = 0;
             
+            $Abodo = me.cbu(R,'Abodo');
+            # for any tunneling through %Abodo
+            ah(Abodo,'Alooseion','Abodis',&{ f.shui() });
+            
+            
             each tv f.sc {
                 Rc&Verbose and me&nu,t,v
             }
-            # for any tunneling through %Abodo
-            ah(Abodo,'Alooseion','Abodis',&{ f.shui() });
             
             f.hatch = &t{
                 $args = [...arguments];
@@ -3100,7 +3112,7 @@ Fourism: |
                 $cb = me&sccb,R,'shui_casual',&{f.shui('casual')};
                 G&delay,2.14,cb;
                 
-                
+                ~>5 shuibegin:
                 $began = Gtime();
                 Abodo = f.Abodo = me&yfuture,Abodo;
                 # f.at - view, also f.on/f.con
@@ -3126,7 +3138,7 @@ Fourism: |
                     #return G&yl,0.01,f.shui
                 }
                 
-                !fs&init and f.hatch(1) and return
+                !fs&init && f.hatch(1) and return
                 f.hatch(22) and return
                 
                 # sleepytime same geo
@@ -3142,7 +3154,7 @@ Fourism: |
                 !still              and f.hatch(71)   and return
                 mode && !f.sc[mode] and f.hatch(mode) and return
                 
-                mode == 'casual' and return
+                #mode == 'casual' and return
                 ~>2 shui: Gtime(began), mode||'...', still?"still":""
             };
             
