@@ -3012,6 +3012,14 @@ Fourism: |
                     G&delay,0.001,&{f.shui()};
                     T.fengdone = 1
                 }
+                if (T.munt) {
+                    $k = 'munt:'+T.munt;
+                    R.sc[k] ||= 0;
+                    R.sc[k]++ <3 and G&delay,0.44,&{f.shui()};
+                    else
+                    R.sc[k]++ == 3 and ~>7 shui gives up: k
+                    T.waits = k
+                }
                 T.waits and return 1
             };
             
@@ -3024,6 +3032,15 @@ Fourism: |
                 ex(f,uf);
                 f.o = o;
             }
+            f.sanity = &fT{
+                $at = f.at;
+                !ats&on || !ats&con and return T.munt = 'aton'
+                ats&gapy < 500 and return T.munt = 'skinny gap'
+                
+                # check dom semi arrived
+                $N = f.M && f.M.filter(m => (ms&height||0) < 22) || [];
+                !f.M || N.length and return T.munt = 'heightholes'
+            };
             f.shui = &mode,{
                 $began = Gtime();
                 # < Abodo knowing better its outoftime function waterfallery
@@ -3045,23 +3062,10 @@ Fourism: |
                 
                 # f.at - view, also f.on/f.con
                 $at = f.at = f.where();
-                if (!(ats&on && ats&con)) {
-                    ~>2 muntedaton:
-                    return G&yl,444.04,f.shui
-                }
-                if (ats&gapy < 500) {
-                    ~>2 skinty: ats&gapy
-                    return G&yl,444.04,f.shui
-                }
                 # f.M - Codoors
-                f.M = f.balls(Abodo);
-                
-                # check dom semi arrived
-                $N = f.M && f.M.filter(m => (ms&height||0) < 22) || [];
-                if (!f.M || N.length) {
-                    ~>2 heightholes: N.map(n=>n.t).join(',')
-                    return G&yl,144.04,f.shui
-                }
+                f.M = f.balls(f.Abodo);
+                # and that should look right
+                f.hatch('sanity') and return
                 
                 # wait for the Abodo to be done
                 # elvis shunting awake cn
