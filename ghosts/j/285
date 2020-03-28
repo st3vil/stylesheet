@@ -2082,13 +2082,17 @@ Fourism: |
                 Rs&seekto and f.hatch(T,'Codon_point',Rs&seekto)
             });
             
-            # aft sleepcheck
+            # aft sleepcheck:
+            
             # to casually be somewhere
             #  part of the shui('casual') loop
-            #  if geometry isnt still
+            #  after !still (and init), comes here
             dish('o','casual',&fT{
                 f.hatch(T,'trailing') and return
-                
+                fs&casual = 1;
+            });
+            dish('o',71,&fT{
+                f.hatch(T,'notice_center') and return
             });
             
             # seekto resume Loc%center
@@ -2097,16 +2101,17 @@ Fourism: |
             # others may set this
             me&rollbs,R,'seekto'
             
+            # if scroll or Codin sizes change:
             # notice where center of view is
             #  as fractions of %Codin(/%Code)
-            dish('o',71,&fT{
+            dish('o','notice_center',&fT{
                 $din = f.Codepointer();
                 !din and return
                 #~>3 center: ki(din,2), ki(ner,2)
                 Locs&center = din;
             });
             
-            # if something changey
+            # if sizes Codin sizes change:
             dish('o',6,&fT{
                 f.hatch('dontscroll');
             });
@@ -3111,19 +3116,18 @@ Fourism: |
                 f.hatch(22) and return
                 
                 # sleepytime same geo
-                $is = [ats&left,ats&top,
-                    ...f.M.map(m=>ms&top+':'+ms&height)]
-                    .join(",");
+                $geo = f.M.map(m=>ms&top+':'+ms&height).join(',');
+                $stillgeo = geo == fs&wasgeo;
+                fs&wasgeo = geo;
+                $is = [ats&left,ats&top,geo].join(' ');
                 $still = is == fs&was;
                 fs&was = is;
+                !still and delete fs&casual
                 
-                if (!still) {
-                    f.hatch(6) and return
-
-                    f.hatch(71) and return
-
-                    mode && f.hatch(mode) and return
-                }
+                !stillgeo           and f.hatch(6)    and return
+                !still              and f.hatch(71)   and return
+                mode && !f.sc[mode] and f.hatch(mode) and return
+                
                 mode == 'casual' and return
                 ~>2 shui: Gtime(began), mode||'...', still?"still":""
             };
