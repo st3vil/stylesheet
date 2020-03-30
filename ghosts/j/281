@@ -2496,6 +2496,8 @@ Soogle: | # start from Sevo
             return
         }
         
+        #c e finds purpose
+        # may include a wander inside:
         $srv = &{
             !T.wake || T.wake == 'not' and return
             # e-nvelope the finished e with one to wake its target
@@ -2522,6 +2524,8 @@ Soogle: | # start from Sevo
         }
         
         # - s&medo - instant, outside (A=4) (eg Jause)
+        #   T.non to keep going inside, doing no other %medo
+        #     eg. the e:says for a title that also %modeens
         each in lop {
             # dont fire usual click event when dragging stuff to it
             c&dragslope and break
@@ -2531,10 +2535,13 @@ Soogle: | # start from Sevo
             $msg =
             ~Elvised: medo, '>3:what ...'
             $ret = me[medo](A,C,G,T,n);
+            T.non and ret = 'non'; delete T.non; break
+            else {
+                s&edone = 'medo';
+                s&medo = medo;
+                s&n = n;
+            }
             G&yl:123,&{ msg.set('what',ki(ret)) };
-            s&edone = 'medo';
-            s&medo = medo;
-            s&n = n;
             srv();
             return
         }
@@ -2551,7 +2558,7 @@ Soogle: | # start from Sevo
         4s&elvising = C;
         G&yl,0,cb;
     };
-    #c Fourier < in-time elvising
+    #c Fourier < in-time elvising, as revampable relics
     me.Ja.Fourier = &acgt{
         me&heading;
         A&o = 'Elvising';
@@ -3449,15 +3456,23 @@ Soogle: | # start from Sevo
     me.ballrename = &acgtRt{
         $S = Rc&s;
         $p = Ry&up;
-        $ps = pc&s;
+        $P = pc&s;
+        $zi = Ps&z ? Ps&z.indexOf(S) : -1;
         if (ps&ball)
-            i $ps/-$S
+            i $P/-$S
         S.t = t;
-        !ps&ball || !ays&S.length and return
+        !ps&ball || !ays&S.length and debugger
         me&Rsync,p;
-        i $ps/$S
+        i $P/$S
+        if (zi > -1) {
+            $zn = Ps&z.indexOf(S);
+            zn < 0 and debugger
+            # if removing before it, put -1
+            zn < zi and zi--
+            $out = Ps&z.splice(zn,1);
+            Ps&z.splice(zi,0,S);
+        }
         me&Rsync,p;
-        
     };
     # keep a %ball for each Rc&ss&z!
     me.Rsync = &acgtRV{
@@ -3770,6 +3785,7 @@ Soogle: | # start from Sevo
     me.modeenery = &Rc{
         c ||= {};
         Rs&modeen = &acgtr{
+            !C.t.includes('click') and return T.non = 'notaclick'
             ry&modeening and ry&modeening(r,T,C)
             else
             if (rs&togla) {
