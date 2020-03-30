@@ -651,6 +651,7 @@ get '/' => sub { my ($c) = @_;
 };
 
 #c /digwaypoll/ notifier, see 281 Sevo
+# < check on connect
 my $poll = {tx=>[],ways=>{}};
 $poll->{wayt} = {}; # pi/name -> pi-name
 $poll->{wayd} = {}; # pi-name -> $C->{sc}->{dige}
@@ -660,6 +661,7 @@ get '/digwtf' => sub { my ($c) = @_;
 $poll->{doing} = sub { my ($o) = @_;
     return if $o && $poll->{one} && $o ne $poll->{one};
     my @ways;
+    my $tw = {};
     while (my ($p,$i) = each %{$poll->{ways} }) {
         my $t = $p;
         $t = $poll->{wayt}->{"$p"} ||= do { $t =~ s/\W/-/sg; $t };
@@ -671,6 +673,7 @@ $poll->{doing} = sub { my ($o) = @_;
         next if $was && $dig eq $was;
         $poll->{wayd}->{"$t"} = $dig;
         $was = 'any';
+        $tw->{$p} = 1;
         $was && push @ways,
             $p.'%dige:'.$dig
     }
@@ -680,6 +683,7 @@ $poll->{doing} = sub { my ($o) = @_;
         # so receiver can react immediately
         my $s = join"",map{ $_ ."\n" }@ways;
         for my $tx (@{$poll->{tx}}) {
+            next if !grep { $tx->{ways}->{$_} } keys %$tw;
             $tx->send($s);
         }
         1 && saygr "sent $s"

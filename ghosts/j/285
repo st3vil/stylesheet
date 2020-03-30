@@ -1411,8 +1411,11 @@ Fourism: |
             $abil = location.search || "?Elfor";
             
             $t = abil.substr(1);
-            me&Rom,R,t;
-            
+            $l = t.split('/',2);
+            $c = {t: l[0]};
+            c[c.t] = 1;
+            l[1] != null and c.into = l[1]
+            me&Rom,R,t,c;
         },'ift,D'],
 
         ['Elfor','291',&acgtRs{
@@ -4474,6 +4477,7 @@ Wud: | # restacked Wed server
     };
     
     #c /digwaypoll/ notifier, see 281 Sevo
+    # < check on connect
     my $poll = {tx=>[],ways=>{}};
     poll.wayt = {}; # pi/name -> pi-name
     poll.wayd = {}; # pi-name -> s&dige
@@ -4483,6 +4487,7 @@ Wud: | # restacked Wed server
     poll.doing = &o{
         return if $o && poll.one && $o ne poll.one;
         my @ways;
+        my $tw = {};
         each pi poll.ways {
             my $t = $p;
             $t = poll.wayt.>$p ||= do { $t =~ s/\W/-/sg; $t };
@@ -4494,6 +4499,7 @@ Wud: | # restacked Wed server
             next if $was && $dig eq $was;
             poll.wayd.>$t = $dig;
             $was = 'any';
+            $tw->{$p} = 1;
             $was && push @ways,
                 $p.'%dige:'.$dig
         }
@@ -4503,6 +4509,7 @@ Wud: | # restacked Wed server
             # so receiver can react immediately
             my $s = join"",map{ $_ ."\n" }@ways;
             for my $tx (@{poll.tx}) {
+                next if !grep { tx.ways->{$_} } keys %$tw;
                 $tx->send($s);
             }
             1 && saygr "sent $s"
