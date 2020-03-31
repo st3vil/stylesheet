@@ -7575,6 +7575,35 @@ Foogla: | # Domes prepare to A=A
             Rs&Talks = {};
             Rs&Decode = {};
             Rs&Mix = {};
+            # the usual way to decode a response,
+            #  having a sc header for dige/of
+            # Pc&s = me&Pcs,P,c,s;
+            me.Pcs = &acgtPcs{
+                $W = Pc&s = Cye([P.t,1]);
+                Ws&of = Pc&of;
+                $sc = c.getResponseHeader('sc');
+                if (sc) {
+                    sc = dej(sc);
+                    ex(P.sc,sc);
+                    ex(W.sc,sc);
+                }
+                return W;
+            };
+            # implant code as .js
+            #  should be able to receive any ting,
+            #  esp way, is more stack/debugger findable loaded like so:
+            Rs&add_script = &src,cb{
+                !cb and return &cb,{ return Rs&add_script,src,cb };
+                $have = $('body script[src="'+src+'"]');
+                have.length and return cb(have[0])
+                $s = document.createElement('script');
+                s.setAttribute('src', src);
+                s.setAttribute('type', 'text/javascript');
+                cb and s.onload = &e{ cb(s,e) };
+                document.body.appendChild(s);
+                return s
+            };
+            
             # < w are from:
             #  the digway+/way/ (trad)
             #  the /w/ (unBabz'd way) (new)
@@ -7596,6 +7625,15 @@ Foogla: | # Domes prepare to A=A
                     }
                 };
             };
+            # filling out way, more when called:
+            Rs&Decode.way = &PCw{
+                $w = G&Cye,[C.t,1];
+                wc&s = Ps&string;
+                ws&of = 'w';
+                # dige is for s before compiled
+                ws&dige = Ps&dige;
+                s = w;
+            };
             #c Talks.wayjs
             Rs&Talks.wjs = &TCP{
                 # you must know how to call the way
@@ -7607,88 +7645,50 @@ Foogla: | # Domes prepare to A=A
                 $cb_gen = delete T.cb_gen;
                 T.got = &Psc{
                     $W = me&Pcs,P,c,s;
+                    Cc&dige && Ws&dige != Wc&dige and throw "dige!ask"
                     Ws&I = {};
                     # nest callback to <script> it
                     T.ok = 0;
                     T.waits = Gtime();
-                    $callback = 
                     Rs&add_script(src) (&s,e{
                         T.waited_script = Gtime(T.waits);
                         T.ok = 1;
                         Ps&script = s;
+                        Ps&src = src;
                         Ps&Want_Decode = 'wjs';
                         cb_gen(C,P);
                     });
                 };
                 
-                # in callback:
-                # window.onerror puts script.compile_errors[error]
-                $script = wc&script = G&add_script,src;
-                
-                script.onerror = &er{
-                    ~>5 wayjs err: w.t
-                };
-                script.onload = &er{
+            };
+            # < discover compile errors (since we have args)
+            Rs&Decode.wjs = &PCw{
+                if (0) {
                     # if compiled or not
                     $towake = me.cbu(R,'JRom');
                     !towake and throw "notowake";
                     me&elvis,R,'wayjs',{wake:towake};
-                    $name = ['w',w.t,ws&dige,args].join('__');
-                    name = name.replace(/\W+/g,'_');
-                    $y = window[name];
-                    !y and return ~>5 wayjs not compiling: w.t
-                    ~>5 wayjs loaded: w.t
-                    script.loaded = 1;
-                    # swap it in, providing the next error with line number:
-                    wc&code = y;
-                };
-            };
-            # the usual way to decode a response,
-            #  having a sc header for dige/of
-            # Pc&s = me&Pcs,P,c,s;
-            me.Pcs = &acgtPcs{
-                $W = Pc&s = Cye([P.t,1]);
-                $sc = c.getResponseHeader('sc');
-                if (sc) {
-                    sc = dej(sc);
-                    ex(P.sc,sc);
-                    ex(W.sc,sc);
                 }
-                return W;
-            };
-            # replacing Pc&s with the deLines:
-            Rs&Decode.Lines = &PCW{
-                !Ps&string and throw "P!%string"
-                $N = G&readLines,Ps&string;
-                N.length != 1 and throw "Weird tW lines", s
-                return N[0]
-            };
-            # filling out way, more when called:
-            Rs&Decode.way = &PCw{
-                $w = G&Cye,[C.t,1];
-                wc&s = Ps&string;
+                # unique name
+                $name = ['w',w.t,ws&args,ws&dige].join('__');
+                name = name.replace(/\W+/g,'_');
+                # for the code in Ps&src
+                $y = window[name];
+                
+                # which might have trouble
+                $comperr = Ps&script.compile_errors;
+                !y && !comperr and return ~>5 wayjs not comperring: w.t
+                if (!y) {
+                    Ps&error = "nocompile";
+                    return ~>5 wayjs not compiling: w.t
+                }
+                
+                ~>5 wayjs loaded: w.t
+                script.loaded = 1;
+                # providing the next error with line number:
+                wc&code = y;
                 ws&of = 'w';
-                # dige is for s before compiled
-                ws&dige = Ps&dige;
-                s = w;
-            };
-            # < discover compile errors (since we have args)
-            Rs&Decode.wjs = &PCw{
-                $w = G&Cye,[C.t,1];
-                wc&s = Ps&string;
-                ws&of = 'w';
-                # dige is for s before compiled
-                ws&dige = Ps&dige;
-                s = w;
-            };
-            # < discover compile errors (since we have args)
-            Rs&Decode.js = &PCw{
-                $w = G&Cye,[C.t,1];
-                wc&s = Ps&string;
-                ws&of = 'w';
-                # dige is for s before compiled
-                ws&dige = Ps&dige;
-                s = w;
+                return w
             };
             #c Talks.js
             Rs&Talks.js = &TCP{
@@ -7723,20 +7723,6 @@ Foogla: | # Domes prepare to A=A
                     };
                     Rs&add_script(src,callback);
                 };
-            };
-            # implant code as .js
-            #  should be able to receive any ting,
-            #  esp way, is more stack/debugger findable loaded like so:
-            Rs&add_script = &src,cb{
-                !cb and return &cb,{ return Rs&add_script,src,cb };
-                $have = $('body script[src="'+src+'"]');
-                have.length and return cb(have[0])
-                $s = document.createElement('script');
-                s.setAttribute('src', src);
-                s.setAttribute('type', 'text/javascript');
-                cb and s.onload = &e{ cb(s,e) };
-                document.body.appendChild(s);
-                return s
             };
             Rs&Decode.js = &PCW{
                 $tocfunc = W.t+'_'+Ws&dige;
@@ -7775,6 +7761,13 @@ Foogla: | # Domes prepare to A=A
                 return W
             }
             #c Talks.W
+            # replacing Pc&s (clued from headers etc) with the deLines:
+            Rs&Decode.Lines = &PCW{
+                !Ps&string and throw "P!%string"
+                $N = G&readLines,Ps&string;
+                N.length != 1 and throw "Weird tW lines", s
+                return N[0]
+            };
             Rs&Talks.W = &TCP{
                 T.get.url = '/W/'+C.t;
                 $d = T.get.data = {};
