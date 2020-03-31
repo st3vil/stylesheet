@@ -4525,7 +4525,6 @@ Wud: | # restacked Wed server
     };
     poll.doing = &o{
         return if $o && poll.one && $o ne poll.one;
-        my @ways;
         my $tw = {};
         each pi poll.ways {
             my $t = $p;
@@ -4537,21 +4536,21 @@ Wud: | # restacked Wed server
             my $was = poll.wayd.>$t;
             next if $was && $dig eq $was;
             poll.wayd.>$t = $dig;
-            $was = 'any';
-            $tw->{$p} = 1;
-            $was && push @ways,
-                $p.'%dige:'.$dig
+            $tw->{$p} = $dig;
         }
         
-        if (@ways) {
+        if (keys %$tw) {
             # send many d=0 Lines as one message,
             # so receiver can react immediately
-            my $s = join"",map{ $_ ."\n" }@ways;
             for my $tx (@{poll.tx}) {
-                next if !grep { tx.ways->{$_} } keys %$tw;
+                my $s = join"", map{ $_ ."\n" }
+                    map{ $_.'%dige:'.$tw->{$_} }
+                    grep { !tx.ways->{$_}
+                        || tx.ways->{$_} ne $tw->{$_}
+                    } keys %$tw;
                 $tx->send($s);
+                1 && saygr "digwaypoll: $s"
             }
-            1 && saygr "sent $s"
         }
         
         Mojo::IOLoop->timer(0.3,&{ poll.doing(poll.one = rand()) });

@@ -660,7 +660,6 @@ get '/digwtf' => sub { my ($c) = @_;
 };
 $poll->{doing} = sub { my ($o) = @_;
     return if $o && $poll->{one} && $o ne $poll->{one};
-    my @ways;
     my $tw = {};
     while (my ($p,$i) = each %{$poll->{ways} }) {
         my $t = $p;
@@ -672,21 +671,21 @@ $poll->{doing} = sub { my ($o) = @_;
         my $was = $poll->{wayd}->{"$t"};
         next if $was && $dig eq $was;
         $poll->{wayd}->{"$t"} = $dig;
-        $was = 'any';
-        $tw->{$p} = 1;
-        $was && push @ways,
-            $p.'%dige:'.$dig
+        $tw->{$p} = $dig;
     }
 
-    if (@ways) {
+    if (keys %$tw) {
         # send many d=0 Lines as one message,
         # so receiver can react immediately
-        my $s = join"",map{ $_ ."\n" }@ways;
         for my $tx (@{$poll->{tx}}) {
-            next if !grep { $tx->{ways}->{$_} } keys %$tw;
+            my $s = join"", map{ $_ ."\n" }
+                map{ $_.'%dige:'.$tw->{$_} }
+                grep { !$tx->{ways}->{$_}
+                    || $tx->{ways}->{$_} ne $tw->{$_}
+                } keys %$tw;
             $tx->send($s);
+            1 && saygr "digwaypoll: $s"
         }
-        1 && saygr "sent $s"
     }
 
     Mojo::IOLoop->timer(0.3,sub { $poll->{doing}($poll->{one} = rand()) });
