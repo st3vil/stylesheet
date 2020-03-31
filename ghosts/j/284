@@ -7182,7 +7182,9 @@ Foogla: | # Domes prepare to A=A
             # c&canwait = 1;
             Qc&ready = &CP{};
             Rs&havediges and Qs&havediges = Rs&havediges
+            # < convert to c&section
             Rs&section and Qs&section = Rs&section
+            Rs&args and Qc&args = Rs&args;
             # < Live should never disappear?
             $s = Rs&Live = Rs&_ting(Q);
             
@@ -7527,7 +7529,12 @@ Foogla: | # Domes prepare to A=A
                     T.cb(s,c);
                 };
                 
-                $r = T.r = $.ajax(T.get).done(done);
+                $r = T.r = $.ajax(T.get)
+                r.done(done);
+                r.error(&csm{
+                    Ps&errors = m;
+                    Cs&errors = m;
+                });
                 T.waits = Gtime();
                 
             };
@@ -7536,10 +7543,9 @@ Foogla: | # Domes prepare to A=A
                 $type = Ps&Want_Decode;
                 $de = ch('decode',[P.t,type,'','']);
                 
-                $Do = Rs&Decodes[type];
+                $Do = Rs&Decode[type];
                 !Do and throw "Decode type "+type
                 
-                Do(T,C,P);
                 # Pc&el becomes interesting to the Client,
                 #   2-3 were our will carried out
                 #   6-7 to merge
@@ -7550,7 +7556,7 @@ Foogla: | # Domes prepare to A=A
                 
                 $s = null;
                 try {
-                    s = Do(P,C,s);
+                    s = Do(P,C,Pc&s);
                     !s and throw "didnt Decode type "+type
                     s.y.P = P;
                     Pc&s = s;
@@ -7632,14 +7638,14 @@ Foogla: | # Domes prepare to A=A
                 ws&of = 'w';
                 # dige is for s before compiled
                 ws&dige = Ps&dige;
-                s = w;
+                return w
             };
             #c Talks.wayjs
             Rs&Talks.wjs = &TCP{
                 # you must know how to call the way
                 $args = Cc&args;
                 !args and throw "untried w"
-                T.get.url = ['','wjs',w.t,args].join('/');
+                T.get.url = ['','wjs',C.t,args].join('/');
                 Cc&dige and T.get.url += '/'+Cc&dige
                 # can find dige
                 $cb_gen = delete T.cb_gen;
