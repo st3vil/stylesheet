@@ -967,5 +967,35 @@ get '/wayjs/#dige/#args/*way' => sub { my ($c) = @_;
         .$c->param('args').") {\n".$w->{c}->{s}."\n}\n";
     $c->render(text => $s);
 };
+get '/wjs/*way' => sub { my ($c) = @_;
+    my $wayish = $c->param('way');
+    $wayish =~ s/\.js$//;
+    my ($t,$args,$dige) = split "__", $wayish;
+
+    my $w = away($t);
+    $dige ||= '';
+    1 && saybl $c->param('way')."  ->  $t  $args  $dige";
+
+    # must be that version
+    if (!$w) {
+        1 && sayre "404 $t";
+        return $c->reply->not_found
+    }
+    if ($dige && $dige ne $w->{sc}->{dige}) {
+        1 && sayre "moved $t $dige -> $w->{sc}->{dige}";
+        return $c->reply->not_found
+    }
+    $dige = $w->{sc}->{dige};
+    $w->{sc}->{args} = $args;
+
+    # put in a global namespace
+    my $name = join("__",'w',$t,$args,$dige);
+    $name =~ s/\W+/_/g;
+
+    my $s = "function $name(A,C,G,T,$args) {\n".$w->{c}->{s}."\n}\n";
+
+    $c->res->headers->append(sc => sjson($w->{sc}));
+    $c->render(text => $s);
+};
 
 starts();

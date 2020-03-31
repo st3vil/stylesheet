@@ -4832,6 +4832,36 @@ Wud: | # restacked Wed server
             .$c->param('args').") {\n".wc&s."\n}\n";
         $c->render(text => $s);
     };
+    get '/wjs/*way' => &c{
+        my $wayish = $c->param('way');
+        $wayish =~ s/\.js$//;
+        my ($t,$args,$dige) = split "__", $wayish;
+        
+        my $w = away($t);
+        $dige ||= '';
+        1 && saybl $c->param('way')."  ->  $t  $args  $dige";
+        
+        # must be that version
+        if (!$w) {
+            1 && sayre "404 $t";
+            return $c->reply->not_found
+        }
+        if ($dige && $dige ne ws&dige) {
+            1 && sayre "moved $t $dige -> ws&dige";
+            return $c->reply->not_found
+        }
+        $dige = ws&dige;
+        ws&args = $args;
+        
+        # put in a global namespace
+        my $name = join("__",'w',$t,$args,$dige);
+        $name =~ s/\W+/_/g;
+        
+        my $s = "function $name(A,C,G,T,$args) {\n".wc&s."\n}\n";
+        
+        $c->res->headers->append(sc => sjson(w.sc));
+        $c->render(text => $s);
+    };
     
     starts();
 

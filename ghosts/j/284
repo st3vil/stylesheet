@@ -7557,7 +7557,7 @@ Foogla: | # Domes prepare to A=A
                 $s = null;
                 try {
                     s = Do(P,C,Pc&s);
-                    !s and throw "didnt Decode type "+type
+                    !isC(s) and throw "didnt Decode type "+type
                     s.y.P = P;
                     Pc&s = s;
                 }
@@ -7599,7 +7599,6 @@ Foogla: | # Domes prepare to A=A
             #  should be able to receive any ting,
             #  esp way, is more stack/debugger findable loaded like so:
             Rs&add_script = &src,cb{
-                !cb and return &cb,{ return Rs&add_script,src,cb };
                 $have = $('body script[src="'+src+'"]');
                 have.length and return cb(have[0])
                 $s = document.createElement('script');
@@ -7645,25 +7644,30 @@ Foogla: | # Domes prepare to A=A
                 # you must know how to call the way
                 $args = Cc&args;
                 !args and throw "untried w"
-                T.get.url = ['','wjs',C.t,args].join('/');
-                Cc&dige and T.get.url += '/'+Cc&dige
-                # can find dige
+                $src = '/wjs/'+C.t+"__"+args;
+                $ask = src;
+                # dige not supported (just t:s store, will 404)
+                c&dige and ask += "__"+c&dige
+                T.get.url = ask;
+                
                 $cb_gen = delete T.cb_gen;
                 T.got = &Psc{
                     $W = me&Pcs,P,c,s;
-                    Cc&dige && Ws&dige != Wc&dige and throw "dige!ask"
-                    Ws&I = {};
+                    c&dige && Ws&dige != c&dige and throw "dige!ask"
+                    !Ws&dige and throw "!dige"
+                    src += "__"+Ws&dige+".js"
                     # nest callback to <script> it
                     T.ok = 0;
                     T.waits = Gtime();
-                    Rs&add_script(src) (&s,e{
+                    $cb = &s,e{
                         T.waited_script = Gtime(T.waits);
                         T.ok = 1;
                         Ps&script = s;
                         Ps&src = src;
                         Ps&Want_Decode = 'wjs';
                         cb_gen(C,P);
-                    });
+                    };
+                    Rs&add_script(src,cb);
                 };
                 
             };
@@ -7680,17 +7684,16 @@ Foogla: | # Domes prepare to A=A
                 name = name.replace(/\W+/g,'_');
                 # for the code in Ps&src
                 $y = window[name];
-                
                 # which might have trouble
                 $comperr = Ps&script.compile_errors;
-                !y && !comperr and return ~>5 wayjs not comperring: w.t
+                !y && !comperr and ~>5 wayjs not comperring: w.t
                 if (!y) {
-                    Ps&error = "nocompile";
-                    return ~>5 wayjs not compiling: w.t
+                    Ps&error = "nocompile: "+name;
+                    ~>5 wayjs not compiling: w.t
                 }
                 
                 ~>5 wayjs loaded: w.t
-                script.loaded = 1;
+                Ps&script.loaded = 1;
                 # providing the next error with line number:
                 wc&code = y;
                 ws&of = 'w';
