@@ -492,8 +492,14 @@ Threeism: |
         $sf = ar[arm[3]];
         $si = ar[arm[4]];
         
+        
         # help Ban find its source
         Gc&B.sc.way = w;
+        if (cb) {
+            # containing a sync G&way call
+            #  or a way to get the w back
+            return cb(t,ar,w);
+        }
         return wc&code(A,C,G,T,ar,so,st,sh,sf,si);
     }
 
@@ -1426,9 +1432,42 @@ Fourism: |
             # test sleep
             #n Sleigh  R %Slei,ting:W,Gens,tingspot
         },'ift,D'],
+        &{
+        # ensure a bunch of ways are ready,
+        #  call them or wake R
+        me.wayel = &acgtRt,ar{
+            $all_ready = &{
+                each tv Rs&wayel {
+                    !v and return
+                }
+                return 1;
+            };
+            # checking the bunch
+            !t and return all_ready()
+            
+            # adding to the bunch
+            ah(R,'wayel',t,0);
+            # way cb happens asap, per ghost state!
+            $sync = 1;
+            $cb = &{
+                ah(R,'wayel',t,1);
+                sync and return
+                !all_ready() and return
+                ~>3 wayel+: R.t, t
+                me&elvis,R,'wayelup';
+            };
+            G&way,t,ar,cb;
+            sync = 0;
+        };
+        },
         ['Wayout','291',&acgtRs{
             4s&Wayout = R;
             Rs&rowish = 1;
+            me&wayel,R,'ruv';
+            me&wayel,R,'g',{R};
+            me&wayel,R,'Pearch',{R};
+            !me&wayel,R and return
+            G&way,'ruv',{};
             G&way,'g',{R};
         },'ift,D'],
         #c unihab
