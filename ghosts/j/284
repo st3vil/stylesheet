@@ -7597,16 +7597,6 @@ Foogla: | # Domes prepare to A=A
                 };
             };
             #c Talks.wayjs
-            me.Pcs = &acgtPcs{
-                $sc = c.getResponseHeader('sc');
-                $W = Pc&s = Cye([P.t,1]);
-                if (sc) {
-                    sc = dej(sc);
-                    ex(P.sc,sc);
-                    ex(W.sc,sc);
-                }
-                return W;
-            };
             Rs&Talks.wjs = &TCP{
                 # you must know how to call the way
                 $args = Cc&args;
@@ -7653,29 +7643,53 @@ Foogla: | # Domes prepare to A=A
                     wc&code = y;
                 };
             };
+            # the usual way to decode a response,
+            #  having a sc header for dige/of
+            # Pc&s = me&Pcs,P,c,s;
+            me.Pcs = &acgtPcs{
+                $W = Pc&s = Cye([P.t,1]);
+                $sc = c.getResponseHeader('sc');
+                if (sc) {
+                    sc = dej(sc);
+                    ex(P.sc,sc);
+                    ex(W.sc,sc);
+                }
+                return W;
+            };
+            # replacing Pc&s with the deLines:
             Rs&Decode.Lines = &PCW{
                 !Ps&string and throw "P!%string"
                 $N = G&readLines,Ps&string;
                 N.length != 1 and throw "Weird tW lines", s
                 return N[0]
-            }
-            Rs&Decode.wjs = &PCW{
-                    elsif (type == 'way') {
-                        $w = G&Cye,[C.t,1];
-                        wc&s = Ps&string;
-                        ws&of = 'w';
-                        # dige is for s before compiled
-                        ws&dige = Ps&dige;
-                        s = w;
-                    }
-                    elsif (type == 'js') {
-                        s = Pc&s;
-                        Rs&Decode.js(s);
-                    }
-                    else {
-                        throw "Decode type "+type
-                    }
-                };
+            };
+            # filling out way, more when called:
+            Rs&Decode.way = &PCw{
+                $w = G&Cye,[C.t,1];
+                wc&s = Ps&string;
+                ws&of = 'w';
+                # dige is for s before compiled
+                ws&dige = Ps&dige;
+                s = w;
+            };
+            # < discover compile errors (since we have args)
+            Rs&Decode.wjs = &PCw{
+                $w = G&Cye,[C.t,1];
+                wc&s = Ps&string;
+                ws&of = 'w';
+                # dige is for s before compiled
+                ws&dige = Ps&dige;
+                s = w;
+            };
+            # < discover compile errors (since we have args)
+            Rs&Decode.js = &PCw{
+                $w = G&Cye,[C.t,1];
+                wc&s = Ps&string;
+                ws&of = 'w';
+                # dige is for s before compiled
+                ws&dige = Ps&dige;
+                s = w;
+            };
             #c Talks.js
             Rs&Talks.js = &TCP{
                 # I in a .js script (+ a little about the 9)
