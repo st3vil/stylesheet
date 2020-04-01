@@ -19,20 +19,34 @@ Rs&Ghodigup = &QP{
     Searchs&_ting(Q);
     Qs&P != P and ~>5 QP:
 }
-# per Q in a batch of updates (GhodigWay)
-#  make elvis for Q's update
-Rs&Qup = &QP{
-    Rs&perma(1);
-    # tell by the args if it emits me?
-    #  and could get its own io
-    ~>6 WayQup: Qc&of, Q.t
-    Q.t == 'ruv' and G&way,Q.t,{me}
-    me&elvis,R,'Qup',{wake:Top,Q:Q}
+# Rs&Qu (Q updated) -> elvis to reality
+Rs&Qup = &{
+    $N = delete Rs&Qu;
+    !N and return ~>4 nothing
+    $wake = [];
+    each iQ N {
+        $P = Qs&P;
+        $s = Qc&s || Pc&s;
+        !s and throw "Qup!s"
+        ~>6 WayQup: Qc&of, Q.t
+        # tell by the args if it emits me
+        $isme = Qc&of == 'wjs' &&
+            ss&args.match(/\bme\b/);
+        if (isme) {
+            Rs&dropRcache();
+            me&way,Q.t,{me};
+        }
+        else {
+            wake.push(Qy&R)
+        }
+    }
+    # they can be crunched into a tunneling:
+    ~>6 aonee: N.length, ki(wake,2)
+    me&elvis,R,'Qup',{wake:Top}
 }
-# drops R I cache, recompiling me.ruv
-Rs&perma = &{
+# drops Ring's task cache, recompiling me.ruv
+Rs&dropRcache = &{
     each tw A.5.I.w.y.tw {
-        ws&now = G&time + 3600;
         delete ws&makesI;
         delete ws&makesIw;
     }
@@ -48,19 +62,19 @@ Rs&_ting = &Qr{
         # use it if we are !ready now
         #  if T.non (eg me&way !cb) default to:
     }
-    # out of time comeback
+    # from out of time Pull_a completion
+    #  per Q that we listened up
     Qc&ready = &CP{
-        ~>5 new: C.t, Ps&dige
-        $y = &{
-            Rs&Qup(Q,P);
-        };
-        G&yl,5,y;
+        ac(R,'Qu',Q);
+        # delay to allow batching
+        $cb = me&sccb,R,'Quping',&{Rs&Qup()};
+        G&delay,0.03,cb;
     }
     
     $s = upting(Q);
     $P = Qs&P;
     !P and ~>5 upting!P: Q.t
-    !s and ~>5 upting!s: Q.t
+    #!s and ~>5 upting!s: Q.t
     !s || !P and return 
     
     # as found things go by, listen them
@@ -79,10 +93,10 @@ Rs&_ting = &Qr{
         #yas&P && yas&P != P and debugger
         yas&P = P;
         yac&ready = &w{
-            each iP yas&Ps {
-                $Q = ac(ya,'Ps',P,'Q');
-                Rs&Ghodigup(Q,P)
-            }
+            # dispatch ready() on all these:
+            yas&Ps_Q.map(Q => ac(P,'readyingC',Q))
+            # dispatching the request on one:
+            Rs&Ghodigup(Q,P)
         };
         Ps&listened = 1;
     }

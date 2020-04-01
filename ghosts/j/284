@@ -7675,11 +7675,15 @@ Foogla: | # Domes prepare to A=A
                 $ask = src;
                 # dige not supported (just t:s store, will 404)
                 c&dige and ask += "__"+c&dige
+                # script src must inc dige to version
                 T.get.url = ask;
                 
                 $cb_gen = delete T.cb_gen;
                 T.got = &Psc{
                     $W = me&Pcs,P,c,s;
+                    # < get the source code out of a <script src> ?
+                    # use our first request (to ascertain the dige)
+                    Wc&s = s;
                     c&dige && Ws&dige != c&dige and throw "dige!ask"
                     !Ws&dige and throw "!dige"
                     src += "__"+Ws&dige+".js"
@@ -7711,6 +7715,7 @@ Foogla: | # Domes prepare to A=A
                 name = name.replace(/\W+/g,'_');
                 # for the code in Ps&src
                 $y = window[name];
+                
                 # which might have trouble
                 $comperr = Ps&script.compile_errors;
                 !y && !comperr and ~>5 wayjs not comperring: w.t
@@ -8148,7 +8153,7 @@ Foogla: | # Domes prepare to A=A
                 Ss&sleep_Further &&
                     Ss&sleep_Further(w,s);
                 
-                $com = [w.t];
+                $com = [w.t,ws&dige];
                 !was and com.push("@1")
                 else
                 if (wass&dige == ws&dige) {
