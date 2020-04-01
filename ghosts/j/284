@@ -7301,15 +7301,31 @@ Foogla: | # Domes prepare to A=A
             
             $Pio = Rs&Pio = {};
             Pio.what = &tP{
-                o $Ghost/#$t/#Pc&of/#$P:s
+                if (Pc&args) {
+                    o $Ghost/#$t/#Pc&of/#Pc&args/#$P:s
+                }
+                else {
+                    o $Ghost/#$t/#Pc&of/#$P:s
+                }
                 return ya
             };
             Pio.not = &tP{
-                i $Ghost/#$t/#Pc&of/-#$P:s
+                if (Pc&args) {
+                    i $Ghost/#$t/#Pc&of/#Pc&args/-#$P:s
+                }
+                else {
+                    i $Ghost/#$t/#Pc&of/-#$P:s
+                }
             };
             Pio.is = &tP{
-                i $Ghost/#$t/#Pc&of/-#$P:s
-                i $Ghost/#$t/#Pc&of/$P:s
+                if (Pc&args) {
+                    i $Ghost/#$t/#Pc&of/#Pc&args/-#$P:s
+                    i $Ghost/#$t/#Pc&of/#Pc&args/$P:s
+                }
+                else {
+                    i $Ghost/#$t/#Pc&of/-#$P:s
+                    i $Ghost/#$t/#Pc&of/$P:s
+                }
             };
             
             #c _ting - a many arg'd entrypoint
@@ -7326,6 +7342,10 @@ Foogla: | # Domes prepare to A=A
                 $P = Pio.what('In',C);
                 if (!P) {
                     P = G&Cye,[C.t,1,{of:c&of},{}];
+                    if (c&of == 'wjs') {
+                        Pc&args = Cc&args;
+                        !c&args and throw "wjs args required"
+                    }
                     Pio.is('In',P);
                     Ps&Want_Check = 1;
                 }
