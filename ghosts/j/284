@@ -7562,6 +7562,40 @@ Foogla: | # Domes prepare to A=A
                 T.waits = Gtime();
                 
             };
+            
+            #c Talks/Decode
+            
+            Rs&Talks = {};
+            Rs&Decode = {};
+            Rs&Mix = {};
+            # the usual way to decode a response,
+            #  having a sc header for dige/of
+            # Pc&s = me&Pcs,P,c,s;
+            me.Pcs = &acgtPcs{
+                $W = Pc&s = Cye([P.t,1]);
+                Ws&of = Pc&of;
+                $sc = c.getResponseHeader('sc');
+                if (sc) {
+                    sc = dej(sc);
+                    ex(P.sc,sc);
+                    ex(W.sc,sc);
+                }
+                return W;
+            };
+            # implant code as .js
+            #  should be able to receive any ting,
+            #  esp way, is more stack/debugger findable loaded like so:
+            Rs&add_script = &src,cb{
+                $have = $('body script[src="'+src+'"]');
+                have.length and return cb(have[0])
+                $s = document.createElement('script');
+                s.setAttribute('src', src);
+                s.setAttribute('type', 'text/javascript');
+                cb and s.onload = &e{ cb(s,e) };
+                document.body.appendChild(s);
+                return s
+            };
+            
             Rs&Pull_Decode = &TCP{
                 T.ok = 0;
                 $type = Ps&Want_Decode;
@@ -7602,37 +7636,6 @@ Foogla: | # Domes prepare to A=A
             
         
             #c Talks.w
-            Rs&Talks = {};
-            Rs&Decode = {};
-            Rs&Mix = {};
-            # the usual way to decode a response,
-            #  having a sc header for dige/of
-            # Pc&s = me&Pcs,P,c,s;
-            me.Pcs = &acgtPcs{
-                $W = Pc&s = Cye([P.t,1]);
-                Ws&of = Pc&of;
-                $sc = c.getResponseHeader('sc');
-                if (sc) {
-                    sc = dej(sc);
-                    ex(P.sc,sc);
-                    ex(W.sc,sc);
-                }
-                return W;
-            };
-            # implant code as .js
-            #  should be able to receive any ting,
-            #  esp way, is more stack/debugger findable loaded like so:
-            Rs&add_script = &src,cb{
-                $have = $('body script[src="'+src+'"]');
-                have.length and return cb(have[0])
-                $s = document.createElement('script');
-                s.setAttribute('src', src);
-                s.setAttribute('type', 'text/javascript');
-                cb and s.onload = &e{ cb(s,e) };
-                document.body.appendChild(s);
-                return s
-            };
-            
             # < w are from:
             #  the digway+/way/ (trad)
             #  the /w/ (unBabz'd way) (new)
@@ -7663,7 +7666,7 @@ Foogla: | # Domes prepare to A=A
                 ws&dige = Ps&dige;
                 return w
             };
-            #c Talks.wayjs
+            # Talks.wayjs
             Rs&Talks.wjs = &TCP{
                 # you must know how to call the way
                 $args = Cc&args;
@@ -7713,7 +7716,7 @@ Foogla: | # Domes prepare to A=A
                 !y && !comperr and ~>5 wayjs not comperring: w.t
                 if (!y) {
                     Ps&error = "nocompile: "+name;
-                    ~>5 wayjs not compiling: w.t
+                    ~>5 wayjs not compiling: w.t, name
                 }
                 
                 ~>5 wayjs loaded: w.t
