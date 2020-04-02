@@ -1922,13 +1922,57 @@ Foogla: | # Domes prepare to A=A
         # c.wantsleep and c.ov = 0.279
         # before tunneling 18:
         c.wantsleep and c.ov = 0.172
+        
+        $cancelation = &{
+            # reset X, failed R don't become b!
+            me&resetRbitX,R,r;
+            
+            # < packdowns for whatever can't continue,
+            #   doming marked through as async?
+            #    keep some, G&T/thro may resync from B stack
+            
+            # keep last Display (to put it in Rs&down)
+            $b = rc&b;
+            if (b && by&Display) {
+                #  %JRom%sleeping could also do this,
+                #  having already had awake inners...
+                try {
+                    # c.sleeping doesn't visit any r/awake
+                    me&Display,r,{sleeping:1};
+                }
+                catch (err) {
+                    msg = '!sle! '+msg
+                }
+            }
+        };
+        $error = &msg,{
+            $n = G&Cye,[Ac&sip,'',{}];
+            nc&s = msg;
+            ns&now = G&time;
+            ns&A = A;
+            ns&B = Gc&B;
+            ns&p = p;
+            ns&R = r;
+            # to nearest dome with room to think about it
+            $JR = me.cbu(p,'erN');
+            $erN = JRs&erN;
+            erN.push(n);
+            return n
+        }
 
         try {
             $cb = delete c.Recb;
             $r = me&Re,p,c;
             cb && cb(r);
             me&Ring,r;
-            if (c.wantsleep) {
+            if (T.cancel) {
+                # used by JRom_asyncQs to casually wait for tings
+                #  could also abort pointless A:e-ing
+                $n = error('cancel: '+T.cancel);
+                delete T.cancel;
+                cancelation();
+            }
+            if (rs&wantsleep) {
                 if (!rc&b || !rc&b.y.Display) {
                     me&tsc,"sleep!hist:"+r.t,0,'B'
                 }
@@ -1950,40 +1994,15 @@ Foogla: | # Domes prepare to A=A
         catch (er) {
             $msg = er.message || er+'';
             $async = msg.match(/^async/);
-            # reset X, failed R don't become b!
-            me&resetRbitX,R,r;
-            # can it sleep?
-            $b = rc&b;
-            if (b && by&Display) {
-                # keep last display
-                #  %JRom%sleeping could also do this,
-                #  having already had awake inners...
-                try {
-                    me&Display,r,{sleeping:1};
-                }
-                catch (err) {
-                    msg = '!sle! '+msg
-                }
-            }
-            # < packdowns for whatever can't continue,
-            #   doming marked through as async?
-            #    keep some, G&T/thro may resync from B stack
             
-            $n = G&Cye,[Ac&sip,'',{}];
-            nc&s = msg;
+            cancelation();
+            
+            $n = error(msg);
+            
             nc&er = er;
             # bunch of artifaces, < (t,$s)+
             er.tc and nc&M = er.tc
             
-            ns&now = G&time;
-            ns&A = A;
-            ns&B = Gc&B;
-            ns&p = p;
-            ns&R = r;
-            # to nearest dome with room to think about it
-            $JR = me.cbu(p,'erN');
-            $erN = JRs&erN;
-            erN.push(n);
             Rs&error = n;
             ps&returns and throw er
         }
@@ -7724,7 +7743,7 @@ Foogla: | # Domes prepare to A=A
                     ~>5 wayjs not compiling: w.t, name
                 }
                 
-                ~>5 wayjs loaded: w.t
+                #~>5 wayjs loaded: w.t
                 Ps&script.loaded = 1;
                 # providing the next error with line number:
                 wc&code = y;
