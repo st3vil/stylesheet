@@ -3930,6 +3930,9 @@ Fourism: |
             if (ps&Code) {
                 # hs&string is always
                 $pull = &{ hs&string = Ps&string };
+                $ot = hy&renamed_from;
+                ot and Qc&gitmv = ot
+                Qc&gitmv && Rs&Settled and delete Qc&gitmv; delete hy&renamed_from;
             }
             elsif (ps&Gens) {
                 $pull = &{
@@ -4543,7 +4546,7 @@ Wud: | # restacked Wed server
             $t = poll.wayt.>$p ||= do { $t =~ s/\W/-/sg; $t };
             my $digway = "wormhole/digway/$t";
             my $dig = readlink $digway;
-            sayre "no $digway" if !$dig;
+            1 && sayre "no $digway" if !$dig;
             next if !$dig;
             my $was = poll.wayd.>$t;
             next if $was && $dig eq $was;
@@ -4746,6 +4749,25 @@ Wud: | # restacked Wed server
                 re.ok = 'updated';
                 re.ok = 'created' if $new;
                 $was_write = 1;
+                
+                my $mv = $c->param('gitmv');
+                if ($mv) {
+                    my $m = "$dir/$mv";
+                    while ($m) {
+                        sayre("no $m to move from")
+                            && last unless -f $m;
+                        
+                        my $dif = `diff $f $m`;
+                        sayre("$f<-$mv not up to date:\n".$dif)
+                            && last if $dif =~ /\S/;
+                        
+                        `rm $f`;
+                        my $move = `git mv $m $f`;
+                        sayre("$f<-$mv git mv noise:\n".$move)
+                            && last if $move =~ /\S/;
+                        $m = ''
+                    }
+                }
             }
         }
         else {

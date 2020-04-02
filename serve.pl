@@ -666,7 +666,7 @@ $poll->{doing} = sub { my ($o) = @_;
         $t = $poll->{wayt}->{"$p"} ||= do { $t =~ s/\W/-/sg; $t };
         my $digway = "wormhole/digway/$t";
         my $dig = readlink $digway;
-        $G->{h}->($A,$C,$G,$T,'say','sayre',"no $digway") if !$dig;
+        1 && sayre "no $digway" if !$dig;
         next if !$dig;
         my $was = $poll->{wayd}->{"$t"};
         next if $was && $dig eq $was;
@@ -869,6 +869,25 @@ any '/ghost/*w' => sub { my ($c) = @_;
             $re->{ok} = 'updated';
             $re->{ok} = 'created' if $new;
             $was_write = 1;
+
+            my $mv = $c->param('gitmv');
+            if ($mv) {
+                my $m = "$dir/$mv";
+                while ($m) {
+                    sayre("no $m to move from")
+                        && last unless -f $m;
+
+                    my $dif = `diff $f $m`;
+                    sayre("$f<-$mv not up to date:\n".$dif)
+                        && last if $dif =~ /\S/;
+
+                    `rm $f`;
+                    my $move = `git mv $m $f`;
+                    sayre("$f<-$mv git mv noise:\n".$move)
+                        && last if $move =~ /\S/;
+                    $m = ''
+                }
+            }
         }
     }
     else {
