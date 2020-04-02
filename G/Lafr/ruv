@@ -18,9 +18,8 @@ me.ruv = &acgt{ return [
     ... me&Actingness ,
     ... me&Toolingness ,
     
+    # notify tinger
     ['Pearch','3',&acgtRs{
-        # Codon or ...
-        me&tsc,"Iching:"+R.t
         G&way,'Pearch',{R};
     },'ift,D'],
     
@@ -30,18 +29,8 @@ me.ruv = &acgt{ return [
         
         me&way,R,'Vacea',{R,col:3}
         
-        #!!!!!!!!!!!!!!!!!!!
-        n g  R %ting:w
-        #throw "Wouble", "Fix"
-        n a  R %ting:w
-        n Pearch  R %ting:w
+        #Rs&COmbac = n;
         
-        $n =
-        n ruv  R %ting:wjs
-        ns&args = 'ar,me';
-        Rs&COmbac = n;
-        
-        n ruv  R %ting:w
         #!!!!!!!! !!!! !!!!!!
 
     },'ift,D'],
@@ -69,6 +58,8 @@ me.ruv = &acgt{ return [
 me.t = &acgtRst{
     !isR(R) and throw "!R"
     isC(s) and $Q = s
+    else
+    isha(s) and $Q = Cye([t,1,s])
     else {
         t == null and t = s; s = "I"
         $Q = Cye([t,1,{of:s}]);
@@ -85,6 +76,7 @@ me.t = &acgtRst{
     else {
         # %Search
         $Search = me&Rsc,R,'^^Inn';
+        T.asyncQs and Qc&async = &{ T.asyncQs.push(Q) };
         $s = Searchs&_ting(Q,R);
         # we would be async
         return s
@@ -109,10 +101,9 @@ me.way = &acgtRtry{
     # the index to an of:wjs
     $Q = G&Cye,[t,'',{of:'wjs',args}];
     
+    cb == 'noop' and cb = &{}
     # throw async if not ready
     Qc&async = &{
-        cb == 'noop' and cb = &{}
-        else
         typeof cb == 'string' and throw "Cant go async: "+cb
 
         # Jin should avoid this A for a while
@@ -145,7 +136,10 @@ me.way = &acgtRtry{
     };
     
     $w = me&t,R,Q;
-    !w and throw "no way: "+Q.t
+    if (!w) {
+        T.asyncQs && T.asyncQs.includes(Q) and return
+        throw "no way: "+Q.t
+    }
     
     $argumas = tar.split(',').map(k => ar[k]);
     # see Ban
