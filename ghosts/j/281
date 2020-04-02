@@ -3192,11 +3192,30 @@ Soogle: | # start from Sevo
     me.cby = &sfzdo{
         !s and return !f && d
         isC(f) and $want = f; f = &R{ return R == want }
+        
+        if (typeof f == 'string') {
+            if (f.substr(0,3) == '^^^') {
+                $k = f.substr(3);
+                # find ^^^%$k - continuous blob of %$k
+                $started = 0;
+                f = &R{
+                    $has = R.sc[k] != null;
+                    !has && !started and return -1
+                    has and started = 1; return 0
+                    !has and return -2
+                };
+            }
+            else {
+                throw "other than ^^^:"+f
+            }
+        }
+        
         z == 'up' and z = null
         z ||= &s{ return s.y.up };
         d ||= [];
         d.unshift(s) > 50 and throw "manycby"
         $r = f && f(s,o);
+        r < 0 and d.shift(); r++
         r and return d
         return me.cby(z(s),f,z,d,s)
     };
@@ -3206,7 +3225,16 @@ Soogle: | # start from Sevo
     };
     me.cbu = &sfz{
         $cb = f;
-        typeof f == 'string' and cb = &R{ return R.sc[f] }
+        if (typeof f == 'string') {
+            if (f.substr(0,1) == '^') {
+                # cby knows ^+
+                cb = f;
+            }
+            else {
+                # find ^^%$f
+                cb = &R{ return R.sc[f] }
+            }
+        }
         typeof f == 'object' and cb = &R{ return R == f }
         $l = me.cby(s,cb,z||'up');
         return l && l[0]
