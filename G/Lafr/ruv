@@ -40,19 +40,14 @@ me.ruv = &acgt{ return [
         A = G&Aye,'J';
         A.1 = R;
         num(Rs&Peace) and A&Sonly = Rs&Peace
-        ah(R,'reawakens','Peace',{
-            rollbs:'Peace'
-        });
-        if (Rs&Gens) {
-            ah(R,'reawakens','Gens',{
-                rollbs:'Gens,self,Here,Zaving'
-            });
-            delete Rs&ting;
-            Rs&Zaving = "mem,W";
-        }
+        
         $done = me&JRom_asyncQs,R;
         me&way,R,'Peace',{R,col:3};
         done() and return
+        
+        ah(R,'reawakens','Peace',{
+            rollbs:'Peace'
+        });
         
         # default some steps
         $step = A&Sonly;
@@ -66,11 +61,22 @@ me.ruv = &acgt{ return [
                 #   to use as well as w:Peace
                 #    and its meanings for W ball
                 n $R.t  R %Peace:5,Gens
+                # we redo:
+                $Be = me.Be;
+                delete Be.sc.J;
+                delete Be.sc.W;
             }
             if (step == 5) {
-                # 5: bits of housing (boh)
+                # 5: bits of housing (boh), store <-> self
                 #  eg ballRom does JRom/5/3
                 !Rs&Gens and throw "5!Gens"
+                ah(R,'reawakens','Gens',{
+                    rollbs:'Gens,self,Here,Zaving'
+                });
+                delete Rs&ting;
+                
+                Rs&Zaving = "mem,W";
+                
                 # 5/4 then 5/3
                 $four = me.cby(R,"^^^Peace")
                     .filter(n=>ns&Peace==4)[0];
@@ -83,13 +89,35 @@ me.ruv = &acgt{ return [
                 Rs&Abodo = 1;
             }
             if (step > 1 && step < 5) {
-                !Rs&ball and throw "2-4!ball"
                 # spreading 2
+                !Rs&ball and throw step+"!ball"
                 ah(R,'inheritscif','ball',{Peace:2})
+            }
+            if (step == 2) {
+                # a node
+                if (ss&W || ss&J) {
+                    $c = {};
+                    # implies %Gens once ^^Gens
+                    c.Doming = 3;
+                    # on the %Gens:
+                    c.Peace = 5;
+                    c.JRomc = {Peace:8};
+                    # Rom normalises h%task
+                    #  JRom always rovo (NormalI)
+                    #   this could be the osc identity
+                    #  so we can leave any mind with one call
+                    c.task = 'ruv';
+                    # ss&* mixed into 5s&*
+                    $r = me&ballRom,R,s,c;
+                }
+            }
+            if (step == 8) {
+                # osc transaction join
+                #  plot out of time together
+                !Rs&JRom and throw "8!JRom"
             }
             if (step == 1) {
                 # an edge
-                me&tsc,"Peaceout",0,'y'
             }
         }
         
