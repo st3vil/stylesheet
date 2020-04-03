@@ -7307,17 +7307,19 @@ Foogla: | # Domes prepare to A=A
     
     # too early to e, retry in 80ms x4
     me.tooearly = &acgtkm{
-        $tooearly = &{
+        $tooearly = &T{
             $K = 'tooearly_'+k;
             T[K] ||= 0;
             T[K]++ > 3 and throw "still tooearly: "+k
         };
         if (m) {
-            return &y{
+            return &y,meanwhile{
                 # to init Rs&fengi =
                 return &{
-                    tooearly();
                     $args = [...arguments];
+                    # meanwhile() when stalling,
+                    #  may return a better T to ttl on
+                    tooearly(meanwhile && meanwhile(...args) || T);
                     $cb = &{
                         # f = Rs&fengi (or this again)
                         $f = y ();
@@ -7327,7 +7329,7 @@ Foogla: | # Domes prepare to A=A
                 };
             };
         }
-        tooearly();
+        tooearly(T);
         return &y{ G&yl,80,y }
     };
     
