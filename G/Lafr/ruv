@@ -56,10 +56,11 @@ me.ruv = &acgt{ return [
         
         # A:Peace
         # uses A.1-5 for %Peace=1-5
+        # relies on %Peace all the way down
         $p = Ry&up;
         $Y = A;
-        # relies on %Peace all the way down
         ps&Ace and A = ps&Ace
+        A = Y;
         # < RbitX might extend to deal b into Ace/**
         $Y = Rs&Ace = G&Aye,'Peace';
         Yc&Y = A;
@@ -119,6 +120,7 @@ me.ruv = &acgt{ return [
             }
             if (step > 1 && step < 5) {
                 !Rs&ball and throw step+"!ball"
+                !isC(s) and throw step+"!s"
                 # a node sloping 4,(3,2)+
                 # spreading 2
                 ah(R,'inheritscif','ball',{Peace:2})
@@ -148,8 +150,7 @@ me.ruv = &acgt{ return [
         # auto near tops
         $wouldJ = step <3 && Y.5 == Y.4[5];
         $wouldR = step >= 3;
-        !Rs&play || s&R && wouldR || wouldJ and return
-        
+        !(Rs&play || ss&R && wouldR || !ss&R && wouldJ) and return
         $c = {};
         # the $s <-> $self
         #  outside $s/** may be to inside $self/** related
@@ -173,14 +174,14 @@ me.ruv = &acgt{ return [
         ss&W and ''
         
         if (ss&R) {
-            if (ss&R.substr(0,1) == '+') {
+            if (isst(ss&R) && ss&R.substr(0,1) == '+') {
                 # modes to enable on R
                 # < it might want to be here from the start
                 #   rollhauntedb, ghost of a process
                 ss&R.split('+').map(&k{
-                    k and return
+                    !k and return
                     # ballRom would copy ss&* to rs&*
-                    c[k] = hak(s.sc,k) ? s.sc[k] : 1
+                    R.sc[k] = hak(s.sc,k) ? s.sc[k] : 1
                 });
                 return 'nothing'
             }
@@ -221,7 +222,7 @@ me.ruv = &acgt{ return [
         # uplink for the A.2
         return r
     }
-    }
+    },
     # traversee
     ['COmbac','3',&acgtRs{
         $r = me&Rsc,R,'COmbac';
