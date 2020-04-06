@@ -2120,7 +2120,7 @@ Foogla: | # Domes prepare to A=A
             $erN = Rs&erN = [];
             
             # 6 do innard
-            $began = G&time;
+            $began = Gtime();
             
             $r = me&Rom,R,'Rom',c;
             # out me&Rom returns in me&Rom
@@ -2135,17 +2135,22 @@ Foogla: | # Domes prepare to A=A
                 Rs&returns = r;
             }
             
-            # pause if slow
+            # pause if slow!
             $max = rs&timetopause || 2.5;
-            $delta = G&time,began;
+            $delta = Gtime(began);
             each tn Dy&tw {
+                # JRom not tunneled this time
+                !Rc&N.includes(Ds&JRom) and continue
                 ns&delta and delta -= ns&delta
             }
             if (delta > max) {
                 me&tsc,"("+delta+">"+max+")";
                 me&introqua,R,{boost:-1}
             }
-            Ds&delta = delta
+            delta < 0 and ~>3 -delta: R.t, delta
+            delta < 0 and delta = 0
+            Ds&delta = delta;
+            Ds&JRom = R;
             Ds&R = r;
             # no colour for the paused
             c.wantsleep and s&sat = 0
