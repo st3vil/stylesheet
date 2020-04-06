@@ -53,6 +53,24 @@ me.ruv = &acgt{ return [
     },'ift,D'],
 ]};
 
+# S for an osc pin, bump through segments of the work
+me.Srupto = &A,C,G,T,s,t,talk,params{
+    s == '' && t == '' and throw "no io"
+    
+    #~Sonly: s, ':', t, '%', talk
+    
+    A&Sonly && num(s) && s != A&Sonly and return 0
+    
+    t ||= s;
+    
+    A&doings ||= {};
+    $l = A&doings[t] ||= {};
+    l.done and return
+    l.done = 1;
+    #~sttalk: ki([s,t,talk,params]);
+    return 1;
+};
+
 # find things from A[1-9].I
 G.t = &acgtst{
     typeof s == 'object' and throw "Nevers";
