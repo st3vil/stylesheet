@@ -49,7 +49,8 @@ me.Sch_Pavings = &acgt{ return [
     #     which Y:Steps: Gracto @3 Rings in
     ['Pavings',0.306,&acgtRs{
         me&tsc,'Pavings';
-        return;
+        me&reaw,R,'Pavings';
+        #return;
         # borrow %Paving params
         me&adherePaving,R,R;
         # to give on to %Paving
@@ -59,26 +60,28 @@ me.Sch_Pavings = &acgt{ return [
         me&Ring,R,{und:r,ov:0.58}
     },'ift,D'],
     &{
-    # inhere
-    me.inherePaving = &acgtR{
-        me&ioty,R,'ball' .map(&r{
-            rs&Paving = 1;
-            me&adherePaving,R,r;
-        })
-    };
-    # adhere eg r%dir = s%dir || R%dir
-    me.adherePaving = &acgtRr{
-        $s = Rc&s;
-        $z = rc&s;
-        ['directory'].map(&k{
-            # each of any params that matter
-            #  on s when not as inherited from R
-            $is = hak(z.sc,k) ? z.sc[k] : R.sc[k];
-            # and eg. %directory='' leaves
-            is and r.sc[k] = is
-        })
-    };
+        # inhere
+        me.inherePaving = &acgtR{
+            me&ioty,R,'ball' .map(&r{
+                rs&Paving = 1;
+                me&adherePaving,R,r;
+            })
+        };
+        # adhere eg r%dir = s%dir || R%dir
+        me.adherePaving = &acgtRr{
+            $s = Rc&s;
+            $z = rc&s;
+            zs&directory and zs&directory = zs&directory.replace(/\/$/,'')
+            ['directory'].map(&k{
+                # each of any params that matter
+                #  on s when not as inherited from R
+                $is = hak(z.sc,k) ? z.sc[k] : R.sc[k];
+                # and eg. %directory='' leaves
+                is and r.sc[k] = is
+            })
+        };
     },
+    # %Paving splits into species
     ['Paving',0.36,&acgtRs{
         $of = Rs&Paving;
         of == 1 and of = 'W'
@@ -86,7 +89,7 @@ me.Sch_Pavings = &acgt{ return [
         # see if there's a HEAD-type method for this Qc&of
         $M = [];
         if (of == 'W') {
-            m W.5 2  %species:5
+            m W\.5 2  %species:5
             Rs&fully &&
                 m $of 1
         }
@@ -101,9 +104,11 @@ me.Sch_Pavings = &acgt{ return [
             n $n
         }
     },'ift,D'],
+    
+    # %Paves collect a species
     ['Pave','291',&acgtRs{
         $p = Ry&up;
-        # %Paves collect
+        $s = pc&s;
         # since Zaving@294, reuse foldy thing
         ah(p,'Zaving',Rs&Pave,R);
         # similar to %Zave,
@@ -123,14 +128,38 @@ me.Sch_Pavings = &acgt{ return [
             is and Q.c[k] = is
             else { delete Q.c[k] }
         });
+        # compile to $t for Search
+        Qc&directory and Q.t = Qc&directory+'/'+Q.t
+        Qc&species and Q.t = Q.t+'/'+Qc&species
+        # and for humans
+        n of 101 $s:Qc&of %hs:348,fs:9
+        Qc&directory &&
+        n directory 102 $s:Qc&directory %fs:8,hs:194
+        n t 11 $s:s.t %hs:348
+        Qc&species &&
+        n species 112 $s:Qc&species %fs:8,hs:157
+        
         
         # Q refinds P each G&t
         $w = me&t,R,Q;
-        me&nu,Q.t,Q.c;
+        # per most of this besides s, el + hooks
+        #me&nu,Q.t,Q.c;
         
+        !Qs&ready and return me&waits,'!ready','...'
         # $w may wander off, usu clones into %Gens%self
         # < following P into the future (%Differ)
-        !Qs&ready and return me&waits,'!ready','...'
+        
+        n el 13 $s:Qc&el %hs:348,fs:9
+        
+        me&rolltog,R,{maydo:'Q'} &&
+            me&zu,'Q',Q;
+        
+        Qc&s && me&rolltog,R,{maydo:'s'} &&
+            n s  $s:Qc&s %R:ball
+        
+        # have the thing, readyonly, copied from Pc&s
+        # < Q can Qs&Want_Decode for itself
+        Qc&s and Rc&s = Qc&s
         
         # then something posits string to follow:
         Rs&commitstring = &s{
@@ -139,9 +168,6 @@ me.Sch_Pavings = &acgt{ return [
             me&t,R,Q;
         };
         
-        me&nu,"Q",Q
-        #$r = me&nu,'Pavings',R;
-        #me&Ring,R,{und:r,ov:0.58}
     },'ift,D'],
     
   # Paving 5
