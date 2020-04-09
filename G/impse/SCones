@@ -83,15 +83,24 @@ me.Sch_Pavings = &acgt{ return [
         }
         Rs&waits and return
         
+        $notready = !Q || !Qs&ready;
+        notready and me&waits,"!ready"
+        $w = Qc&s;
+        !w and me&waits,"!live"
+        !w && !notready && Qc&el == '9' and Rs&creatine = 1
+        
+        Rs&waits and return
+        
         # send r%trouble as late as you want to open it
         me&ollbs,R,'trouble' and Rs&openey = 1
         
         # roll/sleepatch inner processes
         me&rolls,'grype',{s:Q.t+"@"+Qs&dige}
             && me&rollbs,'changey';
-        me&rollbs,'amCompiling,fully';
+        me&rollbs,'amCompiling';
         
         Rs&Live = Qc&s;
+        Rs&Q = Q;
 
         # looking at the answer
         # < sleep by Q&dige
@@ -296,9 +305,6 @@ me.Sch_Pavings = &acgt{ return [
         me&adherePaving,R,R;
         # to give on to %Paving
         me&inherePaving,R;
-        
-        $r = me&nu,'Pavings',R;
-        me&Ring,R,{und:r,ov:0.58}
     },'ift,D'],
     &{
         # inhere
@@ -327,12 +333,13 @@ me.Sch_Pavings = &acgt{ return [
         $of = Rs&Paving;
         of == 1 and of = 'W'
         me&reaw,R,'Paving,directory';
+        me&rollbs,R,'fully';
         # see if there's a HEAD-type method for this Qc&of
         $M = [];
         if (of == 'W') {
             m W\.5 2  %species:5
             Rs&fully &&
-                m $of 1
+                m W 1
         }
         else {
             m $of 1  
@@ -421,7 +428,7 @@ me.RedialyPaving = &acgtRrk{
     $sa = Ry&sa;
     $ha = Ry&ha;
     # is all there or 404
-    $fok = !r && (rs&Paving_goodin || rs&creatine);
+    $fok = r && (rs&Paving_goodin || rs&creatine);
     !fok and return me&waits,'!fok'
     if (sa(k)) {
         !rs&fully and throw "undialed"
@@ -454,7 +461,11 @@ me.Sch_Constel = &acgt{ return [
             $da = Ry&da; # differ last waigh <-> now waigh
             # from in or out?
             $f = sy&f;
-            me&RedialyPaving,R,f;
+            $Q = fs&Q;
+            !Q || !Qs&ready and return me&waits,'!Q'
+            me&RedialyPaving,R,f and return
+            Qc&species == 5 and return me&waits,'Q5'
+            
             
 // Conste-ing{
             # only top %Conste compiles
@@ -463,7 +474,7 @@ me.Sch_Constel = &acgt{ return [
             # o **!%redialy
             #  very in future
             $N = sy&N.map(s => sy&R).filter(&j{
-                return !jy&sa('redialy')
+                return !jy&sa('Redialy')
             });
             N.length and return ha('waits:them-redialy')
             
@@ -506,7 +517,6 @@ me.Sch_Constel = &acgt{ return [
             $Lives = me&ioty,R,'Conste'
                 .map(j => js&Live);
             Lives.filter(L=>!L).length and return ha('waits:them-Live')
-            
             
             me&rollbs,R,'Ready';
             cha.length and delete Rs&Ready
@@ -718,6 +728,7 @@ me.Sch_Constel = &acgt{ return [
                     # mark as being in That
                     fs&Wupular = 1
                     # now %ting for .1
+                    
                     
                     me&zu,"Update",st;
                     continue
