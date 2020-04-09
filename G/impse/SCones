@@ -53,7 +53,16 @@ me.Sch_Pavings = &acgt{ return [
          me&tsc,"PEace",0,'g'
          s&hue ||= 30;
      },'ift,D'],
-# Paving 5
+    ['KnowThee','304',&acgtRs{
+        $h = me&SChema,R,'KnowThee',{};
+        n Know 1  %bri:0.7,Pavings
+        n Compiling 3  %hue:70,supr:Comal
+        n Seq 5  %hue:110,supr:Comste,Omplateau
+        n That 7  %Pavings
+
+        hy&domed()
+    },'ift,D'],
+// Paving 5{
     ['Paving',0.5,&acgtRs{
         # waits for each Pave,
         #  draws clues together
@@ -70,12 +79,13 @@ me.Sch_Pavings = &acgt{ return [
         me&ollbs,R,'trouble' and Rs&openey = 1
         
         # roll/sleepatch inner processes
-        me&rolls,'grype',{s:Q.t+"@"+Qs&dige,alsolineate:f};
+        me&rolls,'grype',{s:Q.t+"@"+Qs&dige}
+            && me&rollbs,'changey';
         me&rollbs,'amCompiling';
 
         # looking at the answer
         # < sleep by Q&dige
-        $Thing = Rs&Glean = me&lookating,W;
+        $Thing = Rs&Glean = me&lookaQ,Q;
         # sync ss&dige and Thing's dige (however it appears)
         #  and whatever other Things project knowledge around
 
@@ -89,7 +99,7 @@ me.Sch_Pavings = &acgt{ return [
         #   f%changey can be forgot if R%tracting is interrupted
         # don't apply change from the Thing until Compiling wants to
         Rs&liesnotok = 1;
-        fs&commiting and Rs&liesnotok = 0; fs&commiting++
+        me&rollbs,'commiting' and Rs&liesnotok = 0; Rs&commiting++
         # hold waking Thing changes are projected into:
         # < without hiding the change
         #Rs&noprojcha = 1;
@@ -116,25 +126,36 @@ me.Sch_Pavings = &acgt{ return [
             }
             ss&el == 7 and me&mtsc,inc,'hmm',0,'B'
         }
+        # children selected per scheme
+        # eg not %ignore
+        Rs&zget = &Ry{
+            me&ioty,R,'Paving' .map(&r{
+                rs&ignore and return
+                y(r)
+            })
+        };
+        
         # we must now become changey if:
         #   any of our W-type data changes
         #   child dige projection wrong
         Things&Wind and me&gromps,R,'Wind','t,dige',Things&Wind
         # tally  grypes and gromps (from above)
+        Rs&tracting = R;
         me&grimp,R;
+        delete Rs&tracting;
 
-        if (Rs&traccon) {
+        if (con) {
             me&zu,'Thingstract',Thing
-            fs&changey and me&zu,'changey',fs&changey;
+            Rs&changey and me&zu,'changey',Rs&changey;
             Rs&trouble and me&zu,"Rtrub",Rs&trouble;
             #me&zu,'Loadism',load
             Ds&fs = 15;
         }
         
         # various leads to %changey, %openey, %trouble
-        if (fs&changey) {
+        if (Rs&changey) {
             # dige here or inside solving
-            me&tsc,"f%changey","cha",'G';
+            me&tsc,"R%changey","cha",'G';
             s&bgh = 111;
             # 2 them
             me&ioty,R,'ball'
@@ -142,33 +163,26 @@ me.Sch_Pavings = &acgt{ return [
         }
         Rs&trouble and me&tsc,'trouble','trou','G'
 
-        Rs&tracting_good = f;
+        Rs&Paving_good = 1;
 
-        if (game == 'look') {
-            # get dige-level diff figured
-        }
-        elsif (game == 'get') {
-            # should match the dige-level figured
-        }
         return;
         # < applying the sort-out-code scheme
         # wanting a decision on each one
         # (1 keep, 7 transfiguration, 9 death)
-        $z = tc&s;
-        if (!zs&el) {
+        if (!ss&el) {
             me&tsc,'('
-            me&rolltog,R,'9',0 and zs&el = 9
-            me&rolltog,R,'7',0 and zs&el = 7
+            me&rolltog,R,'9',0 and ss&el = 9
+            me&rolltog,R,'7',0 and ss&el = 7
             me&tsc,')'
         }
     },'ift,D'],
     &{
     # know about the Thing independent of the species
-    me.lookaPave = &acgtr{
-        $Q = Ws&Q;
-        $s = Ws&Live;
-        $Thing = G&Cye,[s.t,1,{},{}];
-        if (Ws&species == 5) {
+    me.lookaQ = &acgtQ{
+        $s = Qc&s;
+        !s and throw "Q!s"
+        $Thing = Cye([s.t,1]);
+        if (Qc&species == 5) {
             Things&dige = ss&ha;
             o $s/W/*:s
             each in ays&s {
@@ -181,7 +195,7 @@ me.Sch_Pavings = &acgt{ return [
                 ah(Thing,'wind',n.t,ns&dige)
             }
         }
-        elsif (Ws&species == 1 || !Ws&species) {
+        elsif (Qc&species == 1 || !Qc&species) {
             # < can do similar for .4
             # < pointings that adjust for its compression
             each in sy&N {
@@ -197,20 +211,68 @@ me.Sch_Pavings = &acgt{ return [
             }
             Things&dige = dige;
         }
-        else {
-        }
         return Thing
     }
     },
-    ['KnowThee','304',&acgtRs{
-        $h = me&SChema,R,'KnowThee',{};
-        n Know 1  %bri:0.7,Pavings
-        n Compiling 3  %hue:70,supr:Comal
-        n Seq 5  %hue:110,supr:Comste,Omplateau
-        n That 7  %Pavings
+    # R%Paving_good waits for R/*%tracting_good, etc
+    #  when we can rely on our children to complain,
+    #  know if they're changey/trouble
+    ['ball+Paving_good','52',&acgtRs{
+        T.Mw = 'trac';
+        $p = Ry&up;
+        Rs&zget(R,&r{
+            # into this pool of what we're looking for from who
+            # < display their stuff up against them
+            #   dividing the ball in two
 
-        hy&domed()
+            # completed 51
+            !rs&Paving_good &&
+                ah(R,'waitz','tw_scgk_r',r.t,'Paving_good',r);
+
+            # completed 52
+            #  which they haven't this future
+            #  it should know changzo/simply/awake+ready,
+            #   which would unset in 61 if net change
+            !me&ollbs,r,'Paving_goodin' &&
+                ah(R,'waitz','tw_scgk_r',r.t,'Paving_goodin',r);
+
+        });
+
+        # autothink:
+        # sending %trouble should lead to %Paving_good
+        $wa = {solvent: [{
+            dscif: {scgk:'Paving_good'},
+            arkfor: {r: {cb:&dr{
+                ac(r,'trouble',R.t+" wants %Paving_good")
+            }}}
+        }], beready:1};
+
+        # weakly supposing no signal means ok
+        !me&waitzo,R,wa and return
+
+        # children at least here
+        #  Ring usu. children almost here
+        Rs&Paving_goodin = 1;
+
+        # modulat from the grype of late only
+        if (Rs&changey) {
+            $out = [];
+            each in Rs&changey {
+                !ny&R || Rc&N.indexOf(ny&R) >= 0 and continue
+                ny&timingout ||= 0;
+                ny&timingout++ > 2 and out.push(n)
+            }
+            Rs&changey = Rs&changey
+                .filter(n => out.indexOf(n) < 0);
+            !Rs&changey.length and delete Rs&changey
+        }
+
+        # which means all we need to compile is connected!
+        if (!ps&Paving) {
+            aha(p,'wou')({ready:1,tw:R.t,r:R});
+        }
     },'ift,D'],
+
 // Pavings 3{
     # < timing: after/inside ^%MindInto->%SupplyChai @305
     #    which should delay children while it sets up
@@ -272,6 +334,8 @@ me.Sch_Pavings = &acgt{ return [
             nc&R = 1;
             n $n
         }
+        # to give on to *%Paving
+        me&inherePaving,R;
     },'ift,D'],
     
     # %Paves collect a species
