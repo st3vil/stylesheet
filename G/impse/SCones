@@ -5,6 +5,7 @@ me.SCones = &acgt{ return [
     ... me&ruv ,
     # W etc relatives
     ... me&Sch_Pavings ,
+    ... me&Sch_Constel ,
     ... me&Sch_ema ,
     
 ]};
@@ -54,11 +55,13 @@ me.Sch_Pavings = &acgt{ return [
          s&hue ||= 30;
      },'ift,D'],
     ['KnowThee','304',&acgtRs{
+        Rs&notun = 1;
+        
         $h = me&SChema,R,'KnowThee',{};
         n Know 1  %bri:0.7,Pavings
         # Comal/Conal, Comste/Conste
-        n Compiling 3  %hue:70,supr:Comal
-        n Seq 5  %hue:110,supr:Comste,Omplateau
+        n Compiling 3  %hue:70,supr:Conal
+        n Seq 5  %hue:110,supr:Conste,Omplateau
         n That 7  %Pavings
 
         hy&domed()
@@ -87,6 +90,8 @@ me.Sch_Pavings = &acgt{ return [
         me&rolls,'grype',{s:Q.t+"@"+Qs&dige}
             && me&rollbs,'changey';
         me&rollbs,'amCompiling,fully';
+        
+        Rs&Live = Qc&s;
 
         # looking at the answer
         # < sleep by Q&dige
@@ -409,6 +414,25 @@ me.Sch_Pavings = &acgt{ return [
     },'ift,D'],
     
 ]};
+# R%Conal waits for Know|That/...r%Pave+=%fully
+# < set %creatine
+me.RedialyPaving = &acgtRrk{
+    k = 'Redialy'+(k?'-'+k:'');
+    $sa = Ry&sa;
+    $ha = Ry&ha;
+    # is all there or 404
+    $fok = !r && (rs&Paving_goodin || rs&creatine);
+    !fok and return me&waits,'!fok'
+    if (sa(k)) {
+        !rs&fully and throw "undialed"
+        ha(k)
+    }
+    else {
+        rs&fully = 1;
+        ha(k)
+        return 1
+    }
+};
 me.Sch_Constel = &acgt{ return [
     # hierarchise
 // Conste 3{
@@ -430,22 +454,10 @@ me.Sch_Constel = &acgt{ return [
             $da = Ry&da; # differ last waigh <-> now waigh
             # from in or out?
             $f = sy&f;
+            me&RedialyPaving,R,f;
             
-            if (sa('redialy')) {
-                # status should depend on:
-                !fs&fully and throw "undialed"
-                ha('redialy')
-            }
-            else {
-                # < give fy&G/W some time to have game=...
-                #   ensuring it on the way back (Thing?)
-                # alters the %ting but supposedly it's ours,
-                #  and we will sleep til its ready again
-                f and fs&game = 'get'
-                return ha('redialy')
-            }
-            
-            # only top %Comste compiles
+// Conste-ing{
+            # only top %Conste compiles
             sy&top != s and return
             
             # o **!%redialy
@@ -454,7 +466,6 @@ me.Sch_Constel = &acgt{ return [
                 return !jy&sa('redialy')
             });
             N.length and return ha('waits:them-redialy')
-// Conste-ing{
             
             # check out n
             $cha = [];
@@ -463,11 +474,11 @@ me.Sch_Constel = &acgt{ return [
                 $j = ny&R;
                 $f = ny&f;
                 !f and return me&waits,n.t+"-!f"
-                # Ws&Live stills
-                $W = fy&W;
+                !fs&Live and return me&waits,n.t+"-!f%Live"
+                # fs&Live stills
                 $was = me&rollbs,j,'Live';
-                Ws&Live != was and cha.push(cha)
-                js&Live = Ws&Live;
+                fs&Live != was and cha.push(cha)
+                js&Live = fs&Live;
                 # < copy into This/$t/{origin,comp} meanwhile
                 #   to externalise to perl to jsbabz it
                 #   to apply hacks in waves to it, so differ
@@ -489,19 +500,10 @@ me.Sch_Constel = &acgt{ return [
                 #     to a few dozen thousand line /W/
                 #      with some Babzing before it I's too
                 #      so we have a bunch of ghost to show for it
-                # they want those instructions applied tho
-                #   backup system if not simple el=1
-                # < bring on holding A.I = W:Isomewhere,
-                #   should have all onward
                 
-                # < G%hacks...
-                #   want to be named (for many users)
-                #   and inheritable (for js:eye->i everywhere)
-                $g = fy&G;
-                $hs = me&ioty,g,['hack'];
-                hs.length and me&nu,'hacks-'+g.t,hs;
+                # < look in Hacks/$t for compile tricks
             }
-            $Lives = me&ioty,R,'Comste'
+            $Lives = me&ioty,R,'Conste'
                 .map(j => js&Live);
             Lives.filter(L=>!L).length and return ha('waits:them-Live')
             
@@ -539,10 +541,10 @@ me.Sch_Constel = &acgt{ return [
             me&opeuni,g,Ready,Lives,c;
             
             if (gs&ope) {
-                me&nu,'Comste',{Ready,Lives}
+                me&nu,'Conste',{Ready,Lives}
             }
             
-            # back to Comal
+            # back to Conal
             $l = sy&l;
             $r = ly&R;
             $la = ry&ha;
@@ -592,13 +594,14 @@ me.Sch_Constel = &acgt{ return [
             ss&coung ||= 0;
             $le = ss&coung++;
         },'ift,D'],
-// Comal 32
+// Conal 32
         ['ball+Conal','32',&acgtRs{
             T.Mw = 'Conal';
             $sa = Ry&sa;
             $ha = Ry&ha;
             $da = Ry&da;
             !sa and return me&waits,'no-sa'
+            me&reaw,R,'Conal';
             
             # f ~ref is ok, Comal checks ~Live
             # < test:
@@ -637,7 +640,7 @@ me.Sch_Constel = &acgt{ return [
             # ^ goes around, now fro would be:
             $ready = !sy&leaf && sa('mot') && !sa('fro');
             
-            $g = me&opeology,"Comal",{walls:1};
+            $g = me&opeology,"Conal",{walls:1};
             ac(R,'M',g);
             if (gs&ope) {
                 $re = me&opeKm,g,"putready?"
@@ -653,7 +656,7 @@ me.Sch_Constel = &acgt{ return [
             
             #return;
             if (ready) {
-                # %SupplyChai finds this, makes into %Comste
+                # %SupplyChai finds this, makes into %Conste
                 ha('ready');
                 Rs&suprise_c = {dl:1};
             }
@@ -672,7 +675,7 @@ me.Sch_Constel = &acgt{ return [
                     sy&top.y.N.indexOf(lz) < 0 and throw "Nofind zyl",z
                     lz != s and throw "lz nots"
                     
-                    # make skinny tree to it, s)%Comal +
+                    # make skinny tree to it, s)%Conal +
                     $stack = me.cby(lz,sy&top);
                     stack[0] != sy&top and throw "stack weird", stack
                     
@@ -685,7 +688,7 @@ me.Sch_Constel = &acgt{ return [
                         my&fin = rs;
                         rsy&l = m; # should persis/compete
                         rs&Thinting = 1;
-                        ac(r,'trouble',"Comste-pushish");
+                        ac(r,'trouble',"Conste-pushish");
                         tr = r;
                     }
                     rs.t != s.t and throw "not our name?",s,'->',r
@@ -706,39 +709,20 @@ me.Sch_Constel = &acgt{ return [
                     $ts = sy&fin;
                     $t = tsy&R;
                     $f = tsy&f;
+                    me&RedialyPaving,R,t,'fin' and continue
                     
                     # %Comste %Ready -> encoding %Lines .1+5
+                    # < cache it with all this sense
                     $st = me&Wunifyst,R,s,n,'clonn';
                     
-                    
-                    #me&nu,"ts",ts;
-                    #me&nu,"f",f;
-                    #me&nu,"n",n;
-                    #me&nu,"st",st;
-                    
-                    # < func for this next bit of code
-                    #   it is the quintessential several
-                    #   to spread out and help sleep
-                    
-                    # is all there or 404
-                    $fok = f && (ts&tracting_goodin || ts&creatine);
-                    # keeps diags, pushes get dekeened if !fok
-                    if (sa('Redialy')) {
-                        f && fs&game != 'get' and throw "undialed"
-                        ha('Redialy')
-                    }
-                    else {
-                        fok and fs&game = 'get'; ha('Redialy')
-                        return
-                    }
-                    
-                    !fok and return me&waits,'!fok'
                     # mark as being in That
                     fs&Wupular = 1
                     # now %ting for .1
                     
-                    #Rs&tracting_goodin = 1;
-                    #Rs&creatine;
+                    me&zu,"Update",st;
+                    continue
+                    
+                    # grapple each %Pave
                     
                     $W = fy&W;
                     $ge = fy&G;
@@ -749,7 +733,7 @@ me.Sch_Constel = &acgt{ return [
                     !P and me&mtsc,g,'!noP!',0,'p'
                     
                     if (gs&ope) {
-                        me&nu,"Comal%Ready",{st}
+                        me&nu,"Conal%Ready",{st}
                     }
                     
                     if (P && Qc&el != 9) {
