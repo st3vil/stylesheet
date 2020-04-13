@@ -11,20 +11,19 @@ me.YingA = &acgt{ return [
         # wait for R/*%ball to kinda happen
         #me.hacks && me&bewind,R and return
         
-        # < feedback, early intro tunneling
-        ah(R,'nextlifesc','Ying',2);
         
         Rs&nonDescribable = '%Ying';
 
         # phases: to be minding the steps
 
         $SC = me&rollbsc,R,'Ying';
+        # < feedback, early intro tunneling
+        ah(R,'nextlifesc','Ying',SC);
         # steps congealed
         $s = me&Ying,R,SC,{},1;
-        #debugger;
+        
         $s = me&Ying,R,SC,{},9;
 
-        me&nu,'SC',SC;
         #me&nu,'SCminds',me.SCminds;
 
         s&boc = 588;
@@ -32,7 +31,7 @@ me.YingA = &acgt{ return [
     
 ]};
 me.Yingmind ||= {};
-// functions: Y:A, Yingmindo, tempwind, Yingio
+// functions: Y:A, Yingmindo, Yingio
     # each school (of thought) eg %KnowThat
     # gets mixed/attached/progressed
     # With: local knowledge about certain names etc
@@ -43,6 +42,7 @@ me.Yingmind ||= {};
             sy&Y = Y;
             # list of atoms to loop, default:
             # Yc&M = [s]
+            throw "haps"
         },'ift,D'],
     ] };
     
@@ -60,7 +60,7 @@ me.Yingmind ||= {};
         return N
     };
     
-    
+// Yingio
     # ah() for C with A (Y) sense
     # < more than one level
     # < io pipes A to A
@@ -93,11 +93,11 @@ me.Yingmind ||= {};
 
 // me&Ying,R,Ying|Y,c,$ov - to be Aing Ying**
     # or me&Ying R $s(y&Y) $mind? {Y.sc intro} $ov||=9
-    #  ~$mind on est. might return forked Y/Y:$mind 
-    # Ying/Y
-    # $s = 
+    #  $mind on est. might return forked Y/Y:$mind 
+    # also if ov<1 or difft/R to rewind
+    #  which should sync it to
+    # $s = Ying or Ying/Y, or s with y&Y
     me.Ying = &acgtRstc,ov{
-        $R = Cy&R;
         isob(t) and ov = c; c = t; t = null
         # ov='o2' -> @02
         isst(ov) && ov.substr(0,1) == 'o' and ov = ov.substr(1)/100
@@ -107,9 +107,13 @@ me.Yingmind ||= {};
         # < slope sy&up and know stuff, part of wider Aing
         $dive = me.cby(s);
         $SC = dive[0];
+        $Y = sy&Y;
         
-        # init a possibility
-        #   they may resume their previous cv/ov after
+        
+        # rewind to resyncs our inputs 0-1
+        #  resumes greater cv/ov after
+        # can be voluntary or because:
+        $diffR = sy&R && me&yfuture,sy&R != sy&R;
         # s may have sy&Y to continue,
         # or begin:
         #  forks@01 - alters Yc&M=[s]
@@ -123,64 +127,10 @@ me.Yingmind ||= {};
         #  on@02 - join macro A (eg R)
         #   so it can give/take grounds there
         
-        $diffR = sy&R && me&yfuture,sy&R != sy&R;
-        $Y = sy&Y;
-        
         
         $difft = t && Y && Yc&t != t;
         if (!Y || diffR || difft || ov <= 0.1) {
-            # s may look like the mind its expecting
-            t ||= Y && Yc&t || ss&of || s.t;
-            # start/resync the Y
-            if (Y && Yc&t != t) {
-                # going to fork a different Y,
-                #  happens as we SCA,SC,'Schema',... when SCy&Y
-                # < knowing we came from this Y (is in sy&up)
-                Y = null;
-                # < some Aing of Y to use a different mind
-                #   wouldn't go here
-                #  it's a different Y...
-                #   a layer projecting C alterations into te pipeline
-                #   Y:Comste has Y:Encode travelling
-                #    such Y:Nodes from Y:Step
-            }
-            
-            # about this vector if init:
-            $gen = {cv:0,ov:0.1};
-            if (ov <= 0.1) {
-                # low ov takes init temporality,
-                if (!Y || (Yc&cv||0) < ov) {
-                    # from (after) current low cv, to this low ov
-                    gen.cv = Y && Yc&cv || 0;
-                    gen.ov = ov;
-                }
-                else {
-                    # including cv=ov, to 0.1 as usual
-                    c.ashocks = 1;
-                    gen.cv = ov;
-                    gen.ov = 0.1;
-                }
-            }
-            
-            # here's the Yc&t - SCmind to have
-            gen.t ||= t;
-            if (Y) {
-                $wascv = Yc&cv;
-                # put cv/ov back where they were after
-                $cb = me&tempwind,Y.c,gen;
-                # may skip forks@0.01 if sy&Y
-                gen.Y = Y;
-                gen.cv ||= 0.01;
-            }
-            
-            Y = me&Yinging,R,s,gen,c,SC;
-            
-            $thencv = Yc&cv;
-            cb && cb();
-            # keep a progressed cv
-            #  if cb() wound back as expected
-            if (wascv < thencv && wascv == Yc&cv)
-                Yc&cv = thencv
+            Y = me&rewindYing,R,SC,s,Y,t,c,ov;
         }
         
         # Yc&M would be different if it was complicated forks@01
@@ -197,25 +147,81 @@ me.Yingmind ||= {};
     };
     
     # when SCA about to ex(Y.c,gen)
-    # returns function to replace originals
-    #  not exception handling, a brittle strategy
-    #   maybe it could have a stack of jobs in Y.sc
-    #   to be plucked into Y.c, committing to it
-    # to allow SCA to temporarily be:
-    #   SCAing 0-1 every time we SCA,
-    #   is really another A's work,
-    #   though it might still present this A (Y)
-    #   as the Y to I that don't know the distinction
-    me.tempwind = &acgtcs{
+    me.tempYing = &acgtcs{
         $set = {};
         each kv s {
             hak(c,k) and set[k] = c[k]
         }
+        # returns function to replace originals
+        #  not exception handling, a brittle strategy
+        #   maybe it could have a stack of jobs in Y.sc
+        #   to be plucked into Y.c, committing to it
+        # to allow SCA to temporarily be:
+        #   SCAing 0-1 every time we SCA,
+        #   is really another A's work,
+        #   though it might still present this A (Y)
+        #   as the Y to I that don't know the distinction
         return &{
             each kv set {
                 c[k] = set[k]
             }
         }
+    };
+    # resync a slightly awake R
+    me.rewindYing = &acgtR,SC,s,Y,t,c,ov{
+        # s may look like the mind its expecting
+        t ||= Y && Yc&t || ss&of || s.t;
+        # start/resync the Y
+        if (Y && Yc&t != t) {
+            # going to fork a different Y,
+            #  happens as we SCA,SC,'Schema',... when SCy&Y
+            # < knowing we came from this Y (is in sy&up)
+            Y = null;
+            # < some Aing of Y to use a different mind
+            #   wouldn't go here
+            #  it's a different Y...
+            #   a layer projecting C alterations into te pipeline
+            #   Y:Comste has Y:Encode travelling
+            #    such Y:Nodes from Y:Step
+        }
+
+        # about this vector if init:
+        $gen = {cv:0,ov:0.1};
+        if (ov <= 0.1) {
+            # low ov takes init temporality,
+            if (!Y || (Yc&cv||0) < ov) {
+                # from (after) current low cv, to this low ov
+                gen.cv = Y && Yc&cv || 0;
+                gen.ov = ov;
+            }
+            else {
+                # including cv=ov, to 0.1 as usual
+                c.ashocks = 1;
+                gen.cv = ov;
+                gen.ov = 0.1;
+            }
+        }
+
+        # here's the Yc&t - SCmind to have
+        gen.t ||= t;
+        if (Y) {
+            $wascv = Yc&cv;
+            # put cv/ov back where they were after
+            $cb = me&tempYing,Y.c,gen;
+            # may skip forks@0.01 if sy&Y
+            gen.Y = Y;
+            gen.cv ||= 0.01;
+        }
+
+        Y = me&Yinging,R,s,gen,c,SC;
+
+        $thencv = Yc&cv;
+        cb && cb();
+        # keep a progressed cv
+        #  if cb() wound back as expected
+        if (wascv < thencv && wascv == Yc&cv)
+            Yc&cv = thencv
+        return Y
     };
     
     
@@ -286,6 +292,7 @@ me.Yingmind.Ying = &acgt{ return [
             c = woudef(c);
             return me&brackdown,j,c
         };
+        ~>3 Ying forks:
     },'ift,D'],
 
     # @02 when R%SC relives,
@@ -294,6 +301,7 @@ me.Yingmind.Ying = &acgt{ return [
         s != SC and throw "should be the one"
         sy&R = R;
         sy&Y = Y;
+        ~>3 Ying Rs:
     },'ift,D'],
 
     #  mix Schema/$h/$p into Steps/$p
@@ -313,7 +321,7 @@ me.Yingmind.Ying = &acgt{ return [
         #     if it didn't we could make it:
         #       $was = me&Yingio,SC,'Steps',9;
         #   and imports new Steps/$p
-        s = Ys&Steps = me&Ying,SC,'Steps',{N:N},'o2';
+        s = Ys&Steps = me&Ying,R,SC,'Steps',{N:N},'o2';
 
         #~>3 Compi: SC.t
         Schc&compiled = 1;
@@ -322,19 +330,20 @@ me.Yingmind.Ying = &acgt{ return [
     # @023 Steps per R%SC
     ['Steps per R',0.023,&acgtRYs,SC{
         # covered by Schema always recompiling
-        #me&SCA,Ys&Steps,{},'o2';
+        #me&Ying,R,Ys&Steps,{},'o2';
     },'ift,D'],
 
     # @023 Steps per walk through Y:SC
     #   pull up a map for this Aing,
     ['Steps per walk',0.03,&acgtRYs,SC{
-        me&SCA,Ys&Steps,{},'o3';
+        me&Ying,R,Ys&Steps,{},'o3';
     },'ift,D'],
 
     # @023 Steps take walk through Y:SC
     #   pull up a map for this Aing,
     ['Steps walk',0.6,&acgtRYs,SC{
-        me&SCA,Ys&Steps,{},9;
+        me&Ying,R,Ys&Steps,{},9;
+        ~>3 Ying Steps:
     },'ift,D'],
 ]};
 
@@ -355,6 +364,7 @@ me.Yingmind.Steps = &acgt{ return [
             sy&Y = Y;
             # a&N[$p:steps flow into @02
             Ys&N .map(p => me&Yingio,s,p );
+            ~>3 Steps fork:
         },'ift,D'],
         
         # per R%SC:
@@ -381,6 +391,7 @@ me.Yingmind.Steps = &acgt{ return [
             SCs&steps = Yc&M = ss&z;
             # GOING
             Rs&Lastly = ss&z.slice().pop();
+            ~>3 Steps R:
         },'ift,D'],
         
         # still per R%SC:
@@ -395,7 +406,7 @@ me.Yingmind.Steps = &acgt{ return [
             #   to conserve the main things from:
             #     Ghost/Inn/W/$t
             #   in a pile easier to read than all the W.5s everywhere
-            ss&Pavings and rs&Gracto = rs&Pavings = 1
+            #ss&Pavings and rs&Gracto = rs&Pavings = 1
             
             # prefer specific tw, altering supr-isms
             # they seem to have storable ambitions
