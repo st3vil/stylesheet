@@ -24,7 +24,7 @@ me.Sch_ema = &acgt{ return [
         me&nu,'SC',SC;
     },'ift,D'],
 
-    # %Ying and %SomeSchema+ 
+    # schemas employable from s/s%SC
     ['SCinto','292',&acgtRs{
         # look for R/r(%SC=ForThee
         #  becomes R%ForThee%SupplyChai
@@ -44,29 +44,41 @@ me.Sch_ema = &acgt{ return [
             }
         });
     },'ift,D'],
+    
     # early
     ['Ying','293',&acgtRs{
         $SC = me&rollbsc,R,'Ying';
-        
-        
-        # if we're awake tun=here
-        # if we're tunneling further
-        $zn = me&ioty,R,'ball'
-            .filter(n=>Rc&N.includes(n));
+        $zn = me&ioty,R,'ball' .filter(n=>Rc&N.includes(n));
         $steps = me&Yingio,SC,'Steps',7;
-        # steps must know which to not bal
         if (zn.length) {
-            # only those
+            # only those tunneling has set out
+            #  avoid me&bal, etc for the others
+            !Rs&sleeping and throw "nonsleeping early Ying/ball mod"
+            $zp = zn.map(r => rc&s.y.p);
+            me&ioty,steps,'' .map(&p{
+                zp.includes(p) and ps&iswake = R
+                else {
+                    ps&issleep = R
+                }
+            });
+        ~>2 Ying5:
+            $s = me&Yong,R,SC,{},1;
+        ~>2 Ying9:
+            $s = me&Yong,R,SC,{},9;
+            #  only while $steps/$p hasn't replaced (by Schema @294)
+            Rs&beh = [zn.map(n=>nc&s.y.p),[...stepss&z]];
         }
         else {
-            # whoever might
-            me&nu,'steps',steps
+            # awake and/or tun=here
+            #   might want to be totally awake,
+            #    or would elvis what to wake inside, sleeping
+            $beh = me&rollbs,R,'beh';
+            me&nu,'stepsetc',beh;
         }
         
         # decide which steps shall sleep
         
         # steps congealed
-        #$s = me&Ying,R,SC,{},1;
         $is = Rs&tunneling;
         
         ~>5 Ying 28: is?'TUN':'', zn.map(n=>n.t).join(",")
@@ -93,7 +105,7 @@ me.Sch_ema = &acgt{ return [
         hy&domed()
     },'ift,D'],
     
-    #  
+    # Ying normally after R%Peace and schemas load, before 
     ['Ying','296',&acgtRs{
         T.Mw = 'SC';
         Rs&nonDescribable = '%Ying';
@@ -102,9 +114,10 @@ me.Sch_ema = &acgt{ return [
         # < feedback, early intro tunneling
         ah(R,'nextlifesc','Ying',SC);
         # steps congealed
-        $s = me&Ying,R,SC,{},1;
-        
-        $s = me&Ying,R,SC,{},9;
+        ~>2 Yong6:
+        $s = me&Yong,R,SC,{},1;
+        ~>2 Ying9:
+        $s = me&Yong,R,SC,{},9;
 
         me&nu,'SC',s;
         me&nu,"Tunel",Rs&tunneling;
@@ -115,11 +128,11 @@ me.Sch_ema = &acgt{ return [
     # drink grounds into Ying/Schema
     me.Ying_Schema = &acgtRtc{
         $SC = me&rollbsc,R,'Ying';
-        $s = me&Ying,R,SC,'Schema',{t:t},1;
+        $s = me&Yong,R,SC,'Schema',{t:t},1;
         # steps adopted from recent: n ...
         sy&domed = &{
             $N = me&ydome;
-            me&Ying,R,s,{N:N},2;
+            me&Yong,R,s,{N:N},2;
         };
         return s
     };
@@ -140,13 +153,12 @@ me.Sch_ema = &acgt{ return [
         sy&supr and R.sc[sy&supr] = 1
         # see Y:Steps about %nextlifesc %nottilund
     },'ift,D'],
-    
 ]};
-
 me.Yingmind ||= {};
-
-
 me.Yingmind.Schema = &acgt{ return [
+    # SC/Schema/Y:$src/$step+ posit SC/Steps/$step+
+    #  every time R%Ying wakes
+    # < slep @2
     # %*T pronounces how it will be, arranging for SCing:
     # A:SC@1 %SupplyChai=C macro laterer
     #  A:Schema@1 %SCh/$t=C micro schema
@@ -162,7 +174,7 @@ me.Yingmind.Schema = &acgt{ return [
     #   to avoid it Ringing outside the SCing
 
     # %KnowThat forks SC/Schema/t=KnowThat
-    ['forks',0.01,&acgtRYs,SC{
+    ['+Schema',0.01,&acgtRYs,SC{
         # organise SC's Ys as of/t:
         $Sch = me&Yingio,SC,'Schema';
         $t = Ys&t;
@@ -170,14 +182,15 @@ me.Yingmind.Schema = &acgt{ return [
         # el:1 recreates, string t makes spacer
         #  and sets sy&Y = Y
         $s = me&Yingio,Sch,t,{el:1,Y:Y};
-        Yc&M = [s];
         # drop cache # < wake Y:Schema if diff
         delete Schc&compiled;
+        # makes the subject of iteration, sets sy&Y=Y
+        return s
     },'ift,D'],
     # day, display zone
     ['on',0.02,&acgtRYs,SC{
         sy&R = R;
-
+        # nowhere:
         $g = sy&g = me&opeolo,s.t,{walls:'b:2.2h6',label:{walls:'bg'}};
         Rc&brackuiet = 1;
         gy&can('ope',&{ Rc&brackuiet = 0 });
