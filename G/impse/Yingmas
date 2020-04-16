@@ -12,7 +12,7 @@ me.YingA = &acgt{ return [
      giving it this new Y
  either then:
   sy&R!future - Ying @o2, resyncing new R
-    saving higher cv/ov until Steps does Yc&resumeov
+    saving higher cv/ov until Steps does Yc&resumeov()
  and:
   Ying up to that ov
  
@@ -143,7 +143,7 @@ me.YingA = &acgt{ return [
         !Y || Yc&cv < ov and Y = me&Ying,R,s,c,sc,SC
         
         $ind = dive.map(s=>s.t).join('/');
-        ~>6 Yingd: ind, began, Yc&cv, ov, rem, ki(c)
+        SCc&verbose and ~>6 Yingd: ind, began, Yc&cv, ov, rem, ki(c)
         
         $re = Ys&returns || (Yc&M||[])[0];
         rey&Y != Y and throw "returning !yY=Y"
@@ -158,9 +158,8 @@ me.YingA = &acgt{ return [
     # sets sy&Y=Y for Yc&M/*
     #  and on itself if it returns so from 0.01
     me.Ying = &acgtRsc,sc,SC{
-        # incv - allows doing Ycv==tcv
-        #  usu so many at == cv all happen
-        $incv = delete c.ashocks&&c.cv;
+        # incv allows doing Ycv==tcv
+        $incv = delete c.incv;
         # Y = c.Y explicitly, probably is sy&Y
         $Y = delete c.Y;
         if (!Y) {
@@ -187,6 +186,7 @@ me.YingA = &acgt{ return [
             !t and break
             ty&cv > Yc&ov and break
             ty&cv <= Yc&cv && incv != ty&cv and continue
+            # usu so many at == cv all happen
             incv = ty&cv;
             # <=@o2 iterate themselves
             $M = ty&cv > 0.02 && Yc&M || [s];
@@ -196,7 +196,7 @@ me.YingA = &acgt{ return [
                 #$r = ny&R || sy&R || Cy&R;
                 # R is from the Ying above (R%SC)
                 # < elabourate argumentation
-                #~>4 Ying: s.t, t.t, t.y.cv, n.t, Yc&ov
+                sc&verbose and ~>4 Ying: s.t, t.t, t.y.cv, n.t, Yc&ov
                 $re = tc&s(A,C,G,T,R,Y,n,SC);
                 Yc&cv = ty&cv;
                 if (ty&cv == 0.01) {
@@ -222,10 +222,9 @@ me.YingA = &acgt{ return [
 me.Yingmind.Ying = &acgt{ return [
     # @1 figure out where things are at every so often
     # > misuse of 0.01 to declare functions
-    # @o1 discerns itself from SC
+    # @o1 discerns itself from SC, which it doesn't
     
     ['Ying',0.01,&acgtRYs,SC{
-        ~>4 Yingforks1: ki(s,2)
         # steps etc wai %wou
         $woudef = &c{
             return me&waidef,c,'',{k:'wou'};
@@ -250,14 +249,12 @@ me.Yingmind.Ying = &acgt{ return [
     ['on',0.02,&acgtRYs,SC{
         s != SC and throw "should be the one"
         sy&R = R;
-        ~>3 Ying Rs:
     },'ift,D'],
 
     #  mix Schema/$h/$p into Steps/$p
     # < Schema knowing export to Steps/$p
     #   or sharing as $p:step, and Steps inhales :steps
     ['Schema to Steps',0.021,&acgtRYs,SC{
-        ~>3 Ying Sch:
         $Sch = me&Yingio,SC,'Schema',7;
         Schc&compiled and return
         $N = [];
@@ -267,29 +264,25 @@ me.Yingmind.Ying = &acgt{ return [
         tvsortz(N);
         # start new Steps
         #   and imports new Steps/$p
-        s = Ys&Steps = me&Yong,R,SC,'Steps',{N:N},'o2';
-        ~>3 Compi: SC.t
+        s = Ys&Steps = me&Yong,R,SC,'Steps',{adoptees:N},'o2';
         Schc&compiled = 1;
     },'ift,D'],
 
     # @023 Steps per R%SC
     ['Steps per R',0.023,&acgtRYs,SC{
         # covered by Schema always recompiling
-        ~>3 Ying Steps o2:
         me&Yong,R,Ys&Steps,{},'o2';
     },'ift,D'],
 
     # @03 Steps per walk through Y:SC
     #   pull up a map for this Aing,
     ['Steps per walk',0.03,&acgtRYs,SC{
-        ~>3 Ying Steps o3:
         me&Yong,R,Ys&Steps,{},'o3';
     },'ift,D'],
 
     # @6 Steps take walk through Y:Steps
     #   pull up a map for this Aing,
     ['Steps walk',0.6,&acgtRYs,SC{
-        ~>3 Ying Steps 9:
         me&Yong,R,Ys&Steps,{},9;
     },'ift,D'],
 ]};
@@ -301,6 +294,15 @@ me.Yingmind.Steps = &acgt{ return [
     # @02 having r and its s
     # @03 runtime oncily
     #   grasps/feeds the whims of the steps
+        # Y:Steps per current walk around
+        # < Y:Walk - delivering the goods or not this dome
+        #   carrying to the future what matters
+        #   decides if it's done or to keep going around
+        #     like c&e's T.pos/T.el
+        #   if we could travel R:Steps/$p y&R at will
+        #     which is deleteRbitX + Re synthesis from tunneling
+        #    we could Walk here many times to mutate solutions
+
     #   
     # for r that might be any of (p,r,s),
     #   find the one we want
@@ -311,7 +313,11 @@ me.Yingmind.Steps = &acgt{ return [
             s != SC and throw "s!=SC"
             $s = me&Yingio,s,'Steps',{el:1,Y:Y};
             # a&N[$p:steps flow into @02
-            Ys&N .map(p => me&Yingio,s,p );
+            $N = Ys&adoptees
+            each ip Ys&adoptees {
+                # < slep here
+                me&Yingio,s,p
+            }
             ~>3 Steps fork:
             return s
         },'ift,D'],
@@ -340,7 +346,6 @@ me.Yingmind.Steps = &acgt{ return [
             SCs&steps = Yc&M = ss&z;
             # GOING
             Rs&Lastly = ss&z.slice().pop();
-            ~>3 Steps R:
         },'ift,D'],
         
         # still per R%SC:
@@ -371,15 +376,8 @@ me.Yingmind.Steps = &acgt{ return [
             #  works anyway if you don't bewind until here
             #   otherwise the bewind will wait forever
             #rs&supr and rs&nextlifesc = {nottilund:1}
-            ~>3 onStep3: p.t
         },'ift,D'],
         
-        #c Y:Steps per current walk around
-        # < Y:Walk - delivering the goods or not this dome
-        #   decides if it's done or to keep going around
-        #     like c&e's T.pos/T.el
-        #   then Y:Steps decides whether to multiply Walks per Step, etc
-        # 
         # @03 each Steps/(p,r,s) wake up, have features
         #  may be different, may be time to something!
         ['on',0.03,&acgtRYp,SC{
@@ -428,7 +426,7 @@ me.Yingmind.Steps = &acgt{ return [
             ps&issleep == R and return
             $r = py&R;
             rs&sleeping and return
-            ~>3 onStep6: p.t
+            #~>3 onStep6: p.t
             # Steps
             $S = Ys&returns;
             $i = Yc&M.indexOf(p);
