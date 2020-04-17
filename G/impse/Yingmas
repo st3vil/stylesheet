@@ -33,6 +33,17 @@ me.YingA = &acgt{ return [
         me.Yingminds[t] = N;
         return N
     };
+    # drink grounds into Ying/Schema
+    me.Ying_Schema = &acgtRtc{
+        $SC = me&rollbsc,R,'Ying';
+        $s = me&Yong,R,SC,'Schema',{t:t},1;
+        # steps adopted from recent: n ...
+        sy&domed = &{
+            $N = me&ydome;
+            me&Yong,R,s,{N:N},2;
+        };
+        return s
+    };
     
 // Yingio
     # fio() moded for SC
@@ -125,8 +136,7 @@ me.YingA = &acgt{ return [
         rey&Y != Y and throw "returning !yY=Y"
         return re
     };
-    
-    
+
 // Ying - mind (Yc&N) over matter (Yc&M)
     # as a way to find C about how to A
     # may c.t=newmind
@@ -162,6 +172,15 @@ me.YingA = &acgt{ return [
             !t and break
             ty&cv > Yc&ov and break
             ty&cv <= Yc&cv && incv != ty&cv and continue
+            
+            # deciding
+            $T = {};
+            if (ss&sleeping) {
+                # misses everything but sleeping spells
+                !(ts&sleeping || t.t.substr(0,8) == 'sleeping') and T.not = 'sleeping'
+            }
+            T.not and continue
+            
             # usu so many at == cv all happen
             incv = ty&cv;
             # <=@o2 iterate themselves
@@ -200,6 +219,10 @@ me.Yingmind.Ying = &acgt{ return [
     # > misuse of 0.01 to declare functions
     # @o1 discerns itself from SC, which it doesn't
     
+    # < set out unififying crawlythings
+    #  eg check legitimacy of W Iing from its .5
+    #  or do some update
+    #   they set out, taking their parts of the wormhole
     ['Ying',0.01,&acgtRYs,SC{
         # steps etc wai %wou
         $woudef = &c{
@@ -278,18 +301,14 @@ me.Yingmind.Steps = &acgt{ return [
         #   if we could travel R:Steps/$p y&R at will
         #     which is deleteRbitX + Re synthesis from tunneling
         #    we could Walk here many times to mutate solutions
+   
 
-    #   
-    # for r that might be any of (p,r,s),
-    #   find the one we want
-    # eg r=p||s, uses yR
-    
-        # compulsive recreate SC/Y:Steps, give z of Ys&N
+        # o1 schema doming recreates SC/Y:Steps
+        # per awake R%Ying%SomeSchema
         ['Steps',0.01,&acgtRYs,SC{
             s != SC and throw "s!=SC"
             $s = me&Yingio,s,'Steps',{el:1,Y:Y};
-            # a&N[$p:steps flow into @02
-            $N = Ys&adoptees
+            # grounded $p:steps flow into @02
             each ip Ys&adoptees {
                 # < slep here
                 me&Yingio,s,p
@@ -298,26 +317,47 @@ me.Yingmind.Steps = &acgt{ return [
             return s
         },'ift,D'],
         
-        # per R%SC:
-        # @02 as Y:Steps each $p:step has r which has s
+        # o2 Steps/$p <-> R/$r awake
+        # per any R%Ying
         ['steps are',0.02,&acgtRYs,SC{
             sy&R = R;
-            # reverse: bal shall adjust Rs&z to flow upwards
+            
+            # we can see tunnelled $r already
+            $N = me&ioty,R,'ball';
+            if (N.length) {
+                $awake = [];
+                # mixed with recycling
+                N = arou(N,&n{ return Rc&N.includes(n) },awake);
+                $tunneling = Rs&tunneling;
+                !tunneling and throw "early !tun"
+                # by the sleeping since we know r -> p
+                $sleeping = N.map(r => rc&s.y.p);
+            }
+            #Rs&tunneling && !tunneling and throw "tun !N"
+            
+            # this reverse + bal adjust Rs&z to flow upwards
+            # links p,r,s (+n)
             ss&z.slice().reverse().map(&p{
+                sleeping && sleeping.includes(p) and return ps&sleeping = 1
+                delete ps&sleeping
+                
                 $n = py&Schema_step;
                 # bal inputs to ups%ball, unless %eph
-                ns&supr && !ns&tings && !ns&Pavings and ns&eph = 1
-                ps&issleep == R and return
+                # < compile this on the Schema
+                ns&supr and ns&eph = 1
+                
                 # n.sc -> r.sc
                 $r = me&bal,n.t,n.sc;
                 $s = rc&s;
                 # n.c -> s.sc
                 ex(s.sc,n.c);
+                
+                # < pc&s = s)%ball?
                 py&s = s;
                 sy&p = p;
-                # < is b
                 py&R = sy&R = r;
             });
+            
             # goes on as each SC/Steps/$p
             SCs&steps = Yc&M = ss&z;
             # GOING
@@ -327,7 +367,6 @@ me.Yingmind.Steps = &acgt{ return [
         # still per R%SC:
         # @021 each Steps/(p,r,s) attr init
         ['on',0.021,&acgtRYp,SC{
-            ps&issleep == R and return
             $r = py&R;
             $s = py&s;
             
@@ -357,7 +396,6 @@ me.Yingmind.Steps = &acgt{ return [
         # @03 each Steps/(p,r,s) wake up, have features
         #  may be different, may be time to something!
         ['on',0.03,&acgtRYp,SC{
-            ps&issleep == R and return
             $r = py&R;
             
             # p's current walk around Y:Steps
@@ -399,7 +437,6 @@ me.Yingmind.Steps = &acgt{ return [
         # > rs&Gracto 3: Rings r ov=58
         # steps happen in order
         ['Steps',0.6,&acgtRYp,SC{
-            ps&issleep == R and return
             $r = py&R;
             rs&sleeping and return
             #~>3 onStep6: p.t
@@ -530,14 +567,12 @@ me.Yingmind.Steps = &acgt{ return [
         # and again to wake things generated into other steps
         #  ie from inside:r, out to where Ring isn't
         ['Steps may other',0.67,&acgtRYp,SC{
-            ps&issleep == R and return
             $r = py&R;
             me&Ring,r,{und:r,ov:0.31};
         },'ift,D'],
         
         # and again to wake things generated
         ['Trip report',0.7,&acgtRYp,SC{
-            ps&issleep == R and return
             $r = py&R;
             rs&sleeping and return
             py&nodes && py&nodes(&js{
