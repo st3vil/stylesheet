@@ -91,6 +91,30 @@ Fividy: |
         return h
     }
     
+    # interpret cv='','o2','32'
+    window.scaf = &ov,{
+        !ov and return 0
+        # ov=o2 -> 0.02
+        if (isst(ov) && ov.substr(0,1) == 'o')
+            ov = 1*('0.'+ov).replace(/o/g,'0')
+        # ov=32 -> 0.32
+        ov = sca(ov);
+        return ov
+    };
+    # to make eg winding back the ov undoable
+    #  non-transactioney, keeps change if k unhad before
+    window.extemp = &cs{
+        $set = {};
+        each kv s {
+            hak(c,k) and set[k] = c[k]
+        }
+        return &{
+            each kv set {
+                c[k] = set[k]
+            }
+        }
+    };
+    
     #c C-ish
     # < G&C, babz: = C yadda @3
     #   and to parse args for eg opeolo
