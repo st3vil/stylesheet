@@ -389,7 +389,17 @@ me.Yingmind.Steps = &acgt{ return [
             # enough to have Rs&C, Rc&b, Ace
             me&Ring,r,{und:r,ov:0.295};
         },'ift,D'],
-        
+        &{
+        # py&l|r - linked listness of a step
+        me.stepneigh = &acgtp{
+            $Steps = py&up;
+            $z = Stepss&z;
+            $pi = z.indexOf(p);
+            pi <0 and throw "!step"
+            py&l = z[pi-1];
+            py&r = z[pi+1];
+        };
+        },
         # @03 each Steps/(p,r,s) wake up, have features
         #  may be different, may be time to something!
         ['being',0.03,&acgtRYp,SC{
@@ -405,12 +415,15 @@ me.Yingmind.Steps = &acgt{ return [
             # being three states at once
             #  they may have happened
             me&stepneigh,p;
-            me&stepwaitime,p;
+            
+            # sa za la na o, ha i
+            me&stepbrackio,p;
             # $s:step/**$z:node
+            #  they me&inode
             sy&N ||= [];
             
             # %adhere-ants like %supr, %twmt realise they're nodes
-            # > no room for this totality:
+            # > no room for the totality:
             if (rs&supr) {
                 # othering C
                 # < sleps, sleeping
@@ -472,7 +485,7 @@ me.Yingmind.Steps = &acgt{ return [
             #  so io can make sense of eg %twmt
             # < expands to ps&sleeping until condition is met,
             #   possibly this time?
-            each waitel,t,n rs&wou.waitel_t_n {
+            each waitel,t,n ahsk(rs&wou,'waitel_t_n') {
                 ~>3 waitel: n.t,'>=',waitel,'then',p.t
                 me&zaft,Yc&M,n,p;
             }}
@@ -485,9 +498,6 @@ me.Yingmind.Steps = &acgt{ return [
             
             me&Ring,r,{und:r,ov:0.7};
             
-            $g = me&stepbrack,r;
-            # attaching C to r without doming:
-            ac(r,'M',g);
 
             # wouey is wough before 32
             # < assume everything in 31 sleeps 32
@@ -506,13 +516,14 @@ me.Yingmind.Steps = &acgt{ return [
                 me&suprise,j,n
             }
             
-            # %wough is finally here!
-            ry&za = me&stepwaia,r,{now:1};
+            # %wough is complete
+            $g = me&stepbrack,r;
+            ry&za = me&bracko,r,{now:1};
             each iz sy&N {
                 $j = zy&R;
                 # < insist ready is the first column
                 #   so we can simply js&wou.*.ready
-                jy&za = me&stepwaia,r,{now:1};
+                jy&za = me&bracko,r,{now:1};
                 !jy&za('ready') and return
                 # j%wou..ready travel on
                 leaves(j,py&n);
@@ -533,10 +544,7 @@ me.Yingmind.Steps = &acgt{ return [
             $s = rc&s;
             each ij sy&N {
                 $j = jy&R;
-                js&wough and throw "Hadwough: "+j.t
                 $g = me&stepbrack,j;
-                me&walls,g,'b:2.2';
-                ac(j,'M',g)
             }
         },'ift,D'],
 ]};
@@ -555,15 +563,6 @@ me.Yingmind.Steps = &acgt{ return [
   #     not multiple handling, have to put in indexing
   
   
-        # py&l|r - linked listness of a step
-        me.stepneigh = &acgtp{
-            $Steps = py&up;
-            $z = Stepss&z;
-            $pi = z.indexOf(p);
-            pi <0 and throw "!step"
-            py&l = z[pi-1];
-            py&r = z[pi+1];
-        };
         # < jy&da - differing wai of a node
         me.diffwaia = &j,loose,tight,c{
             c ||= {};
@@ -586,7 +585,6 @@ me.Yingmind.Steps = &acgt{ return [
             }
             return cha
         }
-      // nodes, their bracks
         # as r/** wake up & want nodesing
         me.inode = &acgtj{
             if (jy&R) {
@@ -600,8 +598,7 @@ me.Yingmind.Steps = &acgt{ return [
             !zy&path and throw "nonoder"
             $S = zy&path[0];
             $N = Sy&N;
-            $ni = N.indexOf(z);
-            ni < 0 and N.push(z)
+            !N.includes(z) and N.push(z)
             zy&R = j;
             if (!jy&sa) {
                 # pseudo Nodes o3:
@@ -644,10 +641,12 @@ me.Yingmind.Steps = &acgt{ return [
             ry&la = me&bracko,py&l;
             ry&na = me&bracko,py&n;
         }
-        me.nodebrackology = &acgtj{
-        me.nodebrackio = &acgtj{
         me.stepbrack = &acgtjc{
-            return me&brackdown,j,c
+            $g = me&brackology,j,c;
+            me&walls,g,'b:2.2';
+            # attaching C to r without doming:
+            ac(j,'M',g);
+            return g
         };
   // brack io
         # steps and nodes wai %wou
@@ -671,10 +670,10 @@ me.Yingmind.Steps = &acgt{ return [
                 # indexed
                 Xi(s,...args);
                 # listed
-                $z = j.sc[c.k+c.gh] ||= Cye([c.k,1]);
+                $z = j.sc[c.k+c.gh] ||= Cye([c.k,1,c]);
                 $st = Cye(['stuff',1]);
                 st.sc = s;
-                ac(z,c.k+c.gh,st);
+                ac(z,'z',st);
                 # < Xi could know its siblings
                 #  < joining to another X.* partition out there,
                 #    so our queries can climb through their objects
@@ -693,12 +692,13 @@ me.Yingmind.Steps = &acgt{ return [
             return me&braq,z;
         };
         # query wai, context for
+        # < sorting by desire, OR if not AND,
+        #    so to solver from the parts we may have
         me.braq = &acgtNq{
             $z = isC(N) ? N : Cye(['anarray',1,{},{z:N}]);
-            return &coi{
+            return &co{
                 !(c||o) and return zs&z
                 isst(c) and c = G&peel,c
-                i and $sortby = i
                 $M = [];
                 # OR
                 each tv c {
@@ -731,26 +731,45 @@ me.Yingmind.Steps = &acgt{ return [
     #   so they may show up to a few C.t,
     #    then expand
     # < fill with hooks, combine with KnowC?
-    me.brackology = &acgtRc,gh{
-        $C = Rs&C;
-        c = me&waidef,c,'k';
-        if (gh && c.gh && gh != c.gh) {
-            # < means subset of,
-            #   is highlit or layout stuff adding
-        }
-        gh ||= me&waicu,R,c;
+    me.brackology = &acgtjcz{
+        $C = js&C;
+        isC(c) and z = c; c = z.c
+        else { c = me&brackdef,c }
+        z and throw "layers"
+        z ||= j.sc[c.k+c.gh];
+        #j.t == 'Know' and debugger;
         
-        $g = me&opeology,c.t,{label:{walls:'bg',tsc:'l'}};
-        me&Mw,R,T.Mw .push(g);
+        $g = me&opeology,c.k,{label:{walls:'bg',tsc:'l'}};
         me&walls,g,'b:2.2h6';
-        
-        if (!gh) {
-            me&mtsc,g,'empty',0,'6';
-            return g
+        $zuctnu = &gts{
+            $nu = me&nu,t,s;
+            me&zN,nu;
+            me&zuct,g,nu;
+        };
+        # k/v enumerate columns and their values
+        # < renumerate by rows in common
+        $X = {k:{}};
+        $N = z && zs&z || [];
+        each in N {
+            each kv n.sc {
+                $x = X.k[k] ||= {};
+                $fs = x.refs ||= [];
+                $vi = fs.indexOf(v);
+                vi < 0 and vi = fs.push(v)-1
+                $f = x.ref ||= {};
+                # by id of the value
+                $fx = f[vi] ||= {};
+                fx.z ||= [];
+                # a row
+                fx.z.push(n);
+            }
         }
         
-        gy&waigh = gh;
-        ghy&brackdown = g;
+        !hak(X.k) and me&mtsc,g,'empty',0,'6'; return g
+        
+        gy&brack = z;
+        zy&brackology = g;
+        gy&X = X;
         
         $allope = !Rc&brackuiet;
         if (gs&ope) {
@@ -759,94 +778,61 @@ me.Yingmind.Steps = &acgt{ return [
             me&opelabel,Km;
             Kms&bg = 000;
             if (Kms&ope) {
-                me&nu,'waiN',ghy&N;
-                me&nu,"waigh",gh;
+                me&nu,'waigh',z;
+                me&nu,"X",X;
             }
         }
         Rc&brackon and allope = 1
         
-        $nks = ['c','sc'];
-        
         if (!allope) {
             # < only changes pop up, fade out
-            $ar = {};
-            nks.map(nk => ex(ar,{nk:gh[nk]}));
-            $op = me&opesizup,g,{len:hak(ar)};
+            $op = me&opesizup,g,{len:hak(X.k)};
             !(op && ops&ope) and return g
         }
-            
+        
         # < not C rebellion
-        each i,nk nks {
-            each kV gh[nk] {
-                # hide fact of paths
-                k == 'path' and continue
-                # and the 1 in $k:1
-                k == 'isness' and continue
-                # size, may lead on
-                $Km = me&opeKm,g,k;
-                me&opesizup,Km,{len:hak(V)};
+        each kx X.k {
+            $Km = me&opeKm,g,k;
+            # total values, Km%ope if 1
+            me&opesizup,Km,{len:hak(x.ref)};
+            !Kms&ope and continue
+            
+            fio(Km,['ope',1,{s:":"},'hs:888']);
+            $vii = 0;
+            each vi,fx x.ref {
+                $v = x.refs[vi];
+                $tee = isC(v) ? v.t :
+                    !isob(v) ? v : ki(k,2);
+                $Kn = me&opeKn,Km,tee,{label:{tsc:'y'}};
                 
-                if (Kms&ope) {
-                    fio(Km,['ope',1,{s:":"},'hs:888']);
-                    each tn V {
-                        $rv = null;
-                        if (nk == 'c') {
-                            # avoiding ref as key
-                            $rv = ghy&refs[t];
-                            !rv and throw "invalid Kn refs: "+t
-                        }
-                        $tee = isC(rv) ? rv.t : t;
-                        $Kn = me&opeKn,Km,tee,{label:{tsc:'y'}};
-                        
-                        $someC = 0;
-                        each iw n {
-                            # a wai row, eg mot:cha,
-                            #  each may have other k
-                            # where w.c is like a row:
-                            $v = w.c[k];
-                            isC(v) and someC++;
-                            if (nk == 'c') {
-                                rv != v and throw "Kn t(refs) not as wai.c."+k
-                            }
-                            else {
-                                v != t and throw "Kn t not as wai.c."+k, v, t
-                            }
-                            i > 5 and break
-                        }
-                        $lab = Kny&label;
-                        Knc&sortcv = 1;
-                        someC &&
-                            fio(Kn,['sym',112,{s:'C'},
-                            'label,fs:13,lh:0.8,hs:757']);
-                        
-                        me&sizo,Kn,{len:hak(n)};
-                        
-                        
-                        Kns&ma = 0.2;
-                        if (Kns&ope) {
-                            # < light up other k this has
-                            each iw n {
-                                $na = [g.t,k,t,i].join("'");
-                                $wa = me&opeKn,Kn,na;
-                                way&cv = 0.2;
-                                # concentrate on each wai.c (one row)
-                                $s = was&ope ? w : w.c;
-                                !was&ope and na += '.c'
-                                # has a sprawl limit
-                                $nu = me&nu,na,s;
-                                # usu. by R Ringing
-                                me&zN,nu;
-                                me&zuct,wa,nu;
-                                was&dis = 1;
-                                # see me.endome: if n ...R... that is:
-                                #nuc&Rzucto = wa;
-                            }
-                        }
+                $lab = Kny&label;
+                Knc&sortcv = 1;
+                isC(v) &&
+                    fio(Kn,['sym',112,{s:'C'},
+                    'label,fs:13,lh:0.8,hs:757']);
+
+                # total rows with this value for this key
+                # < light up other k/v/rows this k/v/row has
+                me&sizo,Kn,{len:fx.z.length};
+                Kns&ma = 0.2;
+                if (Kns&ope) {
+                    each in fx.z {
+                        $val = n.sc[k];
+                        $na = [g.t,k,vi,i].join("'");
+                        $wa = me&opeKn,Kn,na;
+                        way&cv = 0.2;
+                        was&dis = 1;
+                        # for the value
+                        zuctnu(wa,k,val);
+                        # sprout icon, some non-nu to click
+                        $wan = me&opeKn,wa,'ܤ',{label:{tsc:'y'}};
+                        wans&ope and zuctnu(wa,'rowswith',n)
+                        wany&cv = 0.8;
+                        #fio(wa,sp);
                     }
                 }
             }
         }
-        
         return g
     };
     
