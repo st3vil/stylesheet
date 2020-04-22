@@ -148,7 +148,6 @@ me.Sch_Pavings = &acgt{ return [
         #  eg $of/$t (the .5 ghost) to Q:$t with Qc&of
         me.Q_via_structure = &acgtpN{
             $i = N.length - 1;
-            me&tsc,'twin*'+i,0,'B';
 
             i < 0 and return
             $m = ps&structure;
@@ -178,7 +177,6 @@ me.Sch_Pavings = &acgt{ return [
         # < persistent query, knowing io it pipes into,
         me.nodeo = &acgtRjQ,qe{
             $qs = ex({tw:Q.t},Q.c);
-            me&nu,"selecto",qs;
             $N = jy&za(qs);
             if (!N) {
                 # < %%waits as me&waits
@@ -188,11 +186,13 @@ me.Sch_Pavings = &acgt{ return [
                     #  < may already have {s,may:input} if el=2
                     #   < use %Pavings%ein to input
                 });
+                me&tsc,'non';
                 return
             }
             if (N.legnth > 1) {
                 # in the web you would want many answers,
                 #  perhaps candidates get see s** to rank/sync
+                me&tsc,'unc';
                 me&waits,'unclear'
             }
             return N
@@ -200,9 +200,6 @@ me.Sch_Pavings = &acgt{ return [
         # q describes a possibility of an act
         # a what's needed to complete it
         # might solve immediately, bracking no %%may
-        # q=%%may,... opens,
-        # a~=...,%may solves, returns q+a~ rows
-        # < ...,%may is the answer, cancels the question?
         # < %%waits as me&waits (hault)
         me.may = &acgtRtaq,qe{
             isst(a) and a = G&peel,a
@@ -217,7 +214,7 @@ me.Sch_Pavings = &acgt{ return [
             if (N && N.length) {
                 # a-found rows
                 # < merged with q?
-                # < ha'd with %%indeed, which noops the may+waits
+                # < ha with %%indeed, which noops the may+waits
                 return N
             }
             Ry&ha(q);
@@ -232,16 +229,18 @@ me.Sch_Pavings = &acgt{ return [
         $win = me.cby(R,'^^^twin');
         $r = win.shift();
         $p = rc&s.y.p;
+        me&tsc,'twin*'+win.length,0,'B';
         
         $Q = me&Q_via_structure,p,win;
         # the py&R, non-last bits of index
         !Q and return
         $S = me&inode,R;
         $host = Qy&host;
-        $q = {host};
-        $N = me&nodeo,R,hosty&R,Q,q;
+        $qe = {host};
+        $N = me&nodeo,R,hosty&R,Q,qe;
         each in N {
-            Ry&ha(n,null,q);
+            
+            Ry&ha(n,null,qe);
         }
     },'ift,D'],
     # they make a pile of names
