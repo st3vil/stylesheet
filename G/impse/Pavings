@@ -1,13 +1,36 @@
 # stored item pile
+# see %%acty, %%may, %%wants
+#  not the usual row of stuff
 me.Sch_Pavings = &acgt{ return [
-
+    &{
+        # introduce some %Part of it
+        # < be a heading swallowed-by or swallowing brack
+        #  < knowing T.act here and when ha
+        #    ha doesn't acgt,
+        #     could stealth T.act every row
+        # acty:8 meaning dialectical,
+        # acty:1 would be openey,
+        #   buttons for the first layers of mind atop
+        # they are cv-ish, yet individual doables...
+        #   %%may:ha,openey:1,acty:1 - advertise route
+        # then just increase %%acty to wander in to things
+        #  eg when depending on something being awake
+        #  eg acty=5 might be enough to know expected Wup affects
+        me.acting = &acgtRt{
+            t ||= T.act.t;
+            $ope = me&rolltog,R,{may:t,tsc:'l',acty:8};
+            return ope
+        };
+    },
   // Paving 5
     ['Paving',0.5,&acgtRs{
       // waits for Pave
-        #  draws clues together
+        $ope = me&acting,R,'Pave';
         sy&R = R;
+        # < brack piping not f supring
         sy&f = R;
-        $con = me&rolltog,R,{may:'Pave',tsc:'l',acty:8};
+        
+        
         $Q;
         each ir Rs&Zaving {
             rs&waits and me&waits,'...'
@@ -72,32 +95,32 @@ me.Sch_Pavings = &acgt{ return [
                 Ds&bri = 0.6;
                 me&mtsc,inc,'ig',0,'B'
                 # < also ignored by the compiler
-                Ry&ha('ignore')
+                Rs&ignore = 1;
+                Ry&ha('ignore');
                 return
             }
             ss&el == 7 and me&mtsc,inc,'hmm',0,'B'
         }
-        
-        # children selected per scheme
-        # eg not %ignore
+        # eg which children to ignore
         Rs&zget = &Ry{
             me&ioty,R,'Paving' .map(&r{
                 rs&ignore and return
                 y(r)
             })
         };
+        
        // etc
         
-        # we must now become changey if:
-        #   any of our W-type data changes
-        #   child dige projection wrong
-        Things&Wind and me&gromps,R,'Wind','t,dige',Things&Wind
-        # tally  grypes and gromps (from above)
-        Rs&tracting = R;
-        me&grimp,R;
-        delete Rs&tracting;
-
-        if (con) {
+        # project info to children
+        Things&Wind and me&CB_proji,R,'Wind','t,dige',Things&Wind
+        # receive those projections
+        me&CB_projo,R;
+        
+        # tally grypes about info here
+        # < it's their %%cha if their projections are wrong
+        me&CB_conclude,R;
+        
+        if (ope) {
             me&zu,'Thingstract',Thing
             Rs&changey and me&zu,'changey',Rs&changey;
             Rs&trouble and me&zu,"Rtrub",Rs&trouble;
@@ -260,6 +283,7 @@ me.Sch_Pavings = &acgt{ return [
         # %adhere resolves meanings
         # < generalise levels of engagement:
         # %openey Searches with /%Pave (G&t)
+        me&ollbs,R,'trouble' and Rs&openey = 1
         !me&rollbs,R,'openey' and return
         # %fully gets %Pave's item
         me&rollbs,R,'fully';
@@ -347,6 +371,59 @@ me.Sch_Pavings = &acgt{ return [
     
 ]}
   // CB
+   # sc here, there, seeing change
+   # < brack instead of %grype,
+   #   see sans %grype, in CB_proji:
+   #    %%wants - another node to have something
+   #     ha {imps:t,wants:z,openey:1,cause:d}
+   #     < (from),%%wants(to-node),(body),(%%cause.+)
+   #       for z to receive %%openey reliably
+   #        tells the %%inbox it is read
+   #    %%may - do something maybe
+   #     may,input,once {imps:t,s:Cuess,cause:d}
+   #     < click to do since s in q rather than a
+   #       and we know how to may:input an s
+   #     < bracktrick click many
+   # grype:
+   #   CB_proji proto %%wants another r:node:
+   #     e-out logs R%grype/proj/o/#$t/$d
+   #     mostly it ac(r,'trouble',d),
+   #       which turns into r%openey on %Paving
+   #     so it reads r%grype/proj/i/*/* (%%inbox)
+   # apart from that,
+   #  overall %%cha <- fs&changey
+                
+   # < brackology with styles, similar columns grouping
+   // conclude
+    # dialects of %grype/* conclude into fs&changey
+    me.CB_conclude = &acgtR{
+        Rs&traccon and me&nu,"grype/*",Rs&grype;
+        each kn Rs&grype {
+            # c&Km are display parts, non-persistent
+            $Km = nc&Km;
+            !Km and continue
+            #Rs&traccon and me&nu,n
+            $f = R;
+            if (f) {
+                # take any Kn/%changey as fs&changey
+                $N = me&ioty,Km,['groupthing','changey'];
+                each id N {
+                    # < want things for fs&changey to be persistent
+                    #   see 'these should be elvised in there'
+                    if (fs&changey && dy&cv > 0.7) {
+                        fs&changey = fs&changey
+                            .filter(c => c.t != d.t)
+                    }
+                    ac(f,'changey',d);
+                    dy&R = R;
+                    
+                    # sans %grype:
+                    Ry&ha({cha:d,grype:k})
+                }
+            }
+        }
+    };
+    
    // CB_fix|load
     # like KnowC for %balls
     # < generalise from sc
@@ -363,7 +440,7 @@ me.Sch_Pavings = &acgt{ return [
         $Kc = Be.C[load.type];
         $Km = load.Km = G&Cye,[load.type,4,{Kc:Kc},'grouping'];
         each i,k Kc.scgk {
-            $got = w && w.sc[k];
+            $got = s && s.sc[k];
             got == null and continue
             load.c[k] = got;
             $Kn = fio(Km,k,[k,1,{s:k},'groupthing,fs:9,mar:0.3']);
@@ -377,13 +454,13 @@ me.Sch_Pavings = &acgt{ return [
             M.unshift(M.pop());
             me&walls,Km,'bd:1.4,hu:3'
         }
-        return load;
+        return load
     };
     # for %ball/%fix known by $type
     me.CB_fix = &acgtR,type{
         !Rs&ball and throw "!ball"
-        $lo = me&CB_have,{type},Rc&s;
-        $Km = lo.Km;
+        $load = me&CB_have,{type},Rc&s;
+        $Km = load.Km;
         !Km and return
         # < put the r%fix in R%Mw/fix anyway
         #   so it can be before R%z
@@ -483,7 +560,7 @@ me.Sch_Pavings = &acgt{ return [
             
             $was = s && s.sc[k];
             # W says everything
-            $v = load.c[k] = imp || got || was || exp;
+            $v = load.c[k] = got || was || exp;
             
             $value = got;
             # G implies what is implied
@@ -500,8 +577,6 @@ me.Sch_Pavings = &acgt{ return [
                     value = null;
                 }
             }
-            # imp acts like exp
-            imp && imp == value && imp == got && !was and value = null
             load.sc[k] = value
         }
         
@@ -571,7 +646,155 @@ me.Sch_Pavings = &acgt{ return [
         }
         return load
     };
-   // CB_fix|load
-    
+   // CB_proji|o
+    # internode rumour mill
+    #  s = $t/$scgk=$v
+    # %Wind talking of children we should have
+    # < &nodeo,Q($t,%Paving-ish) having %ting-ish
+    #  < .5 changing %directory
+    # redundancy -> difference -> mot cha
+    # eg check child dige, sends trouble
+    # or !exists, input
+    # me&gromps,R,'Wind','t,dige',Things&Wind
+    me.CB_proji = &acgtRtks{
+        !Rs&ball and throw "!ball"
+        # the proj/o/#$t/$d
+        $g = me&rollbsc,R,'grype/proj';
+        $reset = !fio(g,'o',0);
+        #R.t.includes('ick') && reset and ~>4 reset: R.t
+        # from here
+        $go = fio(g,'o');
+        # named $t
+        $gt = fio(go,t);
+        
+        $ks = k.split(',');
+        ks.length != 2 and throw "only 2-spheres"
+        ks[0] != 't' and throw "for t,$scgk"
+        # one $scgk, many R/$t
+        $k = ks[1];
+
+        # match against what we have
+        # < should only be (%ting, but is implied
+        #   we have no other stuff in the Know yet, but could
+        #   supposedly the implications would change,
+        #   as u climb
+        $have = {};
+        me&ioty,R,'ball' .map(&n{
+            hak(s,n.t) and have[n.t] = n
+        });
+        
+        $news = [];
+        each tv s {
+            $r = have[t];
+            # < these should be elvised in there
+            #   to sleep the pile. write these:
+            #   e $r -proj-cha $lc
+            $d = G&Cye,[t+"%"+k,1,{s:v},{proj:gt,nk:'sc',gk:k}];
+            fio(gt,d);
+            dc&R = R;
+            if (r) {
+                dc&r = r;
+                $z = rc&s;
+                
+                !hak(z.sc,k) and ds&cha = 'new'
+                else
+                z.sc[k] != v and ds&cha = 'diff'
+                
+                # sans %grype:
+                Ry&ha({imps:t,wants:z,openey:1,cause:d});
+                
+                # < gone is dcR != yfuture at the receiving end
+                #   with non-fatal not in Rc&N
+                $og = me&rollbsc,r,'grype/proj';
+                $ogi = fio(og,'i');
+                me&givi,ogi,R.t,d;
+                # >1 them, springs into lies fixing
+                # anything should become %%openey if %%trouble?
+                ds&cha && !Rs&noprojcha and ac(r,'trouble',d)
+            }
+            else {
+                # sans %grype:
+                # may input our belief, to wake up wrong
+                $b = Cye([t,1]);
+                b.sc[k] = v;
+                $q = {imps:t,s:b,cause:d};
+                me&may,R,'input','once',q;
+                
+                ds&cha = 'not';
+                # create there
+                $d = {may:'input_'+t,s:t,tsc:'y'};
+                me&rolltog,R,d and me&input,R,t
+                me&walls,d.n,'b:2.2h5';
+                news.push(d.n);
+            }
+        }
+        if (news.length) {
+            # one thing here about the many not there
+            $d = {may:'input_*',s:'Unhad:',tsc:'y'};
+            if (me&rolltog,R,d ) {
+                news.map(d => me&input,R,dc&s );
+            }
+            $n = d.n;
+            ns&fs = 8;
+            ny&cv = 0.4;
+            news.map(d => me&modopt,R,n,d );
+            me&walls,n,'b:2.2h5';
+            me&mtsc,n,"\n";
+        }
+    };
+    me.CB_projo = &acgtR{
+        # the proj
+        $g = me&rollbsc,R,'grype/proj';
+        # into here /from.t/$d%proj
+        $N = me&ioty,g,['','','proj'],['i','',''];
+        each id N {
+            $Kn = null;
+            # the groupthing.t we're going for
+            $t = ds&gk || '?';
+            each in Rs&grype {
+                n == g and continue
+                $Km = nc&Km;
+                !Km and continue
+                if (ds&nk && ds&gk) {
+                    # < generalise from sc
+                    ns&nk && ns&nk != ds&nk and continue
+                    Kn = fio(Km,ds&gk);
+                }
+                else {
+                    throw "grimp match "+d.t
+                }
+            }
+            if (!Kn) {
+                # may not have gk yet:
+                #   make extra grype (usually for type groups)
+                #   listens to all grypes for %groupthing/%changey
+                $ge = me&rollbsc,R,'grype/sc';
+                $Km = gec&Km ||= G&Cye,['may',1,{},'almost,grouping'];
+                Kn = fio(Km,[d.t,1,{s:t+'!'},'almost,groupthing,fs:7,mar:0.3']);
+            }
+            Kns&almost and Kns&opa = 0.5
+            # noted, might match history of this gk
+            $r = dc&R;
+            # < want things for fs&changey to be persistent
+            $n = G&Cye,["Projected-from-"+r.t,7894,{projin:d},'dis:2'];
+            n.t += " to s&"+t;
+            me&walls,n,'b:2.2h666';
+            fio(Kn,n);
+            # < make namepath looking
+            #   also if Mlimits dub all ^^^^ means parent loop
+            #     make larger recycle symbol
+            $up = fio(n,['fromabove',1,{s:'^'},'hs:999']);
+            if (ds&cha) {
+                # projected difference
+                # noticing out of date from our memory
+                ns&changey = 1;
+                ups&fs = 13;
+                fio(n,['projected-from',2,{s:r.t},'fs:6,hue:166,mat:-1']);
+                fio(n,['projected-'+t,3,{s:">"+dc&s},'fs:8,dis']);
+            }
+        };
+    }
+
+
             
 
