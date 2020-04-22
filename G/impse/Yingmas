@@ -176,13 +176,6 @@
             ty&cv > Yc&ov and break
             ty&cv <= Yc&cv && incv != ty&cv and continue
             
-            # deciding
-            $T = {};
-            if (ss&sleeping) {
-                # misses everything but sleeping spells
-                !(ts&sleeping || t.t.substr(0,8) == 'sleeping') and T.not = 'sleeping'
-            }
-            T.not and continue
             
             # usu so many at == cv all happen
             incv = ty&cv;
@@ -190,6 +183,15 @@
             $M = ty&cv > 0.02 && Yc&M || [s];
             each in M {
                 # t act, n ground
+                
+                # deciding
+                $T = {};
+                if (ns&sleeping) {
+                    # misses everything but sleeping spells
+                    !(ts&sleeping || t.t.substr(0,8) == 'sleeping') and T.not = 'sleeping'
+                }
+                T.not and continue
+                
                 # can't always trust whatever these might be:
                 #$r = ny&R || sy&R || Cy&R;
                 # R is from the Ying above (R%SC)
@@ -318,6 +320,7 @@ me.Yingmind.Steps = &acgt{ return [
             
             # we can see tunnelled $r already
             $N = me&ioty,R,'ball';
+            $sleeping = [];
             if (N.length) {
                 $awake = [];
                 # mixed with recycling
@@ -325,13 +328,13 @@ me.Yingmind.Steps = &acgt{ return [
                 $tunneling = Rs&tunneling;
                 !tunneling and throw "early !tun"
                 # by the sleeping since we know r -> p
-                $sleeping = N.map(r => rc&s.y.p);
+                sleeping = N.map(r => rc&s.y.p);
             }
             
             # this reverse + bal adjust Rs&z to flow upwards
             # links p,r,s (+n)
             Stepss&z.slice().reverse().map(&p{
-                sleeping && sleeping.includes(p) and return ps&sleeping = 1
+                sleeping.includes(p) and return ps&sleeping = 1
                 delete ps&sleeping
                 
                 $n = py&Schema_step;
@@ -502,18 +505,18 @@ me.Yingmind.Steps = &acgt{ return [
             each iz sy&N {
                 $j = zy&R;
                 if (Rc&N.includes(j)) {
-                    # it lived, capture info
+                    # awake - accept new za
                     jy&za = me&bracko,j,{now:1};
                 }
                 # eto even if sleeping
-                #  posited as e-ish
+                #  posited as e-ish, of tw, here-ables
                 # < keep N in order
-                
                 each in jy&za({eto:1}) {
-                    ry&ha(ex({node:z},n.sc))
+                    ry&ha(n,{node:z})
                 }
                 
                 if (jy&za('ready')) {
+                    # < bring back?
                     # j%wou..ready travel on
                     leaves(j,py&n);
                     !n and me&mtsc,g,"nonext"; return
@@ -545,7 +548,10 @@ me.Yingmind.Steps = &acgt{ return [
             $s = rc&s;
             each ij sy&N {
                 $j = jy&R;
-                $g = me&stepbrack,j;
+                if (Rc&N.includes(j)) {
+                    # awake - see the words
+                    $g = me&stepbrack,j;
+                }
             }
         },'ift,D'],
 ]};
@@ -654,30 +660,41 @@ me.Yingmind.Steps = &acgt{ return [
             c.gh ||= 'gh';
             return c
         };
-        # input to %wou and %wough
+        # input to %wough
         me.bracki = &acgtjc{
             c = me&brackdef,c;
             # into %wou.bunch_of_arks.**
             #  non dup having
             #  have to know the entire path
             $Xi = aha(j,c.k);
-            return &s{
-                $args = [... arguments].slice(1);
+            return &s,shade,mix{
                 isst(s) and s = G&peel,s
-                args.length and ~>2 brackiargs: ki(args,4.23)
+                # we may be given an $n
+                isC(s) and $os = s; s = ex({},s.sc)
+                isar(s) and throw "many of these"
                 
                 # indexed by path
-                Xi(s,...args);
+                Xi(s);
                 
                 # listed
                 $z = j.sc[c.k+c.gh] ||= Cye([c.k,1,c]);
-                $st = Cye(['stuff',1]);
-                st.sc = s;
-                ac(z,'z',st);
+                $n = Cye(['stuff',1]);
+                n.sc = s;
+                ac(z,'z',n);
                 
-                # another index
+                # mix shade -> n.sc for a while
+                shade || os and me&brackshade,n,shade,os;
+                # row pipelined around
+                os and ny&up = os
+                ny&brack = z;
+                # mix mix -> n.sc
+                each kv mix {
+                    n.sc[k] = v
+                }
+                
+                # indexed by ns&* index
                 $X = zs&X ||= {};
-                me&brackX,[st],X;
+                me&brackX,[n],X;
                 # < could know its siblings
                 #  < joining to another X.* partition out there,
                 #    so our queries can climb through their objects
@@ -705,6 +722,29 @@ me.Yingmind.Steps = &acgt{ return [
                     fx.z ||= [];
                     # a row
                     fx.z.push(n);
+                }
+            }
+        }
+        # to get rows piped around, grown + washed
+        me.brackshade = &acgtn,shade,os{
+            # track non-essential k/v, still in n.sc
+            #  don't inherit through ha(n)
+            # < we could also put separate row linked to n
+            #    {n,layer:'somesuch',...h}
+            #   then bracko may include the somesuch layer
+            #    of whatever it's asking about, if it wants to
+            if (shade) {
+                # add stuff that vanishes
+                nc&shade = ex({},os && osc&shade || {});
+                each kv shade {
+                    nc&shade[k] = 1;
+                    n.sc[k] = v;
+                }
+            }
+            elsif (os) {
+                # remove stuff that vanishes
+                each kv osc&shade {
+                    delete n.sc[k];
                 }
             }
         };
