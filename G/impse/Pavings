@@ -1,5 +1,5 @@
 # stored item pile
-# see %%acty, %%may, %%wants
+# see %%acty, %%may, %%wants, %%waits
 #  not the usual row of stuff
 me.Sch_Pavings = &acgt{ return [
     &{
@@ -50,14 +50,12 @@ me.Sch_Pavings = &acgt{ return [
         
         Rs&waits and return
         
-        # send r%trouble as late as you want to open it
-        me&ollbs,R,'trouble' and Rs&openey = 1
-        
         # roll/sleepatch inner processes
         me&rolls,'grype',{s:Q.t+"@"+Qs&dige}
             && me&rollbs,'changey';
         
       // looking
+       // at Thing
         # < sleep by Q%dige?
         $Thing = Rs&Glean = me&lookaQ,Q;
         # sync ss&dige and Thing's dige (however it appears)
@@ -86,7 +84,7 @@ me.Sch_Pavings = &acgt{ return [
         me&CB_fixing,R,'W',{w:Thing};
         # < particularly if it changes when we game look->get,
         #    would mean a 4 is not pointing to the 1 proper
-      
+        
        // < filtering s%el=9
         # %el etc bring meanings
         $inc = me&CB_fixing,R,'inc';
@@ -100,6 +98,17 @@ me.Sch_Pavings = &acgt{ return [
                 return
             }
             ss&el == 7 and me&mtsc,inc,'hmm',0,'B'
+        }
+        if (0) {
+            # < applying the sort-out-code scheme
+            # wanting a decision on each one
+            # (1 keep, 7 transfiguration, 9 death)
+            if (!ss&el) {
+                me&tsc,'('
+                me&rolltog,R,'9',0 and ss&el = 9
+                me&rolltog,R,'7',0 and ss&el = 7
+                me&tsc,')'
+            }
         }
         # eg which children to ignore
         Rs&zget = &Ry{
@@ -139,17 +148,6 @@ me.Sch_Pavings = &acgt{ return [
         Rs&trouble and me&tsc,'trouble','trou','G'
 
         Rs&Paving_good = 1;
-
-        return;
-        # < applying the sort-out-code scheme
-        # wanting a decision on each one
-        # (1 keep, 7 transfiguration, 9 death)
-        if (!ss&el) {
-            me&tsc,'('
-            me&rolltog,R,'9',0 and ss&el = 9
-            me&rolltog,R,'7',0 and ss&el = 7
-            me&tsc,')'
-        }
     },'ift,D'],
     &{
     # know about the Thing independent of the species
@@ -188,6 +186,25 @@ me.Sch_Pavings = &acgt{ return [
         }
         return Thing
     }
+    =pod beready
+     %Paving wants to continue as itself,
+      unless it %%waits or so
+      upper levels (of cv or R/r) tugging lower
+      thus it would become acty=2,
+       meaning something acty=1 (%%openey) succeeded
+      and produce a %%Live (Qc&s)
+     rather than
+      becoming %Paving_good|in all the way down|up
+     
+     < Ying:Steps:Ring:r could arrest R** on ha %%waits
+       as soon as it is ha
+        < wants Rc&ip.contains()
+     
+     &beready for $p, whack Ring r
+       if safe to, select stuff,
+       begin reaction as txn on wou
+        might be pausible
+     =cut
     },
     # R%Paving_good waits for R/*%tracting_good, etc
     #  when we can rely on our children to complain,
@@ -228,6 +245,7 @@ me.Sch_Pavings = &acgt{ return [
         # children at least here
         #  Ring usu. children almost here
         Rs&Paving_goodin = 1;
+        Ry&ha("Goodin")
 
         # modulat from the grype of late only
         if (Rs&changey) {
@@ -243,13 +261,11 @@ me.Sch_Pavings = &acgt{ return [
         }
 
         # which means all we need to compile is connected!
-        if (!ps&Paving) {
-            aha(p,'wou')({ready:1,tw:R.t,r:R});
-            aha(p,'wou')({reedy:1,tw:R.t});
-        }
+        !ps&Paving and Ry&ha('stabilised','eto')
     },'ift,D'],
 
   // Paving 3
+    # %Pavings contain %Paves, but aren't %tw themselves
     ['Pavings',0.301,&acgtRs{
         me&reaw,R,'Pavings';
         # borrow %Paving params
@@ -262,7 +278,8 @@ me.Sch_Pavings = &acgt{ return [
             if (zs&Pavings) {
                 # except folderish, another %Pavings
                 rs&Pavings = zs&Pavings;
-                ah(r,'noadhere','Paving')
+                ah(r,'noadhere','Paving');
+                ah(r,'noadhere','twmt');
             }
             else {
                 # < engage the top level if we pc&ov>=2,
@@ -281,7 +298,7 @@ me.Sch_Pavings = &acgt{ return [
         me&reaw,R,'Paving,directory';
         $S = me&inode,R;
         # %adhere resolves meanings
-        # < generalise levels of engagement:
+        # < generalise levels of engagement (%%may,acty)
         # %openey Searches with /%Pave (G&t)
         me&ollbs,R,'trouble' and Rs&openey = 1
         !me&rollbs,R,'openey' and return
@@ -380,7 +397,7 @@ me.Sch_Pavings = &acgt{ return [
    #       for z to receive %%openey reliably
    #        tells the %%inbox it is read
    #    %%may - do something maybe
-   #     may,input,once {imps:t,s:Cuess,cause:d}
+   #     may,input,once {imps:t,s:C_to_input,cause:d}
    #     < click to do since s in q rather than a
    #       and we know how to may:input an s
    #     < bracktrick click many
@@ -392,8 +409,7 @@ me.Sch_Pavings = &acgt{ return [
    #     so it reads r%grype/proj/i/*/* (%%inbox)
    # apart from that,
    #  overall %%cha <- fs&changey
-                
-   # < brackology with styles, similar columns grouping
+   
    // conclude
     # dialects of %grype/* conclude into fs&changey
     me.CB_conclude = &acgtR{
