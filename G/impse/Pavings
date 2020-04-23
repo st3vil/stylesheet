@@ -1,6 +1,4 @@
 # stored item pile
-# see %%acty, %%may, %%wants, %%waits
-#  not the usual row of stuff
 me.Sch_Pavings = &acgt{ return [
     &{
         # introduce some %Part of it
@@ -81,9 +79,9 @@ me.Sch_Pavings = &acgt{ return [
         me&CB_fixing,R,'ting';
 
         # %dige-ish group - change makes fs&changey
-        me&CB_fixing,R,'W',{w:Thing};
         # < particularly if it changes when we game look->get,
         #    would mean a 4 is not pointing to the 1 proper
+        me&CB_fixing,R,'W',{w:Thing};
         
        // < filtering s%el=9
         # %el etc bring meanings
@@ -136,7 +134,8 @@ me.Sch_Pavings = &acgt{ return [
             #me&zu,'Loadism',load
         }
         
-        # various leads to %changey, %openey, %trouble
+        # various leads to %changey -> /*%openey
+        #  so all **%changey/*!%changey
         if (Rs&changey) {
             # dige here or inside solving
             me&tsc,"R%changey","cha",'G';
@@ -196,14 +195,74 @@ me.Sch_Pavings = &acgt{ return [
      rather than
       becoming %Paving_good|in all the way down|up
      
-     < Ying:Steps:Ring:r could arrest R** on ha %%waits
-       as soon as it is ha
-        < wants Rc&ip.contains()
+     the historic:
+     me&waits,... modulates something%waits,
+      switches on R%waits (fast discovery, per act or Steps)
+       which &waitzo converts to %%waits
+      ! nobody else should %waits
+     me&beready,R,$Mw read R%Mw/$Mw||*/* (but not Rc&M)
+       sifted out the %acty things,
+        returned false if any %waits things
      
+     &bready and return # implements a waitsology
+      R%waits -> %%waits
+      %%wants:$n%%waits -> %%waits:wants,...
+      %%waits -> pause|shy $R
+       and inners, unless $n%%waits,
+         or %%waits:wants them,
+         fuzzy line? who is waiting for who
+         top down if same cv?
+       might be a recognisable solution
+       might be retry loop,
+       do others first (moreso if %%waits:wants)
+     < Ying:Steps:Ring:r could arrest R** on ha %%waits
+      < wants Rc&ip.contains()
+     
+     waiting at an earlier &bready drops state between
+      unless its domed not to
+      could be grype resetting per Qs&dige
+       right now they copy into %changey[], which ttl=2
+      while keeping some history,
+       eg commit log
+       eg sanity checking as we .5<->.1
+     ie
+     low-acty sleeps while high-acty transfigures it
+     or
+     should get a dome of intention all ready,
+      then go amuck, positing changes to it
+     then return to sync that dome again
+     using/not the things at particular times
+     and
+      when Comp wants Know/**%fully,
+       it waits for them all to:
+        get that message,
+        &bready, &settle
+     
+     &settle is a node that is:
+      &halfsettled:
+       &bready, at least by Steps@6 or so
+       brack seemingly stable
+      and:
+       nodes above/below are at least &halfsettled
+        eg: Settled/Unsettled/Chaos
+         where Chaos is not brackstable etc but Unsettled is
+     
+     most behaviour decisions wait for &settle
+      stepping into the noise
+     
+     most behaviour reflexes wait for &bready
+      eg selecting nodes eg S o ...
+        they/we should %bready
+      eg begin reaction as txn on brack
+        as in %%may,... -> ...,%may, sorta
      &beready for $p, whack Ring r
        if safe to, select stuff,
        begin reaction as txn on wou
         might be pausible
+     
+     and they form loops!
+     elvis
+     
      =cut
     },
     # R%Paving_good waits for R/*%tracting_good, etc
@@ -717,7 +776,7 @@ me.Sch_Pavings = &acgt{ return [
                 z.sc[k] != v and ds&cha = 'diff'
                 
                 # sans %grype:
-                Ry&ha({imps:t,wants:z,openey:1,cause:d});
+                ds&cha and Ry&ha({imps:t,wants:z,openey:1,cause:d});
                 
                 # < gone is dcR != yfuture at the receiving end
                 #   with non-fatal not in Rc&N
