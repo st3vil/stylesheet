@@ -2262,35 +2262,52 @@ Foogla: | # Domes prepare to A=A
             $wayline = &wlc{
                 if (!isnu(l)) {
                     $stackline = l;
-                    $m = stackline.match(/:(\d+):(\d+)\)$/);
+                    $m = stackline.match(/:(\d+):(\d+)\)?$/);
                     !m and return
                     l = m[1];
                     c = m[2];
                 }
+                l *= 1;
+                c *= 1;
                 # for the wrapping as a function with argumentation:
-                l -= 1;
+                !wc&script and l -= 1;
                 # < Differ having more context sense:
                 #   find line before each indent outwards and upwards,
                 #   and the first line of a comment on either side
                 #   < far more ideally, how the logic went!
                 $context = 2;
-                $lines = wc&s.split("\n").slice(l-context-1,l+context);
+                $from = l-context-1;
+                from < 0 and from = 0
+                $lines = wc&s.split("\n").slice(from,l+context);
                 me&tsc,"from:"+l+":"+lines.length;
                 if (!lines.length) {
                     me&tsc,'invalid-lineguess' .sc.ma = 0.3;
                     me&tsc,'stackend',stackline,'y' .sc.dis = 1;
                     return;
                 }
+                $min; 
+                each is lines {
+                    $m = s.match(/^(\s+)/);
+                    !m and continue
+                    $ind = m[1].length;
+                    min == null || min > ind and min = ind
+                }
+                min and lines = lines.map(s => s.substr(min)); c -= min;
                 each is lines {
                     $wasline = (l-context)+i*1;
                     $n = me&tsc,'line:'+wasline,0,'y';
                     ns&dis = 1;
+                    nc&s = '';
+                    me&mtsc,n,'no:',wasline+':','y';
+                    $ok = me&mtsc,n,'line:'+wasline,0,'p';
+                    
                     if (wasline == l) {
                         $trouble = s.substr(c-1);
                         s = s.substr(0,c-1);
                         me&mtsc,n,'trouble',trouble,'b';
+                        
                     }
-                    nc&s = wasline+':'+s;
+                    okc&s = s;
                 }
             };
             # locatable errors!
@@ -2331,6 +2348,20 @@ Foogla: | # Domes prepare to A=A
             
             #c ercursion
             $er = sc&er;
+            # to make location.origin+/(\/\S+):\d+:\d+\)?/
+            window.regex = &{
+                $N = [...arguments];
+                $s = "";
+                each in N {
+                    n.constructor == RegExp and s += n.source
+                    else
+                    isob(n) and throw "regexbit", n
+                    else {
+                        s+= n.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1")
+                    }
+                }
+                return new RegExp(s)
+            };
             $ersense = &er,erp{
                 $stack = er && er.stack;
                 
@@ -2344,6 +2375,24 @@ Foogla: | # Domes prepare to A=A
                         stack = stack.split("\n");
                         $fore = stack.shift();
                         $first = stack[0];
+                        $isc = regex(location.origin,/(\S+):\d+:\d+\)?/);
+                        $inscript = first.match(isc);
+                        if (inscript) {
+                            inscript = inscript[1];
+                            # get by id?
+                            $script = $('body script[src="'+inscript+'"]')[0];
+                            if (script) {
+                                w = script.way;
+                                wc&script != script and throw "mad"
+                            }
+                            else {
+                                me&tsc,'in-not',0,'y'
+                            }
+                        }
+                        if (script) {
+                            # href in stack is better than w in Bstack
+                            w = script.way;
+                        }
                         # < !w may still have urls of wayjs
                         if (w) {
                             $script = wc&script;
@@ -7791,6 +7840,7 @@ Foogla: | # Domes prepare to A=A
                 # providing the next error with line number:
                 wc&code = y;
                 wc&script = Ps&script;
+                wc&script.way = w;
                 ws&of = 'w';
                 return w
             };
