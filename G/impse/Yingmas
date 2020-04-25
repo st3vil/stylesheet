@@ -580,43 +580,45 @@ me.Yingmind.Steps = &acgt{ return [
         }
         
   // 5 - select
-    // bready - checking readiness
-        =pod beready
+    // readiness
+      =pod todo
         
         < S o AnotherStep/... would &settle?
         < &settle meaning a wants b to be settled,
-          quickly decided
-          comeback
-          ps&sleepy til met?
-        < io making sense of eg %twmt
-        < upper levels of acty
-         %Paving wants to continue as itself,
-          unless it %%waits or so
-          upper levels (of cv or R/r) tugging lower
-          thus it would become acty=2,
+          quickly decided, else
+            comeback
+            ps&sleepy til met?
+        < io making sense of eg %%tw, %ein,
+          but probably not &settle,
+           blocking reads only for Pinnings
+        < upper levels of acty or R/r tugging lower
+          %Paving would become acty=2,
            meaning something acty=1 (%%openey) succeeded
           and produce a %%Live (Qc&s)
-         rather than
-          becoming %Paving_good|in all the way down|up
-
-         the historic:
-         me&waits,... modulates something%waits,
-          switches on R%waits (fast discovery, per act or Steps)
-           which &waitzo converts to %%waits
-          ! nobody else should %waits
-         me&beready,R,$Mw read R%Mw/$Mw||*/* (but not Rc&M)
-           sifted out the %acty things,
-            returned false if any %waits things
-
+        < %Paving basically top-down &settle,
+           and some kind of r%acty=R%acty-1 spread
+          runs out of %openey far enough in
+          so $p/* should &settle,
+            but $p/*/*/* neednt be %openey (or settled?)
+          > becoming %Paving_good|in all the way down|up
+          might be up to r:Know to %%wants:r/*,acty:1,settled,
+         
+      // more tails
          waiting at an earlier &bready drops state between
-          unless its domed not to
-          could be grype resetting per Qs&dige
-           right now they copy into %changey[], which ttl=2
-          while keeping some history,
-           eg commit log
-           eg sanity checking as we .5<->.1
+          < unless its domed not to
+            while keeping some history,
+             eg commit log
+             eg sanity checking as we .5<->.1
          ie
          low-acty sleeps while high-acty transfigures it
+         or
+         %supr-link may de-reposits altered input,
+           after it %settles,
+           %Compiling may want to finish what it has,
+             it may be a commit-situation
+             each time-atomised bit of %supr-ables,
+              are staging changes,
+              to be grouped into commits
          or
          should get a dome of intention all ready,
           then go amuck, positing changes to it
@@ -638,25 +640,22 @@ me.Yingmind.Steps = &acgt{ return [
            it waits for them all to:
             get that message,
             &bready, &settle
-
-         &settle is a node that is:
-          &halfsettled:
-           &bready, at least by Steps@6 or so
-           brack seemingly stable
-          and:
-           nodes above/below are at least &halfsettled
-            eg: Settled/Unsettled/Chaos
-             where Chaos is not brackstable etc but Unsettled is
-
+         
          most behaviour decisions wait for &settle
-          stepping into the noise
+          waiting for confidence
+          eg selecting nodes eg S o ... or &nodeo
+            they/we should %bready
 
          most behaviour reflexes wait for &bready
-          eg selecting nodes eg S o ...
-            they/we should %bready
+          just needing a bit of resolution
           eg begin reaction as txn on brack
             as in %%may,... -> ...,%may, sorta
-        bready
+        
+      // specifically
+
+         &waits,... modulates something%waits
+          R%waits has it
+          
          &bready and return # implements a waitsology
           R%waits -> %%waits
           %%wants:$n%%waits -> %%waits:wants,...
@@ -669,15 +668,24 @@ me.Yingmind.Steps = &acgt{ return [
            might be retry loop,
            do others first (moreso if %%waits:wants)
 
-         < Ying:Steps:Ring:r could arrest R** on ha %%waits
-          < wants Rc&ip.contains()
+         &settle is a node that is:
+          if relative to another node that wants it:
+             eg %%wants...settled,
+            %sleeping - not able to unsettle
+          not pending elvising:
+            as in %%wants:n,acty:1,settled,
+             unless %%acty has transmit
+          &halfsettled:
+           @7:
+            < &bready
+            < brack seemingly stable: ja == za
+          and:
+           nodes above/below are at least &halfsettled
+            eg: Settled/Unsettled/Chaos
+             where Chaos is not brackstable etc but Unsettled is
 
-            # bracktricks:
-            #  ha ...uniq - not if exactly like another row
-            #  ta - ternary ja $want ? ha $consequence : ha $waitsish
-            #   see 
          and they form loops!
-        =elvis
+      =elvis
         me.bready = &acgtR{
             # got to via %%wants:R below
             !Ry&ja and return Rs&waits
@@ -709,12 +717,27 @@ me.Yingmind.Steps = &acgt{ return [
             # avoiding the rest of the activity
             return 1
         };
+        # < bracktricks:
+        #  transmit - solving %%may or %%wants
+        #   to be rolled into %wough early
+        #  ha waits... - could arrest Ring:r,
+        #   < wants Rc&ip.contains()
+        #  7 wants:n,acty:1,settled
+        #   acty transmit to $n,
+        #   waits for it to settle
+        #  ha ...uniq - not if exactly like another row
+        #  ta - ternary ja $want ? ha $consequence : ha $waitsish
+        #  conseq - for the above, and %%may
+        #    hangs up the ja(expression),
+        #     we can tell if the rows were transmit to it etc
     // zamerge - ending ready
         # < everyone &bready?
         # < call &stail if !&bready but otherwise &settle
         # < catching that %Pave elvis async already @315
         #    coming back to complete bunches at a time
         # < avoiding any more Ring r**,
+        #    < wants Rc&ip.contains()
+        #   as soon as ha ...waits
         #    winding them past mind they can't reach,
         #     recycling domes of stuff
         # < alterior sleeping - when %%waits stops Ring
@@ -795,8 +818,6 @@ me.Yingmind.Steps = &acgt{ return [
         # introduce some %Part of it
         # < be a heading swallowed-by or swallowing brack
         #  < knowing T.act here and when ha
-        #    ha doesn't acgt,
-        #     could stealth T.act every row
         # acty:8 meaning dialectical,
         # acty:1 would be openey,
         #   buttons for the first layers of mind atop
