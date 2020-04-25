@@ -943,7 +943,7 @@ Fourism: |
         &{
         # to the thing
         #  handlers generating ec&wake
-        me.elvis = &acgtRec{
+        me.elvis = &acgtRecs{
             !isR(R) and throw "!R"
             isR(e) and throw "e=R"
             $E = 4s&Elvacts ||= Cye(['Elvacts',1]);
@@ -984,6 +984,12 @@ Fourism: |
                 else {
                     throw "long form elvis plant"
                 }
+                isC(s) || isst(s) and ec&s = s
+                else
+                isar(s) and es&z = s
+                else
+                isob(s) and e.sc = s
+                
                 # current Ring act
                 es&act = T.act;
                 es&R = R;
@@ -991,6 +997,10 @@ Fourism: |
                 !haks(e.c) and ec&wake = R
 
                 Ein({direction:'o'});
+                # ^ should check it gets attended,
+                # returns without usual attendance:
+                ec&ret and delete ec&ret; return e
+                
                 if (4s&thinking) {
                     # messages want collecting
                     $JR = me.cbu(Ry&up,'JRom');
@@ -1055,8 +1065,12 @@ Fourism: |
                     $r = n[j];
                     !r and continue
                     $ri = dif.indexOf(r);
-                    ri < 0 and dif.push(r);
-                    $ri = dif.indexOf(r);
+                    # < allow the occasional async here,
+                    #   probably at a tw-safe join, doing 
+                    if (ri < 0 && j == 0 && r.t == 'I') {
+                        dif[0] && dif[0].t == 'I' and ri = 0
+                    }
+                    ri < 0 and ri = dif.push(r)-1
                     $z = N[ri] ||= [];
                     z.push(n);
                 }

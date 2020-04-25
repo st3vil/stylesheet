@@ -248,6 +248,7 @@ me.Yingmind.Ying = &acgt{ return [
     ['on',0.02,&acgtRYs,SC{
         s != SC and throw "should be the one"
         sy&R = R;
+        me&brackStepso2,R,s;
     },'ift,D'],
 
     #  mix Schema/$h/$p into Steps/$p
@@ -269,7 +270,6 @@ me.Yingmind.Ying = &acgt{ return [
 
     # @023 Steps per R%SC
     ['Steps per R',0.023,&acgtRYs,SC{
-        # covered by Schema always recompiling
         me&Yong,R,Ys&Steps,{},'o2';
     },'ift,D'],
 
@@ -283,6 +283,10 @@ me.Yingmind.Ying = &acgt{ return [
     #   pull up a map for this Aing,
     ['Steps walk',0.6,&acgtRYs,SC{
         me&Yong,R,Ys&Steps,{},9;
+    },'ift,D'],
+    # 
+    ['Steps e',0.8,&acgtRYs,SC{
+        me&brackSteps8,R,s;
     },'ift,D'],
 ]};
 
@@ -491,6 +495,10 @@ me.Yingmind.Steps = &acgt{ return [
         me.bracknodeo3 = &acgtj{
             me&sahazaja,j;
         }
+        me.brackStepso2 = &acgtRs{
+            me&sahazaja,R;
+        }
+        
         # as r/** wake up & want nodesing
         me.inode = &acgtj{
             if (jy&R) {
@@ -703,33 +711,32 @@ me.Yingmind.Steps = &acgt{ return [
             !Ry&ja and return Rs&waits
             # R%waits -> %%waits
             each in Rs&waits {
-                Ry&ja({waits:n}) and continue
-                me&nu,'couldwaitfor'+i,n;
-                Ry&ha({waits:n})
+                R&ja,{waits:n} and continue
+                R&ha,{waits:n}
             }
             # %%wants:$n%%waits -> %%waits:wants,...
-            each in Ry&ja({wants:1}) {
-                $n = ns&wants;
-                !isC(n) and continue
+            R&jaa,'wants',1 .map(&n{
+                !isC(n) and return
                 # could be p/r/s
                 $j = ny&R;
                 if (!jy&ha) {
                     # not a node
-                    js&waits and Ry&ha({waits:'wants',wants:n,notanode:1})
+                    js&waits and R&ha,{waits:'wants',wants:n,notanode:1}
                 }
                 else {
                     # < unpossiblate infinite recursion
                     #   with me&ind bit on the T?
-                    me&bready,j and Ry&ha({waits:'wants',wants:n})
+                    me&bready,j and R&ha,{waits:'wants',wants:n}
                 }
-            }
+            })
             
-            !Ry&ja({waits:1}) and return
+            !R&ja,'waits' and return
             # < %%waits -> pause|shy $R
             # avoiding the rest of the activity
             return 1
         };
         # < bracktricks:
+        #  ha ...uniq - not if exactly like another row
         #  transmit - solving %%may or %%wants
         #   to be rolled into %wough early
         #  ha waits... - could arrest Ring:r,
@@ -737,7 +744,6 @@ me.Yingmind.Steps = &acgt{ return [
         #  7 wants:n,acty:1,settled
         #   acty transmit to $n,
         #   waits for it to settle
-        #  ha ...uniq - not if exactly like another row
         #  ta - ternary ja $want ? ha $consequence : ha $waitsish
         #  conseq - for the above, and %%may
         #    hangs up the ja(expression),
@@ -793,6 +799,7 @@ me.Yingmind.Steps = &acgt{ return [
         me.brackstep7 = &acgtRprs{
             $stepsleeping = me&node_acceptable,R,r,s;
             
+            $revisit = [];
             each iz sy&N {
                 $j = zy&R;
                 $nodesleeping = me&node_acceptable,R,j,z;
@@ -808,8 +815,8 @@ me.Yingmind.Steps = &acgt{ return [
                     j&zaa,'eto' .map(n => r&ha,n,{node:z} )
                 }
                 if (!nodesleeping) {
+                    me&bready,j and revisit.push(j)
                     me&node_accept,R,j,z;
-                    
                     me&stepbrack,j
                 }
             }
@@ -829,6 +836,11 @@ me.Yingmind.Steps = &acgt{ return [
                     me&suprise,r,n
                 }
                 
+                me&bready,r and revisit.push(r)
+                revisit.map(&r{
+                    R&ha,{waits:'wants',wants:r}
+                })
+                
                 # < steps might all ^ then:
                 # commit %wough to be za next time
                 me&node_accept,R,r,s;
@@ -837,6 +849,32 @@ me.Yingmind.Steps = &acgt{ return [
                 me&walls,g,'b:3.3h9';
             }
         }
+        # the %Ying elvising
+        me.brackSteps8 = &acgtRs{
+            me&node_accept,R,R,s;
+            
+            me&rollbs,R,'Iinint',0;
+            $starting = Rs&Iinint++ < 5;
+            
+            $wakers = R&jaa,'waits','wants' .map(&n{
+                !isR(n) and throw "notR"
+                return me&elvis,R,'reYn',{wake:n,ret:1}
+            });
+            if (wakers.length) {
+                $elvising = &{
+                    # pack: es&z are e, simultaneously
+                    ~>3 SENDPACK:
+                    me&elvis,R,"Yingvoids",{pack:R},wakers
+                };
+                # avoids usual timing of Elvoids:
+                # < should ec&when exactly
+                $del = starting ? 30 : 3000
+                G&yl,del,elvising;
+            }
+            
+            $g = me&stepbrack,R;
+            me&walls,g,'b:3.3h9';
+        };
         me.stepbrack = &acgtjz{
             $g = me&brackology,j,z;
             me&walls,g,'b:2.2';
