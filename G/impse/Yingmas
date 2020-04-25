@@ -466,7 +466,11 @@ me.Yingmind.Steps = &acgt{ return [
         # makes eg R&za,c,o -> &acgtco{ za(acgtRco) }
         # R.prototype.za? R = this? etc
         #  does every haks(R) out there get confused?
-        # < Babz for each in me&thing { # call thing once
+        # < Babz for each in me&thing { # call me&thing once
+        # < Babz R&za -> me&za,R (single character == self)
+        #   have me&za solve z for R
+        # takes a function that calls me&brack(i|o),R,z
+        #  which itself takes a function that solves z for R
         me.Racgty = &y{
             return &acgt{
                 $args = [...arguments].slice(4);
@@ -504,7 +508,7 @@ me.Yingmind.Steps = &acgt{ return [
             zy&R = j;
             
             # pseudo Nodes init o3
-            !j.sa and me me&bracknodeo3,j
+            !jy&sa and me&bracknodeo3,j
             
             # Step's R that last o3'd, not sleeping
             !Sy&p and throw "Step !y&p"
@@ -518,6 +522,10 @@ me.Yingmind.Steps = &acgt{ return [
         me.sahazaja = &acgtj{
             jy&R and j = jy&R
             $k = 'wough';
+            
+            # making acgt R&za,'things'
+            # ! currently R.* inherits to r.*, which is weird
+            # see '< Babz R&za -> me&za,R'
             
             # resolve z, expanding args to bracko
             #  eg j&za,c,o -> me.bracko(acgtjzco)
@@ -536,17 +544,23 @@ me.Yingmind.Steps = &acgt{ return [
             #   < without &bready? or just !sleep?
             
             # ja always now
-            j.ja = brack('o',&{ return j.sc[k] })
+            j.ja = brack('o',&{
+                return j.sc[k]
+            });
             
             # sa last time
             $saz = me&ollbs,j,k
-            j.sa = brack('o',&{ return saz })
+            j.sa = brack('o',&{
+                return saz
+            });
             
             # za always >7
             $zak = k+'_accepted';
             $zaz = me&rollbs,j,zak;
             me&reaw,j,zak;
-            j.za = brack('o',&{ return zaz });
+            j.za = brack('o',&{
+                return zaz
+            });
             
             # and they can always return arrays (to .map...)
             $thisj = j
@@ -554,7 +568,6 @@ me.Yingmind.Steps = &acgt{ return [
             j.zaa = &{ return thisj.za(...arguments) || [] }
             j.jaa = &{ return thisj.ja(...arguments) || [] }
             # wai:wou enterer
-            # < be R&ha,{yada:voux}, < Babz way/ar params
             # is our chance to react in a Ring,r hang way,
             #  returning/jumping somewhere to think/reapproach
             j.ha = brack('i',&{
@@ -563,12 +576,11 @@ me.Yingmind.Steps = &acgt{ return [
                 return z
             })
             
-
             # GOING - call them with this ACGT until converted
-            jy&za = &{ return j&za,...arguments }
-            jy&sa = &{ return j&sa,...arguments }
-            jy&ja = &{ return j&ja,...arguments }
-            jy&ha = &{ return j&ha,...arguments }
+            jy&za = &{ return thisj&za,...arguments }
+            jy&sa = &{ return thisj&sa,...arguments }
+            jy&ja = &{ return thisj&ja,...arguments }
+            jy&ha = &{ return thisj&ha,...arguments }
 
             # differ before <-> now
             # < caching sa/za, then:
@@ -731,6 +743,9 @@ me.Yingmind.Steps = &acgt{ return [
         #    hangs up the ja(expression),
         #     we can tell if the rows were transmit to it etc
     // zamerge - ending ready
+        
+  // 7 - close
+      // ending ready
         # < everyone &bready?
         # < call &stail if !&bready but otherwise &settle
         # < catching that %Pave elvis async already @315
@@ -744,32 +759,43 @@ me.Yingmind.Steps = &acgt{ return [
         #   does it accept r as b? suppose, to display
         #    r/** want winding past their whole lives if strange
         #     winds to 9...Display while %sleeping?
-        
-        # node|step commits za
-        #  returns true if r is not able to display
-        me.zamerge = &acgtRrs{
-            # displayable after sleepywind
-            rs&sleepung and ~>3 node pung: r.t
-            else
-            # reawakened + tunneled through (Know)
-            rs&sleeping and return ~>3 node sleeping: r.t
-            else
-            # not awakened
-            !Rc&N.includes(r) and return ~>3 node avoid: r.t
-            # ^ would all keep za same
-            else {
-                # awake - accept new za
-                rs&wough_accepted = rs&wough
+       // accept - node|step commits za
+        # should we commit za... usually
+        #  unless &bready has taken extra exception (%sleepung)
+        #  or it's %sleeping or so
+        # >0 if r is not able to commit (za)
+        # >1 if r is not able to display
+        me.node_acceptable = &acgtRrs{
+            if (rs&sleepung) {
+                # displayable after sleepywind
+                ~>3 node pung: r.t
+                return 1
             }
+            elsif (rs&sleeping) {
+                # reawakened + tunneled through (Know)
+                ~>3 node sleeping: r.t
+            } 
+            elsif (!Rc&N.includes(r)) {
+                # not awakened
+                ~>3 node avoid: r.t
+            }
+            else {
+                return 0
+            }
+            return 2
         }
-  // 7 - close
+        # accepts new za
+        me.node_accept = &acgtRrs{
+            rs&wough_accepted = rs&wough
+        }
+      // ending
         # < call multiple times as $p graduates
         me.brackstep7 = &acgtRprs{
-            $stepsleeping = me&zamerge,R,r,s;
+            $stepsleeping = me&node_acceptable,R,r,s;
             
             each iz sy&N {
                 $j = zy&R;
-                $nodesleeping = me&zamerge,R,j,z;
+                $nodesleeping = me&node_acceptable,R,j,z;
                 if (!stepsleeping) {
                     # hoist to step, even if nodesleeping
                     
@@ -782,6 +808,8 @@ me.Yingmind.Steps = &acgt{ return [
                     j&zaa,'eto' .map(n => r&ha,n,{node:z} )
                 }
                 if (!nodesleeping) {
+                    me&node_accept,R,j,z;
+                    
                     me&stepbrack,j
                 }
             }
@@ -800,11 +828,15 @@ me.Yingmind.Steps = &acgt{ return [
                     # builds j** into n/
                     me&suprise,r,n
                 }
+                
+                # < steps might all ^ then:
+                # commit %wough to be za next time
+                me&node_accept,R,r,s;
+                
                 $g = me&stepbrack,r;
                 me&walls,g,'b:3.3h9';
             }
         }
-        
         me.stepbrack = &acgtjz{
             $g = me&brackology,j,z;
             me&walls,g,'b:2.2';
