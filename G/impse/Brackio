@@ -205,27 +205,46 @@
     #   see CB, which also wants:
     # < brackology with styles
     
-    # find openness and 
+    # find openness asap, ology upwards
+    me.brackope = &acgtjk,forreal{
+        $C = js&C;
+        $bk = 'brack'+k+'ology';
+        
+        if (!forreal) {
+            me&reaw,j,bk,1;
+            $g = j.sc[bk] =
+                me&opeology,k,{label:{walls:'bg'}};
+            return g
+        }
+        $g = j.sc[bk];
+        !forreal and return
+        
+        $p = me.cbu(jy&up,bk);
+        p and $pp = me.cbu(py&up,bk)
+        p and p = p.sc[bk]
+        
+        gs&pow = gs&ope ? 2
+            : p && ps&ope || !pp ? 1
+            : 0;
+        
+        gs&ws = 0;
+        if (gs&pow > 1) {
+            #gs&float = 'right';
+            gs&dis = 2;
+        }
+        me&walls,g,'b:2.2h6';
+        
+        return g;
+    };
+    
     me.brackology = &acgtjz{
         $C = js&C;
-        isst(z) and $k = z; z = null
-        z and throw "layers"
-        k ||= 'wou';
-        z ||= j.sc[k];
-        k = z && z.t || k;
-        $g = me&opeology,k,{label:{walls:'bg',tsc:'l'}};
-        gs&ws = 0;
-        #gs&float = 'right';
-        gs&dis = 2;
-        me&walls,g,'b:2.2h6';
+        isst(z) and z = j.sc[z]
+        !isC(z) and throw "!z"
+        $k = z.t;
+        $g = me&brackope,j,k,1
         !z and return g;
         
-        $zuctnu = &gts{
-            $nu = me&nu,t,s;
-            nus&ope = 1;
-            me&zN,nu;
-            me&zuct,g,nu;
-        };
         $X = zs&X ||= me&brackX,zs&z;
         
         !hak(X.k) and return g
@@ -234,26 +253,20 @@
         zy&brackology = g;
         gy&X = X;
         
-        $allope = !Rc&brackuiet;
         if (gs&ope) {
-            Rc&brackon = 1;
-            $Km = me&opeKm,g,"ope";
-            me&opelabel,Km;
-            Kms&bg = 000;
-            if (Kms&ope) {
-                me&nu,'waigh',z;
-                me&nu,"X",X;
-            }
+            #me&nu,'waigh',z;
+            #me&nu,"X",X;
         }
-        Rc&brackon and allope = 1
+        #j.t == 'Travel' and me&nu,"j",j;
         
         # 0 - 1 changes
         # 1 - t-only, grouped
         # 2 - t:v, for 1 v only (as now)
         # < t-only, of at the toplevel
-        if (!allope) {
+        if (gs&pow < 1) {
             # < only changes pop up, shrink in
-            $op = me&opesizup,g,{len:hak(X.k)};
+            $op = me&sizo,g,{t:'rows',len:zs&z.length,opelen:1};
+            me&sizo,g,{len:hak(X.k)};
             !(op && ops&ope) and return g
         }
         
@@ -267,6 +280,8 @@
                 ugs&bgh = 581;
                 ugs&dis = 2;
             }
+            ugs&pow = gs&pow;
+            ugs&ope = gs&ope;
             #j.t == 'Travel' and me&nu,"rowish"+i,c
             me&brackXology,ug,cs&X;
         }
@@ -303,13 +318,34 @@
                 N.push(c)
             }
         }
-        N.length == 1 and N = [z]
+        #N.length == 1 and N = [z]
         return N
+    };
+    me.mnu = &acgtgts{
+        $nu = me&nu,t,s;
+        nus&ope = 1;
+        me&zN,nu;
+        me&zuct,g,nu;
     };
     # draw openable X.k/ref/z
     me.brackXology = &acgtgX{
+        $Kms = [];
         each kx X.k {
             $Km = me&opeKm,g,k;
+            Kmc&k = k;
+            Kmc&x = x;
+            Kms&ope and gs&pow = 2
+            Kms.push(Km)
+        }
+        gs&pow < 2 and gs&ma = 0.2
+        each i,Km Kms {
+            $k = Kmc&k;
+            $x = Kmc&x;
+            if (gs&pow < 2) {
+                Kms&ma = 0.1
+                continue
+            }
+            
             # total values for key, Km%ope if 1
             me&opesizup,Km,{len:hak(x.ref)};
             !Kms&ope and continue
@@ -343,11 +379,11 @@
                         $wan = me&opeKn,wa,'ܤ',{label:{tsc:'y'}};
                         if (wans&ope) {
                             # whole row
-                            zuctnu(wa,'row',n)
+                            me&mnu,wa,'row',n
                         }
                         else {
                             # for the value
-                            zuctnu(wa,k,val);
+                            me&mnu,wa,k,val;
                         }
                         wany&cv = 0.8;
                     }
