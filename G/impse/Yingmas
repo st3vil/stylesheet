@@ -598,14 +598,6 @@ me.Yingmind.Steps = &acgt{ return [
             
             me&brackdomeo2,j;
         }
-        me.brackdomeo2 = &acgtR{
-            $N = me&ollbs,R,'transbrack';
-            !N and return
-            each in N {
-                me&nu,"transbrack",n;
-                #$oj = 
-            }
-        }
   // 5 - select
     // readiness
       =pod todo
@@ -1067,14 +1059,56 @@ me.Yingmind.Steps = &acgt{ return [
         me.node_accept = &acgtRrs{
             # when not &bready, ask R%Ying to come back:
             me&bready,r and R&ha,{waits:'wants',wants:r}
-            
+            # < %%dome rewholes here
             rs&wou_accepted = rs&wou
-            
-            R == r and return
-            # anything transporting, ask R%Ying to take it
-            #  could let $p route amongst itself..?
-            $eto = r&zaa,'eto' .filter(n => ns&eto != 1);
-            eto.length and R&ha,{etoing:r}
+        }
+        # brack transporting
+        #  all %%eto from this node,
+        #   grouped by where they're going,
+        #    to brackstill/slep
+        #   then maybe:
+        # asking %Ying to transport
+        me.node_hoist = &acgtRprs{
+            $eto = r&zaa,'eto';
+            $M = [];
+            # node s resolve to a %Ying(pa/th)
+            $tpath = &to,{
+                $jo = toy&R;
+                $N = me.cby(jo,&r{
+                    return rc&s == Rc&s
+                });
+                N[0].c.s != Rc&s and throw "!^^%Ying"
+                N.shift();
+                N = N.filter(r => rs&ball);
+                !N.length and throw "!tpath"
+                return N.map(r => r.t).join('/')
+            };
+            $fromt = tpath(r);
+            each in eto {
+                ns&efrom and continue
+                $to = ns&eto;
+                # %%eto=1 means to the step
+                to == 1 and to = p
+                $tot = tpath(to);
+                $ks = haks(n.sc).join(',')
+                m $tot  $n:n,to:to,ks:ks
+            }
+            M.map(&n{
+                ~>5 hoist: fromt, ki(n,4.23)
+            });
+            #!
+            if (!1) {
+                # hoist to step, even if nodesleeping
+                # eg %%tw, names throughout r**
+                #  ja%%tw reads|wants them, to &settle,
+                #   and %acty++ etc per process
+                # kind of e-ish
+                # < keep N in order
+                # < goes via %Ying brackstill etc
+                #   where %%eto=1 means %%eto:p
+                j&zaa,'eto' .filter(n => ns&eto == 1)
+                    .map(n => r&ha,n,{node:z} )
+            }
         }
       // ending
         # %Ying/$p** done
@@ -1088,20 +1122,9 @@ me.Yingmind.Steps = &acgt{ return [
                 $nodesleeping = me&node_acceptable,R,j,z;
                 if (!nodesleeping) {
                     me&node_accept,R,j,z;
+                    me&node_hoist,R,p,j,z;
                     me&stepbrack,j;
                     # %%eto=$C 
-                }
-                if (!stepsleeping) {
-                    # hoist to step, even if nodesleeping
-                    # eg %%tw, names throughout r**
-                    #  ja%%tw reads|wants them, to &settle,
-                    #   and %acty++ etc per process
-                    # kind of e-ish
-                    # < keep N in order
-                    # < goes via %Ying brackstill etc
-                    #   where %%eto=1 means %%eto:p
-                    j&zaa,'eto' .filter(n => ns&eto == 1)
-                        .map(n => r&ha,n,{node:z} )
                 }
             }
             
@@ -1123,10 +1146,15 @@ me.Yingmind.Steps = &acgt{ return [
                 # < steps might all ^ then:
                 # commit %wough to be za next time
                 me&node_accept,R,r,s;
-                
+                me&node_hoist,R,p,r,s;
                 $g = me&stepbrack,r;
                 me&walls,g,'b:3.3h9';
             }
+        }
+        # domes, transbrack ha aft sahazaja
+        me.brackdomeo2 = &acgtR{
+            $N = me&ollbs,R,'transbrack';
+            N and Rs&transbrackin = N
         }
         # %Ying done, comeback to steps|nodes
         # < give up on brackstable %%waits
@@ -1147,8 +1175,9 @@ me.Yingmind.Steps = &acgt{ return [
                     ns&eto == 1 and return
                     $to = ns&eto;
                     $jo = toy&R;
+                    jo = me&yfuture,jo;
                     ac(jo,'transbrack',n);
-                    ~>5 etoing: r.t, ns&eto
+                    ~>5 etoing: r.t, jo.t
                 })
             });
             
