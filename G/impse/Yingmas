@@ -1116,7 +1116,7 @@ me.Yingmind.Steps = &acgt{ return [
         #  < a/b/-c/d should then stop d's stuff coming through b
         me.node_hoist = &acgtRprs{
             # all %%eto from this node
-            $eto = r&zaa,'eto' .filter (n => !ns&efrom);
+            $eto = r&jaa,'eto' .filter (n => !ns&efrom);
             # node s resolve to a %Ying/(pa/th)
             $tpath = &to,{
                 $jo = toy&R;
@@ -1131,7 +1131,9 @@ me.Yingmind.Steps = &acgt{ return [
             };
             $fromt = tpath(r);
             # C:from/C:to/row
-            $hoisting = Cye([fromt,1]);
+            # with c&el=9
+            $ing = sy&etos ||= Cye([fromt,1]);
+            $gone = (ings&z||[]).slice();
             each in eto {
                 $to = ns&eto;
                 # %%eto=1 means to the step
@@ -1139,43 +1141,60 @@ me.Yingmind.Steps = &acgt{ return [
                 # select s given p/r/s
                 $jo = toy&R;
                 to = joc&s;
+                
                 $tot = tpath(to);
-                to = fio(hoisting,[tot,1,{},{to,from:s}])
-                ac(to,'z',n)
+                $h = fio(ing,tot);
+                $gi = gone.indexOf(h);
+                if (gi >= 0) {
+                    gone.splice(gi,1);
+                    # new bunch of rows
+                    hs&z = [];
+                }
+                
+                hs&to = to;
+                hs&from  = s;
+                ac(h,'z',n);
+                
             }
-            
-            # version off the previous one
-            $hoisted = sy&hoisting;
-            hoisted && me&ioty,hoisted .map(&to,{
-                fio(hoisting,to.t,0) and return
-                if (toc&el != 9) {
-                    tos&current = to;
-                    toc&el = 9
+            # revoke
+            gone .map(&h{
+                !fio(ing,h.t,0) and throw "notnt"
+                if (hc&el != 9) {
+                    hs&current = h;
+                    hc&el = 9
                 }
-                fio(hoisting,to)
             });
-            me&ioty,hoisting .map(&to,{
-                $tob = hoisted && fio(hoisted,to.t,0)
-                tos&vers = tob && tobs&vers || [];
-                tos&accepted = tob && tobs&accepted;
-                if (toc&el != 9) {
-                    $la = tos&vers.slice(-1)[0];
-                    $cha = me&brackstill,r,to,la;
-                    cha and tos&vers.push(to);
-                    cha and ~>3 newvers: to.t
-                    tos&current = tos&vers.slice(-1)[0];
+            # version off the previous one
+            me&ioty,ing .map(&h{
+                hs&vers ||= [];
+                #!
+                if (hc&el != 9) {
+                    $la = hs&vers.slice(-1)[0];
+                    $cha = me&brackstill,r,h,la;
+                    if (cha) {
+                        delete hs&accepted_boring;
+                        # clone into vers[], h/* replaces
+                        hs&vers.push(Cye(h));
+                        #~>3 newvers: h.t
+                    }
+                    hs&current = hs&vers.slice(-1)[0];
                 }
-                !(tos&from || !tos&to) and throw "!to|from"
-                if (tos&accepted == tos&current) {
+                !(hs&from || !hs&to) and throw "!to|from"
+                if (hs&accepted == hs&current) {
                     # remove here once they accept 9ing it
-                    toc&el == 9 and fio(hoisting,to.t,9)
-                    ~>3 hoistcept: to.t, '<-', fromt
+                    if (hc&el == 9) {
+                        ~>2 GC: h.t
+                        fio(ing,h.t,9)
+                    }
+                    $neu = !hs&accepted_boring;
+                    hs&accepted_boring = 1;
+                    neu and ~>3 hoistcept: h.t, '<-', fromt
                 }
                 else {
-                    R&ha,{hoisting:to,fromt}
+                    R&ha,{etos:h,s,fromt}
+                    !cha and ~>3 oldnews: h.t, '<-', fromt
                 }
             })
-            sy&hoisting = hoisting
         }
         # transbrack comparator
         # < brackology with two z's, +- 
@@ -1204,14 +1223,18 @@ me.Yingmind.Steps = &acgt{ return [
             if (sy&efroms) {
                 $ef = Rs&transbrackin = sy&efroms;
                 me&ioty,ef .map(&fo,{
-                    $ho = fos&hoisting;
-                    hoc&el == 9 and foc&el = 9; return
-                    !hos&from and throw "!from"
-                    hos&to != s and throw "to!"
-                    me&ioty,ho .map(&n{
+                    $h = fos&etos;
+                    # h may re-node_hoist before we 7, if from /**
+                    fos&using = hs&current;
+                    hc&el == 9 and foc&el = 9; return
+                    !hs&vers.includes(hs&current) and throw "vers!"
+                    !hs&from and throw "!from"
+                    hs&to != s and throw "to!"
+                    me&ioty,h .map(&n{
                         # each row is mixed in, +%%efrom
-                        n = r&ha,n,{efrom:hos&from}
-                        ny&hoistin = fo;
+                        n = r&ha,n,{efrom:hs&from}
+                        # < looking at s & n should notice this link:
+                        ny&efrom = fo;
                     });
                 })
             }
@@ -1223,9 +1246,9 @@ me.Yingmind.Steps = &acgt{ return [
                 $ef = sy&efroms;
                 $gone = [];
                 me&ioty,ef .map(&fo,{
-                    $ho = fos&hoisting;
-                    hos&accepted = hos&current;
-                    hoc&el == 9 and gone.push(fo); return
+                    $h = fos&etos;
+                    hs&accepted = fos&using;
+                    hc&el == 9 and gone.push(fo); return
                     # something in the way it is now?
                 })
                 gone.map(fo => fio(ef,fo,9))
@@ -1240,20 +1263,20 @@ me.Yingmind.Steps = &acgt{ return [
         }
         # domes, transbrack accept
         me.Yinghoisting = &acgtR{
-            $froms = R&jaa,'hoisting';
+            $froms = R&jaa,'etos';
             froms.map(&n{
                 # ho = to with s&current from &node_hoist
                 !ns&fromt and throw "!fromt"
-                $ho = ns&hoisting;
-                $to = hos&to;
+                $h = ns&etos;
+                $to = hs&to;
                 $jo = toy&R;
                 to = joc&s;
                 # efroms - for|on the to node path
-                $ef = toy&efroms ||= Cye([ho.t,1]);
-                ef.t != ho.t and throw "misnodepath"
+                $ef = toy&efroms ||= Cye([h.t,1]);
+                ef.t != h.t and throw "misnodepath"
                 #  /$fromt - the from node path
                 $fo = fio(ef,ns&fromt);
-                fos&hoisting = ho;
+                fos&etos = h;
                 # jo tidies efroms, once el=9 accepted
                 # send attention
                 R&ha,{waits:'eto',wants:to}
