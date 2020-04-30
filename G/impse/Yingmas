@@ -404,7 +404,7 @@ me.Yingmind.Steps = &acgt{ return [
             # $p earlier (Know-ward) and later
             me.neigh(p,&lr{ py&l = l; py&r = r })
             
-            me&brackstepo3,p;
+            me&brackstepo3,r;
             
             # me&inode arrives jc&s into:
             sy&N ||= [];
@@ -1128,7 +1128,7 @@ me.Yingmind.Steps = &acgt{ return [
             };
             $fromt = tpath(r);
             # C:from/C:to/row
-            $hoisting = Cye(['from '+fromt,1]);
+            $hoisting = Cye([fromt,1]);
             each in eto {
                 $to = ns&eto;
                 # %%eto=1 means to the step
@@ -1169,7 +1169,7 @@ me.Yingmind.Steps = &acgt{ return [
                     toc&el == 9 and fio(hoisting,to.t,9)
                 }
                 else {
-                    R&ha,{hoisting:to,to:tos&to,from:s}
+                    R&ha,{hoisting:to,to:tos&to,from:s,fromt}
                 }
             })
             sy&hoisting = hoisting
@@ -1197,24 +1197,35 @@ me.Yingmind.Steps = &acgt{ return [
         }
         # domes, transbrack init
         me.brackdomeo3 = &acgtR{
-            $N = me&ollbs,R,'transbrack';
-            N and Rs&transbrackin = N
+            $s = Rc&s;
+            if (sy&efroms) {
+                Rs&transbrackin = sy&efroms
+            }
         }
         # domes, transbrack accept
         me.brackdome7 = &acgtRr{
         }
         # domes, transbrack accept
         me.Yinghoisting = &acgtR{
-            $froms = R&jaa,'hoisting',1;
-            froms.map(&r{
-                r&jaa,'eto' .map(&n{
-                    ns&eto == 1 and return
-                    $to = ns&eto;
-                    $jo = toy&R;
-                    jo = me&yfuture,jo;
-                    ac(jo,'transbrack',n);
-                    ~>5 etoing: r.t, jo.t
-                })
+            $froms = R&jaa,'hoisting';
+            froms.map(&n{
+                # ho = to with s&current from &node_hoist
+                $ho = ns&hoisting;
+                $to = ns&to;
+                $jo = toy&R;
+                to = joc&s;
+                # efroms - for|on the to node path
+                $ef = toy&efroms ||= Cye([ho.t,1]);
+                ef.t != ho.t and throw "misnodepath"
+                #  /$fromt - the from node path
+                !ns&fromt and throw "!fromt"
+                $fo = fio(ef,ns&fromt);
+                fos&hoisting = ho;
+                # jo tidies efroms, once el=9 accepted
+                # send attention
+                R&ha,{waits:'eto',wants:to}
+                
+                ~>5 efroms hoisting: ef.t, '<-', fo.t
             });
         }
         # %Ying done, comeback to steps|nodes
@@ -1237,6 +1248,7 @@ me.Yingmind.Steps = &acgt{ return [
                 $elvising = &{
                     # visits those r**
                     wakers = wakers.map(&n{
+                        n= ny&R;
                         !isR(n) and throw "notR"
                         return me&elvis,R,'reYn',{wake:n,ret:1}
                     });
