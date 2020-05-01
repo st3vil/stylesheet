@@ -249,7 +249,7 @@ me.Yingmind.Ying = &acgt{ return [
     ['on',0.02,&acgtRYs,SC{
         s != SC and throw "should be the one"
         sy&R = R;
-        me&brackStepso2,R,s;
+        me&Ying_o2,R,s;
     },'ift,D'],
 
     #  mix Schema/$h/$p into Steps/$p
@@ -287,7 +287,7 @@ me.Yingmind.Ying = &acgt{ return [
     },'ift,D'],
     # 
     ['Steps e',0.8,&acgtRYs,SC{
-        me&brackSteps8,R,s;
+        me&Ying_8,R,s;
     },'ift,D'],
 ]};
 
@@ -405,7 +405,7 @@ me.Yingmind.Steps = &acgt{ return [
             # $p earlier (Know-ward) and later
             me.neigh(p,&lr{ py&l = l; py&r = r })
             
-            me&brackstepo3,r;
+            me&Steps_o3,r;
             
             # me&inode arrives jc&s into:
             sy&N ||= [];
@@ -441,7 +441,7 @@ me.Yingmind.Steps = &acgt{ return [
         ['Trip report',0.7,&acgtRYp,SC{
             $r = py&R;
             $s = rc&s;
-            me&brackstep7,R,p,r,s;
+            me&Steps_7,R,p,r,s;
         },'ift,D'],
 ]};
 // brackstepnodeism
@@ -492,13 +492,13 @@ me.Yingmind.Steps = &acgt{ return [
       #  limbs becoming available
       
         # Steps @o3: r+s
-        me.brackstepo3 =
-        # part of &inode: j+z, if and when they call it
-        me.bracknodeo3 =
+        me.Steps_o3 =
+        # &inode: j+z, if and when they call it
+        me.Nodes_o3 =
         # Ying @o2: R+s
-        me.brackStepso2 = &acgtRs{
+        me.Ying_o2 = &acgtRs{
             me&sahazaja,R;
-            me&brackdomeo3,R;
+            me&Domes_o3,R;
         }
         
         # as r/** wake up & want nodesing
@@ -518,7 +518,7 @@ me.Yingmind.Steps = &acgt{ return [
             zy&R = j;
             
             # pseudo Nodes init o3
-            !jy&sa and me&bracknodeo3,j
+            !jy&sa and me&Nodes_o3,j
             
             # Step's R that last o3'd, not sleeping
             !Sy&p and throw "Step !y&p"
@@ -785,6 +785,10 @@ me.Yingmind.Steps = &acgt{ return [
         < then (once &settle or sooner or later)
           return to $from
         many %%waits (ordering peers)
+         posit wakers into a few visits, to pick up on:
+         < p%priority or $p refd by another waker first
+         < undropped e when sccb throttles
+        < give up on brackstable %%waits
        
        =elvis
       // nodeeio
@@ -1069,7 +1073,7 @@ me.Yingmind.Steps = &acgt{ return [
         #  or it's %sleeping or so
         # >0 if r is not able to commit (za)
         # >1 if r is not able to display
-        me.node_acceptable = &acgtRrs{
+        me.node_acceptable = &acgtRr{
             if (rs&sleepung) {
                 # displayable after sleepywind
                 ~>3 node pung: r.t
@@ -1088,29 +1092,17 @@ me.Yingmind.Steps = &acgt{ return [
             }
             return 2
         }
-        # accepts new za
-        #  and hoists to R%Ying anything transporting
-        me.node_accept = &acgtRrs{
-            # when not &bready, ask R%Ying to come back:
-            me&bready,r and R&ha,{waits:'wants',wants:r}
-            # < %%dome rewholes here
-            rs&wou_accepted = rs&wou
-        }
       // ending
-        # %Ying/$p** done
-        # < wake $p on da hoistings
-        #   dome %%eto etc, then put for $p?
-        me.brackstep7 = &acgtRprs{
-            $stepsleeping = me&node_acceptable,R,r,s;
+        # $p done: $p & $j+ Nodes_7
+        #  depending on node_acceptable
+        me.Steps_7 = &acgtRprs{
+            $stepsleeping = me&node_acceptable,R,r;
             
             each iz sy&N {
                 $j = zy&R;
-                $nodesleeping = me&node_acceptable,R,j,z;
+                $nodesleeping = me&node_acceptable,R,j;
                 if (!nodesleeping) {
-                    me&node_accept,R,j,z;
-                    me&node_hoist,R,p,j,z;
-                    me&brackdome7,R,j;
-                    me&stepbrack,j;
+                    me&Nodes_7,R,p,j,z;
                     # %%eto=$C 
                 }
             }
@@ -1130,20 +1122,41 @@ me.Yingmind.Steps = &acgt{ return [
                     me&suprise,r,n
                 }
                 
-                # < steps might all ^ then:
-                # commit %wough to be za next time
-                me&node_accept,R,r,s;
-                me&node_hoist,R,p,r,s;
-                me&brackdome7,R,r;
-                $g = me&stepbrack,r;
+                $g = me&Nodes_7,R,p,r,s;
                 me&walls,g,'b:3.3h9';
             }
         }
+        # $p|$j done
+        me.Nodes_7 = &acgtRprs{
+            me&node_accept,R,r,s;
+            me&node_hoist,R,p,r,s;
+            me&Domes_7,R,r;
+            return me&stepbrack,r;
+        }
+        # R%Ying done, comeback to steps|nodes
+        me.Ying_8 = &acgtRs{
+            me&node_accept,R,R,s;
+            
+            me&Ying_hoisting,R;
+            me&Ying_waitsing,R;
+            
+            if (me&node_acceptable,R,R ) {
+                $g = me&stepbrack,R;
+                me&walls,g,'b:3.3h9';
+            }
+        };
+        
+        # commit %wou to be za next time
+        me.node_accept = &acgtRrs{
+            # when not &bready, ask R%Ying to come back:
+            me&bready,r and R&ha,{waits:'wants',wants:r}
+            
+            # < %%dome rewholes here
+            rs&wou_accepted = rs&wou
+        }
+        
         # brack transporting
-        #   grouped by where they're going,
-        #    to brackstill/slep
-        #   then maybe:
-        # asking %Ying to transport
+        # < brackstill config/slep
         # < riding X, hoisting all the way up...
         #  < a/b/-c/d should revoke d's stuff on b, a
         me.node_hoist = &acgtRprs{
@@ -1163,6 +1176,7 @@ me.Yingmind.Steps = &acgt{ return [
             };
             $fromt = tpath(r);
             # C:from/C:to/row
+            # grouped by where they're going
             # with c&el=9
             $ing = sy&etos ||= Cye([fromt,1]);
             $gone = (ings&z||[]).slice();
@@ -1196,7 +1210,7 @@ me.Yingmind.Steps = &acgt{ return [
                     hc&el = 9
                 }
             });
-            # version off the previous one
+            # brackstill version off the previous
             me&ioty,ing .map(&h{
                 hs&vers ||= [];
                 #!
@@ -1223,6 +1237,7 @@ me.Yingmind.Steps = &acgt{ return [
                     neu and ~>3 hoistcept: h.t, '<-', fromt
                 }
                 else {
+                    # asking %Ying to transport
                     R&ha,{etos:h,s,fromt}
                     !cha and ~>3 oldnews: h.t, '<-', fromt
                 }
@@ -1250,10 +1265,10 @@ me.Yingmind.Steps = &acgt{ return [
             return cha
         }
         # domes, transbrack init
-        me.brackdomeo3 = &acgtr{
+        me.Domes_o3 = &acgtr{
             $s = rc&s;
             if (sy&efroms) {
-                $ef = Rs&transbrackin = sy&efroms;
+                $ef = sy&efroms;
                 me&ioty,ef .map(&fo,{
                     $h = fos&etos;
                     # h may re-node_hoist before we 7, if from /**
@@ -1272,7 +1287,7 @@ me.Yingmind.Steps = &acgt{ return [
             }
         }
         # domes, transbrack accept
-        me.brackdome7 = &acgtRr{
+        me.Domes_7 = &acgtRr{
             $s = rc&s;
             if (sy&efroms) {
                 $ef = sy&efroms;
@@ -1293,8 +1308,8 @@ me.Yingmind.Steps = &acgt{ return [
                 
             }
         }
-        # domes, transbrack accept
-        me.Yinghoisting = &acgtR{
+        # Ying %%etos -> $to, %waits,wants:to
+        me.Ying_hoisting = &acgtR{
             $froms = R&jaa,'etos';
             froms.map(&n{
                 # ho = to with s&current from &node_hoist
@@ -1316,19 +1331,9 @@ me.Yingmind.Steps = &acgt{ return [
                 ~>5 efroms hoisting: ef.t, '<-', fo.t
             });
         }
-        # %Ying done, comeback to steps|nodes
-        # < give up on brackstable %%waits
-        # < posit wakers into a few visits, to pick up on:
-        #  < p%priority or $p ref'd by another waker first
-        #  < undropped e when sccb throttles
-        # < also have to wake the connections
-        me.brackSteps8 = &acgtRs{
-            me&node_accept,R,R,s;
-            
+        me.Ying_waitsing = &acgtR{
             me&rollbs,R,'Iinint',0;
             $starting = Rs&Iinint++ < 5;
-            
-            me&Yinghoisting,R;
             
             # %Ying %%waits,wants=r
             $wakers = R&ja,'waits','wants';
@@ -1353,10 +1358,9 @@ me.Yingmind.Steps = &acgt{ return [
                 $yeah = me&sccb,Co,'Yingvoids',elvising;
                 G&yl,del,yeah;
             }
-            
-            $g = me&stepbrack,R;
-            me&walls,g,'b:3.3h9';
-        };
+        }
+        
+  // 8 - dial
         # display brackology
         me.stepbrack = &acgtjz{
             $g = me&brackology,j,z||'wou';
@@ -1365,8 +1369,6 @@ me.Yingmind.Steps = &acgt{ return [
             ac(j,'M',g);
             return g
         }
-        
-  // 8 - dial
       
         # introduce some %Part of it
         # < be a heading swallowed-by or swallowing brack
