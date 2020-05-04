@@ -1314,7 +1314,79 @@ Fourism: |
 
             !l[es&tunneli+1] and return es&beawake ||= {pathend:R}
         };
+        #c make Re,c-ipe
+        me.tunnel = &acgtRc{
+            $b = c.b;
+            !b and throw "tunnel!b"
+            Rc&N.indexOf(b) >= 0 and throw "b current"
+            c.t = b.t;
+            # < subtly repoint s with slep
+            bc&s != null and c.s = bc&s;
+
+            # it knows {$gk:{use}}
+            # strategy for a widely held gk
+            #  eg %Slei, %Codon, %ball
+            # for rolling their other sc
+            $aw = bs&reawakens;
+            aw and c.reawakens = aw
+            else {
+                # others inherit if of type
+                aw = me.cbu(R,'reawakens');
+                aw = aw && aws&reawakens;
+            }
+            $auth = [];
+            if (aw) {
+                # see if strategy is for this R
+                each tw aw {
+                    !b.sc[t] and continue
+                    # w.bg == not convincing to reawaken
+                    # eg %Peace is in the background of many others
+                    #  some main thing going on must also %reawakens
+                    !w.bg and auth.push(t);
+                    # < babz this 'each, k use.rollbs'
+                    w.rollbs &&
+                    w.rollbs.split(',').map(&k{
+                        hak(b.sc,k) and c[k] = b.sc[k]
+                    });
+                    w.sc and ex(c,w.sc)
+                }
+                bs&ball and c.ball = 1
+                bs&tightly and c.tightly = 1
+                # < aw.wakeasparent for Cit?
+                #aw.wake_parent && !es&tunnel[lin+1] and c.wakeasparent = 1
+            }
+            else {
+                # %reawakens implies %tunneling to it is ok
+            }
+            # general
+            ['Gens','Zuctto','inheritsc','inheritscif','eCsc'].map(&k{
+                b.sc[k] and c[k] = b.sc[k]
+            });
+            # JRom skip %tunneling
+            if (bs&JRom) {
+                # < to sleeping+JRom/%Domeds,
+                #   as opposed to the JRom%returns
+                #    see also es&beawake = {nonmain:R}
+                c.JRom = bs&JRom;
+            }
+            else
+            !c.reawakens && aw && !auth.length and c.noreawakens = 1
+            return c
+        }
         # make child
+        me.tunnelin = &acgtRce{
+            $b = delete c.b;
+            if (c.JRom) {
+                $r = me&tunnelJRom,R,b,e;
+            }
+            else {
+                $r = me&Ret,R,c;
+                Rs&z.filter(n => n == r).length != 1 and debugger;
+                me&zN,r;
+                Rc&N.filter(n => n == r).length != 1 and debugger;
+            }
+        }
+        # make JRom child
         me.tunnelJRom = &acgtRbe{
             !bs&JRom and throw "b!%JRom"
             $c = ex({},bs&JRom);
@@ -1364,6 +1436,9 @@ Fourism: |
             #Rs&sleeping = 1;
             ~>5 neednt but did: R.t
         },'ift,D'],
+        &{
+        
+        },
         ['tunneling','18',&acgtRs{
             $e = Rs&tunneling;
             Rs&sleeping and debugger;
@@ -1397,63 +1472,12 @@ Fourism: |
                     b = b[0];
                     c.tunneling = en;
                 }
-
-                Rc&N.indexOf(b) >= 0 and throw "b current"
-                c.t = b.t;
+                c.b = b;
+                me&tunnel,R,c;
                 M.push(c);
-                # < subtly repoint s with slep
-                bc&s != null and c.s = bc&s;
-
-                # it knows {$gk:{use}}
-                # strategy for a widely held gk
-                #  eg %Slei, %Codon, %ball
-                # for rolling their other sc
-                $aw = bs&reawakens;
-                aw and c.reawakens = aw
-                else {
-                    # others inherit if of type
-                    aw = me.cbu(R,'reawakens');
-                    aw = aw && aws&reawakens;
-                }
-                $auth = [];
-                if (aw) {
-                    # see if strategy is for this R
-                    each tw aw {
-                        !b.sc[t] and continue
-                        # w.bg == not convincing to reawaken
-                        # eg %Peace is in the background of many others
-                        #  some main thing going on must also %reawakens
-                        !w.bg and auth.push(t);
-                        # < babz this 'each, k use.rollbs'
-                        w.rollbs &&
-                        w.rollbs.split(',').map(&k{
-                            hak(b.sc,k) and c[k] = b.sc[k]
-                        });
-                        w.sc and ex(c,w.sc)
-                    }
-                    bs&ball and c.ball = 1
-                    bs&tightly and c.tightly = 1
-                    aw.wake_parent && !es&tunnel[lin+1] and c.wakeasparent = 1
-                }
-                else {
-                    # %reawakens implies %tunneling to it is ok
-                }
-                # general
-                ['Gens','Zuctto','inheritsc','inheritscif','eCsc'].map(&k{
-                    b.sc[k] and c[k] = b.sc[k]
-                });
-                # JRom skip %tunneling
-                if (bs&JRom) {
-                    # < to sleeping+JRom/%Domeds,
-                    #   as opposed to the JRom%returns
-                    #    see also es&beawake = {nonmain:R}
-                    c.JRom = bs&JRom;
-                }
-                else
-                !c.reawakens && aw && !auth.length and c.noreawakens = 1
-                c.b = b
+                
             }
-            #c doing, depending on awakeness theory
+            # doing, depending on awakeness theory
             $bailifany = &k{
                 $dont = M.filter(c => c[k]);
                 !dont.length and return
@@ -1493,16 +1517,7 @@ Fourism: |
 
             # or inflates individuals with %tunneling
             each ic M {
-                $b = delete c.b;
-                if (c.JRom) {
-                    $r = me&tunnelJRom,R,b,e;
-                }
-                else {
-                    $r = me&Ret,R,c;
-                    Rs&z.filter(n => n == r).length != 1 and debugger;
-                    me&zN,r;
-                    Rc&N.filter(n => n == r).length != 1 and debugger;
-                }
+                me&tunnelin,R,c,e
             }
         },'ift,D'],
     ] };
