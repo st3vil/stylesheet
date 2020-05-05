@@ -7688,7 +7688,7 @@ Foogla: | # Domes prepare to A=A
             me.Pcs = &acgtPcs{
                 $W = Pc&s = Cye([P.t,1]);
                 Ws&of = Pc&of;
-                $sc = c.getResponseHeader('sc');
+                $sc = c && c.getResponseHeader('sc');
                 if (sc) {
                     sc = dej(sc);
                     ex(P.sc,sc);
@@ -8028,7 +8028,7 @@ Foogla: | # Domes prepare to A=A
                         Pc&s = null;
                         Ps&dige = r.dige;
                         Ps&string = r.s;
-                        Ps&Want_Decode = 'Lines';
+                        Ps&Want_Decode = T.Want_Decode || 'Lines';
                     }
                     if (el <= 3) {
                         $se = d.se || r.se;
@@ -8043,12 +8043,22 @@ Foogla: | # Domes prepare to A=A
                 s&string != null && !s&section and throw "/ghost/+ !section"
                 Rs&Talks.W(T,C,P);
                 T.get.url = '/ghost/'+C.t;
-                Ps&noDecode = 1;
+                T.Want_Decode = 'string';
+            };
+            # Pc&s = C (c&s = Ps&string)
+            Rs&Decode.string = &PCW{
+                !Ps&dige and throw "P!%dige"
+                !Ps&string and throw "P!%string"
+                $W = Pc&s = Cye([P.t,1]);
+                Wc&s = Ps&string;
+                Ws&of = Pc&of;
+                Ws&dige = Ps&dige;
+                return W
             };
             # tmp that is string
             Rs&Talks.tmp = &TCP{
                 Rs&Talks.mem(T,C,P);
-                Ps&noDecode = 1;
+                T.Want_Decode = 'string';
             };
             # mem that is Lines
             Rs&Talks.mem = &TCP{
