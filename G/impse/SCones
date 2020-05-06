@@ -197,8 +197,10 @@ me.Sch_Comm = &acgt{ return [
         $w = me&t,R,'ghost','Yingmas-light';
         !w and return me&waits,'t...'
         me&rollbs,R,'Yinghost';
-        $z = Rs&Yinghost = Cye(w);
+        me&rolltog,R,{maydo:'reset-w'} and delete Rs&Yinghost;
+        $z = Rs&Yinghost ||= Cye(w);
         zs&dige != ws&dige and z = Rs&Yinghost = Cye(w);
+        
         
         me&Tie,R,'sayeth',1;
         if (Rs&sayeth != null) {
@@ -212,14 +214,6 @@ me.Sch_Comm = &acgt{ return [
         $cm = me&rollbs,R,'cm';
         !cm and return me&waits,'cm...'
         
-        $N = cm.getAllMarks().filter(n => n.__isFold)
-        each in N {
-            # TextMarker
-            $l = n.lines;
-            $range = [l[0],l.slice(-1)[0]].map(li => li.lineNo())
-            me&tsc,"foldon:"+range.join('-') .sc.dis = 1
-        }
-        
         $i = 3;
         while (i++ < 8) {
             #cm.foldCode(CodeMirror.Pos(i,0));
@@ -231,86 +225,76 @@ me.Sch_Comm = &acgt{ return [
   // Glimpes chunk
         if (!zs&chunks|| 1) {
             zs&chunks = [];
-            $chunk = &sil{
-                $c = Cye(['chunk@'+i,1]);
-                cs&line = l;
-                me&fiu,s,c;
-                ac(z,'chunks',c);
-                return c
-            }
             $lines = zc&s.split("\n");
+            
             $chu = Cye(['flo',1]);
             chus&line = 0;
             chus&toline = lines.length-1;
-            me&indo,chu,{dl:15} (&sd{
-                #zs&chunks.length > 11 and return;
-                # stop once chunks are one line
-                $chunksoflines = &s,lines{
-                $c = null;
-                $i = 0;
-                $li = ss&line || 0;
-                $laindent = ss&indent || 0;
-                while (lines[li+i] != null) {
-                    $l = lines[li+i];
-                    $indent = l.match(/^(\s*)(.*)$/);
-                    $stuff = indent[2];
-                    indent = indent[1].length;
-                    $p = c;
-                    
-                    # level this chunk is based at
-                    $cind = c && cs&indent || 0;
-                    # remaining at s's indent is not c-worthy
-                    !c && ss&line && indent == ss&indent and i++; continue
-                    else
-                    !c and c = chunk(s,i,li+i)
-                    else
-                    !i and throw "i=0"
-                    else
-                    !stuff || stuff.match(/^#/) and 'grows'
-                    else
-                    # (1,2),(1) or (2,3),(1)
-                    if (cind == indent && indent < laindent
-                        || cind > indent) {
-                        c = chunk(s,i,li+i)
-                    }
-                    else
-                    # (1,1),(2) -> (1),(1,2)
-                    if (cind < indent && laindent <= cind
-                        && ps&toline - ps&line > 0) {
-                        c = chunk(s,i,li+i);
-                        cs&indent = laindent;
-                        ps&toline--; cs&line--
-                    }
-                    else
-                    # chunks with something further inside will cm.doFold
-                    #  unless they're /^#/, no prob
-                    # ie only the (1,2) of (1,1,1),(1,2)
-                    indent > cind and cs&proper = 1
-                    
-                    if (cs&indent == null) {
-                        cs&indent = indent
-                    }
-                    cs&toline = li+i;
-                    cs&toline >= ss&toline and break
-                    laindent = indent;
-                    i++;
-                }
-                }
+            $N = me&indo,chu,{dl:15} (&sd{
                 ss&indent != null && ss&toline == ss&line and 1
                 else {
-                    chunksoflines(s,lines)
+                    me&chunksoflines,s,lines;
                     !ss&z and throw "nochunks"
                 }
-                ss&z.length == 1 and ss&z.map(z => me&fiu,s,z,9 )
-                sc&s = lines.slice(ss&line,ss&toline+1).join("\n")
+                s == chu && ss&z.length == 1 and ss&z.map(z => me&fiu,s,z,9 )
+                sc&s = lines.slice(ss&line,ss&toline+1).join("\n");
+                return s
             });
-            #!
-            me&nu,"zee",chu;
             
+            N.map(&s{
+                ss&lines = 1+ss&toline-ss&line;
+                ss&lines < 20 and delete ss&proper
+            });
+            $rev = N.slice().reverse();
+            rev.filter(s => ss&proper).map(&s{
+                ss&size = ss&lines;
+                ss&z .filter(c => cs&proper).map(&c{
+                    ss&size -= cs&lines-1;
+                });
+            })
             delete chuc&s;
-            #zs&chunks.map(s => delete sc&s)
             #chus&z = zs&chunks.filter(s => sy&up == z);
-            n z.t  $s:chu,R %ball
+            $dive;
+            me&indo,chu,{dl:15} (&sd{
+                !ss&proper and d.not = 1; return
+                !d.dive and dive = d.dive = Cye(s);
+                else {
+                    d.dive = me&fiu,d.dive,Cye(s)
+                }
+            })
+            dive && 
+            n z.t  $s:dive,R %ball
+            
+            $M = cm.getAllMarks().filter(n => n.__isFold).map(&n{
+                # TextMarker
+                $l = n.lines;
+                $range = [l[0],l.slice(-1)[0]].map(li => li.lineNo());
+                return Cye(['fold',1,{},{line:range[0],toline:range[1]}])
+            });
+            # < open fold markers too, leave open
+            #   when aging/inserting folds,
+            #     open those the cursor/diff is mostly in
+            $ope = {};
+            each if M {
+                ope[fs&line] = f
+            }
+            # our chunks match|make a fold !!!!
+            each is rev {
+                $f = ope[ss&line];
+                f and fy&chunk = s 
+                elsif (ss&proper) {
+                    cm.foldCode(CodeMirror.Pos(ss&line,0));
+                }
+            }
+            each if ope {
+                $ch = fy&chunk;
+                $g = me&tsc,"fold-on:"+fs&line,0,1
+                !ch and me&mtsc,g,"surprise",0,'y'
+                else {
+                    me&mtsc,g,"loc",0,'y' .c.s = lines[fs&line]
+                }
+            }
+
         }
         
         
@@ -362,6 +346,67 @@ me.Sch_Comm = &acgt{ return [
         })
     },'ift,D'],
 ]};
+  // Textl
+    # i $s/$chunk+
+    #  relating s%(to)lines -> lines
+    me.chunksoflines = &acgts,lines{
+        $chunk = &sil{
+            $c = Cye(['chunk@'+i,1]);
+            cs&line = l;
+            me&fiu,s,c;
+            return c
+        }
+        $c = null;
+        $i = 0;
+        $li = ss&line || 0;
+        $laindent = ss&indent || 0;
+        while (lines[li+i] != null) {
+            $l = lines[li+i];
+            $indent = l.match(/^(\s*)(.*)$/);
+            $stuff = indent[2];
+            indent = indent[1].length;
+            $p = c;
+
+            # level this chunk is based at
+            $cind = c && cs&indent || 0;
+            # remaining at s's indent is not c-worthy
+            !c && ss&line && indent == ss&indent and i++; continue
+            else
+            !c and c = chunk(s,i,li+i)
+            else
+            !i and throw "i=0"
+            else
+            !stuff || stuff.match(/^#/) && indent == cind and 'grows'
+            else
+            # (1,2),(1) or (2,3),(1)
+            if (cind == indent && indent < laindent
+                || cind > indent) {
+                c = chunk(s,i,li+i)
+            }
+            else
+            # (1,1),(2) -> (1),(1,2)
+            if (cind < indent && laindent <= cind
+                && ps&toline - ps&line > 0) {
+                c = chunk(s,i,li+i);
+                cs&indent = laindent;
+                ps&toline--; cs&line--
+            }
+            else
+            # chunks with something further inside will cm.doFold
+            #  unless they're /^#/, no prob
+            # ie only the (1,2) of (1,1,1),(1,2)
+            indent > cind and cs&proper = 1
+
+            if (cs&indent == null) {
+                cs&indent = indent
+            }
+            cs&toline = li+i;
+            cs&toline >= ss&toline and break
+            laindent = indent;
+            i++;
+        }
+    }
+
 me.Sch_Constel = &acgt{ return [
     # hierarchise, do batches of updates 
     # < more than W I mixes
