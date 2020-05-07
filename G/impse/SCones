@@ -213,70 +213,76 @@ me.Sch_Comm = &acgt{ return [
         $cmsc = cms&cm_sc = {hoistcm:R};
         $cm = me&rollbs,R,'cm';
         !cm and me&waits,'cm...'
-        
-        $i = 3;
-        while (i++ < 8) {
-            #cm.foldCode(CodeMirror.Pos(i,0));
         }
-        
-        # < an open fold should have '@' buttons at each end
-        #  < scanUp for the initial or less indent
-        }
+        $lines = zc&s.split("\n");
   // Glimpes chunk
-        if (!zs&chunks|| 1) {
-            zs&chunks = [];
-            $lines = zc&s.split("\n");
+        if (!zs&chunks || 1) {
             
+            # starting from s = the whole document
             $chu = Cye(['flod',1]);
             chus&line = 0;
             chus&toline = lines.length-1;
+            # i $s/$c each divisible chunk
             $N = me&indo,chu,{dl:15} (&sd{
-                ss&indent != null && ss&toline == ss&line and 1
-                else {
-                    me&chunksoflines,s,lines;
-                    !ss&z and throw "nochunks"
-                }
-                s == chu && ss&z.length == 1 and ss&z.map(z => me&fiu,s,z,9 )
-                sc&s = lines.slice(ss&line,ss&toline+1).join("\n");
+                ss&toline-ss&line < 20 and return s
+                
+                me&chunksoflines,s,lines;
+                !ss&z and throw "nochunks"
+                
+                s == chu && ss&z.length == 1 &&
+                    ss&z.map(z => me&fiu,s,z,9 )
                 return s
             });
-            
+            # assign their substrings 
             N.map(&s{
+                #sc&s = lines.slice(ss&line,ss&toline+1).join("\n");
                 ss&lines = 1+ss&toline-ss&line;
                 ss&lines < 20 and delete ss&proper
             });
             $rev = N.slice().reverse();
+            # size supposing s/*%folded
             rev.filter(s => ss&proper).map(&s{
                 ss&size = ss&lines;
                 ss&z .filter(c => cs&proper).map(&c{
                     ss&size -= cs&lines-1;
                 });
             })
-            delete chuc&s;
-            #chus&z = zs&chunks.filter(s => sy&up == z);
+            zs&chunks = rev;
             
-            if (1) {
-                # a map, almost as folded
+            delete chuc&s;
+            
+            if (0) {
+                # a map, almost as folded!
                 $dive;
                 me&indo,chu,{dl:15} (&sd{
-                    ss&lines < 20 and d.not = 1; return
                     !d.dive and dive = d.dive = Cye(s); dive.t = 'dive'
                     else {
                         d.dive = me&fiu,d.dive,Cye(s)
                     }
                 })
+                
                 me&nu,"Dived",dive||"NOT";
                 dive &&
-                n zeer  $s:dive,R %ball,noDescribe
+                n zoap  $s:dive,R %ball,tightly,noDescribe,chunksia,reneg
             }
+        }
+  // Glimpes folds
             
-            $M = !cm ? [] :
-                cm.getAllMarks().filter(n => n.__isFold).map(&n{
-                # TextMarker
-                $l = n.lines;
-                $range = [l[0],l.slice(-1)[0]].map(li => li.lineNo());
-                return Cye(['fold',1,{},{line:range[0],toline:range[1]}])
-            });
+            
+            $M = [];
+            if (cm) {
+                $marks = cm.getAllMarks();
+                marks.filter(n => n.__isreFold).map(&n{
+                    n.clear();
+                });
+                M = marks.filter(n => n.__isFold).map(&n{
+                    # TextMarker
+                    $pos = n.find();
+                    return Cye(['fold',1,{},{mark:n,
+                        line: pos.from.line,
+                        toline: pos.to.line}])
+                });
+            }
             # < open fold markers too, leave open
             #   when aging/inserting folds,
             #     open those the cursor/diff is mostly in
@@ -285,7 +291,7 @@ me.Sch_Comm = &acgt{ return [
                 ope[fs&line] = f
             }
             # our chunks match|make a fold !!!!
-            each is rev {
+            each is zs&chunks {
                 $f = ope[ss&line];
                 f and fy&chunk = s 
                 elsif (ss&proper) {
@@ -293,17 +299,52 @@ me.Sch_Comm = &acgt{ return [
                     folds.push(CodeMirror.Pos(ss&line,0));
                 }
             }
-            return
+            
+            #return
             each if ope {
                 $ch = fy&chunk;
+                ch && chs&indent > 6 and continue
+                $m = fs&mark;
+                $pos = m.find();
+                $loc = lines[fs&line];
+                if (loc.includes('< Domes')) {
+        # < an open fold should have close buttons at each end
+                $refoldable;
+                refoldable = &m{
+                    m._handlers and delete m._handlers.clear;
+                    m.on('clear',&from,to{
+                        $N;
+                        $foldagain = &{
+                            $pos = N[0].find();
+                            N.map(n => n.clear())
+                            !pos and return
+                            ~>3 foldat: pos.line
+                            $fo = cm.foldCode(pos);
+                            !fo and return ~>5 lost fold:
+                            refoldable(fo);
+                        };
+                        N = [from,to].map(&l{
+                            $sym = l == from ? "\u21A6" : "\u21A4";
+                            $widget = $('<n>'+sym+'</n>')
+                                .on('click',foldagain)
+                                .css('float','right')
+                                # < clickable large floaty things...
+                                #.css('font-size','280%')
+                                .css('color','#7c9')[0];
+                            $lop = cm.setBookmark(l,{widget});
+                            lop.__isreFold = 1;
+                            return lop;
+                        });
+                    })
+                };
+                refoldable(m);
+                }
                 $g = me&tsc,"fold-on:"+fs&line,0,1
                 !ch and me&mtsc,g,"surprise",0,'y'
                 else {
                     me&mtsc,g,"loc",0,'y' .c.s = lines[fs&line]
                 }
             }
-
-        }
         
         
         # splitting line objects into many overlapping chunk objects
@@ -368,9 +409,10 @@ me.Sch_Comm = &acgt{ return [
         $i = 0;
         $li = ss&line || 0;
         $laindent = ss&indent || 0;
+        $ltoindent = {};
         while (lines[li+i] != null) {
             $l = lines[li+i];
-            $indent = l.match(/^(\s*)(.*)$/);
+            $indent = ltoindent[li+i] ||= l.match(/^(\s*)(.*)$/);
             $stuff = indent[2];
             indent = indent[1].length;
             $p = c;
@@ -384,7 +426,7 @@ me.Sch_Comm = &acgt{ return [
             else
             !i and throw "i=0"
             else
-            !stuff || stuff.match(/^#/) && indent == cind and 'grows'
+            !stuff || stuff[0] == '#' && indent == cind and 'grows'
             else
             # (1,2),(1) or (2,3),(1)
             if (cind == indent && indent < laindent
