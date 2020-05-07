@@ -215,23 +215,27 @@ me.Sch_Comm = &acgt{ return [
         $cm = me&rollbs,R,'cm';
         !cm and me&waits,'cm...'
         }
+        #cmsc.chunksfold = 1;
+        #return;
+        
+        cmsc.valuecha = &cm,{}
         $lines = zc&s.split("\n");
         !zs&chunks and me&chunksoflines,z,lines
-        cmsc.valuecha = &cm,{
+        cmsc.valuecha = &acgt,cm{
             ~>5 gave value:
             $ope = me&cm_foldmap,cm
             me&cm_foldCode,z,ope,cm;
         };
-  // Glimpes folds
+       // chunks debug
         $ope = cm && me&cm_foldmap,cm || {};
         each is zs&chunks {
             $f = ope[ss&line];
             f and fy&chunk = s
         }
-            #return
+        if (1) {
             each if ope {
                 $ch = fy&chunk;
-                ch && chs&indent > 6 and continue
+                ch && chs&indent > 10 and continue
                 $m = fs&mark;
                 $pos = m.find();
                 $loc = lines[fs&line];
@@ -242,9 +246,21 @@ me.Sch_Comm = &acgt{ return [
                     me&mtsc,g,"loc",0,'y' .c.s = lines[fs&line]
                 }
             }
-        # splitting line objects into many overlapping chunk objects
-        # folding until <100 lines
-        # give cm foldmarkers
+        }
+        if (0) {
+            # a map, could ...
+            $dive;
+            me&indo,z,{dl:15} (&sd{
+                !d.dive and dive = d.dive = Cye(s); dive.t = 'dive'
+                else {
+                    d.dive = me&fiu,d.dive,Cye(s)
+                }
+            })
+            if (dive) {
+                delete dives&of;
+                n zoap  $s:dive,R %ball,tightly,noDescribe,reneg
+            }
+        }
     },'ift,D'],
    
   // Travelty
@@ -297,8 +313,21 @@ me.Sch_Comm = &acgt{ return [
     # < when aging/inserting folds,
     #     open those the cursor/diff is mostly in
    // cm side
+    # all at once
+    #   no memo, usu rarely happens via s&valuecha()
+    me.cm_chunksfold = &acgtz,cm{
+        $lines = zc&s.split("\n");
+        # not the osc C?
+        z == C and z = Cye(['lod',1]);
+        # split that up
+        !zs&chunks and me&chunksoflines,z,lines;
+        # the existing marks
+        $ope = me&cm_foldmap,cm
+        # adjust to C
+        me&cm_foldCode,z,ope,cm;
+    }
     # our chunks match|make a fold
-    # < z** could have ope=1/0, changing what is
+    # < z**%ope=1/0, changing what is
     me.cm_foldCode = &acgtz,ope,cm{
         $nofo = 1;
         each is zs&chunks {
@@ -372,11 +401,10 @@ me.Sch_Comm = &acgt{ return [
     # s/$c**, also s%chunks = [c in reverse (depth first)]
     me.chunksoflines = &acgts,lines{
         # starting from s = the whole document
-        $chu = s; # Cye(['flod',1]);
-        chus&line = 0;
-        chus&toline = lines.length-1;
+        ss&line = 0;
+        ss&toline = lines.length-1;
         # i $s/$c each divisible chunk
-        $N = me&indo,chu,{dl:15} (&sd{
+        $N = me&indo,s,{dl:15} (&sd{
             #ss&toline-ss&line < 20 and return s
 
             me&chunkchunksoflines,s,lines;
@@ -385,7 +413,7 @@ me.Sch_Comm = &acgt{ return [
             ss&z.filter(c => cs&toline-cs&line < 20)
                 .map(c => me&fiu,s,c,9 );
 
-            s == chu && ss&z.length == 1 &&
+            d.d == 1 && ss&z.length == 1 &&
                 ss&z.map(c => me&fiu,s,c,9 )
             return s
         });
@@ -407,21 +435,6 @@ me.Sch_Comm = &acgt{ return [
             ss&size < 20 and delete ss&proper
         })
         ss&chunks = rev;
-
-        if (0) {
-            # a map, could ...
-            $dive;
-            me&indo,chu,{dl:15} (&sd{
-                !d.dive and dive = d.dive = Cye(s); dive.t = 'dive'
-                else {
-                    d.dive = me&fiu,d.dive,Cye(s)
-                }
-            })
-            if (dive) {
-                delete dives&of;
-                n zoap  $s:dive,R %ball,tightly,noDescribe,chunksia,reneg
-            }
-        }
     }
     # i $s/$chunk+
     #  relating s%(to)lines -> lines
