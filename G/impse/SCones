@@ -217,41 +217,17 @@ me.Sch_Comm = &acgt{ return [
         }
         $lines = zc&s.split("\n");
         !zs&chunks and me&chunksoflines,z,lines
-        
+        cmsc.valuecha = &cm,{
+            ~>5 gave value:
+            $ope = me&cm_foldmap,cm
+            me&cm_foldCode,z,ope,cm;
+        };
   // Glimpes folds
-            
-            
-            $M = [];
-            if (cm) {
-                $marks = cm.getAllMarks();
-                marks.filter(n => n.__isreFold).map(&n{
-                    n.clear();
-                });
-                M = marks.filter(n => n.__isFold).map(&n{
-                    # TextMarker
-                    $pos = n.find();
-                    return Cye(['fold',1,{},{mark:n,
-                        line: pos.from.line,
-                        toline: pos.to.line}])
-                });
-            }
-            # < open fold markers too, leave open
-            #   when aging/inserting folds,
-            #     open those the cursor/diff is mostly in
-            $ope = {};
-            each if M {
-                ope[fs&line] = f
-            }
-            # our chunks match|make a fold !!!!
-            each is zs&chunks {
-                $f = ope[ss&line];
-                f and fy&chunk = s 
-                elsif (ss&proper) {
-                    $folds = cmsc.foldCode ||= [];
-                    folds.push(CodeMirror.Pos(ss&line,0));
-                }
-            }
-            
+        $ope = cm && me&cm_foldmap,cm || {};
+        each is zs&chunks {
+            $f = ope[ss&line];
+            f and fy&chunk = s
+        }
             #return
             each if ope {
                 $ch = fy&chunk;
@@ -259,7 +235,6 @@ me.Sch_Comm = &acgt{ return [
                 $m = fs&mark;
                 $pos = m.find();
                 $loc = lines[fs&line];
-                me&cm_mark_refoldable,m,cm;
                 
                 $g = me&tsc,"fold-on:"+fs&line,0,1
                 !ch and me&mtsc,g,"surprise",0,'y'
@@ -267,8 +242,6 @@ me.Sch_Comm = &acgt{ return [
                     me&mtsc,g,"loc",0,'y' .c.s = lines[fs&line]
                 }
             }
-        
-        
         # splitting line objects into many overlapping chunk objects
         # folding until <100 lines
         # give cm foldmarkers
@@ -321,13 +294,53 @@ me.Sch_Comm = &acgt{ return [
     # see &chunksoflines various < 20 for some stumbling into:
     # < play with which being open gives near 100 lines
     #   or 100 lines per 1000 lines, or so
+    # < when aging/inserting folds,
+    #     open those the cursor/diff is mostly in
    // cm side
+    # our chunks match|make a fold
+    # < z** could have ope=1/0, changing what is
+    me.cm_foldCode = &acgtz,ope,cm{
+        $nofo = 1;
+        each is zs&chunks {
+            $f = ope[ss&line];
+            f and fy&chunk = s
+            elsif (ss&proper) {
+                # this checks again that fold makes sense
+                $fo = cm.foldCode(CodeMirror.Pos(ss&line,0));
+                !fo and continue
+                nofo = 0
+                # doesn't make an $f
+                # open widgets
+                me&cm_mark_refoldable,fo,cm;
+            }
+        }
+        nofo and throw "cm.foldCode doesn't return marker"
+    }
+    # current folds by line, inc open if refold marked
+    me.cm_foldmap = &acgt,cm{
+        $M = cm.getAllMarks()
+        .filter(n => n.__isreFold && n.otherend || n.__isFold)
+        .map(&n{
+            $pos = n.find();
+            n.otherend and pos = {from:pos,to:n.otherend.find()}
+            return Cye(['fold',1,{},{mark:n,
+                line: pos.from.line,
+                toline: pos.to.line
+            }])
+        });
+        $ope = {};
+        each if M {
+            ope[fs&line] = f
+        }
+        return ope
+    }
     # an open fold having close buttons at each end
     me.cm_mark_refoldable = &acgtm,cm{
         $refoldable;
         refoldable = &m{
             m._handlers and delete m._handlers.clear;
             m.on('clear',&from,to{
+                !(from && to) and return ~>5 lost fold:
                 $N;
                 $foldagain = &{
                     $pos = N[0].find();
@@ -335,7 +348,7 @@ me.Sch_Comm = &acgt{ return [
                     !pos and return
                     ~>3 foldat: pos.line
                     $fo = cm.foldCode(pos);
-                    !fo and return ~>5 lost fold:
+                    !fo and return ~>5 lost refold:
                     refoldable(fo);
                 };
                 N = [from,to].map(&l{
@@ -350,6 +363,7 @@ me.Sch_Comm = &acgt{ return [
                     lop.__isreFold = 1;
                     return lop;
                 });
+                N[0].otherend = N[1]
             })
         };
         refoldable(m);
