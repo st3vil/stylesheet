@@ -237,7 +237,6 @@ me.Sch_Comm = &acgt{ return [
             N.map(&s{
                 #sc&s = lines.slice(ss&line,ss&toline+1).join("\n");
                 ss&lines = 1+ss&toline-ss&line;
-                ss&lines < 20 and delete ss&proper
             });
             $rev = N.slice().reverse();
             # size supposing s/*%folded
@@ -307,37 +306,9 @@ me.Sch_Comm = &acgt{ return [
                 $m = fs&mark;
                 $pos = m.find();
                 $loc = lines[fs&line];
+                me&cm_mark_refoldable,m;
+                
                 if (loc.includes('< Domes')) {
-        # < an open fold should have close buttons at each end
-                $refoldable;
-                refoldable = &m{
-                    m._handlers and delete m._handlers.clear;
-                    m.on('clear',&from,to{
-                        $N;
-                        $foldagain = &{
-                            $pos = N[0].find();
-                            N.map(n => n.clear())
-                            !pos and return
-                            ~>3 foldat: pos.line
-                            $fo = cm.foldCode(pos);
-                            !fo and return ~>5 lost fold:
-                            refoldable(fo);
-                        };
-                        N = [from,to].map(&l{
-                            $sym = l == from ? "\u21A6" : "\u21A4";
-                            $widget = $('<n>'+sym+'</n>')
-                                .on('click',foldagain)
-                                .css('float','right')
-                                # < clickable large floaty things...
-                                #.css('font-size','280%')
-                                .css('color','#7c9')[0];
-                            $lop = cm.setBookmark(l,{widget});
-                            lop.__isreFold = 1;
-                            return lop;
-                        });
-                    })
-                };
-                refoldable(m);
                 }
                 $g = me&tsc,"fold-on:"+fs&line,0,1
                 !ch and me&mtsc,g,"surprise",0,'y'
@@ -396,6 +367,40 @@ me.Sch_Comm = &acgt{ return [
     },'ift,D'],
 ]};
   // Textl
+   // cm side
+    # an open fold having close buttons at each end
+    me.cm_mark_refoldable = &acgtm{
+        $refoldable;
+        refoldable = &m{
+            m._handlers and delete m._handlers.clear;
+            m.on('clear',&from,to{
+                $N;
+                $foldagain = &{
+                    $pos = N[0].find();
+                    N.map(n => n.clear())
+                    !pos and return
+                    ~>3 foldat: pos.line
+                    $fo = cm.foldCode(pos);
+                    !fo and return ~>5 lost fold:
+                    refoldable(fo);
+                };
+                N = [from,to].map(&l{
+                    $sym = l == from ? "\u21A6" : "\u21A4";
+                    $widget = $('<n>'+sym+'</n>')
+                        .on('click',foldagain)
+                        .css('float','right')
+                        # < clickable large floaty things...
+                        #.css('font-size','280%')
+                        .css('color','#7c9')[0];
+                    $lop = cm.setBookmark(l,{widget});
+                    lop.__isreFold = 1;
+                    return lop;
+                });
+            })
+        };
+        refoldable(m);
+    }
+   // lines side
     # i $s/$chunk+
     #  relating s%(to)lines -> lines
     me.chunksoflines = &acgts,lines{
