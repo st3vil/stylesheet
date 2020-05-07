@@ -216,7 +216,7 @@ me.Sch_Comm = &acgt{ return [
         !cm and me&waits,'cm...'
         }
         $lines = zc&s.split("\n");
-        !zs&chunks || 1 and me&chunksoflines,z,lines
+        !zs&chunks and me&chunksoflines,z,lines
         
   // Glimpes folds
             
@@ -318,6 +318,9 @@ me.Sch_Comm = &acgt{ return [
     },'ift,D'],
 ]};
   // Textl
+    # see &chunksoflines various < 20 for some stumbling into:
+    # < play with which being open gives near 100 lines
+    #   or 100 lines per 1000 lines, or so
    // cm side
     # an open fold having close buttons at each end
     me.cm_mark_refoldable = &acgtm,cm{
@@ -360,31 +363,38 @@ me.Sch_Comm = &acgt{ return [
         chus&toline = lines.length-1;
         # i $s/$c each divisible chunk
         $N = me&indo,chu,{dl:15} (&sd{
-            ss&toline-ss&line < 20 and return s
+            #ss&toline-ss&line < 20 and return s
 
             me&chunkchunksoflines,s,lines;
             !ss&z and throw "nochunks"
+            
+            ss&z.filter(c => cs&toline-cs&line < 20)
+                .map(c => me&fiu,s,c,9 );
 
             s == chu && ss&z.length == 1 &&
-                ss&z.map(z => me&fiu,s,z,9 )
+                ss&z.map(c => me&fiu,s,c,9 )
             return s
         });
+        
         # assign their substrings 
         N.map(&s{
-            sc&s = lines.slice(ss&line,ss&toline+1).join("\n");
+            #ss&string = lines.slice(ss&line,ss&toline+1).join("\n");
             ss&lines = 1+ss&toline-ss&line;
+            ss&lines < 20 and delete ss&proper
         });
         $rev = N.slice().reverse();
+        
         # size supposing s/*%folded
         rev.filter(s => ss&proper).map(&s{
             ss&size = ss&lines;
             ss&z .filter(c => cs&proper).map(&c{
                 ss&size -= cs&lines-1;
             });
+            ss&size < 20 and delete ss&proper
         })
         ss&chunks = rev;
 
-        if (1) {
+        if (0) {
             # a map, could ...
             $dive;
             me&indo,chu,{dl:15} (&sd{
@@ -393,10 +403,10 @@ me.Sch_Comm = &acgt{ return [
                     d.dive = me&fiu,d.dive,Cye(s)
                 }
             })
-
-            #me&nu,"Dived",dive||"NOT";
-            dive &&
-            n zoap  $s:dive,R %ball,tightly,noDescribe,chunksia,reneg
+            if (dive) {
+                delete dives&of;
+                n zoap  $s:dive,R %ball,tightly,noDescribe,chunksia,reneg
+            }
         }
     }
     # i $s/$chunk+
