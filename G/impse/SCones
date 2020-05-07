@@ -193,6 +193,7 @@ me.Sch_Comm = &acgt{ return [
     },'ift,D'],
   // Glimpes Textl
     ['Glimpes',0.32,&acgtRs{
+        me&reaw,R,'Yinghost,cm';
         me&tsc,'%Glimpessssssss',0,'G'
         $w = me&t,R,'ghost','Yingmas-light';
         !w and return me&waits,'t...'
@@ -215,56 +216,8 @@ me.Sch_Comm = &acgt{ return [
         !cm and me&waits,'cm...'
         }
         $lines = zc&s.split("\n");
-  // Glimpes chunk
-        if (!zs&chunks || 1) {
-            
-            # starting from s = the whole document
-            $chu = Cye(['flod',1]);
-            chus&line = 0;
-            chus&toline = lines.length-1;
-            # i $s/$c each divisible chunk
-            $N = me&indo,chu,{dl:15} (&sd{
-                ss&toline-ss&line < 20 and return s
-                
-                me&chunksoflines,s,lines;
-                !ss&z and throw "nochunks"
-                
-                s == chu && ss&z.length == 1 &&
-                    ss&z.map(z => me&fiu,s,z,9 )
-                return s
-            });
-            # assign their substrings 
-            N.map(&s{
-                #sc&s = lines.slice(ss&line,ss&toline+1).join("\n");
-                ss&lines = 1+ss&toline-ss&line;
-            });
-            $rev = N.slice().reverse();
-            # size supposing s/*%folded
-            rev.filter(s => ss&proper).map(&s{
-                ss&size = ss&lines;
-                ss&z .filter(c => cs&proper).map(&c{
-                    ss&size -= cs&lines-1;
-                });
-            })
-            zs&chunks = rev;
-            
-            delete chuc&s;
-            
-            if (0) {
-                # a map, almost as folded!
-                $dive;
-                me&indo,chu,{dl:15} (&sd{
-                    !d.dive and dive = d.dive = Cye(s); dive.t = 'dive'
-                    else {
-                        d.dive = me&fiu,d.dive,Cye(s)
-                    }
-                })
-                
-                me&nu,"Dived",dive||"NOT";
-                dive &&
-                n zoap  $s:dive,R %ball,tightly,noDescribe,chunksia,reneg
-            }
-        }
+        !zs&chunks || 1 and me&chunksoflines,z,lines
+        
   // Glimpes folds
             
             
@@ -306,10 +259,8 @@ me.Sch_Comm = &acgt{ return [
                 $m = fs&mark;
                 $pos = m.find();
                 $loc = lines[fs&line];
-                me&cm_mark_refoldable,m;
+                me&cm_mark_refoldable,m,cm;
                 
-                if (loc.includes('< Domes')) {
-                }
                 $g = me&tsc,"fold-on:"+fs&line,0,1
                 !ch and me&mtsc,g,"surprise",0,'y'
                 else {
@@ -369,7 +320,7 @@ me.Sch_Comm = &acgt{ return [
   // Textl
    // cm side
     # an open fold having close buttons at each end
-    me.cm_mark_refoldable = &acgtm{
+    me.cm_mark_refoldable = &acgtm,cm{
         $refoldable;
         refoldable = &m{
             m._handlers and delete m._handlers.clear;
@@ -401,9 +352,56 @@ me.Sch_Comm = &acgt{ return [
         refoldable(m);
     }
    // lines side
+    # s/$c**, also s%chunks = [c in reverse (depth first)]
+    me.chunksoflines = &acgts,lines{
+        # starting from s = the whole document
+        $chu = s; # Cye(['flod',1]);
+        chus&line = 0;
+        chus&toline = lines.length-1;
+        # i $s/$c each divisible chunk
+        $N = me&indo,chu,{dl:15} (&sd{
+            ss&toline-ss&line < 20 and return s
+
+            me&chunkchunksoflines,s,lines;
+            !ss&z and throw "nochunks"
+
+            s == chu && ss&z.length == 1 &&
+                ss&z.map(z => me&fiu,s,z,9 )
+            return s
+        });
+        # assign their substrings 
+        N.map(&s{
+            sc&s = lines.slice(ss&line,ss&toline+1).join("\n");
+            ss&lines = 1+ss&toline-ss&line;
+        });
+        $rev = N.slice().reverse();
+        # size supposing s/*%folded
+        rev.filter(s => ss&proper).map(&s{
+            ss&size = ss&lines;
+            ss&z .filter(c => cs&proper).map(&c{
+                ss&size -= cs&lines-1;
+            });
+        })
+        ss&chunks = rev;
+
+        if (1) {
+            # a map, could ...
+            $dive;
+            me&indo,chu,{dl:15} (&sd{
+                !d.dive and dive = d.dive = Cye(s); dive.t = 'dive'
+                else {
+                    d.dive = me&fiu,d.dive,Cye(s)
+                }
+            })
+
+            #me&nu,"Dived",dive||"NOT";
+            dive &&
+            n zoap  $s:dive,R %ball,tightly,noDescribe,chunksia,reneg
+        }
+    }
     # i $s/$chunk+
     #  relating s%(to)lines -> lines
-    me.chunksoflines = &acgts,lines{
+    me.chunkchunksoflines = &acgts,lines{
         $chunk = &sil{
             $c = Cye(['chunk@'+i,1]);
             cs&line = l;
