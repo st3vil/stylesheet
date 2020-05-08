@@ -99,11 +99,13 @@
         ss&toline = lines.length-1;
         # i $s/$c each divisible chunk
         $N = me&indo,s,{dl:15} (&sd{
+            # keep small chunks, no further
             #ss&toline-ss&line < 20 and return s
 
             me&chunkchunksoflines,s,lines;
             !ss&z and throw "nochunks"
             
+            # drop small chunks
             ss&z.filter(c => cs&toline-cs&line < 20)
                 .map(c => me&fiu,s,c,9 );
 
@@ -160,8 +162,10 @@
             else
             !i and throw "i=0"
             else
-            # < not not minding empty lines
-            !stuff || stuff[0] == '#' && indent == cind and 'grows'
+            # not minding empty lines
+            !stuff and indent = laindent; 'grow'
+            else
+            stuff[0] == '#' && indent == cind and 'grow'
             else
             # (1,2),(1) or (2,3),(1)
             if (cind == indent && indent < laindent
