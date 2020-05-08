@@ -2201,7 +2201,8 @@ Fourism: |
                 # < seekto as %loca, any depth/describitude
                 #    as SCA ring
                 dinc&ttl ||= 5;
-                if (--dinc&ttl == 0) {
+                dinc&timetl ||= Gtime();
+                if (--dinc&ttl == 0 || Gtime(dinc&timetl) > 5) {
                     # might be things on trail no longer in W
                     # < loose bits of uncommitted W to reintro
                     delete Rs&seekto;
@@ -2236,10 +2237,9 @@ Fourism: |
                 ~>7 sunk: ki(fora,2)
                 if (!fs&sunketh) {
                     fs&sunketh = 1;
-                    ~>7 sunketh: R.t
+                    ~>3 sunketh inint:
                     me&elvis,R,'sunketh-init';
                 }
-                
                 delete Rs&seekto;
             });
             
@@ -3195,6 +3195,27 @@ Fourism: |
         ['Abodis','293',&acgtRs{
             $dish = &{ah(R,'Abodis',...arguments) };
             
+            dish('o','main acts',&f,T,mode{
+                $at = f.at;
+                !fs&init && f.hatch(1) and return
+                f.hatch(22) and return
+                
+                # sleepytime same geo
+                $geo = f.M.map(m=>ms&top+':'+ms&height).join(',');
+                $stillgeo = geo == fs&wasgeo;
+                fs&wasgeo = geo;
+                $is = [ats&left,ats&top,geo].join(' ');
+                $still = is == fs&was;
+                fs&was = is;
+                !still and delete fs&casual
+                
+                !stillgeo           and f.hatch(6)    and return
+                !still              and f.hatch(71)   and return
+                mode && !f.sc[mode] and f.hatch(mode) and return
+                
+                mode == 'casual' and return
+                #~>2 shui: Gtime(began), mode||'...', still?"still":""
+            })
             dish('o',1,&fT{
                 $at = f.at;
                 $on = ats&on; # Abodo
@@ -3227,26 +3248,53 @@ Fourism: |
                 f.hatch('mapstyle');
                 f.hatch('fengup');
                 
-                # e->f entry, eg nto callback, hatch with arg
+                fs&init = 1;
+            });
+            
+            $thisR = R;
+            !Rc&b and G&delay:1.14,&{ me&elvis,thisR,'breeze' }
+            # pretty inexplicably complicated
+            #  doesn't seem to future anywhere,
+            #   was somehow holding R%Domed, closure weirdness?
+            # < do f acts as e, immediato from the top level, if finding f
+            #   else (and for now) e Codap to re-fengup (re-ein)
+            # e->f entry, eg nto callback, hatch with args
+            $sharef;
+            dish('o','fengup',&fT{
+                ~>5 Fengsiup:
+                f.fengi =
                 Rs&fengi = &TtO{
                     f = fs&f;
                     $args = [...arguments].slice(2);
                     f.hatch(t,...args);
                     T.wake ||= 'not';
                 };
-                fs&init = 1;
+                f.fengisup = 1;
             });
-            # delays calls until replaced on init
+            # delays calls until replaced on f.22
             Rs&fengi = me&tooearly,'fengi','stub' (&{
-                $r = me&yfuture,R;
+                ~>5 thisR: thisR.t
+                !Rs&calledback and Rs&calledback = 1; me&elvis,R,'fengi-back'
+                $f = sharef;
+                # futurises f
+                f = f && fs&f;
+                # futureises R
+                $r = me&yfuture,thisR;
+                rs&fengi = f && f.fengi || rs&fengi;
                 return rs&fengi
             },&TtO{ T.wake = 'not'; return T });
             
+            #c more acts
             # early ish, before sleepcheck
-            # notice instructions left, from things just rendered
             dish('o',22,&fT{
                 Abodo = f.Abodo;
+                sharef = f;
                 
+                # f, per R, could be f.init,
+                # as opposed to fs&init which is permanent
+                !f.fengisup and f.hatch('fengup');
+                
+                # notice instructions left, from things just rendered
                 each tO Abodos&fengtodo {
                     O == 'not' and continue
                     f.hatch(t,O) and return
@@ -3259,11 +3307,13 @@ Fourism: |
             
             # aft sleepcheck:
             
-            # if sizes Codin sizes change:
+            # if sizes change:
             dish('o',6,&fT{
                 f.hatch('dontscroll')
             });
+            # if scroll changes:
             dish('o',71,&fT{
+                delete Rs&seekto;
                 f.hatch(T,'notice_center')
             });
             # to casually be somewhere
@@ -3364,6 +3414,7 @@ Fourism: |
                 if (JRs&elvoids) {
                     fs&beenwaiting ||= 0;
                     $i = fs&beenwaiting++;
+                    i > 5 and ~>8 fs&beenwaiting: fs&beenwaiting
                     return
                 }
                 if (fs&beenwaiting) {
@@ -3372,25 +3423,7 @@ Fourism: |
                     # < one more?
                     #return G&yl,0.01,f.shui
                 }
-                
-                !fs&init && f.hatch(1) and return
-                f.hatch(22) and return
-                
-                # sleepytime same geo
-                $geo = f.M.map(m=>ms&top+':'+ms&height).join(',');
-                $stillgeo = geo == fs&wasgeo;
-                fs&wasgeo = geo;
-                $is = [ats&left,ats&top,geo].join(' ');
-                $still = is == fs&was;
-                fs&was = is;
-                !still and delete fs&casual
-                
-                !stillgeo           and f.hatch(6)    and return
-                !still              and f.hatch(71)   and return
-                mode && !f.sc[mode] and f.hatch(mode) and return
-                
-                mode == 'casual' and return
-                #~>2 shui: Gtime(began), mode||'...', still?"still":""
+                f.hatch('main acts',mode);
             };
             
             
