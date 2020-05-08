@@ -760,7 +760,18 @@ Soogle: | # start from Sevo
         });
         $cm = Rs&cm;
         cm.R = R;
-        s&chunksfold and h.valuecha = &acgt{ me&cm_chunksfold,C,cm }
+        if (s&chunksfold) {
+            # when it sets value
+            h.valuecha = &acgt{ me&cm_chunksfold,cm }
+            # and for big pastes
+            s&hands ||= {};
+            s&hands.inputRead and throw "double handed"
+            s&hands.inputRead = &cm,ch{
+                ch.text.length < 20 and return
+                # C is now out of date
+                me&cm_chunksfold,cm
+            };
+        }
 
         # sets value
         if (c&s != null) {
@@ -794,7 +805,7 @@ Soogle: | # start from Sevo
             s&digs and ec&parent = s&digs
             me&valuesays,R,e;
         };
-        #c 8
+        #c codemirror 8
         $save = &{ G&gev };
         cm.setOption('extraKeys', {
             'Esc': save,
