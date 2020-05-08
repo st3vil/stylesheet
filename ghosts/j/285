@@ -787,7 +787,7 @@ Fourism: |
         #s&ab = 1;
         #s&wi = '44%';
     };
-    #c Elvisingness - sleeping is possible
+    #c Elvisingness - %Slei - sleeping is possible
     me.Elvisingness = &acgt{ return [
         ['Slei','278',&acgtRs{
             !(Rs&ball || Rs&Gens) and delete Rs&Slei; return
@@ -893,7 +893,7 @@ Fourism: |
                 });
             }
         },'ift,D'],
-        #c Slei-testing
+        #c %Slei - testing
         # t =~ /^sleeping/ only if sleeping, sc either
         ['sleeping+Timeding','28',&acgtRs{
             me&rollbs,R,'lupe,countis,incount,Vawake';
@@ -2234,6 +2234,12 @@ Fourism: |
                 }
                 on.scrollTop = dec(scroll);
                 ~>7 sunk: ki(fora,2)
+                if (!fs&sunketh) {
+                    fs&sunketh = 1;
+                    ~>7 sunketh: R.t
+                    me&elvis,R,'sunketh-init';
+                }
+                
                 delete Rs&seekto;
             });
             
@@ -2243,7 +2249,27 @@ Fourism: |
                 D == Loc and D = null
                 !D and D = O; O = null
                 $seek = Cye([D.t,1]);
-                O and $onto = fio(seek,O.t)
+                
+                if (O) {
+                    # specific %Code
+                    $onto = fio(seek,O.t);
+                    # visited to open for the first time (until r%cm)
+                    #   after that ope=1|0 toggles cm display:none from stylepile
+                    $r = Oc&R;
+                    Os&ope = 1;
+                    if (r && !rs&cm) {
+                        ~>7 ope-Code hop:
+                        # < ux: seek then this via Dc&onsunketh
+                        me&elvis,R,'ope-Code',{wake:Oc&R}
+                    }
+                }
+                
+                # every odd Codon_click should seek top of it
+                #   not $seek/-$onto
+                $was = fs&last_Codon_click_O;
+                was == O and onto = null; delete fs&last_Codon_click_O
+                else { fs&last_Codon_click_O = O }
+                
                 $t = Locs&trail;
                 if (onto && t) {
                     # go where we left
@@ -2697,12 +2723,14 @@ Fourism: |
             };
         };
         
-        # make/keep Oc&R=r, rs&Org=O
+        # make/keep Oc&R=r, rs&Org=sy&Org=O
         me.futlink = &acgtOtr{
             r and Oc&R = r
             !Oc&R and return
             r = Oc&R = me&yfuture,Oc&R;
             r.sc[t] = O;
+            $s = rc&s;
+            s && rs&ball and s.y [t] = O
             return r
         };
         
@@ -3278,6 +3306,7 @@ Fourism: |
                 cb(f,T,...args);
                 
                 if (T.feng && !T.fengdone) {
+                    # very fast
                     G&delay,0.001,&{f.shui()};
                     T.fengdone = 1
                 }
@@ -3486,10 +3515,12 @@ Fourism: |
         ['fix+Cofix','296',&acgtRs{
             #$c = me&tsc,'%Codon','Cofix','g';
 
-            # < feed openness
-            Rs&beopen ||= 1;
             $p = Ry&up;
             !ps&Code and throw "Cofix^!Code"
+            $z = pc&s;
+            $O = zy&Org;
+            # feed openness from Org
+            O && Os&ope and Rs&beopen = 1
             if (R.t == 'string') {
                 # T: the cm object placed on the Code, etc
                 $h = Rs&cm_sc = ps&cm_sc = {hoistcm:p};
