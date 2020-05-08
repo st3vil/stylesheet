@@ -1,5 +1,12 @@
 # lines of characters, etc
   // Textl
+    # < preferring // titles, if siblings,
+    #   down to cs&size > 5
+    # < joining b in ((...,0),(1,2,2,1,2,2,1):b):a
+    #    esp if a > 80, we could look harder
+    #    b is otherwise 3 chunks, none big enough, also:
+    # < pre|post-amble, braces or comments, if gap beyond
+    #   (1,2,2,1),0,(1,2,2,1)
     # see &chunksoflines various < 20 for some stumbling into:
     # < play with which being open gives near 100 lines
     #   or 100 lines per 1000 lines, or so
@@ -108,9 +115,12 @@
             # drop small chunks
             ss&z.filter(c => cs&toline-cs&line < 20)
                 .map(c => me&fiu,s,c,9 );
-
-            d.d == 1 && ss&z.length == 1 &&
-                ss&z.map(c => me&fiu,s,c,9 )
+            # and any one chunk same as the parent chunk
+            ss&z.length == 1 && ss&z
+            .filter(c => cs&line == ss&line).map(&c{
+                cs&toline != ss&toline and throw "was shorter"
+                me&fiu,s,c,9
+            });
             return s
         });
         
@@ -122,7 +132,7 @@
         });
         $rev = N.slice().reverse();
         
-        # size supposing s/*%folded
+        # size supposing s/*%folded are each 1 line
         rev.filter(s => ss&proper).map(&s{
             ss&size = ss&lines;
             ss&z .filter(c => cs&proper).map(&c{
