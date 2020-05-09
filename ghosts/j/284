@@ -7489,8 +7489,7 @@ Foogla: | # Domes prepare to A=A
                 
                 # don't wait for the async check
                 #  use the current, let remotes resolve async
-                # Pc&s only null if never found,
-                #  or new string is got but not decoded
+                # Pc&s only null if never found or not decoded
                 !ok && Pc&s && !c&canwait and ok = 1
                 
                 if (!ok) {
@@ -7611,7 +7610,7 @@ Foogla: | # Domes prepare to A=A
             #c PullCheck
             Rs&Pull_Check = &TCP{
                 T.waits and throw "PullCheck while waits"
-                T.ok = 0;
+                T.ok = null;
                 # they may have their own ways to use dige/v, p/P/s&P
                 # Pc&get how to ask,
                 # Pc&got loads response into P
@@ -7624,7 +7623,7 @@ Foogla: | # Domes prepare to A=A
                     # sync Talk.mem, every time
                     # no cb_gen, keeps Want_Check=1
                     Ps&now = Gtime();
-                    T.ok = 1;
+                    T.ok == null and T.ok = 1
                     delete T.done;
                     # for Decode timer:
                     #T.tcp = ch(c&of,[C.t,'.','.','.','']);
@@ -7795,6 +7794,8 @@ Foogla: | # Domes prepare to A=A
                 $cb_gen = delete T.cb_gen;
                 T.got = &Psc{
                     $W = me&Pcs,P,c,s;
+                    # not looking ready too soon, wait for Wc&code
+                    delete Pc&s;
                     # < get the source code out of a <script src> ?
                     # use our first request (to ascertain the dige)
                     Wc&s = s;
@@ -7805,6 +7806,7 @@ Foogla: | # Domes prepare to A=A
                     T.ok = 0;
                     T.waits = Gtime();
                     $cb = &s,e{
+                        Pc&s = W;
                         T.waited_script = Gtime(T.waits);
                         T.ok = 1;
                         Ps&script = s;
