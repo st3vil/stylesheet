@@ -29,7 +29,7 @@ Rs&Qready = &Q{
     #  if you don't recycle your Qs
     #   unpacke will flatten it
     $r = me&yfuture,R;
-    r != R and return rs&Qready(Q);
+    r != R and return rs&Qready && rs&Qready(Q);
     ac(R,'Qu',Q);
     # delay to allow batching
     $cb = me&sccb,R,'Quping',&{Rs&Qup()};
@@ -40,7 +40,6 @@ Rs&Qup = &{
     $N = delete Rs&Qu;
     !N and return ~>4 nothing
     $wake = [];
-    $lost = [];
     each iQ N {
         $P = Qs&P;
         $s = Qc&s || Pc&s;
@@ -55,23 +54,54 @@ Rs&Qup = &{
             me&way,R,Q.t,{me};
         }
         else {
-            Qy&R and wake.push(Q)
-            else {
-                lost.push(Q)
-            }
+            wake.push(P)
         }
     }
     # redisable feta
     me.hacks and me&hacks;
+    $JRoms = [];
     if (wake.length) {
+        each iP wake {
+            # one P many Q, one of whom found the news
+            each i,Pring Ps&Prings {
+                $J = me&yfuture,Prings&R;
+                JRoms.includes(J) and continue
+                JRoms.push(J);
+                # b-give it pairs of [Q,r] of interest (to %Yingu)
+                # < on the e, deeply, plan with
+                each in Prings&z {
+                    # < check bunch of P are ready, wait max 2s
+                    !ns&P.c.s and ~>3 prematuero: ns&P.t
+                    ns&P != P and continue
+                    each iz ns&z {
+                        ac(J,'Intere',Cye(['Qup',1,{},{R:zs&R,Q:zs&Q}]))
+                    }
+                }
+            }
+        }
+        !JRoms.length and ~>5 didnt Prings any: P.t
+    }
+   // and
+    if (JRoms.length) {
         # elQups pack from Pearch, like elvoids from JRom
         $E = Cye(['elQups',8,{pack:R}]);
-        $names = [];
-        each iQ wake {
-            $r = Qy&R;
-            !r and throw "NOQ"
-            names.push(r.t == Q.t ? "J%"+Q.t : r.t+"<"+Q.t)
-            $e = Cye(['elQup',1,{wake:r},{Q}]);
+        each iJ JRoms {
+            $tz = {};
+            $Intere = Js&Intere;
+            each iq Intere {
+                $z = tz[qs&R.t] ||= [];
+                z.push(q)
+            }
+            $names = [];
+            each tz tz {
+                names.push( (t != J.t ? qs&R.t : "")+"<-"
+                    + z.map(q => qs&Q.t).join(',') )
+            }
+            names = J.t+": "+names.join(" ");
+            ~>6 elQueps: names
+            
+            $e = Cye(['elQup',1,{wake:J}]);
+            Intere and es&Intere = Intere
             ac(E,'z',e);
         }
         # < unpause JRoms after debugger pauses
@@ -80,9 +110,6 @@ Rs&Qup = &{
         4s&unplugbugcb = [];
         N.map(cb => cb());
         
-        lost.length and Es&lostQ = lost
-        lost.length and ~>6 elQuplos: ki(lost,2)
-        ~>6 elQueps: Es&z.length, names.join(" ")
         me&elvis,R,E;
     }
     else {
@@ -90,7 +117,31 @@ Rs&Qup = &{
         me&elvis,R,'Qup',{wake:Top}
     }
 }
-
+# maintain P -> r^^%Jrom%Pring/n%P/z%Q -> r
+Rs&Pring = &Q{
+    $P = Qs&P;
+    $r = Qy&R;
+    !(P && r) and throw "noPr"
+    $J = me.cbu(r,'JRom');
+    !J and return ~>4 nonjrom: r.t, 'ting:'+Q.t
+    $Pring = Js&Pring ||= Cye(["Pring:"+J.t,1])
+    Prings&R = J;
+    $N = Prings&z ||= [];
+    # unique %Pring/n%P
+    $n = N.filter(n => ns&P == P)[0];
+    !n and n = Cye([Q.t,1]); N.push(n)
+    ns&P = P;
+    $N = ns&z ||= [];
+    # they might reuse Q
+    $z = N.filter(z => zs&Q == Q)[0];
+    # or new Q with R future
+    z ||= N.filter(z => z.t == R.t && me&yfuture,zs&R == r)[0];
+    # or leak memory until futures flattened on Qup/tunneling
+    !z and z = Cye([r.t,1]); N.push(z);
+    zs&R = r;
+    zs&Q = Q;
+    ac(P,'Prings',Pring);
+}
 # drops Ring's task cache, recompiling me.ruv
 Rs&dropRcache = &{
     each tw A.5.I.w.y.tw {
@@ -122,6 +173,9 @@ Rs&_ting = &Qr{
     $s = upting(Q);
     $P = Qs&P;
     !P and ~>5 upting!P: Q.t
+    !P and return
+    Rs&Pring(Q);
+    
     #!s and ~>5 upting!s: Q.t
     !s || !P and return 
     
