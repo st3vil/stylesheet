@@ -397,7 +397,8 @@ EleVisAn: | # event handler -> n someone
         # unless wanting to watch typing as it happens,
         # throws out events like click, keypress other than esc/enter
         if (c&noisyinput) {
-            if (c&type != 'blur' && c&key != 'esc' && c&key != "\n") {
+            if (c&type != 'blur' && (!s || !s.type || s.type != 'blur')
+                && c&key != 'esc' && c&key != "\n") {
                 a&msg.set("state","noise");
                 return T.not = 1;
             }

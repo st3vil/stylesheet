@@ -742,7 +742,7 @@ Soogle: | # start from Sevo
             });
             return
         }
-        
+        # make A:e here to save
         $h = s&cm_sc || {};
         s&cm_sc and ex(C.sc,s&cm_sc);
         Rs&cm ||= bs&cm;
@@ -761,16 +761,8 @@ Soogle: | # start from Sevo
         $cm = Rs&cm;
         cm.R = R;
         if (s&chunksfold) {
-            # when it sets value
-            h.valuecha = &acgt{ me&cm_chunksfold,cm }
-            # and for big pastes
-            s&hands ||= {};
-            s&hands.inputRead and throw "double handed"
-            s&hands.inputRead = &cm,ch{
-                ch.text.length < 20 and return
-                # C is now out of date
-                me&cm_chunksfold,cm
-            };
+            # when it sets value and for big pastes
+            h.valuecha = h.onbigpaste = &{ me&cm_chunksfold,cm }
         }
 
         # sets value
@@ -806,7 +798,10 @@ Soogle: | # start from Sevo
             me&valuesays,R,e;
         };
         #c codemirror 8
-        $save = &{ G&gev };
+        $save = &{
+            ~>3 cm-save:
+            G&gev 
+        };
         cm.setOption('extraKeys', {
             'Esc': save,
             'Tab': &c{
@@ -845,11 +840,15 @@ Soogle: | # start from Sevo
                 # no click/key events
                 G.clof();G.keof();
                 me&wantpause,R,1;
-                # alt-tab causes window.blur but not cm.blur
-                window.whenitblurs = save;
             },
             # click: &{ G.clof();G.keof(); },
-            blur:  &{ G.clon();G.keon(); save(); },
+            blur:  &{
+                G.clon();G.keon(); save();
+            },
+            inputRead: &cm,ch{
+                !ch.text || ch.text.length < 20 and return
+                h.onbigpaste and h&onbigpaste
+            },
         };
         s&hands and ex(hands,s&hands)
         # and here
