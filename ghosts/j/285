@@ -1222,6 +1222,14 @@ Fourism: |
         #     < could Ring-wait the outsiders until
         #       inners are certain they don't need
         #       their surroundings after doing stuff
+        # reawaken gk(,gk)+
+        #  if bs&$gk, roll them into %tunneling spawn
+        #  should be enough to be awake or look like it to others
+        me.reaw = &acgtR,gks,c{
+            $k = gks.split(',')[0];
+            c == 1 and c = {bg:1}
+            ah(R,'reawakens',k,ex(c||{},{rollbs:gks}));
+        };
         me.printpath = &acgtli{
             i != null and l = l.slice(0,i+1)
             return l.map(n=>isar(n) ? '*'+n.length : n.t).join('/');
@@ -2112,6 +2120,9 @@ Fourism: |
             $c = me&tsc,'%Codon','Abodo-'+Rs&incount,'g';
             
             n Codap  R %Abodis,Codap
+            # so %Code can find ^^%sCodap
+            me&reaw,R,'Abodo,sCodap';
+            me&rollbs,R,'sCodap';
         },'ift,D'],
         
         # Codap extends Abodis, animal of these handlers
@@ -2132,7 +2143,9 @@ Fourism: |
             #   without this %reawakens, clicks here wakes %Abodo
             #   then its %Codoors c.neednt badly,
             #   < JRom post-error/pre-history better
-            ah(R,'reawakens','Codap',{rollbs:'Codap,Loc,selfs'});
+            me&reaw,R,'Codap,Loc,selfs';
+            $p = Ry&up;
+            ps&sCodap = R;
             
             $Abodo = me.cbu(R,'Abodo');
             # to sample attention from
@@ -2559,10 +2572,12 @@ Fourism: |
                     if (rs&Code) {
                         $cm = rs&cm;
                         if (cm) {
-                            # < rather mute the %fix somehow
-                            #   so it doesn't load cm when starting closed
-                            $div = cm.getWrapperElement();
+                            # < O and the %fix tighter bound,
+                            #   so it doesn't load cm when starting closed,
                             $is = Os&ope ? '' : 'none';
+                            #   yet open for new & unsaved
+                            cm.lineCount() < 5 and is = ''
+                            $div = cm.getWrapperElement();
                             if (div.style.display != is) {
                                 div.style.display = is;
                                 T.feng = 'cmope';
@@ -3524,6 +3539,12 @@ Fourism: |
         # fixturism
         ['ball+Code','293',&acgtRs{
             s&bgh = '311';
+            if (!Rc&b) {
+                # re-self Codap
+                $Codap = me&Rsc,R,'^^sCodap';
+                Codap and me&elvis,R,'Code-init',{wake:Codap}
+            }
+            
             
             # T: W becomes worth saving
             $Ge = me.cbu(R,'Gens');
@@ -3554,7 +3575,7 @@ Fourism: |
             $z = pc&s;
             $O = zy&Org;
             # feed openness from Org
-            O && Os&ope and Rs&beopen = 1
+            O && Os&ope || s.length < 100 and Rs&beopen = 1
             if (R.t == 'string') {
                 # T: the cm object placed on the Code, etc
                 $h = Rs&cm_sc = ps&cm_sc = {hoistcm:p};
