@@ -9,6 +9,7 @@ use G;
 sub dige { slm(12, Digest::SHA::sha256_hex( encode_utf8(shift) ) ) };
 my ($A,$C,$G,$T);
 my $ar = {};
+!-d $_ && `mkdir -p $_` for qw'wormhole/digway G W';
 
 use Mojolicious::Lite;
 use MIME::Base64;
@@ -648,6 +649,66 @@ if(1){
 }
 get '/' => sub { my ($c) = @_;
     $c->reply->static("two\.html");
+};
+
+#c /peek/ - pull it into stylehouse
+any '/peek/*t' => sub { my ($c) = @_;
+    my $resp = sub { my ($s) = @_; $c->render(text=>sjson($s)) };
+    # look at:
+    my $t = $c->param('t');
+    # for a size or range:
+    my $line = $c->param('line') || 0;
+    # for directory, text,
+    my $type = 'f';
+    $t += '/*' if -d $t;
+    $type = 'd' if $t =~ /\*/;
+
+    my ($f) = my @l = glob $t;
+
+    # weird corners:
+    #  supplying ?-ambiguated $t matching many
+    $type = 'd' if @l > 1 || -d $f;
+    my $re = {type=>$type};
+    return $resp->({sc=>{%$re,lines=>[@l]}}) if $type eq 'd';
+    # < symlinks
+    return $resp->({er=>'not found'}) if !-f $f;
+
+    my $size = $re->{sizekb} = 0.001 * (-s $f);
+    return $resp->({er=>'too big: '.$size.'kb'}) if $size > 420;
+    # < image or video...
+    return $resp->({er=>'not text'}) unless -T $f;
+    my $string = decode_utf8(read_file($f));
+    @l = split "\n", $string;
+    $re->{length} = 0+@l;
+
+    # how to chop that up
+    if ($line =~ s/<(\d+)$//) {
+        # only shallow indents, dige between
+        my $indentlt = $1;
+        my @between;
+        @l = grep {
+            if (!/\S+/ || /^ {$indentlt}/) {
+                push @{$between[-1] ||= []}, $_;
+                0
+            }
+            else {
+                push @between, [];
+                1
+            }
+        } @l;
+        1 && sayre "indgrep $indentlt ".@l." < ".$re->{length};
+        @between = map { !@$_ ? '' : @$_."x".dige(join("\n",@$_)) } @between;
+        $re->{between} = \@between;
+    }
+    $line ||= 0;
+    my $toline = $2 if $line =~ s/^(\d+)-(\d+)$/$1/;
+    $toline ||= $line + 100;
+    $re->{line} = $line;
+    $toline = @l-1 if $toline > @l-1;
+    @l = @l[$line..$toline];
+    $re->{toline} = $line + @l;
+
+    return $resp->({sc=>{%$re,lines=>[@l]}})
 };
 
 #c /digwaypoll/ notifier, see 281 Sevo
