@@ -120,10 +120,14 @@ me.Peaceness = &acgt{ return [
     &{
     me.personifyif = &acgtRsY,step{
         [ss&W,ss&J,ss&R].filter(n=>n).length > 1 and throw "mul"
-        # auto near tops
-        $wouldJ = step <3 && Y.4 && Y.5 == Y.4[5];
-        $wouldR = step >= 3;
-        $would = ss&R ? wouldR : wouldJ;
+        # we could be on a %Peace=2-4
+        # R on 3 or 4 (tops of a J) auto
+        $would = ss&R ? !(step <3) :
+            # J immediately under 4
+            Y.up == Y.4;
+            # or anywhere before another 5? ie one J deep
+            step <3 && Y.4 && Y.5 == Y.4[5];
+        
         !(Rs&play || would) and return
         Rs&play && would and return
         return me&personify,R,s,Y,step;
