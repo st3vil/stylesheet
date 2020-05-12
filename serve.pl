@@ -669,7 +669,8 @@ any '/peek/*t' => sub { my ($c) = @_;
     #  supplying ?-ambiguated $t matching many
     $type = 'd' if @l > 1 || -d $f;
     my $re = {type=>$type};
-    return $resp->({sc=>{%$re,lines=>[@l]}}) if $type eq 'd';
+    return $resp->({sc=>{%$re,lines=>[@l],
+        dige=>dige(join "\n",@l)}}) if $type eq 'd';
     # < symlinks
     return $resp->({er=>'not found'}) if !-f $f;
 
@@ -685,7 +686,8 @@ any '/peek/*t' => sub { my ($c) = @_;
     if ($line =~ s/<(\d+)$//) {
         # only shallow indents, dige between
         my $indentlt = $1;
-        my @between;
+        # always has a leading something
+        my @between = [];
         @l = grep {
             if (!/\S+/ || /^ {$indentlt}/) {
                 push @{$between[-1] ||= []}, $_;
@@ -698,15 +700,21 @@ any '/peek/*t' => sub { my ($c) = @_;
         } @l;
         1 && sayre "indgrep $indentlt ".@l." < ".$re->{length};
         @between = map { !@$_ ? '' : @$_."x".dige(join("\n",@$_)) } @between;
+        $re->{dige} = dige(join "\n",
+            $between[0], map{ $l[$_], $between[$_+1]||'' } 0..@l-1
+        );
         $re->{between} = \@between;
     }
-    $line ||= 0;
-    my $toline = $2 if $line =~ s/^(\d+)-(\d+)$/$1/;
-    $toline ||= $line + 100;
-    $re->{line} = $line;
-    $toline = @l-1 if $toline > @l-1;
-    @l = @l[$line..$toline];
-    $re->{toline} = $line + @l;
+    else {
+        $line ||= 0;
+        my $toline = $2 if $line =~ s/^(\d+)-(\d+)$/$1/;
+        $toline ||= $line + 100;
+        $re->{line} = $line;
+        $toline = @l-1 if $toline > @l-1;
+        @l = @l[$line..$toline];
+        $re->{toline} = $line + @l;
+        $re->{dige} = dige(join "\n",@l);
+    }
 
     return $resp->({sc=>{%$re,lines=>[@l]}})
 };
