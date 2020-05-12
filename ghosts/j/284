@@ -7687,15 +7687,26 @@ Foogla: | # Domes prepare to A=A
             # Pc&s = me&Pcs,P,c,s;
             me.Pcs = &acgtPcs{
                 $W = Pc&s = Cye([P.t,1]);
+                s != null and Wc&s = s
                 Ws&of = Pc&of;
-                $sc = c && c.getResponseHeader('sc');
+                $sc = c && (c.getResponseHeader ?
+                    c.getResponseHeader('sc') : c);
                 if (sc) {
-                    sc = dej(sc);
+                    isst(sc) and sc = dej(sc)
+                    # < retractable, see Punready
                     ex(P.sc,sc);
                     ex(W.sc,sc);
                 }
                 return W;
-            };
+            }
+            # make a P look unready
+            $Punready = &P{
+                delete Pc&s;
+                delete Ps&dige;
+                delete Ps&string;
+                delete Ps&section;
+                delete Ps&lines;
+            }
             # implant code as .js
             #  should be able to receive any ting,
             #  esp way, is more stack/debugger findable loaded like so:
@@ -7799,7 +7810,6 @@ Foogla: | # Domes prepare to A=A
                     delete Pc&s;
                     # < get the source code out of a <script src> ?
                     # use our first request (to ascertain the dige)
-                    Wc&s = s;
                     c&dige && Ws&dige != c&dige and throw "dige!ask"
                     !Ws&dige and throw "!dige"
                     src += "__"+Ws&dige+".js"
@@ -8004,10 +8014,7 @@ Foogla: | # Domes prepare to A=A
                     if (el == 9) {
                         # watch for undelete?
                         r.s and throw "what"
-                        delete Pc&s;
-                        delete Ps&dige;
-                        delete Ps&string;
-                        delete Ps&section;
+                        Punready(P);
                         # plumb? like an elvisory
                         return
                     }
@@ -8040,6 +8047,25 @@ Foogla: | # Domes prepare to A=A
                 };
             };
          
+            #c Talks.peek
+            Rs&Talks.peek = &TCP{
+                T.get.url = '/peek/'+C.t;
+                Pc&args and T.get.data = G&peel,Pc&args;
+                T.got = &Psc{
+                    $s = dej(s);
+                    if (s.er) {
+                        Ps&er = s.er;
+                        Punready(P);
+                        return
+                    }
+                    # ^ or the opposite,
+                    delete Ps&er;
+                    $W = me&Pcs,P,s.sc;
+                    $unk = haks(s).filter(k => k != 'sc');
+                    unk.length and throw "more response",unk,s
+                    # Ws&between may be [lengthxdige+]
+                }
+            };
             #c Talks.ghost,tmp,mem
             # W that is string
             Rs&Talks.ghost = &TCP{
