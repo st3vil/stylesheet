@@ -169,7 +169,7 @@ me.Sch_Pavings = &acgt{ return [
         $z = rc&s;
         # inherit environment
         zs&directory and zs&directory = zs&directory.replace(/\/$/,'')
-        ['directory','Paving'].map(&k{
+        ['args','directory','Paving'].map(&k{
             # r%dir = s%dir || R%dir
             # < omit s%dir when == R%dir
             $is = hak(z.sc,k) ? z.sc[k] : R.sc[k];
@@ -487,6 +487,7 @@ me.Sch_Pavings = &acgt{ return [
             is and Q.c[k] = is
             else { delete Q.c[k] }
         });
+        Qc&of == 'peek' and Qc&args ||= 'none'
         # compile to $t for Search
         Qc&directory and Q.t = Qc&directory+'/'+Q.t
         Qc&species and Q.t = Q.t+'/'+Qc&species
@@ -502,9 +503,11 @@ me.Sch_Pavings = &acgt{ return [
         
         
         # Q refinds P each G&t
+        #!Qs&ready and debugger;
         $w = me&t,R,Q;
         # per most of this besides s, el + hooks
         #me&nu,Q.t,Q.c;
+        Qs&waslooking = 1;
         
         !Qs&ready and return me&waits,'!ready','...'
         # $w may wander off, usu clones into %Gens%self
