@@ -318,6 +318,7 @@ me.Sch_Comm = &acgt{ return [
         Rs&Section = 1;
         me&reaw,R,'Comvalve,Section';
     },'ift,D'],
+    # take s from Lave, start saving it here
     ['Comvalue',0.29071,&acgtRs{
         $z = sy&Lave;
         !z and return me&waits,"!sy&Lave"
@@ -327,10 +328,34 @@ me.Sch_Comm = &acgt{ return [
         !Ls&lines and return me&waits,'!L%lines'
         Rs&Live = L;
         
+        $din = me.cbu(R,'Section');
+        !din and throw "!section"
+        n ghost  $section:din.t,R %Pave:ghost
+        
+        #me&nu,"From",z;
+        #me&nu,"The",L;
+        #me&nu,"s",s;
+    },'ift,D'],
+    # sleep, compile, saving it here
+    ['Comvalue',0.6,&acgtRs{
+        Rs&waits and return
+        $r = Rs&Zaving && Rs&Zaving.ghost;
+        !r and return me&waits,'!Zaving.ghost'
+        $coms = rs&commitstring;
+        !coms and return me&waits,'!coms'
+        $Q = rs&Q;
+        $L = Rs&Live;
+        
         $lines = Ls&lines;
-        lines = lines.slice(0,30);
-        $notind = lines.filter(l => l.substr(0,4) != '    ');
-        notind.length and return me&waits,"!allind>=4" && me&nu,lines
+        #lines = lines.slice(0,130);
+        $once = 0;
+        each il lines {
+            !l || l.substr(0,4) == '    ' and continue
+            !once++ and debugger;
+        }
+        once and return me&waits,"Weirdind"
+        $notind = lines.filter(l => l && l.substr(0,4) != '    ');
+        notind.length and return me&waits,"!allind>=4" && me&nu,notind
         lines = lines.map(l => l.substr(4));
         
         # drop certain chunks
@@ -354,17 +379,16 @@ me.Sch_Comm = &acgt{ return [
             return 1
         });
         
-        # < what problem %Zaving is having with 8klines?
-        ss&string = lines.join("\n");
-        Rs&Zaving = "ghost";
-        Rs&Here = s;
-        Rs&compLines = &D{
-            delete Ds&string
-        };
+        delete ss&string;
+        # DIY diff
+        $string = lines.join("\n");
+        string.slice(-1)[0] != "\n" and string += "\n"
         
-        #me&nu,"From",z;
-        #me&nu,"The",L;
-        #me&nu,"s",s;
+        $W = Qc&s;
+        !W && Qc&el != 9 and return me&waits,'!W!el9!?'
+        W && !Ws&dige and return me&waits,'!dige'
+        W && Ws&dige == dig(string) and return me&tsc,'done'
+        coms(string)
     },'ift,D'],
    // Lave
     ['Lave',0.4,&acgtRs{

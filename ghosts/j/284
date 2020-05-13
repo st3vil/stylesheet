@@ -7950,8 +7950,6 @@ Foogla: | # Domes prepare to A=A
                 if (hak(haves) && !is_write)
                     d.have = haks(haves).join("\t")
                 
-                s&section and d.se = s&section
-                
                 c&gitmv and d.gitmv = c&gitmv
                 
                 # the first "can you hold on to..."
@@ -8071,9 +8069,12 @@ Foogla: | # Domes prepare to A=A
             #c Talks.ghost,tmp,mem
             # W that is string
             Rs&Talks.ghost = &TCP{
-                s&string != null && !s&section and throw "/ghost/+ !section"
+                s&section and c&section = s&section
+                s&string != null && !c&section and throw "/ghost/+ !section"
                 Rs&Talks.W(T,C,P);
                 T.get.url = '/ghost/'+C.t;
+                $d = T.get.data;
+                c&section and d.se = c&section
                 T.Want_Decode = 'ghost';
             };
             # Pc&s = C (c&s = Ps&string)
