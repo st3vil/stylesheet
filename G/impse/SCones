@@ -277,7 +277,7 @@ me.Sch_Comm = &acgt{ return [
     
     # < 284:Foogla drops '#c %mund = GhoNut'..<'#c ting fance'
     #   joining keepers from Tongingness (%ting) to Domingness
-    # 
+    # < after git reset we should recheck all ting
     ['Hoosh',0.293,&acgtRs{
         $S = me&inode,R;
         #!S and return
@@ -302,6 +302,7 @@ me.Sch_Comm = &acgt{ return [
     },'ift,D'],
     ['Lave+Live',0.6,&acgtRs{
         $L = Rs&Live;
+        Rs&waits and return me&tsc,"%waits",'','y'
         if (Ls&type == 'd') {
             each il Ls&lines {
                 !l.includes('284') and continue
@@ -311,8 +312,73 @@ me.Sch_Comm = &acgt{ return [
                 zs&Lave = 'peek';
             }
         }
+        if (Ls&type == 'f') {
+            if (Ls&between) {
+                # interpret betweens as items
+                $N = me&peek_betweens,L;
+                each in N {
+                    # < CBing its expected dige
+                    ns&shouldige = delete ns&dige;
+                    $r = me&input,R,n.t;
+                    $z = rc&s;
+                    ex(z.sc,n.sc);
+                    # will get huge responses, up to filesize limit
+                    zs&args = "line:"+ns&line+"-"+ns&toline;
+                    zs&Lave = 'peek';
+                    # Q.t filename, not the pin, args differntiate them
+                    zy&tin = s;
+                }
+            }
+            else {
+                # < range
+                me&tsc,"range!"
+                #ss&lines.length
+                # < into CB|lookaQ
+                ss&shouldige && ss&shouldige != ss&dige
+                    && me&tsc,"~dige";
+                
+                $more = ss&length > ss&lineto;
+                ss&line == 0 and 'start wandering in'
+                # < and similar, check lines overlap,
+                #   tailing logs read back until we know
+                #    probably sensing now before wandering back
+                me&nu,"L",L
+            }
+        }
         #me&nu,L
     },'ift,D'],
+    &{
+    me.peek_betweens = &acgtL{
+        $N = [];
+        $line = 0;
+        each il Ls&between {
+            if (l) {
+                $m = l.match(/^(\d+)x(\w+)$/);
+                !m and throw "nonbetween"
+                l = Ls&lines[i-1];
+                l == null and throw "nonline"
+                # < anything. indent, \n\n, strange formations
+                $tm = l.match(/^(\S+): \|/);
+                !tm and throw "!yaml", l
+                $t = tm[1];
+                $n = Cye([t,1]);
+                # not including the headline
+                ns&headline = l;
+                line += 1;
+                ns&line = line;
+                line += m[1];
+                ns&toline = line;
+                # should yield:
+                ns&dige = m[2];
+                N.push(n)
+            }
+            else {
+                i != 0 and throw "nobetween", i, l, L
+            }
+        }
+        return N
+    }
+    },
    
   // Travelty
     ['Travels',0.39,&acgtRs{
