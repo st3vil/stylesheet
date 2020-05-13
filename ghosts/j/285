@@ -1398,7 +1398,8 @@ Fourism: |
                 # %reawakens implies %tunneling to it is ok
             }
             # general
-            ['Gens','Zuctto','inheritsc','inheritscif','eCsc'].map(&k{
+            ['Gens','Zuctto','inheritsc','inheritscif','eCsc',
+             'play',].map(&k{
                 b.sc[k] and c[k] = b.sc[k]
             });
             # JRom skip %tunneling
@@ -4123,18 +4124,26 @@ Fourism: |
         },'ift,D'],
 
         # also these tiny details
+        &{
+        # filed under se%Codin: G/$se/$t
+        me.ghost_section = &acgtR{
+            $din = me.cbu(R,'Codin');
+            din ||= me.cbu(R,'Section');
+            return din && din.t
+        }
+        },
         ['Zave','292',&acgtRs{
             $p = Ry&up;
             $ting = me&Rsc,R,'Saveting';
 
             if (Rs&Zave == 'ghost') {
-                # filed under se%Codin: G/$se/$t
-                $din = me.cbu(R,'Codin');
-                !din and delete Rs&Zave; return me&waits,'no^^%Codin'
-                tings&section = din.t;
+                $se = me&ghost_section,R;
+                !se and delete Rs&Zave; return me&waits,'no^^%Codin'
+                tings&section = se;
                 # fixes !section on initCode commit
                 $Q = tings&Q;
-                Q and Qs&section = din.t;
+                Q and Qs&section = se;
+                # also needed on commit!?
             }
 
             # they cache each other
@@ -4249,6 +4258,7 @@ Fourism: |
             # and then put this situation in it
             $p = Ry&up;
             $h = me&Rsc,R,'Here';
+            h ||= me&Rsc,p,'Here';
             $t = me&Rsc,R,'Saveting';
             !t and return me&waits,"Z!ting"
             me&zuct,re,t
@@ -4521,7 +4531,9 @@ Fourism: |
                         }
                     }
                     if (Rs&Zave == 'ghost') {
-                        Qs&section = me.cbu(R,'Codin').t
+                        $se = me&ghost_section,R;
+                        !se and throw "ghost!section"
+                        Qs&section = se
                     }
                     
                     commit_ting();
