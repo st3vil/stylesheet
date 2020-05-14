@@ -48,7 +48,7 @@ my $hide = {};
 # supposed to not babz anything in it...
 # < stylehouse (the editor) must know this too
 #     or it'll expand tabs to 4 spaces
-$C->{c}->{s} =~ s{^(\s*)($nlp)<<(''|"")($nlp?)\n((?:$nlp\n)+)[ \t]*\n}{
+$C->{c}->{s} =~ s{^(\s*)($nlp)<<(''|"")($nlp?)\n((?:\1$nlp\n)+)[ \t]*\n}{
     my $babin = $3 eq '""';
     my $ind = $1 || '';
     my $fore = $2;
