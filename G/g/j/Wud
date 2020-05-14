@@ -20,9 +20,13 @@ app->secrets(["nothing"]);
 #    if Gc&dir || Gc&ipd;
 
 our $listen = "http://localhost:1422";
+if (-f 'listen') {
+    $_ = `cat listen`; chomp $_;
+    $listen = 'http://'.$_;
+}
 sub starts {
     1 && saybl "Starting     listens: $listen";
-    1 && saygr "Appstart: ". app->start('daemon', '--listen' => "$listen");
+    app->start('daemon', '--listen' => "$listen");
 }
 sub JaBabz {
     my $C = shift;
