@@ -739,7 +739,7 @@ $poll->{doing} = sub { my ($o) = @_;
         $t = $poll->{wayt}->{"$p"} ||= do { $t =~ s/\W/-/sg; $t };
         my $digway = "wormhole/digway/$t";
         my $dig = readlink $digway;
-        1 && sayre "no $digway" if !$dig;
+        #1 && sayre "no $digway" if !$dig;
         next if !$dig;
         my $was = $poll->{wayd}->{"$t"};
         next if $was && $dig eq $was;
@@ -898,7 +898,7 @@ any '/ghost/*w' => sub { my ($c) = @_;
     my ($cat) = $f =~ /^G\/([^\/]+)\//;
     # < avoid some disking if $have
     my $wig = "wormhole/digway/$st";
-    my $digway = readlink($wig);
+    my $digway = readlink($wig) || '';
 
     # returns json:
     my $re = {ok=>0};
